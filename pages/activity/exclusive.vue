@@ -1,5 +1,14 @@
 <template>
   <div class="container" :style="{ marginTop: safeTop + 'px' }">
+    <!--    url('https://cdn.shupian.cn/sp-pt/wap/2z5tsl5cs4q0000.png');-->
+    <!--    linear-gradient(125deg, #DAA240 0%, #C98714 100%);-->
+    <sp-sticky
+      :style="safeTopStyle"
+      style="
+        background: url('https://cdn.shupian.cn/sp-pt/wap/images/diffbv56gi00000.png');
+      "
+      offset-top="0"
+    />
     <!-- <sp-sticky></sp-sticky> -->
     <!-- S search -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
@@ -20,11 +29,7 @@
             color="#FFFFFF"
             :style="{ marginLeft: iconLeft + 'rem' }"
           ></my-icon>
-          <input
-            placeholder="搜索独家商品"
-            readonly
-            @click="clickInputHandle"
-          />
+          <input placeholder="搜索商品" readonly @click="clickInputHandle" />
         </div>
       </div>
     </sp-sticky>
@@ -33,7 +38,7 @@
       <!-- S countdown -->
       <div class="countdown">
         <div class="special-price"></div>
-        <div class="count-down">
+        <div v-if="isTimerShow" class="count-down">
           <p class="down-time">
             距本场结束还剩
             <span>{{ time.day }}</span
@@ -66,10 +71,11 @@
           <div class="content">{{ item.skuName }}</div>
           <div class="background">
             <div class="bg-img"></div>
-            <div class="money">
+            <div v-if="parsePrice(item.specialPrice) !== '面议'" class="money">
               <span>{{ item.specialPrice }}</span
               ><span>元</span>
             </div>
+            <div v-else class="money">面议</div>
           </div>
         </div>
       </div>
@@ -97,7 +103,11 @@
       </sp-sticky>
 
       <div class="body-content">
-        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <sp-pull-refresh
+          v-model="refreshing"
+          :disabled="refreshDisabled"
+          @refresh="onRefresh"
+        >
           <sp-list
             v-model="loading"
             :finished="finished"
@@ -133,13 +143,26 @@
                     </div>
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
-                        <div class="rc-bottom-lf-my">
-                          <div>{{ item.specialPrice }}</div>
-                          <div>元</div>
+                        <template>
+                          <div
+                            v-if="parsePrice(item.specialPrice) !== '面议'"
+                            class="rc-bottom-lf-my"
+                          >
+                            <div>{{ item.specialPrice }}</div>
+                            <div>元</div>
+                          </div>
+                          <div v-else class="rc-bottom-lf-my">
+                            <div>面议</div>
+                          </div>
+                        </template>
+                        <div
+                          v-if="parsePrice(item.specialPrice) !== '面议'"
+                          class="bf-my"
+                        >
+                          原价{{ item.skuPrice }}元
                         </div>
-                        <div class="bf-my">原价{{ item.skuPrice }}元</div>
                       </div>
-                      <div class="rc-bottom-rt">去抢购</div>
+                      <div class="rc-bottom-rt">立即抢购</div>
                     </div>
                   </div>
                 </div>
@@ -240,15 +263,24 @@ export default {
           price: '998',
         },
       ],
+      hasCity: false,
     }
-  },
-  mounted() {
-    this.countDown(new Date().getTime() + 60 * 60 * 24 * 1000)
   },
 }
 </script>
 
 <style lang="less" scoped>
+html::-webkit-scrollbar {
+  display: none;
+}
+.multiRowOverflowDot {
+  //width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; //行数
+  -webkit-box-orient: vertical;
+}
 .no-data {
   text-align: center;
   padding-top: 10px;
@@ -304,7 +336,7 @@ export default {
       input {
         border: none;
         font-size: 32px;
-        font-weight: 500;
+        font-weight: bold;
         color: #ffffff;
         line-height: 32px;
         background: transparent;
@@ -347,7 +379,7 @@ export default {
         align-items: center;
         :nth-of-type(1) {
           font-size: 24px;
-          font-weight: 500;
+          font-weight: bold;
           color: #ffedcb;
           line-height: 24px;
           margin-right: 15px;
@@ -355,20 +387,21 @@ export default {
         .down-time {
           font-size: 24px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
+          font-weight: bold;
           color: #fefffe;
           line-height: 24px;
           display: flex;
           align-items: center;
           span {
-            width: 36px;
+            min-width: 36px;
+            white-space: normal;
             height: 36px;
             padding: 6px 4px;
             background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);
             border-radius: 4px;
             font-size: 24px;
             font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
+            font-weight: bold;
             color: #835436;
             line-height: 24px;
             margin: 0 6px;
@@ -379,9 +412,10 @@ export default {
     }
     .avtars {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       margin-bottom: 40px;
       overflow-x: scroll;
+      overflow-y: hidden;
       &::-webkit-scrollbar {
         width: 0 !important;
       }
@@ -414,7 +448,7 @@ export default {
         }
         .content {
           font-size: 26px;
-          font-weight: 500;
+          font-weight: bold;
           color: #222222;
           line-height: 34px;
           margin: 16px 24px 12px 20px;
@@ -436,13 +470,13 @@ export default {
           justify-content: flex-start;
 
           font-size: 28px;
-          font-weight: 500;
+          font-weight: bold;
           color: #ffffff;
           line-height: 28px;
           .money {
             font-size: 28px;
             font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
+            font-weight: bold;
             color: #835436;
             margin: 0;
             position: relative;
@@ -492,7 +526,7 @@ export default {
             background: #f5f5f5;
             border-radius: 32px;
             font-size: 26px;
-            font-weight: 500;
+            font-weight: bold;
             color: #222222;
             line-height: 26px;
             margin-right: 16px;
@@ -500,7 +534,7 @@ export default {
           .active {
             // padding: 17px 42px;
             // font-size: 30px;
-            // font-weight: 500;
+            // font-weight: bold;
             color: #835436;
             background: #ec5330;
             background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);
@@ -528,7 +562,7 @@ export default {
         margin: 0 20px;
       }
       ::v-deep .sp-list {
-        > div:first-child .body-content-items {
+        > div > div:first-child .body-content-items {
           margin-top: 0;
         }
       }
@@ -562,7 +596,7 @@ export default {
           background: url('https://cdn.shupian.cn/sp-pt/wap/7nccpoc61co0000.png');
           background-size: 100% 100%;
           font-size: 20px;
-          font-weight: 500;
+          font-weight: bold;
           color: #ffffff;
           top: -6px;
           left: 0;
@@ -578,16 +612,17 @@ export default {
         .rc-top {
           font-size: 32px;
           // height: 84px;
-          font-weight: 500;
+          font-weight: bold;
           color: #222222;
           line-height: 42px;
+          .multiRowOverflowDot();
 
           span {
             background: #ec5330;
             border-radius: 4px;
             padding: 8px;
             font-size: 20px;
-            font-weight: 500;
+            font-weight: bold;
             color: #ffffff;
             margin-top: 6px;
           }
@@ -626,12 +661,12 @@ export default {
               }
               div:nth-of-type(1) {
                 font-size: 40px;
-                font-weight: 500;
+                font-weight: bold;
                 line-height: 40px;
               }
               div:nth-of-type(2) {
                 font-size: 22px;
-                font-weight: 500;
+                font-weight: bold;
                 margin: 13px 0 0 2px;
                 line-height: 22px;
               }
@@ -648,17 +683,18 @@ export default {
             }
           }
           .rc-bottom-rt {
-            width: 176px;
+            //width: 176px;
             height: 80px;
             background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);
             border-radius: 8px;
             border-radius: 8px;
             font-size: 30px;
-            font-weight: 500;
+            font-weight: bold;
             color: #835436;
             line-height: 30px;
             padding: 25px 28px;
             text-align: center;
+            white-space: nowrap;
           }
         }
       }

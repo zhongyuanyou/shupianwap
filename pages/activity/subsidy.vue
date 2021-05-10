@@ -1,12 +1,19 @@
 <template>
-  <div class="container" :style="{ marginTop: safeTop + 'px' }">
+  <div class="container" :style="{ paddingTop: safeTop + 'px' }">
     <div
       class="rule-tag"
-      :style="{ top: safeTop + headerHeight + 10 + 'px' }"
+      :style="{ top: convert2vw(safeTop + headerHeight) + 'vw' }"
       @click="$router.push('/login/protocol?categoryCode=protocol100034')"
     >
       规则
     </div>
+    <sp-sticky
+      :style="safeTopStyle"
+      style="
+        background: url('https://cdn.shupian.cn/sp-pt/wap/images/5xaor0rxs3g0000.png');
+      "
+      offset-top="0"
+    />
     <!-- S search -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="search">
@@ -26,11 +33,7 @@
             color="#FFFFFF"
             :style="{ marginLeft: iconLeft + 'rem' }"
           ></my-icon>
-          <input
-            placeholder="搜索补贴商品"
-            readonly
-            @click="clickInputHandle"
-          />
+          <input placeholder="搜索商品" readonly @click="clickInputHandle" />
         </div>
       </div>
     </sp-sticky>
@@ -59,13 +62,18 @@
           </div>
           <div class="advert_item-title">
             <div class="advert_item-title-name">{{ item.skuName }}</div>
-            <div class="advert_item-title-price">
+            <div
+              v-if="parsePrice(item.specialPrice) !== '面议'"
+              class="advert_item-title-price"
+            >
               低至
               <span class="advert_item-title-num">{{ item.specialPrice }}</span>
               元
             </div>
+            <div v-else class="advert_item-title-price">
+              <span class="advert_item-title-num">面议</span>
+            </div>
           </div>
-          {{ item.skuName }}
         </div>
         <!-- <div class="advert_item"></div>
         <div class="advert_item"></div> -->
@@ -92,7 +100,11 @@
     </sp-sticky>
     <div class="container-body">
       <div class="body-content">
-        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <sp-pull-refresh
+          v-model="refreshing"
+          :disabled="refreshDisabled"
+          @refresh="onRefresh"
+        >
           <sp-list
             v-model="loading"
             :finished="finished"
@@ -119,11 +131,13 @@
                   </div>
                   <div class="right-content">
                     <div class="rc-top">
-                      <span class="span1">好品</span>
-                      <span class="span2">千万补贴</span>
-                      <span class="span3"> {{ item.skuName }}</span>
+                      <div style="display: inline-block">
+                        <span class="span1">好品</span>
+                        <span class="span2">千万补贴</span>
+                      </div>
+                      <span class="span3">{{ item.skuName }}</span>
                     </div>
-                    <div class="rc-middle">
+                    <div v-show="item.tags" class="rc-middle">
                       <div
                         v-for="tag in item.tags.split(',').slice(0, 3)"
                         :key="tag"
@@ -134,11 +148,30 @@
                     </div>
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
-                        <div class="rc-bottom-lf-my">
-                          <div>{{ item.specialPrice }}</div>
-                          <div>元</div>
+                        <template>
+                          <div
+                            v-if="parsePrice(item.specialPrice) !== '面议'"
+                            class="rc-bottom-lf-my"
+                          >
+                            <div>
+                              {{ parsePrice(item.specialPrice).yuan }}.
+                              <span class="rc-bottom-lf-my-cent">
+                                {{ parsePrice(item.specialPrice).jiao }}
+                              </span>
+                              <span class="rc-bottom-lf-my-unit">元</span>
+                            </div>
+                          </div>
+                          <div v-else class="rc-bottom-lf-my">
+                            <div>面议</div>
+                          </div>
+                        </template>
+                        <div
+                          v-if="parsePrice(item.skuPrice) !== '面议'"
+                          class="bf-my"
+                        >
+                          {{ item.skuPrice }}
+                          <span>元</span>
                         </div>
-                        <div class="bf-my">{{ item.skuPrice }}元</div>
                       </div>
                       <div class="rc-bottom-rt">
                         <div>立即购买</div>
@@ -196,6 +229,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+html::-webkit-scrollbar {
+  display: none;
+}
 .no-data {
   text-align: center;
   padding-top: 10px;
@@ -216,12 +252,19 @@ export default {
   text-overflow: ellipsis;
   overflow: hidden;
 }
+.multiRowOverflowDot {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; //行数
+  -webkit-box-orient: vertical;
+}
 .container {
   position: relative;
   background: url('https://cdn.shupian.cn/sp-pt/wap/33iptmq9cya0000.png');
   background-size: 100% auto;
   -moz-background-size: 100% auto;
-  // background-attachment: fixed;
+  width: 100vw;
   &::-webkit-scrollbar {
     width: 0 !important;
   }
@@ -234,18 +277,16 @@ export default {
     background: linear-gradient(42deg, #ffa291 0%, #ffdb12 100%);
     box-shadow: 0px 0px 20px 0px rgba(192, 24, 33, 0.5);
     border-radius: 32px 0px 0px 32px;
-    // opacity: 0.5;
     z-index: 10;
     font-size: 20px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: bold;
     color: #ffffff;
     text-align: right;
     padding-right: 12px;
   }
   .search {
     display: flex;
-    // justify-content: space-between;
     align-items: center;
     padding: 16px 0;
     margin-bottom: 16px;
@@ -266,11 +307,10 @@ export default {
     .search-box {
       margin-right: 40px;
       height: 88px;
-      box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
+      //box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
       border-radius: 8px;
-      background: #000000;
-      border-radius: 8px;
-      background-color: rgba(0, 0, 0, 0.1);
+      //background: #000000;
+      background: rgba(0, 0, 0, 0.1);
       display: flex;
       align-items: center;
       flex: 1;
@@ -280,7 +320,7 @@ export default {
       input {
         border: none;
         font-size: 32px;
-        font-weight: 500;
+        font-weight: bold;
         color: #ffffff;
         line-height: 32px;
         background: transparent;
@@ -309,21 +349,23 @@ export default {
       display: flex;
       justify-content: flex-start;
       padding: 0 20px;
+      overflow-x: scroll;
+      overflow-y: hidden;
       .advert_item {
-        width: 230px;
-        height: 288px;
+        width: 30vw;
+        height: 38.4vw;
         background: #fff2e3;
         border-radius: 12px;
         margin-right: 10px;
         font-family: PingFangSC-Medium, PingFang SC;
         overflow: hidden;
-        box-shadow: 0px 0px 5px 1px rgba(255, 255, 255, 0.6);
         .advert_item-img {
           border-radius: 12px;
           overflow: hidden;
           position: relative;
           width: 100%;
-          height: 202px;
+          //height: 202px;
+          height: 26.9vw;
           .advert_item-angle {
             position: absolute;
             left: 4px;
@@ -339,7 +381,7 @@ export default {
             background-repeat: no-repeat;
             font-size: 20px;
             font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
+            font-weight: bold;
             color: #ffffff;
             background-size: 100% 100%;
             width: 160px;
@@ -360,10 +402,11 @@ export default {
             color: #222222;
             line-height: 22px;
             margin: 12px 0 5px 0;
+            .overflowDot();
           }
           .advert_item-title-price {
             font-size: 20px;
-            font-weight: 500;
+            font-weight: bold;
             color: #ec5330;
             .advert_item-title-num {
               font-size: 35px;
@@ -391,53 +434,56 @@ export default {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      height: 88px;
-      padding: 0 20px;
+      // height: 88px;
+      // padding: 0 20px;
+      padding: 28px 20px;
       &.sp-sticky--fixed {
         border-radius: 0;
       }
     }
     .drop_down {
-      width: 150px;
       height: 56px;
       background: linear-gradient(270deg, #f3363f 0%, #ec5330 100%);
       border-radius: 32px;
       display: flex;
       align-items: center;
       margin-right: 48px;
+      padding: 0 28px;
       .drop_down_title {
-        padding: 0 8px 0 24px;
-        height: 30px;
+        white-space: nowrap;
         font-size: 30px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
+        font-weight: bold;
         color: #ffffff;
-        line-height: 30px;
+        line-height: 56px;
       }
       .drop_down_icon {
         background: url('https://cdn.shupian.cn/sp-pt/wap/9ij1cu5sv4g0000.png');
         width: 15px;
         height: 10px;
+        margin-left: 8px;
         background-size: 100% 100%;
         -moz-background-size: 100% 100%;
       }
     }
     .tabs-box-items {
+      height: 56px;
       display: flex;
       justify-content: flex-start;
-      max-width: 550px;
       overflow-x: scroll;
+      // margin: auto 0;
       &::-webkit-scrollbar {
         width: 0 !important;
+        height: 0 !important;
       }
       li {
         white-space: nowrap;
-        height: 32px;
         font-size: 32px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
+        font-weight: bold;
         color: #555555;
-        line-height: 32px;
+        line-height: 56px;
+        height: 56px;
         margin-right: 48px;
         &.active {
           font-weight: bold;
@@ -448,24 +494,21 @@ export default {
   }
   .container-body {
     position: absolute;
-    width: 750px;
+    width: 100vw;
     height: 1667px;
     background: #ffffff;
     padding: 0 20px;
-    // top: 758px;
 
     .body-content {
       .line {
-        width: 710px;
         height: 1px;
-        background: #dcdcdc;
+        background: #f4f4f4;
       }
       .body-content-items {
-        display: flex;
         height: 284px;
         width: 100%;
         padding: 32px 0;
-        justify-content: space-between;
+        display: flex;
       }
       .left-content {
         width: 220px;
@@ -474,39 +517,38 @@ export default {
         background-size: 100% 100%;
         -moz-background-size: 100% 100%;
         overflow: hidden;
+        margin-right: 32px;
       }
       .right-content {
-        width: 458px;
+        position: relative;
+        flex: 1;
         .rc-top {
-          font-size: 32px;
-          height: 84px;
           font-weight: 500;
-          color: #222222;
           width: 395px;
-          .span1 {
-            height: 32px;
-            background: #ec5330;
-            border-radius: 4px;
-            padding: 6px 8px;
-            font-size: 20px;
-            font-family: PingFangSC-Medium, PingFang SC;
-
-            font-weight: 500;
-            color: #ffffff;
-            line-height: 20px;
-          }
+          font-size: 32px;
+          .multiRowOverflowDot();
+          .span1,
           .span2 {
-            height: 32px;
             background: #ec5330;
             border-radius: 4px;
-            padding: 6px 8px;
+            padding: 0 8px;
             font-size: 20px;
             font-family: PingFangSC-Medium, PingFang SC;
             font-weight: 500;
             color: #ffffff;
-            line-height: 20px;
+            line-height: 32px;
+            height: 32px;
+            float: left;
+            margin: 4px 8px 0 0;
+          }
+          .span3 {
+            color: #222222;
+            font-weight: bold;
+            font-family: PingFangSC-Medium, PingFang SC;
+            line-height: 42px;
           }
         }
+
         .rc-middle {
           margin-top: 12px;
           display: flex;
@@ -514,23 +556,23 @@ export default {
           margin-right: 14px;
           margin-bottom: 32px;
           div {
-            // height: 20px;
             font-size: 20px;
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
             color: #5c7499;
-            line-height: 20px;
-            padding: 4px 6px;
+            line-height: 28px;
+            padding: 0 6px;
 
             background: #f0f2f5;
             border-radius: 4px;
             margin-right: 8px;
-            // max-width: 30%;
-            // .overflowDot();
           }
         }
         .rc-bottom {
           display: flex;
+          position: absolute;
+          width: 100%;
+          bottom: 0;
           justify-content: space-between;
           .rc-bottom-lf {
             margin-top: 2px;
@@ -539,19 +581,18 @@ export default {
               flex-direction: row;
               align-content: flex-start;
               align-items: center;
-              //   padding-top: 2px;
               div {
                 color: #ec5330;
               }
               div:nth-of-type(1) {
                 font-size: 32px;
-                font-weight: 500;
+                font-weight: bold;
                 line-height: 32px;
                 font-family: PingFangSC-Medium, PingFang SC;
               }
               div:nth-of-type(2) {
                 font-size: 22px;
-                font-weight: 500;
+                font-weight: bold;
                 margin: 13px 0 0 2px;
                 line-height: 22px;
               }
@@ -566,6 +607,14 @@ export default {
               line-height: 22px;
               margin-left: 2px;
             }
+            .rc-bottom-lf-my-cent {
+              font-size: 28px;
+              display: inline-block;
+              margin-left: -10px;
+            }
+            .rc-bottom-lf-my-unit {
+              font-size: 22px;
+            }
           }
           .rc-bottom-rt {
             width: 200px;
@@ -579,14 +628,16 @@ export default {
               height: 32px;
               font-size: 32px;
               font-family: PingFangSC-Medium, PingFang SC;
-              font-weight: 500;
+              font-weight: bold;
               color: #ffffff;
               line-height: 32px;
-              padding: 0 8px 0 16px;
+              padding: 1px 8px 0 16px;
+              white-space: nowrap;
             }
-            :nth-last-child(1) {
+            div:nth-last-child(1) {
               height: 32px;
               width: 32px;
+              margin-right: 16px;
               background: url('https://cdn.shupian.cn/sp-pt/wap/g76q42107k00000.png');
               background-size: 100% 100%;
               -moz-background-size: 100% 100%;

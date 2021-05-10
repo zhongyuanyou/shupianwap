@@ -1,5 +1,12 @@
 <template>
   <div class="container" :style="{ marginTop: safeTop + 'px' }">
+    <sp-sticky
+      :style="safeTopStyle"
+      style="
+        background: url('https://cdn.shupian.cn/sp-pt/wap/images/8sq7h20ttpo0000.png');
+      "
+      offset-top="0"
+    />
     <!-- Sheader -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="header">
@@ -29,9 +36,9 @@
               alt=""
             /> -->
           </div>
-          <div class="low-money">近15天全网底价</div>
+          <div class="low-money">近15天全网低价</div>
         </div>
-        <div v-show="endTime.sec" class="count-down">
+        <div v-if="isTimerShow" class="count-down">
           <div class="end-time">距本场结束还剩</div>
           <div class="down-time">
             <span class="block">{{ endTime.hour }}</span>
@@ -120,7 +127,11 @@
         </div>
       </sp-sticky>
       <div class="body-content">
-        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <sp-pull-refresh
+          v-model="refreshing"
+          :disabled="refreshDisabled"
+          @refresh="onRefresh"
+        >
           <sp-list
             v-model="loading"
             :finished="finished"
@@ -253,6 +264,7 @@ export default {
   data() {
     return {
       specType: 'HDZT_ZTTYPE_XSQG',
+      // specType: 'HDZT_ZTTYPE_QWBT',
       advice: [
         {
           lowmoney: '限时直降499元',
@@ -285,12 +297,24 @@ export default {
       refreshing: false,
       allText: '精选',
       introWords: ['人工选品', '限时限量', '低价高质'],
+      hasCity: false,
     }
   },
 }
 </script>
 
 <style lang="less" scoped>
+html::-webkit-scrollbar {
+  display: none;
+}
+.multiRowOverflowDot {
+  //width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; //行数
+  -webkit-box-orient: vertical;
+}
 .no-data {
   text-align: center;
   padding-top: 10px;
@@ -353,7 +377,7 @@ export default {
         align-items: center;
         .low-money {
           font-size: 24px;
-          font-weight: 500;
+          font-weight: bold;
           color: #fefffe;
           margin-left: 8px;
           justify-content: center;
@@ -384,7 +408,7 @@ export default {
         align-items: center;
         .end-time {
           font-size: 24px;
-          font-weight: 500;
+          font-weight: bold;
           color: #fefffe;
           margin-right: 12px;
           font-family: PingFangSC-Medium, PingFang SC;
@@ -392,10 +416,11 @@ export default {
         .down-time {
           .block {
             padding: 6px;
-            width: 36px;
+            min-width: 36px;
+            white-space: normal;
             height: 36px;
             font-size: 24px;
-            font-weight: 500;
+            font-weight: bold;
             color: #ec5330;
             line-height: 24px;
             background: #ffffff;
@@ -403,37 +428,17 @@ export default {
           }
           .colon {
             font-size: 24px;
-            font-weight: 500;
+            font-weight: bold;
             color: #fefffe;
-            // // line-height: 24px;
-            // margin-right: 12px;
           }
-          // .sp-count-down {
-          //   .block {
-          //     padding: 6px;
-          //     width: 36px;
-          //     height: 36px;
-          //     font-size: 24px;
-          //     font-weight: 500;
-          //     color: #ec5330;
-          //     line-height: 24px;
-          //     background: #ffffff;
-          //     border-radius: 4px;
-          //   }
-          //   .colon {
-          //     font-size: 24px;
-          //     font-weight: 500;
-          //     color: #fefffe;
-          //     // // line-height: 24px;
-          //     // margin-right: 12px;
-          //   }
-          // }
         }
       }
     }
     .wrapper {
       display: flex;
-      overflow: auto;
+      justify-content: flex-start;
+      overflow-x: scroll;
+      overflow-y: hidden;
       &::-webkit-scrollbar {
         width: 0 !important;
       }
@@ -481,7 +486,7 @@ export default {
         .item-bt {
           .item-bt-tp {
             font-size: 26px;
-            font-weight: 500;
+            font-weight: bold;
             color: #222222;
             padding: 16px 22px 12px 16px;
           }
@@ -491,14 +496,14 @@ export default {
             align-items: center;
             span:nth-child(1) {
               font-size: 30px;
-              font-weight: 500;
+              font-weight: bold;
               color: #ec5330;
               line-height: 30px;
               padding: 0 0 0 16px;
             }
             span:nth-last-child(1) {
               font-size: 22px;
-              font-weight: 500;
+              font-weight: bold;
               color: #ec5330;
               line-height: 22px;
             }
@@ -576,14 +581,14 @@ export default {
         justify-content: flex-start;
         li {
           font-size: 32px;
-          font-weight: 500;
+          font-weight: bold;
           color: #555555;
           line-height: 32px;
           margin-left: 48px;
         }
         li.active {
           font-size: 32px;
-          font-weight: 500;
+          font-weight: bold;
           color: #ec5330;
           line-height: 32px;
         }
@@ -643,16 +648,17 @@ export default {
         .rc-top {
           font-size: 32px;
           height: 84px;
-          font-weight: 500;
+          font-weight: bold;
           color: #222222;
           line-height: 0.42rem;
+          .multiRowOverflowDot();
           span {
             margin-right: 8px;
             background: #ec5330;
             border-radius: 4px;
             padding: 6px 8px;
             font-size: 20px;
-            font-weight: 500;
+            font-weight: bold;
             color: #ffffff;
             line-height: 20px;
           }
@@ -661,7 +667,7 @@ export default {
           display: flex;
           // justify-content: space-between;
           align-content: flex-start;
-          margin-top: 12px;
+          //margin-top: 12px;
           .reduce-price {
             padding: 4px 8px;
             border-radius: 4px;
@@ -693,7 +699,7 @@ export default {
               font-weight: 400;
               span {
                 font-size: 40px;
-                font-weight: 500;
+                font-weight: bold;
                 display: inline-block;
                 transform: translateY(-3px);
                 margin: 0 4px;
@@ -724,7 +730,7 @@ export default {
               padding: 12px 0 10px 0;
               text-align: center;
               font-size: 30px;
-              font-weight: 500;
+              font-weight: bold;
               color: #ffffff;
               line-height: 30px;
             }
@@ -741,7 +747,7 @@ export default {
               .pro-per {
                 // position: absolute;
                 font-size: 16px;
-                font-weight: 500;
+                font-weight: bold;
                 color: #fffccd;
                 font-family: PingFangSC-Medium, PingFang SC;
                 line-height: 16px;
