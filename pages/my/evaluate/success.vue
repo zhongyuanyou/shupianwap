@@ -4,7 +4,7 @@
       <template #right><div @click="back">完成</div></template>
     </Header>
     <div class="content-wrap">
-      <sp-image round class="img" fit="cover" :src="avatar" />
+      <sp-image round class="img" fit="cover" :src="$ossImgSetV2(avatar)" />
       <div class="tile">感谢您的评价~</div>
       <div class="desc">
         非常感谢您的评价，为我们服务质量的提升提供了宝贵意见！
@@ -17,9 +17,6 @@
 import { Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 
-// mock data
-const avatar = 'https://dchipscommon.dgg188.cn/img/bg.1e53fbc6.png'
-
 export default {
   name: 'EvaluateSucccess',
   components: {
@@ -28,7 +25,7 @@ export default {
   },
   data() {
     return {
-      avatar,
+      avatar: 'fap9pjecawg0000.png',
     }
   },
   methods: {
