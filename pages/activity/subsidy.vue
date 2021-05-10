@@ -131,9 +131,11 @@
                   </div>
                   <div class="right-content">
                     <div class="rc-top">
-                      <span class="span1">好品</span>
-                      <span class="span2">千万补贴</span>
-                      <span class="span3"> {{ item.skuName }}</span>
+                      <div style="display: inline-block">
+                        <span class="span1">好品</span>
+                        <span class="span2">千万补贴</span>
+                      </div>
+                      <span class="span3">{{ item.skuName }}</span>
                     </div>
                     <div v-show="item.tags" class="rc-middle">
                       <div
@@ -251,7 +253,6 @@ html::-webkit-scrollbar {
   overflow: hidden;
 }
 .multiRowOverflowDot {
-  //width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -631,10 +632,12 @@ html::-webkit-scrollbar {
               color: #ffffff;
               line-height: 32px;
               padding: 1px 8px 0 16px;
+              white-space: nowrap;
             }
-            :nth-last-child(1) {
+            div:nth-last-child(1) {
               height: 32px;
               width: 32px;
+              margin-right: 16px;
               background: url('https://cdn.shupian.cn/sp-pt/wap/g76q42107k00000.png');
               background-size: 100% 100%;
               -moz-background-size: 100% 100%;
