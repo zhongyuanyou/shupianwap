@@ -3,7 +3,7 @@
     <sp-sticky
       :style="safeTopStyle"
       style="
-        background: url('https://cdn.shupian.cn/sp-pt/wap/60qzygy1qt80000.png');
+        background: url('https://cdn.shupian.cn/sp-pt/wap/images/8sq7h20ttpo0000.png');
       "
       offset-top="0"
     />
@@ -437,7 +437,8 @@ html::-webkit-scrollbar {
     .wrapper {
       display: flex;
       justify-content: flex-start;
-      overflow: auto;
+      overflow-x: scroll;
+      overflow-y: hidden;
       &::-webkit-scrollbar {
         width: 0 !important;
       }
