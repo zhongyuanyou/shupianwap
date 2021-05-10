@@ -13,6 +13,12 @@
         </div>
       </template>
     </Header>
+    <sp-center-popup
+      v-model="showPop"
+      buttonType="confirm"
+      :field="Field"
+      @confirm="confirm"
+    />
     <!--E 头部-->
     <div class="middle_container">
       <!--S 规划师-->
@@ -39,15 +45,16 @@
 </template>
 
 <script>
+import { CenterPopup } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import EvaluateStar from '@/components/evaluate/EvaluateStar'
-
 export default {
   layout: 'keepAlive',
   name: 'Evaluate',
   components: {
     Header,
     EvaluateStar,
+    [CenterPopup.name]: CenterPopup,
   },
   // async asyncData({ store, $axios }) {
   //   try {
@@ -70,19 +77,56 @@ export default {
   //   } catch (err) {}
   // },
   data() {
-    return {}
+    return {
+      showPop: false,
+
+      Field: {
+        type: 'functional',
+        title: '温馨提示',
+        description: '差一点就评价完了，是否确认退出？',
+        confirmButtonText: '继续评价',
+        cancelButtonText: '操作',
+      },
+    }
   },
   computed: {},
   mounted() {},
   methods: {
     back() {
       console.log('back')
+      this.showPop = true
+    },
+    confirm() {
+      this.$back()
     },
   },
 }
 </script>
 
 <style lang="less" scoped>
+::v-deep .sp-center-popup {
+  width: 540px;
+}
+::v-deep .sp-center-popup__containerConfirm {
+  width: 540px;
+}
+::v-deep .sp-center-popup__description {
+  font-size: 28px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #222222;
+  line-height: 40px;
+  padding: 20px 40px 37px 40px !important;
+  margin-top: 0 !important;
+}
+::v-deep .sp-center-popup__title {
+  height: 48px;
+  font-size: 36px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: blod;
+  color: #1a1a1a;
+  line-height: 48px;
+}
 .evaluate_container {
   position: relative;
   height: 100%;
