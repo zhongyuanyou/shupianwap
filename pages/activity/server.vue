@@ -4,7 +4,7 @@
     <div>
       <header-slot>
         <sp-sticky>
-          <div :class="{ positionY: positionY }" class="search">
+          <div class="search">
             <div class="left-back" @click="uPGoBack">
               <my-icon
                 name="nav_ic_back"
@@ -471,7 +471,7 @@ export default {
   background-size: 100% auto;
   background-position-y: 118px;
   ::v-deep.fixed-head {
-    height: 1.1rem !important;
+    height: 0.92rem !important;
     .my-head {
       max-width: 812px;
       margin: 0 auto;

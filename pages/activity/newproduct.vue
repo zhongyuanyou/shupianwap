@@ -622,12 +622,14 @@ export default {
     margin-top: -20px;
     z-index: 9;
     .tabs-box {
+      width: 100%;
+      height: 124px;
       display: flex;
       justify-content: flex-start;
-      height: 124px;
       align-items: center;
       background: #ffffff;
       padding: 0 20px;
+      box-sizing: border-box;
       .tabs-box-left {
         padding: 0 20px;
         max-width: 200px;
