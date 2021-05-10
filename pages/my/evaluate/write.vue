@@ -14,12 +14,14 @@
       <div class="name">{{ name }}</div>
       <div class="desc">已对规划师匿名</div>
     </div>
+    <evaluate-star />
   </div>
 </template>
 
 <script>
 import { Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
+import EvaluateStar from '@/components/evaluate/EvaluateStar'
 
 // mock data
 const avatar = 'https://dchipscommon.dgg188.cn/img/bg.1e53fbc6.png'
@@ -30,6 +32,7 @@ export default {
   components: {
     Header,
     [Image.name]: Image,
+    EvaluateStar,
   },
   data() {
     return {

@@ -1,19 +1,59 @@
 <template>
   <div class="evaluateStar_container">
     <!--S 评分-->
-    <div class="server_evaluate">
-      <div class="evaluate_first">
-        <div class="ser_title">服务评分</div>
-        <sp-rate
-          v-model="starValue"
-          :size="28"
-          color="#FFB400"
-          void-icon="star"
-          void-color="#F0F0F0"
-          @change="onChange"
-        />
-        <div v-if="showEvaluate" class="star_span">超赞</div>
+    <div class="score">
+      <div class="score-total">
+        <div class="tile">服务评分</div>
+        <template v-for="(item, index) in totalStars">
+          <my-icon
+            :key="index"
+            class="score-total-icon"
+            name="dafen_mian"
+            size="0.56rem"
+            :color="item.flag ? '#FFB400' : '#F0F0F0'"
+            @click.native="clkItemStar(index, 'totalStarLevel')"
+          ></my-icon>
+        </template>
+        <div class="desc">超赞</div>
       </div>
+      <div class="score-item">
+        <div class="tile">专业能力</div>
+        <template v-for="(item, index) in specialtyStars">
+          <img
+            :key="index"
+            :src="item.src"
+            class="score-item-img"
+            @click="clkItemStar(index, 'specialtyStarLevel')"
+          />
+        </template>
+        <div class="desc">超赞</div>
+      </div>
+      <div class="score-item">
+        <div class="tile">回复时效</div>
+        <template v-for="(item, index) in replayStars">
+          <img
+            :key="index"
+            :src="item.src"
+            class="score-item-img"
+            @click="clkItemStar(index, 'replayStarLevel')"
+          />
+        </template>
+        <div class="desc">超赞</div>
+      </div>
+      <div class="score-item">
+        <div class="tile">时效效率</div>
+        <template v-for="(item, index) in efficiencyStars">
+          <img
+            :key="index"
+            :src="item.src"
+            class="score-item-img"
+            @click="clkItemStar(index, 'efficiencyStarLevel')"
+          />
+        </template>
+        <div class="desc">超赞</div>
+      </div>
+    </div>
+    <div class="server_evaluate">
       <div v-if="showEvaluate" class="evaluate_items">
         <div class="evaluate_item">
           <div class="evaluate_item_title">服务评价</div>
@@ -25,7 +65,7 @@
           <div class="star_span">超赞</div>
         </div>
       </div>
-      <div v-if="showEvaluate" class="evaluate_label">
+      <div v-if="tipsFlag" class="evaluate_label">
         <ul class="items">
           <li class="item" :class="'choose_active'">标签表情</li>
           <li class="item">标签表情</li>
@@ -34,7 +74,7 @@
           <li class="item">标签</li>
         </ul>
       </div>
-      <div v-if="showEvaluate" class="input_box">
+      <div v-if="remarkFlag" class="input_box">
         <sp-field
           v-model="message"
           autosize
@@ -44,7 +84,7 @@
           show-word-limit
         />
       </div>
-      <div v-if="showEvaluate" class="upload">
+      <div v-if="uploadImgFlag" class="upload">
         <sp-uploader v-model="fileList" multiple upload-icon="plus" />
       </div>
     </div>
@@ -59,13 +99,12 @@ import {
   Icon,
   TopNavBar,
   Toast,
-  Rate,
   Field,
   Uploader,
 } from '@chipspc/vant-dgg'
+import utils from '@/utils/changeBusinessData'
 
 export default {
-  layout: 'keepAlive',
   name: 'EvaluateStar',
   components: {
     [Tab.name]: Tab,
@@ -73,28 +112,60 @@ export default {
     [Icon.name]: Icon,
     [TopNavBar.name]: TopNavBar,
     [Toast.name]: Toast,
-    [Rate.name]: Rate,
     [Field.name]: Field,
     [Uploader.name]: Uploader,
   },
   props: {
-    // images: {
-    //   type: Array,
-    //   default: () => [],
-    // },
-    isShowRemarkArea: {
+    remark: {
+      // 是否评论
+      type: Boolean,
+      default: () => {
+        return true
+      },
+    },
+    tips: {
+      // 是否标签
+      type: Boolean,
+      default: () => {
+        return true
+      },
+    },
+    upload: {
+      // 是否上传图片
       type: Boolean,
       default: () => {
         return false
       },
     },
-    // keywords: {
-    //   type: String,
-    //   default: '',
-    // },
   },
   data() {
     return {
+      remarkFlag: this.remark,
+      tipsFlag: this.tips,
+      uploadImgFlag: this.upload,
+      imgs: ['vbad', 'bad', 'normal', 'happy', 'vhappy'],
+      imglights: [
+        'vbadlight',
+        'badlight',
+        'normallight',
+        'happylight',
+        'vhappylight',
+      ],
+      totalStarLevel: 0, // 总得分
+      specialtyStarLevel: 0, // 专业分
+      replayStarLevel: 0, // 回答分
+      efficiencyStarLevel: 0, // 效率分
+      totalStars: [
+        // 总得分
+        { flag: false },
+        { flag: false },
+        { flag: false },
+        { flag: false },
+        { flag: false },
+      ],
+      specialtyStars: [],
+      replayStars: [],
+      efficiencyStars: [],
       starValue: 0,
       message: '测试测试',
       fileList: [
@@ -129,24 +200,81 @@ export default {
       rateData1: [],
     }
   },
-  computed: {},
-  mounted() {
-    this.rateData1 = JSON.parse(JSON.stringify(this.rateData))
-    // 这里去请求评价接口数据，如果没有数据则说明是默认页面，未做任何操作，进行初始化
+  watch: {
+    totalStarLevel(val) {
+      console.log(`output totalStarLevel: ${val}`)
+      if (val === 5) {
+        this.specialtyStarLevel = 5
+        this.replayStarLevel = 5
+        this.efficiencyStarLevel = 5
+      }
+      this.setTotalStars()
+    },
+    specialtyStarLevel(val) {
+      console.log(`output specialtyStarLevel: ${val}`)
+      this.setItemStar('specialtyStars', 'specialtyStarLevel')
+    },
+    replayStarLevel(val) {
+      console.log(`output replayStarLevel: ${val}`)
+      this.setItemStar('replayStars', 'replayStarLevel')
+    },
+    efficiencyStarLevel(val) {
+      console.log(`output efficiencyStarLevel: ${val}`)
+      this.setItemStar('efficiencyStars', 'efficiencyStarLevel')
+    },
+  },
+  created() {
     this.init()
+
+    console.log(JSON.stringify(this.specialtyStars))
   },
   methods: {
     init() {
-      this.showEvaluate = false
+      const _this = this
+      this.imgs.forEach((item) => {
+        this.specialtyStars.push({
+          src: _this.$ossImgSetV2(utils.getEvaluateLevelImg(item)),
+        })
+        this.replayStars.push({
+          src: _this.$ossImgSetV2(utils.getEvaluateLevelImg(item)),
+        })
+        this.efficiencyStars.push({
+          src: _this.$ossImgSetV2(utils.getEvaluateLevelImg(item)),
+        })
+      })
     },
-    back() {
-      console.log('back')
+    setTotalStars() {
+      const _this = this
+      this.totalStars.forEach((item, index) => {
+        if (_this.totalStarLevel > index) {
+          item.flag = true
+        } else {
+          item.flag = false
+        }
+      })
     },
-    onChange() {
-      const value = this.starValue
-      if (value) {
-        console.log('back')
-        this.showEvaluate = true
+    setItemStar(starFlag, levelFlag) {
+      const _this = this
+      this[starFlag].forEach((item, index) => {
+        if (_this[levelFlag] > index) {
+          item.src = _this.$ossImgSetV2(
+            utils.getEvaluateLevelImg(_this.imglights[_this[levelFlag] - 1])
+          )
+        } else {
+          item.src = _this.$ossImgSetV2(
+            utils.getEvaluateLevelImg(_this.imgs[index])
+          )
+        }
+      })
+    },
+    clkItemStar(i, val) {
+      const tempI = i + 1
+      if (this[val] === 0 && tempI === 1) {
+        this[val] = 1
+      } else if (this[val] === tempI) {
+        this[val]--
+      } else {
+        this[val] = tempI
       }
     },
     getImageIndex(index) {
@@ -158,25 +286,62 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.not_evaluate {
-  position: absolute;
-  bottom: 24px;
-  height: 88px;
-  background: #4974f5;
-  border-radius: 8px;
-  width: 100%;
-  font-size: 32px;
-  font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 700;
-  color: #ffffff;
-  text-align: center;
-  line-height: 88px;
-  margin-top: 63px;
-  opacity: 0.4;
-}
 .evaluateStar_container {
-  position: relative;
-  // height: 100%;
+  @font-regular: PingFangSC-Regular, PingFang SC;
+  @font-medium: PingFangSC-Medium, PingFang SC;
+
+  .mixin-score-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+  .mixin-score-tile {
+    font: 400 28px @font-regular;
+    color: #222222;
+    margin-right: 62px;
+  }
+  .mixin-score-desc {
+    font: 400 24px @font-regular;
+    color: #555555;
+    position: absolute;
+    right: 0;
+  }
+
+  .score {
+    padding: 0 94px 0 40px;
+    &-total {
+      .mixin-score-item();
+      width: 100%;
+      .tile {
+        font: bold 32px @font-medium;
+        color: #222222;
+        margin-right: 40px;
+      }
+      .desc {
+        .mixin-score-desc();
+      }
+      &-icon {
+        margin-right: 20px;
+      }
+    }
+    &-item {
+      .mixin-score-item();
+      width: 100%;
+      .tile {
+        .mixin-score-tile();
+      }
+      .desc {
+        .mixin-score-desc();
+      }
+      &-img {
+        height: 44px;
+        width: 44px;
+        margin-right: 32px;
+      }
+    }
+  }
+
   .server_evaluate {
     // padding: 0px 40px 0 40px;
     padding: 12px 40px 32px 40px;
