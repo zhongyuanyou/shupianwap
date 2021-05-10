@@ -85,17 +85,14 @@
           <div class="item-bt">
             <div class="item-bt-tp">{{ item.skuName }}</div>
             <div class="item-bt-md">
-              <span>{{ item.specialPrice }}</span>
-              <span>元</span>
+              <template v-if="parsePrice(item.specialPrice) !== '面议'">
+                <span>{{
+                  item.specialUnit ? item.specialNewPrice : item.specialPrice
+                }}</span>
+                <span>{{ item.specialUnit || '元' }}</span>
+              </template>
+              <span v-else>面议</span>
             </div>
-            <!-- <div class="item-bt-bt">
-              <div class="avtars">
-                <div class="avtar1"></div>
-                <div class="avtar2"></div>
-              </div>
-
-              <span class="counsel">{{ item.time }}秒之前咨询</span>
-            </div> -->
           </div>
         </div>
       </div>
@@ -190,17 +187,17 @@
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
                         <div class="rc-bottom-lf-my">
-                          秒杀价<span>{{ item.specialPrice }}</span
-                          >元
-                          <!-- <div>秒杀价</div>
-                        <div>{{ item.specialPrice }}</div>
-                        <div>元</div> -->
+                          秒杀价<span>{{
+                            item.specialUnit
+                              ? item.specialNewPrice
+                              : item.specialPrice
+                          }}</span
+                          >{{ item.specialUnit || '元' }}
                         </div>
-                        <!-- <div class="bf-my">近{{ item.dijia }}天历史低价</div> -->
                       </div>
                       <div class="rc-bottom-rt">
                         <div>去抢购</div>
-                        <div class="process-per">
+                        <!--<div class="process-per">
                           <sp-progress
                             color="#FFF166"
                             :percentage="
@@ -218,7 +215,7 @@
                               )
                             }}%
                           </div>
-                        </div>
+                        </div>-->
                       </div>
                     </div>
                   </div>
