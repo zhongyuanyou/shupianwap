@@ -108,20 +108,31 @@
                       <div class="rc-bottom-lf">
                         <div
                           class="rc-bottom-lf-my"
-                          v-if="parsePrice(item.skuPrice) !== '面议'"
+                          v-if="parsePrice(item.specialPrice) !== '面议'"
                         >
-                          <div>{{ item.specialPrice }}</div>
-                          <div>元</div>
+                          <div>
+                            <span v-if="item.specialNewPrice">{{
+                              item.specialNewPrice
+                            }}</span
+                            ><span v-else>{{ item.specialPrice }}</span>
+                          </div>
+                          <div><span v-if="item.specialUnit">万</span> 元</div>
                         </div>
-                        <div class="rc-bottom-lf-my" v-else>
+                        <div v-else class="rc-bottom-lf-my">
                           <div>面议</div>
                         </div>
                         <div
-                          v-if="parsePrice(item.specialPrice) !== '面议'"
+                          v-if="parsePrice(item.skuPrice) !== '面议'"
                           class="bf-my"
                         >
-                          原价{{ item.skuPrice }}元
+                          原价
+                          <span v-if="item.skuNewPrice">{{
+                            item.skuNewPrice
+                          }}</span
+                          ><span v-else>{{ item.skuPrice }}</span>
+                          <span v-if="item.specialUnit">万</span>元
                         </div>
+                        <div v-else class="bf-my">面议</div>
                       </div>
                       <div class="rc-bottom-rt">
                         <div class="imm_consult">查看详情</div>
