@@ -1,6 +1,5 @@
 <template>
   <div class="evaluateStar_container">
-    <!--S 评分-->
     <div class="score">
       <div class="score-total">
         <div class="tile">服务评分</div>
@@ -16,79 +15,78 @@
         </template>
         <div class="desc">超赞</div>
       </div>
-      <div class="score-item">
-        <div class="tile">专业能力</div>
-        <template v-for="(item, index) in specialtyStars">
-          <img
-            :key="index"
-            :src="item.src"
-            class="score-item-img"
-            @click="clkItemStar(index, 'specialtyStarLevel')"
-          />
-        </template>
-        <div class="desc">超赞</div>
-      </div>
-      <div class="score-item">
-        <div class="tile">回复时效</div>
-        <template v-for="(item, index) in replayStars">
-          <img
-            :key="index"
-            :src="item.src"
-            class="score-item-img"
-            @click="clkItemStar(index, 'replayStarLevel')"
-          />
-        </template>
-        <div class="desc">超赞</div>
-      </div>
-      <div class="score-item">
-        <div class="tile">时效效率</div>
-        <template v-for="(item, index) in efficiencyStars">
-          <img
-            :key="index"
-            :src="item.src"
-            class="score-item-img"
-            @click="clkItemStar(index, 'efficiencyStarLevel')"
-          />
-        </template>
-        <div class="desc">超赞</div>
-      </div>
-    </div>
-    <div class="server_evaluate">
-      <div v-if="showEvaluate" class="evaluate_items">
-        <div class="evaluate_item">
-          <div class="evaluate_item_title">服务评价</div>
-          <ul class="evaluate_ul_items">
-            <li v-for="(item, index) in rateData" :key="index">
-              <img :src="item.imgAdress" alt="" @click="getImageIndex(index)" />
-            </li>
-          </ul>
-          <div class="star_span">超赞</div>
+      <template v-if="subScoreFlag">
+        <div class="score-item">
+          <div class="tile">专业能力</div>
+          <template v-for="(item, index) in specialtyStars">
+            <img
+              :key="index"
+              :src="item.src"
+              class="score-item-img"
+              @click="clkItemStar(index, 'specialtyStarLevel')"
+            />
+          </template>
+          <div class="desc">超赞</div>
         </div>
-      </div>
-      <div v-if="tipsFlag" class="evaluate_label">
-        <ul class="items">
-          <li class="item" :class="'choose_active'">标签表情</li>
-          <li class="item">标签表情</li>
-          <li class="item">标签表情</li>
-          <li class="item">标签表情</li>
-          <li class="item">标签</li>
-        </ul>
-      </div>
-      <div v-if="remarkFlag" class="input_box">
-        <sp-field
-          v-model="message"
-          autosize
-          type="textarea"
-          maxlength="100"
-          placeholder="请对规划师的服务进行评价"
-          show-word-limit
-        />
-      </div>
-      <div v-if="uploadImgFlag" class="upload">
-        <sp-uploader v-model="fileList" multiple upload-icon="plus" />
+        <div class="score-item">
+          <div class="tile">回复时效</div>
+          <template v-for="(item, index) in replayStars">
+            <img
+              :key="index"
+              :src="item.src"
+              class="score-item-img"
+              @click="clkItemStar(index, 'replayStarLevel')"
+            />
+          </template>
+          <div class="desc">超赞</div>
+        </div>
+        <div class="score-item bottom-del">
+          <div class="tile">时效效率</div>
+          <template v-for="(item, index) in efficiencyStars">
+            <img
+              :key="index"
+              :src="item.src"
+              class="score-item-img"
+              @click="clkItemStar(index, 'efficiencyStarLevel')"
+            />
+          </template>
+          <div class="desc">超赞</div>
+        </div>
+      </template>
+    </div>
+    <div v-if="tipsFlag" class="tips">
+      <div v-for="(item, index) in tips" :key="index" class="item">
+        {{ item }}
       </div>
     </div>
-    <!--E 评分-->
+
+    <div v-if="remarkFlag" class="remark">
+      <sp-field
+        v-model="message"
+        autosize
+        type="textarea"
+        maxlength="100"
+        placeholder="请对规划师的服务进行评价~"
+        show-word-limit
+      />
+    </div>
+    <div v-if="uploadImgFlag" class="upload">
+      <sp-uploader
+        v-model="fileList"
+        :max-count="3"
+        multiple
+        upload-icon="plus"
+      ></sp-uploader>
+    </div>
+    <div class="placeholder"></div>
+    <sp-bottombar safe-area-inset-bottom>
+      <sp-bottombar-button
+        type="primary"
+        color="#4974F5"
+        text="发布评价"
+        @click="submit"
+      />
+    </sp-bottombar>
   </div>
 </template>
 
@@ -101,8 +99,14 @@ import {
   Toast,
   Field,
   Uploader,
+  Button,
+  Bottombar,
+  BottombarButton,
 } from '@chipspc/vant-dgg'
 import utils from '@/utils/changeBusinessData'
+
+// mock data
+const mockTipsData = ['标签表情', '标签表情', '标签表情']
 
 export default {
   name: 'EvaluateStar',
@@ -114,6 +118,9 @@ export default {
     [Toast.name]: Toast,
     [Field.name]: Field,
     [Uploader.name]: Uploader,
+    [Button.name]: Button,
+    [Bottombar.name]: Bottombar,
+    [BottombarButton.name]: BottombarButton,
   },
   props: {
     remark: {
@@ -123,7 +130,7 @@ export default {
         return true
       },
     },
-    tips: {
+    tip: {
       // 是否标签
       type: Boolean,
       default: () => {
@@ -134,15 +141,16 @@ export default {
       // 是否上传图片
       type: Boolean,
       default: () => {
-        return false
+        return true
       },
     },
   },
   data() {
     return {
+      tipsFlag: this.tip,
       remarkFlag: this.remark,
-      tipsFlag: this.tips,
       uploadImgFlag: this.upload,
+      subScoreFlag: false,
       imgs: ['vbad', 'bad', 'normal', 'happy', 'vhappy'],
       imglights: [
         'vbadlight',
@@ -166,43 +174,18 @@ export default {
       specialtyStars: [],
       replayStars: [],
       efficiencyStars: [],
+      tips: mockTipsData,
       starValue: 0,
-      message: '测试测试',
-      fileList: [
-        { url: 'https://img.yzcdn.cn/vant/leaf.jpg' },
-        // Uploader 根据文件后缀来判断是否为图片文件
-        // 如果图片 URL 中不包含类型信息，可以添加 isImage 标记来声明
-        { url: 'https://cloud-image', isImage: true },
-      ],
-      showEvaluate: false,
-      rateData: [
-        {
-          imgAdress:
-            'https://cdn.shupian.cn/sp-pt/wap/images/uihcfufviog000.png',
-        },
-        {
-          imgAdress:
-            'https://cdn.shupian.cn/sp-pt/wap/images/fqurczrer3c0000.png',
-        },
-        {
-          imgAdress:
-            'https://cdn.shupian.cn/sp-pt/wap/images/8vml2tl3zh00000.png',
-        },
-        {
-          imgAdress:
-            'https://cdn.shupian.cn/sp-pt/wap/images/u75yce9hmuo000.png',
-        },
-        {
-          imgAdress:
-            'https://cdn.shupian.cn/sp-pt/wap/images/4t6hb5mowc80000.png',
-        },
-      ],
-      rateData1: [],
+      message: '',
+      fileList: [{ url: 'https://img.yzcdn.cn/vant/leaf.jpg' }],
     }
   },
   watch: {
     totalStarLevel(val) {
       console.log(`output totalStarLevel: ${val}`)
+      if (val !== 0) {
+        this.subScoreFlag = true
+      }
       if (val === 5) {
         this.specialtyStarLevel = 5
         this.replayStarLevel = 5
@@ -225,7 +208,6 @@ export default {
   },
   created() {
     this.init()
-
     console.log(JSON.stringify(this.specialtyStars))
   },
   methods: {
@@ -279,7 +261,9 @@ export default {
     },
     getImageIndex(index) {
       console.log('getImageIndex', index)
-      // this.rateData1 =  this.
+    },
+    submit() {
+      console.log('submit')
     },
   },
 }
@@ -290,11 +274,14 @@ export default {
   @font-regular: PingFangSC-Regular, PingFang SC;
   @font-medium: PingFangSC-Medium, PingFang SC;
 
-  .mixin-score-item {
-    position: relative;
+  .mixin-flex {
     display: flex;
-    align-items: center;
+  }
+  .mixin-score-item {
+    .mixin-flex();
+    position: relative;
     margin-bottom: 32px;
+    align-items: center;
   }
   .mixin-score-tile {
     font: 400 28px @font-regular;
@@ -306,6 +293,13 @@ export default {
     color: #555555;
     position: absolute;
     right: 0;
+  }
+
+  .mixin-fontellipsis {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
   }
 
   .score {
@@ -339,175 +333,107 @@ export default {
         width: 44px;
         margin-right: 32px;
       }
+      &.bottom-del {
+        margin-bottom: 0;
+      }
     }
   }
 
-  .server_evaluate {
-    // padding: 0px 40px 0 40px;
-    padding: 12px 40px 32px 40px;
-    .evaluate_first {
-      display: flex;
-      align-items: center;
-      padding-bottom: 16px;
-      .ser_title {
-        font-size: 32px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 700;
-        color: #222222;
-        line-height: 32px;
-        margin-right: 40px;
-      }
-      ::v-deep .sp-rate__item {
-        margin-right: 20px;
-        padding: 0;
-      }
-      .star_span {
-        font-size: 24px;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #555555;
-        line-height: 24px;
-        margin-left: 20px;
+  .tips {
+    .mixin-flex();
+    flex-wrap: wrap;
+    padding: 0 94px 0 40px;
+    margin-top: 64px;
+    .item {
+      .mixin-fontellipsis();
+      font: 400 24px @font-regular;
+      color: #222222;
+      box-sizing: border-box;
+      padding: 16px;
+      background: #f8f8f8;
+      border-radius: 4px;
+      margin: 0 16px 16px 0;
+      min-width: 128px;
+      max-width: 176px;
+      &.z-active {
+        color: #4974f5;
+        background: rgba(73, 116, 245, 0.1);
       }
     }
-    .evaluate_label {
-      padding: 48px 0 48px 0;
-      border-bottom: 1px solid #f4f4f4;
-      .items {
-        display: flex;
-        flex-wrap: wrap;
-        .item {
-          background: #f8f8f8;
-          border-radius: 4px;
-          font-size: 24px;
-          font-family: PingFangSC-Regular, PingFang SC;
-          font-weight: 400;
-          color: #222222;
-          line-height: 24px;
-          padding: 16px;
-          margin-right: 16px;
-          margin-bottom: 16px;
-        }
-        .choose_active {
-          color: #4974f5;
-          background-color: #ecf1fe;
-        }
-      }
-    }
-    .input_box {
-      padding-top: 40px;
-      padding-bottom: 40px;
-      border-bottom: 1px solid #f4f4f4;
-      ::v-deep .sp-field {
-        padding: 0;
-      }
+  }
 
-      ::v-deep .sp-field__body {
+  .remark {
+    margin-top: 105px;
+    padding: 0 40px;
+    ::v-deep.sp-field {
+      padding: 0;
+      font: 400 28px/40px @font-regular;
+      color: #222222;
+      .sp-field__body {
         textarea {
-          width: 100%;
-          height: 200px !important;
-          border: none;
-          resize: none;
-          cursor: pointer;
-          font-size: 28px;
-          font-family: PingFangSC-Regular, PingFang SC;
-          font-weight: 400;
-          color: #cccccc;
-          line-height: 40px;
+          min-height: 200px;
         }
       }
-      ::v-deep .sp-field__word-limit {
-        margin-top: 24px;
-        height: 24px;
-        font-size: 24px;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #bbbbbb;
-        line-height: 24px;
-      }
     }
-    .upload {
-      margin-top: 40px;
-      ::v-deep .sp-uploader__preview {
-        margin: 0 0 16px 0;
+  }
+
+  .upload {
+    margin-top: 65px;
+    padding: 0 40px;
+    ::v-deep.sp-uploader__wrapper {
+      .sp-uploader__preview {
+        margin: 0 32px 0 0;
+        .sp-uploader__preview-image {
+          width: 143px;
+          height: 143px;
+          background: #d8d8d8;
+          border-radius: 8px;
+        }
       }
-      ::v-deep .sp-uploader__preview-image {
-        margin-right: 32px;
-        width: 143px;
-        height: 143px;
-        background: #d8d8d8;
-        border-radius: 8px;
-      }
-      ::v-deep .sp-uploader__preview-delete {
-        position: absolute;
-        top: -16px;
-        right: 16px;
-        width: 32px;
-        height: 32px;
-        background-color: rgba(0, 0, 0, 0.7);
-        border-radius: 50%;
-      }
-      ::v-deep .sp-uploader__preview-delete-icon {
-        top: 0;
-        right: 0;
-      }
-      ::v-deep .sp-uploader__upload {
+      .sp-uploader__upload {
         width: 143px;
         height: 143px;
         background: #ffffff;
         border-radius: 8px;
         border: 1px solid #cdcdcd;
         margin: 0;
-      }
-      ::v-deep .sp-uploader__input {
-        width: 143px;
-        height: 143px;
-        background: #ffffff;
-        border-radius: 8px;
-        border: 1px solid #cdcdcd;
-        margin: 0 0 16px 0;
-      }
-    }
-  }
-  .evaluate_items {
-    .evaluate_item {
-      display: flex;
-      align-items: center;
-      padding: 16px 0;
-      .evaluate_item_title {
-        height: 28px;
-        font-size: 28px;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #222222;
-        line-height: 28px;
-        margin-right: 62px;
-      }
-      .evaluate_ul_items {
-        display: flex;
-        li {
-          width: 44px;
-          height: 44px;
-          margin-right: 32px;
-          img {
-            width: 100%;
-            height: 100%;
-            display: block;
-          }
+        .sp-icon-plus {
+          font: 40px;
+          color: #999999;
         }
       }
-      ::v-deep .sp-rate__item {
-        margin-right: 32px;
+      .sp-uploader__preview-delete {
+        width: 32px;
+        height: 32px;
+        top: -16px;
+        right: -16px;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 50%;
+        .sp-icon-cross {
+          top: -8px;
+          right: -8px;
+        }
       }
-      .star_span {
-        height: 24px;
-        font-size: 24px;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #555555;
-        line-height: 24px;
-        margin-left: 14px;
-      }
+    }
+    ::v-deep.sp-uploader__preview-delete-icon {
+      font-size: 48px;
+    }
+  }
+
+  .placeholder {
+    width: 100%;
+    height: 140px;
+  }
+
+  ::v-deep .sp-bottombar {
+    padding: 0 40px 24px;
+    height: 88px;
+    .sp-button {
+      font: bold 32px/45px @font-medium;
+      font-family: PingFang SC;
+      border-radius: 8px;
+      color: #ffffff;
+      width: 100%;
     }
   }
 }
