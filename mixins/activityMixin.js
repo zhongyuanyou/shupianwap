@@ -348,7 +348,10 @@ export default {
           params.labelId = this.currentTab.id
         }
 
-        if (this.currentTab.labelName !== '') {
+        if (
+          this.currentTab.labelName !== '' &&
+          this.currentTab.labelName !== '全部'
+        ) {
           params.labelName = this.currentTab.labelName
         }
         await this.productMethod(params)
