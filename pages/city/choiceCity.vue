@@ -353,6 +353,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .city-page {
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
   background-color: #f8f8f8;
   max-height: 100vh;
   overflow: hidden;

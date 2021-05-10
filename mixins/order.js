@@ -797,7 +797,7 @@ export default {
       if (arr2.length) {
         for (let j = 0, len = arr2.length; j < len; j++) {
           // 商品售价
-          if (arr2[j].skuPrice && !arr2[j].skuPrice.match('.')) {
+          if (arr2[j].skuPrice) {
             arr2[j].skuPrice = this.regFenToYuan(arr2[j].skuPrice)
           }
         }

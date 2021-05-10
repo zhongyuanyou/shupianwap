@@ -33,7 +33,9 @@
             <p class="title">合同编号：{{ item.contractNo }}</p>
           </div>
           <div class="cell">
-            <p class="title">合同金额：￥{{ item.contractMoney }}</p>
+            <p class="title">
+              合同金额：￥{{ regFenToYuan(item.contractMoney) }}
+            </p>
           </div>
           <div class="cell">
             <p class="title">
@@ -86,6 +88,35 @@ export default {
     this.getorder()
   },
   methods: {
+    regFenToYuan(fen) {
+      let num = Number(fen)
+      num = fen * 0.01
+      num += ''
+      const reg =
+        num.indexOf('.') > -1
+          ? /(\d{1,3})(?=(?:\d{3})+\.)/g
+          : /(\d{1,3})(?=(?:\d{3})+$)/g
+      num = num.replace(reg, '$1')
+      num = this.toDecimal2(num)
+      return num
+    },
+    toDecimal2(x) {
+      let f = parseFloat(x)
+      if (isNaN(f)) {
+        return false
+      }
+      f = Math.round(x * 100) / 100
+      let s = f.toString()
+      let rs = s.indexOf('.')
+      if (rs < 0) {
+        rs = s.length
+        s += '.'
+      }
+      while (s.length <= rs + 2) {
+        s += '0'
+      }
+      return s
+    },
     getorder() {
       orderApi
         .getDetailByOrderId(
@@ -116,6 +147,14 @@ export default {
           },
         })
       } else {
+        if (item.isAppendixContract === 1) {
+          for (let i = 0; i < this.list.length; i++) {
+            if (this.list[i].isAppendixContract === 0) {
+              item.contractFirstContacts = this.list[i].contractFirstContacts
+              item.contractFirstPhone = this.list[i].contractFirstPhone
+            }
+          }
+        }
         this.$router.push({
           path: '/contract/preview',
           query: {

@@ -12,9 +12,9 @@
       </template>
     </Head>
     <div class="tab">
-      <p :class="tabAct == 0 ? 'act' : ''" @click="tabFn(0)">
+      <!-- <p :class="tabAct == 0 ? 'act' : ''" @click="tabFn(0)">
         全部<i class="icon"></i>
-      </p>
+      </p> -->
       <p :class="tabAct == 1 ? 'act' : ''" @click="tabFn(1)">
         待签署<i class="icon"></i>
       </p>
@@ -40,7 +40,7 @@ export default {
   },
   data() {
     return {
-      tabAct: 0,
+      tabAct: 1,
       page: 1,
       status: '',
       list: [],
@@ -160,7 +160,7 @@ export default {
       font-weight: 400;
       color: #222222;
       text-align: center;
-      width: 33.3%;
+      width: 50%;
       position: relative;
       > .icon {
         width: 32px;
