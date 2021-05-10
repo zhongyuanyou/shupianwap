@@ -1,6 +1,6 @@
 <template>
   <div class="evaluateStar_container">
-    <div class="score">
+    <div v-if="scoreFlag" class="score">
       <div class="score-total">
         <div class="tile">服务评分</div>
         <template v-for="(item, index) in totalStars">
@@ -72,7 +72,7 @@
     </div>
     <div v-if="uploadImgFlag" class="upload">
       <sp-uploader
-        v-model="fileList"
+        v-model="uploader"
         :max-count="3"
         multiple
         upload-icon="plus"
@@ -123,8 +123,8 @@ export default {
     [BottombarButton.name]: BottombarButton,
   },
   props: {
-    remark: {
-      // 是否评论
+    score: {
+      // 是否显示评分
       type: Boolean,
       default: () => {
         return true
@@ -132,6 +132,13 @@ export default {
     },
     tip: {
       // 是否标签
+      type: Boolean,
+      default: () => {
+        return true
+      },
+    },
+    remark: {
+      // 是否评论
       type: Boolean,
       default: () => {
         return true
@@ -147,6 +154,7 @@ export default {
   },
   data() {
     return {
+      scoreFlag: this.score,
       tipsFlag: this.tip,
       remarkFlag: this.remark,
       uploadImgFlag: this.upload,
@@ -177,7 +185,7 @@ export default {
       tips: mockTipsData,
       starValue: 0,
       message: '',
-      fileList: [{ url: 'https://img.yzcdn.cn/vant/leaf.jpg' }],
+      uploader: [],
     }
   },
   watch: {
@@ -258,9 +266,6 @@ export default {
       } else {
         this[val] = tempI
       }
-    },
-    getImageIndex(index) {
-      console.log('getImageIndex', index)
     },
     submit() {
       console.log('submit')
