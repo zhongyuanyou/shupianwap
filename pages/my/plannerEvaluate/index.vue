@@ -15,9 +15,10 @@
     </Header>
     <sp-center-popup
       v-model="showPop"
-      buttonType="confirm"
+      button-type="confirm"
       :field="Field"
       @confirm="confirm"
+      @cancel="cancel"
     />
     <!--E 头部-->
     <div class="middle_container">
@@ -34,7 +35,7 @@
       </div>
       <!--E 规划师-->
       <!--S 评分-->
-      <EvaluateStar />
+      <EvaluateStar :type="false" :tips="true" />
       <!--E 评分-->
     </div>
 
@@ -79,7 +80,6 @@ export default {
   data() {
     return {
       showPop: false,
-
       Field: {
         type: 'functional',
         title: '温馨提示',
@@ -97,6 +97,9 @@ export default {
       this.showPop = true
     },
     confirm() {
+      this.showPop = false
+    },
+    cancel() {
       this.$back()
     },
   },
@@ -128,6 +131,8 @@ export default {
   line-height: 48px;
 }
 .evaluate_container {
+  @font-medium: PingFangSC-Medium, PingFang SC;
+  @font-regular: PingFangSC-Regular, PingFang SC;
   position: relative;
   height: 100%;
   .back_icon {
@@ -156,9 +161,7 @@ export default {
       }
       .planer_name {
         height: 34px;
-        font-size: 34px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
+        font: 500 34px @font-medium;
         color: #1a1a1a;
         line-height: 34px;
         margin-right: 16px;
@@ -167,9 +170,7 @@ export default {
         background: #ffffff;
         border-radius: 4px;
         border: 1px solid #dddddd;
-        font-size: 24px;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
+        font: 400 24px @font-regular;
         color: #999999;
         line-height: 24px;
         padding: 10px 12px;

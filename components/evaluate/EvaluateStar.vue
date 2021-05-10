@@ -194,6 +194,11 @@ export default {
       if (val !== 0) {
         this.subScoreFlag = true
       }
+      if (val === 0) {
+        this.specialtyStarLevel = 0
+        this.replayStarLevel = 0
+        this.efficiencyStarLevel = 0
+      }
       if (val === 5) {
         this.specialtyStarLevel = 5
         this.replayStarLevel = 5
