@@ -121,6 +121,8 @@ export default {
 <style lang="less" scoped>
 .city-search {
   width: 100%;
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
   .search-content {
     border-bottom: 1px solid #f8f8f8;
     .cloose-btn {
