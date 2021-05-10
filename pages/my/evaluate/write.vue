@@ -46,9 +46,6 @@ export default {
 
 <style lang="less" scoped>
 .m-evaluate.write {
-  @font-regular: PingFangSC-Regular, PingFang SC;
-  @font-medium: PingFangSC-Medium, PingFang SC;
-
   .mixin-flex {
     display: flex;
     align-items: center;
@@ -64,7 +61,7 @@ export default {
     .mixin-flex();
     .name {
       height: 34px;
-      font: bold 34px/34px @font-medium;
+      font: bold 34px/34px @fontf-pfsc-med;
       color: #1a1a1a;
       margin: 0 16px 0 24px;
     }
@@ -73,7 +70,7 @@ export default {
       padding: 10px 12px;
       border-radius: 4px;
       border: 1px solid #dddddd;
-      font: 24px @font-regular;
+      font: 24px @fontf-pfsc-reg;
       color: #999999;
     }
   }
