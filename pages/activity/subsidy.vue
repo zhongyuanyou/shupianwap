@@ -10,7 +10,7 @@
     <sp-sticky
       :style="safeTopStyle"
       style="
-        background: url('https://cdn.shupian.cn/sp-pt/wap/1s1ki8z86vfk000.png');
+        background: url('https://cdn.shupian.cn/sp-pt/wap/images/5xaor0rxs3g0000.png');
       "
       offset-top="0"
     />
@@ -348,6 +348,8 @@ html::-webkit-scrollbar {
       display: flex;
       justify-content: flex-start;
       padding: 0 20px;
+      overflow-x: scroll;
+      overflow-y: hidden;
       .advert_item {
         width: 30vw;
         height: 38.4vw;

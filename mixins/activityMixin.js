@@ -28,7 +28,7 @@ export default {
         // backgroundColor: '#fff',
         // background:
         //   "url('https://cdn.shupian.cn/sp-pt/wap/9wjolx4gc0s0000.png')",
-        backgroundSize: '100% auto',
+        backgroundSize: '100% 300%',
         // backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         position: 'fixed',

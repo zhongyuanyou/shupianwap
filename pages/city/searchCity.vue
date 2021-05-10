@@ -8,25 +8,23 @@
 -->
 <template>
   <div class="city-search">
-    <sp-sticky>
-      <div class="search-content">
-        <Search
-          ref="searchRef"
-          :icon-left="0.35"
-          placeholder="请输入城市名称"
-          @valChangeHandle="valChangeHandle"
-        >
-          <template v-slot:right>
-            <a
-              class="cloose-btn"
-              href="javascript:void(0);"
-              @click="clooseHandle"
-              >取消</a
-            >
-          </template>
-        </Search>
-      </div>
-    </sp-sticky>
+    <!-- <sp-sticky> -->
+    <div v-if="isInApp" class="gd"></div>
+    <div class="search-content">
+      <Search
+        ref="searchRef"
+        :icon-left="0.35"
+        placeholder="请输入城市名称"
+        @valChangeHandle="valChangeHandle"
+      >
+        <template v-slot:right>
+          <a class="cloose-btn" href="javascript:void(0);" @click="clooseHandle"
+            >取消</a
+          >
+        </template>
+      </Search>
+    </div>
+    <!-- </sp-sticky> -->
     <div v-if="searchList.length" class="search-results">
       <div
         v-for="(item, index) in searchList"
@@ -40,7 +38,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { Sticky } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import { homeApi } from '@/api'
@@ -54,6 +52,12 @@ export default {
     return {
       searchList: [],
     }
+  },
+  computed: {
+    ...mapState({
+      appInfo: (state) => state.app.appInfo, // app信息
+      isInApp: (state) => state.app.isInApp, // 是否在app中打开此页
+    }),
   },
   methods: {
     ...mapMutations({
@@ -121,8 +125,8 @@ export default {
 <style lang="less" scoped>
 .city-search {
   width: 100%;
-  padding-top: constant(safe-area-inset-top);
-  padding-top: env(safe-area-inset-top);
+  height: 100vh;
+  overflow: hidden;
   .search-content {
     border-bottom: 1px solid #f8f8f8;
     .cloose-btn {
@@ -133,7 +137,14 @@ export default {
       margin-left: 40px;
     }
   }
+  .gd {
+    height: 40px;
+    width: 100%;
+    background: #fff;
+  }
   .search-results {
+    height: calc(100vh - 128px);
+    overflow: auto;
     width: 100%;
     padding: 0 40px;
     > div {

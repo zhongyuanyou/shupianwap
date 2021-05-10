@@ -1,9 +1,11 @@
 <template>
   <div class="container" :style="{ marginTop: safeTop + 'px' }">
+    <!--    url('https://cdn.shupian.cn/sp-pt/wap/2z5tsl5cs4q0000.png');-->
+    <!--    linear-gradient(125deg, #DAA240 0%, #C98714 100%);-->
     <sp-sticky
       :style="safeTopStyle"
       style="
-        background: url('https://cdn.shupian.cn/sp-pt/wap/2z5tsl5cs4q0000.png');
+        background: url('https://cdn.shupian.cn/sp-pt/wap/images/diffbv56gi00000.png');
       "
       offset-top="0"
     />
@@ -413,6 +415,7 @@ html::-webkit-scrollbar {
       justify-content: flex-start;
       margin-bottom: 40px;
       overflow-x: scroll;
+      overflow-y: hidden;
       &::-webkit-scrollbar {
         width: 0 !important;
       }
