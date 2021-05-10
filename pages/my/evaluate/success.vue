@@ -39,12 +39,10 @@ export default {
 <style lang="less" scoped>
 .m-evaluate.success {
   @img-size: 140px;
-  @font-regular: PingFangSC-Regular, PingFang SC;
-  @font-medium: PingFangSC-Medium, PingFang SC;
 
   ::v-deep.slot-right {
     color: #222222;
-    font: 400 32px @font-regular;
+    font: 400 32px @fontf-pfsc-reg;
     padding-right: 40px;
   }
   .content-wrap {
@@ -58,12 +56,12 @@ export default {
       margin: 112px 0 56px;
     }
     .tile {
-      font: bold 44px @font-medium;
+      font: bold 44px @fontf-pfsc-med;
       color: #1a1a1a;
       margin-bottom: 32px;
     }
     .desc {
-      font: 400 28px/40px @font-regular;
+      font: 400 28px/40px @fontf-pfsc-reg;
       color: #999999;
       text-align: center;
       margin: 0 80px;

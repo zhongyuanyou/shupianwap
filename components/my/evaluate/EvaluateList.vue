@@ -53,29 +53,12 @@ export default {
 </script>
 <style lang="less" scoped>
 .m-evaluate.list {
-  @font: PingFangSC-Medium, PingFang SC;
   @item-padding: 32px 40px;
   @item-img-size: 130px;
 
-  .mixin-fontellipsis {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    word-break: break-all;
-  }
-  .mixin-font2linellipsis {
-    text-overflow: -o-ellipsis-lastline;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
-
   .item {
     padding: @item-padding;
-    font-family: @font;
+    font-family: @fontf-pfsc-med;
     &-info {
       display: flex;
       .img {
@@ -93,7 +76,7 @@ export default {
           color: #222222;
           line-height: 36px;
           margin-bottom: 20px;
-          .mixin-font2linellipsis();
+          .textOverflow(2);
         }
         &-content {
           height: 24px;
@@ -101,7 +84,7 @@ export default {
           font-size: 24px;
           font-weight: 400;
           color: #999999;
-          .mixin-fontellipsis();
+          .mixin-text-oneoverflow();
         }
       }
     }

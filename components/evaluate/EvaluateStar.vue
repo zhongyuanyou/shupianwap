@@ -281,9 +281,6 @@ export default {
 
 <style lang="less" scoped>
 .evaluateStar_container {
-  @font-regular: PingFangSC-Regular, PingFang SC;
-  @font-medium: PingFangSC-Medium, PingFang SC;
-
   .mixin-flex {
     display: flex;
   }
@@ -294,22 +291,15 @@ export default {
     align-items: center;
   }
   .mixin-score-tile {
-    font: 400 28px @font-regular;
+    font: 400 28px @fontf-pfsc-reg;
     color: #222222;
     margin-right: 62px;
   }
   .mixin-score-desc {
-    font: 400 24px @font-regular;
+    font: 400 24px @fontf-pfsc-reg;
     color: #555555;
     position: absolute;
     right: 0;
-  }
-
-  .mixin-fontellipsis {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    word-break: break-all;
   }
 
   .score {
@@ -318,7 +308,7 @@ export default {
       .mixin-score-item();
       width: 100%;
       .tile {
-        font: bold 32px @font-medium;
+        font: bold 32px @fontf-pfsc-med;
         color: #222222;
         margin-right: 40px;
       }
@@ -355,8 +345,8 @@ export default {
     padding: 0 94px 0 40px;
     margin-top: 64px;
     .item {
-      .mixin-fontellipsis();
-      font: 400 24px @font-regular;
+      .mixin-text-oneoverflow();
+      font: 400 24px @fontf-pfsc-reg;
       color: #222222;
       box-sizing: border-box;
       padding: 16px;
@@ -377,7 +367,7 @@ export default {
     padding: 0 40px;
     ::v-deep.sp-field {
       padding: 0;
-      font: 400 28px/40px @font-regular;
+      font: 400 28px/40px @fontf-pfsc-reg;
       color: #222222;
       .sp-field__body {
         textarea {
@@ -437,10 +427,11 @@ export default {
 
   ::v-deep .sp-bottombar {
     padding: 0 40px 24px;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
     height: 88px;
     .sp-button {
-      font: bold 32px/45px @font-medium;
-      font-family: PingFang SC;
+      font: bold 32px/45px @fontf-pfsc-med;
       border-radius: 8px;
       color: #ffffff;
       width: 100%;

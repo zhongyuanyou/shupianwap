@@ -100,9 +100,6 @@ export default {
 
 <style lang="less" scoped>
 .m-evaluate.detail {
-  @font-regular: PingFangSC-Regular, PingFang SC;
-  @font-medium: PingFangSC-Medium, PingFang SC;
-
   .mixin-flex {
     display: flex;
   }
@@ -124,12 +121,12 @@ export default {
         align-items: center;
         margin-bottom: 24px;
         &-name {
-          font: bold 34px @font-medium;
+          font: bold 34px @fontf-pfsc-med;
           color: #1a1a1a;
           margin-right: 262px;
         }
         &-time {
-          font: 400 24px @font-regular;
+          font: 400 24px @fontf-pfsc-reg;
           color: #999999;
         }
       }
@@ -138,7 +135,7 @@ export default {
         align-items: center;
         margin-bottom: 24px;
         &-tile {
-          font: 400 24px @font-regular;
+          font: 400 24px @fontf-pfsc-reg;
           color: #222222;
           margin-right: 16px;
         }
@@ -147,14 +144,14 @@ export default {
         }
         &-desc {
           margin-left: 8px;
-          font: 400 22px @font-regular;
+          font: 400 22px @fontf-pfsc-reg;
           color: #555555;
         }
       }
       .score-sub {
         .mixin-flex();
         align-items: center;
-        font: 400 24px @font-regular;
+        font: 400 24px @fontf-pfsc-reg;
         color: #999999;
         span {
           display: inline-block;
@@ -170,7 +167,7 @@ export default {
   }
   .content {
     margin: 40px 40px 32px;
-    font: 400 28px/44px @font-regular;
+    font: 400 28px/44px @fontf-pfsc-reg;
     color: #222222;
   }
   .tips {
@@ -181,7 +178,7 @@ export default {
       margin-right: 12px;
     }
     &-desc {
-      font: 400 24px/24px @font-regular;
+      font: 400 24px/24px @fontf-pfsc-reg;
       color: #999999;
     }
   }
