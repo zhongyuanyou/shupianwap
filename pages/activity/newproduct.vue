@@ -8,7 +8,7 @@
           v-if="isInApp"
           :style="{ height: appInfo.statusBarHeight + 'px' }"
         ></div> -->
-          <div :class="{ positionY: positionY }" class="search">
+          <div class="search">
             <div class="left-back" @click="uPGoBack">
               <my-icon
                 name="nav_ic_back"
@@ -37,7 +37,7 @@
     </div>
     <!-- E search -->
     <!-- <sp-sticky></sp-sticky> -->
-    <div class="container-advice">
+    <div class="container-advice" :class="{ positionY: positionY }">
       <div
         class="rules"
         @click="$router.push('/login/protocol?categoryCode=protocol100035')"
@@ -473,7 +473,7 @@ export default {
 
 <style lang="less" scoped>
 .positionY {
-  background-position-y: -46px !important;
+  margin-top: -150px !important;
 }
 .no-data {
   text-align: center;
@@ -499,7 +499,7 @@ export default {
   overflow-x: hidden;
   margin: 0 auto;
   ::v-deep.fixed-head {
-    height: 0.88rem !important;
+    height: 0.92rem !important;
     .my-head {
       margin: 0 auto;
       right: 0;
@@ -509,7 +509,7 @@ export default {
       box-shadow: none !important;
       background: url('https://cdn.shupian.cn/sp-pt/wap/8j0v9fa82uo0000.png')
         no-repeat;
-      background-size: 100% auto;
+      background-size: 100% 100%;
     }
   }
   .search {
@@ -519,7 +519,6 @@ export default {
     // width: 750px;
     width: 100%;
     margin: 0 auto;
-
     background-size: 100% auto;
     .left-back {
       display: flex;
@@ -562,12 +561,13 @@ export default {
   }
   .container-advice {
     width: 100%;
-    height: 340px;
+    height: 460px;
     position: relative;
     background: url('https://cdn.shupian.cn/sp-pt/wap/fe7bmr53zfs0000.png')
       no-repeat;
-    background-size: 100% auto;
-    background-position-y: -90px;
+    background-size: 100% 4.6rem;
+    margin-top: -140px;
+    background-position-y: 5px;
     .rules {
       position: fixed;
       width: 68px;
@@ -580,7 +580,7 @@ export default {
       align-items: center;
       justify-content: center;
       right: -4px;
-      top: 164px;
+      top: 200px;
       p {
         height: 20px;
         font-size: 20px;
@@ -622,15 +622,17 @@ export default {
     margin-top: -20px;
     z-index: 9;
     .tabs-box {
-      display: flex;
-      justify-content: space-between;
+      width: 100%;
       height: 124px;
+      display: flex;
+      justify-content: flex-start;
       align-items: center;
       background: #ffffff;
       padding: 0 20px;
+      box-sizing: border-box;
       .tabs-box-left {
         padding: 0 20px;
-        width: 160px;
+        max-width: 200px;
         overflow: hidden;
         height: 56px;
         background: linear-gradient(270deg, #f3363f 0%, #ec5330 100%);
@@ -669,11 +671,11 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-right: 15px;
       max-width: 500px;
       overflow-x: auto;
       height: 80px;
       white-space: nowrap;
+      margin-left: 20px;
       // padding: 22px 10px 0 10px;
       li {
         height: 32px;

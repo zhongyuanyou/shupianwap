@@ -4,7 +4,7 @@
     <div>
       <header-slot>
         <sp-sticky>
-          <div :class="{ positionY: positionY }" class="search">
+          <div class="search">
             <div class="left-back" @click="uPGoBack">
               <my-icon
                 name="nav_ic_back"
@@ -471,7 +471,7 @@ export default {
   background-size: 100% auto;
   background-position-y: 118px;
   ::v-deep.fixed-head {
-    height: 1.1rem !important;
+    height: 0.92rem !important;
     .my-head {
       max-width: 812px;
       margin: 0 auto;
@@ -609,14 +609,14 @@ export default {
     overflow: hidden;
     .tabs-box {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       height: 124px;
       align-items: center;
       background: #ffffff;
       padding: 0 20px;
       .tabs-box-left {
         padding: 0 20px;
-        width: 160px;
+        max-width: 200px;
         overflow: hidden;
         height: 56px;
         background: linear-gradient(270deg, #f3363f 0%, #ec5330 100%);
@@ -655,11 +655,11 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-right: 15px;
       max-width: 500px;
       overflow-x: auto;
       height: 80px;
       white-space: nowrap;
+      margin-left: 20px;
       li {
         height: 32px;
         font-size: 32px;
