@@ -111,7 +111,8 @@ export default {
       this.safeTop = this.appInfo.statusBarHeight
     }
     this.headerHeight = this.$refs.header_sticky.height
-    this.chii()
+    // console.log(process.env)
+    // this.chii()
     this.screenWidth = window.screen.width
   },
   beforeDestroy() {
@@ -346,6 +347,10 @@ export default {
         if (this.currentTab.id !== '') {
           params.labelId = this.currentTab.id
         }
+
+        if (this.currentTab.labelName !== '') {
+          params.labelName = this.currentTab.labelName
+        }
         await this.productMethod(params)
       } else {
         // this.isNoData = true
@@ -371,6 +376,7 @@ export default {
             if (this.page > res.data.totalPage) {
               this.finished = true
             }
+            this.refreshing = false
           } else {
             this.loading = false
             throw new Error('服务异常，请刷新重试！')
@@ -383,6 +389,7 @@ export default {
           }
         })
         .catch((err) => {
+          this.refreshing = false
           Toast.fail({
             duration: 2000,
             message: err.message,
@@ -390,9 +397,9 @@ export default {
             className: 'my-toast-style',
           })
         })
-        .finally(() => {
-          this.refreshing = false
-        })
+      // .finally(() => {
+      //   this.refreshing = false
+      // })
     },
     getRecommendProductList() {
       if (this.specCode) {

@@ -758,6 +758,14 @@ export default {
     },
     // 订单价格分转元
     changeMoney(orderItem) {
+      if (
+        (orderItem.orderTotalMoney && orderItem.orderTotalMoney.match('.')) ||
+        (orderItem.orderPayableMoney &&
+          orderItem.orderPayableMoney.match('.')) ||
+        (orderItem.depositAmount && orderItem.depositAmount.match('.'))
+      ) {
+        return
+      }
       if (orderItem.orderTotalMoney && orderItem.depositAmount)
         // 尾款
         orderItem.lastAount = this.regFenToYuan(
@@ -797,7 +805,7 @@ export default {
       if (arr2.length) {
         for (let j = 0, len = arr2.length; j < len; j++) {
           // 商品售价
-          if (arr2[j].skuPrice) {
+          if (arr2[j].skuPrice && !arr2[j].skuPrice.match('.')) {
             arr2[j].skuPrice = this.regFenToYuan(arr2[j].skuPrice)
           }
         }

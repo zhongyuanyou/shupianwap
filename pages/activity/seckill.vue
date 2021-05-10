@@ -667,7 +667,7 @@ html::-webkit-scrollbar {
           display: flex;
           // justify-content: space-between;
           align-content: flex-start;
-          margin-top: 12px;
+          //margin-top: 12px;
           .reduce-price {
             padding: 4px 8px;
             border-radius: 4px;
