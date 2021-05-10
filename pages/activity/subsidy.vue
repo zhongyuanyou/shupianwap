@@ -7,7 +7,13 @@
     >
       规则
     </div>
-    <sp-sticky :style="safeTopStyle" offset-top="0"></sp-sticky>
+    <sp-sticky
+      :style="safeTopStyle"
+      style="
+        background: url('https://cdn.shupian.cn/sp-pt/wap/images/5xaor0rxs3g0000.png');
+      "
+      offset-top="0"
+    />
     <!-- S search -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="search">
@@ -221,6 +227,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+html::-webkit-scrollbar {
+  display: none;
+}
 .no-data {
   text-align: center;
   padding-top: 10px;
@@ -339,6 +348,8 @@ export default {
       display: flex;
       justify-content: flex-start;
       padding: 0 20px;
+      overflow-x: scroll;
+      overflow-y: hidden;
       .advert_item {
         width: 30vw;
         height: 38.4vw;

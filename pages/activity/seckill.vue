@@ -1,6 +1,12 @@
 <template>
   <div class="container" :style="{ marginTop: safeTop + 'px' }">
-    <sp-sticky :style="safeTopStyle" offset-top="0"></sp-sticky>
+    <sp-sticky
+      :style="safeTopStyle"
+      style="
+        background: url('https://cdn.shupian.cn/sp-pt/wap/images/8sq7h20ttpo0000.png');
+      "
+      offset-top="0"
+    />
     <!-- Sheader -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="header">
@@ -30,7 +36,7 @@
               alt=""
             /> -->
           </div>
-          <div class="low-money">近15天全网底价</div>
+          <div class="low-money">近15天全网低价</div>
         </div>
         <div v-if="isTimerShow" class="count-down">
           <div class="end-time">距本场结束还剩</div>
@@ -298,6 +304,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+html::-webkit-scrollbar {
+  display: none;
+}
 .multiRowOverflowDot {
   //width: 100px;
   overflow: hidden;
@@ -428,7 +437,8 @@ export default {
     .wrapper {
       display: flex;
       justify-content: flex-start;
-      overflow: auto;
+      overflow-x: scroll;
+      overflow-y: hidden;
       &::-webkit-scrollbar {
         width: 0 !important;
       }

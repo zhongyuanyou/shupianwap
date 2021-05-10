@@ -1,6 +1,12 @@
 <template>
   <div class="container" :style="{ marginTop: safeTop + 'px' }">
-    <sp-sticky :style="safeTopStyle" offset-top="0"></sp-sticky>
+    <sp-sticky
+      :style="safeTopStyle"
+      style="
+        background: url('https://cdn.shupian.cn/sp-pt/wap/images/f4eiumfehnc0000.png');
+      "
+      offset-top="0"
+    />
     <!-- S search -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="search">
@@ -170,15 +176,7 @@
                           原价{{ item.skuPrice }}元
                         </div>
                       </div>
-                      <div class="rc-bottom-rt">
-                        <div>去抢购</div>
-                        <div>
-                          已成交{{
-                            item.specialInventory -
-                            item.specialResidueInventory
-                          }}单
-                        </div>
-                      </div>
+                      <div class="rc-bottom-rt">去抢购</div>
                     </div>
                   </div>
                 </div>
@@ -239,6 +237,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+html::-webkit-scrollbar {
+  display: none;
+}
 .no-data {
   text-align: center;
   padding-top: 10px;
@@ -397,6 +398,7 @@ export default {
       display: flex;
       justify-content: flex-start;
       overflow-x: scroll;
+      overflow-y: hidden;
       &::-webkit-scrollbar {
         width: 0 !important;
       }
@@ -682,28 +684,33 @@ export default {
           }
           .rc-bottom-rt {
             width: 100px;
-            height: 100px;
+            //height: 100px;
             background: yellow;
             width: 176px;
-            height: 80px;
+            //height: 80px;
             font-family: PingFangSC-Medium, PingFang SC;
             background: linear-gradient(139deg, #fe525d 0%, #fd3543 100%);
             border-radius: 8px;
-            div:nth-of-type(1) {
-              padding: 12px 0 4px 0;
-              text-align: center;
-              font-size: 30px;
-              font-weight: bold;
-              color: #ffffff;
-              line-height: 30px;
-            }
-            div:nth-of-type(2) {
-              font-size: 22px;
-              font-weight: 400;
-              color: #ffffff;
-              line-height: 22px;
-              text-align: center;
-            }
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: #ffffff;
+            line-height: 80px;
+            //div:nth-of-type(1) {
+            //  padding: 12px 0 4px 0;
+            //  text-align: center;
+            //  font-size: 30px;
+            //  font-weight: bold;
+            //  color: #ffffff;
+            //  line-height: 30px;
+            //}
+            //div:nth-of-type(2) {
+            //  font-size: 22px;
+            //  font-weight: 400;
+            //  color: #ffffff;
+            //  line-height: 22px;
+            //  text-align: center;
+            //}
           }
         }
       }
