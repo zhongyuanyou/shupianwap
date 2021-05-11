@@ -33,9 +33,7 @@
             <p class="title">合同编号：{{ item.contractNo }}</p>
           </div>
           <div class="cell">
-            <p class="title">
-              合同金额：￥{{ regFenToYuan(item.contractMoney) }}
-            </p>
+            <p class="title">合同金额：￥{{ item.contractMoney }}</p>
           </div>
           <div class="cell">
             <p class="title">
@@ -45,7 +43,7 @@
             </p>
           </div>
           <div class="cell">
-            <p class="title">签署时间：{{ item.contractApplyTime || '-' }}</p>
+            <p class="title">签署时间：{{ item.contractSignedTime || '-' }}</p>
           </div>
         </div>
         <div
@@ -88,46 +86,19 @@ export default {
     this.getorder()
   },
   methods: {
-    regFenToYuan(fen) {
-      let num = Number(fen)
-      num = fen * 0.01
-      num += ''
-      const reg =
-        num.indexOf('.') > -1
-          ? /(\d{1,3})(?=(?:\d{3})+\.)/g
-          : /(\d{1,3})(?=(?:\d{3})+$)/g
-      num = num.replace(reg, '$1')
-      num = this.toDecimal2(num)
-      return num
-    },
-    toDecimal2(x) {
-      let f = parseFloat(x)
-      if (isNaN(f)) {
-        return false
-      }
-      f = Math.round(x * 100) / 100
-      let s = f.toString()
-      let rs = s.indexOf('.')
-      if (rs < 0) {
-        rs = s.length
-        s += '.'
-      }
-      while (s.length <= rs + 2) {
-        s += '0'
-      }
-      return s
-    },
     getorder() {
       orderApi
-        .getDetailByOrderId(
+        .annexList(
           { axios: this.axios },
-          { id: this.order.orderId, cusOrderId: this.order.cusOrderId }
+          {
+            id: this.$store.state.user.userInfo.userId,
+            orderId: this.order.orderId,
+          }
         )
         .then((res) => {
-          this.list = res.contractVo2s
+          this.list = res.records
         })
         .catch((err) => {
-          this.skeletonLoading = false
           this.$xToast.error(err.message || '查询失败，请稍后重试')
           const that = this
           setTimeout(function () {
