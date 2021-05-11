@@ -8,7 +8,7 @@
           v-if="isInApp"
           :style="{ height: appInfo.statusBarHeight + 'px' }"
         ></div> -->
-          <div :class="{ positionY: positionY }" class="search">
+          <div class="search">
             <div class="left-back" @click="uPGoBack">
               <my-icon
                 name="nav_ic_back"
@@ -26,7 +26,7 @@
                 :style="{ marginLeft: iconLeft + 'rem' }"
               ></my-icon>
               <input
-                placeholder="搜索首发商品"
+                placeholder="搜索商品"
                 readonly
                 @click="clickInputHandle"
               />
@@ -37,7 +37,7 @@
     </div>
     <!-- E search -->
     <!-- <sp-sticky></sp-sticky> -->
-    <div class="container-advice">
+    <div class="container-advice" :class="{ positionY: positionY }">
       <div
         class="rules"
         @click="$router.push('/login/protocol?categoryCode=protocol100035')"
@@ -106,11 +106,33 @@
                     </div>
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
-                        <div class="rc-bottom-lf-my">
-                          <div>{{ item.specialPrice }}</div>
-                          <div>元</div>
+                        <div
+                          v-if="parsePrice(item.specialPrice) !== '面议'"
+                          class="rc-bottom-lf-my"
+                        >
+                          <div>
+                            <span v-if="item.specialNewPrice">{{
+                              item.specialNewPrice
+                            }}</span
+                            ><span v-else>{{ item.specialPrice }}</span>
+                          </div>
+                          <div><span v-if="item.specialUnit">万</span> 元</div>
                         </div>
-                        <div class="bf-my">原价{{ item.skuPrice }}元</div>
+                        <div v-else class="rc-bottom-lf-my">
+                          <div>面议</div>
+                        </div>
+                        <div
+                          v-if="parsePrice(item.skuPrice) !== '面议'"
+                          class="bf-my"
+                        >
+                          原价
+                          <span v-if="item.skuNewPrice">{{
+                            item.skuNewPrice
+                          }}</span
+                          ><span v-else>{{ item.skuPrice }}</span>
+                          <span v-if="item.specialUnit">万</span>元
+                        </div>
+                        <div v-else class="bf-my">面议</div>
                       </div>
                       <div class="rc-bottom-rt">
                         <div class="imm_consult">查看详情</div>
@@ -182,7 +204,7 @@ export default {
       platformCode: 'COMDIC_PLATFORM_CRISPS', // 平台code
       specCode: '',
       defaultCityCode: '510100',
-      advertCode: 'ad100043', // 广告code
+      advertCode: 'ad100033', // 广告code
       productType: '',
       fixedShow: false,
       limit: 10,
@@ -339,6 +361,7 @@ export default {
         this.loading = false
       }
     },
+
     productMethod(param) {
       this.$axios
         .get(activityApi.activityProductList, {
@@ -380,6 +403,16 @@ export default {
           console.log(err)
         })
     },
+    parsePrice(priceStr) {
+      if (priceStr > 0) {
+        return {
+          yuan: priceStr.split('.')[0],
+          jiao: priceStr.split('.')[1],
+        }
+      } else {
+        return '面议'
+      }
+    },
     getAdvertisingData() {
       this.$axios
         .get(activityApi.activityAdvertising, {
@@ -389,10 +422,10 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.productAdvertData = res.data.sortMaterialList[0].materialList.slice(
-              0,
-              3
-            )
+            const adImg01 = res.data.sortMaterialList[0].materialList || []
+            const adImg02 = res.data.sortMaterialList[1].materialList || []
+            const adImg03 = res.data.sortMaterialList[2].materialList || []
+            this.productAdvertData = [...adImg01, ...adImg02, ...adImg03]
           } else {
             Toast.fail({
               duration: 2000,
@@ -473,7 +506,7 @@ export default {
 
 <style lang="less" scoped>
 .positionY {
-  background-position-y: -46px !important;
+  margin-top: -150px !important;
 }
 .no-data {
   text-align: center;
@@ -499,7 +532,7 @@ export default {
   overflow-x: hidden;
   margin: 0 auto;
   ::v-deep.fixed-head {
-    height: 0.88rem !important;
+    height: 0.92rem !important;
     .my-head {
       margin: 0 auto;
       right: 0;
@@ -509,7 +542,7 @@ export default {
       box-shadow: none !important;
       background: url('https://cdn.shupian.cn/sp-pt/wap/8j0v9fa82uo0000.png')
         no-repeat;
-      background-size: 100% auto;
+      background-size: 100% 100%;
     }
   }
   .search {
@@ -519,7 +552,6 @@ export default {
     // width: 750px;
     width: 100%;
     margin: 0 auto;
-
     background-size: 100% auto;
     .left-back {
       display: flex;
@@ -562,12 +594,13 @@ export default {
   }
   .container-advice {
     width: 100%;
-    height: 340px;
+    height: 460px;
     position: relative;
     background: url('https://cdn.shupian.cn/sp-pt/wap/fe7bmr53zfs0000.png')
       no-repeat;
-    background-size: 100% auto;
-    background-position-y: -90px;
+    background-size: 100% 4.6rem;
+    margin-top: -140px;
+    background-position-y: 5px;
     .rules {
       position: fixed;
       width: 68px;
@@ -580,7 +613,7 @@ export default {
       align-items: center;
       justify-content: center;
       right: -4px;
-      top: 164px;
+      top: 200px;
       p {
         height: 20px;
         font-size: 20px;
@@ -622,15 +655,17 @@ export default {
     margin-top: -20px;
     z-index: 9;
     .tabs-box {
-      display: flex;
-      justify-content: space-between;
+      width: 100%;
       height: 124px;
+      display: flex;
+      justify-content: flex-start;
       align-items: center;
       background: #ffffff;
       padding: 0 20px;
+      box-sizing: border-box;
       .tabs-box-left {
         padding: 0 20px;
-        width: 160px;
+        max-width: 200px;
         overflow: hidden;
         height: 56px;
         background: linear-gradient(270deg, #f3363f 0%, #ec5330 100%);
@@ -669,11 +704,11 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-right: 15px;
       max-width: 500px;
       overflow-x: auto;
       height: 80px;
       white-space: nowrap;
+      margin-left: 20px;
       // padding: 22px 10px 0 10px;
       li {
         height: 32px;

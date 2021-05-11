@@ -4,7 +4,7 @@
     <div>
       <header-slot>
         <sp-sticky>
-          <div :class="{ positionY: positionY }" class="search">
+          <div class="search">
             <div class="left-back" @click="uPGoBack">
               <my-icon
                 name="nav_ic_back"
@@ -46,7 +46,7 @@
         </div>
         <div>
           <div
-            v-for="(item, index) in productAdvertData.slice(1, 3)"
+            v-for="(item, index) in productAdvertDataTwo.slice(0, 2)"
             :key="index"
             class="other_s"
           >
@@ -58,7 +58,7 @@
       </div>
     </div>
     <div class="container-body">
-      <sp-sticky :offset-top="59">
+      <sp-sticky :offset-top="offsetTop">
         <div ref="menu" class="tabs-box">
           <div class="tabs-box-left">
             <div @click="swichCityHandle">
@@ -110,11 +110,33 @@
                     </div>
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
-                        <div class="rc-bottom-lf-my">
-                          <div>{{ item.specialPrice }}</div>
-                          <div>元</div>
+                        <div
+                          v-if="parsePrice(item.specialPrice) !== '面议'"
+                          class="rc-bottom-lf-my"
+                        >
+                          <div>
+                            <span v-if="item.specialNewPrice">{{
+                              item.specialNewPrice
+                            }}</span
+                            ><span v-else>{{ item.specialPrice }}</span>
+                          </div>
+                          <div><span v-if="item.specialUnit">万</span> 元</div>
                         </div>
-                        <div class="bf-my">原价{{ item.skuPrice }}元</div>
+                        <div v-else class="rc-bottom-lf-my">
+                          <div>面议</div>
+                        </div>
+                        <div
+                          v-if="parsePrice(item.skuPrice) !== '面议'"
+                          class="bf-my"
+                        >
+                          原价
+                          <span v-if="item.skuNewPrice">{{
+                            item.skuNewPrice
+                          }}</span
+                          ><span v-else>{{ item.skuPrice }}</span>
+                          <span v-if="item.specialUnit">万</span>元
+                        </div>
+                        <div v-else class="bf-my">面议</div>
                       </div>
                       <div class="rc-bottom-rt">
                         <div class="imm_consult">立即购买</div>
@@ -181,13 +203,15 @@ export default {
       itemTypeOptions: '',
       productList: [],
       productRecoData: '',
-      productAdvertData: '',
+      productAdvertData: [],
+      productAdvertDataTwo: [],
       page: 1,
       specTypeCode: 'HDZT_ZTTYPE_XFWHSF', // 活动类型code
       platformCode: 'COMDIC_PLATFORM_CRISPS', // 平台code
       specCode: '',
       defaultCityCode: '510100',
-      advertCode: 'ad100043', // 广告code
+      advertCode: 'ad100034', // 广告code
+      advertCodeTwo: 'ad100035', // 广告code
       productType: '',
       fixedShow: false,
       limit: 10,
@@ -214,7 +238,8 @@ export default {
         type: 'init',
       })
     }
-    this.getAdvertisingData()
+    this.getAdvertisingData(1, this.advertCode)
+    this.getAdvertisingData(2, this.advertCodeTwo)
     await this.getMenuTabs().then(this.getProductList)
   },
   mounted() {
@@ -324,6 +349,16 @@ export default {
           console.log(err)
         })
     },
+    parsePrice(priceStr) {
+      if (priceStr > 0) {
+        return {
+          yuan: priceStr.split('.')[0],
+          jiao: priceStr.split('.')[1],
+        }
+      } else {
+        return '面议'
+      }
+    },
     // 获取产品
     getProductList() {
       const params = {
@@ -358,6 +393,11 @@ export default {
             if (this.page > res.data.totalPage) {
               this.finished = true
             }
+            if (this.productList.length === 0) {
+              this.isNoData = true
+            } else {
+              this.isNoData = false
+            }
           } else {
             this.loading = false
             this.finished = true
@@ -375,16 +415,22 @@ export default {
           console.log(err)
         })
     },
-    getAdvertisingData() {
+    getAdvertisingData(adNum, advertCode) {
       this.$axios
         .get(activityApi.activityAdvertising, {
           params: {
-            locationCode: this.advertCode,
+            locationCode: advertCode,
           },
         })
         .then((res) => {
           if (res.code === 200) {
-            this.productAdvertData = res.data.sortMaterialList[0].materialList
+            if (adNum === 1) {
+              this.productAdvertData = res.data.sortMaterialList[0].materialList
+            } else {
+              const adImg01 = res.data.sortMaterialList[0].materialList || []
+              const adImg02 = res.data.sortMaterialList[1].materialList || []
+              this.productAdvertDataTwo = adImg01.concat(adImg02)
+            }
           } else {
             Toast.fail({
               duration: 2000,
@@ -471,7 +517,7 @@ export default {
   background-size: 100% auto;
   background-position-y: 118px;
   ::v-deep.fixed-head {
-    height: 1.1rem !important;
+    height: 0.88rem !important;
     .my-head {
       max-width: 812px;
       margin: 0 auto;
@@ -481,8 +527,7 @@ export default {
       box-shadow: none !important;
       background: url('https://cdn.shupian.cn/sp-pt/wap/images/ezdtzc7pkwg0000.png')
         no-repeat;
-      background-size: 100% auto;
-      background-position-y: -40px;
+      background-size: 100% 100%;
     }
   }
 
@@ -572,7 +617,7 @@ export default {
       box-sizing: border-box;
       padding: 20px;
       width: 710px;
-      height: 346px;
+      height: 340px;
       left: 0;
       right: 0;
       margin: 0 auto;
@@ -580,7 +625,7 @@ export default {
       border-radius: 24px;
       .default_s {
         width: 327px;
-        // height: 298px;
+        height: 298px;
         overflow: hidden;
         border-radius: 12px;
         img {
@@ -609,14 +654,14 @@ export default {
     overflow: hidden;
     .tabs-box {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       height: 124px;
       align-items: center;
       background: #ffffff;
       padding: 0 20px;
       .tabs-box-left {
         padding: 0 20px;
-        width: 160px;
+        max-width: 200px;
         overflow: hidden;
         height: 56px;
         background: linear-gradient(270deg, #f3363f 0%, #ec5330 100%);
@@ -655,11 +700,11 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-right: 15px;
       max-width: 500px;
       overflow-x: auto;
       height: 80px;
       white-space: nowrap;
+      margin-left: 20px;
       li {
         height: 32px;
         font-size: 32px;

@@ -52,6 +52,7 @@
         <img :src="$ossImgSet(340, 340, '9vnk3u2qlk80000.png')" alt="" />
       </div>
       <span class="firstSpan">抱歉，未找到相关问题</span>
+      <b v-if="isInApp" class="im" @click="handleIM">联系客服</b>
       <!-- <span class="lastSpan">联系客服</span> -->
     </div>
     <Loading-center v-show="loading" />
@@ -60,7 +61,16 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import { Search, Cell, CellGroup, TopNavBar, Sticky } from '@chipspc/vant-dgg'
+import {
+  Search,
+  Cell,
+  CellGroup,
+  TopNavBar,
+  Sticky,
+  Bottombar,
+  BottombarButton,
+  BottombarIcon,
+} from '@chipspc/vant-dgg'
 import {
   PLATFORM_CODE,
   TERMINAL_CODE,
@@ -80,6 +90,9 @@ export default {
     [TopNavBar.name]: TopNavBar,
     [Sticky.name]: Sticky,
     Header,
+    [Bottombar.name]: Bottombar,
+    [BottombarButton.name]: BottombarButton,
+    [BottombarIcon.name]: BottombarIcon,
   },
   data() {
     return {
@@ -137,6 +150,38 @@ export default {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
+    handleIM() {
+      this.uPIM({
+        entranceId: 'STAFF_NOT_RESULT_HELP_CENTER_CODE',
+      })
+    },
+    uPIM(data = {}) {
+      // const { mchUserId, userName, type } = data
+      // 如果当前页面在app中，则调用原生IM的方法
+      if (this.isInApp) {
+        try {
+          // 需要判断登陆没有，没有登录就是调用登录
+          // await this.getUserInfo()
+          this.$appFn.dggOpenOnlineServiceIM(
+            {
+              entranceId: 'STAFF_NOT_RESULT_HELP_CENTER_CODE',
+            },
+            (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `联系失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            }
+          )
+        } catch (error) {
+          console.error('uPIM error:', error)
+        }
+      }
+    },
     inputFocus() {
       try {
         setTimeout(() => {
@@ -248,6 +293,25 @@ export default {
     .lastSpan {
       font-size: 28px;
       color: #4974f5;
+    }
+    .im {
+      font-size: 28px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #4974f5;
+      width: 100%;
+      margin-top: 32px;
+      text-align: center;
+    }
+  }
+  ::v-deep .green {
+    background: #24ae68;
+    border: 1px solid #24ae68;
+  }
+  > .left {
+    .sp-icon {
+      font-weight: bold;
+      font-size: 40px;
     }
   }
 }
