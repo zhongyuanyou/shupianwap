@@ -87,21 +87,17 @@ export default {
   },
   methods: {
     async init() {
-      const params = {}
+      const params = {
+        infoId: '123',
+      }
       const res = await this.$axios.get(evaluateApi.detail, { params })
       if (res.code === 200) {
-        if (res.data.information_list.length) {
-          this.loading = false
-          this.finished = false
-          this.infoList = this.infoList.concat(res.data.information_list)
-        } else {
-          this.finished = true
-        }
+        console.log(res)
       }
     },
     setStars() {
       // 构建星级
-      const _this = this
+      const _this = this``````
       this.stars.forEach((item, index) => {
         if (_this.starLevel > index) {
           item.flag = true
