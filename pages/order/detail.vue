@@ -97,8 +97,21 @@
           </span>
         </p> -->
       </div>
-
-      <div class="order-info">
+      <div class="order-info order-info1">
+        <p class="order-item">
+          <span class="label">签单人</span>
+          <span class="text">刘雅婷</span>
+          <span class="right"
+            >写评价
+            <my-icon
+              name="per_ic_customer"
+              size="0.28rem"
+              color="#222222"
+            ></my-icon>
+          </span>
+        </p>
+      </div>
+      <div class="order-info order-info2">
         <p class="order-item">
           <span class="label">订单编号</span>
           <span class="text">{{ orderData.orderNo }}</span>
@@ -390,7 +403,6 @@ export default {
       } else {
         this.showHead = false
       }
-      console.log('scrollTop', scrollTop)
     },
     onLeftClick() {
       this.$router.back(-1)
@@ -566,10 +578,16 @@ export default {
     font-size: 36px;
   }
 }
+.order-info2 {
+  margin-bottom: 150px;
+}
+.order-info1 {
+  margin-bottom: 20px;
+}
+
 .order-info {
   background: white;
   padding: 40px;
-  margin-bottom: 150px;
   font-size: 26px;
   .order-item {
     font-size: 26px;
