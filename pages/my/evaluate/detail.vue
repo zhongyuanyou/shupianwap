@@ -30,15 +30,27 @@
           <div class="score-desc">一般</div>
         </div>
         <div class="score-sub">
-          <span>专业能力:1星</span>
-          <span>回复时效:3星</span>
-          <span>时效效率:4星</span>
+          <span v-for="(item, index) in evaluateDimensionList" :key="index"
+            >{{ item.name }}:{{
+              item.fraction === '2'
+                ? '1星'
+                : item.fraction === '4'
+                ? '2星'
+                : item.fraction === '6'
+                ? '3星'
+                : item.fraction === '8'
+                ? '4星'
+                : item.fraction === '10'
+                ? '5星'
+                : ''
+            }}</span
+          >
         </div>
       </div>
     </div>
     <div class="placeholder"></div>
     <div class="content">
-      化妆只是注重形象的表现吧，不代表化妆了女人就靠生殖价值活着了，现在日韩男人都开始打扮甚至化妆了，难道代表这些日韩男人靠生殖价值活？不见得吧
+      {{ evaluateContent }}
     </div>
     <div class="tips">
       <my-icon
@@ -47,7 +59,11 @@
         size="0.24rem"
         color="#999999"
       ></my-icon>
-      <div class="tips-desc">性价比高，服务质量好，办理效率高</div>
+      <div class="tips-desc">
+        <span v-for="(item, index) in evaluateTagList" :key="index">{{
+          item.name
+        }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -71,7 +87,7 @@ export default {
       avatar,
       avatarSize: '0.8rem',
       name,
-      starLevel: 3, // 星级
+      starLevel: 0, // 星级
       stars: [
         { flag: false },
         { flag: false },
@@ -79,11 +95,15 @@ export default {
         { flag: false },
         { flag: false },
       ], // flag 图标是否点亮
+      evaluateContent: '',
+      evaluateTagList: [],
+      evaluateDimensionList: [],
+      serverScore: 0, // 服务分
     }
   },
   mounted() {
-    this.setStars()
     this.init()
+    this.setStars()
   },
   methods: {
     async init() {
@@ -93,11 +113,15 @@ export default {
       const res = await this.$axios.get(evaluateApi.detail, { params })
       if (res.code === 200) {
         console.log(res)
+        this.evaluateContent = res.data.evaluateContent
+        this.evaluateTagList = res.data.evaluateTagList
+        this.evaluateDimensionList = res.data.evaluateDimensionList
+        const serverScore = res.data.serverScore
       }
     },
     setStars() {
       // 构建星级
-      const _this = this``````
+      const _this = this
       this.stars.forEach((item, index) => {
         if (_this.starLevel > index) {
           item.flag = true
