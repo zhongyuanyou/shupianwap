@@ -60,11 +60,20 @@
     <div class="container-body">
       <sp-sticky :offset-top="offsetTop">
         <div ref="menu" class="tabs-box">
-          <div class="tabs-box-left">
+          <div
+            v-if="productType === 'PRO_CLASS_TYPE_SERVICE'"
+            class="tabs-box-left"
+          >
             <div @click="swichCityHandle">
               {{ cityName ? cityName : '定位中' }}
             </div>
             <div></div>
+          </div>
+          <div
+            v-if="productType === 'PRO_CLASS_TYPE_TRANSACTION'"
+            class="tabs-box-left"
+          >
+            <div>全国</div>
           </div>
           <ul class="tabs-box-items">
             <li
