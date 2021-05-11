@@ -103,7 +103,6 @@ export default {
         }
         params = Object.assign(params, data)
         this.imExample.createSession(params, (res) => {
-          console.log(res)
           if (res.code === 200) {
             const myInfo = localStorage.getItem('myInfo')
               ? JSON.parse(localStorage.getItem('myInfo'))
@@ -117,7 +116,7 @@ export default {
               ? this.userId
               : this.$cookies.get('userId', { path: '/' })
               ? this.$cookies.get('userId', { path: '/' })
-              : myInfo.token
+              : myInfo.imUserId
             const userType =
               this.userType ||
               this.$cookies.get('userType', { path: '/' }) ||
@@ -233,7 +232,7 @@ export default {
                     ? JSON.parse(localStorage.getItem('myInfo'))
                     : {}
                   const token = this.userType ? this.token : myInfo.token
-                  const userId = this.userType ? this.userId : myInfo.token
+                  const userId = this.userType ? this.userId : myInfo.imUserId
                   const userType = this.userType || 'VISITOR'
                   if (this.isApplets) {
                     window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}&requireCode=${sessionParams.requireCode}&requireName=${sessionParams.requireName}&isApplets=true`
