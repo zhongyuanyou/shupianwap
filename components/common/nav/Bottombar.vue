@@ -130,25 +130,25 @@ export default {
     pageJump(item) {
       // 消息页面跳转 IM
       if (item.path === '/msg') {
+        // if (this.userInfo.token) {
         if (this.userInfo.token) {
-          if (this.userInfo.token) {
-            window.location.href = `${config.imBaseUrl}/index?token=${this.userInfo.token}&userId=${this.userInfo.userId}&userType=${this.userInfo.userType}`
-          } else {
-            const imId = localStorage.getItem('myInfo')
-              ? JSON.parse(localStorage.getItem('myInfo'))
-              : {}
-            window.location.href = `${config.imBaseUrl}/index?token=${imId.token}&userId=${imId.imUserId}&userType=VISITOR`
-          }
-          return
+          window.location.href = `${config.imBaseUrl}/index?token=${this.userInfo.token}&userId=${this.userInfo.userId}&userType=${this.userInfo.userType}`
         } else {
-          this.$router.push({
-            path: '/login',
-            query: {
-              redirect: this.$route.fullPath,
-            },
-          })
+          const imId = localStorage.getItem('myInfo')
+            ? JSON.parse(localStorage.getItem('myInfo'))
+            : {}
+          window.location.href = `${config.imBaseUrl}/index?token=${imId.token}&userId=${imId.imUserId}&userType=VISITOR`
         }
         return
+        // } else {
+        //   this.$router.push({
+        //     path: '/login',
+        //     query: {
+        //       redirect: this.$route.fullPath,
+        //     },
+        //   })
+        // }
+        // return
       }
       if (item.path.match('order') && !this.userInfo.token) {
         this.$router.push({
