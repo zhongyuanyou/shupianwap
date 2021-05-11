@@ -55,11 +55,20 @@
     <div class="container-body">
       <sp-sticky :offset-top="offsetTop">
         <div ref="menu" class="tabs-box">
-          <div class="tabs-box-left">
+          <div
+            v-if="productType === 'PRO_CLASS_TYPE_SERVICE'"
+            class="tabs-box-left"
+          >
             <div @click="swichCityHandle">
               {{ cityName ? cityName : '定位中' }}
             </div>
             <div></div>
+          </div>
+          <div
+            v-if="productType === 'PRO_CLASS_TYPE_TRANSACTION'"
+            class="tabs-box-left"
+          >
+            <div style="border: none">全国</div>
           </div>
           <ul class="tabs-box-items">
             <li
@@ -422,10 +431,10 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.productAdvertData = res.data.sortMaterialList[0].materialList.slice(
-              0,
-              3
-            )
+            const adImg01 = res.data.sortMaterialList[0].materialList || []
+            const adImg02 = res.data.sortMaterialList[1].materialList || []
+            const adImg03 = res.data.sortMaterialList[2].materialList || []
+            this.productAdvertData = [...adImg01, ...adImg02, ...adImg03]
           } else {
             Toast.fail({
               duration: 2000,
@@ -638,7 +647,7 @@ export default {
       height: 160px;
       //background: linear-gradient(137deg, #ffffff 0%, #fff3eb 100%);
       border-radius: 12px;
-      border: 5px solid #ffab6f;
+      border: 0.06rem solid #ffab6f;
       margin-top: -18px;
       img {
         width: 100%;

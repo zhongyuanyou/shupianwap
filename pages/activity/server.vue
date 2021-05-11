@@ -58,13 +58,22 @@
       </div>
     </div>
     <div class="container-body">
-      <sp-sticky :offset-top="59">
+      <sp-sticky :offset-top="offsetTop">
         <div ref="menu" class="tabs-box">
-          <div class="tabs-box-left">
+          <div
+            v-if="productType === 'PRO_CLASS_TYPE_SERVICE'"
+            class="tabs-box-left"
+          >
             <div @click="swichCityHandle">
               {{ cityName ? cityName : '定位中' }}
             </div>
             <div></div>
+          </div>
+          <div
+            v-if="productType === 'PRO_CLASS_TYPE_TRANSACTION'"
+            class="tabs-box-left"
+          >
+            <div style="border: none">全国</div>
           </div>
           <ul class="tabs-box-items">
             <li
@@ -393,6 +402,11 @@ export default {
             if (this.page > res.data.totalPage) {
               this.finished = true
             }
+            if (this.productList.length === 0) {
+              this.isNoData = true
+            } else {
+              this.isNoData = false
+            }
           } else {
             this.loading = false
             this.finished = true
@@ -422,8 +436,9 @@ export default {
             if (adNum === 1) {
               this.productAdvertData = res.data.sortMaterialList[0].materialList
             } else {
-              this.productAdvertDataTwo =
-                res.data.sortMaterialList[0].materialList
+              const adImg01 = res.data.sortMaterialList[0].materialList || []
+              const adImg02 = res.data.sortMaterialList[1].materialList || []
+              this.productAdvertDataTwo = adImg01.concat(adImg02)
             }
           } else {
             Toast.fail({
@@ -511,7 +526,7 @@ export default {
   background-size: 100% auto;
   background-position-y: 118px;
   ::v-deep.fixed-head {
-    height: 0.92rem !important;
+    height: 0.88rem !important;
     .my-head {
       max-width: 812px;
       margin: 0 auto;
@@ -521,8 +536,7 @@ export default {
       box-shadow: none !important;
       background: url('https://cdn.shupian.cn/sp-pt/wap/images/ezdtzc7pkwg0000.png')
         no-repeat;
-      background-size: 100% auto;
-      background-position-y: -40px;
+      background-size: 100% 100%;
     }
   }
 

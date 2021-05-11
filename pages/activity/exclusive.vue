@@ -487,13 +487,16 @@ html::-webkit-scrollbar {
           color: #ffffff;
           line-height: 28px;
           .money {
-            font-size: 28px;
+            font-size: 24px;
             font-family: PingFangSC-Medium, PingFang SC;
             font-weight: bold;
             color: #835436;
             margin: 0;
-            position: relative;
+            width: 1.8rem;
+            transform: scale(0.8);
             line-height: 44px;
+            position: relative;
+            left: 0.17rem;
             span:nth-of-type(2) {
               font-size: 22px;
             }
