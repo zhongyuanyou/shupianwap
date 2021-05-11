@@ -1,6 +1,14 @@
 <template>
   <div class="container" :style="{ marginTop: safeTop + 'px' }">
-    <sp-sticky :style="safeTopStyle" offset-top="0"></sp-sticky>
+    <!--    url('https://cdn.shupian.cn/sp-pt/wap/2z5tsl5cs4q0000.png');-->
+    <!--    linear-gradient(125deg, #DAA240 0%, #C98714 100%);-->
+    <sp-sticky
+      :style="safeTopStyle"
+      style="
+        background: url('https://cdn.shupian.cn/sp-pt/wap/images/diffbv56gi00000.png');
+      "
+      offset-top="0"
+    />
     <!-- <sp-sticky></sp-sticky> -->
     <!-- S search -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
@@ -21,11 +29,7 @@
             color="#FFFFFF"
             :style="{ marginLeft: iconLeft + 'rem' }"
           ></my-icon>
-          <input
-            placeholder="搜索独家商品"
-            readonly
-            @click="clickInputHandle"
-          />
+          <input placeholder="搜索商品" readonly @click="clickInputHandle" />
         </div>
       </div>
     </sp-sticky>
@@ -67,10 +71,15 @@
           <div class="content">{{ item.skuName }}</div>
           <div class="background">
             <div class="bg-img"></div>
-            <div class="money">
-              <span>{{ item.specialPrice }}</span
-              ><span>元</span>
+            <div v-if="parsePrice(item.specialPrice) !== '面议'" class="money">
+              <span>
+                {{
+                  item.specialUnit ? item.specialNewPrice : item.specialPrice
+                }}</span
+              >
+              <span>{{ item.specialUnit || '元' }}</span>
             </div>
+            <div v-else class="money">面议</div>
           </div>
         </div>
       </div>
@@ -98,7 +107,11 @@
       </sp-sticky>
 
       <div class="body-content">
-        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <sp-pull-refresh
+          v-model="refreshing"
+          :disabled="refreshDisabled"
+          @refresh="onRefresh"
+        >
           <sp-list
             v-model="loading"
             :finished="finished"
@@ -134,13 +147,35 @@
                     </div>
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
-                        <div class="rc-bottom-lf-my">
-                          <div>{{ item.specialPrice }}</div>
-                          <div>元</div>
+                        <template>
+                          <div
+                            v-if="parsePrice(item.specialPrice) !== '面议'"
+                            class="rc-bottom-lf-my"
+                          >
+                            <div>
+                              {{
+                                item.specialUnit
+                                  ? item.specialNewPrice
+                                  : item.specialPrice
+                              }}
+                            </div>
+                            <div>{{ item.specialUnit || '元' }}</div>
+                          </div>
+                          <div v-else class="rc-bottom-lf-my">
+                            <div>面议</div>
+                          </div>
+                        </template>
+                        <div
+                          v-if="parsePrice(item.skuPrice) !== '面议'"
+                          class="bf-my"
+                        >
+                          原价{{
+                            item.skuUnit ? item.skuNewPrice : item.skuPrice
+                          }}
+                          {{ item.skuUnit || '元' }}
                         </div>
-                        <div class="bf-my">原价{{ item.skuPrice }}元</div>
                       </div>
-                      <div class="rc-bottom-rt">去抢购</div>
+                      <div class="rc-bottom-rt">立即抢购</div>
                     </div>
                   </div>
                 </div>
@@ -244,13 +279,21 @@ export default {
       hasCity: false,
     }
   },
-  mounted() {
-    this.countDown(new Date().getTime() + 60 * 60 * 24 * 1000)
-  },
 }
 </script>
 
 <style lang="less" scoped>
+html::-webkit-scrollbar {
+  display: none;
+}
+.multiRowOverflowDot {
+  //width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; //行数
+  -webkit-box-orient: vertical;
+}
 .no-data {
   text-align: center;
   padding-top: 10px;
@@ -382,9 +425,10 @@ export default {
     }
     .avtars {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       margin-bottom: 40px;
       overflow-x: scroll;
+      overflow-y: hidden;
       &::-webkit-scrollbar {
         width: 0 !important;
       }
@@ -443,13 +487,16 @@ export default {
           color: #ffffff;
           line-height: 28px;
           .money {
-            font-size: 28px;
+            font-size: 24px;
             font-family: PingFangSC-Medium, PingFang SC;
             font-weight: bold;
             color: #835436;
             margin: 0;
-            position: relative;
+            width: 1.8rem;
+            transform: scale(0.8);
             line-height: 44px;
+            position: relative;
+            left: 0.17rem;
             span:nth-of-type(2) {
               font-size: 22px;
             }
@@ -531,7 +578,7 @@ export default {
         margin: 0 20px;
       }
       ::v-deep .sp-list {
-        > div:first-child .body-content-items {
+        > div > div:first-child .body-content-items {
           margin-top: 0;
         }
       }
@@ -584,6 +631,7 @@ export default {
           font-weight: bold;
           color: #222222;
           line-height: 42px;
+          .multiRowOverflowDot();
 
           span {
             background: #ec5330;
@@ -651,7 +699,7 @@ export default {
             }
           }
           .rc-bottom-rt {
-            width: 176px;
+            //width: 176px;
             height: 80px;
             background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);
             border-radius: 8px;
@@ -662,6 +710,7 @@ export default {
             line-height: 30px;
             padding: 25px 28px;
             text-align: center;
+            white-space: nowrap;
           }
         }
       }
