@@ -1,7 +1,6 @@
 import { mapState, mapActions } from 'vuex'
 import { Toast } from '@chipspc/vant-dgg'
 import { activityApi } from '~/api'
-import imHandle from '@/mixins/imHandle'
 
 export default {
   computed: {
@@ -48,7 +47,6 @@ export default {
     //   return this.specType === 'HDZT_ZTTYPE_DJZS'
     // },
   },
-  mixins: [imHandle],
   data() {
     return {
       endCountDownTimer: null,
@@ -573,6 +571,7 @@ export default {
       return (px / this.screenWidth) * 100
     },
     parsePrice(priceStr) {
+      priceStr = priceStr.toString()
       if (priceStr > 0) {
         return {
           yuan: priceStr.split('.')[0],

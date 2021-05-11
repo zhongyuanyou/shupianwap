@@ -46,7 +46,7 @@
         </div>
         <div>
           <div
-            v-for="(item, index) in productAdvertData.slice(1, 3)"
+            v-for="(item, index) in productAdvertDataTwo.slice(0, 2)"
             :key="index"
             class="other_s"
           >
@@ -111,8 +111,8 @@
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
                         <div
-                          class="rc-bottom-lf-my"
                           v-if="parsePrice(item.specialPrice) !== '面议'"
+                          class="rc-bottom-lf-my"
                         >
                           <div>
                             <span v-if="item.specialNewPrice">{{
@@ -203,13 +203,15 @@ export default {
       itemTypeOptions: '',
       productList: [],
       productRecoData: '',
-      productAdvertData: '',
+      productAdvertData: [],
+      productAdvertDataTwo: [],
       page: 1,
       specTypeCode: 'HDZT_ZTTYPE_XFWHSF', // 活动类型code
       platformCode: 'COMDIC_PLATFORM_CRISPS', // 平台code
       specCode: '',
       defaultCityCode: '510100',
-      advertCode: 'ad100043', // 广告code
+      advertCode: 'ad100034', // 广告code
+      advertCodeTwo: 'ad100035', // 广告code
       productType: '',
       fixedShow: false,
       limit: 10,
@@ -236,7 +238,8 @@ export default {
         type: 'init',
       })
     }
-    this.getAdvertisingData()
+    this.getAdvertisingData(1, this.advertCode)
+    this.getAdvertisingData(2, this.advertCodeTwo)
     await this.getMenuTabs().then(this.getProductList)
   },
   mounted() {
@@ -407,16 +410,21 @@ export default {
           console.log(err)
         })
     },
-    getAdvertisingData() {
+    getAdvertisingData(adNum, advertCode) {
       this.$axios
         .get(activityApi.activityAdvertising, {
           params: {
-            locationCode: this.advertCode,
+            locationCode: advertCode,
           },
         })
         .then((res) => {
           if (res.code === 200) {
-            this.productAdvertData = res.data.sortMaterialList[0].materialList
+            if (adNum === 1) {
+              this.productAdvertData = res.data.sortMaterialList[0].materialList
+            } else {
+              this.productAdvertDataTwo =
+                res.data.sortMaterialList[0].materialList
+            }
           } else {
             Toast.fail({
               duration: 2000,
@@ -604,7 +612,7 @@ export default {
       box-sizing: border-box;
       padding: 20px;
       width: 710px;
-      height: 346px;
+      height: 340px;
       left: 0;
       right: 0;
       margin: 0 auto;
@@ -612,7 +620,7 @@ export default {
       border-radius: 24px;
       .default_s {
         width: 327px;
-        // height: 298px;
+        height: 298px;
         overflow: hidden;
         border-radius: 12px;
         img {

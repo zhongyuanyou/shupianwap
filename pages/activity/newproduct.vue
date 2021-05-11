@@ -107,8 +107,8 @@
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
                         <div
-                          class="rc-bottom-lf-my"
                           v-if="parsePrice(item.specialPrice) !== '面议'"
+                          class="rc-bottom-lf-my"
                         >
                           <div>
                             <span v-if="item.specialNewPrice">{{
@@ -204,7 +204,7 @@ export default {
       platformCode: 'COMDIC_PLATFORM_CRISPS', // 平台code
       specCode: '',
       defaultCityCode: '510100',
-      advertCode: 'ad100043', // 广告code
+      advertCode: 'ad100033', // 广告code
       productType: '',
       fixedShow: false,
       limit: 10,
