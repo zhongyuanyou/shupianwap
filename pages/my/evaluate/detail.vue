@@ -55,7 +55,7 @@
 <script>
 import { Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
-
+import { evaluateApi } from '@/api'
 // mock data
 const avatar = 'https://dchipscommon.dgg188.cn/img/bg.1e53fbc6.png'
 const name = '吴月茹'
@@ -83,8 +83,22 @@ export default {
   },
   mounted() {
     this.setStars()
+    this.init()
   },
   methods: {
+    async init() {
+      const params = {}
+      const res = await this.$axios.get(evaluateApi.detail, { params })
+      if (res.code === 200) {
+        if (res.data.information_list.length) {
+          this.loading = false
+          this.finished = false
+          this.infoList = this.infoList.concat(res.data.information_list)
+        } else {
+          this.finished = true
+        }
+      }
+    },
     setStars() {
       // 构建星级
       const _this = this

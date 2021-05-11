@@ -39,9 +39,9 @@
       <!--E 评分-->
     </div>
 
-    <div class="btn">
+    <!-- <div class="btn">
       <div class="evaluate_btn">发布评价</div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -175,23 +175,6 @@ export default {
         line-height: 24px;
         padding: 10px 12px;
       }
-    }
-  }
-
-  .btn {
-    padding: 0 40px;
-
-    width: 100%;
-    .evaluate_btn {
-      height: 88px;
-      background: #4974f5;
-      border-radius: 8px;
-      font-size: 32px;
-      font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 700;
-      color: #ffffff;
-      text-align: center;
-      line-height: 88px;
     }
   }
 }
