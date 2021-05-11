@@ -422,10 +422,10 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.productAdvertData = res.data.sortMaterialList[0].materialList.slice(
-              0,
-              3
-            )
+            const adImg01 = res.data.sortMaterialList[0].materialList || []
+            const adImg02 = res.data.sortMaterialList[1].materialList || []
+            const adImg03 = res.data.sortMaterialList[2].materialList || []
+            this.productAdvertData = [...adImg01, ...adImg02, ...adImg03]
           } else {
             Toast.fail({
               duration: 2000,

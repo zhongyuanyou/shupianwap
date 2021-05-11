@@ -635,7 +635,6 @@ html::-webkit-scrollbar {
             border-radius: 8px;
             display: flex;
             align-items: center;
-            margin-left: 134px;
             div:nth-child(1) {
               height: 32px;
               font-size: 32px;

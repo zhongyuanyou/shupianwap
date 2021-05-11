@@ -393,6 +393,9 @@ export default {
             if (this.page > res.data.totalPage) {
               this.finished = true
             }
+            if (this.productList.length === 0) {
+              this.isNoData = true
+            }
           } else {
             this.loading = false
             this.finished = true
@@ -422,8 +425,9 @@ export default {
             if (adNum === 1) {
               this.productAdvertData = res.data.sortMaterialList[0].materialList
             } else {
-              this.productAdvertDataTwo =
-                res.data.sortMaterialList[0].materialList
+              const adImg01 = res.data.sortMaterialList[0].materialList || []
+              const adImg02 = res.data.sortMaterialList[1].materialList || []
+              this.productAdvertDataTwo = adImg01.concat(adImg02)
             }
           } else {
             Toast.fail({
