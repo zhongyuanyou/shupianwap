@@ -253,7 +253,7 @@ export default {
   },
   mounted() {
     if (this.isInApp) {
-      this.offsetTop = this.appInfo.statusBarHeight + 66 + 'px'
+      this.offsetTop = this.appInfo.statusBarHeight + 62 + 'px'
       this.positionY = true
     } else {
       this.offsetTop = 59 + 'px'
