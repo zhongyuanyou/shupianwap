@@ -113,6 +113,13 @@ export default {
       evaluateTagList: [],
       evaluateDimensionList: [],
       serverScore: 0, // 服务分
+      Field: {
+        type: 'functional',
+        title: '温馨提示',
+        description: '差一点就评价完了，是否确认退出？',
+        confirmButtonText: '继续评价',
+        cancelButtonText: '操作',
+      },
     }
   },
   mounted() {
@@ -151,7 +158,6 @@ export default {
   .mixin-flex {
     display: flex;
   }
-
   .header-line {
     width: 100%;
     height: 1px;
