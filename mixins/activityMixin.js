@@ -46,6 +46,10 @@ export default {
     // isTrade() {
     //   return this.specType === 'HDZT_ZTTYPE_DJZS'
     // },
+    isService() {
+      return this.productType === 'PRO_CLASS_TYPE_SERVICE'
+      // return true
+    },
   },
   data() {
     return {

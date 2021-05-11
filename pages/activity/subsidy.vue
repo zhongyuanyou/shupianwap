@@ -83,7 +83,7 @@
       <!-- E advert -->
     </div>
     <sp-sticky class="tabs-box" :offset-top="headerHeight + safeTop">
-      <div class="drop_down">
+      <div v-if="isService" class="drop_down">
         <div class="drop_down_title" @click="swichCityHandle">
           {{ cityName ? cityName : '定位中' }}
         </div>
