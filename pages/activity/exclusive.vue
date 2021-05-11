@@ -166,10 +166,13 @@
                           </div>
                         </template>
                         <div
-                          v-if="parsePrice(item.specialPrice) !== '面议'"
+                          v-if="parsePrice(item.skuPrice) !== '面议'"
                           class="bf-my"
                         >
-                          原价{{ item.skuPrice }}元
+                          原价{{
+                            item.skuUnit ? item.skuNewPrice : item.skuPrice
+                          }}
+                          {{ item.skuUnit || '元' }}
                         </div>
                       </div>
                       <div class="rc-bottom-rt">立即抢购</div>
