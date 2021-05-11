@@ -165,6 +165,7 @@ export default {
 ::v-deep.sp-popup--bottom.sp-popup--round {
   border-radius: 24px 24px 0px 0px;
 }
+
 .bargaining {
   padding: 64px 40px 40px 40px;
   &-title {
@@ -181,6 +182,9 @@ export default {
     height: 34px;
     line-height: 34px;
     margin-top: 12px;
+  }
+  .bargaining-desc {
+    font-size: 28px;
   }
   ::v-deepinput {
     font-size: 28px;
