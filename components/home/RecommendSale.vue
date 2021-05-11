@@ -211,12 +211,8 @@ export default {
       return this.$store.state.city.currentCity.code
     },
   },
-  async created() {
-    if (process.client) {
-      this.params.deviceId = await getUserSign() // 获取用户唯一标识
-    }
-  },
-  mounted() {
+  async mounted() {
+    this.params.deviceId = await getUserSign() // 获取用户唯一标识
     this.getTabData()
     try {
       this.searchDomHeight =
@@ -278,7 +274,10 @@ export default {
       e.stopImmediatePropagation() // 阻止冒泡
     },
     // 查询推荐商品
-    findRecomList(index) {
+    async findRecomList(index) {
+      if (!this.params.deviceId) {
+        this.params.deviceId = await getUserSign()
+      }
       const params = this.params
       params.areaCode = this.cityCode || '510100'
       params.page = {
