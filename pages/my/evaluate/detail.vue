@@ -97,7 +97,7 @@ export default {
     },
     setStars() {
       // 构建星级
-      const _this = this``````
+      const _this = this
       this.stars.forEach((item, index) => {
         if (_this.starLevel > index) {
           item.flag = true
