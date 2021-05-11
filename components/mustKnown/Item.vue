@@ -114,6 +114,7 @@ export default {
     font-family: PingFangSC-Medium, PingFang SC;
     font-weight: bold;
     color: #1a1a1a;
+    line-height: 50px;
     word-break: break-all;
     overflow: hidden;
     text-overflow: ellipsis;

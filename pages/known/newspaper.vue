@@ -281,6 +281,8 @@ export default {
     height: 1218px;
     background: #ffffff;
     border-radius: 24px 24px 0px 0px;
+    position: absolute;
+    margin-top: -22px;
   }
 }
 </style>
