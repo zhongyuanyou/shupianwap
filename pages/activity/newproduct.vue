@@ -106,11 +106,33 @@
                     </div>
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
-                        <div class="rc-bottom-lf-my">
-                          <div>{{ item.specialPrice }}</div>
-                          <div>元</div>
+                        <div
+                          class="rc-bottom-lf-my"
+                          v-if="parsePrice(item.specialPrice) !== '面议'"
+                        >
+                          <div>
+                            <span v-if="item.specialNewPrice">{{
+                              item.specialNewPrice
+                            }}</span
+                            ><span v-else>{{ item.specialPrice }}</span>
+                          </div>
+                          <div><span v-if="item.specialUnit">万</span> 元</div>
                         </div>
-                        <div class="bf-my">原价{{ item.skuPrice }}元</div>
+                        <div v-else class="rc-bottom-lf-my">
+                          <div>面议</div>
+                        </div>
+                        <div
+                          v-if="parsePrice(item.skuPrice) !== '面议'"
+                          class="bf-my"
+                        >
+                          原价
+                          <span v-if="item.skuNewPrice">{{
+                            item.skuNewPrice
+                          }}</span
+                          ><span v-else>{{ item.skuPrice }}</span>
+                          <span v-if="item.specialUnit">万</span>元
+                        </div>
+                        <div v-else class="bf-my">面议</div>
                       </div>
                       <div class="rc-bottom-rt">
                         <div class="imm_consult">查看详情</div>
@@ -339,6 +361,7 @@ export default {
         this.loading = false
       }
     },
+
     productMethod(param) {
       this.$axios
         .get(activityApi.activityProductList, {
@@ -379,6 +402,16 @@ export default {
           this.productList = []
           console.log(err)
         })
+    },
+    parsePrice(priceStr) {
+      if (priceStr > 0) {
+        return {
+          yuan: priceStr.split('.')[0],
+          jiao: priceStr.split('.')[1],
+        }
+      } else {
+        return '面议'
+      }
     },
     getAdvertisingData() {
       this.$axios
