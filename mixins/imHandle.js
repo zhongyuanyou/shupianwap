@@ -156,16 +156,18 @@ export default {
      * @return: void
      */
     regularVisitor({ visitorId, userId }) {
-      console.log(visitorId, userId, 321)
-      this.imExample.regularVisitor(
-        {
-          visitorId,
-          userId,
-        },
-        (res) => {
-          console.log(res, 123)
-        }
-      )
+      return new Promise((resolve) => {
+        this.imExample.regularVisitor(
+          {
+            visitorId,
+            userId,
+          },
+          (res) => {
+            resolve()
+            console.log(res, 123)
+          }
+        )
+      })
     },
     sendTemplateMsgMixin({ sessionParams, msgParams }) {
       const userInfo = this.$store.state.user.userInfo
