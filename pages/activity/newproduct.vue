@@ -68,7 +68,8 @@
             v-if="productType === 'PRO_CLASS_TYPE_TRANSACTION'"
             class="tabs-box-left"
           >
-            <div style="border: none">全国</div>
+            <div>全国</div>
+            <div style="border: none"></div>
           </div>
           <ul class="tabs-box-items">
             <li
