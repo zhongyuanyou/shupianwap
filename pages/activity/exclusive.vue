@@ -487,7 +487,7 @@ html::-webkit-scrollbar {
           color: #ffffff;
           line-height: 28px;
           .money {
-            font-size: 28px;
+            font-size: 24px;
             font-family: PingFangSC-Medium, PingFang SC;
             font-weight: bold;
             color: #835436;

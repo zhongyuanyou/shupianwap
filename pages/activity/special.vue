@@ -468,9 +468,11 @@ html::-webkit-scrollbar {
             font-weight: bold;
             transform: scale(0.8);
             width: 4rem;
+            position: relative;
+            left: 0.36rem;
             span:nth-of-type(1) {
-              line-height: 28px;
-              font-size: 28px;
+              line-height: 24px;
+              font-size: 24px;
             }
             span:nth-of-type(2) {
               font-size: 22px;
