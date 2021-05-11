@@ -393,6 +393,9 @@ export default {
             if (this.page > res.data.totalPage) {
               this.finished = true
             }
+            if (this.productList.length === 0) {
+              this.isNoData = true
+            }
           } else {
             this.loading = false
             this.finished = true
@@ -422,8 +425,17 @@ export default {
             if (adNum === 1) {
               this.productAdvertData = res.data.sortMaterialList[0].materialList
             } else {
-              this.productAdvertDataTwo =
-                res.data.sortMaterialList[0].materialList
+              this.productAdvertDataTwo = []
+              if (res.data.sortMaterialList[0]) {
+                this.productAdvertDataTwo = res.data.sortMaterialList[0]
+              } else if (
+                res.data.sortMaterialList[0] &&
+                res.data.sortMaterialList[1]
+              ) {
+                this.productAdvertDataTwo = res.data.sortMaterialList[0].materialList.concat(
+                  res.data.sortMaterialList[1].materialList
+                )
+              }
             }
           } else {
             Toast.fail({
