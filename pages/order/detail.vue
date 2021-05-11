@@ -97,14 +97,37 @@
           </span>
         </p> -->
       </div>
-      <div class="order-info order-info1">
+      <div
+        v-if="
+          orderData.evaluateStatus &&
+          orderData.orderSplitAndCusVo.signerId &&
+          (orderData.evaluateStatus !== 3 || orderData.evaluateStatus !== '3')
+        "
+        class="order-info order-info1"
+      >
         <p class="order-item">
           <span class="label">签单人</span>
-          <span class="text">刘雅婷</span>
-          <span class="right"
+          <span class="text">{{
+            orderData.orderSplitAndCusVo.signerName
+          }}</span>
+          <span
+            v-if="orderData.evaluateStatus == 1"
+            class="right"
+            @click="navToUrl(1)"
             >写评价
             <my-icon
-              name="per_ic_customer"
+              name="order_ic_listnext"
+              size="0.28rem"
+              color="#222222"
+            ></my-icon>
+          </span>
+          <span
+            v-if="orderData.evaluateStatus == 2"
+            class="right"
+            @click="navToUrl(2)"
+            >查看评价
+            <my-icon
+              name="order_ic_listnext"
               size="0.28rem"
               color="#222222"
             ></my-icon>
@@ -362,7 +385,7 @@ export default {
       orderData: {
         orderStatus: '',
         orderList: [],
-        orderSplitAndCusVo: [],
+        orderSplitAndCusVo: {},
       },
       showPayBtn: false,
       payList: [], // 支付列表
@@ -510,6 +533,28 @@ export default {
           break
       }
     },
+    navToUrl(type) {
+      const query = {
+        evaluateCenterId: this.orderData.orderSplitAndCusVo.evaluateCenterId, // 评价id
+        signerId: this.orderData.orderSplitAndCusVo.signerId, // 签单人员id
+        signerNo: this.orderData.orderSplitAndCusVo.signerNo, // 签单人员编号
+        signerSubjectUserId: this.orderData.orderSplitAndCusVo
+          .signerSubjectUserId, // 签单人商户用户id
+        orderId: this.orderData.id,
+        cusOrderId: this.orderData.cusOrderId,
+      }
+      if (type === 1) {
+        this.$router.push({
+          path: '/my/plannerEvaluate',
+          query,
+        })
+      } else {
+        this.$router.push({
+          path: '/my/evaluate/detail',
+          query,
+        })
+      }
+    },
     // 设置取消订单原因name 中文
     setCancelOrderName(val) {
       this.canCelReasonName = val
@@ -577,12 +622,6 @@ export default {
     color: #ec5330;
     font-size: 36px;
   }
-}
-.order-info2 {
-  margin-bottom: 150px;
-}
-.order-info1 {
-  margin-bottom: 20px;
 }
 
 .order-info {
@@ -687,6 +726,20 @@ export default {
     }
   }
 }
+
+.order-info2 {
+  margin-bottom: 150px;
+}
+.order-info1 {
+  margin-bottom: 20px;
+  .order-item {
+    margin-bottom: 0;
+    .right {
+      float: right;
+    }
+  }
+}
+
 .serve-time {
   margin-top: 20px;
   width: 100%;
