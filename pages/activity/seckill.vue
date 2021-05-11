@@ -178,11 +178,11 @@
                       <div class="reduce-price">
                         限时直降{{ item.minusPrice }}元
                       </div>
-                      <div class="deal-ok">
+                      <!-- <div class="deal-ok">
                         已成交{{
                           item.specialInventory - item.specialResidueInventory
                         }}单
-                      </div>
+                      </div>-->
                     </div>
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
@@ -196,7 +196,8 @@
                         </div>
                       </div>
                       <div class="rc-bottom-rt">
-                        <div>去抢购</div>
+                        去抢购
+                        <!--  <div>去抢购</div>-->
                         <!--<div class="process-per">
                           <sp-progress
                             color="#FFF166"
@@ -723,21 +724,26 @@ html::-webkit-scrollbar {
             background: linear-gradient(139deg, #fe525d 0%, #fd3543 100%);
             border-radius: 8px;
             position: relative;
-            div:nth-of-type(1) {
-              padding: 12px 0 10px 0;
-              text-align: center;
-              font-size: 30px;
-              font-weight: bold;
-              color: #ffffff;
-              line-height: 30px;
-            }
-            div:nth-of-type(2) {
-              font-size: 22px;
-              font-weight: 400;
-              color: #ffffff;
-              line-height: 22px;
-              text-align: center;
-            }
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: #ffffff;
+            line-height: 80px;
+            //div:nth-of-type(1) {
+            //  padding: 12px 0 10px 0;
+            //  text-align: center;
+            //  font-size: 30px;
+            //  font-weight: bold;
+            //  color: #ffffff;
+            //  line-height: 30px;
+            //}
+            //div:nth-of-type(2) {
+            //  font-size: 22px;
+            //  font-weight: 400;
+            //  color: #ffffff;
+            //  line-height: 22px;
+            //  text-align: center;
+            //}
             .process-per {
               display: flex;
               align-items: center;
