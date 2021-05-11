@@ -5,7 +5,7 @@
       <div v-for="(item, index) in list" :key="index" class="list">
         <div class="head">
           <h1>{{ item.contractName }}</h1>
-          <p v-if="item.contractStatus == 'STRUTS_YWC'">已完成</p>
+          <p v-if="item.contractStatus == 'STRUTS_YWC'">已签署</p>
           <p
             v-if="item.contractStatus == 'STRUTS_CG'"
             :style="{

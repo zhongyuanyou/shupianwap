@@ -178,51 +178,50 @@ export default {
     },
     // 调起IM
     // 发送模板消息(带图片)
-    async sendTemplateMsgWithImg(mchUserId, type) {
-      const isLogin = await this.judgeLoginMixin()
-      if (isLogin) {
-        // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
-        // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
-        // 意向业务
-        const intentionType = {}
-        intentionType[
-          this.sellingDetail.classCode
-        ] = this.sellingDetail.classCodeName
-        // 意向城市
-        const intentionCity = {}
-        intentionCity[this.city.code] = this.city.name
-        const sessionParams = {
-          requireCode: this.sellingDetail.classCodeLevel.split(',')[0],
-          requireName: '',
-          imUserId: mchUserId, // 商户用户ID
-          imUserType: type, // 用户类型
-          ext: {
-            intentionType, // 意向业务 非必传
-            intentionCity, // 意向城市 非必传
-            recommendId: '',
-            recommendAttrJson: {},
-            startUserType: 'cps-app', //
-          },
-        }
-        const msgParams = {
-          sendType: 0, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
-          msgType: 'im_tmplate', // 消息类型
-          extContent: this.$route.query, // 路由参数
-          productName: this.sellingDetail.name, // 产品名称
-          productContent: this.sellingDetail.salesGoodsOperatings
-            .productDescribe, // 产品信息
-          price: this.sellingDetail.salesPrice, // 价格
-          forwardAbstract: this.sellingDetail.salesGoodsOperatings
-            .productDescribe, // 摘要信息，可与显示内容保持一致
-          routerId: 'IMRouter_APP_ProductDetail_Service', // 路由ID
-          imageUrl: this.sellingDetail.salesGoodsOperatings.clientDetails[0]
-            .imgFileIdPaths[0], // 产品图片
-          unit: this.sellingDetail.salesPrice.split('.')[1], // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
-        }
-        this.sendTemplateMsgMixin({ sessionParams, msgParams })
-      } else {
-        this.$router.push('/login')
+    sendTemplateMsgWithImg(mchUserId, type) {
+      // const isLogin = await this.judgeLoginMixin()
+      // if (isLogin) {
+      // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
+      // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
+      // 意向业务
+      const intentionType = {}
+      intentionType[
+        this.sellingDetail.classCode
+      ] = this.sellingDetail.classCodeName
+      // 意向城市
+      const intentionCity = {}
+      intentionCity[this.city.code] = this.city.name
+      const sessionParams = {
+        requireCode: this.sellingDetail.classCodeLevel.split(',')[0],
+        requireName: '',
+        imUserId: mchUserId, // 商户用户ID
+        imUserType: type, // 用户类型
+        ext: {
+          intentionType, // 意向业务 非必传
+          intentionCity, // 意向城市 非必传
+          recommendId: '',
+          recommendAttrJson: {},
+          startUserType: 'cps-app', //
+        },
       }
+      const msgParams = {
+        sendType: 0, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
+        msgType: 'im_tmplate', // 消息类型
+        extContent: this.$route.query, // 路由参数
+        productName: this.sellingDetail.name, // 产品名称
+        productContent: this.sellingDetail.salesGoodsOperatings.productDescribe, // 产品信息
+        price: this.sellingDetail.salesPrice, // 价格
+        forwardAbstract: this.sellingDetail.salesGoodsOperatings
+          .productDescribe, // 摘要信息，可与显示内容保持一致
+        routerId: 'IMRouter_APP_ProductDetail_Service', // 路由ID
+        imageUrl: this.sellingDetail.salesGoodsOperatings.clientDetails[0]
+          .imgFileIdPaths[0], // 产品图片
+        unit: this.sellingDetail.salesPrice.split('.')[1], // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+      }
+      this.sendTemplateMsgMixin({ sessionParams, msgParams })
+      // } else {
+      //   this.$router.push('/login')
+      // }
     },
   },
 }
