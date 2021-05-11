@@ -45,7 +45,7 @@
             </p>
           </div>
           <div class="cell">
-            <p class="title">签署时间：{{ item.updateTime }}</p>
+            <p class="title">签署时间：{{ item.contractApplyTime || '-' }}</p>
           </div>
         </div>
         <div
