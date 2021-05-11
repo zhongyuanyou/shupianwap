@@ -466,6 +466,8 @@ html::-webkit-scrollbar {
             font-family: PingFangSC-Medium, PingFang SC;
             color: #ffffff;
             font-weight: bold;
+            transform: scale(0.8);
+            width: 4rem;
             span:nth-of-type(1) {
               line-height: 28px;
               font-size: 28px;

@@ -58,7 +58,7 @@
       </div>
     </div>
     <div class="container-body">
-      <sp-sticky :offset-top="59">
+      <sp-sticky :offset-top="offsetTop">
         <div ref="menu" class="tabs-box">
           <div class="tabs-box-left">
             <div @click="swichCityHandle">
@@ -395,6 +395,8 @@ export default {
             }
             if (this.productList.length === 0) {
               this.isNoData = true
+            } else {
+              this.isNoData = false
             }
           } else {
             this.loading = false
@@ -515,7 +517,7 @@ export default {
   background-size: 100% auto;
   background-position-y: 118px;
   ::v-deep.fixed-head {
-    height: 0.92rem !important;
+    height: 0.88rem !important;
     .my-head {
       max-width: 812px;
       margin: 0 auto;
@@ -525,8 +527,7 @@ export default {
       box-shadow: none !important;
       background: url('https://cdn.shupian.cn/sp-pt/wap/images/ezdtzc7pkwg0000.png')
         no-repeat;
-      background-size: 100% auto;
-      background-position-y: -40px;
+      background-size: 100% 100%;
     }
   }
 
