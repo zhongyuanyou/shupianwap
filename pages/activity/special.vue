@@ -1,6 +1,12 @@
 <template>
   <div class="container" :style="{ marginTop: safeTop + 'px' }">
-    <sp-sticky :style="safeTopStyle" offset-top="0"></sp-sticky>
+    <sp-sticky
+      :style="safeTopStyle"
+      style="
+        background: url('https://cdn.shupian.cn/sp-pt/wap/images/f4eiumfehnc0000.png');
+      "
+      offset-top="0"
+    />
     <!-- S search -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="search">
@@ -20,11 +26,7 @@
             color="#FFFFFF"
             :style="{ marginLeft: iconLeft + 'rem' }"
           ></my-icon>
-          <input
-            placeholder="搜索特卖商品"
-            readonly
-            @click="clickInputHandle"
-          />
+          <input placeholder="搜索商品" readonly @click="clickInputHandle" />
         </div>
       </div>
     </sp-sticky>
@@ -68,10 +70,13 @@
           <div class="content">{{ item.skuName }}</div>
           <div class="background">
             <div class="bg-img"></div>
-            <div class="money">
-              <span>{{ item.specialPrice }}</span
-              ><span>元</span>
+            <div v-if="parsePrice(item.specialPrice) !== '面议'" class="money">
+              <span>{{
+                item.specialUnit ? item.specialNewPrice : item.specialPrice
+              }}</span
+              ><span>{{ item.specialUnit || '元' }}</span>
             </div>
+            <div v-else class="money">面议</div>
           </div>
         </div>
       </div>
@@ -95,7 +100,11 @@
     </sp-sticky>
     <div class="container-body">
       <div class="body-content">
-        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <sp-pull-refresh
+          v-model="refreshing"
+          :disabled="refreshDisabled"
+          @refresh="onRefresh"
+        >
           <sp-list
             v-model="loading"
             :finished="finished"
@@ -151,21 +160,33 @@
                     </div>
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
-                        <div class="rc-bottom-lf-my">
-                          <div>{{ item.specialPrice }}</div>
-                          <div>元</div>
+                        <div
+                          v-if="parsePrice(item.specialPrice) !== '面议'"
+                          class="rc-bottom-lf-my"
+                        >
+                          <div>
+                            {{
+                              item.specialUnit
+                                ? item.specialNewPrice
+                                : item.specialPrice
+                            }}
+                          </div>
+                          <div>{{ item.specialUnit || '元' }}</div>
                         </div>
-                        <div class="bf-my">原价{{ item.skuPrice }}元</div>
-                      </div>
-                      <div class="rc-bottom-rt">
-                        <div>去抢购</div>
-                        <div>
-                          已成交{{
-                            item.specialInventory -
-                            item.specialResidueInventory
-                          }}单
+                        <div v-else class="rc-bottom-lf-my">
+                          <div>面议</div>
+                        </div>
+
+                        <div
+                          v-if="parsePrice(item.specialPrice) !== '面议'"
+                          class="bf-my"
+                        >
+                          原价{{
+                            item.skuUnit ? item.skuNewPrice : item.skuPrice
+                          }}{{ item.skuUnit || '元' }}
                         </div>
                       </div>
+                      <div class="rc-bottom-rt">去抢购</div>
                     </div>
                   </div>
                 </div>
@@ -226,6 +247,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+html::-webkit-scrollbar {
+  display: none;
+}
 .no-data {
   text-align: center;
   padding-top: 10px;
@@ -240,6 +264,15 @@ export default {
     color: #222222;
     font-size: 28px;
   }
+}
+
+.multiRowOverflowDot {
+  //width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; //行数
+  -webkit-box-orient: vertical;
 }
 .container {
   position: relative;
@@ -375,6 +408,7 @@ export default {
       display: flex;
       justify-content: flex-start;
       overflow-x: scroll;
+      overflow-y: hidden;
       &::-webkit-scrollbar {
         width: 0 !important;
       }
@@ -432,9 +466,13 @@ export default {
             font-family: PingFangSC-Medium, PingFang SC;
             color: #ffffff;
             font-weight: bold;
+            transform: scale(0.8);
+            width: 4rem;
+            position: relative;
+            left: 0.36rem;
             span:nth-of-type(1) {
-              line-height: 28px;
-              font-size: 28px;
+              line-height: 24px;
+              font-size: 24px;
             }
             span:nth-of-type(2) {
               font-size: 22px;
@@ -572,6 +610,7 @@ export default {
           white-space: normal;
           height: 84px;
           line-height: 42px;
+          .multiRowOverflowDot();
           .rc-span {
             display: inline-flex;
             align-items: center;
@@ -659,28 +698,33 @@ export default {
           }
           .rc-bottom-rt {
             width: 100px;
-            height: 100px;
+            //height: 100px;
             background: yellow;
             width: 176px;
-            height: 80px;
+            //height: 80px;
             font-family: PingFangSC-Medium, PingFang SC;
             background: linear-gradient(139deg, #fe525d 0%, #fd3543 100%);
             border-radius: 8px;
-            div:nth-of-type(1) {
-              padding: 12px 0 4px 0;
-              text-align: center;
-              font-size: 30px;
-              font-weight: bold;
-              color: #ffffff;
-              line-height: 30px;
-            }
-            div:nth-of-type(2) {
-              font-size: 22px;
-              font-weight: 400;
-              color: #ffffff;
-              line-height: 22px;
-              text-align: center;
-            }
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: #ffffff;
+            line-height: 80px;
+            //div:nth-of-type(1) {
+            //  padding: 12px 0 4px 0;
+            //  text-align: center;
+            //  font-size: 30px;
+            //  font-weight: bold;
+            //  color: #ffffff;
+            //  line-height: 30px;
+            //}
+            //div:nth-of-type(2) {
+            //  font-size: 22px;
+            //  font-weight: 400;
+            //  color: #ffffff;
+            //  line-height: 22px;
+            //  text-align: center;
+            //}
           }
         }
       }

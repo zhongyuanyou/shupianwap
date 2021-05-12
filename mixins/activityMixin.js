@@ -1,8 +1,6 @@
 import { mapState, mapActions } from 'vuex'
 import { Toast } from '@chipspc/vant-dgg'
 import { activityApi } from '~/api'
-import imHandle from '@/mixins/imHandle'
-let timer
 
 export default {
   computed: {
@@ -26,14 +24,21 @@ export default {
       return {
         width: '100%',
         height: this.safeTop + 'px',
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
+        // background:
+        //   "url('https://cdn.shupian.cn/sp-pt/wap/9wjolx4gc0s0000.png')",
+        backgroundSize: '100% 300%',
+        // backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
         position: 'fixed',
         top: '0',
         zIndex: '99',
       }
     },
     terminalCode() {
-      return this.isInApp ? 'COMDIC_TERMINAL_APP' : 'COMDIC_TERMINAL_WAP'
+      // return this.isInApp ? 'COMDIC_TERMINAL_APP' : 'COMDIC_TERMINAL_WAP'
+      // 只有app有图片
+      return 'COMDIC_TERMINAL_APP'
     },
     isTimerShow() {
       return this.recommendProductList.length || this.activityProductList.length
@@ -41,10 +46,15 @@ export default {
     // isTrade() {
     //   return this.specType === 'HDZT_ZTTYPE_DJZS'
     // },
+    isService() {
+      return this.productType === 'PRO_CLASS_TYPE_SERVICE'
+      // return true
+    },
   },
-  mixins: [imHandle],
   data() {
     return {
+      endCountDownTimer: null,
+      countDownTimer: null,
       defaultData: {
         index: 0,
         sort: -1, // 倒序
@@ -52,6 +62,7 @@ export default {
       iconLeft: 0.35,
       loading: false,
       finished: false,
+      refreshDisabled: false,
       refreshing: false,
       activityTypeOptions: [],
       activityProductList: [],
@@ -73,7 +84,8 @@ export default {
       specCode: '',
       defaultCityCode: '510100',
       advertCode: 'ad1314', // 广告code
-      diff: 0,
+      endCountDiff: 0,
+      countDownDiff: 0,
       time: '',
       endTime: '',
       recommendProductList: [],
@@ -93,19 +105,21 @@ export default {
       })
     }
 
-    // this.getAdvertisingData()
-    await this.getMenuTabs().then(this.getRecommendProductList)
+    await this.getMenuTabs()
+    await this.getRecommendProductList()
   },
   mounted() {
     if (this.isInApp) {
       this.safeTop = this.appInfo.statusBarHeight
     }
     this.headerHeight = this.$refs.header_sticky.height
+    // console.log(process.env)
     // this.chii()
     this.screenWidth = window.screen.width
   },
   beforeDestroy() {
-    clearInterval(timer)
+    clearInterval(this.endCountDownTimer)
+    clearInterval(this.countDownTimer)
   },
   methods: {
     ...mapActions({
@@ -248,9 +262,11 @@ export default {
         specType: this.specType,
         platformCode: this.platformCode,
       }
-      if (this.hasCity) {
-        params.cityCodes = this.cityCode || this.defaultCityCode
-      }
+      // if (this.hasCity) {
+      //   params.cityCodes = this.cityCode || this.defaultCityCode
+      // }
+      // 前端放开，后台校验城市，如果是交易产品后台就不带城市查询
+      params.cityCodes = this.cityCode || this.defaultCityCode
       // if (this.specType !== 'HDZT_ZTTYPE_XSQG') {
       //   Object.assign(params, {
       //     // cityCodes: this.cityCode || this.defaultCityCode,
@@ -263,6 +279,18 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
+            this.activityTypeOptions = res.data.settingVOList || []
+            if (
+              (this.activityTypeOptions.length === 0 &&
+                this.specType !== 'HDZT_ZTTYPE_XSQG') ||
+              !res.data.specCode
+            ) {
+              // throw new Error('无活动数据')
+              this.loading = false
+              this.finished = true
+              this.refreshDisabled = true
+              return
+            }
             if (res.data.endTime) {
               this.activeTimer(res.data.endTime.replace(/-/g, '/'))
             }
@@ -270,13 +298,6 @@ export default {
               this.specCode = res.data.specCode
             }
             this.productType = res.data.productType || ''
-            this.activityTypeOptions = res.data.settingVOList || []
-            if (
-              this.activityTypeOptions.length === 0 &&
-              this.specType !== 'HDZT_ZTTYPE_XSQG'
-            ) {
-              throw new Error('无分类数据')
-            }
             this.activityTypeOptions.unshift({
               cityCode: this.cityCode,
               cityName: this.cityName,
@@ -299,6 +320,7 @@ export default {
         .catch((error) => {
           this.loading = false
           this.finished = true
+          this.refreshDisabled = true
           Toast.fail({
             duration: 2000,
             message: error.message,
@@ -319,11 +341,20 @@ export default {
           limit: 15,
           terminalCode: this.terminalCode,
         }
-        if (this.hasCity) {
-          params.cityCode = this.cityCode
-        }
+        // if (this.hasCity) {
+        //   params.cityCode = this.cityCode
+        // }
+        // 前端放开，后台校验城市，如果是交易产品后台就不带城市查询
+        params.cityCode = this.cityCode
         if (this.currentTab.id !== '') {
           params.labelId = this.currentTab.id
+        }
+
+        if (
+          this.currentTab.labelName !== '' &&
+          this.currentTab.labelName !== '全部'
+        ) {
+          params.labelName = this.currentTab.labelName
         }
         await this.productMethod(params)
       } else {
@@ -339,9 +370,6 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            res.data.rows.forEach((v) => {
-              v.tags = 'asdsad,asdasdas,fdsgdfg,dfhgfhfg,sdrfwegergerher,'
-            })
             this.activityProductList = this.activityProductList.concat(
               res.data.rows
             )
@@ -353,6 +381,7 @@ export default {
             if (this.page > res.data.totalPage) {
               this.finished = true
             }
+            this.refreshing = false
           } else {
             this.loading = false
             throw new Error('服务异常，请刷新重试！')
@@ -365,6 +394,7 @@ export default {
           }
         })
         .catch((err) => {
+          this.refreshing = false
           Toast.fail({
             duration: 2000,
             message: err.message,
@@ -372,9 +402,9 @@ export default {
             className: 'my-toast-style',
           })
         })
-        .finally(() => {
-          this.refreshing = false
-        })
+      // .finally(() => {
+      //   this.refreshing = false
+      // })
     },
     getRecommendProductList() {
       if (this.specCode) {
@@ -386,9 +416,11 @@ export default {
           terminalCode: this.terminalCode,
         }
 
-        if (this.hasCity) {
-          params.cityCode = this.cityCode
-        }
+        // if (this.hasCity) {
+        //   params.cityCode = this.cityCode
+        // }
+        // 前端放开，后台校验城市，如果是交易产品后台就不带城市查询
+        params.cityCode = this.cityCode
 
         this.$axios
           .get(activityApi.activityProductList, { params })
@@ -482,11 +514,11 @@ export default {
       const that = this
       const nowTimeStamp = new Date().getTime()
       // 计算时间差 秒
-      this.diff = (timestamp - nowTimeStamp) / 1000
-      timer = setInterval(() => {
-        let hour = Math.floor(this.diff / 3600)
-        let min = Math.floor((this.diff - hour * 3600) / 60)
-        let sec = Math.floor(this.diff % 60)
+      this.endCountDiff = (timestamp - nowTimeStamp) / 1000
+      this.endCountDownTimer = setInterval(() => {
+        let hour = Math.floor(that.endCountDiff / 3600)
+        let min = Math.floor((that.endCountDiff - hour * 3600) / 60)
+        let sec = Math.floor(that.endCountDiff % 60)
         if (hour < 10) hour = '0' + hour
         if (min < 10) min = '0' + min
         if (sec < 10) sec = '0' + sec
@@ -495,7 +527,7 @@ export default {
           min,
           sec,
         }
-        that.diff--
+        that.endCountDiff--
       }, 1000)
       // 每执行一次定时器就减少一秒
     },
@@ -503,23 +535,23 @@ export default {
       const that = this
       const nowTimeStamp = new Date().getTime()
       // 计算时间差 秒
-      this.diff = (endTimeStamp - nowTimeStamp) / 1000
-      timer = setInterval(() => {
-        const day = Math.floor(this.diff / 86400)
-        const hour = Math.floor((this.diff - day * 86400) / 3600)
-        const min = Math.floor((this.diff - hour * 3600 - day * 86400) / 60)
-        const sec = Math.floor(this.diff % 60)
-        // if (day < 10) day = '0' + day
-        // if (hour < 10) hour = '0' + hour
-        // if (min < 10) min = '0' + min
-        // if (sec < 10) sec = '0' + sec
+      this.countDiff = (endTimeStamp - nowTimeStamp) / 1000
+      this.countDownTimer = setInterval(() => {
+        let day = Math.floor(that.countDiff / 86400)
+        let hour = Math.floor((that.countDiff - day * 86400) / 3600)
+        let min = Math.floor((that.countDiff - hour * 3600 - day * 86400) / 60)
+        let sec = Math.floor(that.countDiff % 60)
+        if (day < 10) day = '0' + day
+        if (hour < 10) hour = '0' + hour
+        if (min < 10) min = '0' + min
+        if (sec < 10) sec = '0' + sec
         that.time = {
           day,
           hour,
           min,
           sec,
         }
-        that.diff--
+        that.countDiff--
       }, 1000)
       // 每执行一次定时器就减少一秒
     },
@@ -543,6 +575,7 @@ export default {
       return (px / this.screenWidth) * 100
     },
     parsePrice(priceStr) {
+      priceStr = priceStr.toString()
       if (priceStr > 0) {
         return {
           yuan: priceStr.split('.')[0],
