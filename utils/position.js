@@ -1,6 +1,19 @@
-import axios from 'axios'
+import $axios from '@/plugins/axios'
 import { homeApi } from '@/api'
-
+// const token = app.$cookies.get('token', {
+//   path: '/',
+// })
+// function gatewaySign(data) {
+//   // 签名
+//   return gatewaySign.handleSign({
+//     method: 'get',
+//     rawData: data,
+//     sysCode: BASE.SYS_CODE,
+//     secret: BASE.SECRET,
+//     token,
+//     contentType: config.headers['Content-Type'],
+//   })
+// }
 const amapKey = '5111f49d979a509f1e96420a1b456ff4' // 高德地图key
 const regeoUrl = '/gdmap/v3/geocode/regeo' // 高德地图逆地理编码接口服务（根据经纬度获取城市信息）
 // const ipUrl = '/gdmap/v3/ip' // 高德地图根据用户请求地址ip获取所在城市
@@ -36,12 +49,19 @@ export const getPositonCity = () => {
     async function getCityInfo(longAndlat) {
       try {
         let positionCity = ''
+        // const signData = gatewaySign({
+        //   key: amapKey,
+        //   location: longAndlat,
+        // })
         // 调用高德服务，根据经纬度逆地址解析，获取城市信息
-        const cityAnalysis = await axios.get(regeoUrl, {
+        const cityAnalysis = await $axios.get(regeoUrl, {
           params: {
             key: amapKey,
             location: longAndlat,
           },
+          // headers: {
+          //   ...signData,
+          // },
         })
         if (cityAnalysis.status === 200 && cityAnalysis.data.status) {
           positionCity = cityAnalysis.data.regeocode.addressComponent.city
@@ -56,7 +76,7 @@ export const getPositonCity = () => {
           let siteList = []
           const findSiteApi = `/api${homeApi.findSiteList}`
           // 获取站点列表
-          const siteRes = await axios.get(findSiteApi, {
+          const siteRes = await $axios.get(findSiteApi, {
             headers: {
               'x-cache-control': 'cache',
             },

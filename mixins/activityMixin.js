@@ -1,7 +1,6 @@
 import { mapState, mapActions } from 'vuex'
 import { Toast } from '@chipspc/vant-dgg'
 import { activityApi } from '~/api'
-import imHandle from '@/mixins/imHandle'
 
 export default {
   computed: {
@@ -47,8 +46,11 @@ export default {
     // isTrade() {
     //   return this.specType === 'HDZT_ZTTYPE_DJZS'
     // },
+    isService() {
+      return this.productType === 'PRO_CLASS_TYPE_SERVICE'
+      // return true
+    },
   },
-  mixins: [imHandle],
   data() {
     return {
       endCountDownTimer: null,
@@ -348,7 +350,10 @@ export default {
           params.labelId = this.currentTab.id
         }
 
-        if (this.currentTab.labelName !== '') {
+        if (
+          this.currentTab.labelName !== '' &&
+          this.currentTab.labelName !== '全部'
+        ) {
           params.labelName = this.currentTab.labelName
         }
         await this.productMethod(params)
@@ -570,6 +575,7 @@ export default {
       return (px / this.screenWidth) * 100
     },
     parsePrice(priceStr) {
+      priceStr = priceStr.toString()
       if (priceStr > 0) {
         return {
           yuan: priceStr.split('.')[0],
