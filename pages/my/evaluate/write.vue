@@ -25,7 +25,7 @@
       />
       <div class="info_right">
         <div class="info_right_title">{{ name }}</div>
-        <div class="info_right_sku">已对规划师匿名</div>
+        <div class="info_right_sku">{{ orderDesc }}</div>
       </div>
     </div>
     <evaluate-star />
@@ -44,10 +44,12 @@ import { Image, CenterPopup } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import EvaluateStar from '@/components/evaluate/EvaluateStar'
 
+/*
 // mock data
 const avatar = 'https://dchipscommon.dgg188.cn/img/bg.1e53fbc6.png'
 const name =
   '我哦我噢噢噢噢噢噢噢噢噢噢噢噢哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦111111111111111111jjjjjjjjjjjjjjj'
+*/
 
 export default {
   name: 'EvaluateWrite',
@@ -59,9 +61,9 @@ export default {
   },
   data() {
     return {
-      avatar,
+      avatar: '',
       avatarSize: '1.3rem',
-      name,
+      name: '',
       showPop: false,
       Field: {
         type: 'functional',
@@ -70,7 +72,16 @@ export default {
         confirmButtonText: '继续评价',
         cancelButtonText: '退出',
       },
+      infoId: '', // 评价中心id
+      orderDesc: '', // 评价属性
     }
+  },
+  mounted() {
+    const routeInfo = this.$route.query
+    this.avatar = routeInfo.indexImg
+    this.name = routeInfo.orderName
+    this.infoId = routeInfo.infoId
+    this.orderDesc = routeInfo.orderDesc
   },
   methods: {
     back() {

@@ -50,6 +50,8 @@ export default {
         query: {
           indexImg: evaluateInfo.indexImg,
           orderName: evaluateInfo.orderName,
+          infoId: evaluateInfo.evaluateCenterId,
+          orderDesc: evaluateInfo.orderDesc,
         },
       })
     },
