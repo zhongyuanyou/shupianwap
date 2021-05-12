@@ -168,12 +168,19 @@ export default {
         }
         if (this.priceobj) {
           this.$nextTick(() => {
-            this.$refs.price[0].priceFit(this.priceobj)
+            if (this.$refs.service[1].showPopup) {
+              this.$refs.price[0].priceFit(this.priceobj)
+            }
           })
-        } else if (this.$parent.formData.price.minPrice) {
+        } else if (
+          this.$parent.formData.price &&
+          this.$parent.formData.price.minPrice
+        ) {
           this.$nextTick(() => {
-            this.$refs.price[0].minPrice = this.$parent.formData.price.minPrice
-            this.$refs.price[0].maxPrice = this.$parent.formData.price.maxPrice
+            if (this.$refs.service[1].showPopup) {
+              this.$refs.price[0].minPrice = this.$parent.formData.price.minPrice
+              this.$refs.price[0].maxPrice = this.$parent.formData.price.maxPrice
+            }
           })
         }
         this.isOne = false

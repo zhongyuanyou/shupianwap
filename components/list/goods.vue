@@ -150,6 +150,11 @@ export default {
         activeItems: {},
       }
     }
+    if (this.classcode.sort) {
+      this.formData.sort = {
+        code: this.classcode.sort,
+      }
+    }
     this.getlist()
   },
   methods: {
@@ -291,6 +296,14 @@ export default {
                   if (this.classcode.priceid === this.items.price[z].code) {
                     this.jyFilterData[1].name = this.items.price[z].name
                     this.$refs.dropDownMenu.priceobj = this.items.price[z]
+                  }
+                }
+              }
+              if (this.classcode.sort) {
+                for (let x = 0; x < this.items.sortFilter.length; x++) {
+                  if (this.classcode.sort === this.items.sortFilter[x].code) {
+                    this.jyFilterData[2].name = this.items.sortFilter[x].name
+                    this.sortactive = this.items.sortFilter[x]
                   }
                 }
               }
