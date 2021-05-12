@@ -9,10 +9,12 @@
         </div>
       </div>
       <template v-if="evaluateInfo.evaluateStatus === 1">
-        <div class="item-button" @click="linkWrite">写评价</div>
+        <div class="item-button" @click="linkWrite(evaluateInfo)">写评价</div>
       </template>
       <template v-else>
-        <div class="item-button read" @click="linkDetail">查看评价</div>
+        <div class="item-button read" @click="linkDetail(evaluateInfo)">
+          查看评价
+        </div>
       </template>
       <div class="item-clear"></div>
     </div>
@@ -42,11 +44,25 @@ export default {
     }
   },
   methods: {
-    linkWrite() {
-      this.$router.push({ path: '/my/evaluate/write' })
+    linkWrite(evaluateInfo) {
+      this.$router.push({
+        path: '/my/evaluate/write',
+        query: {
+          indexImg: evaluateInfo.indexImg,
+          orderName: evaluateInfo.orderName,
+        },
+      })
     },
-    linkDetail() {
-      this.$router.push({ path: '/my/evaluate/detail' })
+    linkDetail(evaluateInfo) {
+      this.$router.push({
+        path: '/my/evaluate/detail',
+        query: {
+          indexImg: evaluateInfo.indexImg,
+          orderName: evaluateInfo.orderName,
+          orderDesc: evaluateInfo.orderDesc,
+          infoId: evaluateInfo.evaluateCenterId,
+        },
+      })
     },
   },
 }
