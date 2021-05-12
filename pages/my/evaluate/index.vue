@@ -13,7 +13,7 @@
           @load="onLoad"
         >
           <evaluate-list
-            v-for="(item, index) in orderList"
+            v-for="(item, index) in evaluateList"
             :key="index"
             :item="item"
           />
@@ -30,7 +30,7 @@
           @load="onLoad"
         >
           <evaluate-list
-            v-for="(item, index) in orderList"
+            v-for="(item, index) in evaluateList"
             :key="index"
             :item="item"
         /></sp-list>
@@ -43,9 +43,11 @@
 import { Tab, Tabs, List } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import EvaluateList from '@/components/my/evaluate/EvaluateList'
+import { evaluateApi } from '@/api/evaluate'
 
 // mock data
 // commentFlag: 1 已评价; commentFlag: 0 未评价
+/*
 const mockOrderListFlag1 = [
   {
     avatar: 'https://dchipscommon.dgg188.cn/img/bg.1e53fbc6.png',
@@ -173,6 +175,7 @@ const mockOrderListFlag0 = [
     commentFlag: 0,
   },
 ]
+*/
 
 export default {
   name: 'Evaluate',
@@ -191,30 +194,60 @@ export default {
       finished: false,
       page: 1,
       limit: 15,
-      orderList: [], // 订单列表
+      evaluateList: [], // 订单列表
+      evaluateStatus: 1,
     }
   },
   methods: {
-    changeTab() {
-      this.init()
+    changeTab(val) {
+      this.init(val)
       this.onLoad()
     },
-    init() {
-      this.orderList = []
+    init(val) {
+      this.evaluateList = []
+      this.evaluateStatus = val + 1
       this.page = 1
       this.error = false
       this.finished = false
       this.loading = true
     },
     onLoad() {
-      this.getOrderListApi()
+      this.getEvaluateListApi()
     },
-    getOrderListApi() {
+    async getEvaluateListApi() {
+      // 查询评价列表 evaluateApi
+      try {
+        const params = {
+          page: this.page,
+          limit: this.limit,
+          evaluateStatus: this.evaluateStatus + '',
+        }
+        const { code, data, message } = await this.$axios.post(
+          evaluateApi.list,
+          params
+        )
+        if (code === 200) {
+          this.evaluateList.push(...data.records)
+          this.page++
+          if (this.page > data.totalPage) {
+            this.finished = true
+          }
+        } else {
+          this.error = true
+          this.xToast.error(message)
+        }
+        this.loading = false
+      } catch (e) {
+        this.error = true
+        this.loading = false
+      }
+      /*
       this.orderList = mockOrderListFlag1
       this.loading = false
       if (this.active === 1) {
         this.orderList = mockOrderListFlag0
       }
+      */
     },
   },
 }
