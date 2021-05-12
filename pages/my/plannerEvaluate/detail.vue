@@ -131,7 +131,7 @@ export default {
       const params = {
         // infoId: this.$route.query.infoId,
         // userId: this.$route.query.userId,
-
+        // planerId: this.$route.query.planerId,
         infoId: '1118738721594990083',
       }
       const res = await this.$axios.get(evaluateApi.detail, { params })
