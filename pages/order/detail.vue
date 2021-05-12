@@ -550,7 +550,7 @@ export default {
         })
       } else {
         this.$router.push({
-          path: '/my/evaluate/detail',
+          path: '/my/plannerEvaluate/detail',
           query,
         })
       }
