@@ -2,13 +2,13 @@
   <div class="m-evaluate list">
     <div class="item">
       <div class="item-info">
-        <sp-image class="img" fit="cover" :src="orderInfo.avatar || ''" />
+        <sp-image class="img" fit="cover" :src="evaluateInfo.indexImg || ''" />
         <div class="desc">
-          <div class="desc-name">{{ orderInfo.name || '' }}</div>
-          <div class="desc-content">{{ orderInfo.desc || '' }}</div>
+          <div class="desc-name">{{ evaluateInfo.orderName || '' }}</div>
+          <div class="desc-content">{{ evaluateInfo.orderDesc || '' }}</div>
         </div>
       </div>
-      <template v-if="orderInfo.commentFlag === 1">
+      <template v-if="evaluateInfo.evaluateStatus === 1">
         <div class="item-button" @click="linkWrite">写评价</div>
       </template>
       <template v-else>
@@ -38,7 +38,7 @@ export default {
   },
   data() {
     return {
-      orderInfo: this.item,
+      evaluateInfo: this.item,
     }
   },
   methods: {
