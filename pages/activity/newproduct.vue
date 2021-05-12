@@ -38,6 +38,13 @@
     <!-- E search -->
     <!-- <sp-sticky></sp-sticky> -->
     <div class="container-advice" :class="{ positionY: positionY }">
+      <div class="banner-img">
+        <img
+          src="https://cdn.shupian.cn/sp-pt/wap/fe7bmr53zfs0000.png"
+          alt=""
+          srcset=""
+        />
+      </div>
       <div
         class="rules"
         @click="$router.push('/login/protocol?categoryCode=protocol100035')"
@@ -68,7 +75,8 @@
             v-if="productType === 'PRO_CLASS_TYPE_TRANSACTION'"
             class="tabs-box-left"
           >
-            <div style="border: none">全国</div>
+            <div>全国</div>
+            <div style="border: none"></div>
           </div>
           <ul class="tabs-box-items">
             <li
@@ -605,11 +613,20 @@ export default {
     width: 100%;
     height: 460px;
     position: relative;
-    background: url('https://cdn.shupian.cn/sp-pt/wap/fe7bmr53zfs0000.png')
-      no-repeat;
-    background-size: 100% 4.6rem;
-    margin-top: -140px;
-    background-position-y: 5px;
+    // background: url('https://cdn.shupian.cn/sp-pt/wap/fe7bmr53zfs0000.png')
+    // no-repeat;
+    // background-size: 100% 4.6rem;
+    // margin-top: -140px;
+    // background-position-y: 5px;
+    .banner-img {
+      width: 100%;
+      height: 460px;
+      margin-top: -140px;
+      img {
+        width: 100%;
+        height: 460px;
+      }
+    }
     .rules {
       position: fixed;
       width: 68px;

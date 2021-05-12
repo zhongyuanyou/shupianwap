@@ -34,6 +34,12 @@
     <!-- E search -->
     <!-- <sp-sticky></sp-sticky> -->
     <div class="container-advice">
+      <div class="banner-img">
+        <img
+          src="https://cdn.shupian.cn/sp-pt/wap/images/1ra46owiem9s000.png"
+          alt=""
+        />
+      </div>
       <div class="advice-box">
         <div
           v-for="(item, index) in productAdvertData.slice(0, 1)"
@@ -73,7 +79,8 @@
             v-if="productType === 'PRO_CLASS_TYPE_TRANSACTION'"
             class="tabs-box-left"
           >
-            <div style="border: none">全国</div>
+            <div>全国</div>
+            <div style="border: none"></div>
           </div>
           <ul class="tabs-box-items">
             <li
@@ -521,10 +528,6 @@ export default {
   height: 100%;
   overflow-x: hidden;
   margin: 0 auto;
-  background: url('https://cdn.shupian.cn/sp-pt/wap/images/1ra46owiem9s000.png')
-    no-repeat;
-  background-size: 100% auto;
-  background-position-y: 118px;
   ::v-deep.fixed-head {
     height: 0.88rem !important;
     .my-head {
@@ -593,8 +596,17 @@ export default {
     // padding: 0 20px;
     width: 100%;
     height: 700px;
-
     position: relative;
+    .banner-img {
+      position: absolute;
+      width: 100%;
+      height: 720px;
+      padding-top: 30px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
     .rules {
       position: fixed;
       width: 68px;
