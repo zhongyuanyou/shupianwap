@@ -174,6 +174,7 @@ export default {
       // this.judgeLoginMixin(true).then((userInfo) => {
       if (userInfo) {
         let params = {
+          operUserType: userInfo.type || 'VISITOR',
           imUserId: '',
           imUserType: '',
           ext: {
