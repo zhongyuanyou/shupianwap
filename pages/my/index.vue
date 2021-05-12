@@ -291,7 +291,9 @@ export default {
       })
     },
     async getUserInfo() {
-      this.loading = true
+      if (!this.info && !this.info.fullName) {
+        this.loading = true
+      }
       // 获取用户信息
       try {
         const params = {
@@ -310,11 +312,14 @@ export default {
         } else {
           // 清除用户缓存信息
           this.info = {}
-          this.userName = ''
           this.$store.dispatch('user/clearUser')
           localStorage.removeItem('info')
         }
       } catch (err) {
+        this.info = {}
+        this.$store.dispatch('user/clearUser')
+        localStorage.removeItem('info')
+        localStorage.removeItem('userId')
         this.loading = false
       }
     },
@@ -369,8 +374,6 @@ export default {
       const res = await this.$axios.get(userinfoApi.loginOut, { params })
       if (res.code === 200) {
         // 清除cookie中的数据
-        this.info.url = ''
-        this.userName = ''
         this.info = {}
         this.$store.dispatch('user/clearUser')
         // localStorage.removeItem('info')
