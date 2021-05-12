@@ -129,7 +129,10 @@ export default {
   methods: {
     async init() {
       const params = {
-        infoId: '123',
+        // infoId: this.$route.query.infoId,
+        // userId: this.$route.query.userId,
+
+        infoId: '1118738721594990083',
       }
       const res = await this.$axios.get(evaluateApi.detail, { params })
       if (res.code === 200) {

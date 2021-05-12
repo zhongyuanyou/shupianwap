@@ -7,14 +7,14 @@
         square
         class="img"
         fit="cover"
-        :src="avatar"
-        :width="avatarSize"
-        :height="avatarSize"
+        :src="indexImg"
+        :width="imageSize"
+        :height="imageSize"
         radius="8px"
       />
       <div class="info_right">
-        <div class="info_right_title">{{ name }}</div>
-        <div class="info_right_sku">已对规划师匿名</div>
+        <div class="info_right_title">{{ orderName }}</div>
+        <div class="info_right_sku">{{ orderDesc }}</div>
       </div>
     </div>
     <div class="score">
@@ -116,9 +116,6 @@ import { Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import { evaluateApi } from '@/api'
 // mock data
-const avatar = 'https://dchipscommon.dgg188.cn/img/bg.1e53fbc6.png'
-const name =
-  '我哦我噢噢噢噢噢噢噢噢噢噢噢噢哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦111111111111111111jjjjjjjjjjjjjjj'
 
 export default {
   name: 'EvaluateDetail',
@@ -128,10 +125,15 @@ export default {
   },
   data() {
     return {
-      avatar,
-      avatarSize: '1.3rem',
+      avatar: 'https://dchipscommon.dgg188.cn/img/bg.1e53fbc6.png',
+      imgs: '',
+      orderDesc:
+        '是否健康路撒大家福克斯的缴费基数东方季道附近附近JFJF解决方法将',
+      indexImg: 'https://dchipscommon.dgg188.cn/img/bg.1e53fbc6.png',
+      imageSize: '1.3rem',
       size: '2.1rem',
-      name,
+      orderName:
+        '是否健康路撒大家福克斯的缴费基数东方季道附近附近JFJF解决方法将',
       starLevel: 1, // 星级
       stars: [
         { flag: false },
@@ -151,9 +153,14 @@ export default {
     this.setStars()
   },
   methods: {
-    async init() {
+    init() {
+      this.getEvaluateDetail()
+      this.initData()
+    },
+    async getEvaluateDetail() {
       const params = {
-        infoId: '123',
+        // infoId: this.$route.query.infoId,
+        infoId: '1118738721594990083',
       }
       const res = await this.$axios.get(evaluateApi.detail, { params })
       if (res.code === 200) {
@@ -163,6 +170,11 @@ export default {
         this.evaluateDimensionList = res.data.evaluateDimensionList
         // const serverScore = res.data.serverScore
       }
+    },
+    initData() {
+      this.indexImg = this.$route.query.indexImg
+      this.orderName = this.$route.query.orderName
+      this.orderDesc = this.$route.query.orderDesc
     },
     setStars() {
       // 构建星级
