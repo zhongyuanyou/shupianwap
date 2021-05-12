@@ -129,6 +129,27 @@ export default {
       this.itemsclass[0].code = this.classcode.navcode
       this.formData.class = this.itemsclass
     }
+    if (this.classcode.priceid && this.classcode.price) {
+      this.formData.price = {
+        maxPrice: '',
+        minPrice: '',
+        activeItems: {
+          code: this.classcode.priceid,
+          ext2: this.classcode.price,
+        },
+      }
+    } else if (this.classcode.price) {
+      this.formData.price = {
+        minPrice: this.classcode.price.slice(
+          0,
+          this.classcode.price.match('-').index
+        ),
+        maxPrice: this.classcode.price.slice(
+          this.classcode.price.match('-').index + 1
+        ),
+        activeItems: {},
+      }
+    }
     this.getlist()
   },
   methods: {
@@ -262,6 +283,14 @@ export default {
                       }
                     }
                     this.$refs.dropDownMenu.classarr = this.itemsclass[1].services
+                  }
+                }
+              }
+              if (this.classcode.priceid) {
+                for (let z = 0; z < this.items.price.length; z++) {
+                  if (this.classcode.priceid === this.items.price[z].code) {
+                    this.jyFilterData[1].name = this.items.price[z].name
+                    this.$refs.dropDownMenu.priceobj = this.items.price[z]
                   }
                 }
               }

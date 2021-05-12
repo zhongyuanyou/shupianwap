@@ -125,6 +125,7 @@ export default {
       switch2: false,
       navIndex: 0,
       classarr: [],
+      priceobj: '',
       isOne: true,
       option: [
         { text: '全部商品', value: 0 },
@@ -156,19 +157,25 @@ export default {
             })
           }
           this.$nextTick(() => {
-            // this.$refs.classification[0].handleClickNav(this.navIndex)
             this.$refs.classification[0].active = this.navIndex
           })
         } else if (this.$route.query.navcode) {
           this.$nextTick(() => {
             if (this.$refs.service[0].showPopup) {
-              // this.$refs.classification[0]
-              // this.$refs.classification[0].handleClickNav(this.navIndex)
               this.$refs.classification[0].active = this.navIndex
             }
           })
         }
-
+        if (this.priceobj) {
+          this.$nextTick(() => {
+            this.$refs.price[0].priceFit(this.priceobj)
+          })
+        } else if (this.$parent.formData.price.minPrice) {
+          this.$nextTick(() => {
+            this.$refs.price[0].minPrice = this.$parent.formData.price.minPrice
+            this.$refs.price[0].maxPrice = this.$parent.formData.price.maxPrice
+          })
+        }
         this.isOne = false
       }
     },
