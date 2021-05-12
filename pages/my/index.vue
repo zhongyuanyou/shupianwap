@@ -219,7 +219,7 @@ export default {
         },
         {
           iconName: 'per_ic_whole',
-          name: '全部订单',
+          name: '待评价',
         },
       ],
 
@@ -264,6 +264,11 @@ export default {
 
   methods: {
     clickTab(index) {
+      // 进入待评价页面
+      if (index === 5) {
+        this.$router.push({ path: '/my/evaluate' })
+        return
+      }
       // console.log('index', index)
       this.$router.push({
         path: '/order',
