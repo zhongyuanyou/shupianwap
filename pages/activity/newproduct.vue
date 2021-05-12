@@ -55,11 +55,21 @@
     <div class="container-body">
       <sp-sticky :offset-top="offsetTop">
         <div ref="menu" class="tabs-box">
-          <div class="tabs-box-left">
+          <div
+            v-if="productType === 'PRO_CLASS_TYPE_SERVICE'"
+            class="tabs-box-left"
+          >
             <div @click="swichCityHandle">
               {{ cityName ? cityName : '定位中' }}
             </div>
             <div></div>
+          </div>
+          <div
+            v-if="productType === 'PRO_CLASS_TYPE_TRANSACTION'"
+            class="tabs-box-left"
+          >
+            <div>全国</div>
+            <div style="border: none"></div>
           </div>
           <ul class="tabs-box-items">
             <li
@@ -638,7 +648,7 @@ export default {
       height: 160px;
       //background: linear-gradient(137deg, #ffffff 0%, #fff3eb 100%);
       border-radius: 12px;
-      border: 5px solid #ffab6f;
+      border: 0.06rem solid #ffab6f;
       margin-top: -18px;
       img {
         width: 100%;
