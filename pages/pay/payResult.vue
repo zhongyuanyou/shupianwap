@@ -262,12 +262,12 @@ export default {
           deviceId: this.deviceId, // 设备ID
           areaCode: this.cityCode || '510100', // 区域编码
           sceneId: 'app-jycpxq-02', // 场景ID
-          platform: 'APP', // 平台（app,m,pc）
+          platform: 'm', // 平台（app,m,pc）
           page: {
             pageNo: 1,
             pageSize: 10,
           },
-          productType: this.productType || 'PRO_CLASS_TYPE_TRANSACTION',
+          productType: this.productType || 'PRO_CLASS_TYPE_SALES',
         })
         .then((res) => {
           if (res.code === 200) {
