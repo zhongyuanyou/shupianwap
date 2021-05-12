@@ -85,17 +85,14 @@
           <div class="item-bt">
             <div class="item-bt-tp">{{ item.skuName }}</div>
             <div class="item-bt-md">
-              <span>{{ item.specialPrice }}</span>
-              <span>元</span>
+              <template v-if="parsePrice(item.specialPrice) !== '面议'">
+                <span>{{
+                  item.specialUnit ? item.specialNewPrice : item.specialPrice
+                }}</span>
+                <span>{{ item.specialUnit || '元' }}</span>
+              </template>
+              <span v-else>面议</span>
             </div>
-            <!-- <div class="item-bt-bt">
-              <div class="avtars">
-                <div class="avtar1"></div>
-                <div class="avtar2"></div>
-              </div>
-
-              <span class="counsel">{{ item.time }}秒之前咨询</span>
-            </div> -->
           </div>
         </div>
       </div>
@@ -181,26 +178,27 @@
                       <div class="reduce-price">
                         限时直降{{ item.minusPrice }}元
                       </div>
-                      <div class="deal-ok">
+                      <!-- <div class="deal-ok">
                         已成交{{
                           item.specialInventory - item.specialResidueInventory
                         }}单
-                      </div>
+                      </div>-->
                     </div>
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
                         <div class="rc-bottom-lf-my">
-                          秒杀价<span>{{ item.specialPrice }}</span
-                          >元
-                          <!-- <div>秒杀价</div>
-                        <div>{{ item.specialPrice }}</div>
-                        <div>元</div> -->
+                          秒杀价<span>{{
+                            item.specialUnit
+                              ? item.specialNewPrice
+                              : item.specialPrice
+                          }}</span
+                          >{{ item.specialUnit || '元' }}
                         </div>
-                        <!-- <div class="bf-my">近{{ item.dijia }}天历史低价</div> -->
                       </div>
                       <div class="rc-bottom-rt">
-                        <div>去抢购</div>
-                        <div class="process-per">
+                        去抢购
+                        <!--  <div>去抢购</div>-->
+                        <!--<div class="process-per">
                           <sp-progress
                             color="#FFF166"
                             :percentage="
@@ -218,7 +216,7 @@
                               )
                             }}%
                           </div>
-                        </div>
+                        </div>-->
                       </div>
                     </div>
                   </div>
@@ -726,21 +724,26 @@ html::-webkit-scrollbar {
             background: linear-gradient(139deg, #fe525d 0%, #fd3543 100%);
             border-radius: 8px;
             position: relative;
-            div:nth-of-type(1) {
-              padding: 12px 0 10px 0;
-              text-align: center;
-              font-size: 30px;
-              font-weight: bold;
-              color: #ffffff;
-              line-height: 30px;
-            }
-            div:nth-of-type(2) {
-              font-size: 22px;
-              font-weight: 400;
-              color: #ffffff;
-              line-height: 22px;
-              text-align: center;
-            }
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: #ffffff;
+            line-height: 80px;
+            //div:nth-of-type(1) {
+            //  padding: 12px 0 10px 0;
+            //  text-align: center;
+            //  font-size: 30px;
+            //  font-weight: bold;
+            //  color: #ffffff;
+            //  line-height: 30px;
+            //}
+            //div:nth-of-type(2) {
+            //  font-size: 22px;
+            //  font-weight: 400;
+            //  color: #ffffff;
+            //  line-height: 22px;
+            //  text-align: center;
+            //}
             .process-per {
               display: flex;
               align-items: center;

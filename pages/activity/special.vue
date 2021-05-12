@@ -71,8 +71,10 @@
           <div class="background">
             <div class="bg-img"></div>
             <div v-if="parsePrice(item.specialPrice) !== '面议'" class="money">
-              <span>{{ item.specialPrice }}</span
-              ><span>元</span>
+              <span>{{
+                item.specialUnit ? item.specialNewPrice : item.specialPrice
+              }}</span
+              ><span>{{ item.specialUnit || '元' }}</span>
             </div>
             <div v-else class="money">面议</div>
           </div>
@@ -162,8 +164,14 @@
                           v-if="parsePrice(item.specialPrice) !== '面议'"
                           class="rc-bottom-lf-my"
                         >
-                          <div>{{ item.specialPrice }}</div>
-                          <div>元</div>
+                          <div>
+                            {{
+                              item.specialUnit
+                                ? item.specialNewPrice
+                                : item.specialPrice
+                            }}
+                          </div>
+                          <div>{{ item.specialUnit || '元' }}</div>
                         </div>
                         <div v-else class="rc-bottom-lf-my">
                           <div>面议</div>
@@ -173,7 +181,9 @@
                           v-if="parsePrice(item.specialPrice) !== '面议'"
                           class="bf-my"
                         >
-                          原价{{ item.skuPrice }}元
+                          原价{{
+                            item.skuUnit ? item.skuNewPrice : item.skuPrice
+                          }}{{ item.skuUnit || '元' }}
                         </div>
                       </div>
                       <div class="rc-bottom-rt">去抢购</div>
@@ -456,9 +466,13 @@ html::-webkit-scrollbar {
             font-family: PingFangSC-Medium, PingFang SC;
             color: #ffffff;
             font-weight: bold;
+            transform: scale(0.8);
+            width: 4rem;
+            position: relative;
+            left: 0.36rem;
             span:nth-of-type(1) {
-              line-height: 28px;
-              font-size: 28px;
+              line-height: 24px;
+              font-size: 24px;
             }
             span:nth-of-type(2) {
               font-size: 22px;

@@ -67,8 +67,10 @@
               class="advert_item-title-price"
             >
               低至
-              <span class="advert_item-title-num">{{ item.specialPrice }}</span>
-              元
+              <span class="advert_item-title-num">{{
+                item.specialUnit ? item.specialNewPrice : item.specialPrice
+              }}</span>
+              {{ item.specialUnit || '元' }}
             </div>
             <div v-else class="advert_item-title-price">
               <span class="advert_item-title-num">面议</span>
@@ -81,7 +83,7 @@
       <!-- E advert -->
     </div>
     <sp-sticky class="tabs-box" :offset-top="headerHeight + safeTop">
-      <div class="drop_down">
+      <div v-if="isService" class="drop_down">
         <div class="drop_down_title" @click="swichCityHandle">
           {{ cityName ? cityName : '定位中' }}
         </div>
@@ -154,11 +156,21 @@
                             class="rc-bottom-lf-my"
                           >
                             <div>
-                              {{ parsePrice(item.specialPrice).yuan }}.
+                              {{
+                                item.specialUnit
+                                  ? parsePrice(item.specialNewPrice).yuan
+                                  : parsePrice(item.specialPrice).yuan
+                              }}.
                               <span class="rc-bottom-lf-my-cent">
-                                {{ parsePrice(item.specialPrice).jiao }}
+                                {{
+                                  item.specialUnit
+                                    ? parsePrice(item.specialNewPrice).jiao
+                                    : parsePrice(item.specialPrice).jiao
+                                }}
                               </span>
-                              <span class="rc-bottom-lf-my-unit">元</span>
+                              <span class="rc-bottom-lf-my-unit">{{
+                                item.specialUnit || '元'
+                              }}</span>
                             </div>
                           </div>
                           <div v-else class="rc-bottom-lf-my">
@@ -169,8 +181,8 @@
                           v-if="parsePrice(item.skuPrice) !== '面议'"
                           class="bf-my"
                         >
-                          {{ item.skuPrice }}
-                          <span>元</span>
+                          {{ item.skuUnit ? item.skuNewPrice : item.skuPrice }}
+                          <span>{{ item.skuUnit || '元' }}</span>
                         </div>
                       </div>
                       <div class="rc-bottom-rt">
@@ -623,7 +635,6 @@ html::-webkit-scrollbar {
             border-radius: 8px;
             display: flex;
             align-items: center;
-            margin-left: 134px;
             div:nth-child(1) {
               height: 32px;
               font-size: 32px;

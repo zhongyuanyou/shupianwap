@@ -38,6 +38,13 @@
     <!-- E search -->
     <!-- <sp-sticky></sp-sticky> -->
     <div class="container-advice" :class="{ positionY: positionY }">
+      <div class="banner-img">
+        <img
+          src="https://cdn.shupian.cn/sp-pt/wap/fe7bmr53zfs0000.png"
+          alt=""
+          srcset=""
+        />
+      </div>
       <div
         class="rules"
         @click="$router.push('/login/protocol?categoryCode=protocol100035')"
@@ -55,11 +62,21 @@
     <div class="container-body">
       <sp-sticky :offset-top="offsetTop">
         <div ref="menu" class="tabs-box">
-          <div class="tabs-box-left">
+          <div
+            v-if="productType === 'PRO_CLASS_TYPE_SERVICE'"
+            class="tabs-box-left"
+          >
             <div @click="swichCityHandle">
               {{ cityName ? cityName : '定位中' }}
             </div>
             <div></div>
+          </div>
+          <div
+            v-if="productType === 'PRO_CLASS_TYPE_TRANSACTION'"
+            class="tabs-box-left"
+          >
+            <div>全国</div>
+            <div style="border: none"></div>
           </div>
           <ul class="tabs-box-items">
             <li
@@ -106,11 +123,33 @@
                     </div>
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
-                        <div class="rc-bottom-lf-my">
-                          <div>{{ item.specialPrice }}</div>
-                          <div>元</div>
+                        <div
+                          v-if="parsePrice(item.specialPrice) !== '面议'"
+                          class="rc-bottom-lf-my"
+                        >
+                          <div>
+                            <span v-if="item.specialNewPrice">{{
+                              item.specialNewPrice
+                            }}</span
+                            ><span v-else>{{ item.specialPrice }}</span>
+                          </div>
+                          <div><span v-if="item.specialUnit">万</span> 元</div>
                         </div>
-                        <div class="bf-my">原价{{ item.skuPrice }}元</div>
+                        <div v-else class="rc-bottom-lf-my">
+                          <div>面议</div>
+                        </div>
+                        <div
+                          v-if="parsePrice(item.skuPrice) !== '面议'"
+                          class="bf-my"
+                        >
+                          原价
+                          <span v-if="item.skuNewPrice">{{
+                            item.skuNewPrice
+                          }}</span
+                          ><span v-else>{{ item.skuPrice }}</span>
+                          <span v-if="item.specialUnit">万</span>元
+                        </div>
+                        <div v-else class="bf-my">面议</div>
                       </div>
                       <div class="rc-bottom-rt">
                         <div class="imm_consult">查看详情</div>
@@ -182,7 +221,7 @@ export default {
       platformCode: 'COMDIC_PLATFORM_CRISPS', // 平台code
       specCode: '',
       defaultCityCode: '510100',
-      advertCode: 'ad100043', // 广告code
+      advertCode: 'ad100033', // 广告code
       productType: '',
       fixedShow: false,
       limit: 10,
@@ -339,6 +378,7 @@ export default {
         this.loading = false
       }
     },
+
     productMethod(param) {
       this.$axios
         .get(activityApi.activityProductList, {
@@ -380,6 +420,16 @@ export default {
           console.log(err)
         })
     },
+    parsePrice(priceStr) {
+      if (priceStr > 0) {
+        return {
+          yuan: priceStr.split('.')[0],
+          jiao: priceStr.split('.')[1],
+        }
+      } else {
+        return '面议'
+      }
+    },
     getAdvertisingData() {
       this.$axios
         .get(activityApi.activityAdvertising, {
@@ -389,10 +439,10 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.productAdvertData = res.data.sortMaterialList[0].materialList.slice(
-              0,
-              3
-            )
+            const adImg01 = res.data.sortMaterialList[0].materialList || []
+            const adImg02 = res.data.sortMaterialList[1].materialList || []
+            const adImg03 = res.data.sortMaterialList[2].materialList || []
+            this.productAdvertData = [...adImg01, ...adImg02, ...adImg03]
           } else {
             Toast.fail({
               duration: 2000,
@@ -563,11 +613,20 @@ export default {
     width: 100%;
     height: 460px;
     position: relative;
-    background: url('https://cdn.shupian.cn/sp-pt/wap/fe7bmr53zfs0000.png')
-      no-repeat;
-    background-size: 100% 4.6rem;
-    margin-top: -140px;
-    background-position-y: 5px;
+    // background: url('https://cdn.shupian.cn/sp-pt/wap/fe7bmr53zfs0000.png')
+    // no-repeat;
+    // background-size: 100% 4.6rem;
+    // margin-top: -140px;
+    // background-position-y: 5px;
+    .banner-img {
+      width: 100%;
+      height: 460px;
+      margin-top: -140px;
+      img {
+        width: 100%;
+        height: 460px;
+      }
+    }
     .rules {
       position: fixed;
       width: 68px;
@@ -605,7 +664,7 @@ export default {
       height: 160px;
       //background: linear-gradient(137deg, #ffffff 0%, #fff3eb 100%);
       border-radius: 12px;
-      border: 5px solid #ffab6f;
+      border: 0.06rem solid #ffab6f;
       margin-top: -18px;
       img {
         width: 100%;
