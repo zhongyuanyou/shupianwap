@@ -10,47 +10,26 @@
             name="dafen_mian"
             size="0.56rem"
             :color="item.flag ? '#FFB400' : '#F0F0F0'"
-            @click.native="clkItemStar(index, 'totalStarLevel')"
+            @click.native="clkTotalStar(index, 'totalStarLevel')"
           ></my-icon>
         </template>
         <div class="desc">超赞</div>
       </div>
       <template v-if="subScoreFlag">
-        <div class="score-item">
-          <div class="tile">专业能力</div>
-          <template v-for="(item, index) in specialtyStars">
+        <div
+          v-for="(item, index) in evaluateDimensionList"
+          :key="index"
+          class="score-item"
+        >
+          <div class="tile">{{ item.name }}</div>
+          <template v-for="(itemImg, indexImg) in item.imgs">
             <img
-              :key="index"
-              :src="item.src"
+              :key="indexImg"
+              :src="itemImg.src"
               class="score-item-img"
-              @click="clkItemStar(index, 'specialtyStarLevel')"
+              @click="clkItemStar(indexImg, item)"
             />
           </template>
-          <div class="desc">超赞</div>
-        </div>
-        <div class="score-item">
-          <div class="tile">回复时效</div>
-          <template v-for="(item, index) in replayStars">
-            <img
-              :key="index"
-              :src="item.src"
-              class="score-item-img"
-              @click="clkItemStar(index, 'replayStarLevel')"
-            />
-          </template>
-          <div class="desc">超赞</div>
-        </div>
-        <div class="score-item bottom-del">
-          <div class="tile">时效效率</div>
-          <template v-for="(item, index) in efficiencyStars">
-            <img
-              :key="index"
-              :src="item.src"
-              class="score-item-img"
-              @click="clkItemStar(index, 'efficiencyStarLevel')"
-            />
-          </template>
-          <div class="desc">超赞</div>
         </div>
       </template>
     </div>
@@ -62,7 +41,7 @@
 
     <div v-if="remarkFlag" class="remark">
       <sp-field
-        v-model="message"
+        v-model="evaluateContent"
         autosize
         type="textarea"
         maxlength="100"
@@ -72,7 +51,7 @@
     </div>
     <div v-if="uploadImgFlag" class="upload">
       <sp-uploader
-        v-model="uploader"
+        v-model="evaluateFileId"
         :max-count="3"
         multiple
         upload-icon="plus"
@@ -104,10 +83,22 @@ import {
   BottombarButton,
 } from '@chipspc/vant-dgg'
 import utils from '@/utils/changeBusinessData'
+import { evaluateApi } from '@/api/evaluate'
 
 // mock data
 const mockTipsData = ['标签表情', '标签表情', '标签表情']
-
+const evaluateDimensionList = [
+  {
+    id: 324,
+    name: '回复时效',
+    fraction: 0,
+  },
+  {
+    id: 456,
+    name: '时效效率',
+    fraction: 0,
+  },
+]
 export default {
   name: 'EvaluateStar',
   components: {
@@ -151,9 +142,16 @@ export default {
         return true
       },
     },
+    cinfoId: {
+      // 评价ID 必传
+      type: String,
+      default: '123',
+      // required: true,
+    },
   },
   data() {
     return {
+      infoId: this.cinfoId, // 评价id
       scoreFlag: this.score,
       tipsFlag: this.tip,
       remarkFlag: this.remark,
@@ -182,10 +180,11 @@ export default {
       specialtyStars: [],
       replayStars: [],
       efficiencyStars: [],
-      tips: mockTipsData,
+      tips: [],
       starValue: 0,
-      message: '',
-      uploader: [],
+      evaluateContent: '',
+      evaluateFileId: [],
+      evaluateDimensionList, // 评价维度列表
     }
   },
   watch: {
@@ -194,47 +193,23 @@ export default {
       if (val !== 0) {
         this.subScoreFlag = true
       }
-      if (val === 0) {
-        this.specialtyStarLevel = 0
-        this.replayStarLevel = 0
-        this.efficiencyStarLevel = 0
-      }
-      if (val === 5) {
-        this.specialtyStarLevel = 5
-        this.replayStarLevel = 5
-        this.efficiencyStarLevel = 5
-      }
       this.setTotalStars()
     },
-    specialtyStarLevel(val) {
-      console.log(`output specialtyStarLevel: ${val}`)
-      this.setItemStar('specialtyStars', 'specialtyStarLevel')
-    },
-    replayStarLevel(val) {
-      console.log(`output replayStarLevel: ${val}`)
-      this.setItemStar('replayStars', 'replayStarLevel')
-    },
-    efficiencyStarLevel(val) {
-      console.log(`output efficiencyStarLevel: ${val}`)
-      this.setItemStar('efficiencyStars', 'efficiencyStarLevel')
-    },
   },
-  created() {
+  mounted() {
     this.init()
-    console.log(JSON.stringify(this.specialtyStars))
   },
   methods: {
     init() {
+      // 渲染 evaluateDimensionList
       const _this = this
-      this.imgs.forEach((item) => {
-        this.specialtyStars.push({
-          src: _this.$ossImgSetV2(utils.getEvaluateLevelImg(item)),
-        })
-        this.replayStars.push({
-          src: _this.$ossImgSetV2(utils.getEvaluateLevelImg(item)),
-        })
-        this.efficiencyStars.push({
-          src: _this.$ossImgSetV2(utils.getEvaluateLevelImg(item)),
+      this.evaluateDimensionList.forEach((item) => {
+        // 定义图片列表
+        item.imgs = []
+        this.imgs.forEach((itemImg) => {
+          item.imgs.push({
+            src: _this.$ossImgSetV2(utils.getEvaluateLevelImg(itemImg)),
+          })
         })
       })
     },
@@ -248,12 +223,12 @@ export default {
         }
       })
     },
-    setItemStar(starFlag, levelFlag) {
+    setItemStar(item1) {
       const _this = this
-      this[starFlag].forEach((item, index) => {
-        if (_this[levelFlag] > index) {
+      item1.imgs.forEach((item, index) => {
+        if (item1.fraction > index) {
           item.src = _this.$ossImgSetV2(
-            utils.getEvaluateLevelImg(_this.imglights[_this[levelFlag] - 1])
+            utils.getEvaluateLevelImg(_this.imglights[item1.fraction - 1])
           )
         } else {
           item.src = _this.$ossImgSetV2(
@@ -262,7 +237,7 @@ export default {
         }
       })
     },
-    clkItemStar(i, val) {
+    clkTotalStar(i, val) {
       const tempI = i + 1
       if (this[val] === 0 && tempI === 1) {
         this[val] = 1
@@ -272,8 +247,32 @@ export default {
         this[val] = tempI
       }
     },
+    clkItemStar(i, item) {
+      const tempI = i + 1
+      if (item.fraction === 0 && tempI === 1) {
+        item.fraction = 1
+      } else if (item.fraction === tempI) {
+        item.fraction--
+      } else {
+        item.fraction = tempI
+      }
+      this.setItemStar(item)
+      // 解决循环渲染问题
+      this.evaluateDimensionList = this.evaluateDimensionList.slice()
+    },
     submit() {
-      console.log('submit')
+      // check data
+      // submitApi
+      this.addEvaluateApi()
+    },
+    addEvaluateApi() {
+      try {
+        const params = {
+          infoId: this.infoId,
+          evaluateContent: this.evaluateContent,
+          serverScore: this.totalStarLevel,
+        }
+      } catch (e) {}
     },
   },
 }

@@ -28,7 +28,7 @@
         <div class="info_right_sku">{{ orderDesc }}</div>
       </div>
     </div>
-    <evaluate-star />
+    <evaluate-star :cinfo-id="infoId" />
     <sp-center-popup
       v-model="showPop"
       button-type="confirm"
