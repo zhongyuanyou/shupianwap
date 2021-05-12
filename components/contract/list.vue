@@ -78,7 +78,7 @@
           </div>
           <div class="tit">
             <p>签署时间：</p>
-            <p>{{ item.createTime || '暂无' }}</p>
+            <p>{{ item.contractSignedTime || '暂无' }}</p>
           </div>
           <div class="tit">
             <p>订单编号：</p>

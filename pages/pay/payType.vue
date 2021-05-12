@@ -187,35 +187,36 @@ export default {
       this.goBack()
     }
     const startTime = localStorage.getItem('startTime')
-    if (
-      localStorage.getItem('cusOrderId') &&
-      localStorage.getItem('serialNumber')
-    ) {
-      if (startTime) {
-        const nowTime = this.getNowTime()
-        console.log('startTime', startTime)
-        console.log('nowTime', nowTime)
-        console.log('diff', nowTime - startTime)
-        if (nowTime - startTime < 3 * 60 * 1000) {
-          this.resultLoading = true
-          payResultTimer = setInterval(() => {
-            this.number++
-            this.getPayResult()
-          }, 2000)
-        } else {
-          this.clearLocalStorage()
-          // this.$router.replace({
-          //   path: '/pay/payResult',
-          //   query: {
-          //     payStatus: 2,
-          //     orderId: this.$route.query.orderId,
-          //     cusOrderId: this.formData.cusOrderId,
-          //     batchIds: this.$route.query.batchIds,
-          //   },
-          // })
-        }
-      }
-    }
+    // 暂时隐藏付款功能
+    // if (
+    //   localStorage.getItem('cusOrderId') &&
+    //   localStorage.getItem('serialNumber')
+    // ) {
+    //   if (startTime) {
+    //     const nowTime = this.getNowTime()
+    //     console.log('startTime', startTime)
+    //     console.log('nowTime', nowTime)
+    //     console.log('diff', nowTime - startTime)
+    //     if (nowTime - startTime < 3 * 60 * 1000) {
+    //       this.resultLoading = true
+    //       payResultTimer = setInterval(() => {
+    //         this.number++
+    //         this.getPayResult()
+    //       }, 2000)
+    //     } else {
+    //       this.clearLocalStorage()
+    //       // this.$router.replace({
+    //       //   path: '/pay/payResult',
+    //       //   query: {
+    //       //     payStatus: 2,
+    //       //     orderId: this.$route.query.orderId,
+    //       //     cusOrderId: this.formData.cusOrderId,
+    //       //     batchIds: this.$route.query.batchIds,
+    //       //   },
+    //       // })
+    //     }
+    //   }
+    // }
   },
 
   methods: {
@@ -313,8 +314,9 @@ export default {
       this.getPayParamsFormData.payPlatform = item.code
     },
     startPay() {
+      this.showMydialog = true
       // this.$router.replace('/pay/payResult')
-      this.getPayParams()
+      // this.getPayParams()
     },
     // 查询订单应付金额
     enablePayMoney() {

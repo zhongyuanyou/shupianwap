@@ -118,21 +118,13 @@ export default {
           },
         })
       } else {
-        if (item.isAppendixContract === 1) {
-          for (let i = 0; i < this.list.length; i++) {
-            if (this.list[i].isAppendixContract === 0) {
-              item.contractFirstContacts = this.list[i].contractFirstContacts
-              item.contractFirstPhone = this.list[i].contractFirstPhone
-            }
-          }
-        }
         this.$router.push({
           path: '/contract/preview',
           query: {
             contractUrl: item.contractUrl,
             contractId: item.contractId,
             contractNo: item.contractNo,
-            signerName: item.contractFirstContacts,
+            signerName: item.contractFirstName,
             contactWay: item.contractFirstPhone,
             type: 'qs',
             go: '-1',
