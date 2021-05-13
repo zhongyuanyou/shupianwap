@@ -335,12 +335,12 @@ export default {
       this.loading = true
       try {
         this.$axios.post(ossApi.add, formData).then((res) => {
-          this.loading = false
           if (res.code !== 200) {
             throw new Error('图片上传失败')
           }
           imgs.push(res.data.url)
           this.images = imgs
+          this.loading = false
           this.$xToast.success('图片上传成功!')
         })
       } catch (err) {
@@ -392,8 +392,8 @@ export default {
       try {
         // 提交评价前 查询前置接口
         const params = {
-          // infoId: this.infoId
-          infoId: '1118738721594990083',
+          infoId: this.infoId,
+          // infoId: '1118738721594990083',
         }
         const { code, data } = await this.$axios.get(evaluateApi.detail, {
           params,
@@ -407,10 +407,17 @@ export default {
         this.evaluateFileId = data.evaluateFileId || ''
         this.initItemsStar()
         this.initTips()
-      } catch (e) {}
+      } catch (e) {
+        const _this = this
+        this.$xToast.error('查询信息失败')
+        setTimeout(() => {
+          _this.$router.push({ path: '/my/evaluate' })
+        }, 2000)
+      }
     },
     async addEvaluateApi() {
       try {
+        this.loading = true
         this.buildEvaluateDimensionList()
         this.buildTips()
         const params = {
@@ -428,8 +435,10 @@ export default {
         if (code !== 200) {
           throw new Error('评价失败')
         }
+        this.loading = false
         this.$router.push({ path: '/my/evaluate/success' })
       } catch (e) {
+        this.loading = false
         this.$xToast.error('评价失败')
       }
     },
