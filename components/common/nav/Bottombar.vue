@@ -132,7 +132,14 @@ export default {
       if (item.path === '/msg') {
         // if (this.userInfo.token) {
         if (this.userInfo.token) {
-          window.location.href = `${config.imBaseUrl}/index?token=${this.userInfo.token}&userId=${this.userInfo.userId}&userType=${this.userInfo.userType}`
+          window.location.href = `${config.imBaseUrl}/index?token=${
+            this.userInfo.token || this.$cookies.get('token', { path: '/' })
+          }&userId=${
+            this.userInfo.userId || this.$cookies.get('userId', { path: '/' })
+          }&userType=${
+            this.userInfo.userType ||
+            this.$cookies.get('userType', { path: '/' })
+          }`
         } else {
           const imId = localStorage.getItem('myInfo')
             ? JSON.parse(localStorage.getItem('myInfo'))
