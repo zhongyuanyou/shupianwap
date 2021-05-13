@@ -52,17 +52,21 @@
         v-model="evaluateContent"
         autosize
         type="textarea"
-        maxlength="100"
+        maxlength="500"
         placeholder="请对规划师的服务进行评价~"
         show-word-limit
       />
     </div>
     <div v-if="uploadImgFlag" class="upload">
       <sp-uploader
-        v-model="evaluateFileId"
+        v-model="uploader"
         :max-count="3"
+        :max-size="5 * 1024 * 1024"
         multiple
         upload-icon="plus"
+        :after-read="afterRead"
+        :before-delete="beforeDelete"
+        @oversize="onOversize"
       ></sp-uploader>
     </div>
     <div class="placeholder"></div>
@@ -74,6 +78,7 @@
         @click="submit"
       />
     </sp-bottombar>
+    <loading-center v-show="loading" />
   </div>
 </template>
 
@@ -91,7 +96,8 @@ import {
   BottombarButton,
 } from '@chipspc/vant-dgg'
 import utils from '@/utils/changeBusinessData'
-import { evaluateApi } from '@/api/evaluate'
+import { evaluateApi, ossApi } from '@/api'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
 export default {
   name: 'EvaluateStar',
@@ -106,6 +112,7 @@ export default {
     [Button.name]: Button,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
+    LoadingCenter,
   },
   filters: {
     fliterLevel(val) {
@@ -157,6 +164,7 @@ export default {
       remarkFlag: this.remark,
       uploadImgFlag: this.upload,
       subScoreFlag: false,
+      loading: false, // 加载效果状态
       imgs: ['vbad', 'bad', 'normal', 'happy', 'vhappy'],
       imglights: [
         'vbadlight',
@@ -178,9 +186,9 @@ export default {
       replayStars: [],
       efficiencyStars: [],
       tips: [],
-      starValue: 0,
       evaluateContent: '',
-      evaluateFileId: [],
+      uploader: [],
+      images: [], // 图片集合
       evaluateDimensionList: [], // 评价维度列表
     }
   },
@@ -290,8 +298,65 @@ export default {
         item.flag = false
       })
     },
+    onOversize() {
+      this.$xToast.error('文件大小不能超过5M')
+    },
+    afterRead(file) {
+      const imgs = this.images
+      const formData = new FormData()
+      formData.append('uploadatalog', 'sp-pt/wap/images')
+      formData.append('file', file.file)
+      this.loading = true
+      try {
+        this.$axios.post(ossApi.add, formData).then((res) => {
+          this.loading = false
+          if (res.code !== 200) {
+            throw new Error('图片上传失败')
+          }
+          imgs.push(res.data.url)
+          this.images = imgs
+          this.$xToast.success('图片上传成功!')
+        })
+      } catch (err) {
+        this.loading = false
+        this.$xToast.error('图片上传失败!')
+      }
+    },
+    beforeDelete(file, detail) {
+      // 重置uploader 和 images 数组
+      this.images.splice(detail.index, 1)
+      this.uploader.splice(detail.index, 1)
+      this.$xToast.success('图片删除成功!')
+    },
+    checkSubmit() {
+      // check 服务评分
+      if (this.totalStarLevel === 0) {
+        this.$xToast.error('请选择服务评分哦')
+        return false
+      }
+      // check 维度评分
+      if (
+        this.evaluateDimensionList.some((item) => {
+          return item.fraction === 0
+        })
+      ) {
+        this.$xToast.error('维度评分不能为空哦')
+        return false
+      }
+      // check 评价内容
+      if (this.evaluateContent.trim() === '') {
+        this.$xToast.error('评价内容不能为空')
+        return false
+      }
+      // check 图片
+      if (this.uploadImgFlag && this.images.length === 0) {
+        this.$xToast.error('请上传图片')
+        return false
+      }
+    },
     submit() {
-      // check data
+      // start: check data
+      this.checkSubmit()
       // submitApi
       this.addEvaluateApi()
     },
