@@ -189,10 +189,16 @@ export default {
   },
   watch: {
     totalStarLevel(val) {
-      console.log(`output totalStarLevel: ${val}`)
       if (val !== 0) {
         this.subScoreFlag = true
       }
+      if (val === 5) {
+        this.evaluateDimensionList.forEach((item) => {
+          item.fraction = 5
+        })
+      }
+      this.setItemsStar()
+      this.itemRender()
       this.setTotalStars()
     },
   },
@@ -237,6 +243,22 @@ export default {
         }
       })
     },
+    setItemsStar() {
+      const _this = this
+      this.evaluateDimensionList.forEach((item1) => {
+        item1.imgs.forEach((item, index) => {
+          if (item1.fraction > index) {
+            item.src = _this.$ossImgSetV2(
+              utils.getEvaluateLevelImg(_this.imglights[item1.fraction - 1])
+            )
+          } else {
+            item.src = _this.$ossImgSetV2(
+              utils.getEvaluateLevelImg(_this.imgs[index])
+            )
+          }
+        })
+      })
+    },
     clkTotalStar(i, val) {
       const tempI = i + 1
       if (this[val] === 0 && tempI === 1) {
@@ -257,6 +279,9 @@ export default {
         item.fraction = tempI
       }
       this.setItemStar(item)
+      this.itemRender()
+    },
+    itemRender() {
       // 解决循环渲染问题
       this.evaluateDimensionList = this.evaluateDimensionList.slice()
     },
