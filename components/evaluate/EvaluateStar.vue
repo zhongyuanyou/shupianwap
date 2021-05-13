@@ -10,59 +10,46 @@
             name="dafen_mian"
             size="0.56rem"
             :color="item.flag ? '#FFB400' : '#F0F0F0'"
-            @click.native="clkItemStar(index, 'totalStarLevel')"
+            @click.native="clkTotalStar(index, 'totalStarLevel')"
           ></my-icon>
         </template>
-        <div class="desc">超赞</div>
+        <div class="desc">{{ totalStarLevel | fliterLevel }}</div>
       </div>
       <template v-if="subScoreFlag">
-        <div class="score-item">
-          <div class="tile">专业能力</div>
-          <template v-for="(item, index) in specialtyStars">
+        <div
+          v-for="(item, index) in evaluateDimensionList"
+          :key="index"
+          class="score-item"
+        >
+          <div class="tile">{{ item.name }}</div>
+          <template v-for="(itemImg, indexImg) in item.imgs">
             <img
-              :key="index"
-              :src="item.src"
+              :key="indexImg"
+              :src="itemImg.src"
               class="score-item-img"
-              @click="clkItemStar(index, 'specialtyStarLevel')"
+              :class="[indexImg === 4 ? 'z-last' : '']"
+              @click="clkItemStar(indexImg, item)"
             />
           </template>
-          <div class="desc">超赞</div>
-        </div>
-        <div class="score-item">
-          <div class="tile">回复时效</div>
-          <template v-for="(item, index) in replayStars">
-            <img
-              :key="index"
-              :src="item.src"
-              class="score-item-img"
-              @click="clkItemStar(index, 'replayStarLevel')"
-            />
-          </template>
-          <div class="desc">超赞</div>
-        </div>
-        <div class="score-item bottom-del">
-          <div class="tile">时效效率</div>
-          <template v-for="(item, index) in efficiencyStars">
-            <img
-              :key="index"
-              :src="item.src"
-              class="score-item-img"
-              @click="clkItemStar(index, 'efficiencyStarLevel')"
-            />
-          </template>
-          <div class="desc">超赞</div>
+          <div class="desc">{{ item.fraction | fliterLevel }}</div>
         </div>
       </template>
     </div>
     <div v-if="tipsFlag" class="tips">
-      <div v-for="(item, index) in tips" :key="index" class="item">
-        {{ item }}
+      <div
+        v-for="(item, index) in tips"
+        :key="index"
+        class="item"
+        :class="[item.flag ? 'z-active' : '']"
+        @click="clkTip(item)"
+      >
+        {{ item.name }}
       </div>
     </div>
 
     <div v-if="remarkFlag" class="remark">
       <sp-field
-        v-model="message"
+        v-model="evaluateContent"
         autosize
         type="textarea"
         maxlength="100"
@@ -72,7 +59,7 @@
     </div>
     <div v-if="uploadImgFlag" class="upload">
       <sp-uploader
-        v-model="uploader"
+        v-model="evaluateFileId"
         :max-count="3"
         multiple
         upload-icon="plus"
@@ -104,9 +91,7 @@ import {
   BottombarButton,
 } from '@chipspc/vant-dgg'
 import utils from '@/utils/changeBusinessData'
-
-// mock data
-const mockTipsData = ['标签表情', '标签表情', '标签表情']
+import { evaluateApi } from '@/api/evaluate'
 
 export default {
   name: 'EvaluateStar',
@@ -121,6 +106,12 @@ export default {
     [Button.name]: Button,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
+  },
+  filters: {
+    fliterLevel(val) {
+      const txts = ['非常差', '非常差', '很差', '一般', '满意', '超赞']
+      return txts[val]
+    },
   },
   props: {
     score: {
@@ -151,9 +142,16 @@ export default {
         return true
       },
     },
+    cinfoId: {
+      // 评价ID 必传
+      type: String,
+      default: '123',
+      // required: true,
+    },
   },
   data() {
     return {
+      infoId: this.cinfoId, // 评价id
       scoreFlag: this.score,
       tipsFlag: this.tip,
       remarkFlag: this.remark,
@@ -168,9 +166,6 @@ export default {
         'vhappylight',
       ],
       totalStarLevel: 0, // 总得分
-      specialtyStarLevel: 0, // 专业分
-      replayStarLevel: 0, // 回答分
-      efficiencyStarLevel: 0, // 效率分
       totalStars: [
         // 总得分
         { flag: false },
@@ -182,61 +177,34 @@ export default {
       specialtyStars: [],
       replayStars: [],
       efficiencyStars: [],
-      tips: mockTipsData,
+      tips: [],
       starValue: 0,
-      message: '',
-      uploader: [],
+      evaluateContent: '',
+      evaluateFileId: [],
+      evaluateDimensionList: [], // 评价维度列表
     }
   },
   watch: {
     totalStarLevel(val) {
-      console.log(`output totalStarLevel: ${val}`)
       if (val !== 0) {
         this.subScoreFlag = true
       }
-      if (val === 0) {
-        this.specialtyStarLevel = 0
-        this.replayStarLevel = 0
-        this.efficiencyStarLevel = 0
-      }
       if (val === 5) {
-        this.specialtyStarLevel = 5
-        this.replayStarLevel = 5
-        this.efficiencyStarLevel = 5
+        this.evaluateDimensionList.forEach((item) => {
+          item.fraction = 5
+        })
       }
+      this.setItemsStar()
+      this.itemRender()
       this.setTotalStars()
     },
-    specialtyStarLevel(val) {
-      console.log(`output specialtyStarLevel: ${val}`)
-      this.setItemStar('specialtyStars', 'specialtyStarLevel')
-    },
-    replayStarLevel(val) {
-      console.log(`output replayStarLevel: ${val}`)
-      this.setItemStar('replayStars', 'replayStarLevel')
-    },
-    efficiencyStarLevel(val) {
-      console.log(`output efficiencyStarLevel: ${val}`)
-      this.setItemStar('efficiencyStars', 'efficiencyStarLevel')
-    },
   },
-  created() {
+  mounted() {
     this.init()
-    console.log(JSON.stringify(this.specialtyStars))
   },
   methods: {
     init() {
-      const _this = this
-      this.imgs.forEach((item) => {
-        this.specialtyStars.push({
-          src: _this.$ossImgSetV2(utils.getEvaluateLevelImg(item)),
-        })
-        this.replayStars.push({
-          src: _this.$ossImgSetV2(utils.getEvaluateLevelImg(item)),
-        })
-        this.efficiencyStars.push({
-          src: _this.$ossImgSetV2(utils.getEvaluateLevelImg(item)),
-        })
-      })
+      this.getEvaluateDetailApi()
     },
     setTotalStars() {
       const _this = this
@@ -248,12 +216,12 @@ export default {
         }
       })
     },
-    setItemStar(starFlag, levelFlag) {
+    setItemStar(item1) {
       const _this = this
-      this[starFlag].forEach((item, index) => {
-        if (_this[levelFlag] > index) {
+      item1.imgs.forEach((item, index) => {
+        if (item1.fraction > index) {
           item.src = _this.$ossImgSetV2(
-            utils.getEvaluateLevelImg(_this.imglights[_this[levelFlag] - 1])
+            utils.getEvaluateLevelImg(_this.imglights[item1.fraction - 1])
           )
         } else {
           item.src = _this.$ossImgSetV2(
@@ -262,7 +230,23 @@ export default {
         }
       })
     },
-    clkItemStar(i, val) {
+    setItemsStar() {
+      const _this = this
+      this.evaluateDimensionList.forEach((item1) => {
+        item1.imgs.forEach((item, index) => {
+          if (item1.fraction > index) {
+            item.src = _this.$ossImgSetV2(
+              utils.getEvaluateLevelImg(_this.imglights[item1.fraction - 1])
+            )
+          } else {
+            item.src = _this.$ossImgSetV2(
+              utils.getEvaluateLevelImg(_this.imgs[index])
+            )
+          }
+        })
+      })
+    },
+    clkTotalStar(i, val) {
       const tempI = i + 1
       if (this[val] === 0 && tempI === 1) {
         this[val] = 1
@@ -272,8 +256,77 @@ export default {
         this[val] = tempI
       }
     },
+    clkItemStar(i, item) {
+      const tempI = i + 1
+      if (item.fraction === 0 && tempI === 1) {
+        item.fraction = 1
+      } else if (item.fraction === tempI) {
+        item.fraction--
+      } else {
+        item.fraction = tempI
+      }
+      this.setItemStar(item)
+      this.itemRender()
+    },
+    itemRender() {
+      // 解决循环渲染问题
+      this.evaluateDimensionList = this.evaluateDimensionList.slice()
+    },
+    initItemsStar() {
+      // 初始化渲染 evaluateDimensionList 中图片
+      const _this = this
+      this.evaluateDimensionList.forEach((item) => {
+        item.imgs = []
+        item.fraction = 0
+        this.imgs.forEach((itemImg) => {
+          item.imgs.push({
+            src: _this.$ossImgSetV2(utils.getEvaluateLevelImg(itemImg)),
+          })
+        })
+      })
+    },
+    initTips() {
+      this.tips.forEach((item) => {
+        item.flag = false
+      })
+    },
     submit() {
-      console.log('submit')
+      // check data
+      // submitApi
+      this.addEvaluateApi()
+    },
+    async getEvaluateDetailApi() {
+      try {
+        // 提交评价前 查询前置接口
+        const params = {
+          // infoId: this.infoId
+          infoId: '1118738721594990083',
+        }
+        const { code, data } = await this.$axios.get(evaluateApi.detail, {
+          params,
+        })
+        if (code !== 200) {
+          throw new Error('请求接口失败.')
+        }
+        // 对评分item和tag进行赋值
+        this.evaluateDimensionList = data.evaluateDimensionList
+        this.tips = data.evaluateTagList
+        this.initItemsStar()
+        this.initTips()
+      } catch (e) {}
+    },
+    addEvaluateApi() {
+      try {
+        const params = {
+          infoId: this.infoId,
+          evaluateContent: this.evaluateContent,
+          serverScore: this.totalStarLevel,
+        }
+      } catch (e) {}
+    },
+    clkTip(item) {
+      item.flag = !item.flag
+      this.tips = this.tips.slice()
     },
   },
 }
@@ -290,11 +343,6 @@ export default {
     margin-bottom: 32px;
     align-items: center;
   }
-  .mixin-score-tile {
-    font: 400 28px @fontf-pfsc-reg;
-    color: #222222;
-    margin-right: 62px;
-  }
   .mixin-score-desc {
     font: 400 24px @fontf-pfsc-reg;
     color: #555555;
@@ -308,9 +356,10 @@ export default {
       .mixin-score-item();
       width: 100%;
       .tile {
+        width: 160px;
+        margin-right: 10px;
         font: bold 32px @fontf-pfsc-med;
         color: #222222;
-        margin-right: 40px;
       }
       .desc {
         .mixin-score-desc();
@@ -323,7 +372,11 @@ export default {
       .mixin-score-item();
       width: 100%;
       .tile {
-        .mixin-score-tile();
+        font: 400 28px @fontf-pfsc-reg;
+        color: #222222;
+        width: 160px;
+        margin-right: 10px;
+        .mixin-text-oneoverflow();
       }
       .desc {
         .mixin-score-desc();
@@ -332,6 +385,9 @@ export default {
         height: 44px;
         width: 44px;
         margin-right: 32px;
+        &.z-last {
+          margin-right: 0;
+        }
       }
       &.bottom-del {
         margin-bottom: 0;
