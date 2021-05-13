@@ -165,8 +165,8 @@ export default {
       currentTabJyCode: '', // 当前tab选中的jy code
       filterItem: {}, // 保存所有交易业态的已筛选数据
       isReq: {}, // 存储当前业态是否已经进行过搜索
-      classCode: this.$route.query.classCode,
-      classCode1: this.$route.query.classCode,
+      classCode: this.$route.query,
+      classCode1: '',
     }
   },
   computed: {
@@ -228,13 +228,19 @@ export default {
     // this.isReq[this.currentTabJyCode] = true
     this.filterItem[this.tabs[this.typeCodeIndex].code] = {}
     const classList = []
-    if (this.classCode) {
-      const obj = {
-        fieldCode: this.$route.query.pcode.toLowerCase(),
-        fieldValue: [this.classCode],
-        matchType: 'MATCH_TYPE_MULTI',
+    if (this.classCode.classCode) {
+      this.classCode.classCode = this.classCode.classCode.split(',')
+      this.classCode.pcode = this.classCode.pcode.split(',')
+      this.classCode.jylb = this.classCode.jylb.split(',')
+      this.classCode1 = this.classCode
+      for (let i = 0; i < this.classCode.classCode.length; i++) {
+        const obj = {
+          fieldCode: this.classCode.pcode[i].toLowerCase(),
+          fieldValue: [this.classCode.classCode[i]],
+          matchType: 'MATCH_TYPE_MULTI',
+        }
+        classList.push(obj)
       }
-      classList.push(obj)
     }
     this.formData[this.tabs[this.typeCodeIndex].code] = {
       start: 1,
