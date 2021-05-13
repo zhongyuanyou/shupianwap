@@ -73,28 +73,26 @@ export default {
             }
             for (let b = 0; b < this.classCode.jylb.length; b++) {
               for (let i = 0; i < data.filters.length; i++) {
-                // if (data.filters[i].name !== '更多') {
-                //   // for (let a = 0; a < data.filters[i].children.length, a++; ) {
-                //   //   console.log(1111)
-                //   // }
-                // } else {
+                // for (let a = 0; a < data.filters[i].children.length; a++) {}
                 if (this.classCode.jylb[b] === data.filters[i].code) {
-                  for (let z = 0; z < data.filters[i].children.length; z++) {
-                    if (
-                      data.filters[i].children[z].code &&
-                      this.classCode.classCode[b] ===
-                        data.filters[i].children[z].code
-                    ) {
-                      data.filters[i].name = data.filters[i].children[z].name
-                    } else if (
-                      data.filters[i].children[z].name ===
-                      this.classCode.classCode[b]
-                    ) {
-                      data.filters[i].name = data.filters[i].children[z].name
+                  if (data.filters[i].name !== '更多') {
+                    for (let z = 0; z < data.filters[i].children.length; z++) {
+                      if (
+                        data.filters[i].children[z].code &&
+                        this.classCode.classCode[b] ===
+                          data.filters[i].children[z].code
+                      ) {
+                        data.filters[i].name = data.filters[i].children[z].name
+                      } else if (
+                        data.filters[i].children[z].name ===
+                        this.classCode.classCode[b]
+                      ) {
+                        data.filters[i].name = data.filters[i].children[z].name
+                      }
                     }
+                  } else {
                   }
                 }
-                // }
               }
             }
             this.classCode = ''
