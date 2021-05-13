@@ -95,71 +95,6 @@
           </div>
         </sp-index-bar>
       </div>
-      <div class="current-city">
-        <strong>{{ currentCity }}</strong>
-        <span>当前选择</span>
-      </div>
-      <!-- S 当前定位城市 -->
-      <div v-if="!isInApp" class="position-city">
-        <div v-if="!positionStatus" class="no-position">
-          <my-icon
-            name="toast_ic_remind"
-            size="0.32rem"
-            color="#cccccc"
-          ></my-icon>
-          <span>无法定位到当前城市</span>
-        </div>
-        <div v-else class="position-success">
-          <strong @click="choosePositionCity(positionCityName)">{{
-            positionCityName
-          }}</strong>
-          <span>GPS定位</span>
-          <p v-if="positionStatus === 1">未开通服务</p>
-        </div>
-        <a href="javascript:void(0);" @click="positionCity">重新定位</a>
-      </div>
-      <!-- S 城市列表 -->
-      <div>
-        <div v-if="cityHistory.length" class="city-btn-list">
-          <span>历史选择</span>
-          <ul>
-            <li
-              v-for="(item, index) in cityHistory"
-              :key="index"
-              @click="chooseCity(item)"
-            >
-              {{ item.cityName }}
-            </li>
-          </ul>
-        </div>
-        <sp-index-bar
-          :sticky-offset-top="searchDomHeight"
-          highlight-color="#4974F5"
-          :index-list="indexList"
-        >
-          <div v-if="false" class="city-btn-list">
-            <sp-index-anchor index="热">热门城市</sp-index-anchor>
-            <ul>
-              <li>成都</li>
-              <li>洛阳</li>
-              <li>杭州</li>
-              <li>杭州</li>
-              <li>杭州</li>
-            </ul>
-          </div>
-          <div v-for="(item, index) in nweCityList" :key="index">
-            <sp-index-anchor :index="item.letter">{{
-              item.letter
-            }}</sp-index-anchor>
-            <sp-cell
-              v-for="(key, val) in item.data"
-              :key="val"
-              :title="key.cityName"
-              @click="chooseCity(key)"
-            />
-          </div>
-        </sp-index-bar>
-      </div>
     </div>
 
     <Loading-center v-show="loading" title="加载中" />
@@ -353,6 +288,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .city-page {
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
   background-color: #f8f8f8;
   max-height: 100vh;
   overflow: hidden;

@@ -173,11 +173,11 @@ export default {
         this.selectedOrderStatus = 'ORDER_CUS_STATUS_CANCELLED'
       }
     }
+    this.getOrderList()
     // 获取下单协议
     this.addOrderXy = await this.getProtocol('protocol100008')
     // 获取交易委托协议
     this.tranXy = await this.getProtocol('protocol100033')
-    this.getOrderList()
   },
   methods: {
     handleScollList(e) {

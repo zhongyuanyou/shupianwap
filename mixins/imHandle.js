@@ -103,7 +103,6 @@ export default {
         }
         params = Object.assign(params, data)
         this.imExample.createSession(params, (res) => {
-          console.log(res)
           if (res.code === 200) {
             const myInfo = localStorage.getItem('myInfo')
               ? JSON.parse(localStorage.getItem('myInfo'))
@@ -117,7 +116,7 @@ export default {
               ? this.userId
               : this.$cookies.get('userId', { path: '/' })
               ? this.$cookies.get('userId', { path: '/' })
-              : myInfo.token
+              : myInfo.imUserId
             const userType =
               this.userType ||
               this.$cookies.get('userType', { path: '/' }) ||
@@ -157,22 +156,25 @@ export default {
      * @return: void
      */
     regularVisitor({ visitorId, userId }) {
-      console.log(visitorId, userId, 321)
-      this.imExample.regularVisitor(
-        {
-          visitorId,
-          userId,
-        },
-        (res) => {
-          console.log(res, 123)
-        }
-      )
+      return new Promise((resolve) => {
+        this.imExample.regularVisitor(
+          {
+            visitorId,
+            userId,
+          },
+          (res) => {
+            resolve()
+            console.log(res, 123)
+          }
+        )
+      })
     },
     sendTemplateMsgMixin({ sessionParams, msgParams }) {
       const userInfo = this.$store.state.user.userInfo
       // this.judgeLoginMixin(true).then((userInfo) => {
       if (userInfo) {
         let params = {
+          operUserType: userInfo.type || 'VISITOR',
           imUserId: '',
           imUserType: '',
           ext: {
@@ -233,7 +235,7 @@ export default {
                     ? JSON.parse(localStorage.getItem('myInfo'))
                     : {}
                   const token = this.userType ? this.token : myInfo.token
-                  const userId = this.userType ? this.userId : myInfo.token
+                  const userId = this.userType ? this.userId : myInfo.imUserId
                   const userType = this.userType || 'VISITOR'
                   if (this.isApplets) {
                     window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}&requireCode=${sessionParams.requireCode}&requireName=${sessionParams.requireName}&isApplets=true`

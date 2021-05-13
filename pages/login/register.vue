@@ -129,7 +129,9 @@ import {
 import PhoneField from '@/components/login/PhoneField'
 import ProtocolField from '@/components/login/ProtocolField'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
-
+import imHandle from '~/mixins/imHandle'
+import { imInit } from '@/utils/im'
+import getUserSign from '~/utils/fingerprint'
 import formHandle from '@/mixins/formHandle'
 import { auth } from '@/api'
 import { checkPhone, checkAuthCode, checkPassword } from '@/utils/check.js'
@@ -243,7 +245,26 @@ export default {
         this.loading = true
         const data = await auth.register({ axios: this.$axios }, params)
         this.loading = false
-        if (data != null) this.setUserInfo(data) // 注册成功后，返回的也是登录信息，所以也存
+        if (data != null) {
+          this.setUserInfo(data) // 注册成功后，返回的也是登录信息，所以也存
+          const imId = localStorage.getItem('myInfo')
+            ? JSON.parse(localStorage.getItem('myInfo')).imUserId
+            : {}
+          const deviceId = await getUserSign()
+          const initImSdk = imInit({
+            token: data.token,
+            userId: data.token,
+            userType: data.userType,
+            deviceId,
+          })
+          this.$store.commit('im/SET_IM_SDK', initImSdk)
+          await this.regularVisitor({
+            visitorId: imId,
+            userId: data.userId,
+          })
+          localStorage.setItem('userId', data.userId)
+          this.$store.commit('im/SET_IM_SDK', null)
+        }
         return data
       } catch (error) {
         this.loading = false

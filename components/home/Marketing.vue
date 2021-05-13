@@ -196,7 +196,7 @@ export default {
     font-family: PingFangSC-Medium, PingFang SC;
     color: #222222;
     line-height: 32px;
-    margin-bottom: 14px;
+    margin-bottom: 8px;
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -231,11 +231,12 @@ export default {
     }
   }
   .sp-goods-slogan {
+    padding-top: 6px;
     font-size: 26px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(153, 153, 153, 1);
-    line-height: 26px;
+    line-height: 28px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

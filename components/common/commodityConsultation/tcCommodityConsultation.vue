@@ -1,5 +1,8 @@
 <template>
-  <div class="commodityConsult">
+  <div
+    class="commodityConsult"
+    :style="{ opacity: plannerInfo.mchUserId ? 1 : 0 }"
+  >
     <div class="commodityConsult-containner">
       <div class="commodityConsult-containner-userInfo">
         <a
@@ -204,6 +207,7 @@ export default {
   padding-top: 148px;
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
+  transition: all 0.3s;
   &-containner {
     position: fixed;
     bottom: 0px;

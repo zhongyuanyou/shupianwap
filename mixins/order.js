@@ -365,6 +365,7 @@ export default {
             // 对支付列表进行排序
             nodeList.forEach((item) => {
               item.batchIndex = Number(item.batchNumber) + 1
+              item.money = this.regFenToYuan(item.money)
             })
             this.nodeList = nodeList
           } else {
@@ -432,28 +433,39 @@ export default {
       // 当客户订单状态为已取消时不展示按钮
       if (data.cusOrderStatusNo === ORDERSTATUSCODE[4]) return false
       if (this.fromPage === 'orderList') {
-        if (
-          (data.contractStatus &&
-            (data.contractStatus === 'STRUTS_QSZ' ||
-              data.contractStatus === 'STRUTS_CG')) ||
-          !data.contractStatus
-        ) {
-          // 当合同状态为草稿或签署中或无合同信息时显示签署合同按钮
+        // if (
+        //   (data.contractStatus &&
+        //     (data.contractStatus === 'STRUTS_QSZ' ||
+        //       data.contractStatus === 'STRUTS_CG')) ||
+        //   !data.contractStatus
+        // ) {
+        //   // 当合同状态为草稿或签署中或无合同信息时显示签署合同按钮 430版本
+        //   return 1
+        // }
+        // 当合同状态为已完成时显示查看合同按钮 430版本
+        // if (data.contractStatus && data.contractStatus === 'STRUTS_YWC') {
+        //   return 2
+        // }
+        if (!data.contractStatus) {
+          // 当无合同信息时显示签署合同 515合同附件版本
           return 1
-        }
-        // 当合同状态为已完成时显示查看合同按钮
-        if (data.contractStatus && data.contractStatus === 'STRUTS_YWC') {
+        } else {
+          // 当有合同时显示查看合同 515合同附件版本
           return 2
         }
       } else {
-        // 订单详情页面根据合同列表判断
-        // 当合同状态为已完成时显示查看合同按钮
-        if (
-          data.contractVo2s &&
-          data.contractVo2s.length &&
-          data.contractVo2s[0].contractStatus === 'STRUTS_YWC'
-        )
-          return 2
+        // 430版本
+        // // 订单详情页面根据合同列表判断
+        // // 当合同状态为已完成时显示查看合同按钮
+        // if (
+        //   data.contractVo2s &&
+        //   data.contractVo2s.length &&
+        //   data.contractVo2s[0].contractStatus === 'STRUTS_YWC'
+        // )
+        //   return 2
+        // return 1
+        // 515版本
+        if (data.contractVo2s && data.contractVo2s.length) return 2
         return 1
       }
     },
@@ -825,7 +837,85 @@ export default {
     setName(str) {
       return '**' + str.substring(2, str.length)
     },
-    // jump
+    // jumpContract 430版本
+    // toContract() {
+    //   // 合同链接
+    //   const contractUrl =
+    //     this.orderData.contractVo2s &&
+    //     this.orderData.contractVo2s.length &&
+    //     (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+    //       this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+    //       ? this.orderData.contractVo2s[0].contractUrl
+    //       : this.orderData.contractUrl
+    //   // 合同ID
+    //   const contractId =
+    //     this.orderData.contractVo2s &&
+    //     this.orderData.contractVo2s.length &&
+    //     (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+    //       this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+    //       ? this.orderData.contractVo2s[0].contractId
+    //       : this.orderData.contractId
+    //   // 合同编号
+    //   const contractNo =
+    //     this.orderData.contractVo2s &&
+    //     this.orderData.contractVo2s.length &&
+    //     (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+    //       this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+    //       ? this.orderData.contractVo2s[0].contractNo
+    //       : this.orderData.contractNo
+    //   if (
+    //     (this.orderData.contractStatus &&
+    //       (this.orderData.contractStatus === 'STRUTS_QSZ' ||
+    //         this.orderData.contractStatus === 'STRUTS_CG')) ||
+    //     (this.orderData.contractVo2s &&
+    //       this.orderData.contractVo2s.length &&
+    //       (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+    //         this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG'))
+    //   ) {
+    //     this.$router.push({
+    //       path: '/contract/preview',
+    //       query: {
+    //         orderId: this.orderData.id,
+    //         cusOrderId: this.orderData.cusOrderId,
+    //         fromPage: this.fromPage,
+    //         contractUrl,
+    //         type: 'qs',
+    //         contractId,
+    //         contractNo,
+    //       },
+    //     })
+    //   } else if (
+    //     (this.orderData.contractStatus &&
+    //       this.orderData.contractStatus === 'STRUTS_YWC') ||
+    //     (this.orderData.contractVo2s &&
+    //       this.orderData.contractVo2s.length &&
+    //       this.orderData.contractVo2s[0].contractStatus === 'STRUTS_YWC')
+    //   ) {
+    //     this.$router.push({
+    //       path: '/contract/preview',
+    //       query: {
+    //         orderId: this.orderData.id,
+    //         cusOrderId: this.orderData.cusOrderId,
+    //         fromPage: this.fromPage,
+    //         contractUrl,
+    //         contractId,
+    //         contractNo,
+    //         type: 'yl',
+    //       },
+    //     })
+    //   } else {
+    //     this.$router.push({
+    //       path: '/contract/edit',
+    //       query: {
+    //         orderId: this.orderData.id,
+    //         cusOrderId: this.orderData.cusOrderId,
+    //         fromPage: this.fromPage,
+    //         contractStatus: this.orderData.contractStatus,
+    //       },
+    //     })
+    //   }
+    // },
+    // 跳转合同515版本
     toContract() {
       // 合同链接
       const contractUrl =
@@ -852,16 +942,12 @@ export default {
           ? this.orderData.contractVo2s[0].contractNo
           : this.orderData.contractNo
       if (
-        (this.orderData.contractStatus &&
-          (this.orderData.contractStatus === 'STRUTS_QSZ' ||
-            this.orderData.contractStatus === 'STRUTS_CG')) ||
-        (this.orderData.contractVo2s &&
-          this.orderData.contractVo2s.length &&
-          (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
-            this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG'))
+        this.orderData.contractStatus ||
+        (this.orderData.contractVo2s && this.orderData.contractVo2s.length)
       ) {
+        // 有合同则跳转至合同附件列表页
         this.$router.push({
-          path: '/contract/preview',
+          path: '/order/OrderContract?orderId=XXXX',
           query: {
             orderId: this.orderData.id,
             cusOrderId: this.orderData.cusOrderId,
@@ -870,25 +956,6 @@ export default {
             type: 'qs',
             contractId,
             contractNo,
-          },
-        })
-      } else if (
-        (this.orderData.contractStatus &&
-          this.orderData.contractStatus === 'STRUTS_YWC') ||
-        (this.orderData.contractVo2s &&
-          this.orderData.contractVo2s.length &&
-          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_YWC')
-      ) {
-        this.$router.push({
-          path: '/contract/preview',
-          query: {
-            orderId: this.orderData.id,
-            cusOrderId: this.orderData.cusOrderId,
-            fromPage: this.fromPage,
-            contractUrl,
-            contractId,
-            contractNo,
-            type: 'yl',
           },
         })
       } else {
