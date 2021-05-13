@@ -131,7 +131,7 @@ export default {
       // 消息页面跳转 IM
       if (item.path === '/msg') {
         // if (this.userInfo.token) {
-        if (this.userInfo.token) {
+        if (this.userInfo.token || this.$cookies.get('token', { path: '/' })) {
           window.location.href = `${config.imBaseUrl}/index?token=${
             this.userInfo.token || this.$cookies.get('token', { path: '/' })
           }&userId=${
