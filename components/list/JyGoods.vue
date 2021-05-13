@@ -231,7 +231,6 @@ export default {
     if (this.classCode.classCode) {
       this.classCode.classCode = this.classCode.classCode.split(',')
       this.classCode.pcode = this.classCode.pcode.split(',')
-      this.classCode.jylb = this.classCode.jylb.split(',')
       this.classCode1 = this.classCode
       for (let i = 0; i < this.classCode.classCode.length; i++) {
         const obj = {
@@ -239,6 +238,8 @@ export default {
           fieldValue: [this.classCode.classCode[i]],
           matchType: 'MATCH_TYPE_MULTI',
         }
+        const filrerName = `selectFilter${this.classCode.classCode[i].jylb}`
+        this.$set(this.filterItem[this.currentTabJyCode], filrerName, obj)
         classList.push(obj)
       }
     }

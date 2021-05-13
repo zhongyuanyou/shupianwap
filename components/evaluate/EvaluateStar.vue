@@ -52,28 +52,34 @@
         v-model="evaluateContent"
         autosize
         type="textarea"
-        maxlength="100"
+        maxlength="500"
         placeholder="请对规划师的服务进行评价~"
         show-word-limit
       />
     </div>
     <div v-if="uploadImgFlag" class="upload">
       <sp-uploader
-        v-model="evaluateFileId"
+        v-model="uploader"
         :max-count="3"
+        :max-size="5 * 1024 * 1024"
         multiple
         upload-icon="plus"
+        :after-read="afterRead"
+        :before-delete="beforeDelete"
+        @oversize="onOversize"
       ></sp-uploader>
     </div>
     <div class="placeholder"></div>
     <sp-bottombar safe-area-inset-bottom>
       <sp-bottombar-button
+        :class="[submitFlag ? '' : 'z-inactive']"
         type="primary"
         color="#4974F5"
         text="发布评价"
         @click="submit"
       />
     </sp-bottombar>
+    <loading-center v-show="loading" />
   </div>
 </template>
 
@@ -91,7 +97,8 @@ import {
   BottombarButton,
 } from '@chipspc/vant-dgg'
 import utils from '@/utils/changeBusinessData'
-import { evaluateApi } from '@/api/evaluate'
+import { evaluateApi, ossApi } from '@/api'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
 export default {
   name: 'EvaluateStar',
@@ -106,6 +113,7 @@ export default {
     [Button.name]: Button,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
+    LoadingCenter,
   },
   filters: {
     fliterLevel(val) {
@@ -145,8 +153,7 @@ export default {
     cinfoId: {
       // 评价ID 必传
       type: String,
-      default: '123',
-      // required: true,
+      required: true,
     },
   },
   data() {
@@ -157,6 +164,7 @@ export default {
       remarkFlag: this.remark,
       uploadImgFlag: this.upload,
       subScoreFlag: false,
+      loading: false, // 加载效果状态
       imgs: ['vbad', 'bad', 'normal', 'happy', 'vhappy'],
       imglights: [
         'vbadlight',
@@ -178,11 +186,37 @@ export default {
       replayStars: [],
       efficiencyStars: [],
       tips: [],
-      starValue: 0,
       evaluateContent: '',
-      evaluateFileId: [],
+      uploader: [],
+      images: [], // 图片集合
       evaluateDimensionList: [], // 评价维度列表
+      evaluateFileId: '',
     }
+  },
+  computed: {
+    submitFlag() {
+      // check 服务评分
+      if (this.totalStarLevel === 0) {
+        return false
+      }
+      // check 维度评分
+      if (
+        this.evaluateDimensionList.some((item) => {
+          return item.fraction === 0
+        })
+      ) {
+        return false
+      }
+      // check 评价内容
+      if (this.evaluateContent.trim() === '') {
+        return false
+      }
+      // check 图片
+      if (this.uploadImgFlag && this.images.length === 0) {
+        return false
+      }
+      return true
+    },
   },
   watch: {
     totalStarLevel(val) {
@@ -290,10 +324,69 @@ export default {
         item.flag = false
       })
     },
+    onOversize() {
+      this.$xToast.error('文件大小不能超过5M')
+    },
+    afterRead(file) {
+      const imgs = this.images
+      const formData = new FormData()
+      formData.append(this.evaluateFileId, 'sp-pt/wap/images')
+      formData.append('file', file.file)
+      this.loading = true
+      try {
+        this.$axios.post(ossApi.add, formData).then((res) => {
+          this.loading = false
+          if (res.code !== 200) {
+            throw new Error('图片上传失败')
+          }
+          imgs.push(res.data.url)
+          this.images = imgs
+          this.$xToast.success('图片上传成功!')
+        })
+      } catch (err) {
+        this.loading = false
+        this.$xToast.error('图片上传失败!')
+      }
+    },
+    beforeDelete(file, detail) {
+      // 重置uploader 和 images 数组
+      this.images.splice(detail.index, 1)
+      this.uploader.splice(detail.index, 1)
+      this.$xToast.success('图片删除成功!')
+    },
+    checkSubmit() {
+      // check 服务评分
+      if (this.totalStarLevel === 0) {
+        this.$xToast.error('请选择服务评分哦')
+        return false
+      }
+      // check 维度评分
+      if (
+        this.evaluateDimensionList.some((item) => {
+          return item.fraction === 0
+        })
+      ) {
+        this.$xToast.error('维度评分不能为空哦')
+        return false
+      }
+      // check 评价内容
+      if (this.evaluateContent.trim() === '') {
+        this.$xToast.error('评价内容不能为空')
+        return false
+      }
+      // check 图片
+      if (this.uploadImgFlag && this.images.length === 0) {
+        this.$xToast.error('请上传图片')
+        return false
+      }
+      return true
+    },
     submit() {
-      // check data
-      // submitApi
-      this.addEvaluateApi()
+      // start: check data
+      const checkResult = this.checkSubmit()
+      if (checkResult) {
+        this.addEvaluateApi()
+      }
     },
     async getEvaluateDetailApi() {
       try {
@@ -311,18 +404,51 @@ export default {
         // 对评分item和tag进行赋值
         this.evaluateDimensionList = data.evaluateDimensionList
         this.tips = data.evaluateTagList
+        this.evaluateFileId = data.evaluateFileId || ''
         this.initItemsStar()
         this.initTips()
       } catch (e) {}
     },
-    addEvaluateApi() {
+    async addEvaluateApi() {
       try {
+        this.buildEvaluateDimensionList()
+        this.buildTips()
         const params = {
           infoId: this.infoId,
           evaluateContent: this.evaluateContent,
-          serverScore: this.totalStarLevel,
+          serverScore: this.totalStarLevel + '',
+          evaluateDimensionList: this.evaluateDimensionList,
+          evaluateTagList: this.tips,
         }
-      } catch (e) {}
+        // 如果有图片,则添加图片参数
+        if (this.uploadImgFlag) {
+          params.evaluateFileId = this.evaluateFileId
+        }
+        const { code } = await this.$axios.post(evaluateApi.add, params)
+        if (code !== 200) {
+          throw new Error('评价失败')
+        }
+        this.$router.push({ path: '/my/evaluate/success' })
+      } catch (e) {
+        this.$xToast.error('评价失败')
+      }
+    },
+    buildEvaluateDimensionList() {
+      this.evaluateDimensionList.forEach((item) => {
+        item.fraction = item.fraction + ''
+        delete item.imgs
+      })
+    },
+    buildTips() {
+      if (this.tips.length === 0) {
+        return
+      }
+      this.tips = this.tips.filter((item) => {
+        return item.flag
+      })
+      this.tips.forEach((item) => {
+        delete item.flag
+      })
     },
     clkTip(item) {
       item.flag = !item.flag
@@ -489,6 +615,10 @@ export default {
       border-radius: 8px;
       color: #ffffff;
       width: 100%;
+      &.z-inactive {
+        background: rgba(73, 116, 245, 0.4) !important;
+        border-color: rgba(73, 116, 245, 0.4) !important;
+      }
     }
   }
 }
