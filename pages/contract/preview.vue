@@ -23,8 +23,14 @@
     <LoadingCenter v-show="loading" />
     <div v-show="!skeletonLoading" class="data">
       <div class="box">
-        <Pdf v-if="pdf" :src="pdf" />
-        <p v-else>合同预览失败</p>
+        <Pdf
+          v-for="i in numPages"
+          :key="i"
+          :src="src"
+          :page="i"
+          class="pdf-set"
+        />
+        <!-- <p>合同预览失败</p> -->
       </div>
       <div v-if="contract.type == 'qs'" class="btn">
         <Button plain type="primary" size="large" @click="onLeftClick"
@@ -53,6 +59,7 @@
 
 <script>
 import Pdf from 'vue-pdf'
+import CMapReaderFactory from 'vue-pdf/src/CMapReaderFactory.js'
 import { Button, Dialog, Toast, Skeleton } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
 import contractApi from '@/api/contract'
@@ -71,13 +78,14 @@ export default {
   data() {
     return {
       contract: this.$route.query,
-      pdf: '',
+      src: '',
       timeshow: false,
       time: 5,
       btnshow: false,
       timeer: '',
       loading: false,
       skeletonLoading: false,
+      numPages: 1,
     }
   },
   created() {
@@ -88,12 +96,22 @@ export default {
       this.skeletonLoading = true
       this.getorder()
     } else {
-      this.pdf = this.contract.contractUrl
+      this.src = this.contract.contractUrl
+      this.pdfTask()
     }
-    console.log(this.contract, 1111)
+
+    console.log(this.contract)
   },
-  mounted() {},
+  mounted() {
+    this.pdfTask(this.src)
+  },
   methods: {
+    pdfTask() {
+      // 传参 CMapReaderFactory
+      Pdf.createLoadingTask(this.src).promise.then((pdf) => {
+        this.numPages = pdf.numPages
+      })
+    },
     getorder() {
       orderApi
         .getDetailByOrderId(
@@ -104,7 +122,7 @@ export default {
           this.contract.contractId = res.contractVo2s[0].contractId
           this.contract.contactWay = res.contractVo2s[0].contractFirstPhone
           this.contract.signerName = res.contractVo2s[0].contractFirstName
-          this.pdf = res.contractVo2s[0].contractUrl
+          this.src = res.contractVo2s[0].contractUrl
           this.skeletonLoading = false
         })
         .catch((err) => {
