@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     back() {
-      this.$back()
+      this.$router.push({ path: '/my/evaluate' })
     },
   },
 }

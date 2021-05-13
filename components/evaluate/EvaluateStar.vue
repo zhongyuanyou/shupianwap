@@ -72,6 +72,7 @@
     <div class="placeholder"></div>
     <sp-bottombar safe-area-inset-bottom>
       <sp-bottombar-button
+        :class="[submitFlag ? '' : 'z-inactive']"
         type="primary"
         color="#4974F5"
         text="发布评价"
@@ -152,8 +153,7 @@ export default {
     cinfoId: {
       // 评价ID 必传
       type: String,
-      default: '123',
-      // required: true,
+      required: true,
     },
   },
   data() {
@@ -190,7 +190,33 @@ export default {
       uploader: [],
       images: [], // 图片集合
       evaluateDimensionList: [], // 评价维度列表
+      evaluateFileId: '',
     }
+  },
+  computed: {
+    submitFlag() {
+      // check 服务评分
+      if (this.totalStarLevel === 0) {
+        return false
+      }
+      // check 维度评分
+      if (
+        this.evaluateDimensionList.some((item) => {
+          return item.fraction === 0
+        })
+      ) {
+        return false
+      }
+      // check 评价内容
+      if (this.evaluateContent.trim() === '') {
+        return false
+      }
+      // check 图片
+      if (this.uploadImgFlag && this.images.length === 0) {
+        return false
+      }
+      return true
+    },
   },
   watch: {
     totalStarLevel(val) {
@@ -304,7 +330,7 @@ export default {
     afterRead(file) {
       const imgs = this.images
       const formData = new FormData()
-      formData.append('uploadatalog', 'sp-pt/wap/images')
+      formData.append(this.evaluateFileId, 'sp-pt/wap/images')
       formData.append('file', file.file)
       this.loading = true
       try {
@@ -353,12 +379,14 @@ export default {
         this.$xToast.error('请上传图片')
         return false
       }
+      return true
     },
     submit() {
       // start: check data
-      this.checkSubmit()
-      // submitApi
-      this.addEvaluateApi()
+      const checkResult = this.checkSubmit()
+      if (checkResult) {
+        this.addEvaluateApi()
+      }
     },
     async getEvaluateDetailApi() {
       try {
@@ -376,18 +404,51 @@ export default {
         // 对评分item和tag进行赋值
         this.evaluateDimensionList = data.evaluateDimensionList
         this.tips = data.evaluateTagList
+        this.evaluateFileId = data.evaluateFileId || ''
         this.initItemsStar()
         this.initTips()
       } catch (e) {}
     },
-    addEvaluateApi() {
+    async addEvaluateApi() {
       try {
+        this.buildEvaluateDimensionList()
+        this.buildTips()
         const params = {
           infoId: this.infoId,
           evaluateContent: this.evaluateContent,
-          serverScore: this.totalStarLevel,
+          serverScore: this.totalStarLevel + '',
+          evaluateDimensionList: this.evaluateDimensionList,
+          evaluateTagList: this.tips,
         }
-      } catch (e) {}
+        // 如果有图片,则添加图片参数
+        if (this.uploadImgFlag) {
+          params.evaluateFileId = this.evaluateFileId
+        }
+        const { code } = await this.$axios.post(evaluateApi.add, params)
+        if (code !== 200) {
+          throw new Error('评价失败')
+        }
+        this.$router.push({ path: '/my/evaluate/success' })
+      } catch (e) {
+        this.$xToast.error('评价失败')
+      }
+    },
+    buildEvaluateDimensionList() {
+      this.evaluateDimensionList.forEach((item) => {
+        item.fraction = item.fraction + ''
+        delete item.imgs
+      })
+    },
+    buildTips() {
+      if (this.tips.length === 0) {
+        return
+      }
+      this.tips = this.tips.filter((item) => {
+        return item.flag
+      })
+      this.tips.forEach((item) => {
+        delete item.flag
+      })
     },
     clkTip(item) {
       item.flag = !item.flag
@@ -554,6 +615,10 @@ export default {
       border-radius: 8px;
       color: #ffffff;
       width: 100%;
+      &.z-inactive {
+        background: rgba(73, 116, 245, 0.4) !important;
+        border-color: rgba(73, 116, 245, 0.4) !important;
+      }
     }
   }
 }
