@@ -13,7 +13,7 @@
             @click.native="clkTotalStar(index, 'totalStarLevel')"
           ></my-icon>
         </template>
-        <div class="desc">超赞</div>
+        <div class="desc">{{ totalStarLevel | fliterLevel }}</div>
       </div>
       <template v-if="subScoreFlag">
         <div
@@ -27,9 +27,11 @@
               :key="indexImg"
               :src="itemImg.src"
               class="score-item-img"
+              :class="[indexImg === 4 ? 'z-last' : '']"
               @click="clkItemStar(indexImg, item)"
             />
           </template>
+          <div class="desc">{{ item.fraction | fliterLevel }}</div>
         </div>
       </template>
     </div>
@@ -91,20 +93,6 @@ import {
 import utils from '@/utils/changeBusinessData'
 import { evaluateApi } from '@/api/evaluate'
 
-// mock data
-const mockTipsData = ['标签表情', '标签表情', '标签表情']
-const evaluateDimensionList = [
-  {
-    id: 324,
-    name: '回复时效',
-    fraction: 0,
-  },
-  {
-    id: 456,
-    name: '时效效率',
-    fraction: 0,
-  },
-]
 export default {
   name: 'EvaluateStar',
   components: {
@@ -118,6 +106,12 @@ export default {
     [Button.name]: Button,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
+  },
+  filters: {
+    fliterLevel(val) {
+      const txts = ['非常差', '非常差', '很差', '一般', '满意', '超赞']
+      return txts[val]
+    },
   },
   props: {
     score: {
@@ -187,7 +181,7 @@ export default {
       starValue: 0,
       evaluateContent: '',
       evaluateFileId: [],
-      evaluateDimensionList, // 评价维度列表
+      evaluateDimensionList: [], // 评价维度列表
     }
   },
   watch: {
@@ -283,6 +277,7 @@ export default {
       const _this = this
       this.evaluateDimensionList.forEach((item) => {
         item.imgs = []
+        item.fraction = 0
         this.imgs.forEach((itemImg) => {
           item.imgs.push({
             src: _this.$ossImgSetV2(utils.getEvaluateLevelImg(itemImg)),
@@ -348,11 +343,6 @@ export default {
     margin-bottom: 32px;
     align-items: center;
   }
-  .mixin-score-tile {
-    font: 400 28px @fontf-pfsc-reg;
-    color: #222222;
-    margin-right: 62px;
-  }
   .mixin-score-desc {
     font: 400 24px @fontf-pfsc-reg;
     color: #555555;
@@ -366,9 +356,10 @@ export default {
       .mixin-score-item();
       width: 100%;
       .tile {
+        width: 160px;
+        margin-right: 10px;
         font: bold 32px @fontf-pfsc-med;
         color: #222222;
-        margin-right: 40px;
       }
       .desc {
         .mixin-score-desc();
@@ -381,7 +372,11 @@ export default {
       .mixin-score-item();
       width: 100%;
       .tile {
-        .mixin-score-tile();
+        font: 400 28px @fontf-pfsc-reg;
+        color: #222222;
+        width: 160px;
+        margin-right: 10px;
+        .mixin-text-oneoverflow();
       }
       .desc {
         .mixin-score-desc();
@@ -390,6 +385,9 @@ export default {
         height: 44px;
         width: 44px;
         margin-right: 32px;
+        &.z-last {
+          margin-right: 0;
+        }
       }
       &.bottom-del {
         margin-bottom: 0;
