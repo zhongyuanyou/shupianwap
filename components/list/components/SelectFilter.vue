@@ -132,18 +132,30 @@ export default {
   },
   methods: {
     open() {
-      if (this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1) {
-        for (let i = 0; i < this.selectList.length; i++) {
-          if (
-            this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 ===
-            this.selectList[i].code
-          ) {
-            this.activeItems.push(this.selectList[i])
-          } else if (
-            this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 ===
-            this.selectList[i].name
-          ) {
-            this.activeItems.push(this.selectList[i])
+      if (
+        this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 &&
+        this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
+          .classCode
+      ) {
+        for (
+          let b = 0;
+          b <
+          this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
+            .classCode.length;
+          b++
+        ) {
+          for (let i = 0; i < this.selectList.length; i++) {
+            if (
+              this.$parent.$parent.$parent.$parent.$parent.$parent
+                .classCode1 === this.selectList[i].code
+            ) {
+              this.activeItems.push(this.selectList[i])
+            } else if (
+              this.$parent.$parent.$parent.$parent.$parent.$parent
+                .classCode1 === this.selectList[i].name
+            ) {
+              this.activeItems.push(this.selectList[i])
+            }
           }
         }
       }
