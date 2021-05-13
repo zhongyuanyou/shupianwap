@@ -517,15 +517,15 @@ export default {
         }
       } else {
         const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          this.creatImSessionMixin({
-            imUserId: mchUserId,
-            imUserType,
-            requireCode: this.requireCode || '',
-            requireName: this.requireName || '',
-          })
-        }
+        // const isLogin = await this.judgeLoginMixin()
+        // if (isLogin) {
+        this.creatImSessionMixin({
+          imUserId: mchUserId,
+          imUserType,
+          requireCode: this.requireCode || '',
+          requireName: this.requireName || '',
+        })
+        // }
       }
     },
 

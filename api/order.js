@@ -147,5 +147,13 @@ const category = {
       url: CHIPS_WAP_BASE_URL + '/yk/order/v2/coupon_calculation.do',
     })
   },
+  annexList({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/yk/contract/v2/annex_list.do',
+    })
+  },
 }
 export default category

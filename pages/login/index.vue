@@ -168,8 +168,10 @@ import { auth } from '@/api'
 import { checkPhone, checkAuthCode, checkPassword } from '@/utils/check.js'
 import { openLink } from '@/utils/common.js'
 import ImgAuthDialog from '@/components/common/imgAuth'
+import { imInit } from '@/utils/im'
 import { CRISPS_C_MIDDLE_SERVICE_API } from '~/config/constant'
 import imHandle from '~/mixins/imHandle'
+import getUserSign from '~/utils/fingerprint'
 
 // 第三方登录需要回传的参数
 const SOURCE_PLATFROM_PARAMS = { IM: ['token', 'userId'] }
@@ -228,7 +230,7 @@ export default {
       }
       this.login().then((data) => {
         this.$xToast.success('登录成功！')
-        // this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
+        this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
         // 使用定时器，等待提示信息展示1.5s 再跳转
         setTimeout(() => {
           // 跳转外连接
@@ -357,14 +359,22 @@ export default {
           const imId = localStorage.getItem('myInfo')
             ? JSON.parse(localStorage.getItem('myInfo')).imUserId
             : {}
-          this.regularVisitor({
+          const deviceId = await getUserSign()
+          const initImSdk = imInit({
+            token: data.token,
+            userId: data.token,
+            userType: data.userType,
+            deviceId,
+          })
+          this.$store.commit('im/SET_IM_SDK', initImSdk)
+          await this.regularVisitor({
             visitorId: imId,
             userId: data.userId,
           })
           localStorage.setItem('userId', data.userId)
           this.$store.commit('im/SET_IM_SDK', null)
         }
-        return data
+        return Promise.resolve(data)
       } catch (error) {
         this.loading = false
         const { code } = error

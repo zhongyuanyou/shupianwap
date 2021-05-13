@@ -11,7 +11,9 @@
         ></my-icon>
       </template>
     </Head>
-    <iframe :src="src" frameborder="0" class="ifr"></iframe>
+    <div class="ifrbox">
+      <iframe :src="src" class="ifr"></iframe>
+    </div>
   </div>
 </template>
 
@@ -46,10 +48,17 @@ export default {
 <style lang="less" scoped>
 .box {
   width: 100%;
-  height: 100vh;
-  > .ifr {
+  height: 90vh;
+  overflow: hidden;
+  .ifrbox {
+    width: 100vw;
+    height: calc(90vh - 200px);
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ifr {
+    height: 100%;
     width: 100%;
-    height: calc(100vh - 100px);
   }
 }
 </style>
