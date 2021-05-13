@@ -34,8 +34,14 @@
       </template>
     </div>
     <div v-if="tipsFlag" class="tips">
-      <div v-for="(item, index) in tips" :key="index" class="item">
-        {{ item }}
+      <div
+        v-for="(item, index) in tips"
+        :key="index"
+        class="item"
+        :class="[item.flag ? 'z-active' : '']"
+        @click="clkTip(item)"
+      >
+        {{ item.name }}
       </div>
     </div>
 
@@ -166,9 +172,6 @@ export default {
         'vhappylight',
       ],
       totalStarLevel: 0, // 总得分
-      specialtyStarLevel: 0, // 专业分
-      replayStarLevel: 0, // 回答分
-      efficiencyStarLevel: 0, // 效率分
       totalStars: [
         // 总得分
         { flag: false },
@@ -207,17 +210,7 @@ export default {
   },
   methods: {
     init() {
-      // 渲染 evaluateDimensionList
-      const _this = this
-      this.evaluateDimensionList.forEach((item) => {
-        // 定义图片列表
-        item.imgs = []
-        this.imgs.forEach((itemImg) => {
-          item.imgs.push({
-            src: _this.$ossImgSetV2(utils.getEvaluateLevelImg(itemImg)),
-          })
-        })
-      })
+      this.getEvaluateDetailApi()
     },
     setTotalStars() {
       const _this = this
@@ -285,10 +278,47 @@ export default {
       // 解决循环渲染问题
       this.evaluateDimensionList = this.evaluateDimensionList.slice()
     },
+    initItemsStar() {
+      // 初始化渲染 evaluateDimensionList 中图片
+      const _this = this
+      this.evaluateDimensionList.forEach((item) => {
+        item.imgs = []
+        this.imgs.forEach((itemImg) => {
+          item.imgs.push({
+            src: _this.$ossImgSetV2(utils.getEvaluateLevelImg(itemImg)),
+          })
+        })
+      })
+    },
+    initTips() {
+      this.tips.forEach((item) => {
+        item.flag = false
+      })
+    },
     submit() {
       // check data
       // submitApi
       this.addEvaluateApi()
+    },
+    async getEvaluateDetailApi() {
+      try {
+        // 提交评价前 查询前置接口
+        const params = {
+          // infoId: this.infoId
+          infoId: '1118738721594990083',
+        }
+        const { code, data } = await this.$axios.get(evaluateApi.detail, {
+          params,
+        })
+        if (code !== 200) {
+          throw new Error('请求接口失败.')
+        }
+        // 对评分item和tag进行赋值
+        this.evaluateDimensionList = data.evaluateDimensionList
+        this.tips = data.evaluateTagList
+        this.initItemsStar()
+        this.initTips()
+      } catch (e) {}
     },
     addEvaluateApi() {
       try {
@@ -298,6 +328,10 @@ export default {
           serverScore: this.totalStarLevel,
         }
       } catch (e) {}
+    },
+    clkTip(item) {
+      item.flag = !item.flag
+      this.tips = this.tips.slice()
     },
   },
 }
