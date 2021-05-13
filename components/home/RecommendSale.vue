@@ -436,7 +436,6 @@ export default {
     border-radius: 24px;
     font-size: 24px;
     width: 100%;
-    padding: 32px 0;
     display: flex;
     overflow: hidden;
     .goods-lable-img {
