@@ -146,13 +146,13 @@ export default {
         ) {
           for (let i = 0; i < this.selectList.length; i++) {
             if (
-              this.$parent.$parent.$parent.$parent.$parent.$parent
-                .classCode1 === this.selectList[i].code
+              this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
+                .classCode[b] === this.selectList[i].code
             ) {
               this.activeItems.push(this.selectList[i])
             } else if (
-              this.$parent.$parent.$parent.$parent.$parent.$parent
-                .classCode1 === this.selectList[i].name
+              this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
+                .classCode[b] === this.selectList[i].name
             ) {
               this.activeItems.push(this.selectList[i])
             }
