@@ -113,13 +113,13 @@
               <span
                 v-else-if="item.inviteStatus === 1"
                 style="color: #4974f5"
-                @click="goEvaluate"
+                @click="goEvaluate(item)"
                 >去评价</span
               >
               <span
                 v-else-if="item.inviteStatus === 2"
                 style="color: #4974f5"
-                @click="goEvaluate"
+                @click="goEvaluateDetail(item)"
                 >查看评价</span
               >
               <!-- <span v-else-if="item.inviteStatus === 3">您已取消面谈</span> -->
@@ -264,7 +264,7 @@ export default {
         }
       })
     }
-    this.onLoad(true)
+    // this.onLoad(true)
     // this.getInterviewList()
   },
   methods: {
@@ -402,10 +402,24 @@ export default {
       }
       this.creatImSessionMixin({ imUserId, imUserType })
     },
-    goEvaluate() {
+    goEvaluateDetail(item) {
+      this.$router.push({
+        path: '/my/plannerEvaluate/detail',
+        query: {
+          plannerAvatar: item.imgUrl,
+          plannerName: item.inviterName,
+          infoId: item.infoId,
+        },
+      })
+    },
+    goEvaluate(item) {
       this.$router.push({
         path: '/my/plannerEvaluate',
-        query: {},
+        query: {
+          plannerAvatar: item.imgUrl,
+          plannerName: item.inviterName,
+          infoId: item.infoId,
+        },
       })
     },
   },

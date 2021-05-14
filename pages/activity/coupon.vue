@@ -408,7 +408,7 @@ export default {
     .item-rt {
       padding-left: 24px;
       height: auto;
-      width: 300px;
+      width: 290px;
       box-sizing: border-box;
       .title {
         font-size: 32px;
@@ -477,7 +477,7 @@ export default {
       align-items: center;
       display: flex;
       font-size: 24px;
-      margin-right: 10px;
+      margin-right: 32px;
       button {
         display: block;
         width: 150px;

@@ -132,11 +132,11 @@
                     />
                   </div>
                   <div class="right-content">
+                    <div class="rc-span">
+                      <span>好品</span>
+                      <span>千万补贴</span>
+                    </div>
                     <div class="rc-top">
-                      <div style="display: inline-block">
-                        <span class="span1">好品</span>
-                        <span class="span2">千万补贴</span>
-                      </div>
                       <span class="span3">{{ item.skuName }}</span>
                     </div>
                     <div v-show="item.tags" class="rc-middle">
@@ -534,25 +534,46 @@ html::-webkit-scrollbar {
       .right-content {
         position: relative;
         flex: 1;
-        .rc-top {
-          font-weight: 500;
-          width: 395px;
-          font-size: 32px;
-          .multiRowOverflowDot();
-          .span1,
-          .span2 {
+        .rc-span {
+          display: inline-flex;
+          align-items: center;
+          position: absolute;
+          top: 3px;
+          span:nth-child(1) {
+            margin-right: 8px;
+          }
+          span {
+            line-height: 22px;
+            height: 32px;
             background: #ec5330;
             border-radius: 4px;
             padding: 0 8px;
             font-size: 20px;
-            font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
+            font-weight: bold;
             color: #ffffff;
-            line-height: 32px;
-            height: 32px;
-            float: left;
-            margin: 4px 8px 0 0;
+            display: flex;
+            align-items: center;
+            font-family: PingFangSC-Medium, PingFang SC;
           }
+        }
+        .rc-top {
+          font-weight: 500;
+          width: 395px;
+          font-size: 32px;
+          font-size: 32px;
+          font-weight: bold;
+          color: #222222;
+          line-height: 32px;
+          text-overflow: ellipsis;
+          word-break: break-all;
+          font-family: PingFangSC-Medium, PingFang SC;
+          overflow: hidden;
+          white-space: normal;
+          max-height: 84px;
+          line-height: 42px;
+          text-indent: 172px;
+          .multiRowOverflowDot();
+
           .span3 {
             color: #222222;
             font-weight: bold;
@@ -562,11 +583,10 @@ html::-webkit-scrollbar {
         }
 
         .rc-middle {
-          margin-top: 12px;
+          margin: 12px 14px 32px 0;
           display: flex;
           justify-content: flex-start;
-          margin-right: 14px;
-          margin-bottom: 32px;
+
           div {
             font-size: 20px;
             font-family: PingFangSC-Regular, PingFang SC;
@@ -574,10 +594,10 @@ html::-webkit-scrollbar {
             color: #5c7499;
             line-height: 28px;
             padding: 0 6px;
-
             background: #f0f2f5;
             border-radius: 4px;
             margin-right: 8px;
+            height: 28px;
           }
         }
         .rc-bottom {
