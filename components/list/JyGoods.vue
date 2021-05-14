@@ -263,6 +263,7 @@ export default {
       console.log(this.$refs.dropDownMenu)
     },
     getFilterHandle(data, filrerName) {
+      console.log(data, 111)
       // 获取筛选项数据
       if (data) {
         // 如果有数据设置数据
@@ -348,6 +349,15 @@ export default {
       this.loading = true
       this.jyGoodsListData[this.currentTabJyCode] = []
       this.finished = false
+      // console.log(this.formData., 1111)
+      // const obj = {}
+      // const person = this.formData.fieldList.reduce((cur, next) => {
+      //   obj[next.fieldCode]
+      //     ? ''
+      //     : (obj[next.fieldCode] = true && cur.push(next))
+      //   return cur
+      // }, [])
+      // this.formData.fieldList = person
       this.searchKeydownHandle()
     },
     filterItemHandle() {
@@ -428,6 +438,21 @@ export default {
         }
       }
       this.formData[this.currentTabJyCode].fieldList = arr
+      const result = []
+      const obj = {}
+      for (
+        let i = 0;
+        i < this.formData[this.currentTabJyCode].fieldList.length;
+        i++
+      ) {
+        if (!obj[this.formData[this.currentTabJyCode].fieldList[i].fieldCode]) {
+          result.push(this.formData[this.currentTabJyCode].fieldList[i])
+          obj[
+            this.formData[this.currentTabJyCode].fieldList[i].fieldCode
+          ] = true
+        }
+      }
+      this.formData[this.currentTabJyCode].fieldList = result
     },
     computedHeight() {
       // 计算列表的最大高

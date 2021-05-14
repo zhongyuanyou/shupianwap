@@ -167,11 +167,11 @@
                     </div>
                   </div>
                   <div class="right-content">
-                    <div class="rc-top">
-                      <!-- <span>{{ item.span1 }}</span>
-                    <span>{{ item.span2 }}</span> -->
+                    <span class="rc-span">
                       <span>特卖</span>
                       <span>千万补贴</span>
+                    </span>
+                    <div class="rc-top">
                       {{ item.skuName }}
                     </div>
                     <div class="rc-middle">
@@ -191,8 +191,8 @@
                             item.specialUnit
                               ? item.specialNewPrice
                               : item.specialPrice
-                          }}</span
-                          >{{ item.specialUnit || '元' }}
+                          }}</span>
+                          <span>{{ item.specialUnit || '元' }}</span>
                         </div>
                       </div>
                       <div class="rc-bottom-rt">
@@ -643,12 +643,37 @@ html::-webkit-scrollbar {
         display: flex;
         align-content: flex-start;
         flex-direction: column;
+        position: relative;
+        .rc-span {
+          display: inline-flex;
+          align-items: center;
+          position: absolute;
+          top: 3px;
+          span:nth-child(1) {
+            margin-right: 8px;
+          }
+          span {
+            line-height: 22px;
+            height: 32px;
+            background: #ec5330;
+            border-radius: 4px;
+            padding: 0 8px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            font-family: PingFangSC-Medium, PingFang SC;
+          }
+        }
         .rc-top {
           font-size: 32px;
-          height: 84px;
+          max-height: 84px;
           font-weight: bold;
           color: #222222;
           line-height: 0.42rem;
+          text-indent: 172px;
+          margin-bottom: 12px;
           .multiRowOverflowDot();
           span {
             margin-right: 8px;
@@ -701,6 +726,13 @@ html::-webkit-scrollbar {
                 display: inline-block;
                 transform: translateY(-3px);
                 margin: 0 4px;
+              }
+              span:nth-child(2) {
+                font-size: 22px;
+                font-family: PingFangSC-Medium, PingFang SC;
+                font-weight: bold;
+                color: #ec5330;
+                line-height: 22px;
               }
             }
             .bf-my {

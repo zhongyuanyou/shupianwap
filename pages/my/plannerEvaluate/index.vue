@@ -35,10 +35,9 @@
       </div>
       <!--E 规划师-->
       <!--S 评分-->
-      <EvaluateStar :type="false" :tips="true" />
+      <evaluate-star :upload="false" :cinfo-id="infoId" />
       <!--E 评分-->
     </div>
-
     <!-- <div class="btn">
       <div class="evaluate_btn">发布评价</div>
     </div> -->

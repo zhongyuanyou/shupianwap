@@ -1,10 +1,7 @@
 <template>
   <div class="detail">
     <div style="width: 100%">
-      <Header
-        v-if="!isInApp"
-        :title="info.inviteStatus === 1 ? '面谈完成请评价' : '面谈确认'"
-      >
+      <Header v-if="!isInApp" title="面谈确认">
         <template #left>
           <div @click="back">
             <my-icon
@@ -90,17 +87,12 @@
           v-if="info.inviteStatus === 0"
           type="primary"
           @click="handleInterStatus(0)"
-          >已取消面谈</sp-button
+          >取消面谈</sp-button
         >
-        <div
-          v-if="info.inviteStatus !== 0"
-          class="status"
-          :class="info.inviteStatus === 1 ? 'active' : ''"
-          @click="goEvaluate(info.inviteStatus)"
-        >
+        <div v-if="info.inviteStatus !== 0" class="status">
           {{
             info.inviteStatus === 1
-              ? '进行评价'
+              ? '已面谈'
               : info.inviteStatus === 2
               ? '已评价'
               : '已取消'
@@ -140,11 +132,10 @@ export default {
         inviteAddress: '', // 面谈地址
         accompanyName: '', // 陪谈人
         inviteTime: '', // 面谈时间
-        inviteStatus: 1, // 面谈状态
+        inviteStatus: 0, // 面谈状态
         inviterName: '', // 规划师
       }, // 面谈详情
       loading: false,
-      title: '面谈确认',
     }
   },
   computed: {
@@ -172,14 +163,6 @@ export default {
         this.$router.back()
       }
     },
-    goEvaluate(status) {
-      if (status === 1) {
-        this.$router.push({
-          path: '/my/plannerEvaluate',
-          query: {},
-        })
-      }
-    },
     async getInterviewDetail() {
       // 获取面谈详情
       try {
@@ -188,7 +171,7 @@ export default {
         }
         const res = await this.$axios.get(interviewApi.detail, { params })
         if (res.code === 200) {
-          // this.info = res.data || this.info
+          this.info = res.data || this.info
         }
       } catch (err) {}
     },
@@ -337,17 +320,6 @@ export default {
       margin-top: 84px;
       font-size: 30px;
       color: #666;
-    }
-    .active {
-      font-size: 32px;
-      font-family: PingFang-SC-Bold, PingFang-SC;
-      font-weight: bold;
-      color: #ffffff;
-      line-height: 32px;
-      height: 96px;
-      background: #4974f5;
-      border-radius: 8px;
-      line-height: 96px;
     }
   }
   .bot {

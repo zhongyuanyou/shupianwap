@@ -44,13 +44,6 @@ import { Image, CenterPopup } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import EvaluateStar from '@/components/evaluate/EvaluateStar'
 
-/*
-// mock data
-const avatar = 'https://dchipscommon.dgg188.cn/img/bg.1e53fbc6.png'
-const name =
-  '我哦我噢噢噢噢噢噢噢噢噢噢噢噢哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦111111111111111111jjjjjjjjjjjjjjj'
-*/
-
 export default {
   name: 'EvaluateWrite',
   components: {
@@ -85,7 +78,6 @@ export default {
   },
   methods: {
     back() {
-      console.log('back')
       this.showPop = true
     },
     confirm() {
