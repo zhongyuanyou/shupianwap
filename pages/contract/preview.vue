@@ -97,14 +97,10 @@ export default {
       this.getorder()
     } else {
       this.src = this.contract.contractUrl
-      this.pdfTask()
+      this.pdfTask(this.src)
     }
-
-    console.log(this.contract)
   },
-  mounted() {
-    this.pdfTask(this.src)
-  },
+  mounted() {},
   methods: {
     pdfTask() {
       // 传参 CMapReaderFactory
@@ -123,6 +119,7 @@ export default {
           this.contract.contactWay = res.contractVo2s[0].contractFirstPhone
           this.contract.signerName = res.contractVo2s[0].contractFirstName
           this.src = res.contractVo2s[0].contractUrl
+          this.pdfTask(this.src)
           this.skeletonLoading = false
         })
         .catch((err) => {
