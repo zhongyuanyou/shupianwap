@@ -107,6 +107,7 @@ export default {
         activeItems: {},
       },
       classcode: this.$route.query,
+      isOne: true,
     }
   },
   computed: {},
@@ -216,7 +217,7 @@ export default {
         .then((data) => {
           if (this.formData.needTypes === 1) {
             this.items = data
-            if (this.classcode) {
+            if (this.classcode && this.isOne) {
               for (let i = 0; i < this.items.typeData.length; i++) {
                 if (this.classcode.navcode === this.items.typeData[i].code) {
                   this.$refs.dropDownMenu.navIndex = i + 1
@@ -265,6 +266,7 @@ export default {
                   }
                 }
               }
+              this.isOne = false
             }
           }
           if (data.goodsList.records.length < 1) {

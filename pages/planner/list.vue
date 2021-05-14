@@ -549,13 +549,12 @@ export default {
           console.error('uPIM error:', error)
         }
       } else {
+        const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
         // const isLogin = await this.judgeLoginMixin()
         // if (isLogin) {
-        const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_B 启大顺 ;MERCHANT_S 启大包
         this.creatImSessionMixin({
           imUserId: mchUserId,
           imUserType,
-          url: 'planner/list',
         })
         // }
       }
