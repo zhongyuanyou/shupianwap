@@ -249,6 +249,12 @@ export default {
       }
     }
     > .btn {
+      width: 100%;
+      padding: 0 40px;
+      background: #fff;
+      position: fixed;
+      bottom: 10px;
+      left: 0;
       display: flex;
       justify-content: space-between;
       height: 160px;
