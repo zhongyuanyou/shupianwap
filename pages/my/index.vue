@@ -265,12 +265,22 @@ export default {
   methods: {
     clickTab(index) {
       // console.log('index', index)
-      this.$router.push({
-        path: '/order',
-        query: {
-          type: index,
-        },
-      })
+      if (this.token) {
+        this.$router.push({
+          path: '/order',
+          query: {
+            type: index,
+          },
+        })
+      } else {
+        this.$router.push({
+          path: '/login',
+          query: {
+            redirect: '/order',
+            type: index,
+          },
+        })
+      }
     },
     handleAvatar() {
       // 点击头像
