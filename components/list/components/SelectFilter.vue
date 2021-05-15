@@ -75,6 +75,7 @@ export default {
       saveActiveItems: [], // 存储的筛选项数据
       contentMaxHeight: 0, // 内容的最大高
       lowLineCode: [],
+      isOne: true,
     }
   },
   computed: {
@@ -134,30 +135,22 @@ export default {
     open() {
       if (
         this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 &&
-        this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
-          .classCode
+        this.isOne
       ) {
-        for (
-          let b = 0;
-          b <
-          this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
-            .classCode.length;
-          b++
-        ) {
-          for (let i = 0; i < this.selectList.length; i++) {
-            if (
-              this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
-                .classCode[b] === this.selectList[i].code
-            ) {
-              this.activeItems.push(this.selectList[i])
-            } else if (
-              this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
-                .classCode[b] === this.selectList[i].name
-            ) {
-              this.activeItems.push(this.selectList[i])
-            }
+        for (let i = 0; i < this.selectList.length; i++) {
+          if (
+            this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 ===
+            this.selectList[i].code
+          ) {
+            this.activeItems.push(this.selectList[i])
+          } else if (
+            this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 ===
+            this.selectList[i].name
+          ) {
+            this.activeItems.push(this.selectList[i])
           }
         }
+        this.isOne = false
       }
     },
     close() {
