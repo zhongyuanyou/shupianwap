@@ -75,9 +75,8 @@
       @handleDialogClosed="handleDialogClosed"
     />
     <Iframe
-      v-show="payHtml"
       id="mainIframe"
-      style="width: 375px; height: 700px"
+      style="width: 250px; height: 500px"
       :src="payPageUrl"
     ></Iframe>
     <div v-show="loading || resultLoading" class="loading-area">
@@ -342,6 +341,7 @@ export default {
           const countDownTimeLong = this.responseData.countDownTimeLong
           this.countDown(countDownTimeLong) // 倒计时
           localStorage.setItem('cusOrderId', this.$route.query.cusOrderId)
+          localStorage.setItem('payMoney', this.responseData.currentPayMoney)
         })
         .catch((e) => {
           if (e.code !== 200) {
@@ -406,11 +406,13 @@ export default {
         pay
           .getPayParams(this.getPayParamsFormData)
           .then((result) => {
+            localStorage.setItem('startTime', new Date().getTime())
+            localStorage.setItem(
+              'serialNumber',
+              result.billNo || result.guaguaPayPartyNo
+            )
             if (result.formData) {
               console.log('result.formData', result.formData)
-              localStorage.setItem('startTime', new Date().getTime())
-              this.payCallBackData.serialNumber = result.billNo
-              localStorage.setItem('serialNumber', result.billNo)
               this.payHtml = result.formData
               document
                 .getElementById('mainIframe')
