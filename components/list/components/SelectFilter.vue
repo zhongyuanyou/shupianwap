@@ -75,6 +75,7 @@ export default {
       saveActiveItems: [], // 存储的筛选项数据
       contentMaxHeight: 0, // 内容的最大高
       lowLineCode: [],
+      isOne: true,
     }
   },
   computed: {
@@ -132,7 +133,10 @@ export default {
   },
   methods: {
     open() {
-      if (this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1) {
+      if (
+        this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 &&
+        this.isOne
+      ) {
         for (let i = 0; i < this.selectList.length; i++) {
           if (
             this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 ===
@@ -146,6 +150,7 @@ export default {
             this.activeItems.push(this.selectList[i])
           }
         }
+        this.isOne = false
       }
     },
     close() {
