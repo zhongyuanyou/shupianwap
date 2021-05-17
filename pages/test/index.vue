@@ -3,16 +3,6 @@
     <div class="content">
       <h2>文本区域111</h2>
     </div>
-    <sp-uploader
-      v-model="uploader"
-      :max-count="3"
-      :max-size="5 * 1024 * 1024"
-      multiple
-      upload-icon="plus"
-      :after-read="afterRead"
-      :before-delete="beforeDelete"
-      @oversize="onOversize"
-    ></sp-uploader>
     <!-- <div class="page-btn">
       <sp-field type="text" placeholder="请输入1" />
     </div> -->
@@ -21,12 +11,11 @@
 </template>
 
 <script>
-import { Field, Upload } from '@chipspc/vant-dgg'
+import { Field } from '@chipspc/vant-dgg'
 import { auth, ossApi, evaluateApi } from '@/api'
 export default {
   components: {
     [Field.name]: Field,
-    [Upload.name]: Upload,
   },
   data() {
     return {
