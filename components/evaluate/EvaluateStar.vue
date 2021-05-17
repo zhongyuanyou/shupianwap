@@ -150,15 +150,10 @@ export default {
         return true
       },
     },
-    cinfoId: {
-      // 评价ID 必传
-      type: String,
-      required: true,
-    },
   },
   data() {
     return {
-      infoId: this.cinfoId, // 评价id
+      infoId: '', // 评价id
       scoreFlag: this.score,
       tipsFlag: this.tip,
       remarkFlag: this.remark,
@@ -234,6 +229,7 @@ export default {
     },
   },
   mounted() {
+    this.infoId = this.$route.query.infoId
     this.init()
   },
   methods: {
