@@ -142,7 +142,12 @@ export default {
               this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
                 .pricecode === this.selectList[i].code
             ) {
-              console.log(this.$refs.price)
+              this.priceComponent.$refs.selectCheckBox.selectFilter(
+                this.selectList[i],
+                this.priceComponent.$refs.selectCheckBox.isActive(
+                  this.selectList[i].id
+                )
+              )
               // this.$refs.price.priceFit(this.selectList[i])
             }
           }
