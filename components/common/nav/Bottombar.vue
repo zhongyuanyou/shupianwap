@@ -144,7 +144,7 @@ export default {
           const imId = localStorage.getItem('myInfo')
             ? JSON.parse(localStorage.getItem('myInfo'))
             : {}
-          window.location.href = `${config.imBaseUrl}/index?token=${imId.token}&userId=${imId.imUserId}&userType=VISITOR`
+          window.location.href = `${config.imBaseUrl}/index?token=${imId.token}&userId=${imId.userId}&userType=VISITOR`
         }
         return
         // } else {

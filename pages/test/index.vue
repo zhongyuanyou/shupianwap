@@ -22,7 +22,7 @@ export default {
       images: [],
     }
   },
-  mounted() {
+  mounted() { 
     // 获取协议
     this.getProtocol('protocol100008')
     // 数据加密

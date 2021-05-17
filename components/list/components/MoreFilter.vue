@@ -95,6 +95,7 @@ export default {
       activeItems: [], // 默认激活的
       saveActiveItems: [], // 存储的筛选项数据
       contentMaxHeight: 0, // 内容的最大高
+      isOne: true,
     }
   },
   watch: {
@@ -152,8 +153,9 @@ export default {
         if (
           this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 &&
           this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
-            .classCode
-        )
+            .classCode &&
+          this.isOne
+        ) {
           for (
             let b = 0;
             b <
@@ -167,12 +169,6 @@ export default {
                   .pcode[b] === this.children[a].ext1
               ) {
                 for (let i = 0; i < this.children[a].children.length; i++) {
-                  console.log(
-                    this.$parent.$parent.$parent.$parent.$parent.$parent
-                      .classCode1.classCode[b],
-                    this.children[a].children[i].ext2,
-                    123
-                  )
                   if (
                     this.$parent.$parent.$parent.$parent.$parent.$parent
                       .classCode1.classCode[b] ===
@@ -187,10 +183,11 @@ export default {
                     this.activeItems[1].push(this.children[a].children[i])
                   }
                 }
-                console.log(this.activeItems, 11111)
               }
             }
           }
+          this.isOne = false
+        }
       })
     },
     close() {

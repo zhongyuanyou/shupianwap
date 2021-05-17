@@ -93,15 +93,6 @@ export default {
     this.$emit('emitSelf', this)
   },
   methods: {
-    // 解决价格命中问题
-    priceFit(item) {
-      this.$nextTick(() => {
-        this.$refs.selectCheckBox.selectFilter(
-          item,
-          this.$refs.selectCheckBox.isActive(item.id)
-        )
-      })
-    },
     clearInput() {
       // 对外函数
       // 清空输入框和筛选项
