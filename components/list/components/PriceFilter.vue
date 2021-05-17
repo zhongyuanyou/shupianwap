@@ -13,6 +13,7 @@
       }"
     >
       <price-filter-components
+        ref="price"
         :price-list="selectList"
         :echo-data="echoData"
         :is-show-all-option="false"
@@ -141,7 +142,8 @@ export default {
               this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
                 .pricecode === this.selectList[i].code
             ) {
-              this.$refs.price.priceFit(this.selectList[i])
+              console.log(this.$refs.price)
+              // this.$refs.price.priceFit(this.selectList[i])
             }
           }
           this.isOne = false

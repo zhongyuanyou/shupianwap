@@ -291,7 +291,6 @@ export default {
       sortBy: this.formData.sortBy,
     }
     this.initGoodsList()
-    console.log(this.formData[this.tabs[this.typeCodeIndex].code], 123)
     this.formData[this.tabs[this.typeCodeIndex].code].fieldList = []
     if (!this.isShowTabs) {
       this.$refs.spTabs.$refs.nav.parentNode.style.display = 'none'
@@ -467,7 +466,7 @@ export default {
             }
         }
       }
-      this.formData[this.currentTabJyCode].fieldList = arr
+      this.formData[this.currentTabJyCode].fieldList = arr.reverse()
       const result = []
       const obj = {}
       for (

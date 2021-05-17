@@ -95,6 +95,7 @@ export default {
   methods: {
     // 解决价格命中问题
     priceFit(item) {
+      console.log(123)
       this.$nextTick(() => {
         this.$refs.selectCheckBox.selectFilter(
           item,

@@ -194,13 +194,11 @@ export default {
               }
             }
           }
-          // const val = this.getObjById(
-          //   this.filterData.children,
-          //   this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1.area
-          // )
         })
       }
-
+      this.saveActiveItems = clone(this.activeItems, true)
+      const emitData = this.resultHandle()
+      this.$emit('activeItem', emitData, 'areaFilter-' + this.filterData.code)
       this.isOne = false
     },
     close() {
@@ -211,34 +209,6 @@ export default {
       this.coupleSelectVue && this.coupleSelectVue.clear()
     },
     confirmFilters() {
-      const pcode = this.filterData.pcode
-      const emitData1 = this.resultHandle()
-      if (
-        this.$parent.$parent.$parent.$parent.$parent.$parent.formData[pcode] &&
-        this.$parent.$parent.$parent.$parent.$parent.$parent.formData[pcode]
-          .fieldList.length > 0
-      ) {
-        for (
-          let i = 0;
-          i <
-          this.$parent.$parent.$parent.$parent.$parent.$parent.formData[pcode]
-            .fieldList.length;
-          i++
-        ) {
-          if (
-            emitData1.fieldCode ===
-            this.$parent.$parent.$parent.$parent.$parent.$parent.formData[pcode]
-              .fieldList[i].fieldCode
-          ) {
-            console.log(111)
-            this.$parent.$parent.$parent.$parent.$parent.$parent.formData[
-              pcode
-            ].fieldList = this.$parent.$parent.$parent.$parent.$parent.$parent.formData[
-              pcode
-            ].fieldList.splice(i, 0)
-          }
-        }
-      }
       // 确认筛选
       this.saveActiveItems = clone(this.activeItems, true)
       const emitData = this.resultHandle()
