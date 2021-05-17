@@ -25,12 +25,9 @@
       <!--S 规划师-->
       <div class="planer_container">
         <div class="planer_left">
-          <img
-            src="https://cdn.shupian.cn/sp-pt/wap/images/amy4chmsb0c0000.jpg"
-            alt=""
-          />
+          <img :src="avatar" alt="" />
         </div>
-        <div class="planer_name">吴月茹</div>
+        <div class="planer_name">{{ plannerName }}</div>
         <div class="planer_right">已对规划师匿名</div>
       </div>
       <!--E 规划师-->
@@ -78,6 +75,9 @@ export default {
   // },
   data() {
     return {
+      infoId: '',
+      avatar: '',
+      plannerName: '',
       showPop: false,
       Field: {
         type: 'functional',
@@ -89,8 +89,16 @@ export default {
     }
   },
   computed: {},
-  mounted() {},
+  mounted() {
+    this.init()
+  },
   methods: {
+    init() {
+      this.avatar = this.$route.query.plannerAvatar
+      this.plannerName = this.$route.query.plannerName
+      this.infoId = this.$route.query.infoId
+      console.log(' this.infoId', this.infoId)
+    },
     back() {
       console.log('back')
       this.showPop = true

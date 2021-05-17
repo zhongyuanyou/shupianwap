@@ -183,53 +183,54 @@ export default {
   mixins: [imHandle],
   data() {
     return {
-      list: [
-        {
-          imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
-          inviterName: '李佳伦',
-          inviteTime: '2017-02-12',
-          inviteAddress: '成都市',
-          inviteType: false,
-          inviteStatus: 0,
-          confirmCompleteTime: '2018-02-03',
-        },
-        {
-          imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
-          inviterName: '李佳伦',
-          inviteTime: '2017-02-12',
-          inviteAddress: '成都市',
-          inviteType: false,
-          inviteStatus: 1,
-          confirmCompleteTime: '2018-02-03',
-        },
-        {
-          imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
-          inviterName: '李佳伦',
-          inviteTime: '2017-02-12',
-          inviteAddress: '成都市',
-          inviteType: false,
-          inviteStatus: 2,
-          confirmCompleteTime: '2018-02-03',
-        },
-        {
-          imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
-          inviterName: '李佳伦',
-          inviteTime: '2017-02-12',
-          inviteAddress: '成都市',
-          inviteType: false,
-          inviteStatus: 3,
-          confirmCompleteTime: '2018-02-03',
-        },
-        {
-          imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
-          inviterName: '李佳伦',
-          inviteTime: '2017-02-12',
-          inviteAddress: '成都市',
-          inviteType: false,
-          inviteStatus: 4,
-          confirmCompleteTime: '2018-02-03',
-        },
-      ],
+      list: [],
+      // list: [
+      //   {
+      //     imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
+      //     inviterName: '李佳伦',
+      //     inviteTime: '2017-02-12',
+      //     inviteAddress: '成都市',
+      //     inviteType: false,
+      //     inviteStatus: 0,
+      //     confirmCompleteTime: '2018-02-03',
+      //   },
+      //   {
+      //     imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
+      //     inviterName: '李佳伦',
+      //     inviteTime: '2017-02-12',
+      //     inviteAddress: '成都市',
+      //     inviteType: false,
+      //     inviteStatus: 1,
+      //     confirmCompleteTime: '2018-02-03',
+      //   },
+      //   {
+      //     imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
+      //     inviterName: '李佳伦',
+      //     inviteTime: '2017-02-12',
+      //     inviteAddress: '成都市',
+      //     inviteType: false,
+      //     inviteStatus: 2,
+      //     confirmCompleteTime: '2018-02-03',
+      //   },
+      //   {
+      //     imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
+      //     inviterName: '李佳伦',
+      //     inviteTime: '2017-02-12',
+      //     inviteAddress: '成都市',
+      //     inviteType: false,
+      //     inviteStatus: 3,
+      //     confirmCompleteTime: '2018-02-03',
+      //   },
+      //   {
+      //     imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
+      //     inviterName: '李佳伦',
+      //     inviteTime: '2017-02-12',
+      //     inviteAddress: '成都市',
+      //     inviteType: false,
+      //     inviteStatus: 4,
+      //     confirmCompleteTime: '2018-02-03',
+      //   },
+      // ],
       loading: false,
       finished: false,
       refreshing: false,
@@ -264,7 +265,7 @@ export default {
         }
       })
     }
-    // this.onLoad(true)
+    this.onLoad(true)
     // this.getInterviewList()
   },
   methods: {
@@ -385,8 +386,13 @@ export default {
       }
     },
     handleClick(item) {
-      // 点击面谈记录
-      this.$router.push(`/my/interviewRecord/confirm/${item.id}`)
+      // 点击面谈记录`/my/interviewRecord/detail'
+      this.$router.push({
+        path: '/my/interviewRecord/detail',
+        query: {
+          id: item.id,
+        },
+      })
     },
     handleIm(item) {
       // 调起IM
@@ -408,7 +414,7 @@ export default {
         query: {
           plannerAvatar: item.imgUrl,
           plannerName: item.inviterName,
-          infoId: item.infoId,
+          infoId: item.inviterId,
         },
       })
     },
@@ -418,7 +424,7 @@ export default {
         query: {
           plannerAvatar: item.imgUrl,
           plannerName: item.inviterName,
-          infoId: item.infoId,
+          infoId: item.inviterId,
         },
       })
     },
