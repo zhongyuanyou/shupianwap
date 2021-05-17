@@ -57,15 +57,29 @@
                     </div>
                   </h4>
                   <p>
+                    面谈方式：<span>{{
+                      item.inviteType ? '到访面谈' : '去店面谈'
+                    }}</span>
+                  </p>
+                  <p>
                     面谈时间：<span>{{ item.inviteTime }}</span>
                   </p>
                   <p class="address">
                     面谈地点：<span>{{ item.inviteAddress }}</span>
                   </p>
                   <p>
-                    面谈方式：<span>{{
-                      item.inviteType ? '到访面谈' : '去店面谈'
-                    }}</span>
+                    面谈状态：<span
+                      :class="item.inviteStatus === 0 ? 'face_talk' : ''"
+                      >{{
+                        item.inviteStatus === 0
+                          ? '待面谈'
+                          : item.inviteStatus === 1
+                          ? '已面谈'
+                          : item.inviteStatus === 2
+                          ? '已评价'
+                          : '已取消'
+                      }}</span
+                    >
                   </p>
                 </div>
               </div>
@@ -86,15 +100,6 @@
                   @click.stop="tel(item.inviterContact)"
                   ><my-icon name="notify_ic_tel" size="0.32rem" color="#4974F5"
                 /></sp-button>
-                <sp-tag color="#F8F8F8" text-color="#999999">{{
-                  item.inviteStatus === 0
-                    ? '待面谈'
-                    : item.inviteStatus === 1
-                    ? '已面谈'
-                    : item.inviteStatus === 2
-                    ? '已评价'
-                    : '已取消'
-                }}</sp-tag>
               </div>
             </div>
             <div class="item-status">
@@ -105,11 +110,20 @@
                 @click="cancelInterview(item.id)"
                 >取消面谈</sp-button
               >
-              <span v-else-if="item.inviteStatus === 2"
-                >您在{{ item.cancelTime }}已取消面谈</span
+              <span
+                v-else-if="item.inviteStatus === 1"
+                style="color: #4974f5"
+                @click="goEvaluate(item)"
+                >去评价</span
               >
-              <span v-else-if="item.inviteStatus === 3">您已取消面谈</span>
-              <span v-else>您在{{ item.confirmCompleteTime }}已完成面谈</span>
+              <span
+                v-else-if="item.inviteStatus === 2"
+                style="color: #4974f5"
+                @click="goEvaluateDetail(item)"
+                >查看评价</span
+              >
+              <!-- <span v-else-if="item.inviteStatus === 3">您已取消面谈</span> -->
+              <span v-else>您在{{ item.confirmCompleteTime }}已取消面谈</span>
             </div>
           </sp-cell>
         </sp-list>
@@ -169,7 +183,53 @@ export default {
   mixins: [imHandle],
   data() {
     return {
-      list: [],
+      list: [
+        {
+          imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
+          inviterName: '李佳伦',
+          inviteTime: '2017-02-12',
+          inviteAddress: '成都市',
+          inviteType: false,
+          inviteStatus: 0,
+          confirmCompleteTime: '2018-02-03',
+        },
+        {
+          imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
+          inviterName: '李佳伦',
+          inviteTime: '2017-02-12',
+          inviteAddress: '成都市',
+          inviteType: false,
+          inviteStatus: 1,
+          confirmCompleteTime: '2018-02-03',
+        },
+        {
+          imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
+          inviterName: '李佳伦',
+          inviteTime: '2017-02-12',
+          inviteAddress: '成都市',
+          inviteType: false,
+          inviteStatus: 2,
+          confirmCompleteTime: '2018-02-03',
+        },
+        {
+          imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
+          inviterName: '李佳伦',
+          inviteTime: '2017-02-12',
+          inviteAddress: '成都市',
+          inviteType: false,
+          inviteStatus: 3,
+          confirmCompleteTime: '2018-02-03',
+        },
+        {
+          imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
+          inviterName: '李佳伦',
+          inviteTime: '2017-02-12',
+          inviteAddress: '成都市',
+          inviteType: false,
+          inviteStatus: 4,
+          confirmCompleteTime: '2018-02-03',
+        },
+      ],
       loading: false,
       finished: false,
       refreshing: false,
@@ -204,7 +264,7 @@ export default {
         }
       })
     }
-    this.onLoad(true)
+    // this.onLoad(true)
     // this.getInterviewList()
   },
   methods: {
@@ -342,6 +402,26 @@ export default {
       }
       this.creatImSessionMixin({ imUserId, imUserType })
     },
+    goEvaluateDetail(item) {
+      this.$router.push({
+        path: '/my/plannerEvaluate/detail',
+        query: {
+          plannerAvatar: item.imgUrl,
+          plannerName: item.inviterName,
+          infoId: item.infoId,
+        },
+      })
+    },
+    goEvaluate(item) {
+      this.$router.push({
+        path: '/my/plannerEvaluate',
+        query: {
+          plannerAvatar: item.imgUrl,
+          plannerName: item.inviterName,
+          infoId: item.infoId,
+        },
+      })
+    },
   },
 }
 </script>
@@ -350,6 +430,9 @@ export default {
 @title-text-color: #1a1a1a;
 @subtitle-text-color: #999999;
 @hint-text-color: #cccccc;
+.face_talk {
+  color: #f86e21 !important;
+}
 
 .interview {
   height: 100%;
@@ -445,6 +528,7 @@ export default {
                 .textOverflow(1);
               }
             }
+
             .address_icon {
               position: relative;
               top: 1px;

@@ -15,5 +15,5 @@ module.exports = {
   // 网关签名code
   SYS_CODE: 'spc-wap',
   // 网关签名密钥
-  SECRET: '5186d2497a0cfe5e066b679a4a9fa0a9',
+  SECRET: 'd009a5c373334b7412e6742ee8759658',
 }

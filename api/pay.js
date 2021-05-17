@@ -16,7 +16,7 @@ const pay = {
     return request({
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/pay/v2/get_pay_params.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/pay/v3/get_pay_params.do',
     })
   },
   getPayResult(params) {

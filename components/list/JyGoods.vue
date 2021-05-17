@@ -165,8 +165,8 @@ export default {
       currentTabJyCode: '', // 当前tab选中的jy code
       filterItem: {}, // 保存所有交易业态的已筛选数据
       isReq: {}, // 存储当前业态是否已经进行过搜索
-      classCode: this.$route.query.classCode,
-      classCode1: this.$route.query.classCode,
+      classCode: this.$route.query,
+      classCode1: '',
     }
   },
   computed: {
@@ -228,13 +228,20 @@ export default {
     // this.isReq[this.currentTabJyCode] = true
     this.filterItem[this.tabs[this.typeCodeIndex].code] = {}
     const classList = []
-    if (this.classCode) {
-      const obj = {
-        fieldCode: this.$route.query.pcode.toLowerCase(),
-        fieldValue: [this.classCode],
-        matchType: 'MATCH_TYPE_MULTI',
+    if (this.classCode.classCode) {
+      this.classCode.classCode = this.classCode.classCode.split(',')
+      this.classCode.pcode = this.classCode.pcode.split(',')
+      this.classCode1 = this.classCode
+      for (let i = 0; i < this.classCode.classCode.length; i++) {
+        const obj = {
+          fieldCode: this.classCode.pcode[i].toLowerCase(),
+          fieldValue: [this.classCode.classCode[i]],
+          matchType: 'MATCH_TYPE_MULTI',
+        }
+        const filrerName = `selectFilter${this.classCode.classCode[i].jylb}`
+        this.$set(this.filterItem[this.currentTabJyCode], filrerName, obj)
+        classList.push(obj)
       }
-      classList.push(obj)
     }
     this.formData[this.tabs[this.typeCodeIndex].code] = {
       start: 1,
@@ -256,6 +263,7 @@ export default {
       console.log(this.$refs.dropDownMenu)
     },
     getFilterHandle(data, filrerName) {
+      console.log(data, 111)
       // 获取筛选项数据
       if (data) {
         // 如果有数据设置数据
@@ -341,6 +349,15 @@ export default {
       this.loading = true
       this.jyGoodsListData[this.currentTabJyCode] = []
       this.finished = false
+      // console.log(this.formData., 1111)
+      // const obj = {}
+      // const person = this.formData.fieldList.reduce((cur, next) => {
+      //   obj[next.fieldCode]
+      //     ? ''
+      //     : (obj[next.fieldCode] = true && cur.push(next))
+      //   return cur
+      // }, [])
+      // this.formData.fieldList = person
       this.searchKeydownHandle()
     },
     filterItemHandle() {
@@ -421,6 +438,21 @@ export default {
         }
       }
       this.formData[this.currentTabJyCode].fieldList = arr
+      const result = []
+      const obj = {}
+      for (
+        let i = 0;
+        i < this.formData[this.currentTabJyCode].fieldList.length;
+        i++
+      ) {
+        if (!obj[this.formData[this.currentTabJyCode].fieldList[i].fieldCode]) {
+          result.push(this.formData[this.currentTabJyCode].fieldList[i])
+          obj[
+            this.formData[this.currentTabJyCode].fieldList[i].fieldCode
+          ] = true
+        }
+      }
+      this.formData[this.currentTabJyCode].fieldList = result
     },
     computedHeight() {
       // 计算列表的最大高

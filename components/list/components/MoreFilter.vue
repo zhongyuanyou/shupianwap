@@ -149,6 +149,48 @@ export default {
       this.$nextTick(() => {
         // 重置内容据顶部的距离
         document.querySelector('.more-content').scrollTop = 0
+        if (
+          this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 &&
+          this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
+            .classCode
+        )
+          for (
+            let b = 0;
+            b <
+            this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
+              .classCode.length;
+            b++
+          ) {
+            for (let a = 0; a < this.children.length; a++) {
+              if (
+                this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
+                  .pcode[b] === this.children[a].ext1
+              ) {
+                for (let i = 0; i < this.children[a].children.length; i++) {
+                  console.log(
+                    this.$parent.$parent.$parent.$parent.$parent.$parent
+                      .classCode1.classCode[b],
+                    this.children[a].children[i].ext2,
+                    123
+                  )
+                  if (
+                    this.$parent.$parent.$parent.$parent.$parent.$parent
+                      .classCode1.classCode[b] ===
+                    this.children[a].children[i].ext2
+                  ) {
+                    this.activeItems[0].push(this.children[a].children[i])
+                  } else if (
+                    this.$parent.$parent.$parent.$parent.$parent.$parent
+                      .classCode1.classCode[b] ===
+                    this.children[a].children[i].code
+                  ) {
+                    this.activeItems[1].push(this.children[a].children[i])
+                  }
+                }
+                console.log(this.activeItems, 11111)
+              }
+            }
+          }
       })
     },
     close() {

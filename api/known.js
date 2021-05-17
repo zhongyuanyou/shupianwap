@@ -28,6 +28,7 @@ const knownApi = {
     recommendArticle: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/recommendArticle.do`,
     findAttention: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/findAttention.do`,
     findMyInvitedPage: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_my_invited_page.do`, // 我被邀请回答的问题分页查询
+    findListByStatus: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_page_bystatus.do`, // 搜索 文章 | 问题 | 回答 list
   },
   content: {
     add: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/add.do`, // 文章、问题、回答新增 新增内容
