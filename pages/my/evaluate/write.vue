@@ -28,7 +28,7 @@
         <div class="info_right_sku">{{ orderDesc }}</div>
       </div>
     </div>
-    <evaluate-star :cinfo-id="infoId" />
+    <evaluate-star />
     <sp-center-popup
       v-model="showPop"
       button-type="confirm"
@@ -65,7 +65,6 @@ export default {
         confirmButtonText: '继续评价',
         cancelButtonText: '退出',
       },
-      infoId: '', // 评价中心id
       orderDesc: '', // 评价属性
     }
   },
@@ -73,7 +72,6 @@ export default {
     const routeInfo = this.$route.query
     this.avatar = routeInfo.indexImg
     this.name = routeInfo.orderName
-    this.infoId = routeInfo.infoId
     this.orderDesc = routeInfo.orderDesc
   },
   methods: {
