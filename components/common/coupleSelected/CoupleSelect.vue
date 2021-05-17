@@ -342,6 +342,9 @@ export default {
       )
     },
     handleRegion(item, index) {
+      if (!item || !item.name) {
+        return
+      }
       // 点击区
       this.rIndex = index
       const arr = this.selectData[2]

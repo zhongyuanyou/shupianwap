@@ -13,6 +13,7 @@
       }"
     >
       <couple-select
+        ref="area"
         :city-data="filterData.children"
         :back-data="activeItems"
         @select="coupleSelect"
@@ -55,6 +56,7 @@ export default {
       activeItems: [], // 默认激活的
       saveActiveItems: [], // 存储的筛选项数据
       coupleSelectVue: null, // 地区筛选的组件
+      isOne: true,
     }
   },
   computed: {
@@ -104,12 +106,103 @@ export default {
   methods: {
     coupleSelect(item) {
       // 选择项
-      console.log(item)
+      // console.log(item)
       item.forEach((_item, index) => {
         this.$set(this.activeItems, index, _item)
       })
     },
-    open() {},
+    // 递归查询数组
+    getObjById(list, id) {
+      // 遍历数组
+      for (const i in list) {
+        const item = list[i]
+        if (item.code === id) {
+          return item
+        } else {
+          console.log(1)
+          // 查不到继续遍历
+          if (item.children) {
+            const value = this.getObjById(item.children, id)
+            // 查询到直接返回
+            if (value) {
+              return value
+            }
+          }
+        }
+      }
+    },
+    open() {
+      if (
+        this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 &&
+        this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1.area &&
+        this.isOne
+      ) {
+        this.$nextTick(() => {
+          for (let i = 0; i < this.filterData.children.length; i++) {
+            if (
+              this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
+                .area === this.filterData.children[i].code
+            ) {
+              this.$refs.area.handleProvince(this.filterData.children[i], i)
+              break
+            } else if (this.filterData.children[i].children.length > 0) {
+              for (
+                let a = 0;
+                a < this.filterData.children[i].children.length;
+                a++
+              ) {
+                if (
+                  this.$parent.$parent.$parent.$parent.$parent.$parent
+                    .classCode1.area ===
+                  this.filterData.children[i].children[a].code
+                ) {
+                  this.$refs.area.handleProvince(this.filterData.children[i], i)
+                  this.$refs.area.handleCity(
+                    this.filterData.children[i].children[a],
+                    a
+                  )
+                  break
+                } else if (
+                  this.filterData.children[i].children[a].children.length > 0
+                ) {
+                  for (
+                    let b = 0;
+                    b < this.filterData.children[i].children[a].children.length;
+                    b++
+                  ) {
+                    if (
+                      this.$parent.$parent.$parent.$parent.$parent.$parent
+                        .classCode1.area ===
+                      this.filterData.children[i].children[a].children[b].code
+                    ) {
+                      this.$refs.area.handleProvince(
+                        this.filterData.children[i],
+                        i
+                      )
+                      this.$refs.area.handleCity(
+                        this.filterData.children[i].children[a],
+                        a
+                      )
+                      this.$refs.area.handleRegion(
+                        this.filterData.children[i].children[a].children[b + 1],
+                        b + 1
+                      )
+                      break
+                    }
+                  }
+                }
+              }
+            }
+          }
+          // const val = this.getObjById(
+          //   this.filterData.children,
+          //   this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1.area
+          // )
+        })
+      }
+
+      this.isOne = false
+    },
     close() {
       this.activeItems = clone(this.saveActiveItems, true)
     },
@@ -118,6 +211,34 @@ export default {
       this.coupleSelectVue && this.coupleSelectVue.clear()
     },
     confirmFilters() {
+      const pcode = this.filterData.pcode
+      const emitData1 = this.resultHandle()
+      if (
+        this.$parent.$parent.$parent.$parent.$parent.$parent.formData[pcode] &&
+        this.$parent.$parent.$parent.$parent.$parent.$parent.formData[pcode]
+          .fieldList.length > 0
+      ) {
+        for (
+          let i = 0;
+          i <
+          this.$parent.$parent.$parent.$parent.$parent.$parent.formData[pcode]
+            .fieldList.length;
+          i++
+        ) {
+          if (
+            emitData1.fieldCode ===
+            this.$parent.$parent.$parent.$parent.$parent.$parent.formData[pcode]
+              .fieldList[i].fieldCode
+          ) {
+            console.log(111)
+            this.$parent.$parent.$parent.$parent.$parent.$parent.formData[
+              pcode
+            ].fieldList = this.$parent.$parent.$parent.$parent.$parent.$parent.formData[
+              pcode
+            ].fieldList.splice(i, 0)
+          }
+        }
+      }
       // 确认筛选
       this.saveActiveItems = clone(this.activeItems, true)
       const emitData = this.resultHandle()

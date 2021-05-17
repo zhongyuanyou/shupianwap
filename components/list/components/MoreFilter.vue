@@ -187,7 +187,6 @@ export default {
                     this.activeItems[1].push(this.children[a].children[i])
                   }
                 }
-                console.log(this.activeItems, 11111)
               }
             }
           }
