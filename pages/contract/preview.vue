@@ -58,8 +58,7 @@
 </template>
 
 <script>
-import Pdf from 'vue-pdf'
-import CMapReaderFactory from 'vue-pdf/src/CMapReaderFactory.js'
+import Pdf from '@fe/vue-pdf'
 import { Button, Dialog, Toast, Skeleton } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
 import contractApi from '@/api/contract'
@@ -104,6 +103,15 @@ export default {
   methods: {
     pdfTask() {
       // 传参 CMapReaderFactory
+      // const CMAP_URL = 'https://unpkg.com/pdfjs-dist@2.0.943/cmaps/'
+      // this.src = Pdf.createLoadingTask({
+      //   url: this.src,
+      //   cMapUrl: CMAP_URL,
+      //   cMapPacked: true,
+      // })
+      // this.src.promise.then((pdf) => {
+      //   this.numPages = pdf.numPages
+      // })
       Pdf.createLoadingTask(this.src).promise.then((pdf) => {
         this.numPages = pdf.numPages
       })

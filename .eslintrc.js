@@ -27,6 +27,7 @@ module.exports = {
     'vue/no-v-html': 'off',
     'unicorn/prefer-includes': 'off',
     'no-unused-vars': 0,
-    'vue/comment-directive': 'off'
+    'vue/comment-directive': 'off',
+    'prettier/prettier': 'off',
   },
 }
