@@ -1,5 +1,5 @@
 <template>
-  <div v-show="!payHtml" class="pay-page">
+  <div class="pay-page">
     <Header title="选择支付方式" />
     <div class="banner">
       <p class="total-money">{{ responseData.currentPayMoney || '' }}元</p>
@@ -56,7 +56,6 @@
         <span class="btn-item"> 元</span>
       </sp-button>
     </div>
-    <!-- <div ref="payForm" class="form" v-html="payHtml"></div> -->
     <sp-dialog
       v-model="showMydialog"
       :show-cancel-button="true"
@@ -74,11 +73,6 @@
       v-if="!closeAppOpen"
       @handleDialogClosed="handleDialogClosed"
     />
-    <Iframe
-      id="mainIframe"
-      style="width: 250px; height: 500px"
-      :src="payPageUrl"
-    ></Iframe>
     <div v-show="loading || resultLoading" class="loading-area">
       <sp-loading size="24px">{{
         resultLoading ? '正在查询支付结果' : '加载中'
@@ -119,7 +113,6 @@ export default {
   },
   data() {
     return {
-      payPageUrl: 'https://cdn.shupian.cn/sp-pt/wap/files/ai0o4k85p340000.html',
       closeAppOpen: true,
       showMydialog: false,
       protocoTitle: '', // 协议标题
@@ -141,7 +134,7 @@ export default {
       // 请求数据
       getPayParamsFormData: {
         cusOrderId: '',
-        payPlatform: 'CRISPS_C_ZFFS_ALI_4_0',
+        payPlatform: 'CRISPS_C_ZFFS_ALI',
         payTerminal: 'COMDIC_TERMINAL_WAP', // 支付终端 当前为wap
         sourcePlatform: 'COMDIC_PLATFORM_CRISPS', // 操作系统来源
         // userId: this.$cookies.get('userId', { path: '/' }), // 用户ID
@@ -171,9 +164,8 @@ export default {
         //   color: 'rgba(255, 133, 60, 1)',
         // },
       ],
-      payPlatform: 'CRISPS_C_ZFFS_ALI_4_0',
+      payPlatform: 'CRISPS_C_ZFFS_ALI',
       payName: '支付宝支付',
-      payHtml: '',
     }
   },
   computed: {},
@@ -195,7 +187,7 @@ export default {
       this.goBack()
     }
     const startTime = localStorage.getItem('startTime')
-    // // 暂时隐藏付款功能
+    // 暂时隐藏付款功能
     // if (
     //   localStorage.getItem('cusOrderId') &&
     //   localStorage.getItem('serialNumber')
@@ -228,9 +220,6 @@ export default {
   },
 
   methods: {
-    changeForm(e) {
-      console.log('e', e)
-    },
     confirmAggret() {
       this.showMydialog = false
       this.closeAppOpen = false
@@ -325,9 +314,9 @@ export default {
       this.getPayParamsFormData.payPlatform = item.code
     },
     startPay() {
-      // this.showMydialog = true
+      this.showMydialog = true
       // this.$router.replace('/pay/payResult')
-      this.getPayParams()
+      // this.getPayParams()
     },
     // 查询订单应付金额
     enablePayMoney() {
@@ -341,7 +330,6 @@ export default {
           const countDownTimeLong = this.responseData.countDownTimeLong
           this.countDown(countDownTimeLong) // 倒计时
           localStorage.setItem('cusOrderId', this.$route.query.cusOrderId)
-          localStorage.setItem('payMoney', this.responseData.currentPayMoney)
         })
         .catch((e) => {
           if (e.code !== 200) {
@@ -406,17 +394,18 @@ export default {
         pay
           .getPayParams(this.getPayParamsFormData)
           .then((result) => {
-            localStorage.setItem('startTime', new Date().getTime())
-            localStorage.setItem(
-              'serialNumber',
-              result.billNo || result.guaguaPayPartyNo
-            )
-            if (result.formData) {
-              console.log('result.formData', result.formData)
-              this.payHtml = result.formData
-              document
-                .getElementById('mainIframe')
-                .contentWindow.postMessage(this.payHtml, '*')
+            if (result.code === '0') {
+              const payUrl = result.payParam
+              // window.location.href = payUrl
+              this.payCallBackData.serialNumber = result.guaguaPayPartyNo
+              localStorage.setItem(
+                'serialNumber',
+                this.payCallBackData.serialNumber
+              )
+              localStorage.setItem('startTime', new Date().getTime())
+              window.location.href = payUrl
+            } else {
+              this.$xToast.error('支付发起失败，请稍后重试。')
             }
           })
           .catch((e) => {
