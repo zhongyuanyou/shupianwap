@@ -22,7 +22,7 @@
 
 <script>
 import { Field, Upload } from '@chipspc/vant-dgg'
-import { authl, ossApi, evaluateApi } from '@/api'
+import { auth, ossApi, evaluateApi } from '@/api'
 export default {
   components: {
     [Field.name]: Field,
