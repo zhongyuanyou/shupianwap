@@ -67,34 +67,43 @@ export default {
         .then((data) => {
           // 处理多选择交易列表筛选项命中
           if (this.classCode) {
-            this.classCode.jylb = this.classCode.jylb.split(',')
-            if (!Array.isArray(this.classCode.classCode)) {
-              this.classCode.classCode = this.classCode.classCode.split(',')
-            }
-            for (let b = 0; b < this.classCode.jylb.length; b++) {
-              for (let i = 0; i < data.filters.length; i++) {
-                // for (let a = 0; a < data.filters[i].children.length; a++) {}
-                if (this.classCode.jylb[b] === data.filters[i].code) {
-                  if (data.filters[i].name !== '更多') {
-                    for (let z = 0; z < data.filters[i].children.length; z++) {
-                      if (
-                        data.filters[i].children[z].code &&
-                        this.classCode.classCode[b] ===
-                          data.filters[i].children[z].code
+            if (this.classCode.jylb) {
+              this.classCode.jylb = this.classCode.jylb.split(',')
+              if (!Array.isArray(this.classCode.classCode)) {
+                this.classCode.classCode = this.classCode.classCode.split(',')
+              }
+              for (let b = 0; b < this.classCode.jylb.length; b++) {
+                for (let i = 0; i < data.filters.length; i++) {
+                  // for (let a = 0; a < data.filters[i].children.length; a++) {}
+                  if (this.classCode.jylb[b] === data.filters[i].code) {
+                    if (data.filters[i].name !== '更多') {
+                      for (
+                        let z = 0;
+                        z < data.filters[i].children.length;
+                        z++
                       ) {
-                        data.filters[i].name = data.filters[i].children[z].name
-                      } else if (
-                        data.filters[i].children[z].name ===
-                        this.classCode.classCode[b]
-                      ) {
-                        data.filters[i].name = data.filters[i].children[z].name
+                        if (
+                          data.filters[i].children[z].code &&
+                          this.classCode.classCode[b] ===
+                            data.filters[i].children[z].code
+                        ) {
+                          data.filters[i].name =
+                            data.filters[i].children[z].name
+                        } else if (
+                          data.filters[i].children[z].name ===
+                          this.classCode.classCode[b]
+                        ) {
+                          data.filters[i].name =
+                            data.filters[i].children[z].name
+                        }
                       }
+                    } else {
                     }
-                  } else {
                   }
                 }
               }
             }
+
             this.classCode = ''
           }
           this.isReq[this.currentTabJyCode] = true
