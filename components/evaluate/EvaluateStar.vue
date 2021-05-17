@@ -117,7 +117,7 @@ export default {
   },
   filters: {
     fliterLevel(val) {
-      const txts = ['非常差', '非常差', '很差', '一般', '满意', '超赞']
+      const txts = ['非常差', '非常差', '差', '一般', '好', '非常好']
       return txts[val]
     },
   },
