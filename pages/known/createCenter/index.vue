@@ -3,56 +3,64 @@
     <Header title="创作中心" :fixed="true" />
     <sp-tabs v-model="active" @change="changeTab">
       <sp-tab v-for="(item, index) in tabList" :key="index" :title="item.tab">
-        <sp-list
-          v-model="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          class="list"
-          :error.sync="error"
-          error-text="请求失败，点击重新加载"
-          @load="onLoad"
-        >
-          <div
-            v-for="(itemItem, indexIndex) in list"
-            :key="indexIndex"
-            class="item-wrapper"
-            @click="link(itemItem)"
+        <template v-if="emptyFlag === 'not'">
+          <sp-list
+            v-model="loading"
+            :finished="finished"
+            class="list"
+            finished-text="没有更多了"
+            :error.sync="error"
+            error-text="请求失败，点击重新加载"
+            @load="onLoad"
           >
-            <div class="placeholder"></div>
-            <div class="item">
-              <div class="tile">
-                <span
-                  class="tile-flag"
-                  :class="[
-                    itemItem.status === 0
-                      ? 'z-pending'
-                      : itemItem.status === 1
-                      ? 'z-approved'
-                      : 'z-cancel',
-                  ]"
-                  >{{ itemItem.status | fliterStatus }}</span
-                ><span class="tile-txt">&nbsp;{{ itemItem.title }}</span>
-              </div>
-              <div class="content">
-                <div class="content-txt">
-                  {{ itemItem.contentText }}
+            <div
+              v-for="(itemItem, indexIndex) in list"
+              :key="indexIndex"
+              class="item-wrapper"
+              @click="link(itemItem)"
+            >
+              <div class="placeholder"></div>
+              <div class="item">
+                <div class="tile">
+                  <span
+                    class="tile-flag"
+                    :class="[
+                      itemItem.status === 0
+                        ? 'z-pending'
+                        : itemItem.status === 1
+                        ? 'z-approved'
+                        : 'z-cancel',
+                    ]"
+                    >{{ itemItem.status | fliterStatus }}</span
+                  ><span class="tile-txt">&nbsp;{{ itemItem.title }}</span>
                 </div>
-                <sp-image
-                  v-if="itemItem.contentImageUrl"
-                  class="content-img"
-                  fit="cover"
-                  :src="itemItem.contentImageUrl.split(',')[0]"
-                />
-              </div>
-              <div class="desc">
-                <div class="desc-tip">
-                  {{ itemItem.answerCount || 0 }} 回答 ·
-                  {{ itemItem.collectCount || 0 }} 收藏
+                <div class="content">
+                  <div class="content-txt">
+                    {{ itemItem.contentText }}
+                  </div>
+                  <sp-image
+                    v-if="itemItem.contentImageUrl"
+                    class="content-img"
+                    fit="cover"
+                    :src="itemItem.contentImageUrl.split(',')[0]"
+                  />
+                </div>
+                <div class="desc">
+                  <div class="desc-tip">
+                    {{ itemItem.answerCount || 0 }} 回答 ·
+                    {{ itemItem.collectCount || 0 }} 收藏
+                  </div>
                 </div>
               </div>
             </div>
+          </sp-list>
+        </template>
+        <template v-else>
+          <div class="empty">
+            <div class="empty-img"></div>
+            <div class="empty-desc">您暂未创作任何内容～</div>
           </div>
-        </sp-list>
+        </template>
       </sp-tab>
     </sp-tabs>
   </div>
@@ -103,6 +111,7 @@ export default {
           tab: '未通过',
         },
       ],
+      emptyFlag: 'not',
     }
   },
   methods: {
@@ -116,6 +125,7 @@ export default {
       this.finished = false
       this.loading = true
       this.list = []
+      this.emptyFlag = 'not'
     },
     onLoad() {
       this.findListByStatusApi()
@@ -135,6 +145,9 @@ export default {
         if (code !== 200) {
           throw new Error('请求接口失败!')
         }
+        if (data.records.length === 0 && data.totalPage === 0) {
+          this.emptyFlag = 'yes'
+        }
         this.list.push(...data.records)
         this.page++
         if (this.page > data.totalPage) {
@@ -152,28 +165,19 @@ export default {
         if (item.type === 1) {
           this.$router.push({
             path: '/known/publish/question',
-            query: {
-              id: item.id, // 问题id
-              editType: 2,
-            },
           })
         }
         // 文章
         if (item.type === 2) {
           this.$router.push({
-            path: '/known/publish/article',
-            query: {
-              id: item.id, // 文章id
-              editType: 2,
-            },
+            path: '/known/publish/question',
           })
         } else {
-          // 回答
+          // 回答 这里需要传问题id,让用户在上一次回答的问题上继续回答
           this.$router.push({
             path: '/known/publish/answer',
             query: {
-              id: item.id, // 传回答id
-              editType: 2,
+              id: item.sourceId,
             },
           })
         }
@@ -226,7 +230,6 @@ export default {
     .sp-tabs__wrap {
       height: 72px;
       padding-bottom: 8px;
-      border-bottom: 1px solid #f4f4f4;
       .sp-tab {
         font: 400 30px/30px PingFangSC-Regular, PingFang SC;
         color: #999999;
@@ -304,10 +307,28 @@ export default {
       color: #999999;
     }
   }
+
   .placeholder {
     width: 100%;
     height: 20px;
     background: #f5f5f5;
+  }
+  .empty {
+    width: 100%;
+    margin-top: 140px;
+    &-img {
+      width: 340px;
+      height: 340px;
+      background: #4974f5;
+      margin: 0 auto;
+      opacity: 0.4;
+    }
+    &-desc {
+      margin-top: 24px;
+      font: bold 30px @fontf-pfsc-med;
+      color: #222222;
+      text-align: center;
+    }
   }
 }
 </style>
