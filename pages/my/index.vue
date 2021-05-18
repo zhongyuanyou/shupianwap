@@ -83,6 +83,22 @@
           </div>
         </div>
       </div>
+      <div class="my_btns_item" @click="handleClick('/known/createCenter')">
+        <div class="my_btns_item_icon">
+          <my-icon name="faxian" size="0.36rem" color="#FFA416" />
+        </div>
+        <div class="my_btns_item_con">
+          创作中心
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
       <div class="my_btns_item" @click="handleClick(3)">
         <div class="my_btns_item_icon">
           <my-icon name="shimingrenzheng" size="0.36rem" color="#00B365" />
@@ -367,6 +383,8 @@ export default {
         this.$router.push('/my/complain')
       } else if (val === 6) {
         this.$router.push('/my/about')
+      } else {
+        this.$router.push(val)
       }
     },
     async showExit() {
