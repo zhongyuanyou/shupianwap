@@ -1,5 +1,3 @@
-/* 预发布配置文件 */
-
 module.exports = {
   baseURL: 'https://tspmicrouag.shupian.cn',
   mchMerchantSgin: '63E4A4CB44669BAA672EB2DE2528CCEA',
@@ -10,10 +8,10 @@ module.exports = {
   platformCode: 'COMDIC_PLATFORM_CRISPS', // 平台code
   terminalCode: 'COMDIC_TERMINAL_WAP', // 终端code
   imsysCode: 'crisps-app', // imsysCode
-  imsecret: 'bda65845493c8f8f7e0a86536a889396', // imsecret
+  imsecret: '6876d18cdced5214d580c85464841cab', // imsecret
   imappKey: '4R29RHK10AQILT8ONUAOC5DDST', // im
   // 网关签名code
   SYS_CODE: 'spc-wap',
   // 网关签名密钥
-  SECRET: '5186d2497a0cfe5e066b679a4a9fa0a9',
+  SECRET: 'd009a5c373334b7412e6742ee8759658',
 }
