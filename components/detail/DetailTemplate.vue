@@ -412,7 +412,7 @@ export default {
             ? this.proDetail.classCodeLevel.split(',')[1]
             : null, // 二级产品分类
           login_name: null, // 规划师ID(选填)
-          productType: 'FL20201116000003', // 产品类型
+          productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
           sceneId: 'app-cpxqye-02', // 场景ID
           user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
           platform: 'app', // 平台（app,m,pc）
