@@ -77,6 +77,7 @@ export default {
       loading: false,
       fileSize: '',
       fileName: '',
+      isFilter: true,
     }
   },
   methods: {
@@ -90,13 +91,14 @@ export default {
       const file = e.target.files[0]
       if (!file) return
       const formData = new FormData()
-      formData.append(fileSize,  file.size)
+      console.log('file', file)
       formData.append('file', file)
-      formData.filterType = this.filterType
-      formData.filterDegree = this.filterDegree
+      formData.append('filterType', this.filterType)
+      formData.append('filterDegree', this.filterDegree)
+      formData.append('isFilter', this.isFilter)
       that.postData(formData)
-      this.fileSize = file.size
-      this.fileName = file.name
+      // this.fileSize = file.size
+      // this.fileName = file.name
       // if (this.fileSize > 10000000) {
       //   this.$emit('beforeUpload', {
       //     code: 500,
@@ -130,15 +132,15 @@ export default {
             this.$emit('afterUpload', {
               code: 200,
               data: {
-                currentImgUlr: res.data.url,
+                currentImgUrl: res.data.url,
                 imgList: this.imgList,
               },
-              message: '上传成功',
+              message: '处理成功',
             })
           } else {
             this.$emit('afterUpload', {
               code: 500,
-              message: res.message || '上传失败',
+              message: res.message || '处理失败',
             })
           }
         })
@@ -146,7 +148,7 @@ export default {
           this.loading = false
           this.$emit('afterUpload', {
             code: 500,
-            message: err.message || '上传失败',
+            message: err.message || '处理失败',
           })
         })
     },
