@@ -1,7 +1,7 @@
 'use strict'
 
-import { CHIPS_WAP_BASE_URL } from '../config/constant'
-// const CHIPS_WAP_BASE_URL = 'http://172.16.133.115:7001/service'
+// import { CHIPS_WAP_BASE_URL } from '../config/constant'
+const CHIPS_WAP_BASE_URL = 'http://172.16.133.115:7001/service'
 const knownApi = {
   comments: {
     list: `${CHIPS_WAP_BASE_URL}/nk/known_comments/v1/list.do`, // 评论列表

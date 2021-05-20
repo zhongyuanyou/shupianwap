@@ -30,7 +30,15 @@
       </div>
       <div class="download_right" @click="openApp">立即打开</div>
     </div>
-    <div class="content_panel"></div>
+    <div class="content_panel">
+      <iframe
+        class="filename"
+        :src="adress"
+        width="100%"
+        height="600"
+        frameborder="1"
+      ></iframe>
+    </div>
     <div class="footer">
       <div class="footer_forward" @click="share">
         <my-icon
@@ -89,6 +97,8 @@ export default {
       showPop: false,
       email: '',
       documentId: '123',
+      adress:
+        'https://view.officeapps.live.com/op/view.aspx?src=search-1-wk_es_paddle-income5&fixfr=J0XqYQkohDIS%2B6ElWfkiUg%3D%3D',
     }
   },
   computed: {

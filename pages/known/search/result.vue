@@ -30,6 +30,12 @@
       <p :class="tabIndex === '3' ? 'act' : ''" @click="changeTab('3')">
         <span>用户</span><i></i>
       </p>
+      <p :class="tabIndex === '4' ? 'act' : ''" @click="changeTab('4')">
+        <span>视频</span><i></i>
+      </p>
+      <p :class="tabIndex === '5' ? 'act' : ''" @click="changeTab('5')">
+        <span>讲堂</span><i></i>
+      </p>
     </div>
     <div v-show="tabIndex === '1' || tabIndex === '2'" class="listbox">
       <sp-list

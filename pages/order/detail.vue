@@ -535,9 +535,10 @@ export default {
     },
     navToUrl(type) {
       const query = {
-        evaluateCenterId: this.orderData.orderSplitAndCusVo.evaluateCenterId, // 评价id
-        signerId: this.orderData.orderSplitAndCusVo.signerId, // 签单人员id
+        infoId: this.orderData.orderSplitAndCusVo.evaluateCenterId, // 评价id
+        plannerId: this.orderData.orderSplitAndCusVo.signerId, // 签单人员id
         signerNo: this.orderData.orderSplitAndCusVo.signerNo, // 签单人员编号
+        plannerName: this.orderData.orderSplitAndCusVo.signerName,
         signerSubjectUserId: this.orderData.orderSplitAndCusVo
           .signerSubjectUserId, // 签单人商户用户id
         orderId: this.orderData.id,
