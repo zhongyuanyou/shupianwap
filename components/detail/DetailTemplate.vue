@@ -62,7 +62,11 @@
     <Commitment />
     <!--E 第四板块 交易服务保障承诺-->
     <!--S 第五板块 推荐规划师-->
-    <TcPlanners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
+    <TcPlanners
+      v-show="planners"
+      :im-jump-query="imJumpQuery"
+      :recommend-planner="planners"
+    />
     <!--E 第五板块 推荐规划师-->
     <ServiceDetail
       comp-type="tc"
@@ -283,14 +287,14 @@ export default {
             userId: this.$cookies.get('userId', { path: '/' }), // 用户id
             deviceId: this.deviceId, // 设备ID
             formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
-            classCode: formatId1,
+            // classCode: formatId1,
             formatIdOne,
             areaCode: this.city.code, // 区域编码
-            sceneId: this.sceneId1, // 场景ID
+            sceneId: 'app-jycpxq-02', // 场景ID
             productId: this.proDetail.id, // 产品ID（产品详情页必传）
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
             title: this.proDetail.name, // 产品名称（产品详情页传、咨询页等）
-            platform: 'APP', // 平台（app,m,pc）
+            platform: 'm', // 平台（app,m,pc）
             page: this.productPage,
             limit: this.productLimit,
             searchType: 1, // 搜索推荐产品类型：1：交易，2服务
@@ -343,12 +347,13 @@ export default {
             deviceId: this.deviceId, // 设备ID
             formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
             areaCode: this.$store.state.city.currentCity.code, // 区域编码
-            classCode: formatId1,
-            sceneId: this.sceneId2 || this.sceneId1, // 场景ID
+            formatIdOne: formatId1,
+            // classCode: formatId1,
+            sceneId: 'app-jycpxq-01', // this.sceneId2 || this.sceneId1 //场景ID
             productId: this.proDetail.id, // 产品ID（产品详情页必传）
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
             title: this.proDetail.name, // 产品名称（产品详情页传、咨询页等）
-            platform: 'APP', // 平台（app,m,pc）
+            platform: 'm', // 平台（app,m,pc）
             page: 1,
             limit: 5,
             searchType: 1, // 搜索推荐产品类型：1：交易，2服务

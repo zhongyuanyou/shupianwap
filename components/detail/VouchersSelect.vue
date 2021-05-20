@@ -226,8 +226,8 @@ export default {
       return this.$store.state.sellingGoodsDetail.sellingGoodsData
     },
     serviceTag() {
-      const salesGoodsTags = this.$store.state.sellingGoodsDetail
-        .sellingGoodsData.salesGoodsTags
+      const salesGoodsTags =
+        this.$store.state.sellingGoodsDetail.sellingGoodsData.salesGoodsTags
       const serviceTag = salesGoodsTags.map((item) => {
         if (item.tagType === 'PRO_SERVICE_TAG') {
           return {
@@ -241,13 +241,36 @@ export default {
     },
     // 优惠券列表
     coupon() {
-      return this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList
+      const list = []
+      for (
+        let i = 0;
+        i <
+        this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList.length;
+        i++
+      ) {
+        let time1 =
+          this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList[
+            i
+          ].serviceLife.slice(
+            this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList[
+              i
+            ].serviceLife.match('-').index + 1
+          )
+        time1 = new Date(time1)
+        const time2 = new Date()
+        if (time1.getTime() >= time2.getTime()) {
+          list.push(
+            this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList[i]
+          )
+        }
+      }
+      return list
     },
     //  服务商品的SKU集合
     goodsSubDetailsName() {
       //  基础商品
-      const salesGoodsSubVos = this.$store.state.sellingGoodsDetail
-        .sellingGoodsData.salesGoodsSubVos
+      const salesGoodsSubVos =
+        this.$store.state.sellingGoodsDetail.sellingGoodsData.salesGoodsSubVos
       // 找出服务商品
       const serviceGoods = salesGoodsSubVos.map((item) => {
         if (item.goodsType === 'PRO_CLASS_TYPE_SERVICE') {
@@ -284,8 +307,8 @@ export default {
     },
     // 计算优惠后的价格
     couponPreferential() {
-      const sellingGoodsData = this.$store.state.sellingGoodsDetail
-        .sellingGoodsData
+      const sellingGoodsData =
+        this.$store.state.sellingGoodsDetail.sellingGoodsData
       // 找出有效优惠券
       const couponList = sellingGoodsData.couponList.filter(
         (item) => item.couponStatus === 0 || item.couponStatus === 2
@@ -332,7 +355,7 @@ export default {
             })
             .catch((err) => {
               console.log(err)
-              this.$xToast.warning('优惠券领取失败，请稍后重试')
+              this.$xToast.warning(err.message || '优惠券领取失败，请稍后重试')
             })
         }
       }
