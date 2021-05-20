@@ -102,7 +102,9 @@ export default {
       }
       const res = await this.$axios.get(evaluateApi.getAvatar, { params })
       if (res.code === 200) {
-        this.avatar = res.data.img
+        this.avatar = res.data[0].img
+      } else {
+        this.$xToast.error('获取头像失败')
       }
     },
   },
