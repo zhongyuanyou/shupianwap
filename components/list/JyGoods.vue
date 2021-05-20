@@ -228,17 +228,51 @@ export default {
     // this.isReq[this.currentTabJyCode] = true
     this.filterItem[this.tabs[this.typeCodeIndex].code] = {}
     const classList = []
-    if (this.classCode.classCode) {
-      this.classCode.classCode = this.classCode.classCode.split(',')
-      this.classCode.pcode = this.classCode.pcode.split(',')
+    if (this.classCode) {
       this.classCode1 = this.classCode
-      for (let i = 0; i < this.classCode.classCode.length; i++) {
+      if (this.classCode.classCode) {
+        this.classCode.classCode = this.classCode.classCode.split(',')
+        this.classCode.pcode = this.classCode.pcode.split(',')
+        this.classCode1.classCode = this.classCode.classCode
+        this.classCode1.pcode = this.classCode.pcode
+        for (let i = 0; i < this.classCode.classCode.length; i++) {
+          const obj = {
+            fieldCode: this.classCode.pcode[i]
+              ? this.classCode.pcode[i].toLowerCase()
+              : '',
+            fieldValue: [this.classCode.classCode[i]],
+            matchType: 'MATCH_TYPE_MULTI',
+          }
+          const filrerName = `selectFilterCONDITION-JY-GS-DQ`
+          this.$set(this.filterItem[this.currentTabJyCode], filrerName, obj)
+          classList.push(obj)
+        }
+      }
+      if (this.classCode.price) {
+        this.formData.platformPriceStart =
+          parseInt(
+            this.classCode.price.slice(0, this.classCode.price.match('-').index)
+          ) * 100
+        this.formData.platformPriceEnd =
+          parseInt(
+            this.classCode.price.slice(
+              this.classCode.price.match('-').index + 1,
+              -1
+            ) + this.classCode.price.slice(0)
+          ) * 100
+      }
+      if (this.classCode.sort) {
+        this.formData.sortBy = parseInt(this.classCode.sort)
+      }
+      if (this.classCode.area) {
         const obj = {
-          fieldCode: this.classCode.pcode[i].toLowerCase(),
-          fieldValue: [this.classCode.classCode[i]],
+          fieldCode: this.classCode.areacode
+            ? this.classCode.areacode.toLowerCase()
+            : '',
+          fieldValue: [this.classCode.area],
           matchType: 'MATCH_TYPE_MULTI',
         }
-        const filrerName = `selectFilter${this.classCode.classCode[i].jylb}`
+        const filrerName = `selectFilterCONDITION-JY-GS-DQ`
         this.$set(this.filterItem[this.currentTabJyCode], filrerName, obj)
         classList.push(obj)
       }
@@ -252,8 +286,12 @@ export default {
       searchKey: this.searchText,
       statusList: ['PRO_STATUS_LOCKED', 'PRO_STATUS_PUT_AWAY'],
       fieldList: classList,
+      platformPriceStart: this.formData.platformPriceStart || '',
+      platformPriceEnd: this.formData.platformPriceEnd || '',
+      sortBy: this.formData.sortBy,
     }
     this.initGoodsList()
+    this.formData[this.tabs[this.typeCodeIndex].code].fieldList = []
     if (!this.isShowTabs) {
       this.$refs.spTabs.$refs.nav.parentNode.style.display = 'none'
     }
@@ -263,7 +301,6 @@ export default {
       console.log(this.$refs.dropDownMenu)
     },
     getFilterHandle(data, filrerName) {
-      console.log(data, 111)
       // 获取筛选项数据
       if (data) {
         // 如果有数据设置数据
@@ -345,6 +382,7 @@ export default {
     },
     initGoodsList() {
       // 获取初始数据
+      console.log(this.formData, 321)
       this.formData[this.currentTabJyCode].start = 1
       this.loading = true
       this.jyGoodsListData[this.currentTabJyCode] = []
@@ -368,9 +406,8 @@ export default {
         switch (keyStr) {
           case 'sortFilter':
             // 处理排序筛选
-            this.formData[this.currentTabJyCode].sortBy = this.filterItem[
-              this.currentTabJyCode
-            ][key].id
+            this.formData[this.currentTabJyCode].sortBy =
+              this.filterItem[this.currentTabJyCode][key].id
             break
           case 'moreFilter':
             if (
@@ -387,11 +424,10 @@ export default {
               'nameLengthStart' in
               this.filterItem[this.currentTabJyCode][key].charLength
             ) {
-              this.formData[
-                this.currentTabJyCode
-              ].nameLengthStart = this.filterItem[this.currentTabJyCode][
-                key
-              ].charLength.nameLengthStart
+              this.formData[this.currentTabJyCode].nameLengthStart =
+                this.filterItem[this.currentTabJyCode][
+                  key
+                ].charLength.nameLengthStart
             } else {
               delete this.formData[this.currentTabJyCode].nameLengthStart
             }
@@ -399,11 +435,10 @@ export default {
               'nameLengthEnd' in
               this.filterItem[this.currentTabJyCode][key].charLength
             ) {
-              this.formData[
-                this.currentTabJyCode
-              ].nameLengthEnd = this.filterItem[this.currentTabJyCode][
-                key
-              ].charLength.nameLengthEnd
+              this.formData[this.currentTabJyCode].nameLengthEnd =
+                this.filterItem[this.currentTabJyCode][
+                  key
+                ].charLength.nameLengthEnd
             } else {
               delete this.formData[this.currentTabJyCode].nameLengthEnd
             }
@@ -414,16 +449,10 @@ export default {
               this.filterItem[this.currentTabJyCode][key].fieldValue.end
             ) {
               // 处理价格筛选
-              this.formData[
-                this.currentTabJyCode
-              ].platformPriceStart = this.filterItem[this.currentTabJyCode][
-                key
-              ].fieldValue.start
-              this.formData[
-                this.currentTabJyCode
-              ].platformPriceEnd = this.filterItem[this.currentTabJyCode][
-                key
-              ].fieldValue.end
+              this.formData[this.currentTabJyCode].platformPriceStart =
+                this.filterItem[this.currentTabJyCode][key].fieldValue.start
+              this.formData[this.currentTabJyCode].platformPriceEnd =
+                this.filterItem[this.currentTabJyCode][key].fieldValue.end
             } else {
               // 删除价格筛选
               delete this.formData[this.currentTabJyCode].platformPriceStart
@@ -437,7 +466,7 @@ export default {
             }
         }
       }
-      this.formData[this.currentTabJyCode].fieldList = arr
+      this.formData[this.currentTabJyCode].fieldList = arr.reverse()
       const result = []
       const obj = {}
       for (
