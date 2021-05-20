@@ -43,6 +43,7 @@
 
 <script>
 import { CenterPopup } from '@chipspc/vant-dgg'
+import { evaluateApi } from '@/api'
 import Header from '@/components/common/head/header'
 import EvaluateStar from '@/components/evaluate/EvaluateStar'
 export default {
@@ -76,7 +77,11 @@ export default {
   },
   methods: {
     init() {
-      this.avatar = this.$route.query.plannerAvatar || ''
+      if (this.$route.query.plannerAvatar) {
+        this.avatar = this.$route.query.plannerAvatar
+      } else {
+        this.getPlannerInfo()
+      }
       this.plannerName = this.$route.query.plannerName || ''
       this.plannerId = this.$route.query.plannerId || ''
       this.infoId = this.$route.query.infoId
@@ -90,6 +95,15 @@ export default {
     },
     cancel() {
       this.$back()
+    },
+    async getPlannerInfo() {
+      const params = {
+        plannerId: this.$route.query.plannerId,
+      }
+      const res = await this.$axios.get(evaluateApi.getAvatar, { params })
+      if (res.code === 200) {
+        this.avatar = res.data.img
+      }
     },
   },
 }
