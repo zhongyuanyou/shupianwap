@@ -33,7 +33,11 @@
       </div>
       <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
     </div>
-    <div v-if="serviceTag.length > 0" class="cell" @click="safeguardIsShow">
+    <div
+      v-if="serviceTag && serviceTag.length > 0"
+      class="cell"
+      @click="safeguardIsShow"
+    >
       <div class="cell_left">
         <div class="label">保障</div>
         <div class="content">
@@ -226,17 +230,21 @@ export default {
       return this.$store.state.sellingGoodsDetail.sellingGoodsData
     },
     serviceTag() {
-      const salesGoodsTags = this.$store.state.sellingGoodsDetail
-        .sellingGoodsData.salesGoodsTags
-      const serviceTag = salesGoodsTags.map((item) => {
-        if (item.tagType === 'PRO_SERVICE_TAG') {
-          return {
-            text: item.description,
-            title: item.tagName,
-            icon: 'sp-iconfont sp-iconfont-security2',
+      console.log('sellingGoodsDetail', this.$store.state.sellingGoodsDetail)
+      const salesGoodsTags =
+        this.$store.state.sellingGoodsDetail.sellingGoodsData.salesGoodsTags
+      let serviceTag = []
+      if (salesGoodsTags) {
+        serviceTag = salesGoodsTags.map((item) => {
+          if (item.tagType === 'PRO_SERVICE_TAG') {
+            return {
+              text: item.description,
+              title: item.tagName,
+              icon: 'sp-iconfont sp-iconfont-security2',
+            }
           }
-        }
-      })
+        })
+      }
       return serviceTag
     },
     // 优惠券列表
@@ -246,8 +254,8 @@ export default {
     //  服务商品的SKU集合
     goodsSubDetailsName() {
       //  基础商品
-      const salesGoodsSubVos = this.$store.state.sellingGoodsDetail
-        .sellingGoodsData.salesGoodsSubVos
+      const salesGoodsSubVos =
+        this.$store.state.sellingGoodsDetail.sellingGoodsData.salesGoodsSubVos
       // 找出服务商品
       const serviceGoods = salesGoodsSubVos.map((item) => {
         if (item.goodsType === 'PRO_CLASS_TYPE_SERVICE') {
@@ -284,8 +292,8 @@ export default {
     },
     // 计算优惠后的价格
     couponPreferential() {
-      const sellingGoodsData = this.$store.state.sellingGoodsDetail
-        .sellingGoodsData
+      const sellingGoodsData =
+        this.$store.state.sellingGoodsDetail.sellingGoodsData
       // 找出有效优惠券
       const couponList = sellingGoodsData.couponList.filter(
         (item) => item.couponStatus === 0 || item.couponStatus === 2
