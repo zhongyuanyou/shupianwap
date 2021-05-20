@@ -18,7 +18,7 @@ const goods = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/nk/goodslist/v1/get_jy_list.do',
+      url: CHIPS_WAP_BASE_URL + '/nk/goodslist/v2/get_jy_list.do',
     })
   },
   transactionList({ axios }, params) {
