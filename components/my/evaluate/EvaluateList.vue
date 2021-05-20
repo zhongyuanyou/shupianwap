@@ -8,7 +8,7 @@
           <div class="desc-content">{{ evaluateInfo.orderDesc || '' }}</div>
         </div>
       </div>
-      <template v-if="evaluateInfo.evaluateStatus === 1">
+      <template v-if="evaluateInfo.evaluateStatus === '1'">
         <div class="item-button" @click="linkWrite(evaluateInfo)">写评价</div>
       </template>
       <template v-else>
@@ -18,7 +18,7 @@
       </template>
       <div class="item-clear"></div>
     </div>
-    <div class="placeholder"></div>
+    <div v-if="!item.lastFlag" class="placeholder"></div>
   </div>
 </template>
 
