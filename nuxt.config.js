@@ -112,6 +112,8 @@ module.exports = {
     'quill/dist/quill.snow.css',
     'quill/dist/quill.bubble.css',
     'quill/dist/quill.core.css',
+    'vant/lib/index.css',
+    '@fe/sp-ui-mobile/lib/index.css',
   ],
   styleResources: {
     less: 'assets/styles/variables.less',
