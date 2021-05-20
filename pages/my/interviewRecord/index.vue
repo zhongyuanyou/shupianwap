@@ -70,6 +70,7 @@
                   <p>
                     面谈状态：<span
                       :class="item.inviteStatus === 0 ? 'face_talk' : ''"
+                      :disabled="!item.evaluateId && item.inviteStatus === 2"
                       >{{
                         item.inviteStatus === 0
                           ? '待面谈'
@@ -110,20 +111,37 @@
                 @click="cancelInterview(item.id)"
                 >取消面谈</sp-button
               >
+              <span v-else-if="item.inviteStatus === 3"
+                >您在{{ item.cancelTime }}已取消面谈</span
+              >
               <span
-                v-else-if="item.inviteStatus === 1"
+                v-else-if="
+                  item.inviteStatus !== 0 && item.evaluateInfoStatus === 1
+                "
                 style="color: #4974f5"
                 @click="goEvaluate(item)"
                 >去评价</span
               >
               <span
-                v-else-if="item.inviteStatus === 2"
+                v-else-if="
+                  item.inviteStatus !== 0 &&
+                  (item.evaluateInfoStatus === 2 ||
+                    item.evaluateInfoStatus === 3 ||
+                    item.evaluateInfoStatus === 4)
+                "
                 style="color: #4974f5"
                 @click="goEvaluateDetail(item)"
                 >查看评价</span
               >
-              <!-- <span v-else-if="item.inviteStatus === 3">您已取消面谈</span> -->
-              <span v-else>您在{{ item.confirmCompleteTime }}已取消面谈</span>
+              <span
+                v-else-if="
+                  item.inviteStatus !== 0 &&
+                  (!item.evaluateInfoStatus || item.evaluateInfoStatus === 5)
+                "
+                style="color: #4974f5"
+                :class="item.evaluateInfoStatus === '' ? 'set_grey' : ''"
+                >查看评价</span
+              >
             </div>
           </sp-cell>
         </sp-list>
@@ -183,53 +201,7 @@ export default {
   mixins: [imHandle],
   data() {
     return {
-      list: [
-        {
-          imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
-          inviterName: '李佳伦',
-          inviteTime: '2017-02-12',
-          inviteAddress: '成都市',
-          inviteType: false,
-          inviteStatus: 0,
-          confirmCompleteTime: '2018-02-03',
-        },
-        {
-          imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
-          inviterName: '李佳伦',
-          inviteTime: '2017-02-12',
-          inviteAddress: '成都市',
-          inviteType: false,
-          inviteStatus: 1,
-          confirmCompleteTime: '2018-02-03',
-        },
-        {
-          imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
-          inviterName: '李佳伦',
-          inviteTime: '2017-02-12',
-          inviteAddress: '成都市',
-          inviteType: false,
-          inviteStatus: 2,
-          confirmCompleteTime: '2018-02-03',
-        },
-        {
-          imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
-          inviterName: '李佳伦',
-          inviteTime: '2017-02-12',
-          inviteAddress: '成都市',
-          inviteType: false,
-          inviteStatus: 3,
-          confirmCompleteTime: '2018-02-03',
-        },
-        {
-          imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/images/bmp98nyygaw0000.png',
-          inviterName: '李佳伦',
-          inviteTime: '2017-02-12',
-          inviteAddress: '成都市',
-          inviteType: false,
-          inviteStatus: 4,
-          confirmCompleteTime: '2018-02-03',
-        },
-      ],
+      list: [],
       loading: false,
       finished: false,
       refreshing: false,
@@ -264,7 +236,7 @@ export default {
         }
       })
     }
-    // this.onLoad(true)
+    this.onLoad(true)
     // this.getInterviewList()
   },
   methods: {
@@ -378,6 +350,7 @@ export default {
         limit: this.limit,
         page: 1,
         userId: this.userId,
+        id: this.interId,
       }
       const res = await this.$axios.get(interviewApi.list, { params })
       if (res.code === 200) {
@@ -385,8 +358,14 @@ export default {
       }
     },
     handleClick(item) {
-      // 点击面谈记录
-      this.$router.push(`/my/interviewRecord/confirm/${item.id}`)
+      // 点击面谈记录`/my/interviewRecord/detail'
+      this.$router.push({
+        path: '/my/interviewRecord/detail',
+        query: {
+          id: item.id,
+          avatar: item.imgUrl,
+        },
+      })
     },
     handleIm(item) {
       // 调起IM
@@ -408,7 +387,7 @@ export default {
         query: {
           plannerAvatar: item.imgUrl,
           plannerName: item.inviterName,
-          infoId: item.infoId,
+          infoId: item.inviterId,
         },
       })
     },
@@ -418,7 +397,7 @@ export default {
         query: {
           plannerAvatar: item.imgUrl,
           plannerName: item.inviterName,
-          infoId: item.infoId,
+          infoId: item.inviterId,
         },
       })
     },
@@ -433,7 +412,9 @@ export default {
 .face_talk {
   color: #f86e21 !important;
 }
-
+.set_grey {
+  color: #999999 !important;
+}
 .interview {
   height: 100%;
   overflow-y: scroll;

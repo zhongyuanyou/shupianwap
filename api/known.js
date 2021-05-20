@@ -1,12 +1,13 @@
 'use strict'
 
 import { CHIPS_WAP_BASE_URL } from '../config/constant'
-// const CHIPS_WAP_BASE_URL = 'http://172.16.132.255:7001/service'
+// const CHIPS_WAP_BASE_URL = 'http://172.16.133.115:7001/service'
 const knownApi = {
   comments: {
     list: `${CHIPS_WAP_BASE_URL}/nk/known_comments/v1/list.do`, // 评论列表
     publish: `${CHIPS_WAP_BASE_URL}/nk/known_comments/v1/publish.do`, // 发布评论
     like: `${CHIPS_WAP_BASE_URL}/nk/known_comments/v1/like.do`, // 点赞评论
+    delete: `${CHIPS_WAP_BASE_URL}/nk/known_comments/v1/delete.do`, // 删除评论
   },
   home: {
     list: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/index.do`, // 文章、问题、回答列表
