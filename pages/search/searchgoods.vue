@@ -167,7 +167,7 @@ export default {
     this.height =
       this.$refs.search.$el.offsetHeight +
       this.$refs.tabs.$el.offsetHeight +
-      115
+      110
     // 当前页面公共属性注册
     // const param = {
     //   platform_type: 'wap端', // 平台类型：App，H5，Web
