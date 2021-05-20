@@ -338,6 +338,8 @@ export default {
       } else {
         this.myPlate = this.tabs
       }
+      const val = this.$route.query.params
+      this.skip(val)
     },
     skip(val) {
       this.tabs.forEach((item, index) => {

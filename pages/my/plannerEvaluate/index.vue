@@ -53,32 +53,14 @@ export default {
     EvaluateStar,
     [CenterPopup.name]: CenterPopup,
   },
-  // async asyncData({ store, $axios }) {
-  //   try {
-  //     let homeData = {}
-  //     const params = {
-  //       platformCode: store.state.app.isInApp
-  //         ? store.state.app.appInfo.platformCode
-  //         : 'COMDIC_PLATFORM_CRISPS',
-  //       terminalCode: store.state.app.isInApp
-  //         ? 'COMDIC_TERMINAL_APP'
-  //         : 'COMDIC_TERMINAL_WAP',
-  //     }
-  //     const res = await $axios.get(foundApi.initRequest, { params })
-  //     if (res.code === 200) {
-  //       homeData = res.data || {}
-  //     }
-  //     return {
-  //       homeData,
-  //     }
-  //   } catch (err) {}
-  // },
+
   data() {
     return {
       infoId: '',
       avatar: '',
       plannerName: '',
       showPop: false,
+      plannerId: '',
       Field: {
         type: 'functional',
         title: '温馨提示',
@@ -94,10 +76,10 @@ export default {
   },
   methods: {
     init() {
-      this.avatar = this.$route.query.plannerAvatar
-      this.plannerName = this.$route.query.plannerName
+      this.avatar = this.$route.query.plannerAvatar || ''
+      this.plannerName = this.$route.query.plannerName || ''
+      this.plannerId = this.$route.query.plannerId || ''
       this.infoId = this.$route.query.infoId
-      console.log(' this.infoId', this.infoId)
     },
     back() {
       console.log('back')
