@@ -383,11 +383,9 @@ export default {
       } catch (e) {
         const _this = this
         this.$xToast.error('查询信息失败')
-        /*
         setTimeout(() => {
-          _this.$router.push({ path: '/my/evaluate' })
+          _this.$router.replace({ path: '/my/evaluate' })
         }, 2000)
-        */
       }
     },
     async addEvaluateApi() {
@@ -411,7 +409,7 @@ export default {
           throw new Error('评价失败')
         }
         this.loading = false
-        this.$router.push({ path: '/my/evaluate/success' })
+        this.$router.replace({ path: '/my/evaluate/success' })
       } catch (e) {
         this.loading = false
         this.$xToast.error('评价失败')
