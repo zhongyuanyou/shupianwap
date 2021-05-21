@@ -66,7 +66,7 @@
     <div class="content">
       {{ evaluateContent }}
     </div>
-    <div class="tips">
+    <div v-if="evaluateTagList.length > 0" class="tips">
       <my-icon
         class="tips-icon"
         name="biaoqian"
@@ -95,6 +95,7 @@ export default {
   },
   data() {
     return {
+      evaluateTime: '',
       avatar: '',
       avatarSize: '0.8rem',
       name: '规划师',
@@ -109,7 +110,6 @@ export default {
       evaluateContent: '',
       evaluateTagList: [],
       evaluateDimensionList: [],
-      evaluateTime: '',
       serverScore: 0, // 服务分
       Field: {
         type: 'functional',
@@ -146,6 +146,7 @@ export default {
           this.starLevel = res.data.serverScore
           this.setStars()
         }
+        this.evaluateTime = res.data.evaluateTime
       } else {
         this.$xToast.show({ message: '获取信息失败' })
       }
