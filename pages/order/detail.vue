@@ -122,7 +122,7 @@
             ></my-icon>
           </span>
           <span
-            v-if="orderData.evaluateStatus == 2"
+            v-if="orderData.evaluateStatus == 3"
             class="right"
             @click="navToUrl(2)"
             >查看评价
