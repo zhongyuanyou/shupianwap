@@ -16,7 +16,7 @@
         </span>
         <img :src="item" :z-index="index" alt="" @click="preImg(index)" />
       </div>
-      <div class="img-item choose-btn">
+      <div v-if="imgNum > imgList.length" class="img-item choose-btn">
         <div v-show="!loading">
           <img
             src="https://cdn.shupian.cn/sp-pt/wap/3wy2rwklmh0000.png"
@@ -33,7 +33,7 @@
         <div v-show="loading" class="loading-area">上传中...</div>
       </div>
     </div>
-    <div v-show="showPre" class="mask" @click="showPre = false">
+    <div v-show="showPre" class="mask-area" @click="showPre = false">
       <img :src="selectImg" :preview-src-list="imgList" alt="" />
     </div>
   </div>
@@ -48,10 +48,19 @@ export default {
   props: {
     imgNum: {
       type: Number,
-      default: 3,
+      default: 1,
+    },
+    filterType: {
+      type: Number, // 滤镜类型 1.白茶；2 白皙；3.初夏；4.东京；5.告白；6.暖阳；7.蔷薇；8.清澄；9.清透； 10.甜薄荷；11.默认；12.心动；
+      default: 13, // 13.哑灰；14.樱桃布丁；15.自然；16.清逸；17.黑白；18.水果；19.爱情；20.冬日；21.相片；22.夏日；23.香氛；24.魅惑；25.悸动；26.沙滩；27.街拍；28.甜美；29.初吻；30.午后。
+    },
+    filterDegree: {
+      // 滤镜效果，取值[0,100]，0表示无效果，100表示满滤镜效果。
+      type: Number,
+      default: 100,
     },
     imgList: {
-      type: [Array, String],
+      type: Array,
       default() {
         return []
       },
@@ -63,11 +72,12 @@ export default {
       inputUrl: '',
       startImgIndex: null,
       imgBase64: '',
-      FilterDegree: 100,
-      FilterType: 13,
       selectImg: '',
       showPre: false,
       loading: false,
+      fileSize: '',
+      fileName: '',
+      isFilter: true,
     }
   },
   methods: {
@@ -75,49 +85,71 @@ export default {
       this.showPre = true
       this.selectImg = this.imgList[index]
     },
-    clickBtn() {
-      console.log('fileInput', this.$refs.fileInput)
-      this.$refs.fileInput.click()
-    },
     uploadPhoto(e) {
       const that = this
       // 利用fileReader对象获取file
       const file = e.target.files[0]
-      const filesize = file.size
-      this.filename = file.name
-      if (filesize > 2101440) {
-        // 图片大于2MB
-        this.$message({
-          message: '图片过大，请使用其它方式上传！',
-          type: 'fail',
-        })
-        return
-      }
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = function (e) {
-        // 读取到的图片base64 数据编码 将此编码字符串传给后台即可
-        that.imgBase64 = e.target.result
-        that.postData()
-      }
+      if (!file) return
+      const formData = new FormData()
+      console.log('file', file)
+      formData.append('file', file)
+      formData.append('filterType', this.filterType)
+      formData.append('filterDegree', this.filterDegree)
+      formData.append('isFilter', this.isFilter)
+      that.postData(formData)
+      // this.fileSize = file.size
+      // this.fileName = file.name
+      // if (this.fileSize > 10000000) {
+      //   this.$emit('beforeUpload', {
+      //     code: 500,
+      //     message: '图片体积过大',
+      //     data: {
+      //       fileSize: file.size,
+      //       fileName: file.name,
+      //     },
+      //   })
+      //   return
+      // }
+      // const reader = new FileReader()
+      // reader.readAsDataURL(file)
+      // reader.onload = function (e) {
+      //   // 读取到的图片base64 数据编码 将此编码字符串传给后台即可
+      //   that.imgBase64 = e.target.result
+      //   that.postData()
+      // }
     },
-    postData() {
+    postData(formData) {
       this.loading = true
       this.$axios
-        .post('http://127.0.0.1:10007/api/tenCentImg/v1/img_filter.do', {
-          filename: this.filename,
-          filesize: this.filesize,
-          imgBase64: this.imgBase64,
-          FilterDegree: this.FilterDegree,
-          FilterType: this.FilterType,
-        })
+        .post(
+          'http://127.0.0.1:10007/api/tenCentImg/v1/img_filter.do',
+          formData
+        )
         .then((res) => {
           this.loading = false
-          this.imgList.push(res.data.url)
+          if (res.code === 200) {
+            this.imgList.push(res.data.url)
+            this.$emit('afterUpload', {
+              code: 200,
+              data: {
+                currentImgUrl: res.data.url,
+                imgList: this.imgList,
+              },
+              message: '处理成功',
+            })
+          } else {
+            this.$emit('afterUpload', {
+              code: 500,
+              message: res.message || '处理失败',
+            })
+          }
         })
         .catch((err) => {
-          console.log('err', err)
           this.loading = false
+          this.$emit('afterUpload', {
+            code: 500,
+            message: err.message || '处理失败',
+          })
         })
     },
     dltImg(index) {
@@ -137,14 +169,14 @@ input[type='file' i]::-webkit-file-upload-button {
 }
 </style>
 <style lang="less" scoped>
-.mask {
+.mask-area {
   position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
   height: 100%;
+  padding: 40px 0;
   background: rgba(0, 0, 0, 1);
-  padding: 10px;
   display: flex;
   justify-content: space-around;
   align-items: center;

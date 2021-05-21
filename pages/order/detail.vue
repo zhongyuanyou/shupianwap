@@ -122,7 +122,7 @@
             ></my-icon>
           </span>
           <span
-            v-if="orderData.evaluateStatus == 2"
+            v-if="orderData.evaluateStatus == 3"
             class="right"
             @click="navToUrl(2)"
             >查看评价
@@ -381,7 +381,7 @@ export default {
       hasData: false,
       orderId: '',
       cusOrderId: '',
-      cusOrderStatusType: null, // 1为未付款 2进行中3已完成4已取消
+      cusOrderStatusType: null, // 1为未付款 2进行中 3已完成 4已取消
       orderData: {
         orderStatus: '',
         orderList: [],
@@ -460,6 +460,7 @@ export default {
           this.cusOrderStatusType = orderUtils.checkCusOrderStatus(
             this.orderData.cusOrderStatusNo
           )
+          console.log('cusOrderStatusType',this.cusOrderStatusType)
           if (
             this.orderData.orderSplitAndCusVo.cusOrderStatusNo !==
               'ORDER_CUS_STATUS_CANCELLED' &&
@@ -535,11 +536,14 @@ export default {
     },
     navToUrl(type) {
       const query = {
-        evaluateCenterId: this.orderData.orderSplitAndCusVo.evaluateCenterId, // 评价id
-        signerId: this.orderData.orderSplitAndCusVo.signerId, // 签单人员id
+        infoId:
+          this.orderData.evaluateCenterId ||
+          this.orderData.orderSplitAndCusVo.evaluateCenterId, // 评价id
+        plannerId: this.orderData.orderSplitAndCusVo.signerId, // 签单人员id
         signerNo: this.orderData.orderSplitAndCusVo.signerNo, // 签单人员编号
-        signerSubjectUserId: this.orderData.orderSplitAndCusVo
-          .signerSubjectUserId, // 签单人商户用户id
+        plannerName: this.orderData.orderSplitAndCusVo.signerName,
+        signerSubjectUserId:
+          this.orderData.orderSplitAndCusVo.signerSubjectUserId, // 签单人商户用户id
         orderId: this.orderData.id,
         cusOrderId: this.orderData.cusOrderId,
       }

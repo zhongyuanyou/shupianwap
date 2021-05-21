@@ -86,9 +86,6 @@
 import { Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import { evaluateApi } from '@/api'
-// mock data
-const avatar = 'https://dchipscommon.dgg188.cn/img/bg.1e53fbc6.png'
-const name = '吴月茹'
 
 export default {
   name: 'EvaluateDetail',
@@ -98,9 +95,9 @@ export default {
   },
   data() {
     return {
-      avatar,
+      avatar: '',
       avatarSize: '0.8rem',
-      name,
+      name: '规划师',
       starLevel: 1, // 星级
       stars: [
         { flag: false },
@@ -124,15 +121,15 @@ export default {
   },
   mounted() {
     this.init()
+    this.getPlannerInfo()
     this.setStars()
   },
   methods: {
     async init() {
       const params = {
-        // infoId: this.$route.query.infoId,
-        // userId: this.$route.query.userId,
-        // planerId: this.$route.query.planerId,
-        infoId: '1118738721594990083',
+        infoId: this.$route.query.infoId,
+        userId: this.$route.query.userId,
+        planerId: this.$route.query.planerId,
       }
       const res = await this.$axios.get(evaluateApi.detail, { params })
       if (res.code === 200) {
@@ -151,6 +148,15 @@ export default {
           item.flag = true
         }
       })
+    },
+    async getPlannerInfo() {
+      const params = {
+        plannerId: this.$route.query.plannerId,
+      }
+      const res = await this.$axios.get(evaluateApi.getAvatar, { params })
+      if (res.code === 200) {
+        this.avatar = res.data.img
+      }
     },
   },
 }

@@ -404,11 +404,11 @@ export default {
         this.initItemsStar()
         this.initTips()
       } catch (e) {
-        const _this = this
-        this.$xToast.error('查询信息失败')
-        setTimeout(() => {
-          _this.$router.push({ path: '/my/evaluate' })
-        }, 2000)
+        // const _this = this
+        // this.$xToast.error('查询信息失败')
+        // setTimeout(() => {
+        //   _this.$router.push({ path: '/my/evaluate' })
+        // }, 2000)
       }
     },
     async addEvaluateApi() {

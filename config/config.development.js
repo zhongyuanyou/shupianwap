@@ -16,4 +16,16 @@ module.exports = {
   SYS_CODE: 'spc-wap',
   // 网关签名密钥
   SECRET: '1624afea172ca5ed25a5ac6722b7d232',
+  // OSS资源路径(使用框架组上传)
+  deleteUrl:
+    'https://dspmicrouag.shupian.cn/tac-external-platform-server/oss/deleteSingle',
+  callBackUrl:
+    'https://dspmicrouag.shupian.cn/tac-external-platform-server/oss/callback',
+  stsUrl: 'https://dspmicrouag.shupian.cn/tac-external-platform-server/oss/sts',
+  listUrl:
+    'https://dspmicrouag.shupian.cn/tac-external-platform-server/oss/find',
+  fileUrl:
+    'https://dspmicrouag.shupian.cn/tac-external-platform-server/oss/find',
+  mutlefindUrl:
+    'https://dspmicrouag.shupian.cn/tac-external-platform-server/oss/mutlefind',
 }

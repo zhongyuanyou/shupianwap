@@ -221,7 +221,7 @@ export default {
     this.tabs.forEach((item) => {
       this.isReq[item.code] = false
     })
-    this.typeText = this.tabs[0].name + '交易'
+    this.typeText = this.tabs && this.tabs[0] && this.tabs[0].name + '交易'
     // console.log('jygood', this.typeCodeIndex)
     this.activeTabIndex = this.typeCodeIndex
     this.currentTabJyCode = this.tabs[this.typeCodeIndex].code
