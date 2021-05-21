@@ -28,36 +28,12 @@
             ></my-icon>
           </template>
           <div class="score-desc">
-            {{
-              starLevel === 1
-                ? '非常差'
-                : starLevel === 2
-                ? '差'
-                : starLevel === 3
-                ? '一般'
-                : starLevel === 4
-                ? '满意'
-                : starLevel === 5
-                ? '超赞'
-                : ''
-            }}
+            {{ starLevel | filterLevel }}
           </div>
         </div>
         <div class="score-sub">
           <span v-for="(item, index) in evaluateDimensionList" :key="index"
-            >{{ item.name }}:{{
-              item.fraction === 1
-                ? '1星'
-                : item.fraction === 2
-                ? '2星'
-                : item.fraction === 3
-                ? '3星'
-                : item.fraction === 4
-                ? '4星'
-                : item.fraction === 5
-                ? '5星'
-                : ''
-            }}</span
+            >{{ item.name }}:{{ item.fraction | filterFraction }}</span
           >
         </div>
       </div>
@@ -93,6 +69,19 @@ export default {
     Header,
     [Image.name]: Image,
   },
+  filters: {
+    filterLevel(val) {
+      const txts = ['', '非常差', '差', '一般', '好', '非常好']
+      return txts[val] || ''
+    },
+    filterFraction(val) {
+      if (val) {
+        return `${val}星`
+      } else {
+        return ''
+      }
+    },
+  },
   data() {
     return {
       avatar: '',
@@ -122,10 +111,10 @@ export default {
   },
   mounted() {
     this.init()
+    this.name = this.$route.query.plannerName
     if (this.$route.query.plannerId) {
       this.getPlannerInfo()
     } else {
-      this.name = this.$route.query.plannerName
       this.avatar = this.$route.query.plannerAvatar
     }
   },
