@@ -78,7 +78,6 @@ export default {
     }
   },
   mounted() {
-    this.getUserInfo()
     this.timeer = setInterval(() => {
       this.getUserInfo()
     }, 2000)
