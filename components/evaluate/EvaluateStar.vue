@@ -58,16 +58,19 @@
       />
     </div>
     <div v-if="uploadImgFlag" class="upload">
-      <sp-uploader
-        v-model="uploader"
+      <spMobileUpload
+        ref="SpUpLoad"
+        upload-icon="plus"
+        file-id="12312412414"
+        :list-url="CONFIG.listUrl"
+        :delete-url="CONFIG.deleteUrl"
+        :call-back-url="CONFIG.callBackUrl"
         :max-count="3"
         :max-size="5 * 1024 * 1024"
-        multiple
-        upload-icon="plus"
-        :after-read="afterRead"
-        :before-delete="beforeDelete"
+        @onSuccess="success"
+        @onDeleted="deleted"
         @oversize="onOversize"
-      ></sp-uploader>
+      />
     </div>
     <div class="placeholder"></div>
     <sp-bottombar safe-area-inset-bottom>
@@ -97,8 +100,9 @@ import {
   BottombarButton,
 } from '@chipspc/vant-dgg'
 import utils from '@/utils/changeBusinessData'
-import { evaluateApi, ossApi } from '@/api'
+import { evaluateApi } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import config from '@/config'
 
 export default {
   name: 'EvaluateStar',
@@ -183,9 +187,10 @@ export default {
       tips: [],
       evaluateContent: '',
       uploader: [],
-      images: [], // 图片集合
       evaluateDimensionList: [], // 评价维度列表
       evaluateFileId: '',
+      CONFIG: config,
+      imgLength: 0, // 图片数量
     }
   },
   computed: {
@@ -207,7 +212,7 @@ export default {
         return false
       }
       // check 图片
-      if (this.uploadImgFlag && this.images.length === 0) {
+      if (this.uploadImgFlag && this.imgLength === 0) {
         return false
       }
       return true
@@ -323,33 +328,6 @@ export default {
     onOversize() {
       this.$xToast.error('文件大小不能超过5M')
     },
-    afterRead(file) {
-      const imgs = this.images
-      const formData = new FormData()
-      formData.append(this.evaluateFileId, 'sp-pt/wap/images')
-      formData.append('file', file.file)
-      this.loading = true
-      try {
-        this.$axios.post(ossApi.add, formData).then((res) => {
-          if (res.code !== 200) {
-            throw new Error('图片上传失败')
-          }
-          imgs.push(res.data.url)
-          this.images = imgs
-          this.loading = false
-          this.$xToast.success('图片上传成功!')
-        })
-      } catch (err) {
-        this.loading = false
-        this.$xToast.error('图片上传失败!')
-      }
-    },
-    beforeDelete(file, detail) {
-      // 重置uploader 和 images 数组
-      this.images.splice(detail.index, 1)
-      this.uploader.splice(detail.index, 1)
-      this.$xToast.success('图片删除成功!')
-    },
     checkSubmit() {
       // check 服务评分
       if (this.totalStarLevel === 0) {
@@ -371,7 +349,7 @@ export default {
         return false
       }
       // check 图片
-      if (this.uploadImgFlag && this.images.length === 0) {
+      if (this.uploadImgFlag && this.imgLength === 0) {
         this.$xToast.error('请上传图片')
         return false
       }
@@ -389,7 +367,6 @@ export default {
         // 提交评价前 查询前置接口
         const params = {
           infoId: this.infoId,
-          // infoId: '1118738721594990083',
         }
         const { code, data } = await this.$axios.get(evaluateApi.detail, {
           params,
@@ -404,11 +381,13 @@ export default {
         this.initItemsStar()
         this.initTips()
       } catch (e) {
-        // const _this = this
-        // this.$xToast.error('查询信息失败')
-        // setTimeout(() => {
-        //   _this.$router.push({ path: '/my/evaluate' })
-        // }, 2000)
+        const _this = this
+        this.$xToast.error('查询信息失败')
+        /*
+        setTimeout(() => {
+          _this.$router.push({ path: '/my/evaluate' })
+        }, 2000)
+        */
       }
     },
     async addEvaluateApi() {
@@ -458,6 +437,12 @@ export default {
     clkTip(item) {
       item.flag = !item.flag
       this.tips = this.tips.slice()
+    },
+    success(list) {
+      this.imgLength = this.$refs.SpUpLoad.getFilList.length
+    },
+    deleted(list) {
+      this.imgLength = this.$refs.SpUpLoad.getFilList.length
     },
   },
 }
@@ -567,42 +552,43 @@ export default {
   .upload {
     margin-top: 65px;
     padding: 0 40px;
-    ::v-deep.sp-uploader__wrapper {
-      .sp-uploader__preview {
+
+    ::v-deep.van-uploader__wrapper {
+      .van-uploader__preview {
         margin: 0 32px 0 0;
-        .sp-uploader__preview-image {
+        .van-uploader__preview-image {
           width: 143px;
           height: 143px;
           background: #d8d8d8;
           border-radius: 8px;
         }
       }
-      .sp-uploader__upload {
+      .van-uploader__upload {
         width: 143px;
         height: 143px;
         background: #ffffff;
         border-radius: 8px;
         border: 1px solid #cdcdcd;
         margin: 0;
-        .sp-icon-plus {
+        .van-icon-plus {
           font: 40px;
           color: #999999;
         }
       }
-      .sp-uploader__preview-delete {
+      .van-uploader__preview-delete {
         width: 32px;
         height: 32px;
         top: -16px;
         right: -16px;
         background-color: rgba(0, 0, 0, 0.6);
         border-radius: 50%;
-        .sp-icon-cross {
+        .van-icon-cross {
           top: -8px;
           right: -8px;
         }
       }
     }
-    ::v-deep.sp-uploader__preview-delete-icon {
+    ::v-deep.van-uploader__preview-delete-icon {
       font-size: 48px;
     }
   }
