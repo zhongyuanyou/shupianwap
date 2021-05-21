@@ -61,7 +61,7 @@
       <spMobileUpload
         ref="SpUpLoad"
         upload-icon="plus"
-        file-id="12312412414"
+        :file-id="evaluateFileId"
         :list-url="CONFIG.listUrl"
         :delete-url="CONFIG.deleteUrl"
         :call-back-url="CONFIG.callBackUrl"
@@ -399,6 +399,7 @@ export default {
           serverScore: this.totalStarLevel + '',
           evaluateDimensionList: this.evaluateDimensionList,
           evaluateTagList: this.tips,
+          sourceSyscode: this.CONFIG.SYS_CODE,
         }
         // 如果有图片,则添加图片参数
         if (this.uploadImgFlag) {
