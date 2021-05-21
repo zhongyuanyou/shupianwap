@@ -14,7 +14,7 @@
       <div class="desc">
         <div class="name">
           <div class="name-name">{{ name }}</div>
-          <div class="name-time">2020/09/19 14:00</div>
+          <div class="name-time">{{ evaluateTime }}</div>
         </div>
         <div class="score">
           <div class="score-tile">服务评分</div>
@@ -46,15 +46,15 @@
         <div class="score-sub">
           <span v-for="(item, index) in evaluateDimensionList" :key="index"
             >{{ item.name }}:{{
-              item.fraction === '2'
+              item.fraction === 1
                 ? '1星'
-                : item.fraction === '4'
+                : item.fraction === 2
                 ? '2星'
-                : item.fraction === '6'
+                : item.fraction === 3
                 ? '3星'
-                : item.fraction === '8'
+                : item.fraction === 4
                 ? '4星'
-                : item.fraction === '10'
+                : item.fraction === 5
                 ? '5星'
                 : ''
             }}</span
@@ -109,6 +109,7 @@ export default {
       evaluateContent: '',
       evaluateTagList: [],
       evaluateDimensionList: [],
+      evaluateTime: '',
       serverScore: 0, // 服务分
       Field: {
         type: 'functional',
@@ -121,14 +122,18 @@ export default {
   },
   mounted() {
     this.init()
-    this.getPlannerInfo()
-    this.setStars()
+    if (this.$route.query.plannerId) {
+      this.getPlannerInfo()
+    } else {
+      this.name = this.$route.query.plannerName
+      this.avatar = this.$route.query.plannerAvatar
+    }
   },
   methods: {
     async init() {
       const params = {
         infoId: this.$route.query.infoId,
-        userId: this.$route.query.userId,
+        userId: this.$store.state.user.userId,
         planerId: this.$route.query.planerId,
       }
       const res = await this.$axios.get(evaluateApi.detail, { params })
@@ -137,7 +142,12 @@ export default {
         this.evaluateContent = res.data.evaluateContent
         this.evaluateTagList = res.data.evaluateTagList
         this.evaluateDimensionList = res.data.evaluateDimensionList
-        // const serverScore = res.data.serverScore
+        if (res.data.serverScore) {
+          this.starLevel = res.data.serverScore
+          this.setStars()
+        }
+      } else {
+        this.$xToast.show({ message: '获取信息失败' })
       }
     },
     setStars() {
@@ -156,6 +166,8 @@ export default {
       const res = await this.$axios.get(evaluateApi.getAvatar, { params })
       if (res.code === 200) {
         this.avatar = res.data.img
+      } else {
+        this.$xToast.show({ message: '获取信息失败' })
       }
     },
   },

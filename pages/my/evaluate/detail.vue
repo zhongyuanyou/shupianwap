@@ -48,15 +48,15 @@
     <div class="score-sub">
       <span v-for="(item, index) in evaluateDimensionList" :key="index"
         >{{ item.name }}:{{
-          item.fraction === '2'
+          item.fraction === 1
             ? '1星'
-            : item.fraction === '4'
+            : item.fraction === 2
             ? '2星'
-            : item.fraction === '6'
+            : item.fraction === 3
             ? '3星'
-            : item.fraction === '8'
+            : item.fraction === 4
             ? '4星'
-            : item.fraction === '10'
+            : item.fraction === 5
             ? '5星'
             : ''
         }}</span
@@ -68,28 +68,12 @@
     </div>
     <div class="imgs">
       <sp-image
+        v-for="(item, index) in evaluateImgs"
+        :key="index"
         square
         class="img"
         fit="cover"
-        :src="avatar"
-        :width="size"
-        :height="size"
-        radius="8px"
-      />
-      <sp-image
-        square
-        class="img"
-        fit="cover"
-        :src="avatar"
-        :width="size"
-        :height="size"
-        radius="8px"
-      />
-      <sp-image
-        square
-        class="img"
-        fit="cover"
-        :src="avatar"
+        :src="item"
         :width="size"
         :height="size"
         radius="8px"
@@ -125,6 +109,7 @@ export default {
   },
   data() {
     return {
+      evaluateImgs: [],
       avatar: 'https://dchipscommon.dgg188.cn/img/bg.1e53fbc6.png',
       imgs: '',
       orderDesc:
@@ -159,8 +144,8 @@ export default {
     },
     async getEvaluateDetail() {
       const params = {
-        // infoId: this.$route.query.infoId,
-        infoId: '1118738721594990083',
+        infoId: this.$route.query.infoId,
+        userId: this.$store.state.user.userId,
       }
       const res = await this.$axios.get(evaluateApi.detail, { params })
       if (res.code === 200) {
@@ -168,7 +153,13 @@ export default {
         this.evaluateContent = res.data.evaluateContent
         this.evaluateTagList = res.data.evaluateTagList
         this.evaluateDimensionList = res.data.evaluateDimensionList
-        // const serverScore = res.data.serverScore
+        this.evaluateImgs = res.data.evaluateImgs || []
+        if (res.data.serverScore) {
+          this.starLevel = res.data.serverScore
+          this.setStars()
+        }
+      } else {
+        this.$xToast.show({ message: '获取信息失败' })
       }
     },
     initData() {

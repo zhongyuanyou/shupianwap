@@ -67,7 +67,7 @@ export default {
         title: '温馨提示',
         description: '差一点就评价完了，是否确认退出？',
         confirmButtonText: '继续评价',
-        cancelButtonText: '操作',
+        cancelButtonText: '退出',
       },
     }
   },
@@ -77,10 +77,10 @@ export default {
   },
   methods: {
     init() {
-      if (this.$route.query.plannerAvatar) {
-        this.avatar = this.$route.query.plannerAvatar
-      } else {
+      if (this.$route.query.plannerId) {
         this.getPlannerInfo()
+      } else {
+        this.avatar = this.$route.query.plannerAvatar
       }
       this.plannerName = this.$route.query.plannerName || ''
       this.plannerId = this.$route.query.plannerId || ''
