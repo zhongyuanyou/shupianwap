@@ -96,7 +96,11 @@
           @click="goEvaluate(info)"
           >进行评价</sp-button
         >
-        <div v-if="info.inviteStatus !== 0" class="status">
+
+        <div
+          v-if="info.inviteStatus !== 0 && info.evaluateInfoStatus !== 1"
+          class="status"
+        >
           {{
             info.inviteStatus === 1
               ? '已面谈'
