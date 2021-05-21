@@ -3,31 +3,60 @@
     <div @click="toDetail">
       <p class="order-no-area">
         <span class="orderNo"> 订单编号: {{ orderData.orderNo }} </span>
-        <span
-          v-if="
-            orderData.orderStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED'
-          "
-          class="order-status status3"
-          >{{ orderData.statusName }}</span
-        >
-        <span
-          v-else-if="orderData.orderStatusNo === 'ORDER_CUS_STATUS_UNPAID'"
-          class="order-status status2"
-          >待支付</span
-        >
-        <span
-          v-else
-          class="order-status"
-          :class="
-            orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_CANCELLED' ||
-            orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_COMPLETED'
-              ? 'status1'
-              : orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_UNPAID'
-              ? 'status2'
-              : 'status3'
-          "
-          >{{ orderData.statusName }}</span
-        >
+        <span v-if="selectedOrderStatus">
+          <span
+            v-if="
+              orderData.orderStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED'
+            "
+            class="order-status status3"
+            >{{ orderData.statusName }}</span
+          >
+          <span
+            v-else-if="orderData.orderStatusNo === 'ORDER_CUS_STATUS_UNPAID'"
+            class="order-status status2"
+            >待支付</span
+          >
+          <span
+            v-else
+            class="order-status"
+            :class="
+              selectedOrderStatus === 'ORDER_CUS_STATUS_CANCELLED' ||
+              selectedOrderStatus === 'ORDER_CUS_STATUS_COMPLETED'
+                ? 'status1'
+                : selectedOrderStatus === 'ORDER_CUS_STATUS_UNPAID'
+                ? 'status2'
+                : 'status3'
+            "
+            >{{ orderData.statusName }}</span
+          >
+        </span>
+        <span v-else>
+          <span
+            v-if="
+              orderData.orderStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED'
+            "
+            class="order-status status3"
+            >{{ orderData.statusName }}</span
+          >
+          <span
+            v-else-if="orderData.orderStatusNo === 'ORDER_CUS_STATUS_UNPAID'"
+            class="order-status status2"
+            >待支付</span
+          >
+          <span
+            v-else
+            class="order-status"
+            :class="
+              orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_CANCELLED' ||
+              orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_COMPLETED'
+                ? 'status1'
+                : orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_UNPAID'
+                ? 'status2'
+                : 'status3'
+            "
+            >{{ orderData.statusName }}</span
+          >
+        </span>
       </p>
       <div
         v-for="(item, index) in orderData.orderSkuEsList ||

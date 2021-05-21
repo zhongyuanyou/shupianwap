@@ -443,9 +443,6 @@ export default {
             ? res.data.orderSplitAndCusVo
             : res.orderSplitAndCusVo
           this.orderData = Object.assign(cusDetail, res.data || res)
-          this.orderData.statusName = this.getStatusName(
-            this.orderData.orderStatusNo
-          )
           if (
             this.orderData.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
             this.orderData.payStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
@@ -460,7 +457,13 @@ export default {
           this.cusOrderStatusType = orderUtils.checkCusOrderStatus(
             this.orderData.cusOrderStatusNo
           )
-          console.log('cusOrderStatusType',this.cusOrderStatusType)
+          if (this.cusOrderStatusType === 3) {
+            this.orderData.statusName = '已完成'
+          } else {
+            this.orderData.statusName = this.getStatusName(
+              this.orderData.orderStatusNo
+            )
+          }
           if (
             this.orderData.orderSplitAndCusVo.cusOrderStatusNo !==
               'ORDER_CUS_STATUS_CANCELLED' &&
