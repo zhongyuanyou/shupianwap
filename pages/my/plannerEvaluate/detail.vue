@@ -122,7 +122,12 @@ export default {
   },
   mounted() {
     this.init()
-    this.getPlannerInfo()
+    if (this.$route.query.plannerId) {
+      this.getPlannerInfo()
+    } else {
+      this.name = this.$route.query.plannerName
+      this.avatar = this.$route.query.plannerAvatar
+    }
   },
   methods: {
     async init() {

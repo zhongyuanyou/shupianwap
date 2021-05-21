@@ -387,7 +387,7 @@ export default {
         query: {
           plannerAvatar: item.imgUrl,
           plannerName: item.inviterName,
-          infoId: item.inviterId,
+          infoId: item.infoId,
         },
       })
     },

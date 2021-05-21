@@ -77,10 +77,10 @@ export default {
   },
   methods: {
     init() {
-      if (this.$route.query.plannerAvatar) {
-        this.avatar = this.$route.query.plannerAvatar
-      } else {
+      if (this.$route.query.plannerId) {
         this.getPlannerInfo()
+      } else {
+        this.avatar = this.$route.query.plannerAvatar
       }
       this.plannerName = this.$route.query.plannerName || ''
       this.plannerId = this.$route.query.plannerId || ''
