@@ -67,7 +67,7 @@ export default {
         title: '温馨提示',
         description: '差一点就评价完了，是否确认退出？',
         confirmButtonText: '继续评价',
-        cancelButtonText: '操作',
+        cancelButtonText: '退出',
       },
     }
   },

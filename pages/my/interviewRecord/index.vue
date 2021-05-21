@@ -140,7 +140,7 @@
                 "
                 style="color: #4974f5"
                 :class="item.evaluateInfoStatus === '' ? 'set_grey' : ''"
-                >查看评价</span
+                >已完成</span
               >
             </div>
           </sp-cell>
