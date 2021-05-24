@@ -33,11 +33,15 @@
       <div class="download_right" @click="openApp">立即打开</div>
     </div>
     <div class="content_panel">
-      <iframe
-        :src="pageUrl"
-        sandbox="allow-forms allow-scripts"
-        class="content_panel_iframe"
-      ></iframe>
+      <!-- <iframe id="iframe"></iframe> -->
+      <!-- <embed :src="pageUrl" /> -->
+      <Pdf
+        v-for="i in numPages"
+        :key="i"
+        :src="src"
+        :page="i"
+        class="pdf-set"
+      />
     </div>
     <div :class="showPop ? 'fixed' : ''"></div>
     <div class="footer">
@@ -71,14 +75,15 @@
 
 <script>
 import { CenterPopup, Field } from '@chipspc/vant-dgg'
+import Pdf from '@fe/vue-pdf'
 import { mapState } from 'vuex'
 import { documentApi } from '@/api'
-
 export default {
   name: 'DocPage',
   components: {
     [CenterPopup.name]: CenterPopup,
     [Field.name]: Field,
+    Pdf,
   },
   data() {
     return {
@@ -96,6 +101,7 @@ export default {
       fileUrl: '',
       isShow: true,
       title: '',
+      numPages: 1,
     }
   },
   computed: {
@@ -105,17 +111,34 @@ export default {
   },
   mounted() {
     this.init()
+    if (location.href.indexOf('shupian.cn') !== -1) {
+      document.domain = 'shupian.cn'
+    }
   },
   methods: {
+    pdfTask() {
+      // 传参 CMapReaderFactory
+      // const CMAP_URL = 'https://unpkg.com/pdfjs-dist@2.0.943/cmaps/'
+      // this.src = Pdf.createLoadingTask({
+      //   url: this.src,
+      //   cMapUrl: CMAP_URL,
+      //   cMapPacked: true,
+      // })
+      // this.src.promise.then((pdf) => {
+      //   this.numPages = pdf.numPages
+      // })
+      Pdf.createLoadingTask(this.src).promise.then((pdf) => {
+        this.numPages = pdf.numPages
+      })
+    },
     init() {
       this.fileUrl = this.$route.query.fileUrl
-      console.log('this.fileUrl', this.fileUrl)
-      // this.pageUrl =
-      //   'https://view.officeapps.live.com/op/view.aspx?src=' + fileUrl
       this.pageUrl =
         'https://view.officeapps.live.com/op/view.aspx?src=' + this.fileUrl
+      // this.pageUrl = 'http://view.xdocin.com/xdoc?_xdoc=' + this.fileUrl
       this.title = this.$route.query.title
       // this.pageUrl = 'ow365.cn/?i=18679&ssl=1&furl=' + fileUrl
+      this.pdfTask(this.src)
     },
     goBack() {
       this.$router.push({
@@ -233,6 +256,7 @@ export default {
     }
   }
   .download {
+    background: rgba(0, 0, 0, 0.8) !important;
     .mixin-flex();
     padding: 14px 40px;
     height: 100px;
@@ -279,9 +303,11 @@ export default {
       height: 56px;
       background: #4974f5;
       border-radius: 8px;
-      font: bold 26px/56px @font-medium;
+      font: bold 26px @font-medium;
       color: #ffffff;
       text-align: center;
+      .mixin-flex();
+      justify-content: center;
     }
   }
   .content_panel {
@@ -296,10 +322,10 @@ export default {
   .footer {
     .mixin-flex();
     justify-content: space-between;
-    height: 96px;
     position: absolute;
     bottom: 0;
     width: 100%;
+    background: #ffffff;
     &_forward {
       font: bold 24px/24px @font-medium;
       color: #1a1a1a;

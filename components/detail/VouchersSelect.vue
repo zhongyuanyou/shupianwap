@@ -230,6 +230,7 @@ export default {
       return this.$store.state.sellingGoodsDetail.sellingGoodsData
     },
     serviceTag() {
+      console.log('sellingGoodsDetail', this.$store.state.sellingGoodsDetail)
       const salesGoodsTags =
         this.$store.state.sellingGoodsDetail.sellingGoodsData.salesGoodsTags
       let serviceTag = []
