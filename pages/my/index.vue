@@ -43,7 +43,10 @@
     <!--E 我的订单-->
     <!--S 按钮区-->
     <div class="my_btns">
-      <div class="my_btns_item" @click="handleClick(1)">
+      <div
+        class="my_btns_item"
+        @click="handleClick('/contract/contractList', 'login')"
+      >
         <div class="my_btns_item_icon">
           <my-icon
             name="gerenzhongxin_hetongicon"
@@ -63,7 +66,7 @@
           </div>
         </div>
       </div>
-      <div class="my_btns_item" @click="handleClick(2)">
+      <div class="my_btns_item" @click="handleClick('/my/coupon', 'login')">
         <div class="my_btns_item_icon">
           <my-icon
             name="gerenzhongxin_youhuiquanicon"
@@ -83,7 +86,10 @@
           </div>
         </div>
       </div>
-      <div class="my_btns_item" @click="handleClick('/known/createCenter')">
+      <div
+        class="my_btns_item"
+        @click="handleClick('/known/createCenter', 'login')"
+      >
         <div class="my_btns_item_icon">
           <my-icon name="faxian" size="0.36rem" color="#FFA416" />
         </div>
@@ -99,7 +105,7 @@
           </div>
         </div>
       </div>
-      <div class="my_btns_item" @click="handleClick(3)">
+      <div class="my_btns_item" @click="linkAuth">
         <div class="my_btns_item_icon">
           <my-icon name="shimingrenzheng" size="0.36rem" color="#00B365" />
         </div>
@@ -124,7 +130,7 @@
           </div>
         </div>
       </div>
-      <div class="my_btns_item" @click="handleClick(4)">
+      <div class="my_btns_item" @click="handleClick('/my/help')">
         <div class="my_btns_item_icon">
           <my-icon name="per_ic_help" size="0.36rem" color="#00B365" />
         </div>
@@ -140,7 +146,7 @@
           </div>
         </div>
       </div>
-      <div class="my_btns_item" @click="handleClick(5)">
+      <div class="my_btns_item" @click="handleClick('/my/complain')">
         <div class="my_btns_item_icon">
           <my-icon name="per_ic_debunk" size="0.36rem" color="#10BBB8" />
         </div>
@@ -157,7 +163,7 @@
         </div>
       </div>
 
-      <div class="my_btns_item" @click="handleClick(6)">
+      <div class="my_btns_item" @click="handleClick('/my/about')">
         <div class="my_btns_item_icon">
           <my-icon name="per_ic_about" size="0.36rem" color="#4974F5" />
         </div>
@@ -354,37 +360,25 @@ export default {
         this.loading = false
       }
     },
-    async handleClick(val) {
-      if (val === 1) {
+    async handleClick(val, type) {
+      if (type === 'login') {
         const isLogin = await this.judgeLoginMixin()
         if (isLogin) {
-          this.$router.push('/contract/contractList')
-        } else {
-          this.$router.push('/login')
+          this.$router.push(val)
         }
-      } else if (val === 2) {
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          this.$router.push('/my/coupon')
-        } else {
-          this.$router.push('/login')
-        }
-      } else if (val === 3) {
-        if (
-          this.realStatus === 'NO_AUTHENTICATION' ||
-          this.realStatus === 'AUTHENTICATION_FAIL' ||
-          this.realStatus === 'AUTHENTICATION_INVALID'
-        ) {
-          this.$router.push('/contract/authentication')
-        }
-      } else if (val === 4) {
-        this.$router.push('/my/help')
-      } else if (val === 5) {
-        this.$router.push('/my/complain')
-      } else if (val === 6) {
-        this.$router.push('/my/about')
       } else {
         this.$router.push(val)
+      }
+    },
+    async linkAuth() {
+      const isLogin = await this.judgeLoginMixin()
+      if (
+        isLogin &&
+        (this.realStatus === 'NO_AUTHENTICATION' ||
+          this.realStatus === 'AUTHENTICATION_FAIL' ||
+          this.realStatus === 'AUTHENTICATION_INVALID')
+      ) {
+        this.$router.push('/contract/authentication')
       }
     },
     async showExit() {
