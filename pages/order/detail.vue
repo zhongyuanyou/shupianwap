@@ -121,10 +121,7 @@
               color="#222222"
             ></my-icon>
           </span>
-          <span
-            v-if="orderData.evaluateStatus == 3"
-            class="right"
-            @click="navToUrl(2)"
+          <span v-else class="right" @click="navToUrl(2)"
             >查看评价
             <my-icon
               name="order_ic_listnext"
