@@ -123,7 +123,7 @@
           v-for="(item, index) in searchList"
           :key="index"
           class="list"
-          @click="openPopup()"
+          @click="open(item)"
         >
           <h1 v-html="item.videoNameHtml"></h1>
           <div class="box">
@@ -155,7 +155,7 @@
           v-for="(item, index) in searchList"
           :key="index"
           class="list"
-          @click="openPopup()"
+          @click="open(item)"
         >
           <h1 v-html="item.courseNameHtml"></h1>
           <div class="box">
@@ -174,7 +174,7 @@
         </div>
       </sp-list>
     </div>
-    <sp-center-popup v-model="showPop" :field="Field4" button-type="confirm" />
+    <sp-center-popup v-model="showPop" :field="Filed4" button-type="confirm" />
   </div>
 </template>
 <script>
@@ -229,6 +229,9 @@ export default {
     ...mapState({
       userInfo: (state) => state.user, // 登录的用户信息
       userId: (state) => state.user.userId, // userId 用于判断登录
+      isInApp: (state) => state.app.isInApp, // 是否app中
+      appInfo: (state) => state.app.appInfo, // app信息
+      // isApplets: (state) => state.app.isApplets,
     }),
     appInfo() {
       return this.$store.state.app.appInfo
@@ -364,8 +367,42 @@ export default {
     onLoad() {
       this.getSearchListApi()
     },
-    openPopup() {
-      this.showPop = true
+    open(item) {
+      if (this.isInApp && this.appInfo.appCode === 'CPSAPP') {
+        if (this.tabIndex === '4') {
+          try {
+            this.$appFn.dggOpenVideo(item.id, (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `打开视频失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            })
+          } catch (error) {
+            console.error('changeTop error:', error)
+          }
+        } else if (this.tabIndex === '5') {
+          try {
+            this.$appFn.dggOpenCourse(item.id, (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `打开课程失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            })
+          } catch (error) {
+            console.error('changeTop error:', error)
+          }
+        }
+      } else {
+        this.showPop = true
+      }
     },
   },
 }

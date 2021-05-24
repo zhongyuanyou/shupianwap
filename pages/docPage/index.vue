@@ -15,11 +15,13 @@
         class="head_icon_goapp"
         @click.native="goAppHomePage"
       />
-      <div class="head_title">互联网行业…书.doc</div>
+      <div class="head_title">{{ title }}</div>
     </div>
-    <div class="download">
+    <div v-if="isShow" class="download">
+      <div class="close" @click="close">
+        <img :src="$ossImgSet('do4300nohi80000.png')" alt="" />
+      </div>
       <div class="download_left">
-        <div class="close"></div>
         <div class="download_left_icon">
           <my-icon name="logo_mian" size="0.40rem" color="#ffffff" />
         </div>
@@ -32,13 +34,12 @@
     </div>
     <div class="content_panel">
       <iframe
-        class="filename"
-        :src="adress"
-        width="100%"
-        height="600"
-        frameborder="1"
+        :src="pageUrl"
+        sandbox="allow-forms allow-scripts"
+        class="content_panel_iframe"
       ></iframe>
     </div>
+    <div :class="showPop ? 'fixed' : ''"></div>
     <div class="footer">
       <div class="footer_forward" @click="share">
         <my-icon
@@ -51,13 +52,6 @@
       </div>
       <div class="footer_download" @click="download">下载至邮箱</div>
     </div>
-    <!-- <sp-center-popup
-      v-model="showPop"
-      button-type="confirm"
-      :field="Field"
-      @confirm="confirm"
-      @cancel="cancel"
-    /> -->
     <div v-show="showPop" class="popup">
       <div class="popup_body">
         <div class="top_title">请输入邮箱</div>
@@ -71,6 +65,7 @@
         <div class="confirm" @click="confirm">确定</div>
       </div>
     </div>
+    <!-- <sp-center-popup v-model="showPop" :field="Filed4" button-type="confirm" /> -->
   </div>
 </template>
 
@@ -87,6 +82,7 @@ export default {
   },
   data() {
     return {
+      pageUrl: '',
       Field: {
         type: 'functional',
         title: '请输入邮箱',
@@ -97,8 +93,9 @@ export default {
       showPop: false,
       email: '',
       documentId: '123',
-      adress:
-        'https://view.officeapps.live.com/op/view.aspx?src=search-1-wk_es_paddle-income5&fixfr=J0XqYQkohDIS%2B6ElWfkiUg%3D%3D',
+      fileUrl: '',
+      isShow: true,
+      title: '',
     }
   },
   computed: {
@@ -111,38 +108,21 @@ export default {
   },
   methods: {
     init() {
-      // this.documentId = this.$route.qurey.documentId
-      this.documentId = '123'
-      // const isLogin = await this.$isLogin
-      // console.log('+++++++', isLogin)
-      // if (isLogin) {
-      //   this.$router.push({
-      //     path: '/my',
-      //   })
-      // }
+      this.fileUrl = this.$route.query.fileUrl
+      console.log('this.fileUrl', this.fileUrl)
+      // this.pageUrl =
+      //   'https://view.officeapps.live.com/op/view.aspx?src=' + fileUrl
+      this.pageUrl =
+        'https://view.officeapps.live.com/op/view.aspx?src=' + this.fileUrl
+      this.title = this.$route.query.title
+      // this.pageUrl = 'ow365.cn/?i=18679&ssl=1&furl=' + fileUrl
     },
     goBack() {
-      // if (this.isInApp) {
-      //   const iOSRouterStr = ``
-      //   const androidRouterStr = ``
-      //   this.$appFn.dggJumpRoute({
-      //     iOSRouter: iOSRouterStr,
-      //     androidRouter: androidRouterStr,
-      //   })
-      // }
       this.$router.push({
         path: '/',
       })
     },
     goAppHomePage() {
-      // if (this.isInApp) {
-      //   const iOSRouterStr = ``
-      //   const androidRouterStr = ``
-      //   this.$appFn.dggJumpRoute({
-      //     iOSRouter: iOSRouterStr,
-      //     androidRouter: androidRouterStr,
-      //   })
-      // }
       this.$router.push({
         path: '/',
       })
@@ -154,6 +134,7 @@ export default {
     async share() {
       console.log('share')
       const isLogin = await this.$isLogin
+
       if (isLogin) {
         const { code, message } = await this.$axios.post(documentApi.forward, {
           documentId: this.documentId,
@@ -197,6 +178,9 @@ export default {
       // 跳转到下载app页面
       console.log('open')
     },
+    close() {
+      this.isShow = false
+    },
   },
 }
 </script>
@@ -211,17 +195,28 @@ export default {
 }
 
 .overfley {
-  background: rgba(0, 0, 0, 0.4) !important;
+  // background: rgba(0, 0, 0, 0.4) !important;
 }
 .sp-cell {
   padding: 0 24px;
   width: 456px;
 }
+
 .doc_container {
   position: relative;
   height: 100%;
   background-color: #fff;
   // background: rgba(0, 0, 0, 0.4);
+  .fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4) !important;
+    z-index: 2002;
+  }
   .head {
     height: 88px;
     .mixin-flex();
@@ -240,9 +235,21 @@ export default {
   .download {
     .mixin-flex();
     padding: 14px 40px;
-    background: rgba(0, 0, 0, 0.6);
     height: 100px;
     justify-content: space-between;
+    position: relative;
+    .close {
+      width: 56px;
+      height: 56px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      img {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+      }
+    }
     &_left {
       .mixin-flex();
       &_icon {
@@ -277,6 +284,15 @@ export default {
       text-align: center;
     }
   }
+  .content_panel {
+    width: 100%;
+    height: calc(100vh - 280px);
+    position: absolute;
+    &_iframe {
+      width: 100%;
+      height: 100%;
+    }
+  }
   .footer {
     .mixin-flex();
     justify-content: space-between;
@@ -308,6 +324,7 @@ export default {
     border-radius: 24px;
     margin: 344px auto;
     position: relative;
+    z-index: 2003;
     .popup_body {
       padding: 42px 40px 0 40px;
       .top_title {
