@@ -19,7 +19,7 @@
       <!--<span class="tag">急售</span>-->
     </div>
     <div class="goods-right">
-      <h3 v-html="heightLightHtml(getGoodsName())"></h3>
+      <h3 v-html="heightLightHtml(itemData.name || getGoodsName())"></h3>
       <p
         :style="{
           visibility: description ? 'visible' : 'hidden',

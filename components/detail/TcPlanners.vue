@@ -1,69 +1,66 @@
 <template>
   <div class="planners">
     <p class="planners_title">推荐规划师</p>
-    <sp-skeleton :row="6" :loading="recommendPlanner.length == 0">
-      <div
-        v-for="(item, index) in recommendPlanner"
-        :key="item.userCenterId"
-        class="planners_item"
-        :style="{ marginTop: index === 0 ? '0.42rem' : '0.66rem' }"
-      >
-        <div class="planners_item_lf">
-          <a
-            href="javascript:void(0);"
-            @click="plannerInfoUrlJump(item.mchUserId)"
-          >
-            <sp-image
-              width="0.8rem"
-              height="0.8rem"
-              round
-              fit="cover"
-              lazy-load
-              :src="`${item.portrait}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`"
-            />
-          </a>
-          <div class="info">
-            <div class="info_tp">
-              <a
-                href="javascript:void(0);"
-                @click="plannerInfoUrlJump(item.mchUserId)"
-              >
-                <p class="name">{{ item.userName }}</p>
-              </a>
-              <i v-if="item.postName ? true : false" class="gold_icon">
-                {{ item.postName }}
-              </i>
-            </div>
-            <div class="info_bot">
-              <span class="num">{{ Number(item.point) }}</span
-              ><span class="txt">薯片分 | {{ Number(item.payNum) }}次服务</span>
-            </div>
+    <!-- <sp-skeleton :row="6" :loading="recommendPlanner.length == 0"> -->
+    <div
+      v-for="(item, index) in recommendPlanner"
+      :key="item.userCenterId"
+      class="planners_item"
+      :style="{ marginTop: index === 0 ? '0.42rem' : '0.66rem' }"
+    >
+      <div class="planners_item_lf">
+        <a
+          href="javascript:void(0);"
+          @click="plannerInfoUrlJump(item.mchUserId)"
+        >
+          <sp-image
+            width="0.8rem"
+            height="0.8rem"
+            round
+            fit="cover"
+            lazy-load
+            :src="`${item.portrait}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`"
+          />
+        </a>
+        <div class="info">
+          <div class="info_tp">
+            <a
+              href="javascript:void(0);"
+              @click="plannerInfoUrlJump(item.mchUserId)"
+            >
+              <p class="name">{{ item.userName }}</p>
+            </a>
+            <i v-if="item.postName ? true : false" class="gold_icon">
+              {{ item.postName }}
+            </i>
+          </div>
+          <div class="info_bot">
+            <span class="num">{{ Number(item.point) }}</span
+            ><span class="txt">薯片分 | {{ Number(item.payNum) }}次服务</span>
           </div>
         </div>
-        <div class="planners_item_rt">
-          <sp-button
-            round
-            class="contact-btn"
-            @click="sendTemplateMsgWithImg(item.mchUserId, item.type)"
-            ><my-icon
-              class=""
-              name="notify_ic_chat"
-              size="0.424rem"
-              color="#4974F5"
-          /></sp-button>
-          <sp-button
-            round
-            class="contact-btn"
-            @click="handleTel(item.mchUserId)"
-            ><my-icon
-              class=""
-              name="notify_ic_tel"
-              size="0.423rem"
-              color="#4974F5"
-          /></sp-button>
-        </div>
       </div>
-    </sp-skeleton>
+      <div class="planners_item_rt">
+        <sp-button
+          round
+          class="contact-btn"
+          @click="sendTemplateMsgWithImg(item.mchUserId, item.type)"
+          ><my-icon
+            class=""
+            name="notify_ic_chat"
+            size="0.424rem"
+            color="#4974F5"
+        /></sp-button>
+        <sp-button round class="contact-btn" @click="handleTel(item.mchUserId)"
+          ><my-icon
+            class=""
+            name="notify_ic_tel"
+            size="0.423rem"
+            color="#4974F5"
+        /></sp-button>
+      </div>
+    </div>
+    <!-- </sp-skeleton> -->
   </div>
 </template>
 

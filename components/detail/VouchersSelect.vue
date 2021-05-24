@@ -249,7 +249,30 @@ export default {
     },
     // 优惠券列表
     coupon() {
-      return this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList
+      const list = []
+      for (
+        let i = 0;
+        i <
+        this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList.length;
+        i++
+      ) {
+        let time1 =
+          this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList[
+            i
+          ].serviceLife.slice(
+            this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList[
+              i
+            ].serviceLife.match('-').index + 1
+          )
+        time1 = new Date(time1)
+        const time2 = new Date()
+        if (time1.getTime() >= time2.getTime()) {
+          list.push(
+            this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList[i]
+          )
+        }
+      }
+      return list
     },
     //  服务商品的SKU集合
     goodsSubDetailsName() {
@@ -340,7 +363,7 @@ export default {
             })
             .catch((err) => {
               console.log(err)
-              this.$xToast.warning('优惠券领取失败，请稍后重试')
+              this.$xToast.warning(err.message || '优惠券领取失败，请稍后重试')
             })
         }
       }

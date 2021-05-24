@@ -2,6 +2,7 @@
   <div class="search-result">
     <!--S搜索框-->
     <Search
+      ref="search"
       :placeholder="placeholderText"
       :disabled="true"
       :class="{ 'has-input': placeholderText !== '请输入搜索内容' }"
@@ -28,14 +29,15 @@
     </Search>
     <!--E搜索框-->
     <!--S筛选栏-->
-    <sp-work-tabs v-model="active">
+    <sp-work-tabs ref="tabs" v-model="active">
       <sp-work-tab title="企业服务">
-        <serveGoods
+        <!-- <serveGoods
           :init-service-data="serveGoodsListData"
           :search-text="formData.searchText"
           :req-type="reqType"
           @goodsList="getTabVue"
-        />
+        /> -->
+        <goods ref="goods" :searchkey="formData.searchText" :height="height" />
       </sp-work-tab>
       <sp-work-tab title="资产交易">
         <JyGoods
@@ -50,6 +52,21 @@
     <!--S搜索页-->
     <div v-show="isShowInput" class="search-page">
       <Search
+        v-if="active === 0"
+        ref="searchPage"
+        v-model="currentInputText"
+        :maxlength="50"
+        placeholder="请输入搜索内容"
+        @searchKeydownHandle="servergoodsfn"
+        @searchInputHandle="searchInputHandle"
+      >
+        <div slot="left"></div>
+        <div slot="right" class="cancleBtn">
+          <span @click="hidSearchPage">取消</span>
+        </div>
+      </Search>
+      <Search
+        v-else
         ref="searchPage"
         v-model="currentInputText"
         :maxlength="50"
@@ -72,6 +89,7 @@ import { mapMutations, mapState } from 'vuex'
 import { WorkTabs, WorkTab } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import serveGoods from '@/components/list/ServeGoods'
+import Goods from '@/components/list/goods'
 import JyGoods from '@/components/list/JyGoods'
 import addSearchHistory from '@/mixins/addSearchHistory'
 import listJumpIm from '@/mixins/listJumpIm'
@@ -82,7 +100,8 @@ export default {
     Search,
     [WorkTabs.name]: WorkTabs,
     [WorkTab.name]: WorkTab,
-    serveGoods,
+    // serveGoods,
+    Goods,
     JyGoods,
   },
   layout: 'keepAlive',
@@ -105,6 +124,7 @@ export default {
       reqType: 'serve',
       tabVues: {}, // 两个列表实例
       isInput: false, // 判断是否进行过输入框搜索
+      height: '',
     }
   },
   computed: {
@@ -145,6 +165,10 @@ export default {
     // }
     // window.sensors.registerPage(param) // 设置公共属性
     // SearchResult
+    this.height =
+      this.$refs.search.$el.offsetHeight +
+      this.$refs.tabs.$el.offsetHeight +
+      115
     this.SET_KEEP_ALIVE({ type: 'add', name: 'SearchResult' })
     this.getInitData()
     if (this.$route.query.keywords) {
@@ -211,6 +235,15 @@ export default {
         })
       }
     },
+    servergoodsfn() {
+      this.$refs.goods.$refs.list.finished = false
+      this.$refs.goods.formData.start = 1
+      this.$refs.goods.datalist = []
+      this.$refs.goods.formData.searchKey = this.currentInputText
+      this.$refs.goods.formData.needTypes = 0
+      this.isShowInput = false
+      this.$refs.goods.getlist()
+    },
     searchInputHandle() {},
     getTabVue(key, val) {
       // 存储服务和交易列表的vue实例
@@ -251,6 +284,9 @@ export default {
   width: 100%;
   height: 100%;
   background: #fff;
+  ::v-deep.goodsbox {
+    height: calc(100vh - 290px);
+  }
   .search-content {
     padding: 16px 32px;
     &.has-input {

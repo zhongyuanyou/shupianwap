@@ -3,7 +3,7 @@
     v-if="
       serviceGoods.length === 1 && serviceGoods[0]['serviceItems'].length > 0
     "
-    class="container"
+    class="container cgcontainer"
   >
     <!--    服务商品的服务项-->
     <div class="container_tp">
@@ -80,9 +80,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-::v-deep.sp-safeguard__title {
-  max-width: none;
-}
 .container {
   background-color: #fff;
   padding-top: 44px;
@@ -136,6 +133,13 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+}
+</style>
+<style lang="less">
+.cgcontainer {
+  .sp-safeguard__title {
+    width: 500px;
   }
 }
 </style>
