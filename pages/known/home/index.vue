@@ -115,6 +115,7 @@ import Item from '@/components/mustKnown/home/Item'
 import { knownApi } from '~/api'
 import utils from '@/utils/changeBusinessData'
 import { domainUrl } from '~/config/index'
+
 export default {
   name: 'Collection',
   components: {
@@ -187,6 +188,14 @@ export default {
       limit: 10,
       fixed: false,
       adList: [],
+      showPop: false,
+      Filed4: {
+        type: 'functional',
+        showCancelButton: false,
+        title: '提示！',
+        description: `请到App去观看`,
+        confirmButtonText: '好的',
+      },
     }
   },
   computed: {

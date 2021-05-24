@@ -69,15 +69,17 @@
         写回答
       </div>
     </div>
+    <sp-center-popup v-model="showPop" :field="Filed4" button-type="confirm" />
   </div>
 </template>
 <script>
-import { Image } from '@chipspc/vant-dgg'
+import { Image, CenterPopup } from '@chipspc/vant-dgg'
 import { knownApi } from '~/api'
 export default {
   name: 'Item',
   components: {
     [Image.name]: Image,
+    [CenterPopup.name]: CenterPopup,
   },
   filters: {
     filterType(type) {
@@ -99,7 +101,16 @@ export default {
     },
   },
   data() {
-    return {}
+    return {
+      Filed4: {
+        type: 'functional',
+        showCancelButton: false,
+        title: '提示！',
+        description: `请到App去观看`,
+        confirmButtonText: '好的',
+      },
+      showPop: false,
+    }
   },
   computed: {
     userInfo() {
@@ -117,17 +128,21 @@ export default {
       })
     },
     toDetail(item) {
-      this.$router.push({
-        path:
-          item.type === 1
-            ? '/known/detail/question'
-            : item.type === 2
-            ? '/known/detail/article'
-            : '/known/detail/answer',
-        query: {
-          id: item.id,
-        },
-      })
+      if (item.type === 5) {
+        this.open()
+      } else {
+        this.$router.push({
+          path:
+            item.type === 1
+              ? '/known/detail/question'
+              : item.type === 2
+              ? '/known/detail/article'
+              : '/known/detail/answer',
+          query: {
+            id: item.id,
+          },
+        })
+      }
     },
     async isLogin() {
       const res = await this.$isLogin()
@@ -187,6 +202,27 @@ export default {
         }
       } else {
         console.log(message)
+      }
+    },
+    open(item) {
+      console.log('+++++++++++', item)
+      if (this.isInApp && this.appInfo.appCode === 'CPSAPP') {
+        try {
+          this.$appFn.dggOpenVideo(item.id, (res) => {
+            const { code } = res || {}
+            if (code !== 200)
+              this.$xToast.show({
+                message: `打开视频失败`,
+                duration: 1000,
+                forbidClick: true,
+                icon: 'toast_ic_remind',
+              })
+          })
+        } catch (error) {
+          console.error('changeTop error:', error)
+        }
+      } else {
+        this.showPop = true
       }
     },
   },
