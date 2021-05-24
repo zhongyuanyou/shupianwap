@@ -216,7 +216,7 @@ export default {
       loading: false,
       finished: false,
       showPop: false,
-      Field4: {
+      Filed4: {
         type: 'functional',
         showCancelButton: false,
         title: '提示！',
