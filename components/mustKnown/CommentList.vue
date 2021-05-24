@@ -44,9 +44,9 @@
             <p>{{ item.content }}</p>
             <div>
               <span>{{ item.createTime }}</span>
-
               <div>
                 <my-icon
+                  v-if="item.userId === userInfo.userId"
                   name="shanchu"
                   size="0.32rem"
                   :color="'#999999'"
