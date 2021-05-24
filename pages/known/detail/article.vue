@@ -260,7 +260,7 @@ export default {
         .get(knownApi.questionArticle.findAttention, {
           params: {
             currentUserId: this.userInfo.userId,
-            homeUserId: this.articleDetails.createrId,
+            homeUserId: this.articleDetails.userId,
           },
         })
         .then((res) => {
