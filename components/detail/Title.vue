@@ -25,6 +25,7 @@
         <sp-image
           src="https://cdn.shupian.cn/sp-pt/wap/images/4eevblk9nmy0000.png?x-oss-process=image/resize,m_fill,w_40,h_30,limit_0"
           fit="cover"
+          class="img"
         />
         <span>重要提醒</span>
       </nuxt-link>
@@ -140,6 +141,10 @@ export default {
         width: 40px;
         height: 30px;
       }
+    }
+    .img {
+      width: 40px;
+      height: 30px;
     }
     span {
       margin-left: 9px;
