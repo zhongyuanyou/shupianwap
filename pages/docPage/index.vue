@@ -233,6 +233,7 @@ export default {
     }
   }
   .download {
+    background: rgba(0, 0, 0, 0.8) !important;
     .mixin-flex();
     padding: 14px 40px;
     height: 100px;
