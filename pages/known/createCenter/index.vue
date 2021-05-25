@@ -166,11 +166,12 @@ export default {
           this.$router.push({
             path: '/known/publish/question',
           })
+          return
         }
         // 文章
         if (item.type === 2) {
           this.$router.push({
-            path: '/known/publish/question',
+            path: '/known/publish/article',
           })
         } else {
           // 回答 这里需要传问题id,让用户在上一次回答的问题上继续回答
@@ -191,6 +192,7 @@ export default {
               id: item.id, // 问题id
             },
           })
+          return
         }
         // 文章
         if (item.type === 2) {
