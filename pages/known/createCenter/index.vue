@@ -67,12 +67,14 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import { Tab, Tabs, Button, List, Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import knownApi from '@/api/known'
 
 export default {
-  name: 'CreateCenter',
+  layout: 'keepAlive',
+  name: 'KnownCreateCenter',
   components: {
     Header,
     [Tab.name]: Tab,
@@ -114,7 +116,27 @@ export default {
       emptyFlag: 'not',
     }
   },
+  beforeRouteLeave(to, from, next) {
+    if (
+      [
+        'known-detail-answer',
+        'known-detail-article',
+        'known-detail-question',
+        'known-publish-answer',
+        'known-publish-article',
+        'known-publish-question',
+      ].includes(to.name)
+    ) {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'KnownCreateCenter' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'KnownCreateCenter' })
+    }
+    next()
+  },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     changeTab() {
       this.init()
       this.onLoad()
