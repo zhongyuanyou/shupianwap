@@ -100,7 +100,7 @@
         @click="handleClick('/known/createCenter', 'login')"
       >
         <div class="my_btns_item_icon">
-          <my-icon name="faxian" size="0.36rem" color="#FFA416" />
+          <my-icon name="weituo_mian" size="0.36rem" color="#4974f5" />
         </div>
         <div class="my_btns_item_con">
           创作中心
