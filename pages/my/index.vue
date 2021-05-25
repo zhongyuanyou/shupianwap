@@ -28,11 +28,20 @@
           class="my_order_type_list"
         >
           <div class="icon">
-            <my-icon
-              :name="item.iconName"
-              color="#4E78F5"
-              size="0.44rem"
-            ></my-icon>
+            <my-icon :name="item.iconName" color="#4E78F5" size="0.44rem">
+            </my-icon>
+            <span
+              v-if="item.type === 'daipingjia' && evaluateNumFlag !== 'none'"
+              class="icon_daipingjia"
+              :class="[
+                evaluateNumFlag === 'small'
+                  ? 'icon_daipingjia_small'
+                  : evaluateNumFlag === 'med'
+                  ? 'icon_daipingjia_med'
+                  : 'icon_daipingjia_lar',
+              ]"
+              >{{ evaluateNum }}</span
+            >
           </div>
           <div class="order_text" @click="clickTab(++index)">
             {{ item.name }}
@@ -203,7 +212,7 @@
 <script>
 import { Button, Image, CenterPopup } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import { userinfoApi } from '@/api'
+import { userinfoApi, evaluateApi } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import { GOODSLIST } from '~/config/constant'
 import { imInit } from '@/utils/im'
@@ -240,8 +249,9 @@ export default {
           name: '已取消',
         },
         {
-          iconName: 'per_ic_whole',
+          iconName: 'daipingjia',
           name: '待评价',
+          type: 'daipingjia',
         },
       ],
 
@@ -257,6 +267,8 @@ export default {
       loading: false,
       userName: '',
       realStatus: 'NO_AUTHENTICATION',
+      evaluateNumFlag: 'none', // 评论标识状态
+      evaluateNum: 0, // 评价数量
     }
   },
   computed: {
@@ -278,6 +290,7 @@ export default {
         console.log('myInfo', this.info)
       }
       this.getUserInfo()
+      this.getEvaluateNumApi()
       if (!this.token) {
         localStorage.removeItem('info')
       }
@@ -359,6 +372,26 @@ export default {
         localStorage.removeItem('userId')
         this.loading = false
       }
+    },
+    async getEvaluateNumApi() {
+      try {
+        const { code, data } = await this.$axios.get(evaluateApi.evaluateNum)
+        if (code !== 200) {
+          throw new Error('请求评价数量失败')
+        }
+        if (typeof data !== 'number' || data === 0) {
+          this.evaluateNumFlag = 'none'
+        } else if (data < 10) {
+          this.evaluateNumFlag = 'small'
+          this.evaluateNum = data
+        } else if (data > 99) {
+          this.evaluateNumFlag = 'lar'
+          this.evaluateNum = '99+'
+        } else {
+          this.evaluateNumFlag = 'med'
+          this.evaluateNum = data
+        }
+      } catch (e) {}
     },
     async handleClick(val, type) {
       if (type === 'login') {
@@ -464,10 +497,27 @@ export default {
       &_list {
         text-align: center;
         .icon {
-          height: 44px;
-          line-height: 44px;
-          display: flex;
-          justify-content: center;
+          position: relative;
+          &_daipingjia {
+            position: absolute;
+            font: 24px @fontf-pfsc-med;
+            left: 41px;
+            top: -18px;
+            background: #ec5330;
+            border-radius: 16px;
+            color: #fff;
+            text-align: center;
+            box-shadow: -1px 1px #fff;
+            &_small {
+              width: 30px;
+            }
+            &_med {
+              width: 40px;
+            }
+            &_lar {
+              width: 53px;
+            }
+          }
         }
         .order_text {
           font-size: 24px;
