@@ -289,6 +289,7 @@ export default {
                       }
                     }
                     this.$refs.dropDownMenu.classarr = this.itemsclass[1].services
+                    this.isOne = false
                   }
                 }
               }
