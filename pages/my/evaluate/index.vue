@@ -73,7 +73,12 @@ export default {
     },
     init(val) {
       this.evaluateList = []
-      this.evaluateStatus = val + 1
+
+      if (val === 0) {
+        this.evaluateStatus = val + 1
+      } else {
+        this.evaluateStatus = 3
+      }
       this.page = 1
       this.error = false
       this.finished = false
