@@ -99,6 +99,10 @@ export default {
           this.page++
           if (this.page > data.totalPage) {
             this.finished = true
+            // 当为true时, 则对数据进行渲染,拿出最后一个
+            if (this.evaluateList.length > 0) {
+              this.evaluateList[this.evaluateList.length - 1].lastFlag = true
+            }
           }
         } else {
           this.error = true

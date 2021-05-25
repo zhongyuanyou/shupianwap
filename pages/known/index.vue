@@ -338,13 +338,19 @@ export default {
       } else {
         this.myPlate = this.tabs
       }
+      const val = this.$route.query.params
+      this.skip(val)
     },
     skip(val) {
-      this.tabs.forEach((item, index) => {
-        if (item.executionParameters === val) {
-          this.active = index
-        }
-      })
+      if (val) {
+        this.tabs.forEach((item, index) => {
+          if (item.executionParameters === val) {
+            this.active = index
+          }
+        })
+      } else {
+        this.active = 2
+      }
     },
     toggleTabs() {},
     // 打开文章编辑框

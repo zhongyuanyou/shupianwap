@@ -8,34 +8,33 @@
         class="img-item"
       >
         <span class="btn-dlt" @click="dltImg(index)">
-          <my-icon
-            name="popup_ic_closeb"
-            size="0.2rem"
-            color="rgba(66, 66, 66, 0.2)"
-          ></my-icon>
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/bizb563dqso0000.png"
+            alt=""
+            srcset=""
+          />
         </span>
-        <sp-image
-          :src="item"
-          :preview-src-list="imgList"
-          :z-index="index"
-          alt=""
-          srcset=""
-        />
+        <img :src="item" :z-index="index" alt="" @click="preImg(index)" />
       </div>
-      <div v-if="imgList.length < imgNum" class="img-item choose-btn">
-        <my-icon
-          name="popup_ic_add"
-          size="2rem"
-          color="rgba(66, 66, 66, 0.2)"
-        ></my-icon>
-        <input
-          ref="fileInput"
-          type="file"
-          accept=".jpg,.jpeg,.png"
-          class="file-input"
-          @change="uploadPhoto"
-        />
+      <div v-if="imgNum > imgList.length" class="img-item choose-btn">
+        <div v-show="!loading">
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/3wy2rwklmh0000.png"
+            alt=""
+          />
+          <input
+            ref="fileInput"
+            type="file"
+            accept=".jpg,.jpeg,.png"
+            class="file-input"
+            @change="uploadPhoto"
+          />
+        </div>
+        <div v-show="loading" class="loading-area">上传中...</div>
       </div>
+    </div>
+    <div v-show="showPre" class="mask-area" @click="showPre = false">
+      <img :src="selectImg" :preview-src-list="imgList" alt="" />
     </div>
   </div>
 </template>
@@ -49,10 +48,19 @@ export default {
   props: {
     imgNum: {
       type: Number,
-      default: 3,
+      default: 1,
+    },
+    filterType: {
+      type: Number, // 滤镜类型 1.白茶；2 白皙；3.初夏；4.东京；5.告白；6.暖阳；7.蔷薇；8.清澄；9.清透； 10.甜薄荷；11.默认；12.心动；
+      default: 13, // 13.哑灰；14.樱桃布丁；15.自然；16.清逸；17.黑白；18.水果；19.爱情；20.冬日；21.相片；22.夏日；23.香氛；24.魅惑；25.悸动；26.沙滩；27.街拍；28.甜美；29.初吻；30.午后。
+    },
+    filterDegree: {
+      // 滤镜效果，取值[0,100]，0表示无效果，100表示满滤镜效果。
+      type: Number,
+      default: 100,
     },
     imgList: {
-      type: [Array, String],
+      type: Array,
       default() {
         return []
       },
@@ -64,91 +72,88 @@ export default {
       inputUrl: '',
       startImgIndex: null,
       imgBase64: '',
-      FilterDegree: 80,
-      FilterType: 24,
+      selectImg: '',
+      showPre: false,
+      loading: false,
+      fileSize: '',
+      fileName: '',
+      isFilter: true,
     }
   },
   methods: {
-    clickBtn() {
-      console.log('fileInput', this.$refs.fileInput)
-      this.$refs.fileInput.click()
+    preImg(index) {
+      this.showPre = true
+      this.selectImg = this.imgList[index]
     },
     uploadPhoto(e) {
       const that = this
       // 利用fileReader对象获取file
       const file = e.target.files[0]
-      const filesize = file.size
-      this.filename = file.name
-      if (filesize > 2101440) {
-        // 图片大于2MB
-        this.$message({
-          message: '图片过大，请使用其它方式上传！',
-          type: 'fail',
-        })
-        return
-      }
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = function (e) {
-        // 读取到的图片base64 数据编码 将此编码字符串传给后台即可
-        that.imgBase64 = e.target.result
-        that.postData()
-      }
+      if (!file) return
+      const formData = new FormData()
+      console.log('file', file)
+      formData.append('file', file)
+      formData.append('filterType', this.filterType)
+      formData.append('filterDegree', this.filterDegree)
+      formData.append('isFilter', this.isFilter)
+      that.postData(formData)
+      // this.fileSize = file.size
+      // this.fileName = file.name
+      // if (this.fileSize > 10000000) {
+      //   this.$emit('beforeUpload', {
+      //     code: 500,
+      //     message: '图片体积过大',
+      //     data: {
+      //       fileSize: file.size,
+      //       fileName: file.name,
+      //     },
+      //   })
+      //   return
+      // }
+      // const reader = new FileReader()
+      // reader.readAsDataURL(file)
+      // reader.onload = function (e) {
+      //   // 读取到的图片base64 数据编码 将此编码字符串传给后台即可
+      //   that.imgBase64 = e.target.result
+      //   that.postData()
+      // }
     },
-    postData() {
+    postData(formData) {
+      this.loading = true
       this.$axios
-        .post('http://127.0.0.1:10007/api/tenCentImg/v1/img_filter.do', {
-          filename: this.filename,
-          filesize: this.filesize,
-          imgBase64: this.imgBase64,
-          FilterDegree: this.FilterDegree,
-          FilterType: this.FilterType,
-        })
+        .post(
+          'http://127.0.0.1:10007/api/tenCentImg/v1/img_filter.do',
+          formData
+        )
         .then((res) => {
-          console.log('res', res)
-          this.imgList.push(res.data.url)
+          this.loading = false
+          if (res.code === 200) {
+            this.imgList.push(res.data.url)
+            this.$emit('afterUpload', {
+              code: 200,
+              data: {
+                currentImgUrl: res.data.url,
+                imgList: this.imgList,
+              },
+              message: '处理成功',
+            })
+          } else {
+            this.$emit('afterUpload', {
+              code: 500,
+              message: res.message || '处理失败',
+            })
+          }
+        })
+        .catch((err) => {
+          this.loading = false
+          this.$emit('afterUpload', {
+            code: 500,
+            message: err.message || '处理失败',
+          })
         })
     },
     dltImg(index) {
       this.imgList.splice(index, 1)
-    },
-    addImg() {
-      if (this.imgList.length === this.imgNum) {
-        this.imgList.splice(0, 1)
-      }
-      this.imgList.push(this.inputUrl)
-      this.$emit('setImgData', this.imgList)
-    },
-    drag(index) {
-      this.startImgIndex = index
-      const startImgData = this.imgList[this.startImgIndex]
-      this.startImgData = startImgData
-      // 存上当前节点的id和图片数据与目标组件的id对比
-      this.$store.dispatch('dragImg/setStartData', {
-        data: startImgData,
-        id: this._uid,
-      })
-    },
-    drop(index) {
-      // 获取拖动时的组件id
-      const startId = this.$store.state.dragImg.startImgId
-      const endId = this._uid
-      const endImgData = this.imgList[index]
-      this.imgList.splice(index, 1, this.$store.state.dragImg.startImgData)
-      const that = this
-      if (startId === endId) {
-        // 拖动起始组件和结束组件相同时替换拖动后的图片
-        setTimeout(() => {
-          that.imgList.splice(that.startImgIndex, 1, endImgData)
-        }, 10)
-      }
-    },
-    allowDrop(e) {
-      e.preventDefault()
-    },
-    swapArr(arr, index1, index2) {
-      arr[index1] = arr.splice(index2, 1, arr[index1])[0]
-      return arr
     },
   },
 }
@@ -164,6 +169,24 @@ input[type='file' i]::-webkit-file-upload-button {
 }
 </style>
 <style lang="less" scoped>
+.mask-area {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  padding: 40px 0;
+  background: rgba(0, 0, 0, 1);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 999;
+  img {
+    max-height: 100%;
+    max-width: 100%;
+    display: block;
+  }
+}
 .img-area {
   width: auto;
   overflow: hidden;
@@ -182,26 +205,21 @@ input[type='file' i]::-webkit-file-upload-button {
   position: relative;
   margin-bottom: 6px;
   padding: 2px;
-  .btn-dlt {
-    position: absolute;
-    right: 0;
-    top: 4px;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    font-size: 40px;
-    z-index: 99;
-    background: yellow;
-    color: #acafa6;
-  }
-}
-.el-image {
-  width: 100%;
-  height: 100%;
   box-sizing: border-box;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  .btn-dlt {
+    position: absolute;
+    right: 0;
+    top: 0px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 40px;
+    z-index: 3;
+    color: #acafa6;
+  }
   img {
     max-height: 100%;
     max-width: 100%;
@@ -216,6 +234,11 @@ input[type='file' i]::-webkit-file-upload-button {
   overflow: hidden;
   color: #dcdfe6;
   font-size: 40px;
+  .loading-area {
+    font-size: 12px;
+    text-align: center;
+    line-height: 160px;
+  }
 }
 .file-input {
   position: absolute;

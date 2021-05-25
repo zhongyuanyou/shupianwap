@@ -89,11 +89,22 @@
           @click="handleInterStatus(0)"
           >取消面谈</sp-button
         >
-        <div v-if="info.inviteStatus !== 0" class="status">
+        <sp-button
+          v-if="info.inviteStatus === 1 && info.evaluateInfoStatus === 1"
+          type="primary"
+          :class="'evaluating'"
+          @click="goEvaluate(info)"
+          >进行评价</sp-button
+        >
+
+        <div
+          v-if="info.inviteStatus !== 0 && info.evaluateInfoStatus !== 1"
+          class="status"
+        >
           {{
             info.inviteStatus === 1
               ? '已面谈'
-              : info.inviteStatus === 2
+              : info.inviteStatus === 2 && info.evaluateInfoStatus === 3
               ? '已评价'
               : '已取消'
           }}
@@ -134,6 +145,8 @@ export default {
         inviteTime: '', // 面谈时间
         inviteStatus: 0, // 面谈状态
         inviterName: '', // 规划师
+        inviterId: '', // 规划师Id
+        evaluateId: '', // 评价Id
       }, // 面谈详情
       loading: false,
     }
@@ -218,11 +231,27 @@ export default {
         })
       }
     },
+    goEvaluate() {
+      this.$router.push({
+        path: '/my/plannerEvaluate',
+        query: {
+          plannerId: this.info.inviterId,
+          infoId: this.info.evaluateId,
+          plannerAvatar: this.$route.query.avatar,
+          plannerName: this.info.inviterName,
+        },
+      })
+    },
   },
 }
 </script>
 
 <style lang="less" scoped>
+.evaluating {
+  color: #fff !important;
+  background-color: #4974f5 !important;
+  border: 1px solid #4974f5 !important;
+}
 .detail {
   width: 100%;
   height: 100%;

@@ -46,6 +46,13 @@
               <span>{{ item.createTime }}</span>
               <div>
                 <my-icon
+                  v-if="item.userId === userInfo.userId"
+                  name="shanchu"
+                  size="0.32rem"
+                  :color="'#999999'"
+                  @click.native="deleteItem(item, index)"
+                ></my-icon>
+                <my-icon
                   name="dianzan"
                   size="0.32rem"
                   :color="item.isApplaud ? '#4974f5' : '#999999'"
@@ -196,6 +203,31 @@ export default {
           item.applaudCount++
           item.isApplaud = 1
         }
+      } else {
+        console.log(message)
+      }
+    },
+    async deleteItem(item, index) {
+      if (!(await this.isLogin())) {
+        return
+      }
+      this.mackLoading = true
+      const { code, message } = await this.$axios.post(
+        knownApi.comments.delete,
+        {
+          currentUserId: this.userInfo.userId,
+          id: item.id,
+        }
+      )
+      this.mackLoading = false
+      if (code === 200) {
+        Toast({
+          message: '删除成功',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_success',
+        })
+        this.list.splice(index, 1)
+        this.getCommentsList()
       } else {
         console.log(message)
       }

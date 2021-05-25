@@ -14,7 +14,7 @@
       <div class="desc">
         <div class="name">
           <div class="name-name">{{ name }}</div>
-          <div class="name-time">2020/09/19 14:00</div>
+          <div class="name-time">{{ evaluateTime }}</div>
         </div>
         <div class="score">
           <div class="score-tile">服务评分</div>
@@ -28,36 +28,12 @@
             ></my-icon>
           </template>
           <div class="score-desc">
-            {{
-              starLevel === 1
-                ? '非常差'
-                : starLevel === 2
-                ? '差'
-                : starLevel === 3
-                ? '一般'
-                : starLevel === 4
-                ? '满意'
-                : starLevel === 5
-                ? '超赞'
-                : ''
-            }}
+            {{ starLevel | filterLevel }}
           </div>
         </div>
         <div class="score-sub">
           <span v-for="(item, index) in evaluateDimensionList" :key="index"
-            >{{ item.name }}:{{
-              item.fraction === '2'
-                ? '1星'
-                : item.fraction === '4'
-                ? '2星'
-                : item.fraction === '6'
-                ? '3星'
-                : item.fraction === '8'
-                ? '4星'
-                : item.fraction === '10'
-                ? '5星'
-                : ''
-            }}</span
+            >{{ item.name }}:{{ item.fraction | filterFraction }}</span
           >
         </div>
       </div>
@@ -66,7 +42,7 @@
     <div class="content">
       {{ evaluateContent }}
     </div>
-    <div class="tips">
+    <div v-if="evaluateTagList.length > 0" class="tips">
       <my-icon
         class="tips-icon"
         name="biaoqian"
@@ -86,9 +62,6 @@
 import { Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import { evaluateApi } from '@/api'
-// mock data
-const avatar = 'https://dchipscommon.dgg188.cn/img/bg.1e53fbc6.png'
-const name = '吴月茹'
 
 export default {
   name: 'EvaluateDetail',
@@ -96,11 +69,25 @@ export default {
     Header,
     [Image.name]: Image,
   },
+  filters: {
+    filterLevel(val) {
+      const txts = ['', '非常差', '差', '一般', '好', '非常好']
+      return txts[val] || ''
+    },
+    filterFraction(val) {
+      if (val) {
+        return `${val}星`
+      } else {
+        return ''
+      }
+    },
+  },
   data() {
     return {
-      avatar,
+      evaluateTime: '',
+      avatar: '',
       avatarSize: '0.8rem',
-      name,
+      name: '规划师',
       starLevel: 1, // 星级
       stars: [
         { flag: false },
@@ -124,15 +111,19 @@ export default {
   },
   mounted() {
     this.init()
-    this.setStars()
+    this.name = this.$route.query.plannerName
+    if (this.$route.query.plannerId) {
+      this.getPlannerInfo()
+    } else {
+      this.avatar = this.$route.query.plannerAvatar
+    }
   },
   methods: {
     async init() {
       const params = {
-        // infoId: this.$route.query.infoId,
-        // userId: this.$route.query.userId,
-        // planerId: this.$route.query.planerId,
-        infoId: '1118738721594990083',
+        infoId: this.$route.query.infoId,
+        userId: this.$store.state.user.userId,
+        planerId: this.$route.query.planerId,
       }
       const res = await this.$axios.get(evaluateApi.detail, { params })
       if (res.code === 200) {
@@ -140,7 +131,13 @@ export default {
         this.evaluateContent = res.data.evaluateContent
         this.evaluateTagList = res.data.evaluateTagList
         this.evaluateDimensionList = res.data.evaluateDimensionList
-        // const serverScore = res.data.serverScore
+        if (res.data.serverScore) {
+          this.starLevel = res.data.serverScore
+          this.setStars()
+        }
+        this.evaluateTime = res.data.evaluateTime
+      } else {
+        this.$xToast.show({ message: '获取信息失败' })
       }
     },
     setStars() {
@@ -151,6 +148,17 @@ export default {
           item.flag = true
         }
       })
+    },
+    async getPlannerInfo() {
+      const params = {
+        plannerId: this.$route.query.plannerId,
+      }
+      const res = await this.$axios.get(evaluateApi.getAvatar, { params })
+      if (res.code === 200) {
+        this.avatar = res.data.img
+      } else {
+        this.$xToast.show({ message: '获取信息失败' })
+      }
     },
   },
 }

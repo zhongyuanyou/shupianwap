@@ -26,7 +26,8 @@ import contract from './contract'
 import knownApi from './known'
 import knownQuestionArticleApi from './knownQuestionArticle' // 必懂文章集合api
 import { activityApi } from './activity' // 活动专题api
-import { evaluateApi } from './evaluate' // 活动专题api
+import { evaluateApi } from './evaluate' // 评价api
+import { documentApi } from './document' // 文档api 
 
 export { auth, shoppingCar, planner }
 export { category }
@@ -55,3 +56,5 @@ export { knownApi }
 export { knownQuestionArticleApi }
 export { activityApi }
 export { evaluateApi }
+export { documentApi }
+

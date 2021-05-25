@@ -528,6 +528,7 @@ export default {
           font-family: PingFang SC;
           font-weight: 400;
           color: #5c7499;
+          margin-right: 10px;
           // margin-right: 10px;
         }
         .tag-tc {

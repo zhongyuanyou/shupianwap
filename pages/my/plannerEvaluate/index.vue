@@ -25,12 +25,9 @@
       <!--S 规划师-->
       <div class="planer_container">
         <div class="planer_left">
-          <img
-            src="https://cdn.shupian.cn/sp-pt/wap/images/amy4chmsb0c0000.jpg"
-            alt=""
-          />
+          <img :src="avatar" alt="" />
         </div>
-        <div class="planer_name">吴月茹</div>
+        <div class="planer_name">{{ plannerName }}</div>
         <div class="planer_right">已对规划师匿名</div>
       </div>
       <!--E 规划师-->
@@ -46,6 +43,7 @@
 
 <script>
 import { CenterPopup } from '@chipspc/vant-dgg'
+import { evaluateApi } from '@/api'
 import Header from '@/components/common/head/header'
 import EvaluateStar from '@/components/evaluate/EvaluateStar'
 export default {
@@ -56,41 +54,38 @@ export default {
     EvaluateStar,
     [CenterPopup.name]: CenterPopup,
   },
-  // async asyncData({ store, $axios }) {
-  //   try {
-  //     let homeData = {}
-  //     const params = {
-  //       platformCode: store.state.app.isInApp
-  //         ? store.state.app.appInfo.platformCode
-  //         : 'COMDIC_PLATFORM_CRISPS',
-  //       terminalCode: store.state.app.isInApp
-  //         ? 'COMDIC_TERMINAL_APP'
-  //         : 'COMDIC_TERMINAL_WAP',
-  //     }
-  //     const res = await $axios.get(foundApi.initRequest, { params })
-  //     if (res.code === 200) {
-  //       homeData = res.data || {}
-  //     }
-  //     return {
-  //       homeData,
-  //     }
-  //   } catch (err) {}
-  // },
+
   data() {
     return {
+      infoId: '',
+      avatar: '',
+      plannerName: '',
       showPop: false,
+      plannerId: '',
       Field: {
         type: 'functional',
         title: '温馨提示',
         description: '差一点就评价完了，是否确认退出？',
         confirmButtonText: '继续评价',
-        cancelButtonText: '操作',
+        cancelButtonText: '退出',
       },
     }
   },
   computed: {},
-  mounted() {},
+  mounted() {
+    this.init()
+  },
   methods: {
+    init() {
+      if (this.$route.query.plannerId) {
+        this.getPlannerInfo()
+      } else {
+        this.avatar = this.$route.query.plannerAvatar
+      }
+      this.plannerName = this.$route.query.plannerName || ''
+      this.plannerId = this.$route.query.plannerId || ''
+      this.infoId = this.$route.query.infoId
+    },
     back() {
       console.log('back')
       this.showPop = true
@@ -100,6 +95,17 @@ export default {
     },
     cancel() {
       this.$back()
+    },
+    async getPlannerInfo() {
+      const params = {
+        plannerId: this.$route.query.plannerId,
+      }
+      const res = await this.$axios.get(evaluateApi.getAvatar, { params })
+      if (res.code === 200) {
+        this.avatar = res.data[0].img
+      } else {
+        this.$xToast.error('获取头像失败')
+      }
     },
   },
 }

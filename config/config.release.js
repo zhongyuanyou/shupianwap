@@ -1,5 +1,3 @@
-/* 预发布配置文件 */
-
 module.exports = {
   baseURL: 'https://tspmicrouag.shupian.cn',
   mchMerchantSgin: '63E4A4CB44669BAA672EB2DE2528CCEA',
@@ -16,4 +14,16 @@ module.exports = {
   SYS_CODE: 'spc-wap',
   // 网关签名密钥
   SECRET: 'd009a5c373334b7412e6742ee8759658',
+  // OSS资源路径(使用框架组上传)
+  deleteUrl:
+    'https://tspmicrouag.shupian.cn/tac-external-platform-server/oss/deleteSingle',
+  callBackUrl:
+    'https://tspmicrouag.shupian.cn/tac-external-platform-server/oss/callback',
+  stsUrl: 'https://tspmicrouag.shupian.cn/tac-external-platform-server/oss/sts',
+  listUrl:
+    'https://tspmicrouag.shupian.cn/tac-external-platform-server/oss/find',
+  fileUrl:
+    'https://tspmicrouag.shupian.cn/tac-external-platform-server/oss/find',
+  mutlefindUrl:
+    'https://tspmicrouag.shupian.cn/tac-external-platform-server/oss/mutlefind',
 }

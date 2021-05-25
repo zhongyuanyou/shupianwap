@@ -96,7 +96,7 @@ export default {
         price: this.priceactive,
         sort: this.sortactive,
         class: this.itemsclass,
-        clientType: 'COMDIC_TERMINAL_APP',
+        showClient: 'COMDIC_TERMINAL_APP',
       },
       datalist: [],
       items: '',
