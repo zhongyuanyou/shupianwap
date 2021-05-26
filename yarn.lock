@@ -1210,10 +1210,10 @@
   resolved "http://tmobile.dgg188.cn/@fe/pdfjs-dist/download/@fe/pdfjs-dist-2.7.571.tgz#87224d05b347542c9acf9e6123e3a57dbbf2d0e5"
   integrity sha1-hyJNBbNHVCyaz55hI+Olfbvy0OU=
 
-"@fe/sp-ui-mobile@^0.0.8":
-  version "0.0.8"
-  resolved "http://tmobile.dgg188.cn/@fe/sp-ui-mobile/download/@fe/sp-ui-mobile-0.0.8.tgz#bba8fefaff41887563eea69a33e42a8a9229665b"
-  integrity sha1-u6j++v9BiHVj7qaaM+QqipIpZls=
+"@fe/sp-ui-mobile@0.0.21":
+  version "0.0.21"
+  resolved "http://tmobile.dgg188.cn/@fe/sp-ui-mobile/download/@fe/sp-ui-mobile-0.0.21.tgz#809470ebb7b138a9288f552f7b95e2ea9366b2b0"
+  integrity sha1-gJRw67exOKkoj1Uve5Xi6pNmsrA=
   dependencies:
     "@fe/common" "^0.0.8"
     ali-oss "^6.12.0"
@@ -2246,6 +2246,11 @@
   version "1.5.2"
   resolved "https://registry.npm.taobao.org/@vant/icons/download/@vant/icons-1.5.2.tgz#3f3ea353a0eacd38c113757bd31836489facb10b"
   integrity sha1-Pz6jU6DqzTjBE3V70xg2SJ+ssQs=
+
+"@vant/icons@^1.5.3":
+  version "1.6.0"
+  resolved "https://registry.nlark.com/@vant/icons/download/@vant/icons-1.6.0.tgz#3db7eb7f963f51a2a08676720d5af9c4c3512feb"
+  integrity sha1-Pbfrf5Y/UaKghnZyDVr5xMNRL+s=
 
 "@vant/popperjs@^1.0.0":
   version "1.1.0"
@@ -14447,6 +14452,17 @@ vant@^2.12.1:
   dependencies:
     "@babel/runtime" "7.x"
     "@vant/icons" "1.5.2"
+    "@vant/popperjs" "^1.0.0"
+    "@vue/babel-helper-vue-jsx-merge-props" "^1.0.0"
+    vue-lazyload "1.2.3"
+
+vant@^2.12.19:
+  version "2.12.20"
+  resolved "https://registry.nlark.com/vant/download/vant-2.12.20.tgz#d4ebd91c3d88a7cbe4c910edc250286cc3a273c2"
+  integrity sha1-1OvZHD2Ip8vkyRDtwlAobMOic8I=
+  dependencies:
+    "@babel/runtime" "7.x"
+    "@vant/icons" "^1.5.3"
     "@vant/popperjs" "^1.0.0"
     "@vue/babel-helper-vue-jsx-merge-props" "^1.0.0"
     vue-lazyload "1.2.3"
