@@ -53,7 +53,7 @@
         autosize
         type="textarea"
         maxlength="500"
-        placeholder="请对规划师的服务进行评价~"
+        placeholder="请对服务进行评价~"
         show-word-limit
       />
     </div>
@@ -391,13 +391,12 @@ export default {
     async addEvaluateApi() {
       try {
         this.loading = true
-        this.buildEvaluateDimensionList()
         this.buildTips()
         const params = {
           infoId: this.infoId,
           evaluateContent: this.evaluateContent,
-          serverScore: this.totalStarLevel + '',
-          evaluateDimensionList: this.evaluateDimensionList,
+          serverScore: this.totalStarLevel * 2 + '', // 分数传值需要*2
+          evaluateDimensionList: this.buildEvaluateDimensionList(),
           evaluateTagList: this.tips,
           sourceSyscode: this.CONFIG.SYS_CODE,
         }
@@ -405,6 +404,7 @@ export default {
         if (this.uploadImgFlag) {
           params.evaluateFileId = this.evaluateFileId
         }
+        console.log(`output params:\n ${JSON.stringify(params)}`)
         const { code } = await this.$axios.post(evaluateApi.add, params)
         if (code !== 200) {
           throw new Error('评价失败')
@@ -417,9 +417,13 @@ export default {
       }
     },
     buildEvaluateDimensionList() {
-      this.evaluateDimensionList.forEach((item) => {
-        item.fraction = item.fraction + ''
-        delete item.imgs
+      // 这里通过map构建数据,不要改变之前数组结构
+      return this.evaluateDimensionList.map((item) => {
+        return {
+          fraction: item.fraction * 2 + '', // 分数传值需要*2
+          id: item.id,
+          name: item.name,
+        }
       })
     },
     buildTips() {
