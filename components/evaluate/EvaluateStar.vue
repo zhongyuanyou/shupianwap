@@ -404,7 +404,6 @@ export default {
         if (this.uploadImgFlag) {
           params.evaluateFileId = this.evaluateFileId
         }
-        console.log(`output params:\n ${JSON.stringify(params)}`)
         const { code } = await this.$axios.post(evaluateApi.add, params)
         if (code !== 200) {
           throw new Error('评价失败')

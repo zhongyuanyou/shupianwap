@@ -65,7 +65,7 @@ export default {
       page: 1,
       limit: 15,
       evaluateList: [], // 订单列表
-      evaluateStatus: [],
+      evaluateStatus: [1], // 默认查询待评价
     }
   },
   beforeRouteLeave(to, from, next) {
