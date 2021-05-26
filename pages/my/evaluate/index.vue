@@ -88,9 +88,9 @@ export default {
       this.evaluateList = []
 
       if (val === 0) {
-        this.evaluateStatus = val + 1
+        this.evaluateStatus = [1]
       } else {
-        this.evaluateStatus = 3
+        this.evaluateStatus = [2, 3, 4, 5]
       }
       this.page = 1
       this.error = false
