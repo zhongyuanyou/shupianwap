@@ -30,38 +30,14 @@
           ></my-icon>
         </template>
         <div class="score-block-desc">
-          {{
-            starLevel === 1
-              ? '非常差'
-              : starLevel === 2
-              ? '差'
-              : starLevel === 3
-              ? '一般'
-              : starLevel === 4
-              ? '好'
-              : starLevel === 5
-              ? '非常好'
-              : ''
-          }}
+          {{ starLevel | fliterLevel }}
         </div>
       </div>
       <div class="score-time">{{ evaluateTime }}</div>
     </div>
     <div class="score-sub">
       <span v-for="(item, index) in evaluateDimensionList" :key="index"
-        >{{ item.name }}:&nbsp;{{
-          item.fraction === 1
-            ? '1星'
-            : item.fraction === 2
-            ? '2星'
-            : item.fraction === 3
-            ? '3星'
-            : item.fraction === 4
-            ? '4星'
-            : item.fraction === 5
-            ? '5星'
-            : ''
-        }}</span
+        >{{ item.name }}:&nbsp;{{ item.fraction | fliterStar }}</span
       >
     </div>
     <div class="placeholder"></div>
@@ -107,6 +83,22 @@ export default {
   components: {
     Header,
     [Image.name]: Image,
+  },
+  filters: {
+    fliterLevel(val) {
+      const txts = {
+        0: '非常差',
+        2: '非常差',
+        4: '差',
+        6: '一般',
+        8: '好',
+        10: '非常好',
+      }
+      return txts[val] || '非常差'
+    },
+    fliterStar(val) {
+      return val ? val + '星' : '无'
+    },
   },
   data() {
     return {
