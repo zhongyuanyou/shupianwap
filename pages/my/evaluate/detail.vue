@@ -102,6 +102,7 @@ import { evaluateApi } from '@/api'
 // mock data
 
 export default {
+  layout: 'keepAlive',
   name: 'EvaluateDetail',
   components: {
     Header,

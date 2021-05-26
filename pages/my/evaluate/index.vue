@@ -40,12 +40,14 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import { Tab, Tabs, List } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import EvaluateList from '@/components/my/evaluate/EvaluateList'
 import { evaluateApi } from '@/api/evaluate'
 
 export default {
+  layout: 'keepAlive',
   name: 'Evaluate',
   components: {
     Header,
@@ -66,7 +68,18 @@ export default {
       evaluateStatus: 1,
     }
   },
+  beforeRouteLeave(to, from, next) {
+    if (['my-evaluate-detail'].includes(to.name)) {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'Evaluate' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'Evaluate' })
+    }
+    next()
+  },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     changeTab(val) {
       this.init(val)
       this.onLoad()
