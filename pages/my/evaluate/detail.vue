@@ -111,11 +111,11 @@ export default {
       orderName: '',
       starLevel: 1, // 星级
       stars: [
-        { flag: false },
-        { flag: false },
-        { flag: false },
-        { flag: false },
-        { flag: false },
+        { flag: false, num: 2 },
+        { flag: false, num: 4 },
+        { flag: false, num: 6 },
+        { flag: false, num: 8 },
+        { flag: false, num: 10 },
       ], // flag 图标是否点亮
       evaluateContent: '',
       evaluateTagList: '',
@@ -170,8 +170,8 @@ export default {
     setStars() {
       // 构建星级
       const _this = this
-      this.stars.forEach((item, index) => {
-        if (_this.starLevel > index) {
+      this.stars.forEach((item) => {
+        if (_this.starLevel >= item.num) {
           item.flag = true
         }
       })
@@ -290,7 +290,7 @@ export default {
     position: relative;
     &-icon {
       position: absolute;
-      top: 8px;
+      top: 6px;
     }
     &-desc {
       margin-left: 36px;

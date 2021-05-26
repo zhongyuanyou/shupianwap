@@ -33,7 +33,7 @@
         </div>
         <div class="score-sub">
           <span v-for="(item, index) in evaluateDimensionList" :key="index"
-            >{{ item.name }}:{{ item.fraction | filterFraction }}</span
+            >{{ item.name }}:&nbsp;{{ item.fraction | filterFraction }}</span
           >
         </div>
       </div>
@@ -68,7 +68,7 @@ export default {
     [Image.name]: Image,
   },
   filters: {
-    fliterLevel(val) {
+    filterLevel(val) {
       const txts = {
         0: '非常差',
         2: '非常差',
@@ -91,11 +91,11 @@ export default {
       name: '规划师',
       starLevel: 1, // 星级
       stars: [
-        { flag: false },
-        { flag: false },
-        { flag: false },
-        { flag: false },
-        { flag: false },
+        { flag: false, num: 2 },
+        { flag: false, num: 4 },
+        { flag: false, num: 6 },
+        { flag: false, num: 8 },
+        { flag: false, num: 10 },
       ], // flag 图标是否点亮
       evaluateContent: '',
       evaluateTagList: '',
@@ -152,8 +152,8 @@ export default {
     setStars() {
       // 构建星级
       const _this = this
-      this.stars.forEach((item, index) => {
-        if (_this.starLevel > index) {
+      this.stars.forEach((item) => {
+        if (_this.starLevel >= item.num) {
           item.flag = true
         }
       })
@@ -249,7 +249,7 @@ export default {
     position: relative;
     &-icon {
       position: absolute;
-      top: 8px;
+      top: 6px;
     }
     &-desc {
       margin-left: 36px;
