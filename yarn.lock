@@ -1039,10 +1039,10 @@
     "@dgg/oss" "^1.0.0"
     ali-oss "6.9.1"
 
-"@dgg/sp-im-sdk@^1.0.0-beat34":
-  version "1.0.0-beat36"
-  resolved "http://tmobile.dgg188.cn/@dgg/sp-im-sdk/download/@dgg/sp-im-sdk-1.0.0-beat36.tgz#09f1778c78362029d618de075f49b0c15052a48c"
-  integrity sha1-CfF3jHg2ICnWGN4HX0mwwVBSpIw=
+"@dgg/sp-im-sdk@^1.0.0-beat39":
+  version "1.0.0-beat39"
+  resolved "http://tmobile.dgg188.cn/@dgg/sp-im-sdk/download/@dgg/sp-im-sdk-1.0.0-beat39.tgz#46f16238e8350f9c4b934c2d85688fcc0b78d31e"
+  integrity sha1-RvFiOOg1D5xLk0wthWiPzAt40x4=
   dependencies:
     rollup-plugin-filesize "^9.0.2"
     rollup-plugin-serve "^1.0.4"

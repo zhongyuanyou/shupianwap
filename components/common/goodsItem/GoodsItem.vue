@@ -265,6 +265,7 @@ export default {
     overflow: hidden;
     position: relative;
     min-height: 220px;
+    padding-bottom:40px;
     h3 {
       font-size: 32px;
       font-family: PingFang SC;
