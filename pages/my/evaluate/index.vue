@@ -65,7 +65,7 @@ export default {
       page: 1,
       limit: 15,
       evaluateList: [], // 订单列表
-      evaluateStatus: 1,
+      evaluateStatus: [],
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -106,7 +106,7 @@ export default {
         const params = {
           page: this.page,
           limit: this.limit,
-          evaluateStatus: this.evaluateStatus + '',
+          evaluateStatus: this.evaluateStatus,
         }
         const { code, data, message } = await this.$axios.post(
           evaluateApi.list,
