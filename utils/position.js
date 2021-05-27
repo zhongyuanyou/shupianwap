@@ -52,7 +52,7 @@ export const getPositonCity = () => {
           returnData.code = 200
           returnData.message = '定位成功，匹配到对应的服务城市'
           returnData.data.name = res.city
-          if (res.city || res.province === '局域网' || JSON.stringify(res.city) === '[]') {
+          if (!res.city || res.province === '局域网' || JSON.stringify(res.city) === '[]') {
             returnData.code = 5001
             returnData.message = '定位失败,请稍后再试'
           }
