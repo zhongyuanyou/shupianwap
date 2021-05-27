@@ -108,6 +108,7 @@ export default {
       },
       classcode: this.$route.query,
       isOne: true,
+      onshow:true,
     }
   },
   computed: {},
