@@ -40,12 +40,14 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import { Tab, Tabs, List } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import EvaluateList from '@/components/my/evaluate/EvaluateList'
 import { evaluateApi } from '@/api/evaluate'
 
 export default {
+  layout: 'keepAlive',
   name: 'Evaluate',
   components: {
     Header,
@@ -63,10 +65,21 @@ export default {
       page: 1,
       limit: 15,
       evaluateList: [], // 订单列表
-      evaluateStatus: 1,
+      evaluateStatus: [1], // 默认查询待评价
     }
   },
+  beforeRouteLeave(to, from, next) {
+    if (['my-evaluate-detail'].includes(to.name)) {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'Evaluate' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'Evaluate' })
+    }
+    next()
+  },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     changeTab(val) {
       this.init(val)
       this.onLoad()
@@ -75,9 +88,9 @@ export default {
       this.evaluateList = []
 
       if (val === 0) {
-        this.evaluateStatus = val + 1
+        this.evaluateStatus = [1]
       } else {
-        this.evaluateStatus = 3
+        this.evaluateStatus = [2, 3, 4, 5]
       }
       this.page = 1
       this.error = false
@@ -93,7 +106,7 @@ export default {
         const params = {
           page: this.page,
           limit: this.limit,
-          evaluateStatus: this.evaluateStatus + '',
+          evaluateStatus: this.evaluateStatus,
         }
         const { code, data, message } = await this.$axios.post(
           evaluateApi.list,

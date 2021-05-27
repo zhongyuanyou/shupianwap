@@ -18,48 +18,26 @@
       </div>
     </div>
     <div class="score">
-      <div class="score-tile">服务评分</div>
-      <template v-for="(item, index) in stars">
-        <my-icon
-          :key="index"
-          class="score-icon"
-          name="dafen_mian"
-          size="0.22rem"
-          :color="item.flag ? '#FFB400' : '#F0F0F0'"
-        ></my-icon>
-      </template>
-      <div class="score-desc">
-        {{
-          starLevel === 1
-            ? '非常差'
-            : starLevel === 2
-            ? '差'
-            : starLevel === 3
-            ? '一般'
-            : starLevel === 4
-            ? '满意'
-            : starLevel === 5
-            ? '超赞'
-            : ''
-        }}
+      <div class="score-block">
+        <div class="score-block-tile">服务评分</div>
+        <template v-for="(item, index) in stars">
+          <my-icon
+            :key="index"
+            class="score-block-icon"
+            name="dafen_mian"
+            size="0.22rem"
+            :color="item.flag ? '#FFB400' : '#F0F0F0'"
+          ></my-icon>
+        </template>
+        <div class="score-block-desc">
+          {{ starLevel | fliterLevel }}
+        </div>
       </div>
-      <div class="score-time">2020/09/19 14:00</div>
+      <div class="score-time">{{ evaluateTime }}</div>
     </div>
     <div class="score-sub">
       <span v-for="(item, index) in evaluateDimensionList" :key="index"
-        >{{ item.name }}:{{
-          item.fraction === 1
-            ? '1星'
-            : item.fraction === 2
-            ? '2星'
-            : item.fraction === 3
-            ? '3星'
-            : item.fraction === 4
-            ? '4星'
-            : item.fraction === 5
-            ? '5星'
-            : ''
-        }}</span
+        >{{ item.name }}:&nbsp;{{ item.fraction | fliterStar }}</span
       >
     </div>
     <div class="placeholder"></div>
@@ -79,7 +57,7 @@
         radius="8px"
       />
     </div>
-    <div class="tips">
+    <div v-if="evaluateTagFlag" class="tips">
       <my-icon
         class="tips-icon"
         name="biaoqian"
@@ -87,9 +65,7 @@
         color="#999999"
       ></my-icon>
       <div class="tips-desc">
-        <span v-for="(item, index) in evaluateTagList" :key="index">{{
-          item.name
-        }}</span>
+        <p>{{ evaluateTagList }}</p>
       </div>
     </div>
   </div>
@@ -102,35 +78,51 @@ import { evaluateApi } from '@/api'
 // mock data
 
 export default {
+  layout: 'keepAlive',
   name: 'EvaluateDetail',
   components: {
     Header,
     [Image.name]: Image,
   },
+  filters: {
+    fliterLevel(val) {
+      const txts = {
+        0: '非常差',
+        2: '非常差',
+        4: '差',
+        6: '一般',
+        8: '好',
+        10: '非常好',
+      }
+      return txts[val] || '非常差'
+    },
+    fliterStar(val) {
+      return val ? val + '星' : '无'
+    },
+  },
   data() {
     return {
       evaluateImgs: [],
-      avatar: 'https://dchipscommon.dgg188.cn/img/bg.1e53fbc6.png',
       imgs: '',
-      orderDesc:
-        '是否健康路撒大家福克斯的缴费基数东方季道附近附近JFJF解决方法将',
-      indexImg: 'https://dchipscommon.dgg188.cn/img/bg.1e53fbc6.png',
+      orderDesc: '',
+      indexImg: '',
       imageSize: '1.3rem',
       size: '2.1rem',
-      orderName:
-        '是否健康路撒大家福克斯的缴费基数东方季道附近附近JFJF解决方法将',
+      orderName: '',
       starLevel: 1, // 星级
       stars: [
-        { flag: false },
-        { flag: false },
-        { flag: false },
-        { flag: false },
-        { flag: false },
+        { flag: false, num: 2 },
+        { flag: false, num: 4 },
+        { flag: false, num: 6 },
+        { flag: false, num: 8 },
+        { flag: false, num: 10 },
       ], // flag 图标是否点亮
       evaluateContent: '',
-      evaluateTagList: [],
+      evaluateTagList: '',
+      evaluateTagFlag: false,
       evaluateDimensionList: [],
       serverScore: 0, // 服务分
+      evaluateTime: '',
     }
   },
   mounted() {
@@ -149,11 +141,19 @@ export default {
       }
       const res = await this.$axios.get(evaluateApi.detail, { params })
       if (res.code === 200) {
-        console.log(res)
         this.evaluateContent = res.data.evaluateContent
-        this.evaluateTagList = res.data.evaluateTagList
+        if (res.data.evaluateTagList.length > 0) {
+          this.evaluateTagList = (
+            res.data.evaluateTagList.map((item) => {
+              return item.name
+            }) || []
+          ).join(', ')
+          this.evaluateTagFlag = true
+        }
+
         this.evaluateDimensionList = res.data.evaluateDimensionList
         this.evaluateImgs = res.data.evaluateImgs || []
+        this.evaluateTime = res.data.evaluateTime
         if (res.data.serverScore) {
           this.starLevel = res.data.serverScore
           this.setStars()
@@ -170,8 +170,8 @@ export default {
     setStars() {
       // 构建星级
       const _this = this
-      this.stars.forEach((item, index) => {
-        if (_this.starLevel > index) {
+      this.stars.forEach((item) => {
+        if (_this.starLevel >= item.num) {
           item.flag = true
         }
       })
@@ -229,20 +229,24 @@ export default {
     padding: 0 40px;
     .mixin-flex();
     align-items: center;
+    justify-content: space-between;
     margin-bottom: 24px;
-    &-tile {
-      font: 400 24px @fontf-pfsc-reg;
-      color: #222222;
-      margin-right: 16px;
-    }
-    &-icon {
-      margin-right: 8px;
-    }
-    &-desc {
-      margin-left: 8px;
-      font: 400 22px @fontf-pfsc-reg;
-      color: #555555;
-      margin-right: 110px;
+    &-block {
+      .mixin-flex();
+      align-items: center;
+      &-tile {
+        font: 400 24px @fontf-pfsc-reg;
+        color: #222222;
+        margin-right: 16px;
+      }
+      &-icon {
+        margin-right: 8px;
+      }
+      &-desc {
+        margin-left: 8px;
+        font: 400 22px @fontf-pfsc-reg;
+        color: #555555;
+      }
     }
     &-time {
       font: 400 0.24rem @font-regular;
@@ -282,14 +286,15 @@ export default {
     }
   }
   .tips {
-    .mixin-flex();
-    align-items: center;
-    margin-left: 40px;
+    padding: 0 40px;
+    position: relative;
     &-icon {
-      margin-right: 12px;
+      position: absolute;
+      top: 6px;
     }
     &-desc {
-      font: 400 24px/24px @fontf-pfsc-reg;
+      margin-left: 36px;
+      font: 400 24px/40px @fontf-pfsc-reg;
       color: #999999;
     }
   }

@@ -301,7 +301,16 @@ export default {
     clickTab(index) {
       // 进入待评价页面
       if (index === 5) {
-        this.$router.push({ path: '/my/evaluate' })
+        if (this.token) {
+          this.$router.push({ path: '/my/evaluate' })
+        } else {
+          this.$router.push({
+            path: '/login',
+            query: {
+              redirect: '/my/evaluate',
+            },
+          })
+        }
         return
       }
       // console.log('index', index)
@@ -436,8 +445,14 @@ export default {
         // 清除cookie中的数据
         this.info = {}
         this.$store.dispatch('user/clearUser')
+        // 清除查询的评价内容
+        this.clearEvaluate()
         // localStorage.removeItem('info')
       }
+    },
+    clearEvaluate() {
+      this.evaluateNumFlag = 'none'
+      this.evaluateNum = 0
     },
   },
 }
