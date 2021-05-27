@@ -625,8 +625,8 @@ export default {
           if (this.fromPage === 'orderList') this.getOrderList()
           else this.getDetail()
         })
-        .catch((err) => {
-          console.log('err', err)
+        .catch((error) => {
+          console.log('err', error)
         })
     },
     // 不同意协议
