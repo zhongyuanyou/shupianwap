@@ -352,7 +352,8 @@ export default {
     }),
     comment() {
       document.querySelector('#comment').scrollIntoView(true)
-      document.documentElement.scrollTop = (document.documentElement.scrollTop - 250)
+      document.documentElement.scrollTop =
+        document.documentElement.scrollTop - 250
     },
     scrollHandle({ scrollTop }) {
       // 滚动事件
@@ -404,6 +405,9 @@ export default {
           productType: 'PRO_CLASS_TYPE_SALES', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
           title: this.sellingDetail.name, // 产品名称（产品详情页传、咨询页等）
           platform: 'm', // 平台（app,m,pc）
+          formatIdOne:
+            this.sellingDetail.classCodeLevel.split(',')[0] ||
+            this.sellingDetail.classCodeLevel.split(',')[1],
           page: { pageNo: this.productPage, pageSize: this.productLimit },
         })
         .then((res) => {
@@ -452,6 +456,9 @@ export default {
             user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
             platform: 'app', // 平台（app,m,pc）
             productId: this.sellingDetail.id, // 产品id
+            formatIdOne:
+              this.sellingDetail.classCodeLevel.split(',')[0] ||
+              this.sellingDetail.classCodeLevel.split(',')[1],
           },
         })
         .then((res) => {
@@ -483,6 +490,9 @@ export default {
           user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
           platform: 'app', // 平台（app,m,pc）
           productId: this.sellingDetail.id, // 产品id
+          formatIdOne:
+            this.sellingDetail.classCodeLevel.split(',')[0] ||
+            this.sellingDetail.classCodeLevel.split(',')[1],
         },
       })
       if (plannerRes.code === 200) {

@@ -288,7 +288,6 @@ export default {
             deviceId: this.deviceId, // 设备ID
             formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
             classCode: formatId1,
-            formatIdOne,
             areaCode: this.city.code, // 区域编码
             sceneId: 'app-jycpxq-02', // 场景ID
             productId: this.proDetail.id, // 产品ID（产品详情页必传）
@@ -298,6 +297,7 @@ export default {
             page: this.productPage,
             limit: this.productLimit,
             searchType: 1, // 搜索推荐产品类型：1：交易，2服务
+            formatIdOne,
           },
         })
         .then((res) => {
@@ -335,11 +335,6 @@ export default {
       const formatId2 = this.proDetail.classCodeLevel.split(',')[1] // 产品二级分类
       const formatId3 = this.proDetail.classCodeLevel.split(',')[2] // 产品三级分类
       const formatId = formatId3 || formatId2
-
-      console.log(
-        'this.$store.state.city.currentCity',
-        this.$store.state.city.currentCity
-      )
       this.$axios
         .get(recommendApi.recommendProduct, {
           params: {
@@ -347,7 +342,6 @@ export default {
             deviceId: this.deviceId, // 设备ID
             formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
             areaCode: this.$store.state.city.currentCity.code, // 区域编码
-            formatIdOne: formatId1,
             classCode: formatId1,
             sceneId: 'app-jycpxq-01', // this.sceneId2 || this.sceneId1 //场景ID
             productId: this.proDetail.id, // 产品ID（产品详情页必传）
@@ -357,6 +351,7 @@ export default {
             page: 1,
             limit: 5,
             searchType: 1, // 搜索推荐产品类型：1：交易，2服务
+            formatIdOne:formatId
           },
         })
         .then((res) => {
@@ -392,6 +387,9 @@ export default {
             user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
             platform: 'app', // 平台（app,m,pc）
             productId: this.proDetail.id, // 产品id
+            formatIdOne:
+            this.proDetail.classCodeLevel.split(',')[0] ||
+            this.proDetail.classCodeLevel.split(',')[1],
           },
         })
         .then((res) => {
@@ -422,6 +420,9 @@ export default {
           user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
           platform: 'app', // 平台（app,m,pc）
           productId: this.proDetail.id, // 产品id
+          formatIdOne:
+            this.proDetail.classCodeLevel.split(',')[0] ||
+            this.proDetail.classCodeLevel.split(',')[1],
         },
       })
       if (plannerRes.code === 200) {
