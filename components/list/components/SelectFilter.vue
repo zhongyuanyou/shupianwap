@@ -175,7 +175,6 @@ export default {
       // 确认筛选
       this.saveActiveItems = clone(this.activeItems, true)
       const emitData = this.resultHandle()
-      console.log(this.emitData,111)
       this.$emit('activeItem', emitData, 'selectFilter-' + this.filterData.code)
       this.$refs.item.toggle()
     },
@@ -204,6 +203,9 @@ export default {
             : 'ext2'
           if(this.filterData.code === 'CONDITION-JY-GS-HY'){
               keyStr = 'code'
+          }
+          if (this.filterData.code === 'CONDITION-JY-SB-FL') {
+             keyStr = 'code'
           }
         this.activeItems.forEach((item) => {
           emitData.fieldValue.push(item[keyStr])
