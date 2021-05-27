@@ -33,7 +33,7 @@
         </div>
         <div class="score-sub">
           <span v-for="(item, index) in evaluateDimensionList" :key="index"
-            >{{ item.name }}:{{ item.fraction | filterFraction }}</span
+            >{{ item.name }}:&nbsp;{{ item.fraction | filterFraction }}</span
           >
         </div>
       </div>
@@ -42,7 +42,7 @@
     <div class="content">
       {{ evaluateContent }}
     </div>
-    <div v-if="evaluateTagList.length > 0" class="tips">
+    <div v-if="evaluateTagFlag" class="tips">
       <my-icon
         class="tips-icon"
         name="biaoqian"
@@ -50,9 +50,7 @@
         color="#999999"
       ></my-icon>
       <div class="tips-desc">
-        <span v-for="(item, index) in evaluateTagList" :key="index">{{
-          item.name
-        }}</span>
+        <p>{{ evaluateTagList }}</p>
       </div>
     </div>
   </div>
@@ -71,15 +69,18 @@ export default {
   },
   filters: {
     filterLevel(val) {
-      const txts = ['', '非常差', '差', '一般', '好', '非常好']
-      return txts[val] || ''
+      const txts = {
+        0: '非常差',
+        2: '非常差',
+        4: '差',
+        6: '一般',
+        8: '好',
+        10: '非常好',
+      }
+      return txts[val] || '非常差'
     },
     filterFraction(val) {
-      if (val) {
-        return `${val}星`
-      } else {
-        return ''
-      }
+      return val ? val + '星' : '无'
     },
   },
   data() {
@@ -90,14 +91,14 @@ export default {
       name: '规划师',
       starLevel: 1, // 星级
       stars: [
-        { flag: false },
-        { flag: false },
-        { flag: false },
-        { flag: false },
-        { flag: false },
+        { flag: false, num: 2 },
+        { flag: false, num: 4 },
+        { flag: false, num: 6 },
+        { flag: false, num: 8 },
+        { flag: false, num: 10 },
       ], // flag 图标是否点亮
       evaluateContent: '',
-      evaluateTagList: [],
+      evaluateTagList: '',
       evaluateDimensionList: [],
       serverScore: 0, // 服务分
       Field: {
@@ -107,6 +108,7 @@ export default {
         confirmButtonText: '继续评价',
         cancelButtonText: '操作',
       },
+      evaluateTagFlag: false,
     }
   },
   mounted() {
@@ -129,7 +131,14 @@ export default {
       if (res.code === 200) {
         console.log(res)
         this.evaluateContent = res.data.evaluateContent
-        this.evaluateTagList = res.data.evaluateTagList
+        if (res.data.evaluateTagList.length > 0) {
+          this.evaluateTagList = (
+            res.data.evaluateTagList.map((item) => {
+              return item.name
+            }) || []
+          ).join(', ')
+          this.evaluateTagFlag = true
+        }
         this.evaluateDimensionList = res.data.evaluateDimensionList
         if (res.data.serverScore) {
           this.starLevel = res.data.serverScore
@@ -143,8 +152,8 @@ export default {
     setStars() {
       // 构建星级
       const _this = this
-      this.stars.forEach((item, index) => {
-        if (_this.starLevel > index) {
+      this.stars.forEach((item) => {
+        if (_this.starLevel >= item.num) {
           item.flag = true
         }
       })
@@ -236,14 +245,15 @@ export default {
     color: #222222;
   }
   .tips {
-    .mixin-flex();
-    align-items: center;
-    margin-left: 40px;
+    padding: 0 40px;
+    position: relative;
     &-icon {
-      margin-right: 12px;
+      position: absolute;
+      top: 6px;
     }
     &-desc {
-      font: 400 24px/24px @fontf-pfsc-reg;
+      margin-left: 36px;
+      font: 400 24px/40px @fontf-pfsc-reg;
       color: #999999;
     }
   }

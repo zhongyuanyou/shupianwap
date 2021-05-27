@@ -95,6 +95,22 @@
           </div>
         </div>
       </div>
+      <div class="my_btns_item" @click="handleClick('/my/interviewRecord')">
+        <div class="my_btns_item_icon">
+          <my-icon name="caifang_mian" size="0.36rem" color="#4974f5" />
+        </div>
+        <div class="my_btns_item_con no_line">
+          面谈记录
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
       <div
         class="my_btns_item"
         @click="handleClick('/known/createCenter', 'login')"
@@ -301,7 +317,16 @@ export default {
     clickTab(index) {
       // 进入待评价页面
       if (index === 5) {
-        this.$router.push({ path: '/my/evaluate' })
+        if (this.token) {
+          this.$router.push({ path: '/my/evaluate' })
+        } else {
+          this.$router.push({
+            path: '/login',
+            query: {
+              redirect: '/my/evaluate',
+            },
+          })
+        }
         return
       }
       // console.log('index', index)
@@ -436,8 +461,14 @@ export default {
         // 清除cookie中的数据
         this.info = {}
         this.$store.dispatch('user/clearUser')
+        // 清除查询的评价内容
+        this.clearEvaluate()
         // localStorage.removeItem('info')
       }
+    },
+    clearEvaluate() {
+      this.evaluateNumFlag = 'none'
+      this.evaluateNum = 0
     },
   },
 }
