@@ -87,3 +87,37 @@ export const setUrlParams = (url, data = {}) => {
   const newSearch = Qs.stringify(newSearchObj)
   return origin + pathname + '?' + newSearch
 }
+
+/**
+ * @param {Any} val
+ * @desc 判断类型
+ */
+export const typeOf = (val) => {
+  return Object.prototype.toString.call(val).match(/([^\s.*]+)(?=]$)/g)[0]
+}
+
+/**
+ *
+ * @param {Object} dst 目标对象
+ * @param {Object} src 被复制对象
+ * @returns 目标对象
+ */
+export const deepCopy = (dst, src) => {
+  if (typeOf(src) === 'Object' && typeOf(dst) === 'Object') {
+    Object.keys(src).forEach((key) => {
+      if (typeOf(src[key]) === 'Object' && !(src[key] instanceof Node)) {
+        if (!dst[key]) {
+          dst[key] = src[key]
+        } else {
+          deepCopy(dst[key], src[key])
+        }
+      } else if (typeOf(src[key]) === 'Array') {
+        dst[key] =
+          typeOf(dst[key]) === 'Array' ? dst[key].concat(src[key]) : src[key]
+      } else {
+        dst[key] = src[key]
+      }
+    })
+    return dst
+  }
+}
