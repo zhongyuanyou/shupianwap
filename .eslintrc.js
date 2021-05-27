@@ -21,7 +21,7 @@ module.exports = {
   plugins: ['prettier'],
   // add your custom rules here
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ||  process.env.NODE_ENV === 'release' ? 'error' : 'off',
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'nuxt/no-cjs-in-config': 'off',
     'vue/no-v-html': 'off',

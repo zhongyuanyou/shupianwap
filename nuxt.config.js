@@ -61,6 +61,7 @@ module.exports = {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     script: [
+      // {src:"http://webapi.amap.com/maps?v=1.4.4&key=5111f49d979a509f1e96420a1b456ff4"},
       {
         src: '/js/sppt-mdweb-sdk-conf.js',
         ssr: false,
