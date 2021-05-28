@@ -142,7 +142,6 @@ export default {
   },
   mounted() {
     this.imgsrc = this.$ossImgSetV2(utils.getEmptyImgConfig('calendar'))
-    this.$isLogin()
   },
   methods: {
     ...mapMutations({
@@ -161,7 +160,12 @@ export default {
       this.emptyFlag = 'not'
     },
     onLoad() {
-      this.findListByStatusApi()
+      this.$isLogin().then((res) => {
+        // 当在app 中登录成功 或者已经有了登录信息
+        if (res || res === 'app_login_success') {
+          this.findListByStatusApi()
+        }
+      })
     },
     async findListByStatusApi() {
       try {
