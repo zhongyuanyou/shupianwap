@@ -1,8 +1,8 @@
 import $axios from '@/plugins/axios'
 import { homeApi } from '@/api'
 import { request } from '@/utils/request'
-// import { CHIPS_WAP_BASE_URL } from '@/config/constant'
-const CHIPS_WAP_BASE_URL = 'http://172.16.132.240:7001/service'
+import { CHIPS_WAP_BASE_URL } from '@/config/constant'
+// const CHIPS_WAP_BASE_URL = 'http://172.16.132.240:7001/service'
 // const token = app.$cookies.get('token', {
 //   path: '/',
 // })
@@ -48,26 +48,32 @@ export const getPositonCity = () => {
         params,
         method: 'get',
         url: `${CHIPS_WAP_BASE_URL}/nk/home/v1/gdmap.do`,
-      }).then((res) => {
-        if (res.status === '1' && res.city) {
-          returnData.code = 200
-          returnData.message = '定位成功，匹配到对应的服务城市'
-          returnData.data.name = res.city
-          if (res.city || res.province === '局域网' || JSON.stringify(res.city) === '[]') {
+      })
+        .then((res) => {
+          if (res.status === '1' && res.city) {
+            returnData.code = 200
+            returnData.message = '定位成功，匹配到对应的服务城市'
+            returnData.data.name = res.city
+            if (
+              res.city ||
+              res.province === '局域网' ||
+              JSON.stringify(res.city) === '[]'
+            ) {
+              returnData.code = 5001
+              returnData.message = '定位失败,请稍后再试'
+            }
+            resolve(returnData)
+          } else {
             returnData.code = 5001
-            returnData.message = '定位失败,请稍后再试'
+            returnData.message = '定位失败，未知异常'
+            resolve(returnData)
           }
-          resolve(returnData)
-        } else {
+        })
+        .catch(() => {
           returnData.code = 5001
           returnData.message = '定位失败，未知异常'
           resolve(returnData)
-        }
-      }).catch(() => {
-        returnData.code = 5001
-        returnData.message = '定位失败，未知异常'
-        resolve(returnData)
-      })
+        })
     }
     // if (navigator.geolocation) {
     //   // 支持
