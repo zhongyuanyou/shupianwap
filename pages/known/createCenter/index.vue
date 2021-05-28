@@ -57,7 +57,7 @@
         </template>
         <template v-else>
           <div class="empty">
-            <div class="empty-img"></div>
+            <img :src="imgsrc" />
             <div class="empty-desc">您暂未创作任何内容～</div>
           </div>
         </template>
@@ -71,6 +71,7 @@ import { mapMutations, mapState } from 'vuex'
 import { Tab, Tabs, Button, List, Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import knownApi from '@/api/known'
+import utils from '@/utils/changeBusinessData'
 
 export default {
   layout: 'keepAlive',
@@ -114,6 +115,7 @@ export default {
         },
       ],
       emptyFlag: 'not',
+      imgsrc: '',
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -139,6 +141,7 @@ export default {
     }),
   },
   mounted() {
+    this.imgsrc = this.$ossImgSetV2(utils.getEmptyImgConfig('calendar'))
     this.$isLogin()
   },
   methods: {
@@ -349,12 +352,12 @@ export default {
   .empty {
     width: 100%;
     margin-top: 140px;
-    &-img {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    img {
       width: 340px;
       height: 340px;
-      background: #4974f5;
-      margin: 0 auto;
-      opacity: 0.4;
     }
     &-desc {
       margin-top: 24px;
