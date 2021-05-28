@@ -17,6 +17,12 @@ const evaluateLevelImgConfig = {
   vhappylight: 'cxyioo5x58g0000.png',
 }
 
+// 添加空图片处理
+const emptyImgConfig = {
+  box: '3py8wghbsaq000.png',
+  calendar: '9tfokyuuxb00000.png',
+}
+
 const getUserType = (type) => {
   return userTypeConfig[type]
 }
@@ -25,7 +31,12 @@ const getEvaluateLevelImg = (type) => {
   return evaluateLevelImgConfig[type]
 }
 
+const getEmptyImgConfig = (type) => {
+  return emptyImgConfig[type]
+}
+
 export default {
   getUserType,
   getEvaluateLevelImg,
+  getEmptyImgConfig,
 }
