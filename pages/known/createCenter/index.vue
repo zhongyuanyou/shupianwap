@@ -291,6 +291,7 @@ export default {
   }
 
   .item {
+    background: #fff;
     padding: 40px 32px;
     .tile {
       position: relative;
@@ -359,6 +360,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background: #fff;
     img {
       width: 340px;
       height: 340px;
