@@ -87,6 +87,23 @@
                   </sp-cell>
                 </div>
               </sp-dropdown-item>
+              <sp-dropdown-item
+                ref="categoryCodeSelect"
+                :title="search.categoryCodeName"
+                class="search__dropdown-category"
+              >
+                <div class="category-list">
+                  <div
+                    v-for="(item, index) in categoryList"
+                    :key="index"
+                    :class="catogyActiveIndex === index ? 'active-item' : ''"
+                    class="item"
+                    @click="chooseCategory(index)"
+                  >
+                    {{ item.name }}
+                  </div>
+                </div>
+              </sp-dropdown-item>
             </sp-dropdown-menu>
           </sp-sticky>
           <!-- E 下拉筛选条件 -->
@@ -176,7 +193,7 @@ import PlannerSearchItem from '@/components/planner/PlannerSearchItem'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 import imHandle from '@/mixins/imHandle'
 
-import { planner, dict } from '@/api'
+import { planner, dict, goods } from '@/api'
 import { callPhone, parseTel } from '@/utils/common'
 
 const SORT_CONFIG = [
@@ -255,6 +272,9 @@ export default {
           name: '区域',
           code: '',
         },
+        categoryCodes: '',
+        categoryCodeName: '全部分类',
+        categoryState: 1,
       },
       sortOption: SORT_CONFIG,
       regionsOption: [],
@@ -264,6 +284,8 @@ export default {
       finished: false,
       pageOption: DEFAULT_PAGE,
       list: [],
+      categoryList: [],
+      catogyActiveIndex: 0,
     }
   },
   computed: {
@@ -288,11 +310,16 @@ export default {
             ? this.code
             : this.currentCity.code
           : region.code
-      const regionDto = {
+      let regionDto = {
         codeState: region.name === '区域' ? 2 : 3,
         regions: [code],
       }
-
+      if (this.search.catogyActiveIndex !== 0) {
+        regionDto = {
+          codeState: 2,
+          regions: [code || '510100'],
+        }
+      }
       return { sort, plannerName: keywords, regionDto }
     },
   },
@@ -316,6 +343,7 @@ export default {
     this.$nextTick(() => {
       this.headHeight = this.$refs.head.clientHeight
     })
+    this.getCategoryCodes()
   },
   methods: {
     ...mapMutations({
@@ -323,7 +351,36 @@ export default {
       setUserInfo: 'user/SET_USER',
       clearUserInfo: 'user/CLEAR_USER',
     }),
-
+    chooseCategory(index) {
+      this.catogyActiveIndex = index
+      this.search.categoryCodeName = this.categoryList[index].name
+      this.search.getCategoryCodes = this.categoryList[index].code
+      if (index !== 0) this.getListByCode(this.search.getCategoryCodes)
+      else {
+        this.pageOption.page = 1
+        this.getList(1)
+      }
+      this.$refs.categoryCodeSelect.toggle()
+    },
+    getCategoryCodes() {
+      goods.getCategoryCodes({ axios: this.$axios }).then((res) => {
+        this.categoryList = [{ name: '全部分类', code: 0 }].concat(res[0])
+        console.log('this.categoryList', this.categoryList)
+      })
+    },
+    // 根据经营类目查询规划师
+    getListByCode(code) {
+      planner
+        .findListByCode({
+          categoryCodes: [code],
+          categoryState: 1, // 分类层级
+          limit: 10,
+          start: this.pageOption.page || 1,
+        })
+        .then((res) => {
+          console.log('根据类目查询规划师', res)
+        })
+    },
     onLeftClick() {
       console.log('nav onClickLeft')
       this.uPGpBack()
@@ -603,6 +660,7 @@ export default {
     async getList(currentPage) {
       const { limit } = this.pageOption
       const { sort, plannerName, regionDto } = this.formatSearch
+      console.log('regionDto', regionDto)
       const params = { sort, plannerName, regionDto, limit, page: currentPage }
       try {
         const data = await planner.list(params)
@@ -793,6 +851,31 @@ export default {
     }
     .list-cell {
       padding: 40px;
+    }
+    /deep/ .search__dropdown-category {
+      .sp-dropdown-item .sp-popup {
+        max-height: 4rem;
+        min-height: 2rem;
+      }
+    }
+    .category-list {
+      width: 100%;
+      padding: 20px;
+      clear: both;
+      overflow: hidden;
+      .item {
+        font-size: 28px;
+        color: #222;
+        background: #f8f8f8;
+        float: left;
+        margin: 10px 12px;
+        padding: 12px 20px;
+        border-radius: 2px;
+      }
+      .active-item {
+        color: #5883e8;
+        background: #eef0ff;
+      }
     }
   }
 

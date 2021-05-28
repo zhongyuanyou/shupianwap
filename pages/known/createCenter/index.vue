@@ -57,7 +57,7 @@
         </template>
         <template v-else>
           <div class="empty">
-            <div class="empty-img"></div>
+            <img :src="imgsrc" />
             <div class="empty-desc">您暂未创作任何内容～</div>
           </div>
         </template>
@@ -67,13 +67,13 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex'
+import { mapState } from 'vuex'
 import { Tab, Tabs, Button, List, Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import knownApi from '@/api/known'
+import utils from '@/utils/changeBusinessData'
 
 export default {
-  layout: 'keepAlive',
   name: 'KnownCreateCenter',
   components: {
     Header,
@@ -114,24 +114,8 @@ export default {
         },
       ],
       emptyFlag: 'not',
+      imgsrc: '',
     }
-  },
-  beforeRouteLeave(to, from, next) {
-    if (
-      [
-        'known-detail-answer',
-        'known-detail-article',
-        'known-detail-question',
-        'known-publish-answer',
-        'known-publish-article',
-        'known-publish-question',
-      ].includes(to.name)
-    ) {
-      this.SET_KEEP_ALIVE({ type: 'add', name: 'KnownCreateCenter' })
-    } else {
-      this.SET_KEEP_ALIVE({ type: 'remove', name: 'KnownCreateCenter' })
-    }
-    next()
   },
   computed: {
     ...mapState({
@@ -139,12 +123,9 @@ export default {
     }),
   },
   mounted() {
-    this.$isLogin()
+    this.imgsrc = this.$ossImgSetV2(utils.getEmptyImgConfig('calendar'))
   },
   methods: {
-    ...mapMutations({
-      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
-    }),
     changeTab() {
       this.init()
       this.onLoad()
@@ -158,7 +139,12 @@ export default {
       this.emptyFlag = 'not'
     },
     onLoad() {
-      this.findListByStatusApi()
+      this.$isLogin().then((res) => {
+        // 当在app 中登录成功 或者已经有了登录信息
+        if (res || res === 'app_login_success') {
+          this.findListByStatusApi()
+        }
+      })
     },
     async findListByStatusApi() {
       try {
@@ -196,6 +182,10 @@ export default {
         if (item.type === 1) {
           this.$router.push({
             path: '/known/publish/question',
+            query: {
+              editType: '2',
+              id: item.id,
+            },
           })
           return
         }
@@ -203,6 +193,10 @@ export default {
         if (item.type === 2) {
           this.$router.push({
             path: '/known/publish/article',
+            query: {
+              editType: '2',
+              id: item.id,
+            },
           })
         } else {
           // 回答 这里需要传问题id,让用户在上一次回答的问题上继续回答
@@ -210,6 +204,7 @@ export default {
             path: '/known/publish/answer',
             query: {
               id: item.sourceId,
+              editType: '2',
             },
           })
         }
@@ -284,6 +279,7 @@ export default {
   }
 
   .item {
+    background: #fff;
     padding: 40px 32px;
     .tile {
       position: relative;
@@ -349,12 +345,13 @@ export default {
   .empty {
     width: 100%;
     margin-top: 140px;
-    &-img {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+    img {
       width: 340px;
       height: 340px;
-      background: #4974f5;
-      margin: 0 auto;
-      opacity: 0.4;
     }
     &-desc {
       margin-top: 24px;
