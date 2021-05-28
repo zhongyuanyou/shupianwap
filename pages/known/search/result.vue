@@ -30,10 +30,18 @@
       <p :class="tabIndex === '3' ? 'act' : ''" @click="changeTab('3')">
         <span>用户</span><i></i>
       </p>
-      <p :class="tabIndex === '4' ? 'act' : ''" @click="changeTab('4')">
+      <p
+        v-if="showItem"
+        :class="tabIndex === '4' ? 'act' : ''"
+        @click="changeTab('4')"
+      >
         <span>视频</span><i></i>
       </p>
-      <p :class="tabIndex === '5' ? 'act' : ''" @click="changeTab('5')">
+      <p
+        v-if="showItem"
+        :class="tabIndex === '5' ? 'act' : ''"
+        @click="changeTab('5')"
+      >
         <span>讲堂</span><i></i>
       </p>
     </div>
@@ -223,6 +231,7 @@ export default {
         description: `请到App去观看`,
         confirmButtonText: '好的',
       },
+      showItem: true,
     }
   },
   computed: {
@@ -400,6 +409,8 @@ export default {
             console.error('changeTop error:', error)
           }
         }
+      } else if (this.isInApp && this.appInfo.appCode === 'syscode') {
+        this.showItem = false
       } else {
         this.showPop = true
       }

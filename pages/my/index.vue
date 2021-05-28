@@ -111,25 +111,6 @@
           </div>
         </div>
       </div>
-      <div
-        class="my_btns_item"
-        @click="handleClick('/known/createCenter', 'login')"
-      >
-        <div class="my_btns_item_icon">
-          <my-icon name="weituo_mian" size="0.36rem" color="#4974f5" />
-        </div>
-        <div class="my_btns_item_con">
-          创作中心
-          <div class="item_lf">
-            <my-icon
-              name="order_ic_listnext"
-              size="0.24rem"
-              color="#CCCCCC"
-              class="myIcon"
-            />
-          </div>
-        </div>
-      </div>
       <div class="my_btns_item" @click="linkAuth">
         <div class="my_btns_item_icon">
           <my-icon name="shimingrenzheng" size="0.36rem" color="#00B365" />
