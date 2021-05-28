@@ -30,5 +30,15 @@ const goods = {
       url: CHIPS_WAP_BASE_URL + '/nk/commodity/v2/get_serve_list.do',
     })
   },
+  // /service/nk/commodity/v2/get_filter_code.do
+  getCategoryCodes({ axios }, params) {
+    // 获取分类codes
+    return request({
+      axios,
+      params,
+      method: 'get',
+      url: CHIPS_WAP_BASE_URL + '/nk/commodity/v2/get_filter_code.do',
+    })
+  },
 }
 export default goods
