@@ -67,14 +67,13 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex'
+import { mapState } from 'vuex'
 import { Tab, Tabs, Button, List, Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import knownApi from '@/api/known'
 import utils from '@/utils/changeBusinessData'
 
 export default {
-  layout: 'keepAlive',
   name: 'KnownCreateCenter',
   components: {
     Header,
@@ -118,23 +117,6 @@ export default {
       imgsrc: '',
     }
   },
-  beforeRouteLeave(to, from, next) {
-    if (
-      [
-        'known-detail-answer',
-        'known-detail-article',
-        'known-detail-question',
-        'known-publish-answer',
-        'known-publish-article',
-        'known-publish-question',
-      ].includes(to.name)
-    ) {
-      this.SET_KEEP_ALIVE({ type: 'add', name: 'KnownCreateCenter' })
-    } else {
-      this.SET_KEEP_ALIVE({ type: 'remove', name: 'KnownCreateCenter' })
-    }
-    next()
-  },
   computed: {
     ...mapState({
       userId: (state) => state.user.userId,
@@ -144,9 +126,6 @@ export default {
     this.imgsrc = this.$ossImgSetV2(utils.getEmptyImgConfig('calendar'))
   },
   methods: {
-    ...mapMutations({
-      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
-    }),
     changeTab() {
       this.init()
       this.onLoad()
@@ -203,6 +182,10 @@ export default {
         if (item.type === 1) {
           this.$router.push({
             path: '/known/publish/question',
+            query: {
+              editType: '2',
+              id: item.id,
+            },
           })
           return
         }
@@ -210,6 +193,10 @@ export default {
         if (item.type === 2) {
           this.$router.push({
             path: '/known/publish/article',
+            query: {
+              editType: '2',
+              id: item.id,
+            },
           })
         } else {
           // 回答 这里需要传问题id,让用户在上一次回答的问题上继续回答
@@ -217,6 +204,7 @@ export default {
             path: '/known/publish/answer',
             query: {
               id: item.sourceId,
+              editType: '2',
             },
           })
         }
