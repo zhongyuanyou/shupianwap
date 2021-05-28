@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 import { Tab, Tabs, Button, List, Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import knownApi from '@/api/known'
@@ -133,6 +133,14 @@ export default {
     }
     next()
   },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userId,
+    }),
+  },
+  mounted() {
+    this.$isLogin()
+  },
   methods: {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
@@ -158,9 +166,10 @@ export default {
           page: this.page,
           limit: this.limit,
           status: this.activeMapping[this.active],
+          userIds: [this.userId || this.$cookies.get('userId', { path: '/' })],
         }
         const { code, data } = await this.$axios.post(
-          knownApi.questionArticle.findListByStatus,
+          knownApi.createCenter.findListByStatus,
           params
         )
         this.loading = false
