@@ -1,6 +1,14 @@
 <template>
   <div>
-    <sp-video :vod-url="url" :sp-config="config"></sp-video>
+    <sp-video
+      :vod-url="url"
+      :sp-config="config"
+      :show-video="true"
+      :ignore-plugins="iplugins"
+      @errorBtnHandle="errorBtnHandle"
+    >
+      <template #shade><div class="video-shade">test shade</div></template>
+    </sp-video>
   </div>
 </template>
 
@@ -9,13 +17,30 @@ export default {
   name: 'KnownSmallVideo',
   data() {
     return {
-      url: '//sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/mp4/xgplayer-demo-360p.mp4',
+      url: '',
       config: {
-        fluid: true,
+        height: '30vh',
+        width: '100vw',
       },
+      iplugins: ['fullscreen'],
     }
+  },
+  methods: {
+    errorBtnHandle(vThis) {
+      this.url =
+        '//sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/mp4/xgplayer-demo-360p.mp4'
+      debugger
+      vThis.initVideo()
+    },
   },
 }
 </script>
 
-<style></style>
+<style lang="less" scoped>
+.video-shade {
+  position: absolute;
+  top: 0;
+  color: #fff;
+  font-size: 24px;
+}
+</style>

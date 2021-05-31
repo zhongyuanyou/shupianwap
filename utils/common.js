@@ -92,7 +92,7 @@ export const setUrlParams = (url, data = {}) => {
  * @param {Any} val
  * @desc 判断类型
  */
-export const typeOf = (val) => {
+export const custTypeOf = (val) => {
   return Object.prototype.toString.call(val).match(/([^\s.*]+)(?=]$)/g)[0]
 }
 
@@ -103,17 +103,19 @@ export const typeOf = (val) => {
  * @returns 目标对象
  */
 export const deepCopy = (dst, src) => {
-  if (typeOf(src) === 'Object' && typeOf(dst) === 'Object') {
+  if (custTypeOf(src) === 'Object' && custTypeOf(dst) === 'Object') {
     Object.keys(src).forEach((key) => {
-      if (typeOf(src[key]) === 'Object' && !(src[key] instanceof Node)) {
+      if (custTypeOf(src[key]) === 'Object' && !(src[key] instanceof Node)) {
         if (!dst[key]) {
           dst[key] = src[key]
         } else {
           deepCopy(dst[key], src[key])
         }
-      } else if (typeOf(src[key]) === 'Array') {
+      } else if (custTypeOf(src[key]) === 'Array') {
         dst[key] =
-          typeOf(dst[key]) === 'Array' ? dst[key].concat(src[key]) : src[key]
+          custTypeOf(dst[key]) === 'Array'
+            ? dst[key].concat(src[key])
+            : src[key]
       } else {
         dst[key] = src[key]
       }
