@@ -50,9 +50,9 @@
                     {{
                       itemItem.type === 1
                         ? itemItem.answerCount || 0
-                        : itemItem.remarkCount || 0
+                        : itemItem.applaudCount || 0
                     }}
-                    {{ itemItem.type === 1 ? '回答' : '评论' }} ·
+                    {{ itemItem.type === 1 ? '回答' : '点赞' }} ·
                     {{ itemItem.collectCount || 0 }} 收藏
                   </div>
                 </div>
