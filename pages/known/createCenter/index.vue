@@ -47,7 +47,12 @@
                 </div>
                 <div class="desc">
                   <div class="desc-tip">
-                    {{ itemItem.answerCount || 0 }} 回答 ·
+                    {{
+                      itemItem.type === 1
+                        ? itemItem.answerCount || 0
+                        : itemItem.remarkCount || 0
+                    }}
+                    {{ itemItem.type === 1 ? '回答' : '评论' }} ·
                     {{ itemItem.collectCount || 0 }} 收藏
                   </div>
                 </div>
@@ -209,7 +214,7 @@ export default {
           this.$router.push({
             path: '/known/publish/answer',
             query: {
-              id: item.sourceId,
+              id: item.id,
               editType: '2',
             },
           })
