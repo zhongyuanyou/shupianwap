@@ -407,7 +407,7 @@ export default {
           businessId: this.id,
           handleType: this.handleType,
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-          dateType: 1,
+          dateType: 2,
         })
         .then((res) => {
           if (res.code === 200) {

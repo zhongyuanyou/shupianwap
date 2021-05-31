@@ -92,7 +92,7 @@ export default {
   data() {
     return {
       error: false,
-      loading: false,
+      loading: true,
       finished: false,
       page: 1,
       limit: 15,
@@ -120,10 +120,21 @@ export default {
   computed: {
     ...mapState({
       userId: (state) => state.user.userId,
+      isInApp: (state) => state.app.isInApp,
     }),
   },
   mounted() {
     this.imgsrc = this.$ossImgSetV2(utils.getEmptyImgConfig('calendar'))
+    if (this.isInApp) {
+      this.$appFn.dggGetUserInfo((res) => {
+        if (res.code === 200 && res.data.userId && res.data.token) {
+          this.$store.dispatch('user/setUser', res.data)
+          this.onLoad()
+        }
+      })
+    } else {
+      this.onLoad()
+    }
   },
   methods: {
     changeTab() {
@@ -139,12 +150,7 @@ export default {
       this.emptyFlag = 'not'
     },
     onLoad() {
-      this.$isLogin().then((res) => {
-        // 当在app 中登录成功 或者已经有了登录信息
-        if (res || res === 'app_login_success') {
-          this.findListByStatusApi()
-        }
-      })
+      this.findListByStatusApi()
     },
     async findListByStatusApi() {
       try {
@@ -245,6 +251,8 @@ export default {
 
 <style lang="less" scoped>
 .m-known.create-center {
+  min-height: 100vh;
+  background: #fff;
   .mixin-flex {
     display: flex;
     align-items: center;
