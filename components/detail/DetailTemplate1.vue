@@ -330,7 +330,6 @@ export default {
         }
       }
     }
-    console.log(this.commentdata, 2222)
   },
   async mounted() {
     // 假如未获取到站点信息,再获取地理位置
@@ -351,8 +350,19 @@ export default {
       POSITION_CITY: 'city/POSITION_CITY',
     }),
     comment() {
-      document.querySelector('#comment').scrollIntoView(true)
-      document.documentElement.scrollTop = (document.documentElement.scrollTop - 250)
+      const user = navigator.userAgent.toLowerCase()
+      console.log(user)
+      if (
+        user.match(/huawei/i) === 'huawei' ||
+        user.match(/honor/i) === 'honor'
+      ) {
+        document.querySelector('#comment').scrollIntoView(true)
+        document.body.scrollTop = document.body.scrollTop - 250
+      } else {
+        document.querySelector('#comment').scrollIntoView(true)
+        document.documentElement.scrollTop =
+          document.documentElement.scrollTop - 250
+      }
     },
     scrollHandle({ scrollTop }) {
       // 滚动事件
@@ -391,12 +401,11 @@ export default {
       const formatId1 = this.sellingDetail.classCodeLevel.split(',')[0] // 产品二级分类
       const formatId2 = this.sellingDetail.classCodeLevel.split(',')[1] // 产品二级分类
       const formatId3 = this.sellingDetail.classCodeLevel.split(',')[2] // 产品三级分类
-      const formatId = formatId3 || formatId2
       this.$axios
         .post(recommendApi.saleList, {
           userId: this.$cookies.get('userId', { path: '/' }), // 用户id
           deviceId: this.deviceId, // 设备ID
-          formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
+          formatId: formatId2 || formatId3, // 产品二级类别,没有二级类别用三级类别（首页等场景不需传，如其他场景能获取到必传）
           classCode: formatId1,
           areaCode: this.city.code, // 区域编码
           sceneId: 'app-fwcpxq-01', // 场景ID
@@ -404,6 +413,7 @@ export default {
           productType: 'PRO_CLASS_TYPE_SALES', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
           title: this.sellingDetail.name, // 产品名称（产品详情页传、咨询页等）
           platform: 'm', // 平台（app,m,pc）
+          formatIdOne: formatId1 || formatId2,
           page: { pageNo: this.productPage, pageSize: this.productLimit },
         })
         .then((res) => {
@@ -452,6 +462,9 @@ export default {
             user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
             platform: 'app', // 平台（app,m,pc）
             productId: this.sellingDetail.id, // 产品id
+            formatIdOne:
+              this.sellingDetail.classCodeLevel.split(',')[0] ||
+              this.sellingDetail.classCodeLevel.split(',')[1],
           },
         })
         .then((res) => {
@@ -483,6 +496,9 @@ export default {
           user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
           platform: 'app', // 平台（app,m,pc）
           productId: this.sellingDetail.id, // 产品id
+          formatIdOne:
+            this.sellingDetail.classCodeLevel.split(',')[0] ||
+            this.sellingDetail.classCodeLevel.split(',')[1],
         },
       })
       if (plannerRes.code === 200) {

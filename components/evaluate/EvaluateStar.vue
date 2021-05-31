@@ -212,6 +212,7 @@ export default {
       ) {
         return false
       }
+      /*
       // check 评价内容
       if (this.evaluateContent.trim() === '') {
         return false
@@ -220,6 +221,7 @@ export default {
       if (this.uploadImgFlag && this.imgLength === 0) {
         return false
       }
+      */
       return true
     },
   },
@@ -348,6 +350,7 @@ export default {
         this.$xToast.error('维度评分不能为空哦')
         return false
       }
+      /*
       // check 评价内容
       if (this.evaluateContent.trim() === '') {
         this.$xToast.error('评价内容不能为空')
@@ -358,6 +361,7 @@ export default {
         this.$xToast.error('请上传图片')
         return false
       }
+      */
       return true
     },
     submit() {

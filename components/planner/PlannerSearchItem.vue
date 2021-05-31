@@ -17,7 +17,7 @@
       <div class="planner-search-item__detail">
         <h4>
           <span class="planner-search-item__detail-name">{{
-            itemData.userName
+            itemData.userName || itemData.mchUserName
           }}</span>
         </h4>
 

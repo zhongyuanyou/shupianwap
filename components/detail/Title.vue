@@ -19,7 +19,7 @@
         />降价提醒
       </div>
     </div>
-    <p class="title_btitle">{{ proDetail.goodsOperating.showName }}</p>
+    <p class="title_btitle">{{ proDetail.name }}</p>
     <div class="imp_remind">
       <nuxt-link to="/spread/riskTips">
         <sp-image

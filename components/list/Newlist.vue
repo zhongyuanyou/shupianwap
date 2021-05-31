@@ -101,9 +101,11 @@ export default {
     },
     getlist() {},
     onLoad() {
-      this.loading = true
-      this.pages++
-      this.$emit('load', this.pages)
+      if (this.$parent && this.$parent.onshow) {
+        this.loading = true
+        this.pages++
+        this.$emit('load', this.pages)
+      }
     },
   },
 }

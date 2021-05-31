@@ -161,7 +161,6 @@ export default {
     },
     selectItems(item, items) {
       this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 = ''
-      // console.log(item, items)
       this.activeItems = items
       if (!this.filterData.isSelects) {
         // 当该筛选框是单选时，点选了某个筛选项时，需要关闭筛选框
@@ -196,12 +195,18 @@ export default {
         // 如果该筛选项是产品分类查询出来的，value需要取code，如果不是则需要取ext2
         const _flag = this.filterData.ext3 === '1'
         // 资质下面的类别需要code筛选才能筛选出数据，而其他业态下面的分类需要name字段进行筛选
-        const keyStr =
+        let keyStr =
           this.filterData.code === 'CONDITION-JY-ZZ-LB'
             ? 'code'
             : _flag
             ? 'name'
             : 'ext2'
+          if(this.filterData.code === 'CONDITION-JY-GS-HY'){
+              keyStr = 'code'
+          }
+          if (this.filterData.code === 'CONDITION-JY-SB-FL') {
+             keyStr = 'code'
+          }
         this.activeItems.forEach((item) => {
           emitData.fieldValue.push(item[keyStr])
         })
