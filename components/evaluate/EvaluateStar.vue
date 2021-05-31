@@ -52,7 +52,7 @@
         v-model="evaluateContent"
         autosize
         type="textarea"
-        maxlength="500"
+        :maxlength="maxLength"
         placeholder="请对服务进行评价~"
         show-word-limit
       />
@@ -154,6 +154,10 @@ export default {
         return true
       },
     },
+    txtMaxLength: {
+      type: String,
+      default: '500',
+    },
   },
   data() {
     return {
@@ -162,6 +166,7 @@ export default {
       tipsFlag: this.tip,
       remarkFlag: this.remark,
       uploadImgFlag: this.upload,
+      maxLength: this.txtMaxLength,
       subScoreFlag: false,
       loading: false, // 加载效果状态
       imgs: ['vbad', 'bad', 'normal', 'happy', 'vhappy'],
