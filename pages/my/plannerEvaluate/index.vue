@@ -32,7 +32,11 @@
       </div>
       <!--E 规划师-->
       <!--S 评分-->
-      <evaluate-star :upload="false" :cinfo-id="infoId" />
+      <evaluate-star
+        :upload="false"
+        :cinfo-id="infoId"
+        :txt-max-length="length"
+      />
       <!--E 评分-->
     </div>
     <!-- <div class="btn">
@@ -62,6 +66,7 @@ export default {
       plannerName: '',
       showPop: false,
       plannerId: '',
+      length: '100',
       Field: {
         type: 'functional',
         title: '温馨提示',

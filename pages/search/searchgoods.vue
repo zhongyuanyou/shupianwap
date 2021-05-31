@@ -137,6 +137,7 @@ export default {
       tabVues: {}, // 两个列表实例
       isInput: false, // 判断是否进行过输入框搜索
       height: '',
+      onshow: true,
     }
   },
   computed: {
@@ -199,6 +200,7 @@ export default {
       this.$refs.goods.formData.searchKey = this.currentInputText
       this.$refs.goods.formData.needTypes = 0
       this.isShowInput = false
+      this.$refs.goods.onshow = false
       this.$refs.goods.getlist()
     },
     // 获取初始化数据

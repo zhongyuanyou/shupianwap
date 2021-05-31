@@ -2,7 +2,6 @@ import $axios from '@/plugins/axios'
 import { homeApi } from '@/api'
 import { request } from '@/utils/request'
 import { CHIPS_WAP_BASE_URL } from '@/config/constant'
-// const CHIPS_WAP_BASE_URL = 'http://172.16.132.240:7001/service'
 // const token = app.$cookies.get('token', {
 //   path: '/',
 // })
@@ -18,8 +17,8 @@ import { CHIPS_WAP_BASE_URL } from '@/config/constant'
 //   })
 // }
 const amapKey = '5111f49d979a509f1e96420a1b456ff4' // 高德地图key
-const regeoUrl = '/gdmap/v3/geocode/regeo' // 高德地图逆地理编码接口服务（根据经纬度获取城市信息）
-const ipUrl = '/gdmap/v3/ip' // 高德地图根据用户请求地址ip获取所在城市
+// const regeoUrl = '/gdmap/v3/geocode/regeo' // 高德地图逆地理编码接口服务（根据经纬度获取城市信息）
+// const ipUrl = '/gdmap/v3/ip' // 高德地图根据用户请求地址ip获取所在城市
 
 /**
  * @description 获取当前定位城市
@@ -48,32 +47,26 @@ export const getPositonCity = () => {
         params,
         method: 'get',
         url: `${CHIPS_WAP_BASE_URL}/nk/home/v1/gdmap.do`,
-      })
-        .then((res) => {
-          if (res.status === '1' && res.city) {
-            returnData.code = 200
-            returnData.message = '定位成功，匹配到对应的服务城市'
-            returnData.data.name = res.city
-            if (
-              res.city ||
-              res.province === '局域网' ||
-              JSON.stringify(res.city) === '[]'
-            ) {
-              returnData.code = 5001
-              returnData.message = '定位失败,请稍后再试'
-            }
-            resolve(returnData)
-          } else {
+      }).then((res) => {
+        if (res.status === '1' && res.city) {
+          returnData.code = 200
+          returnData.message = '定位成功，匹配到对应的服务城市'
+          returnData.data.name = res.city
+          if (!res.city || res.province === '局域网' || JSON.stringify(res.city) === '[]') {
             returnData.code = 5001
-            returnData.message = '定位失败，未知异常'
-            resolve(returnData)
+            returnData.message = '定位失败,请稍后再试'
           }
-        })
-        .catch(() => {
+          resolve(returnData)
+        } else {
           returnData.code = 5001
           returnData.message = '定位失败，未知异常'
           resolve(returnData)
-        })
+        }
+      }).catch(() => {
+        returnData.code = 5001
+        returnData.message = '定位失败，未知异常'
+        resolve(returnData)
+      })
     }
     // if (navigator.geolocation) {
     //   // 支持

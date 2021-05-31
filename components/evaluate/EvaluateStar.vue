@@ -52,7 +52,7 @@
         v-model="evaluateContent"
         autosize
         type="textarea"
-        maxlength="500"
+        :maxlength="maxLength"
         placeholder="请对服务进行评价~"
         show-word-limit
       />
@@ -154,6 +154,10 @@ export default {
         return true
       },
     },
+    txtMaxLength: {
+      type: String,
+      default: '500',
+    },
   },
   data() {
     return {
@@ -162,6 +166,7 @@ export default {
       tipsFlag: this.tip,
       remarkFlag: this.remark,
       uploadImgFlag: this.upload,
+      maxLength: this.txtMaxLength,
       subScoreFlag: false,
       loading: false, // 加载效果状态
       imgs: ['vbad', 'bad', 'normal', 'happy', 'vhappy'],
@@ -207,6 +212,7 @@ export default {
       ) {
         return false
       }
+      /*
       // check 评价内容
       if (this.evaluateContent.trim() === '') {
         return false
@@ -215,6 +221,7 @@ export default {
       if (this.uploadImgFlag && this.imgLength === 0) {
         return false
       }
+      */
       return true
     },
   },
@@ -343,6 +350,7 @@ export default {
         this.$xToast.error('维度评分不能为空哦')
         return false
       }
+      /*
       // check 评价内容
       if (this.evaluateContent.trim() === '') {
         this.$xToast.error('评价内容不能为空')
@@ -353,6 +361,7 @@ export default {
         this.$xToast.error('请上传图片')
         return false
       }
+      */
       return true
     },
     submit() {
