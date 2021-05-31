@@ -465,15 +465,15 @@ export default {
       this.uPGpBack()
     },
     handleRegionsSelect(data) {
-      console.log('this.currentCity.code', this.currentCity.code)
-      console.log('data[0]', data[0])
+      this.catogyActiveIndex = 0
+      this.search.categoryCodeName = '全部分类'
+      this.isChooseCategory = false
       if (this.currentCity.code !== data[0].code) return
       const { code, name } = data[1] || {}
       this.search.region = {
         code,
         name: name === '不限' ? '区域' : name,
       }
-      this.isChooseCategory = false
       this.$refs.regionsDropdownItem.toggle()
       this.handleSearch()
     },
@@ -484,6 +484,8 @@ export default {
       this.search.sortText = text
       this.search.sortId = value
       this.$refs.sortDropdown.toggle()
+      this.catogyActiveIndex = 0
+      this.search.categoryCodeName = '全部分类'
       this.isChooseCategory = false
       this.handleSearch()
     },
