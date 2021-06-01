@@ -986,6 +986,9 @@ export default {
   }
 
   .no-data {
+    width: 100%;
+    height: auto;
+    min-height: 400px;
     display: flex;
     flex-direction: column;
     justify-content: center;
