@@ -303,7 +303,7 @@ export default {
       isInApp: (state) => state.app.isInApp,
       userInfo: (state) => state.user.userInfo,
       isApplets: (state) => state.app.isApplets,
-      code: (state) => state.city.code,
+      code: (state) => state.city.code || '510100',
     }),
     formatSearch() {
       const { sortId, keywords, region } = this.search
@@ -616,7 +616,7 @@ export default {
               reject(res)
               return
             }
-            const { adCode, cityName } = data
+            const { adCode = '510100', cityName = '成都' } = data
             this.SET_CITY({ code: adCode, name: cityName }) // 设置当前的定位到vuex中
             resolve({ code: adCode })
           })
@@ -986,6 +986,9 @@ export default {
   }
 
   .no-data {
+    width: 100%;
+    height: auto;
+    min-height: 400px;
     display: flex;
     flex-direction: column;
     justify-content: center;
