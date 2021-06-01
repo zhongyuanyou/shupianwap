@@ -299,11 +299,11 @@ export default {
   },
   computed: {
     ...mapState({
-      currentCity: (state) => state.city.currentCity||{code:'510100',name:'成都'},
+      currentCity: (state) => state.city.currentCity,
       isInApp: (state) => state.app.isInApp,
       userInfo: (state) => state.user.userInfo,
       isApplets: (state) => state.app.isApplets,
-      code: (state) => state.city.code||'510100',
+      code: (state) => state.city.code || '510100',
     }),
     formatSearch() {
       const { sortId, keywords, region } = this.search
@@ -616,7 +616,7 @@ export default {
               reject(res)
               return
             }
-            const { adCode='510100', cityName } = data
+            const { adCode = '510100', cityName = '成都' } = data
             this.SET_CITY({ code: adCode, name: cityName }) // 设置当前的定位到vuex中
             resolve({ code: adCode })
           })
