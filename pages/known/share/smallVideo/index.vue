@@ -1,46 +1,143 @@
 <template>
-  <div>
-    <sp-video
-      :vod-url="url"
-      :sp-config="config"
-      :show-video="true"
-      :ignore-plugins="iplugins"
-      @errorBtnHandle="errorBtnHandle"
-    >
-      <template #shade><div class="video-shade">test shade</div></template>
-    </sp-video>
+  <div class="m-share smallVideo">
+    <app-link />
+    <div class="small-video">
+      <my-icon
+        name="bofang_mian"
+        size="1.28rem"
+        color="rgba(0,0,0,0.40)"
+      ></my-icon>
+      <div class="content">
+        <div class="name">@黄奇帆</div>
+        <div class="desc">
+          王健林批评马云：平时不看书，还讲一堆大道理,给青少年灌输不好思想
+        </div>
+      </div>
+    </div>
+    <div class="like">猜你喜欢</div>
+    <div class="video-list">
+      <div class="item">
+        <div class="content">
+          <div class="count">20.5w次观看</div>
+          <div class="tile">#感谢薯片 #工作历程全记录</div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="content">
+          <div class="count">20.5w次观看</div>
+          <div class="tile">论团队和团伙的区别</div>
+        </div>
+      </div>
+      <div class="item"></div>
+      <div class="item"></div>
+      <div class="item"></div>
+    </div>
+    <div class="placeholder"></div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'KnownSmallVideo',
+  components: {
+    AppLink: () => import('@/components/mustKnown/share/AppLink'),
+  },
   data() {
-    return {
-      url: '',
-      config: {
-        height: '30vh',
-        width: '100vw',
-      },
-      iplugins: ['fullscreen'],
-    }
+    return {}
   },
-  methods: {
-    errorBtnHandle(vThis) {
-      this.url =
-        '//sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/mp4/xgplayer-demo-360p.mp4'
-      debugger
-      vThis.initVideo()
-    },
-  },
+  methods: {},
 }
 </script>
 
 <style lang="less" scoped>
-.video-shade {
-  position: absolute;
-  top: 0;
-  color: #fff;
-  font-size: 24px;
+.m-share.smallVideo {
+  background: #1a1a1a;
+  min-height: 100vh;
+  .small-video {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ccc;
+    width: 100%;
+    height: 80vh;
+    .content {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 32px;
+      font-family: @fontf-pfsc-med;
+      color: #fff;
+      width: 100%;
+      height: 254px;
+      background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0) 100%
+      );
+      bottom: 0;
+      left: 0;
+      .name {
+        font-size: 40px;
+        margin-bottom: 10px;
+      }
+      .desc {
+        font-size: 32px;
+        .textOverflow(2);
+      }
+    }
+  }
+  .like {
+    height: 128px;
+    text-align: center;
+    font: 32px/128px @fontf-pfsc-med;
+    color: #fff;
+  }
+  .video-list {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    .item {
+      position: relative;
+      display: inline-block;
+      box-sizing: border-box;
+      border: 1px #1a1a1a solid;
+      width: 50%;
+      height: 40vh;
+      background: #ccc;
+      .content {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 20px;
+        font-family: @fontf-pfsc-med;
+        color: #fff;
+        width: 100%;
+        height: 200px;
+        background-image: linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0.4) 0%,
+          rgba(0, 0, 0, 0) 100%
+        );
+        bottom: 0;
+        left: 0;
+        .count {
+          font-size: 24px;
+          opacity: 0.8;
+          margin-bottom: 8px;
+        }
+        .tile {
+          font-size: 36px;
+          .textOverflow(2);
+        }
+      }
+    }
+  }
+  .placeholder {
+    height: 64px;
+    width: 100%;
+  }
 }
 </style>
