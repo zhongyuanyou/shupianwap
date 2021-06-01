@@ -1,23 +1,21 @@
 <template>
   <div class="m-video">
     <template v-if="videoStatus">
-      <template v-if="!videoError"
-        ><div id="xg-player"><slot name="shade"></slot></div></template
-      ><template v-else
-        ><div
-          class="video-error"
-          :style="{ width: xgVideoConfig.width, height: xgVideoConfig.height }"
-        >
-          <div class="content">
-            <div class="desc">{{ videoErrorConfig.desc }}</div>
-            <sp-button
-              v-if="videoErrorConfig.btn.status"
-              @click="errorBtnHandle"
-              >{{ videoErrorConfig.btn.txt }}</sp-button
-            >
-          </div>
+      <div v-show="!videoError" id="xg-player"><slot name="shade"></slot></div>
+      <div
+        v-show="videoError"
+        class="video-error"
+        :style="{ width: xgVideoConfig.width, height: xgVideoConfig.height }"
+      >
+        <div class="content">
+          <div class="desc">{{ videoErrorConfig.desc }}</div>
+          <sp-button
+            v-if="videoErrorConfig.btn.status"
+            @click="errorBtnHandle"
+            >{{ videoErrorConfig.btn.txt }}</sp-button
+          >
         </div>
-      </template>
+      </div>
     </template>
     <template v-else><slot name="imitate"></slot></template>
   </div>
@@ -86,9 +84,9 @@ export default {
       videoError: false, // 判断视频是否异常
     }
   },
-  computed: {
-    videoUrl() {
-      return this.vodUrl
+  watch: {
+    vodUrl(val) {
+      this.initVideo()
     },
   },
   mounted() {
@@ -102,12 +100,7 @@ export default {
       }
     },
     initVideo() {
-      console.log('111')
-      debugger
-      if (
-        custTypeOf(this.videoUrl) !== 'String' ||
-        this.videoUrl.trim() === ''
-      ) {
+      if (custTypeOf(this.vodUrl) !== 'String' || this.vodUrl.trim() === '') {
         this.videoError = true
         return
       }
@@ -115,7 +108,7 @@ export default {
       this.videoError = false
       let baseConfig = {
         id: 'xg-player',
-        url: this.videoUrl,
+        url: this.vodUrl,
       }
       baseConfig = deepCopy(baseConfig, this.xgVideoConfig)
       // 引入需要视频插件
