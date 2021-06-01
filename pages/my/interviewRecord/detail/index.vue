@@ -90,7 +90,7 @@
           >取消面谈</sp-button
         >
         <sp-button
-          v-if="info.inviteStatus === 1 && info.evaluateInfoStatus === 1"
+          v-if="info.inviteStatus === 1"
           type="primary"
           :class="'evaluating'"
           @click="goEvaluate(info)"
@@ -101,7 +101,7 @@
           class="status"
         >
           {{
-            info.inviteStatus === 1
+            info.inviteStatus === 1 && info.evaluateInfoStatus !== 1
               ? '已面谈'
               : info.inviteStatus === 2 && info.evaluateInfoStatus === 3
               ? '已评价'
@@ -211,7 +211,7 @@ export default {
         } catch (err) {}
       } else if (this.isInApp) {
         this.loading = false
-        this.getInterviewDetail()
+
         // 如果是在app中
         this.$appFn.dggLogin((res) => {
           try {
