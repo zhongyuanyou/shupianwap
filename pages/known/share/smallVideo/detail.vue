@@ -1,25 +1,30 @@
 <template>
-  <div>
-    <sp-video
-      :vod-url="url"
-      :sp-config="config"
-      :show-video="true"
-      :ignore-plugins="iplugins"
-      @errorBtnHandle="errorBtnHandle"
-    >
-      <template #shade><div class="video-shade">test shade</div></template>
-    </sp-video>
+  <div class="m-share smallVideoDetail">
+    <client-only>
+      <sp-video
+        :vod-url="url"
+        :sp-config="config"
+        :show-video="true"
+        :ignore-plugins="iplugins"
+        @errorBtnHandle="errorBtnHandle"
+      >
+      </sp-video>
+    </client-only>
+    <small-video-like />
   </div>
 </template>
 
 <script>
 export default {
   name: 'KnownDetailVideo',
+  components: {
+    SmallVideoLike: () => import('@/components/mustKnown/share/SmallVideoLike'),
+  },
   data() {
     return {
       url: '',
       config: {
-        height: '30vh',
+        height: '100vh',
         width: '100vw',
       },
       iplugins: ['fullscreen'],
@@ -29,18 +34,13 @@ export default {
     errorBtnHandle(vThis) {
       this.url =
         '//sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/mp4/xgplayer-demo-360p.mp4'
-      debugger
-      vThis.initVideo()
     },
   },
 }
 </script>
 
 <style lang="less" scoped>
-.video-shade {
-  position: absolute;
-  top: 0;
-  color: #fff;
-  font-size: 24px;
+.m-share.smallVideoDetail {
+  background: #1a1a1a;
 }
 </style>

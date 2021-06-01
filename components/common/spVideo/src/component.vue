@@ -1,7 +1,9 @@
 <template>
   <div class="m-video">
     <template v-if="videoStatus">
-      <div v-show="!videoError" id="xg-player"><slot name="shade"></slot></div>
+      <div v-show="!videoError" id="xg-player">
+        <slot name="shade"></slot>
+      </div>
       <div
         v-show="videoError"
         class="video-error"
