@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import { evaluateApi } from '@/api'
@@ -110,6 +111,12 @@ export default {
       },
       evaluateTagFlag: false,
     }
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+      userId: (state) => state.user.userInfo.userId,
+    }),
   },
   mounted() {
     this.init()
