@@ -96,7 +96,6 @@
           @click="goEvaluate(info)"
           >进行评价</sp-button
         >
-
         <div
           v-if="info.inviteStatus !== 0 && info.evaluateInfoStatus !== 1"
           class="status"
@@ -212,6 +211,7 @@ export default {
         } catch (err) {}
       } else if (this.isInApp) {
         this.loading = false
+        this.getInterviewDetail()
         // 如果是在app中
         this.$appFn.dggLogin((res) => {
           try {
