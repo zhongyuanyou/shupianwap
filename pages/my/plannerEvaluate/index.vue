@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { CenterPopup } from '@chipspc/vant-dgg'
 import { evaluateApi } from '@/api'
 import Header from '@/components/common/head/header'
@@ -76,7 +77,12 @@ export default {
       },
     }
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+      userId: (state) => state.user.userInfo.userId,
+    }),
+  },
   mounted() {
     if (this.isInApp) {
       this.$appFn.dggSetTitle(
