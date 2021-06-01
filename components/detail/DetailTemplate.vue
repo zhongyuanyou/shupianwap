@@ -280,7 +280,7 @@ export default {
       const formatId2 = this.proDetail.classCodeLevel.split(',')[1] // 产品二级分类
       const formatId3 = this.proDetail.classCodeLevel.split(',')[2] // 产品三级分类
       this.$axios
-        .get(recommendApi.recommendProduct, {
+        .get(recommendApi.saleList, {
           params: {
             userId: this.$cookies.get('userId', { path: '/' }), // 用户id
             deviceId: this.deviceId, // 设备ID
@@ -334,7 +334,7 @@ export default {
       const formatId2 = this.proDetail.classCodeLevel.split(',')[1] // 产品二级分类
       const formatId3 = this.proDetail.classCodeLevel.split(',')[2] // 产品三级分类
       this.$axios
-        .get(recommendApi.recommendProduct, {
+        .get(recommendApi.saleList, {
           params: {
             userId: this.$cookies.get('userId', { path: '/' }), // 用户id
             deviceId: this.deviceId, // 设备ID
