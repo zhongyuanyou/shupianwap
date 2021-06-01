@@ -1,6 +1,6 @@
 <template>
   <div class="m-evaluate detail">
-    <Header title="评价详情" :fixed="true" />
+    <Header v-if="!isInApp" title="评价详情" :fixed="true" />
     <div class="header-line"></div>
     <div class="info">
       <sp-image
@@ -113,6 +113,19 @@ export default {
   },
   mounted() {
     this.init()
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle(
+        {
+          title: '评价详情',
+        },
+        (res) => {}
+      )
+      this.$appFn.dggGetUserInfo((res) => {
+        if (res.code === 200 && res.data.userId && res.data.token) {
+          this.$store.dispatch('user/setUser', res.data)
+        }
+      })
+    }
     this.name = this.$route.query.plannerName
     if (this.$route.query.plannerId) {
       this.getPlannerInfo()

@@ -1,7 +1,7 @@
 <template>
   <div class="evaluate_container">
     <!--S 头部-->
-    <Header title="评价">
+    <Header v-if="!isInApp" title="评价">
       <template #left>
         <div @click="back">
           <my-icon
@@ -78,6 +78,19 @@ export default {
   },
   computed: {},
   mounted() {
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle(
+        {
+          title: '评价',
+        },
+        (res) => {}
+      )
+      this.$appFn.dggGetUserInfo((res) => {
+        if (res.code === 200 && res.data.userId && res.data.token) {
+          this.$store.dispatch('user/setUser', res.data)
+        }
+      })
+    }
     this.init()
   },
   methods: {
