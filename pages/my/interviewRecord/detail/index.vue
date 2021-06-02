@@ -90,7 +90,7 @@
           >取消面谈</sp-button
         >
         <sp-button
-          v-if="info.inviteStatus === 1"
+          v-if="info.inviteStatus === 1 && info.evaluateInfoStatus === 1"
           type="primary"
           :class="'evaluating'"
           @click="goEvaluate(info)"
