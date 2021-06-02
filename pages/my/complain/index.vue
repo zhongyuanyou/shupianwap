@@ -102,6 +102,7 @@ import SpToast from '@/components/common/spToast/SpToast'
 import Header from '@/components/common/head/header'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
+  layout: 'keepAlive',
   name: 'AddComplaint',
   components: {
     [Button.name]: Button,
