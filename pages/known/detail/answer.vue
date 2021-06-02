@@ -94,7 +94,11 @@
       <div class="content" v-html="answerDetails.content"></div>
       <p class="pub-time">编辑于{{ answerDetails.createTime }}</p>
     </div>
-    <Comment ref="openComment" :article-id="answerDetails.id" />
+    <Comment
+      ref="openComment"
+      :article-id="answerDetails.id"
+      :source-type="answerDetails.type"
+    />
     <sp-bottombar safe-area-inset-bottom>
       <div
         v-if="
