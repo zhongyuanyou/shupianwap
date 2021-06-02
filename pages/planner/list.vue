@@ -299,9 +299,11 @@ export default {
   },
   computed: {
     ...mapState({
-      currentCity: (state) => state.city.currentCity,
+      currentCity: (state) =>
+        state.city.currentCity ||
+        this.$cookies.get('currentCity', { path: '/' }),
       isInApp: (state) => state.app.isInApp,
-      userInfo: (state) => state.user.userInfo,
+      userInfo: (state) => state.user.userInfo || this.$cookies.get('userInfo', { path: '/' }),
       isApplets: (state) => state.app.isApplets,
       code: (state) => state.city.code || '510100',
     }),
