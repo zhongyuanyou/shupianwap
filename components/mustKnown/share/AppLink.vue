@@ -41,7 +41,7 @@ export default {
     display: flex;
     flex-direction: column;
     &-name {
-      font: 32px @fontf-pfsc-med;
+      font: bold 32px @fontf-pfsc-med;
       color: #222;
     }
     &-desc {

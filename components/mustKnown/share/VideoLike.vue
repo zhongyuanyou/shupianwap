@@ -54,9 +54,8 @@ export default {
 .m-known-share.vlike {
   padding: 16px 32px;
   .like {
-    font-size: 32px;
     color: #222222;
-    font: 32px/44px @fontf-pfsc-med;
+    font: bold 32px/44px @fontf-pfsc-med;
     margin-bottom: 10px;
   }
   .video-list {

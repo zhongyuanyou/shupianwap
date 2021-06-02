@@ -33,7 +33,7 @@ export default {
   .like {
     height: 128px;
     text-align: center;
-    font: 32px/128px @fontf-pfsc-med;
+    font: bold 32px/128px @fontf-pfsc-med;
     color: #fff;
   }
   .video-list {
@@ -55,6 +55,7 @@ export default {
         justify-content: center;
         padding: 0 20px;
         font-family: @fontf-pfsc-med;
+        font-weight: bold;
         color: #fff;
         width: 100%;
         height: 200px;

@@ -51,6 +51,7 @@ export default {
       justify-content: center;
       padding: 0 32px;
       font-family: @fontf-pfsc-med;
+      font-weight: bold;
       color: #fff;
       width: 100%;
       height: 254px;

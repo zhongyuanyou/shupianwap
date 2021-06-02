@@ -67,7 +67,7 @@ export default {
         width: 406px;
         .name {
           .mixin-text-oneoverflow();
-          font: 32px @fontf-pfsc-med;
+          font: bold 32px @fontf-pfsc-med;
           color: #222222;
           margin-bottom: 16px;
         }
@@ -88,7 +88,7 @@ export default {
       }
     }
     &-tile {
-      font: 40px/56px @fontf-pfsc-med;
+      font: bold 40px/56px @fontf-pfsc-med;
       color: #1a1a1a;
       .textOverflow(2);
       margin-bottom: 22px;
