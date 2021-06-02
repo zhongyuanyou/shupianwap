@@ -23,12 +23,6 @@
 <script>
 import { Popup } from '@chipspc/vant-dgg'
 export default {
-  // props: {
-  //   showBalanceDesc: {
-  //     type: Boolean,
-  //     default: false,
-  //   },
-  // },
   components: {
     [Popup.name]: Popup,
   },

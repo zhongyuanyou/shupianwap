@@ -57,7 +57,12 @@
           <p>200.00</p>
         </div>
       </div>
-      <div class="withdrawal-btn">提现</div>
+      <div
+        class="withdrawal-btn"
+        @click="$router.push('/my/wallet/withdraw/setPwd')"
+      >
+        提现
+      </div>
       <div class="money-desc" @click="openBalanceDesc">
         <my-icon
           class-prefix="spiconfont"
@@ -75,7 +80,7 @@
           <img />
           <p>账单</p>
         </li>
-        <li>
+        <li @click="$router.push('/my/wallet/bankCards/list')">
           <img />
           <p>银行卡</p>
         </li>

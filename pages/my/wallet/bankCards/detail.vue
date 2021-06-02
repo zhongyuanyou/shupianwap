@@ -1,13 +1,10 @@
 <template>
   <div class="bank">
-    <Header title="银行卡管理" />
+    <Header title="银行卡详情" />
     <div class="bank-list">
       <ul>
         <li
-          style="
-            background-image: linear-gradient(90deg, #14bdbb 0%, #0bb3b3 100%);
-          "
-          @click="$router.push('/my/wallet/bankCards/detail')"
+          style=" background-image: linear-gradient(90deg, #14bdbb 0%, #0bb3b3 100%);"
         >
           <div class="left-logo">
             <img />
@@ -22,9 +19,7 @@
           </div>
         </li>
         <li
-          style="
-            background-image: linear-gradient(90deg, #14bdbb 0%, #0bb3b3 100%);
-          "
+          style="background-image: linear-gradient(90deg, #14bdbb 0%, #0bb3b3 100%);"
         >
           <div class="left-logo">
             <img />
@@ -41,9 +36,7 @@
       </ul>
     </div>
     <div class="footer-btn">
-      <button @click="$router.push('/my/wallet/bankCards/add')">
-        添加收款账户
-      </button>
+      <button @click="$router.push('/my/wallet/bankCards/setPwd')">解绑</button>
     </div>
   </div>
 </template>
