@@ -66,7 +66,11 @@
       <p class="pub-time">编辑于 {{ articleDetails.createTime }}</p>
       <DetailArticleList :article-list="articleList" />
     </div>
-    <Comment ref="openComment" :article-id="articleDetails.id" />
+    <Comment
+      ref="openComment"
+      :article-id="articleDetails.id"
+      :source-type="articleDetails.type"
+    />
     <sp-bottombar safe-area-inset-bottom>
       <div
         v-if="
