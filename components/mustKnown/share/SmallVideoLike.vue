@@ -1,5 +1,5 @@
 <template>
-  <div class="m-known-share like">
+  <div class="m-known-share svlike">
     <div class="like">猜你喜欢</div>
     <div class="video-list">
       <div class="item">
@@ -29,7 +29,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.m-known-share.like {
+.m-known-share.svlike {
   .like {
     height: 128px;
     text-align: center;
