@@ -320,10 +320,10 @@ export default {
             : this.currentCity.code
           : region.code
       let regionDto = {
-        codeState: region.name === '区域' ? 2 : 3,
+        codeState: region.name !== '区域' ? 3 : 2,
         regions: [code || '510100'],
       }
-      if (this.search.catogyActiveIndex !== 0) {
+      if (this.catogyActiveIndex !== 0) {
         regionDto = {
           codeState: 2,
           regions: [code || '510100'],
@@ -356,7 +356,6 @@ export default {
         }
       } else {
         this.uPGetCurrentRegion({ type: 'init' }).then((data) => {
-          console.log('uPGetCurrentRegion data:', data)
           const { code } = data || {}
           this.defaultCityCode = code
           this.onLoad(true)
@@ -479,7 +478,6 @@ export default {
     },
     handleSortChange(item) {
       const { value, text } = item || {}
-      console.log(value)
       // 触发 formatSearchParams 计算
       this.search.sortText = text
       this.search.sortId = value
@@ -503,7 +501,6 @@ export default {
       if (this.catogyActiveIndex === 0) {
         this.getList(currentPage)
           .then((data) => {
-            console.log(data)
             this.loading = false
             if (this.list.length >= this.pageOption.totalCount) {
               this.finished = true
@@ -539,7 +536,6 @@ export default {
           this.uPIM(data)
           break
         case 'tel':
-          console.log('想打电话：', data)
           if (this.isInApp) {
             this.$appFn.dggBindHiddenPhone(
               { plannerId: data.mchUserId },
@@ -603,7 +599,6 @@ export default {
         // app 上获取区域code
         else if (this.isInApp) {
           this.$appFn.dggCityCode((res) => {
-            console.log('dggCityCode:', res)
             const { code, data } = res || {}
             if (code !== 200) {
               this.$xToast.show({
@@ -629,6 +624,7 @@ export default {
           } else {
             code = '510100'
           }
+          this.SET_CITY({ code, name: '成都市' }) // 设置当前的定位到vuex中
           resolve({ code })
         }
       })
@@ -670,7 +666,6 @@ export default {
           icon: 'popup_ic_fail',
         })
       }
-      console.log('telNumber:', telNumber)
       // 如果当前页面在app中，则调用原生拨打电话的方法
       // 浏览器中调用的
     },
@@ -730,7 +725,6 @@ export default {
           if (code !== 200) {
             this.$appFn.dggLogin((loginRes) => {
               if (loginRes && loginRes.code === 200) {
-                console.log('loginRes : ', loginRes)
                 if (
                   loginRes.data &&
                   loginRes.data.userId &&
@@ -760,11 +754,9 @@ export default {
     async getList(currentPage) {
       const { limit } = this.pageOption
       const { sort, plannerName, regionDto } = this.formatSearch
-      console.log('regionDto', regionDto)
       const params = { sort, plannerName, regionDto, limit, page: currentPage }
       try {
         const data = await planner.list(params)
-        console.log(data)
         if (this.refreshing) {
           this.list = []
           this.refreshing = false
@@ -801,7 +793,6 @@ export default {
           { axios: this.$axios },
           { code: cityCode }
         )
-        console.log(data)
         if (Array.isArray(data) && data.length) {
           const { code: currentCityCode } = this.currentCity || {}
           this.regionsOption = [
