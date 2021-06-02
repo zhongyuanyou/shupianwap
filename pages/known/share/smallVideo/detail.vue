@@ -1,5 +1,5 @@
 <template>
-  <div class="m-share smallVideoDetail">
+  <div class="m-known-share smallVideoDetail">
     <client-only>
       <sp-video
         :vod-url="url"
@@ -40,7 +40,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.m-share.smallVideoDetail {
+.m-known-share.smallVideoDetail {
   background: #1a1a1a;
 }
 </style>

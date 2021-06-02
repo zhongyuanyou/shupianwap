@@ -1,5 +1,5 @@
 <template>
-  <div class="m-share appdown">
+  <div class="m-known-share appdown">
     <img :src="$ossImgSetV2('g6trabnxtg80000.png')" class="logo" />
     <div class="desc">
       <div class="desc-name">薯片APP</div>
@@ -21,7 +21,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.m-share.appdown {
+.m-known-share.appdown {
   position: fixed;
   display: flex;
   align-items: center;

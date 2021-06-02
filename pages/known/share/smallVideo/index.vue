@@ -1,5 +1,5 @@
 <template>
-  <div class="m-share smallVideo">
+  <div class="m-known-share smallVideo">
     <app-link />
     <div class="small-video">
       <my-icon
@@ -33,7 +33,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.m-share.smallVideo {
+.m-known-share.smallVideo {
   background: #1a1a1a;
   min-height: 100vh;
   .small-video {
