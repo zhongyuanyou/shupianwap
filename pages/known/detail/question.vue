@@ -269,6 +269,7 @@
     <comment-list
       v-model="commentShow"
       :article-id="questionDetails.id"
+      :source-type="questionDetails.type"
     ></comment-list>
 
     <!--    上拉组件-->
