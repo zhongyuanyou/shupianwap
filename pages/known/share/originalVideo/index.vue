@@ -21,6 +21,7 @@
       <div class="info-tile">领导干部MPA必读核心课程之公共部门经济学</div>
       <div class="info-desc">10.5万次播放 · 发布于2021-11-01</div>
     </div>
+    <video-like></video-like>
   </div>
 </template>
 
@@ -31,6 +32,7 @@ export default {
   name: 'KnownOriginalVideo',
   components: {
     AppLink: () => import('@/components/mustKnown/share/AppLink'),
+    VideoLike: () => import('@/components/mustKnown/share/VideoLike'),
     [Image.name]: Image,
     [Button.name]: Button,
   },
