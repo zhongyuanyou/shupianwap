@@ -299,11 +299,9 @@ export default {
   },
   computed: {
     ...mapState({
-      currentCity: (state) =>
-        state.city.currentCity ||
-        this.$cookies.get('currentCity', { path: '/' }),
+      currentCity: (state) => state.city.currentCity,
       isInApp: (state) => state.app.isInApp,
-      userInfo: (state) => state.user.userInfo || this.$cookies.get('userInfo', { path: '/' }),
+      userInfo: (state) => state.user.userInfo,
       isApplets: (state) => state.app.isApplets,
       code: (state) => state.city.code || '510100',
     }),
@@ -601,10 +599,9 @@ export default {
         // 所以 在app中每次打开页面需要调用方法获取一次，设置到页面里
         if (code && (type !== 'init' || !this.isInApp)) {
           resolve({ code })
-          return
         }
         // app 上获取区域code
-        if (this.isInApp) {
+        else if (this.isInApp) {
           this.$appFn.dggCityCode((res) => {
             console.log('dggCityCode:', res)
             const { code, data } = res || {}
@@ -622,6 +619,17 @@ export default {
             this.SET_CITY({ code: adCode, name: cityName }) // 设置当前的定位到vuex中
             resolve({ code: adCode })
           })
+        } else {
+          const currentCityData = this.$cookies.get('currentCity', {
+            path: '/',
+          })
+          let code
+          if (currentCityData && currentCityData.code) {
+            code = currentCityData.code
+          } else {
+            code = '510100'
+          }
+          resolve({ code })
         }
       })
     },
