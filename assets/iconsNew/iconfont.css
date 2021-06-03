@@ -1,8 +1,8 @@
 @font-face {
   font-family: "spiconfont"; /* Project id 2213614 */
-  src: url('iconfont.woff2?t=1620626452055') format('woff2'),
-       url('iconfont.woff?t=1620626452055') format('woff'),
-       url('iconfont.ttf?t=1620626452055') format('truetype');
+  src: url('iconfont.woff2?t=1621924526079') format('woff2'),
+       url('iconfont.woff?t=1621924526079') format('woff'),
+       url('iconfont.ttf?t=1621924526079') format('truetype');
 }
 
 .spiconfont {
@@ -11,6 +11,18 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.spiconfont-daipingjia:before {
+  content: "\e1209";
+}
+
+.spiconfont-zhibo2:before {
+  content: "\e1208";
+}
+
+.spiconfont-zhiboxiaochuangkouyuyin:before {
+  content: "\e1207";
 }
 
 .spiconfont-biaoqian:before {

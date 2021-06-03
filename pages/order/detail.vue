@@ -121,10 +121,7 @@
               color="#222222"
             ></my-icon>
           </span>
-          <span
-            v-if="orderData.evaluateStatus == 3"
-            class="right"
-            @click="navToUrl(2)"
+          <span v-else class="right" @click="navToUrl(2)"
             >查看评价
             <my-icon
               name="order_ic_listnext"
@@ -542,11 +539,11 @@ export default {
         infoId:
           this.orderData.evaluateCenterId ||
           this.orderData.orderSplitAndCusVo.evaluateCenterId, // 评价id
-        plannerId: this.orderData.orderSplitAndCusVo.signerId, // 签单人员id
+        plannerId: this.orderData.orderSplitAndCusVo.signerSubjectUserId, // 签单人员id
         signerNo: this.orderData.orderSplitAndCusVo.signerNo, // 签单人员编号
         plannerName: this.orderData.orderSplitAndCusVo.signerName,
-        signerSubjectUserId:
-          this.orderData.orderSplitAndCusVo.signerSubjectUserId, // 签单人商户用户id
+        signerSubjectUserId: this.orderData.orderSplitAndCusVo
+          .signerSubjectUserId, // 签单人商户用户id
         orderId: this.orderData.id,
         cusOrderId: this.orderData.cusOrderId,
       }

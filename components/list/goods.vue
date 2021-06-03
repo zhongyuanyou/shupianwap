@@ -108,6 +108,7 @@ export default {
       },
       classcode: this.$route.query,
       isOne: true,
+      onshow:true,
     }
   },
   computed: {},
@@ -243,7 +244,9 @@ export default {
         .then((data) => {
           if (this.formData.needTypes === 1) {
             this.items = data
+            console.log('typeData',data.typeData)
             if (this.classcode && this.isOne) {
+              console.log('jyFilterData', this.jyFilterData)
               for (let i = 0; i < this.items.typeData.length; i++) {
                 if (this.classcode.navcode === this.items.typeData[i].code) {
                   this.$refs.dropDownMenu.navIndex = i + 1
@@ -253,9 +256,8 @@ export default {
                   this.itemsclass[0].text = this.items.typeData[i].text
                   this.jyFilterData[0].name = this.itemsclass[0].name
                   if (this.classcode.classcode) {
-                    this.classcode.classcode = this.classcode.classcode.split(
-                      ','
-                    )
+                    this.classcode.classcode =
+                      this.classcode.classcode.split(',')
                     this.itemsclass[1].services = []
                     for (
                       let b = 0;
@@ -278,9 +280,8 @@ export default {
                             this.jyFilterData[0].name ===
                             this.items.typeData[i].name
                           ) {
-                            this.jyFilterData[0].name = this.items.typeData[
-                              i
-                            ].children[b].name
+                            this.jyFilterData[0].name =
+                              this.items.typeData[i].children[b].name
                           } else {
                             this.jyFilterData[0].name = `${this.jyFilterData[0].name},${this.items.typeData[i].children[b].name}`
                           }
@@ -288,8 +289,11 @@ export default {
                         }
                       }
                     }
-                    this.$refs.dropDownMenu.classarr = this.itemsclass[1].services
+                    this.$refs.dropDownMenu.classarr =
+                      this.itemsclass[1].services
+                    this.isOne = false
                   }
+                  console.log('jyFilterData[0]', this.jyFilterData[0])
                 }
               }
               if (this.classcode.priceid) {

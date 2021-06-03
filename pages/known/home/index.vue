@@ -103,6 +103,7 @@
     <comment-list
       v-model="commentShow"
       :article-id="articleId"
+      :source-type="sourceType"
       @release="release"
     ></comment-list>
   </div>
@@ -196,6 +197,7 @@ export default {
         description: `请到App去观看`,
         confirmButtonText: '好的',
       },
+      sourceType: 1,
     }
   },
   computed: {
@@ -367,8 +369,9 @@ export default {
         console.log(message)
       }
     },
-    comments(id) {
+    comments({ id, type }) {
       this.articleId = id
+      this.sourceType = type
       this.commentShow = true
     },
     release() {

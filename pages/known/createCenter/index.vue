@@ -47,7 +47,12 @@
                 </div>
                 <div class="desc">
                   <div class="desc-tip">
-                    {{ itemItem.answerCount || 0 }} 回答 ·
+                    {{
+                      itemItem.type === 1
+                        ? itemItem.answerCount || 0
+                        : itemItem.applaudCount || 0
+                    }}
+                    {{ itemItem.type === 1 ? '回答' : '点赞' }} ·
                     {{ itemItem.collectCount || 0 }} 收藏
                   </div>
                 </div>
@@ -57,7 +62,7 @@
         </template>
         <template v-else>
           <div class="empty">
-            <div class="empty-img"></div>
+            <img :src="imgsrc" />
             <div class="empty-desc">您暂未创作任何内容～</div>
           </div>
         </template>
@@ -67,12 +72,14 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { Tab, Tabs, Button, List, Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import knownApi from '@/api/known'
+import utils from '@/utils/changeBusinessData'
 
 export default {
-  name: 'CreateCenter',
+  name: 'KnownCreateCenter',
   components: {
     Header,
     [Tab.name]: Tab,
@@ -90,7 +97,7 @@ export default {
   data() {
     return {
       error: false,
-      loading: false,
+      loading: true,
       finished: false,
       page: 1,
       limit: 15,
@@ -112,6 +119,26 @@ export default {
         },
       ],
       emptyFlag: 'not',
+      imgsrc: '',
+    }
+  },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userId,
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
+  mounted() {
+    this.imgsrc = this.$ossImgSetV2(utils.getEmptyImgConfig('calendar'))
+    if (this.isInApp) {
+      this.$appFn.dggGetUserInfo((res) => {
+        if (res.code === 200 && res.data.userId && res.data.token) {
+          this.$store.dispatch('user/setUser', res.data)
+          this.onLoad()
+        }
+      })
+    } else {
+      this.onLoad()
     }
   },
   methods: {
@@ -136,9 +163,10 @@ export default {
           page: this.page,
           limit: this.limit,
           status: this.activeMapping[this.active],
+          userIds: [this.userId || this.$cookies.get('userId', { path: '/' })],
         }
         const { code, data } = await this.$axios.post(
-          knownApi.questionArticle.findListByStatus,
+          knownApi.createCenter.findListByStatus,
           params
         )
         this.loading = false
@@ -165,19 +193,29 @@ export default {
         if (item.type === 1) {
           this.$router.push({
             path: '/known/publish/question',
+            query: {
+              editType: '2',
+              id: item.id,
+            },
           })
+          return
         }
         // 文章
         if (item.type === 2) {
           this.$router.push({
-            path: '/known/publish/question',
+            path: '/known/publish/article',
+            query: {
+              editType: '2',
+              id: item.id,
+            },
           })
         } else {
           // 回答 这里需要传问题id,让用户在上一次回答的问题上继续回答
           this.$router.push({
             path: '/known/publish/answer',
             query: {
-              id: item.sourceId,
+              id: item.id,
+              editType: '2',
             },
           })
         }
@@ -191,6 +229,7 @@ export default {
               id: item.id, // 问题id
             },
           })
+          return
         }
         // 文章
         if (item.type === 2) {
@@ -217,6 +256,8 @@ export default {
 
 <style lang="less" scoped>
 .m-known.create-center {
+  min-height: 100vh;
+  background: #fff;
   .mixin-flex {
     display: flex;
     align-items: center;
@@ -251,6 +292,7 @@ export default {
   }
 
   .item {
+    background: #fff;
     padding: 40px 32px;
     .tile {
       position: relative;
@@ -316,12 +358,13 @@ export default {
   .empty {
     width: 100%;
     margin-top: 140px;
-    &-img {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+    img {
       width: 340px;
       height: 340px;
-      background: #4974f5;
-      margin: 0 auto;
-      opacity: 0.4;
     }
     &-desc {
       margin-top: 24px;

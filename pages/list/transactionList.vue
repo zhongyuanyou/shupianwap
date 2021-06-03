@@ -1,5 +1,20 @@
 <template>
   <div class="jy-list">
+    <div v-if="adList.length" class="ad-area">
+      <sp-swipe :autoplay="3000">
+        <sp-swipe-item v-for="(item, index) in adList" :key="index">
+          <a
+            href="javascript:void(0)"
+            @click="adJumpHandleMixin(item.materialList[0])"
+          >
+            <img
+              v-lazy="item.materialList[0].materialUrl + $ossImgSet(375, 150)"
+              alt=""
+            />
+          </a>
+        </sp-swipe-item>
+      </sp-swipe>
+    </div>
     <!--S搜索框-->
     <Search
       ref="search"
@@ -18,15 +33,22 @@
 
 <script>
 // import JyFilters from '@/components/list/JyFilters'
+import { Swipe, SwipeItem, Image } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import Goods from '@/components/list/goods'
+import adJumpHandle from '~/mixins/adJumpHandle'
+import { publicApi } from '@/api/index'
 export default {
   name: 'TransactionList',
   components: {
     // JyFilters,
+    [Swipe.name]: Swipe,
+    [SwipeItem.name]: SwipeItem,
+    [Image.name]: Image,
     Search,
     Goods,
   },
+  mixins: [adJumpHandle],
   data() {
     return {
       tabItems: [],
@@ -38,9 +60,11 @@ export default {
       reqType: 'jy',
       jyTypesData: [], // 交易业态数据
       height: '',
+      adList: [],
     }
   },
   mounted() {
+    this.getAdlist('ad100399')
     // document.body.addEventListener('focusout', () => {
     //   // 监听软键盘关闭事件
     //   // 解決ios端用微信打开页面，收起软键盘后，底部出现空白问题
@@ -61,11 +85,31 @@ export default {
       this.$refs.goods.getlist()
       // 点击搜索按钮
     },
+    getAdlist(transAdCode) {
+      this.adList = []
+      this.$axios
+        .post(publicApi.findAdvertising, {
+          locationCodeList: [transAdCode],
+        })
+        .then((res) => {
+          console.log('广告', res)
+          if (res.data) this.adList = res.data[transAdCode].sortMaterialList
+          console.log('this.adList', this.adList)
+        })
+    },
   },
 }
 </script>
 
 <style lang="less" scoped>
+.ad-area {
+  width: 100%;
+  height: 300px;
+  img {
+    width: auto;
+    height: auto;
+  }
+}
 .jy-list {
   width: 100%;
   height: 100%;

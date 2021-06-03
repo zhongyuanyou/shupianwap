@@ -44,9 +44,9 @@
             <p>{{ item.content }}</p>
             <div>
               <span>{{ item.createTime }}</span>
-
               <div>
                 <my-icon
+                  v-if="item.userId === userInfo.userId"
                   name="shanchu"
                   size="0.32rem"
                   :color="'#999999'"
@@ -105,6 +105,10 @@ export default {
     articleId: {
       type: String,
       default: '',
+    },
+    sourceType: {
+      type: Number,
+      default: 1,
     },
   },
   data() {
@@ -253,7 +257,7 @@ export default {
         {
           content: this.content,
           sourceId: this.articleId,
-          sourceType: 2, // 2 文章 3 回答
+          sourceType: this.sourceType, // 1问题 2 文章 3 回答
           userId: this.userInfo.userId,
           userName: this.userInfo.userName,
           userType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2, // 1 普通用户 2 规划师

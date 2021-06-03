@@ -52,25 +52,27 @@
         v-model="evaluateContent"
         autosize
         type="textarea"
-        maxlength="500"
-        placeholder="请对规划师的服务进行评价~"
+        :maxlength="maxLength"
+        placeholder="请对服务进行评价~"
         show-word-limit
       />
     </div>
     <div v-if="uploadImgFlag" class="upload">
-      <spMobileUpload
-        ref="SpUpLoad"
-        upload-icon="plus"
-        :file-id="evaluateFileId"
-        :list-url="CONFIG.listUrl"
-        :delete-url="CONFIG.deleteUrl"
-        :call-back-url="CONFIG.callBackUrl"
-        :max-count="3"
-        :max-size="5 * 1024 * 1024"
-        @onSuccess="success"
-        @onDeleted="deleted"
-        @oversize="onOversize"
-      />
+      <client-only>
+        <spMobileUpload
+          ref="SpUpLoad"
+          upload-icon="plus"
+          :file-id="evaluateFileId"
+          :list-url="CONFIG.listUrl"
+          :delete-url="CONFIG.deleteUrl"
+          :call-back-url="CONFIG.callBackUrl"
+          :max-count="3"
+          :max-size="5 * 1024 * 1024"
+          @onSuccess="success"
+          @onDeleted="deleted"
+          @oversize="onOversize"
+        />
+      </client-only>
     </div>
     <div class="placeholder"></div>
     <sp-bottombar safe-area-inset-bottom>
@@ -154,6 +156,10 @@ export default {
         return true
       },
     },
+    txtMaxLength: {
+      type: String,
+      default: '500',
+    },
   },
   data() {
     return {
@@ -162,6 +168,7 @@ export default {
       tipsFlag: this.tip,
       remarkFlag: this.remark,
       uploadImgFlag: this.upload,
+      maxLength: this.txtMaxLength,
       subScoreFlag: false,
       loading: false, // 加载效果状态
       imgs: ['vbad', 'bad', 'normal', 'happy', 'vhappy'],
@@ -207,6 +214,7 @@ export default {
       ) {
         return false
       }
+      /*
       // check 评价内容
       if (this.evaluateContent.trim() === '') {
         return false
@@ -215,6 +223,7 @@ export default {
       if (this.uploadImgFlag && this.imgLength === 0) {
         return false
       }
+      */
       return true
     },
   },
@@ -343,6 +352,7 @@ export default {
         this.$xToast.error('维度评分不能为空哦')
         return false
       }
+      /*
       // check 评价内容
       if (this.evaluateContent.trim() === '') {
         this.$xToast.error('评价内容不能为空')
@@ -353,6 +363,7 @@ export default {
         this.$xToast.error('请上传图片')
         return false
       }
+      */
       return true
     },
     submit() {
@@ -391,25 +402,24 @@ export default {
     async addEvaluateApi() {
       try {
         this.loading = true
-        this.buildEvaluateDimensionList()
-        this.buildTips()
         const params = {
           infoId: this.infoId,
           evaluateContent: this.evaluateContent,
-          serverScore: this.totalStarLevel + '',
-          evaluateDimensionList: this.evaluateDimensionList,
-          evaluateTagList: this.tips,
+          serverScore: this.totalStarLevel * 2 + '', // 分数传值需要*2
+          evaluateDimensionList: this.buildEvaluateDimensionList(),
+          evaluateTagList: this.buildTips(),
           sourceSyscode: this.CONFIG.SYS_CODE,
         }
         // 如果有图片,则添加图片参数
         if (this.uploadImgFlag) {
           params.evaluateFileId = this.evaluateFileId
         }
-        const { code } = await this.$axios.post(evaluateApi.add, params)
-        if (code !== 200) {
-          throw new Error('评价失败')
-        }
+        const { code, data } = await this.$axios.post(evaluateApi.add, params)
         this.loading = false
+        if (code !== 200) {
+          this.$xToast.error(data.error || '评价失败')
+          return
+        }
         this.$router.replace({ path: '/my/evaluate/success' })
       } catch (e) {
         this.loading = false
@@ -417,21 +427,29 @@ export default {
       }
     },
     buildEvaluateDimensionList() {
-      this.evaluateDimensionList.forEach((item) => {
-        item.fraction = item.fraction + ''
-        delete item.imgs
+      // 这里通过map构建数据,不要改变之前数组结构
+      return this.evaluateDimensionList.map((item) => {
+        return {
+          fraction: item.fraction * 2 + '', // 分数传值需要*2
+          id: item.id,
+          name: item.name,
+        }
       })
     },
     buildTips() {
       if (this.tips.length === 0) {
-        return
+        return []
       }
-      this.tips = this.tips.filter((item) => {
+      const tips = this.tips.filter((item) => {
         return item.flag
       })
-      this.tips.forEach((item) => {
+      if (tips.length === 0) {
+        return []
+      }
+      tips.forEach((item) => {
         delete item.flag
       })
+      return tips
     },
     clkTip(item) {
       item.flag = !item.flag

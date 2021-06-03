@@ -241,6 +241,7 @@ export default {
       this.$refs.goods.datalist = []
       this.$refs.goods.formData.searchKey = this.currentInputText
       this.$refs.goods.formData.needTypes = 0
+      this.$refs.goods.onshow = false
       this.isShowInput = false
       this.$refs.goods.getlist()
     },

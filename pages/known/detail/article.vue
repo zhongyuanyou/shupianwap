@@ -66,7 +66,11 @@
       <p class="pub-time">编辑于 {{ articleDetails.createTime }}</p>
       <DetailArticleList :article-list="articleList" />
     </div>
-    <Comment ref="openComment" :article-id="articleDetails.id" />
+    <Comment
+      ref="openComment"
+      :article-id="articleDetails.id"
+      :source-type="articleDetails.type"
+    />
     <sp-bottombar safe-area-inset-bottom>
       <div
         v-if="
@@ -260,7 +264,7 @@ export default {
         .get(knownApi.questionArticle.findAttention, {
           params: {
             currentUserId: this.userInfo.userId,
-            homeUserId: this.articleDetails.createrId,
+            homeUserId: this.articleDetails.userId,
           },
         })
         .then((res) => {
@@ -407,7 +411,7 @@ export default {
           businessId: this.id,
           handleType: this.handleType,
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-          dateType: 1,
+          dateType: 2,
         })
         .then((res) => {
           if (res.code === 200) {

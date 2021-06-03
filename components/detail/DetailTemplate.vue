@@ -276,28 +276,31 @@ export default {
       if (!this.deviceId) {
         this.deviceId = await getUserSign()
       }
+      console.log('this.proDetail.classCodeLevel', this.proDetail)
       const formatId1 = this.proDetail.classCodeLevel.split(',')[0] // 产品二级分类
       const formatId2 = this.proDetail.classCodeLevel.split(',')[1] // 产品二级分类
       const formatId3 = this.proDetail.classCodeLevel.split(',')[2] // 产品三级分类
-      const formatId = formatId3 || formatId2
-      const formatIdOne = formatId1 || formatId2
+      console.log('formatId1', formatId1)
+      console.log('formatId2', formatId2)
+      console.log('formatId3', formatId3)
       this.$axios
         .get(recommendApi.recommendProduct, {
           params: {
             userId: this.$cookies.get('userId', { path: '/' }), // 用户id
             deviceId: this.deviceId, // 设备ID
-            formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
-            // classCode: formatId1,
-            formatIdOne,
-            areaCode: this.city.code, // 区域编码
+            formatId: formatId2 || formatId3 || formatId1, // 产品二级类别,没有二级类别用三级类别（首页等场景不需传，如其他场景能获取到必传）
+            classCode: formatId1,
+            areaCode: this.$store.state.city.currentCity.code || '510100', // 区域编码
             sceneId: 'app-jycpxq-02', // 场景ID
             productId: this.proDetail.id, // 产品ID（产品详情页必传）
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
             title: this.proDetail.name, // 产品名称（产品详情页传、咨询页等）
-            platform: 'm', // 平台（app,m,pc）
+            platform: 'app', // 平台（app,m,pc）
             page: this.productPage,
             limit: this.productLimit,
             searchType: 1, // 搜索推荐产品类型：1：交易，2服务
+            formatIdOne: formatId1 || formatId2,
+            formatIds: formatId1 + '@' + formatId2, // 产品标识，支付返回页必传。交易产品或服务产品产品的业态标识由 产品类型的id与二级类别的id构成，中间用 @ 连接，多个产品标识时用 # 连接
           },
         })
         .then((res) => {
@@ -334,29 +337,23 @@ export default {
       const formatId1 = this.proDetail.classCodeLevel.split(',')[0] // 产品二级分类
       const formatId2 = this.proDetail.classCodeLevel.split(',')[1] // 产品二级分类
       const formatId3 = this.proDetail.classCodeLevel.split(',')[2] // 产品三级分类
-      const formatId = formatId3 || formatId2
-
-      console.log(
-        'this.$store.state.city.currentCity',
-        this.$store.state.city.currentCity
-      )
       this.$axios
         .get(recommendApi.recommendProduct, {
           params: {
             userId: this.$cookies.get('userId', { path: '/' }), // 用户id
             deviceId: this.deviceId, // 设备ID
-            formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
-            areaCode: this.$store.state.city.currentCity.code, // 区域编码
-            formatIdOne: formatId1,
-            // classCode: formatId1,
+            formatId: formatId3 || formatId2 || formatId1, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
+            areaCode: this.$store.state.city.currentCity.code || '510100', // 区域编码
+            classCode: formatId1,
             sceneId: 'app-jycpxq-01', // this.sceneId2 || this.sceneId1 //场景ID
             productId: this.proDetail.id, // 产品ID（产品详情页必传）
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
             title: this.proDetail.name, // 产品名称（产品详情页传、咨询页等）
-            platform: 'm', // 平台（app,m,pc）
+            platform: 'app', // 平台（app,m,pc）
             page: 1,
             limit: 5,
             searchType: 1, // 搜索推荐产品类型：1：交易，2服务
+            formatIdOne: formatId1 || formatId2,
           },
         })
         .then((res) => {
@@ -383,15 +380,19 @@ export default {
             page: this.plannerPage,
             area: this.city.code, // 区域编码
             deviceId: this.deviceId, // 设备ID
-            level_2_ID: this.proDetail.classCodeLevel
-              ? this.proDetail.classCodeLevel.split(',')[1]
-              : null, // 二级产品分类
+            level_2_ID:
+              this.proDetail.classCodeLevel.split(',')[1] ||
+              this.proDetail.classCodeLevel.split(',')[2] ||
+              this.proDetail.classCodeLevel.split(',')[0],
             login_name: null, // 规划师ID(选填)
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
             sceneId: 'app-cpxqye-01', // 场景ID
             user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
             platform: 'app', // 平台（app,m,pc）
             productId: this.proDetail.id, // 产品id
+            formatIdOne:
+              this.proDetail.classCodeLevel.split(',')[0] ||
+              this.proDetail.classCodeLevel.split(',')[1],
           },
         })
         .then((res) => {
@@ -413,9 +414,10 @@ export default {
           page: 1,
           area: this.city.code, // 区域编码
           deviceId, // 设备ID
-          level_2_ID: this.proDetail.classCodeLevel
-            ? this.proDetail.classCodeLevel.split(',')[1]
-            : null, // 二级产品分类
+          level_2_ID:
+            this.proDetail.classCodeLevel.split(',')[1] ||
+            this.proDetail.classCodeLevel.split(',')[2] ||
+            this.proDetail.classCodeLevel.split(',')[0],
           login_name: null, // 规划师ID(选填)
           productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
           sceneId: 'app-cpxqye-02', // 场景ID

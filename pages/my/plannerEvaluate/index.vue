@@ -1,7 +1,7 @@
 <template>
   <div class="evaluate_container">
     <!--S 头部-->
-    <Header title="评价">
+    <Header v-if="!isInApp" title="评价">
       <template #left>
         <div @click="back">
           <my-icon
@@ -32,7 +32,11 @@
       </div>
       <!--E 规划师-->
       <!--S 评分-->
-      <evaluate-star :upload="false" :cinfo-id="infoId" />
+      <evaluate-star
+        :upload="false"
+        :cinfo-id="infoId"
+        :txt-max-length="length"
+      />
       <!--E 评分-->
     </div>
     <!-- <div class="btn">
@@ -42,6 +46,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { CenterPopup } from '@chipspc/vant-dgg'
 import { evaluateApi } from '@/api'
 import Header from '@/components/common/head/header'
@@ -62,6 +67,7 @@ export default {
       plannerName: '',
       showPop: false,
       plannerId: '',
+      length: '100',
       Field: {
         type: 'functional',
         title: '温馨提示',
@@ -71,8 +77,26 @@ export default {
       },
     }
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+      userId: (state) => state.user.userInfo.userId,
+    }),
+  },
   mounted() {
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle(
+        {
+          title: '评价',
+        },
+        (res) => {}
+      )
+      this.$appFn.dggGetUserInfo((res) => {
+        if (res.code === 200 && res.data.userId && res.data.token) {
+          this.$store.dispatch('user/setUser', res.data)
+        }
+      })
+    }
     this.init()
   },
   methods: {
