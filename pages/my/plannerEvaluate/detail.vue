@@ -223,6 +223,7 @@ export default {
         .mixin-flex();
         align-items: center;
         margin-bottom: 24px;
+
         &-name {
           font: bold 34px @fontf-pfsc-med;
           color: #1a1a1a;
