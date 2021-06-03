@@ -35,7 +35,7 @@
         </div>
       </template>
     </div>
-    <div v-if="tipsFlag" class="tips">
+    <div v-if="tipsFlag && subScoreFlag" class="tips">
       <div
         v-for="(item, index) in tips"
         :key="index"
@@ -47,7 +47,7 @@
       </div>
     </div>
 
-    <div v-if="remarkFlag" class="remark">
+    <div v-if="remarkFlag && subScoreFlag" class="remark">
       <sp-field
         v-model="evaluateContent"
         autosize
@@ -57,7 +57,7 @@
         show-word-limit
       />
     </div>
-    <div v-if="uploadImgFlag" class="upload">
+    <div v-if="uploadImgFlag && subScoreFlag" class="upload">
       <client-only>
         <spMobileUpload
           ref="SpUpLoad"
@@ -123,7 +123,7 @@ export default {
   },
   filters: {
     fliterLevel(val) {
-      const txts = ['非常差', '非常差', '差', '一般', '好', '非常好']
+      const txts = ['', '非常差', '差', '一般', '好', '非常好']
       return txts[val]
     },
   },
@@ -612,11 +612,12 @@ export default {
 
   .placeholder {
     width: 100%;
-    height: 140px;
+    height: 150px;
   }
 
   ::v-deep .sp-bottombar {
-    padding: 0 40px 24px;
+    background: #fff;
+    padding: 24px 40px;
     height: 88px;
     .sp-button {
       border: none;

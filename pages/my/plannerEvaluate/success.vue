@@ -56,6 +56,7 @@ export default {
       margin: 112px 0 56px;
     }
     .tile {
+      line-height: 1;
       font: bold 44px @fontf-pfsc-med;
       color: #1a1a1a;
       margin-bottom: 32px;
