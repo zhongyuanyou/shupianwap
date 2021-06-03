@@ -7,7 +7,7 @@
   >
     <HeaderSlot>
       <div class="flex">
-        <div>
+        <div v-if="!isShare">
           <my-icon
             name="nav_ic_back"
             size="0.40rem"
@@ -17,7 +17,7 @@
           ></my-icon>
         </div>
         <p class="title">{{ title }}</p>
-        <div>
+        <div class="right-area">
           <my-icon
             style="margin-right: 0.15rem"
             name="nav_ic_searchbig"
@@ -687,7 +687,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   height: 0.88rem;
-  padding: 0 0.32rem;
+  padding: 0 32px;
   div {
     display: flex;
     height: 0.88rem;
@@ -702,6 +702,9 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .right-area {
+    float: right;
   }
 }
 .down_slide_list {

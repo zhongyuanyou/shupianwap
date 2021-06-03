@@ -2,8 +2,9 @@
   <div class="article">
     <HeaderSlot>
       <div v-if="!showHead" class="flex">
-        <div>
+        <div class="nav-back">
           <my-icon
+            v-if="!isShare"
             name="nav_ic_back"
             size="0.40rem"
             color="#1a1a1a"
@@ -11,7 +12,7 @@
             @click.native="$back()"
           ></my-icon>
         </div>
-        <div>
+        <div class="search">
           <my-icon
             style="margin-right: 0.15rem"
             name="nav_ic_searchbig"
@@ -514,11 +515,20 @@ export default {
 //   z-index: 99;
 // }
 .flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  // display: flex;
+  // justify-content: space-between;
+  // align-items: center;
   height: 0.88rem;
   padding: 0 0.32rem;
+  .nav-back {
+    float: left;
+    margin-top: 24px;
+    width: 40px;
+    height: 40px;
+  }
+  .search {
+    float: right;
+  }
   div {
     display: flex;
     height: 0.88rem;
@@ -579,6 +589,7 @@ export default {
 .main {
   padding: 40px;
   .user-info {
+    margin-top: 10px;
     display: flex;
     align-items: center;
     .img {

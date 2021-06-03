@@ -2,12 +2,13 @@
   <div class="answer">
     <div>
       <header-slot>
-        <div v-if="!showHead2 && !isShare" class="head1">
+        <div v-show="!showHead2" class="head1">
           <my-icon
+            v-if="!isShare"
             name="nav_ic_back"
             size="0.40rem"
             color="#1a1a1a"
-            class="my_icon"
+            class="my_icon nav-back"
             @click.native="$back()"
           ></my-icon>
           <div class="btn-area">
@@ -34,12 +35,13 @@
             </p>
           </div>
         </div>
-        <div v-if="showHead2" class="head2">
+        <div v-show="showHead2" class="head2">
           <my-icon
+            v-if="!isShare"
             name="nav_ic_back"
             size="0.40rem"
             color="#1a1a1a"
-            class="my_icon"
+            class="my_icon nav-back"
             @click.native="$back()"
           ></my-icon>
           <div class="user-info">
@@ -582,15 +584,17 @@ export default {
     border-top: 1px solid #f4f4f4;
   }
 }
+.nav-back {
+  float: left;
+  margin-top: 20px;
+}
 .head1 {
   padding: 0 40px;
   height: 88px;
   font-size: 30px;
   background: #ffffff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   .btn-area {
+    float: right;
     display: flex;
     align-items: center;
     height: 100%;
@@ -609,9 +613,6 @@ export default {
   padding: 0 40px;
   height: 88px;
   background: #ffffff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   .user-info {
     flex: 1;
     display: flex;
