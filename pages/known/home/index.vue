@@ -103,6 +103,7 @@
     <comment-list
       v-model="commentShow"
       :article-id="articleId"
+      :source-type="sourceType"
       @release="release"
     ></comment-list>
   </div>
@@ -115,6 +116,7 @@ import Item from '@/components/mustKnown/home/Item'
 import { knownApi } from '~/api'
 import utils from '@/utils/changeBusinessData'
 import { domainUrl } from '~/config/index'
+
 export default {
   name: 'Collection',
   components: {
@@ -187,6 +189,15 @@ export default {
       limit: 10,
       fixed: false,
       adList: [],
+      showPop: false,
+      Filed4: {
+        type: 'functional',
+        showCancelButton: false,
+        title: '提示！',
+        description: `请到App去观看`,
+        confirmButtonText: '好的',
+      },
+      sourceType: 1,
     }
   },
   computed: {
@@ -207,6 +218,15 @@ export default {
   mounted() {
     this.getAdList()
     window.addEventListener('scroll', this.getScroll)
+
+    const userType = this.type || utils.getUserType(this.userInfo.userType)
+    // 到时候这里改成5
+    if (userType !== 1) {
+      this.menuList.push({
+        name: '视频',
+        index: 5,
+      })
+    }
   },
   methods: {
     adJump(item) {
@@ -349,8 +369,9 @@ export default {
         console.log(message)
       }
     },
-    comments(id) {
+    comments({ id, type }) {
       this.articleId = id
+      this.sourceType = type
       this.commentShow = true
     },
     release() {

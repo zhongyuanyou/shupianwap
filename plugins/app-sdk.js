@@ -264,8 +264,26 @@ const appHandler = {
       handleRequest(res, fn)
     })
   },
+  // 修改顶部颜色
+  dggChangeTopColor: (data = { flags: '' }, fn = () => {}) => {
+    Bridge.callHandler('dgg_changeStatusBar', data, (res) => {
+      console.log('修改颜色', 1111)
+      handleRequest(res, fn)
+    })
+  },
+  // 打开App视频页面
+  dggOpenVideo: (id, fn = () => {}) => {
+    Bridge.callHandler('dgg_open_video_details', { id }, (res) => {
+      handleRequest(res, fn)
+    })
+  },
+  // 打开App课程页面
+  dggOpenCourse: (id, fn = () => {}) => {
+    Bridge.callHandler('dgg_open_classroom_details_page', { id }, (res) => {
+      handleRequest(res, fn)
+    })
+  },
 }
-
 // 注册APP调用的js方法
 const registHandler = (handlerName, fn = () => {}) => {
   handlerName

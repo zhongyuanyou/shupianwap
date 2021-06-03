@@ -36,6 +36,14 @@ const planner = {
     })
   },
 
+  findListByCode(params) {
+    return request({
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/nk/planner/v2/find_list_by_code.do',
+    })
+  },
+
   /**
    * @description 规划师详情接口
    * @param {Object} params 请求参数

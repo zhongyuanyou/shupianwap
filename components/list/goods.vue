@@ -96,7 +96,7 @@ export default {
         price: this.priceactive,
         sort: this.sortactive,
         class: this.itemsclass,
-        clientType: 'COMDIC_TERMINAL_APP',
+        showClient: 'COMDIC_TERMINAL_APP',
       },
       datalist: [],
       items: '',
@@ -130,6 +130,32 @@ export default {
       this.itemsclass[0].id = 1
       this.itemsclass[0].code = this.classcode.navcode
       this.formData.class = this.itemsclass
+    }
+    if (this.classcode.priceid && this.classcode.price) {
+      this.formData.price = {
+        maxPrice: '',
+        minPrice: '',
+        activeItems: {
+          code: this.classcode.priceid,
+          ext2: this.classcode.price,
+        },
+      }
+    } else if (this.classcode.price) {
+      this.formData.price = {
+        minPrice: this.classcode.price.slice(
+          0,
+          this.classcode.price.match('-').index
+        ),
+        maxPrice: this.classcode.price.slice(
+          this.classcode.price.match('-').index + 1
+        ),
+        activeItems: {},
+      }
+    }
+    if (this.classcode.sort) {
+      this.formData.sort = {
+        code: this.classcode.sort,
+      }
     }
     this.getlist()
   },
@@ -218,7 +244,9 @@ export default {
         .then((data) => {
           if (this.formData.needTypes === 1) {
             this.items = data
+            console.log('typeData',data.typeData)
             if (this.classcode && this.isOne) {
+              console.log('jyFilterData', this.jyFilterData)
               for (let i = 0; i < this.items.typeData.length; i++) {
                 if (this.classcode.navcode === this.items.typeData[i].code) {
                   this.$refs.dropDownMenu.navIndex = i + 1
@@ -228,9 +256,8 @@ export default {
                   this.itemsclass[0].text = this.items.typeData[i].text
                   this.jyFilterData[0].name = this.itemsclass[0].name
                   if (this.classcode.classcode) {
-                    this.classcode.classcode = this.classcode.classcode.split(
-                      ','
-                    )
+                    this.classcode.classcode =
+                      this.classcode.classcode.split(',')
                     this.itemsclass[1].services = []
                     for (
                       let b = 0;
@@ -253,9 +280,8 @@ export default {
                             this.jyFilterData[0].name ===
                             this.items.typeData[i].name
                           ) {
-                            this.jyFilterData[0].name = this.items.typeData[
-                              i
-                            ].children[b].name
+                            this.jyFilterData[0].name =
+                              this.items.typeData[i].children[b].name
                           } else {
                             this.jyFilterData[0].name = `${this.jyFilterData[0].name},${this.items.typeData[i].children[b].name}`
                           }
@@ -263,11 +289,29 @@ export default {
                         }
                       }
                     }
-                    this.$refs.dropDownMenu.classarr = this.itemsclass[1].services
+                    this.$refs.dropDownMenu.classarr =
+                      this.itemsclass[1].services
+                    this.isOne = false
+                  }
+                  console.log('jyFilterData[0]', this.jyFilterData[0])
+                }
+              }
+              if (this.classcode.priceid) {
+                for (let z = 0; z < this.items.price.length; z++) {
+                  if (this.classcode.priceid === this.items.price[z].code) {
+                    this.jyFilterData[1].name = this.items.price[z].name
+                    this.$refs.dropDownMenu.priceobj = this.items.price[z]
                   }
                 }
               }
-              this.isOne = false
+              if (this.classcode.sort) {
+                for (let x = 0; x < this.items.sortFilter.length; x++) {
+                  if (this.classcode.sort === this.items.sortFilter[x].code) {
+                    this.jyFilterData[2].name = this.items.sortFilter[x].name
+                    this.sortactive = this.items.sortFilter[x]
+                  }
+                }
+              }
             }
           }
           if (data.goodsList.records.length < 1) {

@@ -42,7 +42,7 @@
                 ref="regionsDropdownItem"
                 :disabled="!regionsOption || !regionsOption.length"
                 :title-class="
-                  search.region.name != '区域'
+                  search.region.name != '区域' && !isChooseCategory
                     ? 'sp-dropdown-menu__title--selected '
                     : ''
                 "
@@ -55,6 +55,7 @@
                   :multiple="false"
                   :city-data="regionsOption"
                   :is-location="true"
+                  :back-data="backData"
                   @select="handleRegionsSelect"
                 />
               </sp-dropdown-item>
@@ -62,7 +63,9 @@
                 ref="sortDropdown"
                 class="search__dropdown-sort"
                 :title-class="
-                  search.sortId > 0 ? 'sp-dropdown-menu__title--selected' : ''
+                  search.sortId > 0 && !isChooseCategory
+                    ? 'sp-dropdown-menu__title--selected'
+                    : ''
                 "
                 :title="search.sortText"
               >
@@ -85,6 +88,26 @@
                       />
                     </template>
                   </sp-cell>
+                </div>
+              </sp-dropdown-item>
+              <sp-dropdown-item
+                ref="categoryCodeSelect"
+                :title="search.categoryCodeName"
+                :title-class="
+                  isChooseCategory ? 'sp-dropdown-menu__title--selected ' : ''
+                "
+                class="search__dropdown-category"
+              >
+                <div class="category-list">
+                  <div
+                    v-for="(item, index) in categoryList"
+                    :key="index"
+                    :class="catogyActiveIndex === index ? 'active-item' : ''"
+                    class="item"
+                    @click="chooseCategory(index)"
+                  >
+                    {{ item.name }}
+                  </div>
                 </div>
               </sp-dropdown-item>
             </sp-dropdown-menu>
@@ -176,7 +199,7 @@ import PlannerSearchItem from '@/components/planner/PlannerSearchItem'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 import imHandle from '@/mixins/imHandle'
 
-import { planner, dict } from '@/api'
+import { planner, dict, goods } from '@/api'
 import { callPhone, parseTel } from '@/utils/common'
 
 const SORT_CONFIG = [
@@ -255,6 +278,9 @@ export default {
           name: '区域',
           code: '',
         },
+        categoryCodes: '',
+        categoryCodeName: '全部分类',
+        categoryState: 1,
       },
       sortOption: SORT_CONFIG,
       regionsOption: [],
@@ -264,6 +290,11 @@ export default {
       finished: false,
       pageOption: DEFAULT_PAGE,
       list: [],
+      categoryList: [],
+      catogyActiveIndex: 0,
+      defaultCityCode: '',
+      isChooseCategory: false,
+      backData: [],
     }
   },
   computed: {
@@ -272,7 +303,7 @@ export default {
       isInApp: (state) => state.app.isInApp,
       userInfo: (state) => state.user.userInfo,
       isApplets: (state) => state.app.isApplets,
-      code: (state) => state.city.code,
+      code: (state) => state.city.code || '510100',
     }),
     formatSearch() {
       const { sortId, keywords, region } = this.search
@@ -288,11 +319,16 @@ export default {
             ? this.code
             : this.currentCity.code
           : region.code
-      const regionDto = {
-        codeState: region.name === '区域' ? 2 : 3,
-        regions: [code],
+      let regionDto = {
+        codeState: region.name !== '区域' ? 3 : 2,
+        regions: [code || '510100'],
       }
-
+      if (this.catogyActiveIndex !== 0) {
+        regionDto = {
+          codeState: 2,
+          regions: [code || '510100'],
+        }
+      }
       return { sort, plannerName: keywords, regionDto }
     },
   },
@@ -303,19 +339,36 @@ export default {
       // 但是在app中登录等，登录信息cookie中的没有更新，导致直接从store中获取到的信息无效
       // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
       this.isInApp && this.clearUserInfo()
-      console.log(this.isInApp, 'app')
-      this.uPGetCurrentRegion({ type: 'init' }).then((data) => {
-        console.log('uPGetCurrentRegion data:', data)
-        const { code } = data || {}
-        this.onLoad()
-        this.getRegionList(code)
-      })
+      if (this.$route.query.cityCode && this.$route.query.cityName) {
+        this.defaultCityCode = this.$route.query.cityCode
+        this.getRegionList(this.$route.query.cityCode)
+        this.SET_CITY({
+          code: this.$route.query.cityCode,
+          name: this.$route.query.cityName,
+        }) // 设置当前的定位到vuex中
+        if (this.$route.query.regionCode) {
+          const regionDto = {
+            codeState: 2,
+            regions: this.$route.query.regionCode,
+          }
+          this.search.regionDto = regionDto
+          this.getList(1)
+        }
+      } else {
+        this.uPGetCurrentRegion({ type: 'init' }).then((data) => {
+          const { code } = data || {}
+          this.defaultCityCode = code
+          this.onLoad(true)
+          this.getRegionList(code)
+        })
+      }
     }
   },
   mounted() {
     this.$nextTick(() => {
       this.headHeight = this.$refs.head.clientHeight
     })
+    this.getCategoryCodes()
   },
   methods: {
     ...mapMutations({
@@ -323,13 +376,97 @@ export default {
       setUserInfo: 'user/SET_USER',
       clearUserInfo: 'user/CLEAR_USER',
     }),
-
+    chooseCategory(index) {
+      this.catogyActiveIndex = index
+      this.search.categoryCodeName = this.categoryList[index].name
+      this.search.categoryCodes = this.categoryList[index].code
+      this.pageOption.page = 1
+      this.pageOption.limit = 10
+      this.search.keywords = ''
+      this.isChooseCategory = true
+      if (index === 0) {
+        this.search.region = {
+          code: this.defaultCityCode,
+          name: '不限',
+          codeState: 1,
+        }
+        this.backData = [
+          {
+            code: this.defaultCityCode,
+            name: '不限',
+            codeState: 1,
+          },
+        ]
+      }
+      this.onLoad()
+      this.$refs.categoryCodeSelect.toggle()
+    },
+    getCategoryCodes() {
+      goods.getCategoryCodes({ axios: this.$axios }).then((res) => {
+        this.categoryList = [{ name: '全部分类', code: 0 }].concat(res[0])
+        if (this.$route.query && this.$route.query.categoryCode) {
+          this.search.categoryCodes = this.$route.query.categoryCode
+          this.isChooseCategory = true
+          this.categoryList.forEach((item, index) => {
+            if (item.code === this.search.categoryCodes) {
+              this.catogyActiveIndex = index
+              this.search.categoryCodeName = item.name
+            }
+          })
+          this.getListByCode(this.search.categoryCodes, 1)
+        }
+      })
+    },
+    // 根据经营类目查询规划师
+    getListByCode(code, currentPage) {
+      planner
+        .findListByCode({
+          categoryCodes: [code],
+          categoryState: 1, // 分类层级
+          limit: 10,
+          start: this.pageOption.page || 1,
+        })
+        .then((res) => {
+          if (this.refreshing) {
+            this.list = []
+            this.refreshing = false
+          }
+          if (res) {
+            this.loading = false
+            this.finished = true
+            this.error = false
+            const { limit, currentPage = 1, totalCount = 0, records = [] } = res
+            this.pageOption = { limit, totalCount, page: currentPage }
+            this.list.push(...records)
+            // 第一页面请求提示
+            if (currentPage === 1) {
+              this.$xToast.show({
+                message: `共找到${totalCount}个规划师`,
+                duration: 1000,
+                forbidClick: true,
+                icon: 'toast_ic_comp',
+              })
+              this.list = records
+            } else {
+              this.list = this.list.concat(currentPage)
+            }
+          }
+        })
+        .catch((error) => {
+          console.log('error', error)
+          this.loading = false
+          this.finished = true
+          this.error = true
+        })
+    },
     onLeftClick() {
       console.log('nav onClickLeft')
       this.uPGpBack()
     },
     handleRegionsSelect(data) {
-      console.log(data)
+      this.catogyActiveIndex = 0
+      this.search.categoryCodeName = '全部分类'
+      this.isChooseCategory = false
       if (this.currentCity.code !== data[0].code) return
       const { code, name } = data[1] || {}
       this.search.region = {
@@ -341,14 +478,19 @@ export default {
     },
     handleSortChange(item) {
       const { value, text } = item || {}
-      console.log(value)
       // 触发 formatSearchParams 计算
       this.search.sortText = text
       this.search.sortId = value
       this.$refs.sortDropdown.toggle()
+      this.catogyActiveIndex = 0
+      this.search.categoryCodeName = '全部分类'
+      this.isChooseCategory = false
       this.handleSearch()
     },
-    onLoad() {
+    onLoad(isInit) {
+      if (isInit && this.$route.query.categoryCode) {
+        return
+      }
       let currentPage = this.pageOption.page
       if (!this.refreshing && this.list.length && currentPage >= 1) {
         currentPage += 1
@@ -356,19 +498,21 @@ export default {
         this.pageOption = DEFAULT_PAGE
         currentPage = 1
       }
-      this.getList(currentPage)
-        .then((data) => {
-          console.log(data)
-          this.loading = false
-          if (this.list.length >= this.pageOption.totalCount) {
-            this.finished = true
-          }
-        })
-        .catch(() => {
-          console.log('sdf')
-          this.error = true
-          this.loading = false
-        })
+      if (this.catogyActiveIndex === 0) {
+        this.getList(currentPage)
+          .then((data) => {
+            this.loading = false
+            if (this.list.length >= this.pageOption.totalCount) {
+              this.finished = true
+            }
+          })
+          .catch(() => {
+            this.error = true
+            this.loading = false
+          })
+      } else {
+        this.getListByCode(this.search.categoryCodes, currentPage)
+      }
     },
     onRefresh() {
       this.finished = false
@@ -392,7 +536,6 @@ export default {
           this.uPIM(data)
           break
         case 'tel':
-          console.log('想打电话：', data)
           if (this.isInApp) {
             this.$appFn.dggBindHiddenPhone(
               { plannerId: data.mchUserId },
@@ -452,12 +595,10 @@ export default {
         // 所以 在app中每次打开页面需要调用方法获取一次，设置到页面里
         if (code && (type !== 'init' || !this.isInApp)) {
           resolve({ code })
-          return
         }
         // app 上获取区域code
-        if (this.isInApp) {
+        else if (this.isInApp) {
           this.$appFn.dggCityCode((res) => {
-            console.log('dggCityCode:', res)
             const { code, data } = res || {}
             if (code !== 200) {
               this.$xToast.show({
@@ -469,10 +610,22 @@ export default {
               reject(res)
               return
             }
-            const { adCode, cityName } = data
+            const { adCode = '510100', cityName = '成都' } = data
             this.SET_CITY({ code: adCode, name: cityName }) // 设置当前的定位到vuex中
             resolve({ code: adCode })
           })
+        } else {
+          const currentCityData = this.$cookies.get('currentCity', {
+            path: '/',
+          })
+          let code
+          if (currentCityData && currentCityData.code) {
+            code = currentCityData.code
+          } else {
+            code = '510100'
+          }
+          this.SET_CITY({ code, name: '成都市' }) // 设置当前的定位到vuex中
+          resolve({ code })
         }
       })
     },
@@ -513,7 +666,6 @@ export default {
           icon: 'popup_ic_fail',
         })
       }
-      console.log('telNumber:', telNumber)
       // 如果当前页面在app中，则调用原生拨打电话的方法
       // 浏览器中调用的
     },
@@ -573,7 +725,6 @@ export default {
           if (code !== 200) {
             this.$appFn.dggLogin((loginRes) => {
               if (loginRes && loginRes.code === 200) {
-                console.log('loginRes : ', loginRes)
                 if (
                   loginRes.data &&
                   loginRes.data.userId &&
@@ -606,7 +757,6 @@ export default {
       const params = { sort, plannerName, regionDto, limit, page: currentPage }
       try {
         const data = await planner.list(params)
-        console.log(data)
         if (this.refreshing) {
           this.list = []
           this.refreshing = false
@@ -643,7 +793,6 @@ export default {
           { axios: this.$axios },
           { code: cityCode }
         )
-        console.log(data)
         if (Array.isArray(data) && data.length) {
           const { code: currentCityCode } = this.currentCity || {}
           this.regionsOption = [
@@ -653,8 +802,20 @@ export default {
               children: Array.isArray(data) ? data : [],
             },
           ]
+          if (this.$route.query.regionCode) {
+            const data1 = data.filter((item) => {
+              return item.code === this.$route.query.regionCode
+            })
+            this.backData = [
+              {
+                name: this.$route.query.cityName,
+                code: this.$route.query.cityCode,
+              },
+              data1[0],
+            ]
+            this.search.region.name = data1[0].name
+          }
         }
-
         return data
       } catch (error) {
         console.error('getRegionList:', error)
@@ -794,6 +955,31 @@ export default {
     .list-cell {
       padding: 40px;
     }
+    /deep/ .search__dropdown-category {
+      .sp-dropdown-item .sp-popup {
+        max-height: 4rem;
+        min-height: 2rem;
+      }
+    }
+    .category-list {
+      width: 100%;
+      padding: 20px;
+      clear: both;
+      overflow: hidden;
+      .item {
+        font-size: 28px;
+        color: #222;
+        background: #f8f8f8;
+        float: left;
+        margin: 10px 12px;
+        padding: 12px 20px;
+        border-radius: 2px;
+      }
+      .active-item {
+        color: #5883e8;
+        background: #eef0ff;
+      }
+    }
   }
 
   .item-wrap {
@@ -801,6 +987,9 @@ export default {
   }
 
   .no-data {
+    width: 100%;
+    height: auto;
+    min-height: 400px;
     display: flex;
     flex-direction: column;
     justify-content: center;

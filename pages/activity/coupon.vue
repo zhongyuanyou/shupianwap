@@ -44,17 +44,6 @@
             <!-- 气泡组件 start -->
             <Popover @closepop="closeBox" />
             <!-- 气泡组件 end-->
-            <!-- 右侧显示 start-->
-            <!-- <div
-            class="sign"
-            :class="
-              couponType === 1
-                ? 'have_use_icon'
-                : couponType === 0
-                ? ''
-                : 'lose'
-            "
-          ></div> -->
             <div class="title" @click="goDetailPage(item)">
               {{ item.couponName }}
             </div>
@@ -153,7 +142,7 @@ export default {
   methods: {
     uPGoBack() {
       if (this.isInApp) {
-        this.$appFn.dggCloseWebView((res) => {
+        this.$appFn.dggWebGoBack((res) => {
           if (!res || res.code !== 200) {
             this.$xToast.show({
               message: '返回失败',
@@ -419,7 +408,7 @@ export default {
     .item-rt {
       padding-left: 24px;
       height: auto;
-      width: 300px;
+      width: 290px;
       box-sizing: border-box;
       .title {
         font-size: 32px;
@@ -488,7 +477,7 @@ export default {
       align-items: center;
       display: flex;
       font-size: 24px;
-      margin-right: 10px;
+      margin-right: 32px;
       button {
         display: block;
         width: 150px;

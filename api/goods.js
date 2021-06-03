@@ -1,7 +1,7 @@
 'use strict'
 import { request } from '@/utils/request'
-// import { CHIPS_WAP_BASE_URL } from '@/config/constant'
-const CHIPS_WAP_BASE_URL = 'http://172.16.132.240:7001/service'
+import { CHIPS_WAP_BASE_URL } from '@/config/constant'
+
 const goods = {
   searchServeGoodsList({ axios }, params) {
     // 搜索服务商品列表接口
@@ -18,7 +18,7 @@ const goods = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/nk/goodslist/v1/get_jy_list.do',
+      url: CHIPS_WAP_BASE_URL + '/nk/goodslist/v2/get_jy_list.do',
     })
   },
   transactionList({ axios }, params) {
@@ -28,6 +28,16 @@ const goods = {
       params,
       method: 'post',
       url: CHIPS_WAP_BASE_URL + '/nk/commodity/v2/get_serve_list.do',
+    })
+  },
+  // /service/nk/commodity/v2/get_filter_code.do
+  getCategoryCodes({ axios }, params) {
+    // 获取分类codes
+    return request({
+      axios,
+      params,
+      method: 'get',
+      url: CHIPS_WAP_BASE_URL + '/nk/commodity/v2/get_filter_code.do',
     })
   },
 }

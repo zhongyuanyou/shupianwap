@@ -116,13 +116,13 @@ export default function ({ $axios, redirect, app, store }) {
       return Promise.reject(error)
     }
   )
-  $axios.onError((error) => {
-    const code = parseInt(error.response && error.response.status)
-    if (code === 400) {
-      redirect('/404')
-    } else if (code === 500) {
-      redirect('/500')
-    }
-  })
+  // $axios.onError((error) => {
+  //   const code = parseInt(error.response && error.response.status)
+  //   if (code === 400) {
+  //     redirect('/404')
+  //   } else if (code === 500) {
+  //     redirect('/500')
+  //   }
+  // })
   saveAxiosInstance($axios)
 }

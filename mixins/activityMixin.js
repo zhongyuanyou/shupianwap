@@ -129,7 +129,7 @@ export default {
     // 平台不同，跳转方式不同
     uPGoBack() {
       if (this.isInApp) {
-        this.$appFn.dggCloseWebView((res) => {
+        this.$appFn.dggWebGoBack((res) => {
           if (!res || res.code !== 200) {
             this.$xToast.show({
               message: '返回失败',
