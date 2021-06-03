@@ -194,6 +194,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.overflow {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .m-evaluate.detail {
   .mixin-flex {
     display: flex;
@@ -211,13 +218,16 @@ export default {
     }
     .desc {
       .name {
+        justify-content: space-between;
+        margin-right: 0.4rem;
         .mixin-flex();
         align-items: center;
         margin-bottom: 24px;
         &-name {
           font: bold 34px @fontf-pfsc-med;
           color: #1a1a1a;
-          margin-right: 262px;
+          .overflow();
+          max-width: 280px;
         }
         &-time {
           font: 400 24px @fontf-pfsc-reg;
@@ -247,6 +257,7 @@ export default {
         align-items: center;
         font: 400 24px @fontf-pfsc-reg;
         color: #999999;
+        justify-content: space-between;
         span {
           display: inline-block;
           margin-right: 24px;
