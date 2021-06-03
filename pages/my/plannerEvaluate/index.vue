@@ -87,7 +87,7 @@ export default {
     if (this.isInApp) {
       this.$appFn.dggSetTitle(
         {
-          title: '评价',
+          title: '写评价',
         },
         (res) => {}
       )
