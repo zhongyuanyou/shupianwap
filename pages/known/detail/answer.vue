@@ -730,8 +730,9 @@ export default {
   }
   .content {
     padding-top: 40px;
-    font-size: 34px;
+    font-size: 32px;
     color: #666;
+    line-height: 50px;
     font-weight: 400;
     color: #555555;
     word-break: break-all;

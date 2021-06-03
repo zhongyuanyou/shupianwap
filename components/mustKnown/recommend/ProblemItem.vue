@@ -8,7 +8,9 @@
   > -->
   <div>
     <sp-cell v-for="(item, index) in newspaperData" :key="index">
-      <div class="item_span">{{ index + 1 }}/精选</div>
+      <div class="item_span">
+        <span style="font-weight: bold">{{ index + 1 }}</span> / 精选
+      </div>
       <div class="item">
         <div class="item_title" @click="goDetailPage(item.type, item.id)">
           {{ item.title }}
@@ -183,7 +185,7 @@ export default {
     font-family: PingFangSC-Medium, PingFang SC;
     font-weight: bold;
     color: #1a1a1a;
-    line-height: 40px;
+    line-height: 45px;
     word-break: break-all;
     overflow: hidden;
     text-overflow: ellipsis;

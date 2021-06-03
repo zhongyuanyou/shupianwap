@@ -196,6 +196,7 @@ export default {
 <style lang="less">
 .edit-container {
   min-height: 400px;
+  color: #555555;
 }
 </style>
 <style lang="css">
