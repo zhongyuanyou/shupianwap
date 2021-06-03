@@ -218,6 +218,8 @@ export default {
     }
     .desc {
       .name {
+        justify-content: space-between;
+        margin-right: 0.4rem;
         .mixin-flex();
         align-items: center;
         margin-bottom: 24px;
