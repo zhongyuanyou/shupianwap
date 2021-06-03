@@ -138,14 +138,17 @@ export default {
 
 <style lang="less" scoped>
 .m-evaluate.list {
+  background: #f5f5f5;
+  min-height: 100vh;
   ::v-deep.sp-tabs {
     .sp-tabs__wrap {
-      height: 72px;
+      height: 88px;
       padding-bottom: 8px;
       border-bottom: 1px solid #f4f4f4;
       .sp-tab {
         font: 400 30px/30px PingFangSC-Regular, PingFang SC;
         color: #999999;
+        height: 80px;
       }
       .sp-tab--active {
         color: #222222;
@@ -160,6 +163,17 @@ export default {
         background: #4974f5;
         border-radius: 3px;
       }
+    }
+  }
+  ::v-deep.sp-list {
+    &__loading,
+    &__finished-text,
+    &__error-text {
+      color: #999999;
+      font-size: 24px !important;
+      text-align: center;
+      line-height: 64px;
+      height: 64px;
     }
   }
 }
