@@ -381,7 +381,7 @@ export default {
         flex: 1;
         > h1 {
           font-size: 30px;
-          color: #555555;
+          color: #222222;
         }
         > p {
           margin-top: 14px;
@@ -409,6 +409,7 @@ export default {
     display: flex;
     align-items: center;
     padding-right: 32px;
+    padding-top: 0;
     padding-bottom: constant(safe-area-inset-bottom);
     padding-bottom: env(safe-area-inset-bottom);
     ::v-deep.sp-cell {
