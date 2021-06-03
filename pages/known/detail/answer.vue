@@ -64,6 +64,7 @@
         </div>
       </header-slot>
     </div>
+    <DownLoadArea :ios-link="iosLink" :androd-link="androdLink" />
     <div class="title-area" @click="toQueDetail">
       <div class="title">{{ answerDetails.title }}</div>
       <div class="nums-area">
@@ -197,8 +198,9 @@ import {
   Icon,
   Bottombar,
 } from '@chipspc/vant-dgg'
-import Comment from '~/components/mustKnown/DetailComment'
+import Comment from '@/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
+import DownLoadArea from '@/components/common/DownLoadArea'
 import { knownApi, userinfoApi } from '@/api'
 import util from '@/utils/changeBusinessData'
 export default {
@@ -213,6 +215,7 @@ export default {
     [Bottombar.name]: Bottombar,
     Comment,
     HeaderSlot,
+    DownLoadArea,
   },
   async asyncData({ $axios, query, store }) {
     let answerDetails = {}
@@ -235,6 +238,8 @@ export default {
   },
   data() {
     return {
+      iosLink: 'cpsccustomer://',
+      androdLink: 'cpsccustomer://',
       showHead2: false,
       answerDetails: '',
       popupShow: false,

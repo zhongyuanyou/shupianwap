@@ -1,17 +1,15 @@
 <template>
-  <div>
-    <div v-if="showDownLoadArea" class="download-area">
-      <div class="download_left">
-        <div class="download_left_icon">
-          <my-icon name="logo_mian" size="0.40rem" color="#4974F7" />
-        </div>
-        <div class="download_left_des">
-          <div class="download_left_des_title">薯片找人APP</div>
-          <div class="download_left_des_word">找人服务，尽在薯片找人</div>
-        </div>
+  <div class="download-area">
+    <div class="download_left">
+      <div class="download_left_icon">
+        <my-icon name="logo_mian" size="0.40rem" color="#4974F7" />
       </div>
-      <div class="download_right" @click="openApp">立即打开</div>
+      <div class="download_left_des">
+        <div class="download_left_des_title">薯片找人APP</div>
+        <div class="download_left_des_word">找人服务，尽在薯片找人</div>
+      </div>
     </div>
+    <div class="download_right" @click="openApp">立即打开</div>
   </div>
 </template>
 
@@ -29,7 +27,6 @@ export default {
   },
   data() {
     return {
-      showDownLoadArea: true,
       url: '',
       showConfirm: false,
       downLoadUrl: '',
@@ -41,7 +38,7 @@ export default {
     this.isAndroid =
       userAgent.indexOf('Android') > -1 || userAgent.indexOf('Adr') > -1 // android终端
     this.isIOS = userAgent.match(/iPhone|iPad|iPod/i) ? 1 : 0 // ios终端
-    this.showDownLoadArea = this.isAndroid || this.isIOS
+    // this.showDownLoadArea = this.isAndroid || this.isIOS
   },
   methods: {
     openApp() {
@@ -59,6 +56,14 @@ export default {
         url = this.androdLink
         downLoadUrl =
           'http://m.pp.cn/detail.html?appid=8180749&ch_src=pp_dev&ch=default'
+      } else {
+        this.$xToast.show({
+          message: '请使用手机浏览器访问本页面即可打开薯片找人APP',
+          duration: 3000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
+        return
       }
       if (ua.match(/MicroMessenger/i) === 'micromessenger') {
         // 是否微信打开
