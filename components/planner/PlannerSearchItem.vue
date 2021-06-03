@@ -103,11 +103,11 @@ export default {
       return this.$store.state.city.currentCity
     },
   },
-  async mounted() {
-    if (!this.city.code) {
-      await this.POSITION_CITY({ type: 'init' })
-    }
-  },
+  // async mounted() {
+  //   if (!this.city.code) {
+  //     await this.POSITION_CITY({ type: 'init' })
+  //   }
+  // },
 
   methods: {
     async handleClick(type) {

@@ -26,7 +26,13 @@
           :class="{ bt_have: item.isAttention }"
           @click="handle(item)"
         >
-          {{ item.isAttention ? '已关注' : '+ 关注' }}
+          <my-icon
+            v-show="!item.isAttention"
+            name="tianjia"
+            size="0.27rem"
+            color="#ffffff"
+          />
+          {{ item.isAttention ? '已关注' : '关注' }}
         </div>
       </div>
     </sp-list>

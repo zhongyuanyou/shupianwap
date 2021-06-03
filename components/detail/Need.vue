@@ -37,7 +37,7 @@
             <div v-if="item.slogan" class="slogan">
               {{ item.slogan }}
             </div>
-            <p class="money">{{ item.platformPrice }}元</p>
+            <p class="money">{{ item.salesPrice || item.platformPrice }}元</p>
           </div>
         </nuxt-link>
       </div>

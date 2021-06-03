@@ -54,7 +54,7 @@
         ></my-icon>
         {{ item.applaudCount || '赞同' }}
       </div>
-      <div class="bottom_item" @click="comments(item.id)">
+      <div class="bottom_item" @click="comments(item)">
         <my-icon name="pinglun" size="0.34rem" color="#999999"></my-icon>
         {{ item.remarkCount || '评论' }}
       </div>
@@ -152,8 +152,8 @@ export default {
       }
       return true
     },
-    comments(id) {
-      this.$emit('comments', id)
+    comments(item) {
+      this.$emit('comments', { id: item.id, type: item.type })
     },
     async invitation(id) {
       if (!(await this.isLogin())) {

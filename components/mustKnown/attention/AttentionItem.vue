@@ -25,6 +25,7 @@
     <comment-list
       v-model="commentShow"
       :article-id="articleId"
+      :source-type="sourceType"
       @release="release"
     ></comment-list>
   </div>
@@ -56,6 +57,7 @@ export default {
       page: 1,
       limit: 10,
       list: [],
+      sourceType: 1,
     }
   },
   computed: {
@@ -74,8 +76,9 @@ export default {
     release() {
       console.log('点击了发布')
     },
-    comments(id) {
+    comments({ id, type }) {
       this.articleId = id
+      this.sourceType = type
       this.commentShow = true
     },
     openAnswer(id) {

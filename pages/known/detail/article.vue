@@ -66,7 +66,11 @@
       <p class="pub-time">编辑于 {{ articleDetails.createTime }}</p>
       <DetailArticleList :article-list="articleList" />
     </div>
-    <Comment ref="openComment" :article-id="articleDetails.id" />
+    <Comment
+      ref="openComment"
+      :article-id="articleDetails.id"
+      :source-type="articleDetails.type"
+    />
     <sp-bottombar safe-area-inset-bottom>
       <div
         v-if="
@@ -609,7 +613,8 @@ export default {
   .content {
     word-break: break-all;
     padding-top: 40px;
-    font-size: 34px;
+    font-size: 32px;
+    line-height: 50px;
     color: #666;
     font-weight: 400;
     color: #555555;

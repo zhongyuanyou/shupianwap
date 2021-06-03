@@ -117,7 +117,7 @@ export default {
     padding: 18px 40px 32px;
     .content-title {
       color: #222222;
-      line-height: 52px;
+      line-height: 56px;
       font-family: PingFangSC-Medium, PingFang SC;
       font-weight: bold;
       word-wrap: break-word;

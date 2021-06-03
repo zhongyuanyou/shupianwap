@@ -94,7 +94,11 @@
       <div class="content" v-html="answerDetails.content"></div>
       <p class="pub-time">编辑于{{ answerDetails.createTime }}</p>
     </div>
-    <Comment ref="openComment" :article-id="answerDetails.id" />
+    <Comment
+      ref="openComment"
+      :article-id="answerDetails.id"
+      :source-type="answerDetails.type"
+    />
     <sp-bottombar safe-area-inset-bottom>
       <div
         v-if="
@@ -730,8 +734,9 @@ export default {
   }
   .content {
     padding-top: 40px;
-    font-size: 34px;
+    font-size: 32px;
     color: #666;
+    line-height: 50px;
     font-weight: 400;
     color: #555555;
     word-break: break-all;
