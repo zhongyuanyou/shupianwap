@@ -118,8 +118,8 @@ export default {
 
 .download-area {
   font-size: 24px;
-  padding: 14px 40px;
-  height: 100px;
+  padding: 14px 40px 0 40px;
+  height: 90px;
   display: flex;
   justify-content: space-between;
   color: #222;

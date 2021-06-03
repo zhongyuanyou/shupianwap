@@ -2,7 +2,7 @@
   <div class="answer">
     <div>
       <header-slot>
-        <div v-if="!showHead2" class="head1">
+        <div v-if="!showHead2 && !isShare" class="head1">
           <my-icon
             name="nav_ic_back"
             size="0.40rem"
@@ -64,7 +64,11 @@
         </div>
       </header-slot>
     </div>
-    <DownLoadArea :ios-link="iosLink" :androd-link="androdLink" />
+    <DownLoadArea
+      v-if="isShare"
+      :ios-link="iosLink"
+      :androd-link="androdLink"
+    />
     <div class="title-area" @click="toQueDetail">
       <div class="title">{{ answerDetails.title }}</div>
       <div class="nums-area">
@@ -240,6 +244,7 @@ export default {
     return {
       iosLink: 'cpsccustomer://',
       androdLink: 'cpsccustomer://',
+      isShare: false,
       showHead2: false,
       answerDetails: '',
       popupShow: false,
@@ -256,6 +261,7 @@ export default {
     }),
   },
   created() {
+    this.isShare = this.$route.query.isShare
     if (this.$route.query.id) {
       this.currentDetailsId = this.$route.query.id
     }

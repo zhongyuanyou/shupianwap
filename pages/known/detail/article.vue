@@ -39,6 +39,11 @@
         />
       </div>
     </HeaderSlot>
+    <DownLoadArea
+      v-if="isShare"
+      :ios-link="iosLink"
+      :androd-link="androdLink"
+    />
     <div class="title-area">
       <div class="title">{{ articleDetails.title }}</div>
     </div>
@@ -174,6 +179,7 @@ import DetailArticleList from '@/components/mustKnown/DetailArticleList'
 // 默认评论列表
 import Comment from '~/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
+import DownLoadArea from '@/components/common/DownLoadArea'
 export default {
   layout: 'keepAlive',
   components: {
@@ -189,6 +195,7 @@ export default {
     // PageHead,
     PageHead2,
     DetailArticleList,
+    DownLoadArea,
     // Header,
   },
   async asyncData({ $axios, query, store }) {
@@ -212,6 +219,9 @@ export default {
   },
   data() {
     return {
+      iosLink: 'cpsccustomer://',
+      androdLink: 'cpsccustomer://',
+      isShare: false,
       popupShow: false,
       articleList: [],
       showHead: false,
@@ -237,6 +247,7 @@ export default {
     },
   },
   created() {
+    this.isShare = this.$route.query.isShare
     this.getRecommendData()
     if (this.userInfo.token) {
       this.initFollow()

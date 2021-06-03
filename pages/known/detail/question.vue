@@ -37,6 +37,11 @@
         </div>
       </div>
     </HeaderSlot>
+    <DownLoadArea
+      v-if="isShare"
+      :ios-link="iosLink"
+      :androd-link="androdLink"
+    />
     <div class="problem">
       <div class="tag">
         <ul class="box">
@@ -305,6 +310,7 @@ import CommentList from '@/components/mustKnown/CommentList'
 import { knownApi, userinfoApi } from '@/api'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import util from '@/utils/changeBusinessData'
+import DownLoadArea from '@/components/common/DownLoadArea'
 export default {
   layout: 'keepAlive',
   name: 'Detail',
@@ -316,6 +322,7 @@ export default {
     [Dialog.name]: Dialog,
     [Bottombar.name]: Bottombar,
     CommentList,
+    DownLoadArea,
   },
   async asyncData({ $axios, query, store }) {
     let questionDetails = []
@@ -344,6 +351,9 @@ export default {
   },
   data() {
     return {
+      iosLink: 'cpsccustomer://',
+      androdLink: 'cpsccustomer://',
+      isShare: false,
       title: '',
       contentshow: false,
       answersort: 0,
@@ -373,6 +383,7 @@ export default {
     }),
   },
   created() {
+    this.isShare = this.$route.query.isShare
     if (this.$route.query.id) {
       this.currentDetailsId = this.$route.query.id
     }
