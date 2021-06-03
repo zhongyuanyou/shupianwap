@@ -619,6 +619,7 @@ export default {
     padding: 0 40px 24px;
     height: 88px;
     .sp-button {
+      border: none;
       font: bold 32px/45px @fontf-pfsc-med;
       border-radius: 8px;
       color: #ffffff;

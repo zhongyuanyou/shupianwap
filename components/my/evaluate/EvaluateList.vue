@@ -1,5 +1,5 @@
 <template>
-  <div class="m-evaluate list">
+  <div class="m-evaluate list-component">
     <div class="item">
       <div class="item-info">
         <sp-image class="img" fit="cover" :src="evaluateInfo.indexImg || ''" />
@@ -70,11 +70,12 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.m-evaluate.list {
+.m-evaluate.list-component {
   @item-padding: 32px 40px;
   @item-img-size: 130px;
 
   .item {
+    background: #fff;
     padding: @item-padding;
     font-family: @fontf-pfsc-med;
     &-info {
@@ -108,16 +109,19 @@ export default {
     }
     &-button {
       margin-top: 32px;
-      padding: 19px 41px;
       font-size: 26px;
       color: #4974f5;
       border-radius: 8px;
       border: 1px solid #4974f5;
       float: right;
+      width: 160px;
+      height: 64px;
+      line-height: 64px;
+      text-align: center;
       &.read {
         border-radius: 6px;
         border: 1px solid #cccccc;
-        color: #cccccc;
+        color: #555555;
       }
     }
     &-clear {
