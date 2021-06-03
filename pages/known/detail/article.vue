@@ -624,7 +624,8 @@ export default {
   .content {
     word-break: break-all;
     padding-top: 40px;
-    font-size: 34px;
+    font-size: 32px;
+    line-height: 50px;
     color: #666;
     font-weight: 400;
     color: #555555;

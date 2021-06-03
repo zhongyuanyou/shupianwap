@@ -230,7 +230,7 @@ export default {
           font-family: PingFangSC-Medium, PingFang SC;
           font-weight: bold;
           color: #555555;
-          line-height: 45px;
+          line-height: 50px;
           word-break: break-all;
         }
         span {

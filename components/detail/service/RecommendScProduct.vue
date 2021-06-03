@@ -40,7 +40,7 @@
                 {{ tItem.name }}
               </div>
             </div>
-            <p class="money">{{ item.referencePrice }}元</p>
+            <p class="money">{{ item.salesPrice || item.referencePrice }}元</p>
           </div>
         </nuxt-link>
       </div>
