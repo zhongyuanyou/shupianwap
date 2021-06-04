@@ -153,7 +153,7 @@ export default {
           type: 'planner',
           titleIcon: '精选规划师',
           linkType: 2,
-          materialLink: 'https://m.shupian.cn/planner/list',
+          materialLink: 'this.list',
         },
         {
           productName: '政策补贴',
@@ -167,6 +167,20 @@ export default {
         },
       ],
     }
+  },
+  mounted() {
+    let url = 'https://shupian.dgg.cn/spread/myDemandCard'
+    const localHerf = window.location.href
+    if (localHerf.match('https://m.shupian')) {
+      url = 'https://shupian.dgg.cn/spread/myDemandCard'
+    } else if (localHerf.match('https://tm.shupian')) {
+      url = 'https://tmtg.shupian.cn/spread/myDemandCard'
+    } else {
+      url = 'https://dmtg.shupian.cn/spread/myDemandCard'
+    }
+    this.list[2].materialLink = url
+    console.log('this.list', this.list)
+    console.log('url', url)
   },
   computed: {
     imgWidth() {

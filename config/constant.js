@@ -8,7 +8,6 @@
  */
 
 const CHIPS_WAP_INSTANCE_NAME = 'crisps-app-wap-bff-api'
-const CHIPS_RESOURCE_API = 'crisps-resource-house'
 const CHIPS_WAP_SERVICE_PREFIX = 'service'
 
 // c端 app调用的java聚合中间层
@@ -19,7 +18,7 @@ export const CHIPS_WAP_BASE_URL = `/${CHIPS_WAP_INSTANCE_NAME}/${CHIPS_WAP_SERVI
 // export const CHIPS_WAP_BASE_URL = `http://172.16.132.240:7001/service`
 export const CHIPS_APP_BASE_URL = `/${CHIPS_APP_INSTANCE_NAME}/${CHIPS_APP_SERVICE_PREFIX}` // 使用网关调用路径的规则：项目实例名 / 自己服务路径前缀
 export const CRISPS_C_MIDDLE_SERVICE_API = 'crisps-c-middle-service-api'
-export const CHIPS_RESOURCE_URL = CHIPS_RESOURCE_API
+export const CHIPS_RESOURCE_API = 'crisps-resource-house'
 export const GOODSDETAIL =
   'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg' // 产品详情默认图片
 export const GOODSLIST =
