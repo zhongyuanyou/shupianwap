@@ -920,9 +920,6 @@ export default {
           &:first-child {
             flex-shrink: 0;
           }
-          &:last-child {
-            margin-left: 66px;
-          }
         }
         &__title {
           color: #222222;
@@ -957,8 +954,8 @@ export default {
     }
     /deep/ .search__dropdown-category {
       .sp-dropdown-item .sp-popup {
-        max-height: 4rem;
-        min-height: 2rem;
+        max-height: 80vh;
+        min-height: 200px;
       }
     }
     .category-list {
@@ -989,7 +986,7 @@ export default {
   .no-data {
     width: 100%;
     height: auto;
-    min-height: 400px;
+    min-height: 600px;
     display: flex;
     flex-direction: column;
     justify-content: center;
