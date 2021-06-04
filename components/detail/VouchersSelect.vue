@@ -233,18 +233,21 @@ export default {
       console.log('sellingGoodsDetail', this.$store.state.sellingGoodsDetail)
       const salesGoodsTags =
         this.$store.state.sellingGoodsDetail.sellingGoodsData.salesGoodsTags
+      console.log('salesGoodsTags', salesGoodsTags)
       let serviceTag = []
       if (salesGoodsTags) {
+        // 产品中心605版本筛选服务标签 code DSJTC20210514000043
         serviceTag = salesGoodsTags.map((item) => {
-          if (item.tagType === 'PRO_SERVICE_TAG') {
+          if (item.categoryCode === 'DSJTC20210514000043') {
             return {
-              text: item.description,
-              title: item.tagName,
+              text: item.ext1 || item.ext2 || item.ext3,
+              title: item.tagValueName,
               icon: 'sp-iconfont sp-iconfont-security2',
             }
           }
         })
       }
+      console.log('serviceTag', serviceTag)
       return serviceTag
     },
     // 优惠券列表
