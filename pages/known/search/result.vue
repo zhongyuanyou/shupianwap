@@ -136,34 +136,25 @@
           <div class="item">
             <div class="lf_img">
               <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
-              <div class="time">00:15:50</div>
+              <div class="time">{{ totime(item.duration) }}</div>
             </div>
             <div class="rt_content">
-              <div class="title">这是一个标题</div>
+              <div class="title">
+                <p v-html="item.videoNameHtml"></p>
+                <!-- {{ item.videoName }} -->
+              </div>
               <div class="name_time">
-                <div class="name">你好</div>
-                <div class="time">{{ item.createTime | fromatDate }}</div>
+                <div class="name">{{ item.createrName }}</div>
+                <div class="time">
+                  {{ timeSplice(item.createTime) }}
+                </div>
               </div>
             </div>
           </div>
-          <!-- <h1 v-html="item.videoNameHtml"></h1>
-          <div class="box">
-            <div>
-              <p v-html="item.videoDescHtml"></p>
-            </div>
-            <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
-          </div>
-          <div v-if="!item.contentImageUrl" class="num">
-            <span>{{ item.thumbCount }} 赞同</span>
-            <i></i>
-            <span>{{ item.remarkCount }} 评论</span>
-            <i></i>
-            <span>{{ item.createTime | fromatDate }} </span>
-          </div> -->
         </div>
       </sp-list>
     </div>
-    <div v-show="tabIndex === '5'" class="listbox">
+    <div v-show="tabIndex === '5'" class="videolist">
       <sp-list
         v-model="loading"
         :finished="finished"
@@ -178,19 +169,23 @@
           class="list"
           @click="open(item)"
         >
-          <h1 v-html="item.courseNameHtml"></h1>
-          <div class="box">
-            <div>
-              <p v-html="item.courseDescHtml"></p>
+          <div class="item">
+            <div class="lf_img">
+              <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
+              <div class="time">{{ totime(item.duration) }}</div>
             </div>
-            <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
-          </div>
-          <div v-if="!item.contentImageUrl" class="num">
-            <span>{{ item.thumbCount }} 赞同</span>
-            <i></i>
-            <span>{{ item.remarkCount }} 评论</span>
-            <i></i>
-            <span>{{ item.createTime | fromatDate }} </span>
+            <div class="rt_content">
+              <div class="title">
+                <p v-html="item.courseNameHtml"></p>
+                <!-- {{ item.videoName }} -->
+              </div>
+              <div class="name_time">
+                <div class="name">{{ item.createrName }}</div>
+                <div class="time">
+                  {{ timeSplice(item.createTime) }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </sp-list>
@@ -265,6 +260,30 @@ export default {
     this.value = query.keyword
   },
   methods: {
+    timeSplice(time) {
+      return time.substring(0, time.length - 3)
+    },
+    totime(time) {
+      if (!time) {
+        return ''
+      }
+
+      let hour = Math.floor(time / 3600)
+      let mid = Math.floor((time - 3600 * hour) / 60)
+      // math.flotime / 60
+      let sec = Math.floor((time - 3600 * hour) % 60)
+      if (hour < 10) {
+        hour = '0' + hour
+      }
+      if (mid < 10) {
+        mid = '0' + mid
+      }
+      if (sec < 10) {
+        sec = '0' + sec
+      }
+
+      return hour + ':' + mid + ':' + sec
+    },
     keyClickHandle() {
       this.$router.replace({
         path: '/known/search',
@@ -631,6 +650,7 @@ export default {
             width: 100%;
             height: 100%;
             display: block;
+            border-radius: 8px;
           }
           .time {
             background: #000000;
@@ -656,6 +676,7 @@ export default {
             overflow: hidden;
             text-overflow: ellipsis;
             word-break: break-all;
+            height: 84px;
           }
           .name_time {
             display: flex;
