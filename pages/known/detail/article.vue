@@ -587,6 +587,12 @@ export default {
       font-size: 30px;
       font-weight: bold;
       color: #999999;
+      background: #f5f5f5;
+      height: 72px;
+      border-radius: 0.12rem;
+      padding: 0 25px;
+      display: flex;
+      align-items: center;
     }
     .btn {
       height: 72px;
