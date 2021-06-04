@@ -60,6 +60,9 @@
         show-word-limit
       />
     </div>
+
+    <div class="line-upload"></div>
+
     <div v-if="uploadImgFlag && subScoreFlag" class="upload">
       <client-only>
         <spMobileUpload
@@ -480,7 +483,7 @@ export default {
     align-items: center;
   }
   .mixin-score-desc {
-    margin-left: 40px;
+    margin-left: 32px;
     font: 400 24px @fontf-pfsc-reg;
     color: #555555;
   }
@@ -492,7 +495,7 @@ export default {
       width: 100%;
       .tile {
         width: 175px;
-        margin-right: 40px;
+        margin-right: 32px;
         font: bold 32px @fontf-pfsc-med;
         color: #222222;
       }
@@ -513,7 +516,7 @@ export default {
         font: 400 28px @fontf-pfsc-reg;
         color: #222222;
         width: 175px;
-        margin-right: 40px;
+        margin-right: 32px;
         .mixin-text-oneoverflow();
       }
       .desc {
@@ -559,9 +562,8 @@ export default {
   }
 
   .line {
-    border: 1px solid #f4f4f4;
+    border-bottom: 1px solid #f4f4f4;
     margin: 64px 40px 40px 40px;
-    padding: 0 40px;
   }
 
   .remark {
@@ -578,8 +580,12 @@ export default {
     }
   }
 
+  .line-upload {
+    border-bottom: 1px solid #f4f4f4;
+    margin: 40px;
+  }
+
   .upload {
-    margin-top: 65px;
     padding: 0 40px;
 
     ::v-deep.van-uploader__wrapper {

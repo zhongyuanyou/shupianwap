@@ -235,8 +235,7 @@ export default {
   mounted() {
     this.getAdList()
     window.addEventListener('scroll', this.getScroll)
-
-    const userType = this.type || utils.getUserType(this.userInfo.userType)
+    const userType = this.type && utils.getUserType(this.type)
     // 到时候这里改成5
     if (userType !== 1) {
       this.menuList.push({
