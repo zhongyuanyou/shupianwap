@@ -7,6 +7,7 @@
           <my-icon
             :key="index"
             class="score-total-icon"
+            :class="index === 4 ? 'z-last' : ''"
             name="dafen_mian"
             size="0.56rem"
             :color="item.flag ? '#FFB400' : '#F0F0F0'"
@@ -477,20 +478,19 @@ export default {
     align-items: center;
   }
   .mixin-score-desc {
+    margin-left: 40px;
     font: 400 24px @fontf-pfsc-reg;
     color: #555555;
-    position: absolute;
-    right: 0;
   }
 
   .score {
-    padding: 0 94px 0 40px;
+    padding: 0 0 0 40px;
     &-total {
       .mixin-score-item();
       width: 100%;
       .tile {
-        width: 160px;
-        margin-right: 10px;
+        width: 175px;
+        margin-right: 40px;
         font: bold 32px @fontf-pfsc-med;
         color: #222222;
       }
@@ -499,6 +499,9 @@ export default {
       }
       &-icon {
         margin-right: 20px;
+        &.z-last {
+          margin-right: 0;
+        }
       }
     }
     &-item {
@@ -507,17 +510,17 @@ export default {
       .tile {
         font: 400 28px @fontf-pfsc-reg;
         color: #222222;
-        width: 160px;
-        margin-right: 10px;
+        width: 175px;
+        margin-right: 40px;
         .mixin-text-oneoverflow();
       }
       .desc {
         .mixin-score-desc();
       }
       &-img {
-        height: 44px;
-        width: 44px;
-        margin-right: 32px;
+        height: 56px;
+        width: 56px;
+        margin-right: 20px;
         &.z-last {
           margin-right: 0;
         }
