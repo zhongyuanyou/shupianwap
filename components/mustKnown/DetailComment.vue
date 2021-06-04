@@ -85,7 +85,7 @@ export default {
   },
   computed: {
     userInfo() {
-      return this.$store.state.user.userInfo
+      return this.$store.state.user
     },
     avatar() {
       return this.$store.state.user.avatar || GOODSLIST
