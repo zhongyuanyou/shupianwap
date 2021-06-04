@@ -5,16 +5,16 @@ const userTypeConfig = {
 
 // 添加评价星级 和 对应图片进行对应
 const evaluateLevelImgConfig = {
-  vbad: 'uihcfufviog000.png',
-  bad: 'fqurczrer3c0000.png',
-  normal: '8vml2tl3zh00000.png',
-  happy: 'u75yce9hmuo000.png',
-  vhappy: '4t6hb5mowc80000.png',
-  vbadlight: '4cm2myxeh9c0000.png',
-  badlight: 'd4l841te9o80000.png',
-  normallight: '4gtpmrc0ag00000.png',
-  happylight: 'efurydznqt40000.png',
-  vhappylight: 'cxyioo5x58g0000.png',
+  vbad: '3j7yfp1gur00000.png',
+  bad: 'erhcjphe1rs0000.png',
+  normal: 'fg3itpb5ymw0000.png',
+  happy: '2f3ml0oiphj4000.png',
+  vhappy: '3altnsq34c80000.png',
+  vbadlight: '89qo0lj31wk0000.png',
+  badlight: '4n14ntskhke0000.png',
+  normallight: '87qklwsjm3c0000.png',
+  happylight: 'fneqpwoo7pk0000.png',
+  vhappylight: 'f5itkuaqg800000.png',
 }
 
 // 添加空图片处理
