@@ -98,6 +98,7 @@ export const mutations = {
     state.userInfo = {}
   },
   SET_INFO(state, data = {}) {
+    console.log('data', data)
     this.$cookies.set('userNo', String(data.no), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
@@ -108,7 +109,7 @@ export const mutations = {
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       domain: 'shupian.cn',
     })
-    this.$cookies.set('userPhone', data.fullName, {
+    this.$cookies.set('userPhone', data.decodePhone, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       domain: 'shupian.cn',
