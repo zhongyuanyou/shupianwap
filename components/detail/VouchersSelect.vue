@@ -33,7 +33,11 @@
       </div>
       <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
     </div>
-    <div v-if="serviceTag.length > 0" class="cell" @click="safeguardIsShow">
+    <div
+      v-if="serviceTag && serviceTag.length > 0"
+      class="cell"
+      @click="safeguardIsShow"
+    >
       <div class="cell_left">
         <div class="label">保障</div>
         <div class="content">
@@ -226,17 +230,21 @@ export default {
       return this.$store.state.sellingGoodsDetail.sellingGoodsData
     },
     serviceTag() {
+      console.log('sellingGoodsDetail', this.$store.state.sellingGoodsDetail)
       const salesGoodsTags =
         this.$store.state.sellingGoodsDetail.sellingGoodsData.salesGoodsTags
-      const serviceTag = salesGoodsTags.map((item) => {
-        if (item.tagType === 'PRO_SERVICE_TAG') {
-          return {
-            text: item.description,
-            title: item.tagName,
-            icon: 'sp-iconfont sp-iconfont-security2',
+      let serviceTag = []
+      if (salesGoodsTags) {
+        serviceTag = salesGoodsTags.map((item) => {
+          if (item.tagType === 'PRO_SERVICE_TAG') {
+            return {
+              text: item.description,
+              title: item.tagName,
+              icon: 'sp-iconfont sp-iconfont-security2',
+            }
           }
-        }
-      })
+        })
+      }
       return serviceTag
     },
     // 优惠券列表

@@ -30,6 +30,20 @@
       <p :class="tabIndex === '3' ? 'act' : ''" @click="changeTab('3')">
         <span>用户</span><i></i>
       </p>
+      <p
+        v-if="showItem"
+        :class="tabIndex === '4' ? 'act' : ''"
+        @click="changeTab('4')"
+      >
+        <span>视频</span><i></i>
+      </p>
+      <p
+        v-if="showItem"
+        :class="tabIndex === '5' ? 'act' : ''"
+        @click="changeTab('5')"
+      >
+        <span>讲堂</span><i></i>
+      </p>
     </div>
     <div v-show="tabIndex === '1' || tabIndex === '2'" class="listbox">
       <sp-list
@@ -104,11 +118,76 @@
         </div>
       </sp-list>
     </div>
+    <div v-show="tabIndex === '4'" class="listbox">
+      <sp-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        :error.sync="error"
+        error-text="请求失败，点击重新加载"
+        @load="onLoad"
+      >
+        <div
+          v-for="(item, index) in searchList"
+          :key="index"
+          class="list"
+          @click="open(item)"
+        >
+          <h1 v-html="item.videoNameHtml"></h1>
+          <div class="box">
+            <div>
+              <p v-html="item.videoDescHtml"></p>
+            </div>
+            <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
+          </div>
+          <div v-if="!item.contentImageUrl" class="num">
+            <span>{{ item.thumbCount }} 赞同</span>
+            <i></i>
+            <span>{{ item.remarkCount }} 评论</span>
+            <i></i>
+            <span>{{ item.createTime | fromatDate }} </span>
+          </div>
+        </div>
+      </sp-list>
+    </div>
+    <div v-show="tabIndex === '5'" class="listbox">
+      <sp-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        :error.sync="error"
+        error-text="请求失败，点击重新加载"
+        @load="onLoad"
+      >
+        <div
+          v-for="(item, index) in searchList"
+          :key="index"
+          class="list"
+          @click="open(item)"
+        >
+          <h1 v-html="item.courseNameHtml"></h1>
+          <div class="box">
+            <div>
+              <p v-html="item.courseDescHtml"></p>
+            </div>
+            <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
+          </div>
+          <div v-if="!item.contentImageUrl" class="num">
+            <span>{{ item.thumbCount }} 赞同</span>
+            <i></i>
+            <span>{{ item.remarkCount }} 评论</span>
+            <i></i>
+            <span>{{ item.createTime | fromatDate }} </span>
+          </div>
+        </div>
+      </sp-list>
+    </div>
+    <sp-center-popup v-model="showPop" :field="Filed4" button-type="confirm" />
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
-import { Sticky, Icon, Dialog, List } from '@chipspc/vant-dgg'
+import { Sticky, Icon, Dialog, List, CenterPopup } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import knownApi from '@/api/known'
 import utils from '@/utils/changeBusinessData'
@@ -122,6 +201,7 @@ export default {
     Search,
     [Dialog.name]: Dialog,
     [List.name]: List,
+    [CenterPopup.name]: CenterPopup,
     HeaderSlot,
   },
   filters: {
@@ -143,12 +223,24 @@ export default {
       error: false,
       loading: false,
       finished: false,
+      showPop: false,
+      Filed4: {
+        type: 'functional',
+        showCancelButton: false,
+        title: '提示！',
+        description: `请到App去观看`,
+        confirmButtonText: '好的',
+      },
+      showItem: true,
     }
   },
   computed: {
     ...mapState({
       userInfo: (state) => state.user, // 登录的用户信息
       userId: (state) => state.user.userId, // userId 用于判断登录
+      isInApp: (state) => state.app.isInApp, // 是否app中
+      appInfo: (state) => state.app.appInfo, // app信息
+      // isApplets: (state) => state.app.isApplets,
     }),
     appInfo() {
       return this.$store.state.app.appInfo
@@ -283,6 +375,45 @@ export default {
     },
     onLoad() {
       this.getSearchListApi()
+    },
+    open(item) {
+      if (this.isInApp && this.appInfo.appCode === 'CPSAPP') {
+        if (this.tabIndex === '4') {
+          try {
+            this.$appFn.dggOpenVideo(item.id, (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `打开视频失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            })
+          } catch (error) {
+            console.error('changeTop error:', error)
+          }
+        } else if (this.tabIndex === '5') {
+          try {
+            this.$appFn.dggOpenCourse(item.id, (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `打开课程失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            })
+          } catch (error) {
+            console.error('changeTop error:', error)
+          }
+        }
+      } else if (this.isInApp && this.appInfo.appCode === 'syscode') {
+        this.showItem = false
+      } else {
+        this.showPop = true
+      }
     },
   },
 }

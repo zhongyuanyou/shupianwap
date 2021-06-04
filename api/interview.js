@@ -1,6 +1,7 @@
 'use strict'
 
 import { CHIPS_WAP_BASE_URL } from '../config/constant'
+// const CHIPS_WAP_BASE_URL = 'http://172.16.133.115:7001/service'
 const interviewApi = {
   list: `${CHIPS_WAP_BASE_URL}/nk/interview/v1/get_interview_list.do`, // 获取用户信息
   cancel: `${CHIPS_WAP_BASE_URL}/nk/interview/v1/update_interview_status.do`, // 取消面谈

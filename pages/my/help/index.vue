@@ -256,7 +256,6 @@ export default {
     }),
   },
   mounted() {
-    this.SET_KEEP_ALIVE({ type: 'add', name: 'Help' })
     if (!this.isInApp && !this.isApplets) {
       this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
     } else if (this.isInApp) {
@@ -268,6 +267,15 @@ export default {
         (res) => {}
       )
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (['my-complain'].includes(to.name)) {
+      console.log(123456789)
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'Help' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'Help' })
+    }
+    next()
   },
   methods: {
     ...mapMutations({

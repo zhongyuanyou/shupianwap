@@ -35,13 +35,17 @@
         </div>
         <div class="item_bottom">
           <span class="like"> {{ applaudNumber(item.applaudCount) }}赞同</span>
-          <span class="comment" @click="showComment(item.id)">
+          <span class="comment" @click="showComment(item)">
             · {{ item.answerCount }} 评论</span
           >
         </div>
       </div>
     </sp-cell>
-    <comment-list v-model="commentShow" :article-id="articleId"></comment-list>
+    <comment-list
+      v-model="commentShow"
+      :article-id="articleId"
+      :source-type="sourceType"
+    ></comment-list>
   </sp-list>
 </template>
 <script>
@@ -84,6 +88,7 @@ export default {
       pages: 0,
       commentShow: false,
       articleId: '1',
+      sourceType: 1,
     }
   },
   watch: {
@@ -102,8 +107,9 @@ export default {
       }
       return browseCount * 10 + '万'
     },
-    showComment(id) {
+    showComment({ id, type }) {
       this.articleId = id
+      this.sourceType = type
       this.commentShow = true
     },
     // 进入文章/问题/回答详情页面

@@ -46,6 +46,14 @@
               <span>{{ item.createTime }}</span>
               <div>
                 <my-icon
+                  v-if="item.userId === userInfo.userId"
+                  style="margin-right: 0.32rem"
+                  name="shanchu"
+                  size="0.32rem"
+                  :color="'#999999'"
+                  @click.native="deleteItem(item, index)"
+                ></my-icon>
+                <my-icon
                   name="dianzan"
                   size="0.32rem"
                   :color="item.isApplaud ? '#4974f5' : '#999999'"
@@ -98,6 +106,10 @@ export default {
     articleId: {
       type: String,
       default: '',
+    },
+    sourceType: {
+      type: Number,
+      default: 1,
     },
   },
   data() {
@@ -200,6 +212,31 @@ export default {
         console.log(message)
       }
     },
+    async deleteItem(item, index) {
+      if (!(await this.isLogin())) {
+        return
+      }
+      this.mackLoading = true
+      const { code, message } = await this.$axios.post(
+        knownApi.comments.delete,
+        {
+          currentUserId: this.userInfo.userId,
+          id: item.id,
+        }
+      )
+      this.mackLoading = false
+      if (code === 200) {
+        Toast({
+          message: '删除成功',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_success',
+        })
+        this.list.splice(index, 1)
+        this.getCommentsList()
+      } else {
+        console.log(message)
+      }
+    },
     async isLogin() {
       const res = await this.$isLogin()
       if (res === 'app_login_success') {
@@ -221,7 +258,7 @@ export default {
         {
           content: this.content,
           sourceId: this.articleId,
-          sourceType: 2, // 2 文章 3 回答
+          sourceType: this.sourceType, // 1问题 2 文章 3 回答
           userId: this.userInfo.userId,
           userName: this.userInfo.userName,
           userType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2, // 1 普通用户 2 规划师

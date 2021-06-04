@@ -8,7 +8,7 @@
 -->
 <template>
   <div class="complaint">
-    <Header :title="!isApplets ? '我要吐槽' : ''">
+    <Header class="my-header" :title="!isApplets ? '我要吐槽' : ''">
       <template #left>
         <div @click="back">
           <my-icon
@@ -102,6 +102,7 @@ import SpToast from '@/components/common/spToast/SpToast'
 import Header from '@/components/common/head/header'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
+  layout: 'keepAlive',
   name: 'AddComplaint',
   components: {
     [Button.name]: Button,
@@ -150,6 +151,7 @@ export default {
     }
   },
   mounted() {
+    console.log('isInApp', this.isInApp)
     if (this.isInApp) {
       // 设置app导航名称
       this.$appFn.dggSetTitle(
@@ -162,6 +164,20 @@ export default {
       this.$appFn.dggPermission((res) => {
         console.log('ress', res)
       })
+      try {
+        // 需要判断登陆没有，没有登录就是调用登录
+        // await this.getUserInfo()
+        this.$appFn.dggChangeTopColor(
+          {
+            flags: '#ffffff',
+          },
+          (res) => {
+            console.log('DGGSetColorRes', res)
+          }
+        )
+      } catch (error) {
+        console.error('uPIM error:', error)
+      }
     }
     // 设置终端和平台
     this.formData.terminalCode = this.isInApp
@@ -346,6 +362,19 @@ export default {
 
 <style lang="less" scoped>
 .complaint {
+  .my-header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 1rem;
+    background: white;
+    z-index: 99999;
+  }
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
   height: 100%;
   background-color: #fff;
   overflow-y: scroll;
@@ -366,6 +395,7 @@ export default {
   }
   &-box {
     padding: 0px 40px 30px 40px;
+    margin-top: 160px;
   }
   &-type {
     padding-top: 36px;
