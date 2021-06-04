@@ -48,6 +48,8 @@
       </div>
     </div>
 
+    <div class="line"></div>
+
     <div v-if="remarkFlag && subScoreFlag" class="remark">
       <sp-field
         v-model="evaluateContent"
@@ -535,16 +537,18 @@ export default {
     .mixin-flex();
     flex-wrap: wrap;
     padding: 0 94px 0 40px;
-    margin-top: 64px;
+    margin-top: 48px;
     .item {
       .mixin-text-oneoverflow();
       font: 400 24px @fontf-pfsc-reg;
       color: #222222;
-      box-sizing: border-box;
-      padding: 16px;
+      height: 56px;
+      line-height: 56px;
+      text-align: center;
       background: #f8f8f8;
       border-radius: 4px;
-      margin: 0 16px 16px 0;
+      margin-right: 16px;
+      margin-top: 16px;
       min-width: 128px;
       max-width: 176px;
       &.z-active {
@@ -554,8 +558,13 @@ export default {
     }
   }
 
+  .line {
+    height: 1px;
+    margin: 64px 0 40px 0;
+    padding: 0 40px;
+  }
+
   .remark {
-    margin-top: 105px;
     padding: 0 40px;
     ::v-deep.sp-field {
       padding: 0;
