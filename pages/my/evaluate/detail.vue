@@ -97,7 +97,7 @@ export default {
       return txts[val] || '非常差'
     },
     fliterStar(val) {
-      return val ? val + '星' : '无'
+      return val ? val / 2 + '星' : '无'
     },
   },
   data() {
