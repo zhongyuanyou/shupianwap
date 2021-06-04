@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <div class="line"></div>
+    <div v-if="subScoreFlag" class="line"></div>
 
     <div v-if="remarkFlag && subScoreFlag" class="remark">
       <sp-field
@@ -559,8 +559,8 @@ export default {
   }
 
   .line {
-    height: 1px;
-    margin: 64px 0 40px 0;
+    border: 1px solid #f4f4f4;
+    margin: 64px 40px 40px 40px;
     padding: 0 40px;
   }
 

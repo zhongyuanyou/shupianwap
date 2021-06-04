@@ -277,7 +277,7 @@ export default {
   .imgs {
     .mixin-flex();
     padding: 0 40px;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
     ::v-deep .img {
       margin: 0 20px 0 0;
     }
