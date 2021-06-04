@@ -99,6 +99,9 @@ export default {
     }
     this.init()
   },
+  destroyed() {
+    this.$appFn.dggHideNav((res) => {})
+  },
   methods: {
     init() {
       if (this.$route.query.plannerId) {
