@@ -310,7 +310,7 @@ import CommentList from '@/components/mustKnown/CommentList'
 import { knownApi, userinfoApi } from '@/api'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import util from '@/utils/changeBusinessData'
-import DownLoadArea from '@/components/common/DownLoadArea'
+import DownLoadArea from '@/components/common/downLoadArea'
 export default {
   layout: 'keepAlive',
   name: 'Detail',

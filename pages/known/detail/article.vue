@@ -156,6 +156,7 @@
         <div class="cancel" @click="popupShow = false">取消</div>
       </div>
     </sp-popup>
+    <ShareModal />
   </div>
 </template>
 
@@ -180,7 +181,9 @@ import DetailArticleList from '@/components/mustKnown/DetailArticleList'
 // 默认评论列表
 import Comment from '~/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
-import DownLoadArea from '@/components/common/DownLoadArea'
+import DownLoadArea from '@/components/common/downLoadArea'
+import ShareModal from '@/components/common/spPopup/SpPopup'
+// import SpBottom from '@/components/common/spBottom/SpBottom'
 export default {
   layout: 'keepAlive',
   components: {
@@ -198,6 +201,7 @@ export default {
     DetailArticleList,
     DownLoadArea,
     // Header,
+    ShareModal,
   },
   async asyncData({ $axios, query, store }) {
     let articleDetails = {}
