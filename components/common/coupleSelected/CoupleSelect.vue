@@ -425,7 +425,7 @@ export default {
   display: flex;
   overflow: hidden;
   position: relative;
-  max-height: 400px;
+  max-height: 80vh;
   min-height: 200px;
   .fix_shadow {
     position: absolute;

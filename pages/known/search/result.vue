@@ -27,9 +27,6 @@
       <p :class="tabIndex === '2' ? 'act' : ''" @click="changeTab('2')">
         <span>文章</span><i></i>
       </p>
-      <p :class="tabIndex === '3' ? 'act' : ''" @click="changeTab('3')">
-        <span>用户</span><i></i>
-      </p>
       <p
         v-if="showItem"
         :class="tabIndex === '4' ? 'act' : ''"
@@ -42,7 +39,10 @@
         :class="tabIndex === '5' ? 'act' : ''"
         @click="changeTab('5')"
       >
-        <span>讲堂</span><i></i>
+        <span>大讲堂</span><i></i>
+      </p>
+      <p :class="tabIndex === '3' ? 'act' : ''" @click="changeTab('3')">
+        <span>用户</span><i></i>
       </p>
     </div>
     <div v-show="tabIndex === '1' || tabIndex === '2'" class="listbox">
@@ -118,7 +118,7 @@
         </div>
       </sp-list>
     </div>
-    <div v-show="tabIndex === '4'" class="listbox">
+    <div v-show="tabIndex === '4'" class="videolist">
       <sp-list
         v-model="loading"
         :finished="finished"
@@ -133,24 +133,28 @@
           class="list"
           @click="open(item)"
         >
-          <h1 v-html="item.videoNameHtml"></h1>
-          <div class="box">
-            <div>
-              <p v-html="item.videoDescHtml"></p>
+          <div class="item">
+            <div class="lf_img">
+              <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
+              <div class="time">{{ totime(item.duration) }}</div>
             </div>
-            <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
-          </div>
-          <div v-if="!item.contentImageUrl" class="num">
-            <span>{{ item.thumbCount }} 赞同</span>
-            <i></i>
-            <span>{{ item.remarkCount }} 评论</span>
-            <i></i>
-            <span>{{ item.createTime | fromatDate }} </span>
+            <div class="rt_content">
+              <div class="title">
+                <p v-html="item.videoNameHtml"></p>
+                <!-- {{ item.videoName }} -->
+              </div>
+              <div class="name_time">
+                <div class="name">{{ item.createrName }}</div>
+                <div class="time">
+                  {{ timeSplice(item.createTime) }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </sp-list>
     </div>
-    <div v-show="tabIndex === '5'" class="listbox">
+    <div v-show="tabIndex === '5'" class="videolist">
       <sp-list
         v-model="loading"
         :finished="finished"
@@ -165,19 +169,23 @@
           class="list"
           @click="open(item)"
         >
-          <h1 v-html="item.courseNameHtml"></h1>
-          <div class="box">
-            <div>
-              <p v-html="item.courseDescHtml"></p>
+          <div class="item">
+            <div class="lf_img">
+              <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
+              <div class="time">{{ totime(item.duration) }}</div>
             </div>
-            <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
-          </div>
-          <div v-if="!item.contentImageUrl" class="num">
-            <span>{{ item.thumbCount }} 赞同</span>
-            <i></i>
-            <span>{{ item.remarkCount }} 评论</span>
-            <i></i>
-            <span>{{ item.createTime | fromatDate }} </span>
+            <div class="rt_content">
+              <div class="title">
+                <p v-html="item.courseNameHtml"></p>
+                <!-- {{ item.videoName }} -->
+              </div>
+              <div class="name_time">
+                <div class="name">{{ item.createrName }}</div>
+                <div class="time">
+                  {{ timeSplice(item.createTime) }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </sp-list>
@@ -252,6 +260,30 @@ export default {
     this.value = query.keyword
   },
   methods: {
+    timeSplice(time) {
+      return time.substring(0, time.length - 3)
+    },
+    totime(time) {
+      if (!time) {
+        return ''
+      }
+
+      let hour = Math.floor(time / 3600)
+      let mid = Math.floor((time - 3600 * hour) / 60)
+      // math.flotime / 60
+      let sec = Math.floor((time - 3600 * hour) % 60)
+      if (hour < 10) {
+        hour = '0' + hour
+      }
+      if (mid < 10) {
+        mid = '0' + mid
+      }
+      if (sec < 10) {
+        sec = '0' + sec
+      }
+
+      return hour + ':' + mid + ':' + sec
+    },
     keyClickHandle() {
       this.$router.replace({
         path: '/known/search',
@@ -597,6 +629,68 @@ export default {
         justify-content: center;
         > span {
           margin-left: 13px;
+        }
+      }
+    }
+  }
+  > .videolist {
+    .list {
+      .item {
+        padding: 28px 40px;
+        display: flex;
+        align-items: center;
+        .lf_img {
+          width: 240px;
+          height: 135px;
+          background: #f5f5f5;
+          border-radius: 8px;
+          position: relative;
+          margin-right: 28px;
+          img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: 8px;
+          }
+          .time {
+            background: #000000;
+            border-radius: 8px;
+            opacity: 0.6;
+            position: absolute;
+            bottom: 8px;
+            left: 9px;
+            font: bold 22px/30px PingFangSC-Medium, PingFang SC;
+            color: #ffffff;
+            padding: 3px 8px;
+          }
+        }
+        .rt_content {
+          width: 402px;
+          .title {
+            color: #222222;
+            font: bold 30px/42px PingFangSC-Medium, PingFang SC;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-all;
+            height: 84px;
+          }
+          .name_time {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .name {
+              color: #555555;
+              font: bold 26px/36px PingFangSC-Medium, PingFang SC;
+            }
+            .time {
+              color: #999999;
+              font: 400 26px/32px PingFangSC-Regular, PingFang SC;
+            }
+          }
         }
       }
     }
