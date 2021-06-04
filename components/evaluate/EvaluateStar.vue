@@ -7,6 +7,7 @@
           <my-icon
             :key="index"
             class="score-total-icon"
+            :class="index === 4 ? 'z-last' : ''"
             name="dafen_mian"
             size="0.56rem"
             :color="item.flag ? '#FFB400' : '#F0F0F0'"
@@ -35,7 +36,7 @@
         </div>
       </template>
     </div>
-    <div v-if="tipsFlag" class="tips">
+    <div v-if="tipsFlag && subScoreFlag" class="tips">
       <div
         v-for="(item, index) in tips"
         :key="index"
@@ -47,7 +48,9 @@
       </div>
     </div>
 
-    <div v-if="remarkFlag" class="remark">
+    <div v-if="subScoreFlag" class="line"></div>
+
+    <div v-if="remarkFlag && subScoreFlag" class="remark">
       <sp-field
         v-model="evaluateContent"
         autosize
@@ -57,7 +60,7 @@
         show-word-limit
       />
     </div>
-    <div v-if="uploadImgFlag" class="upload">
+    <div v-if="uploadImgFlag && subScoreFlag" class="upload">
       <client-only>
         <spMobileUpload
           ref="SpUpLoad"
@@ -123,7 +126,7 @@ export default {
   },
   filters: {
     fliterLevel(val) {
-      const txts = ['非常差', '非常差', '差', '一般', '好', '非常好']
+      const txts = ['', '非常差', '差', '一般', '好', '非常好']
       return txts[val]
     },
   },
@@ -477,20 +480,19 @@ export default {
     align-items: center;
   }
   .mixin-score-desc {
+    margin-left: 40px;
     font: 400 24px @fontf-pfsc-reg;
     color: #555555;
-    position: absolute;
-    right: 0;
   }
 
   .score {
-    padding: 0 94px 0 40px;
+    padding: 0 0 0 40px;
     &-total {
       .mixin-score-item();
       width: 100%;
       .tile {
-        width: 160px;
-        margin-right: 10px;
+        width: 175px;
+        margin-right: 40px;
         font: bold 32px @fontf-pfsc-med;
         color: #222222;
       }
@@ -499,6 +501,9 @@ export default {
       }
       &-icon {
         margin-right: 20px;
+        &.z-last {
+          margin-right: 0;
+        }
       }
     }
     &-item {
@@ -507,17 +512,17 @@ export default {
       .tile {
         font: 400 28px @fontf-pfsc-reg;
         color: #222222;
-        width: 160px;
-        margin-right: 10px;
+        width: 175px;
+        margin-right: 40px;
         .mixin-text-oneoverflow();
       }
       .desc {
         .mixin-score-desc();
       }
       &-img {
-        height: 44px;
-        width: 44px;
-        margin-right: 32px;
+        height: 56px;
+        width: 56px;
+        margin-right: 20px;
         &.z-last {
           margin-right: 0;
         }
@@ -532,16 +537,18 @@ export default {
     .mixin-flex();
     flex-wrap: wrap;
     padding: 0 94px 0 40px;
-    margin-top: 64px;
+    margin-top: 48px;
     .item {
       .mixin-text-oneoverflow();
       font: 400 24px @fontf-pfsc-reg;
       color: #222222;
-      box-sizing: border-box;
-      padding: 16px;
+      height: 56px;
+      line-height: 56px;
+      text-align: center;
       background: #f8f8f8;
       border-radius: 4px;
-      margin: 0 16px 16px 0;
+      margin-right: 16px;
+      margin-top: 16px;
       min-width: 128px;
       max-width: 176px;
       &.z-active {
@@ -551,8 +558,13 @@ export default {
     }
   }
 
+  .line {
+    border: 1px solid #f4f4f4;
+    margin: 64px 40px 40px 40px;
+    padding: 0 40px;
+  }
+
   .remark {
-    margin-top: 105px;
     padding: 0 40px;
     ::v-deep.sp-field {
       padding: 0;
@@ -612,11 +624,12 @@ export default {
 
   .placeholder {
     width: 100%;
-    height: 140px;
+    height: 150px;
   }
 
   ::v-deep .sp-bottombar {
-    padding: 0 40px 24px;
+    background: #fff;
+    padding: 24px 40px;
     height: 88px;
     .sp-button {
       border: none;
