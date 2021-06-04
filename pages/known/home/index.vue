@@ -97,8 +97,24 @@
         @load="getList"
       >
         <div v-for="(item, index) in list" :key="index">
-          <Item :item="item" @comments="comments" /></div
-      ></sp-list>
+          <Item v-if="item.index !== 5" :item="item" @comments="comments" />
+          <div v-else class="item_five">
+            <div class="item">
+              <div class="lf_img">
+                <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
+                <div class="time">00:15:50</div>
+              </div>
+              <div class="rt_content">
+                <div class="title">这是一个标题</div>
+                <div class="name_time">
+                  <div class="name">你好</div>
+                  <div class="time">{{ item.createTime | fromatDate }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sp-list>
     </div>
     <comment-list
       v-model="commentShow"
@@ -113,6 +129,7 @@
 import { Tabs, Tab, Image, List, Swipe, SwipeItem } from '@chipspc/vant-dgg'
 import CommentList from '@/components/mustKnown/CommentList'
 import Item from '@/components/mustKnown/home/Item'
+import VideoItem from '@/components/mustKnown/home/VideoItem'
 import { knownApi } from '~/api'
 import utils from '@/utils/changeBusinessData'
 import { domainUrl } from '~/config/index'
@@ -328,6 +345,8 @@ export default {
       this.list = []
       this.finished = false
       this.loading = true
+      console.log('+++++++active', this.active)
+
       this.getList()
     },
     async init() {
