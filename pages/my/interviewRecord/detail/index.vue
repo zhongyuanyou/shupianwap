@@ -207,6 +207,7 @@ export default {
           this.loading = false
           if (res.code === 200) {
             this.getInterviewDetail()
+            this.$forceUpdate()
           } else {
             this.$refs.spToast.show({
               message: res.data.error,
