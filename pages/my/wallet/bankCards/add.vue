@@ -12,8 +12,8 @@
           >用户名*</sp-field
         >
         <sp-field
-          type="number"
           v-model="cardNum"
+          type="number"
           name="银行卡号"
           label="银行卡号"
           maxlength="20"

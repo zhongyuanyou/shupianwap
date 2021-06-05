@@ -22,7 +22,7 @@
           color="#555555"
         ></sp-icon>
       </div>
-      <div class="total">
+      <div class="total" @click="$router.push('/my/wallet/bill/list')">
         <strong>1200.12</strong
         ><sp-icon
           class-prefix="spiconfont"
@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import { Icon } from '@chipspc/vant-dgg'
+import { Icon, Dialog } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import BalanceDesc from '@/components/wallet/BalanceDesc.vue'
 export default {
@@ -103,11 +103,31 @@ export default {
     Header,
     SpIcon: Icon,
     BalanceDesc,
+    [Dialog.name]: Dialog,
   },
   data() {
     return {}
   },
+  mounted() {
+    this.openActivationDialog()
+  },
   methods: {
+    openActivationDialog() {
+      Dialog.confirm({
+        title: '激活钱包',
+        message: '钱包激活后才可以使用哦！',
+        confirmButtonText: '马上激活',
+        cancelButtonText: '取消',
+      })
+        .then((res) => {
+          this.$router.push({
+            path: '/my/wallet/verified/auth',
+          })
+        })
+        .catch(() => {
+          // on cancel
+        })
+    },
     openBalanceDesc() {
       this.$refs.balanceDesc.showBalanceDesc = true
     },
@@ -119,6 +139,10 @@ export default {
 .wallet {
   height: 100%;
   background: #fff;
+  ::v-deep .sp-dialog__message--has-title {
+    color: #222 !important;
+    font-size: 28px;
+  }
   .wallet-bg {
     height: 432px;
     background: #4974f5;

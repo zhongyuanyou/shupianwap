@@ -18,21 +18,6 @@
             </div>
           </div>
         </li>
-        <li
-          style="background-image: linear-gradient(90deg, #14bdbb 0%, #0bb3b3 100%);"
-        >
-          <div class="left-logo">
-            <img />
-          </div>
-          <div class="right-info">
-            <h3>中国工商银行</h3>
-            <p>四川虎居信息科技有限公司</p>
-            <div class="card-num">
-              <span>****</span><span>****</span><span>****</span
-              ><span>3253</span>
-            </div>
-          </div>
-        </li>
       </ul>
     </div>
     <div class="footer-btn">

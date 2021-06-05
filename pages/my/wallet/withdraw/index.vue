@@ -40,7 +40,7 @@
         <div class="title">提现金额</div>
         <div class="amount">
           <span>￥</span
-          ><sp-field type="number" v-model="amount" maxlength="5" />
+          ><sp-field v-model="amount" type="number" maxlength="5" />
         </div>
       </div>
       <div class="amount-tips">账户余额：¥129999.99，<span>全部提现</span></div>

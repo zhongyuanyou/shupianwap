@@ -4,8 +4,8 @@
     <div>
       <sp-cell-group>
         <sp-field
-          clearable
           v-model="phone"
+          clearable
           label="原手机号"
           maxlength="11"
           placeholder="请输入原手机号"

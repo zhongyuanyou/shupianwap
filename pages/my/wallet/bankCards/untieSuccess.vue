@@ -9,7 +9,7 @@
         name="popup_img_success"
       />
       <p>解绑成功</p>
-      <button @click="$router.push('/my/wallet/bankCards/detail')">返回</button>
+      <button @click="$router.push('/my/wallet/bankCards/list')">返回</button>
     </div>
   </div>
 </template>
