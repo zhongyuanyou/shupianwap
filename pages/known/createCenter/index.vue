@@ -334,13 +334,17 @@ export default {
     }
     .content {
       .mixin-flex();
+      box-sizing: border-box;
       align-items: normal;
-      margin-bottom: 32px;
+      padding-bottom: 32px;
       justify-content: space-between;
+      height: 160px;
       &-txt {
         font: 400 30px/42px @fontf-pfsc-reg;
         color: #555555;
         .textOverflow(3);
+        height: 128px;
+        overflow: hidden;
       }
       &-img {
         margin-left: 40px;
