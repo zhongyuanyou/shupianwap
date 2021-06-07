@@ -114,8 +114,8 @@ export default {
     }),
   },
   created() {
-  this.src = this.$route.query.fileUrl
-  this.pdfTask(this.src)
+    this.src = this.$route.query.fileUrl
+    this.pdfTask(this.src)
   },
   mounted() {
     this.init()
@@ -124,13 +124,12 @@ export default {
     init() {
       this.title = this.$route.query.title
       this.documentId = this.$route.query.documentId
-            console.log(
+      console.log(
         'fileUrl,title,documentId',
         this.fileUrl,
         this.title,
         this.documentId
       )
-   
     },
     pdfTask() {
       Pdf.createLoadingTask(this.src).promise.then((pdf) => {
