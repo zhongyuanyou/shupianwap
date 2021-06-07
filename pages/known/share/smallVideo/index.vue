@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import knownApi from '@/api/known'
+
 export default {
   name: 'KnownSmallVideo',
   components: {
@@ -26,10 +28,32 @@ export default {
     SmallVideoLike: () => import('@/components/mustKnown/share/SmallVideoLike'),
   },
   data() {
-    return {}
+    return {
+      vId: '',
+    }
   },
-  mounted() {},
-  methods: {},
+  mounted() {
+    this.vId = this.$route.query.id
+    this.getVDetailApi()
+  },
+  methods: {
+    async getVDetailApi() {
+      try {
+        const params = {
+          ids: [this.vId],
+        }
+        console.log(`output params:\n ${JSON.stringify(params)}`)
+        const { code, data } = await this.$axios.post(
+          knownApi.video.videoList,
+          params
+        )
+        if (code !== 200) {
+          throw new Error('查询视频失败')
+        }
+      } catch (e) {}
+    },
+    async getVListApi() {},
+  },
 }
 </script>
 
