@@ -300,6 +300,7 @@
         <div class="cancel" @click="cancel">取消</div>
       </div>
     </sp-popup>
+    <ShareModal v-if="isShare" />
   </div>
 </template>
 
@@ -311,6 +312,7 @@ import { knownApi, userinfoApi } from '@/api'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import util from '@/utils/changeBusinessData'
 import DownLoadArea from '@/components/common/downLoadArea'
+import ShareModal from '@/components/common/ShareModal'
 export default {
   layout: 'keepAlive',
   name: 'Detail',
@@ -323,6 +325,7 @@ export default {
     [Bottombar.name]: Bottombar,
     CommentList,
     DownLoadArea,
+    ShareModal,
   },
   async asyncData({ $axios, query, store }) {
     let questionDetails = []

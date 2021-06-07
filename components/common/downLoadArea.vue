@@ -34,7 +34,6 @@ export default {
   },
   mounted() {
     const userAgent = window.navigator.userAgent
-    console.log('userAgent', userAgent)
     this.isAndroid =
       userAgent.indexOf('Android') > -1 || userAgent.indexOf('Adr') > -1 // android终端
     this.isIOS = userAgent.match(/iPhone|iPad|iPod/i) ? 1 : 0 // ios终端

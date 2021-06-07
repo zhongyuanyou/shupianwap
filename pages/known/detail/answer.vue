@@ -208,7 +208,7 @@ import {
 import Comment from '@/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import DownLoadArea from '@/components/common/downLoadArea'
-import ShareModal from '@/components/common/spPopup/SpPopup'
+import ShareModal from '@/components/common/ShareModal'
 import { knownApi, userinfoApi } from '@/api'
 import util from '@/utils/changeBusinessData'
 export default {

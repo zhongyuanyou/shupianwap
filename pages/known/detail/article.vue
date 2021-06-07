@@ -156,7 +156,7 @@
         <div class="cancel" @click="popupShow = false">取消</div>
       </div>
     </sp-popup>
-    <ShareModal />
+    <ShareModal v-if="isShare"/>
   </div>
 </template>
 
@@ -182,7 +182,7 @@ import DetailArticleList from '@/components/mustKnown/DetailArticleList'
 import Comment from '~/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import DownLoadArea from '@/components/common/downLoadArea'
-import ShareModal from '@/components/common/spPopup/SpPopup'
+import ShareModal from '@/components/common/ShareModal'
 // import SpBottom from '@/components/common/spBottom/SpBottom'
 export default {
   layout: 'keepAlive',
