@@ -197,6 +197,7 @@ export default {
         color: #1a1a1a;
         line-height: 34px;
         margin-right: 16px;
+        width: 200px;
       }
       .planer_right {
         background: #ffffff;

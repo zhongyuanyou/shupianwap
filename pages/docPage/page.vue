@@ -178,16 +178,14 @@ export default {
           this.$xToast.show({
             message: '下载成功',
             duration: 1000,
-            icon: 'toast_ic_comp',
             forbidClick: true,
           })
         } else {
           this.showPop = false
           console.log(message)
           this.$xToast.show({
-            message: '下载失败',
+            message,
             duration: 1000,
-            icon: 'toast_ic_comp',
             forbidClick: true,
           })
         }
