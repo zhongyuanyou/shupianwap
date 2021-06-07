@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import Pdf from '@fe/vue-pdf'
 import { appHandler } from './app-sdk'
 
 export default ({ app, store, route }) => {
@@ -7,7 +8,7 @@ export default ({ app, store, route }) => {
    */
   Vue.prototype.$back = () => {
     if (store.state.app.isInApp) {
-      appHandler.dggWebGoBack((res) => {})
+      appHandler.dggWebGoBack((res) => { })
     } else {
       app.router.back()
     }
@@ -37,4 +38,9 @@ export default ({ app, store, route }) => {
       }
     })
   }
+
+  /**
+   * 引入pdf插件
+   */
+  Vue.prototype.$pdf = Pdf
 }
