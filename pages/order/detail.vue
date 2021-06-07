@@ -97,7 +97,7 @@
           </span>
         </p> -->
       </div>
-      <div
+      <!-- <div
         v-if="
           orderData.evaluateStatus &&
           orderData.orderSplitAndCusVo.signerId &&
@@ -130,7 +130,7 @@
             ></my-icon>
           </span>
         </p>
-      </div>
+      </div> -->
       <div class="order-info order-info2">
         <p class="order-item">
           <span class="label">订单编号</span>
@@ -542,8 +542,8 @@ export default {
         plannerId: this.orderData.orderSplitAndCusVo.signerSubjectUserId, // 签单人员id
         signerNo: this.orderData.orderSplitAndCusVo.signerNo, // 签单人员编号
         plannerName: this.orderData.orderSplitAndCusVo.signerName,
-        signerSubjectUserId: this.orderData.orderSplitAndCusVo
-          .signerSubjectUserId, // 签单人商户用户id
+        signerSubjectUserId:
+          this.orderData.orderSplitAndCusVo.signerSubjectUserId, // 签单人商户用户id
         orderId: this.orderData.id,
         cusOrderId: this.orderData.cusOrderId,
       }
