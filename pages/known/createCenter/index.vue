@@ -1,5 +1,8 @@
 <template>
-  <div class="m-known create-center">
+  <div
+    class="m-known create-center"
+    :class="[emptyFlag === 'not' ? '' : 'z-bg-white']"
+  >
     <Header title="创作中心" :fixed="true" />
     <sp-tabs v-model="active" @change="changeTab">
       <sp-tab v-for="(item, index) in tabList" :key="index" :title="item.tab">
@@ -257,7 +260,10 @@ export default {
 <style lang="less" scoped>
 .m-known.create-center {
   min-height: 100vh;
-  background: #fff;
+  background: #f8f8f8;
+  &.z-bg-white {
+    background: #fff;
+  }
   .mixin-flex {
     display: flex;
     align-items: center;
@@ -293,7 +299,7 @@ export default {
 
   .item {
     background: #fff;
-    padding: 40px 32px;
+    padding: 32px 40px;
     .tile {
       position: relative;
       margin-bottom: 20px;
@@ -304,9 +310,10 @@ export default {
       &-flag {
         position: absolute;
         top: 8px;
+        height: 32px;
         width: 88px;
         box-sizing: border-box;
-        font: 400 24px @fontf-pfsc-reg;
+        font: 400 24px/32px @fontf-pfsc-reg;
         color: #ccc;
         border-radius: 4px;
         border: 1px solid #cccccc;
@@ -327,13 +334,17 @@ export default {
     }
     .content {
       .mixin-flex();
+      box-sizing: border-box;
       align-items: normal;
-      margin-bottom: 32px;
+      padding-bottom: 32px;
       justify-content: space-between;
+      height: 160px;
       &-txt {
         font: 400 30px/42px @fontf-pfsc-reg;
         color: #555555;
         .textOverflow(3);
+        height: 128px;
+        overflow: hidden;
       }
       &-img {
         margin-left: 40px;

@@ -146,6 +146,12 @@ export default {
   },
   mounted() {
     if (this.isInApp) {
+      this.$appFn.dggSetTitle(
+        {
+          title: '面谈详情',
+        },
+        (res) => {}
+      )
       this.$appFn.dggGetUserInfo((res) => {
         if (res.code === 200 && res.data.userId && res.data.token) {
           this.$store.dispatch('user/setUser', res.data)

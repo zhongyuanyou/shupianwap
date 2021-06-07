@@ -12,7 +12,6 @@
         </div>
       </template>
     </Header>
-    <div class="header-line"></div>
     <div class="info">
       <sp-image
         square
@@ -91,6 +90,9 @@ export default {
 <style lang="less" scoped>
 @font-medium:pingfangsc-medium, PingFang SC;
 @font-regular:pingfangsc-regular, PingFang SC;
+::v-deep .my-head {
+  border-bottom: 1px solid #f4f4f4;
+}
 ::v-deep .sp-center-popup {
   width: 540px;
 }
@@ -116,11 +118,6 @@ export default {
   }
   .back_icon {
     margin-left: 32px;
-  }
-  .header-line {
-    width: 100%;
-    height: 1px;
-    background: #f4f4f4;
   }
   .info {
     padding: 41px 40px 40px 40px;

@@ -55,7 +55,6 @@
                   :multiple="false"
                   :city-data="regionsOption"
                   :is-location="true"
-                  :back-data="backData"
                   @select="handleRegionsSelect"
                 />
               </sp-dropdown-item>
@@ -319,6 +318,7 @@ export default {
             ? this.code
             : this.currentCity.code
           : region.code
+      console.log('region.name', region.name)
       let regionDto = {
         codeState: region.name !== '区域' ? 3 : 2,
         regions: [code || '510100'],
@@ -387,7 +387,7 @@ export default {
       if (index === 0) {
         this.search.region = {
           code: this.defaultCityCode,
-          name: '不限',
+          name: '区域',
           codeState: 1,
         }
         this.backData = [
@@ -398,6 +398,8 @@ export default {
           },
         ]
       }
+      console.log('regionsOption', this.regionsOption)
+      console.log('this.search.region', this.search.region)
       this.onLoad()
       this.$refs.categoryCodeSelect.toggle()
     },
@@ -920,9 +922,6 @@ export default {
           &:first-child {
             flex-shrink: 0;
           }
-          &:last-child {
-            margin-left: 66px;
-          }
         }
         &__title {
           color: #222222;
@@ -957,8 +956,8 @@ export default {
     }
     /deep/ .search__dropdown-category {
       .sp-dropdown-item .sp-popup {
-        max-height: 4rem;
-        min-height: 2rem;
+        max-height: 80vh;
+        min-height: 200px;
       }
     }
     .category-list {
@@ -989,7 +988,7 @@ export default {
   .no-data {
     width: 100%;
     height: auto;
-    min-height: 400px;
+    min-height: 600px;
     display: flex;
     flex-direction: column;
     justify-content: center;

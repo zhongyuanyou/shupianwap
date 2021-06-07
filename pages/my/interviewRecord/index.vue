@@ -57,30 +57,15 @@
                     </div>
                   </h4>
                   <p>
-                    面谈方式：<span>{{
-                      item.inviteType ? '到访面谈' : '去店面谈'
-                    }}</span>
-                  </p>
-                  <p>
                     面谈时间：<span>{{ item.inviteTime }}</span>
                   </p>
                   <p class="address">
                     面谈地点：<span>{{ item.inviteAddress }}</span>
                   </p>
                   <p>
-                    面谈状态：<span
-                      :class="item.inviteStatus === 0 ? 'face_talk' : ''"
-                      :disabled="!item.evaluateId && item.inviteStatus === 2"
-                      >{{
-                        item.inviteStatus === 0
-                          ? '待面谈'
-                          : item.inviteStatus === 1
-                          ? '已面谈'
-                          : item.inviteStatus === 2
-                          ? '已评价'
-                          : '已取消'
-                      }}</span
-                    >
+                    面谈方式：<span>{{
+                      item.inviteType ? '到访面谈' : '去店面谈'
+                    }}</span>
                   </p>
                 </div>
               </div>
@@ -101,6 +86,15 @@
                   @click.stop="tel(item.inviterContact)"
                   ><my-icon name="notify_ic_tel" size="0.32rem" color="#4974F5"
                 /></sp-button>
+                <sp-tag color="#F8F8F8" text-color="#999999">{{
+                  item.inviteStatus === 0
+                    ? '待面谈'
+                    : item.inviteStatus === 1
+                    ? '已面谈'
+                    : item.inviteStatus === 2
+                    ? '已评价'
+                    : '已取消'
+                }}</sp-tag>
               </div>
             </div>
             <div class="item-status">
@@ -111,37 +105,11 @@
                 @click="cancelInterview(item.id)"
                 >取消面谈</sp-button
               >
-              <span v-else-if="item.inviteStatus === 3"
+              <span v-else-if="item.inviteStatus === 2"
                 >您在{{ item.cancelTime }}已取消面谈</span
               >
-              <span
-                v-else-if="
-                  item.inviteStatus !== 0 && item.evaluateInfoStatus === 1
-                "
-                style="color: #4974f5"
-                @click="goEvaluate(item)"
-                >去评价</span
-              >
-              <span
-                v-else-if="
-                  item.inviteStatus !== 0 &&
-                  (item.evaluateInfoStatus === 2 ||
-                    item.evaluateInfoStatus === 3 ||
-                    item.evaluateInfoStatus === 4)
-                "
-                style="color: #4974f5"
-                @click="goEvaluateDetail(item)"
-                >查看评价</span
-              >
-              <span
-                v-else-if="
-                  item.inviteStatus !== 0 &&
-                  (!item.evaluateInfoStatus || item.evaluateInfoStatus === 5)
-                "
-                style="color: #4974f5"
-                :class="item.evaluateInfoStatus === '' ? 'set_grey' : ''"
-                >已完成</span
-              >
+              <span v-else-if="item.inviteStatus === 3">您已取消面谈</span>
+              <span v-else>您在{{ item.confirmCompleteTime }}已完成面谈</span>
             </div>
           </sp-cell>
         </sp-list>
@@ -350,7 +318,6 @@ export default {
         limit: this.limit,
         page: 1,
         userId: this.userId,
-        id: this.interId,
       }
       const res = await this.$axios.get(interviewApi.list, { params })
       if (res.code === 200) {
@@ -358,14 +325,8 @@ export default {
       }
     },
     handleClick(item) {
-      // 点击面谈记录`/my/interviewRecord/detail'
-      this.$router.push({
-        path: '/my/interviewRecord/detail',
-        query: {
-          id: item.id,
-          avatar: item.imgUrl,
-        },
-      })
+      // 点击面谈记录
+      this.$router.push(`/my/interviewRecord/confirm/${item.id}`)
     },
     handleIm(item) {
       // 调起IM
@@ -381,26 +342,6 @@ export default {
       }
       this.creatImSessionMixin({ imUserId, imUserType })
     },
-    goEvaluateDetail(item) {
-      this.$router.push({
-        path: '/my/plannerEvaluate/detail',
-        query: {
-          plannerAvatar: item.imgUrl,
-          plannerName: item.inviterName,
-          infoId: item.infoId,
-        },
-      })
-    },
-    goEvaluate(item) {
-      this.$router.push({
-        path: '/my/plannerEvaluate',
-        query: {
-          plannerAvatar: item.imgUrl,
-          plannerName: item.inviterName,
-          infoId: item.infoId,
-        },
-      })
-    },
   },
 }
 </script>
@@ -409,12 +350,7 @@ export default {
 @title-text-color: #1a1a1a;
 @subtitle-text-color: #999999;
 @hint-text-color: #cccccc;
-.face_talk {
-  color: #f86e21 !important;
-}
-.set_grey {
-  color: #999999 !important;
-}
+
 .interview {
   height: 100%;
   overflow-y: scroll;
@@ -509,7 +445,6 @@ export default {
                 .textOverflow(1);
               }
             }
-
             .address_icon {
               position: relative;
               top: 1px;

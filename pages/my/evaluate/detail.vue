@@ -97,7 +97,7 @@ export default {
       return txts[val] || '非常差'
     },
     fliterStar(val) {
-      return val ? val + '星' : '无'
+      return val ? val / 2 + '星' : '无'
     },
   },
   data() {
@@ -277,7 +277,7 @@ export default {
   .imgs {
     .mixin-flex();
     padding: 0 40px;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
     ::v-deep .img {
       margin: 0 20px 0 0;
     }

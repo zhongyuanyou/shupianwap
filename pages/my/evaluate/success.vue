@@ -1,6 +1,6 @@
 <template>
   <div class="m-evaluate success">
-    <Header :hide-back="true">
+    <Header v-if="!isInApp" :hide-back="true">
       <template #right><div @click="back">完成</div></template>
     </Header>
     <div class="content-wrap">
@@ -9,11 +9,13 @@
       <div class="desc">
         非常感谢您的评价，为我们服务质量的提升提供了宝贵意见！
       </div>
+      <div v-if="isInApp" class="btn" @click="back">完成</div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 
@@ -27,6 +29,11 @@ export default {
     return {
       avatar: 'fap9pjecawg0000.png',
     }
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
   },
   methods: {
     back() {
@@ -65,6 +72,18 @@ export default {
       color: #999999;
       text-align: center;
       margin: 0 80px;
+    }
+    .btn {
+      width: 160px;
+      height: 64px;
+      line-height: 64px;
+      border-radius: 6px;
+      border: 1px solid #cccccc;
+      font-weight: bold;
+      font-size: 26px;
+      color: #555555;
+      text-align: center;
+      margin-top: 32px;
     }
   }
 }

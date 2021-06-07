@@ -245,11 +245,11 @@ export default {
           iconName: 'per_ic_cancel',
           name: '已取消',
         },
-        {
-          iconName: 'daipingjia',
-          name: '待评价',
-          type: 'daipingjia',
-        },
+        // {
+        //   iconName: 'daipingjia',
+        //   name: '待评价',
+        //   type: 'daipingjia',
+        // },
       ],
 
       info: {

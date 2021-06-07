@@ -169,18 +169,16 @@ export default {
     }
   },
   mounted() {
-    let url = 'https://shupian.dgg.cn/spread/myDemandCard'
+    let url = ''
     const localHerf = window.location.href
     if (localHerf.match('https://m.shupian')) {
-      url = 'https://shupian.dgg.cn/spread/myDemandCard'
+      url = 'https://mtg.shupian.cn/spread/myDemandCard'
     } else if (localHerf.match('https://tm.shupian')) {
       url = 'https://tmtg.shupian.cn/spread/myDemandCard'
     } else {
       url = 'https://dmtg.shupian.cn/spread/myDemandCard'
     }
     this.list[2].materialLink = url
-    console.log('this.list', this.list)
-    console.log('url', url)
   },
   computed: {
     imgWidth() {

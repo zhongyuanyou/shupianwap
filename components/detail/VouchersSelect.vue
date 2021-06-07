@@ -36,7 +36,6 @@
     <div
       v-if="serviceTag && serviceTag.length > 0"
       class="cell"
-      @click="safeguardIsShow"
     >
       <div class="cell_left">
         <div class="label">保障</div>
@@ -49,7 +48,7 @@
           >
         </div>
       </div>
-      <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
+      <!-- <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" /> -->
     </div>
     <sp-popup
       v-model="show"
@@ -230,7 +229,6 @@ export default {
       return this.$store.state.sellingGoodsDetail.sellingGoodsData
     },
     serviceTag() {
-      console.log('sellingGoodsDetail', this.$store.state.sellingGoodsDetail)
       const salesGoodsTags =
         this.$store.state.sellingGoodsDetail.sellingGoodsData.salesGoodsTags
       console.log('salesGoodsTags', salesGoodsTags)
