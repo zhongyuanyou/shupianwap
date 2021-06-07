@@ -186,7 +186,9 @@ export default {
       }
       const res = await this.$axios.get(evaluateApi.getAvatar, { params })
       if (res.code === 200) {
-        this.avatar = res.data.img
+        this.avatar =
+          res.data.img ||
+          'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
       } else {
         this.$xToast.show({ message: '获取信息失败' })
       }
