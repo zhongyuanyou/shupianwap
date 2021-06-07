@@ -246,14 +246,14 @@ export default {
   mounted() {
     this.getAdList()
     window.addEventListener('scroll', this.getScroll)
-    // const userType = this.type && utils.getUserType(this.type)
-    // // 到时候这里改成5
-    // if (userType !== 1) {
-    //   this.menuList.push({
-    //     name: '视频',
-    //     index: 5,
-    //   })
-    // }
+    const userType = this.type && utils.getUserType(this.type)
+    // 到时候这里改成5
+    if (userType !== 1) {
+      this.menuList.push({
+        name: '视频',
+        index: 5,
+      })
+    }
   },
   methods: {
     open(item) {
