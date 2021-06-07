@@ -107,7 +107,9 @@ export default {
       if (this.$route.query.plannerId) {
         this.getPlannerInfo()
       } else {
-        this.avatar = this.$route.query.plannerAvatar
+        this.avatar =
+          this.$route.query.plannerAvatar ||
+          'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
       }
       this.plannerName = this.$route.query.plannerName || ''
       this.plannerId = this.$route.query.plannerId || ''
@@ -197,6 +199,13 @@ export default {
         color: #1a1a1a;
         line-height: 34px;
         margin-right: 16px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: break-all;
+        width: 300px;
       }
       .planer_right {
         background: #ffffff;
