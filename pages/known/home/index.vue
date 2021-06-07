@@ -98,8 +98,8 @@
       >
         <div v-for="(item, index) in list" :key="index">
           <Item v-if="active !== 5" :item="item" @comments="comments" />
-          <div v-else class="item_five" @click="open(item)">
-            <div class="item">
+          <div v-else class="item_five">
+            <div class="item" @click="open(item)">
               <div class="lf_img">
                 <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
                 <div class="time">{{ totime(item.duration) }}</div>
@@ -257,37 +257,21 @@ export default {
   },
   methods: {
     open(item) {
+      console.log(item)
       if (this.isInApp && this.appInfo.appCode === 'CPSAPP') {
-        if (this.tabIndex === '4') {
-          try {
-            this.$appFn.dggOpenVideo(item.id, (res) => {
-              const { code } = res || {}
-              if (code !== 200)
-                this.$xToast.show({
-                  message: `打开视频失败`,
-                  duration: 1000,
-                  forbidClick: true,
-                  icon: 'toast_ic_remind',
-                })
-            })
-          } catch (error) {
-            console.error('changeTop error:', error)
-          }
-        } else if (this.tabIndex === '5') {
-          try {
-            this.$appFn.dggOpenCourse(item.id, (res) => {
-              const { code } = res || {}
-              if (code !== 200)
-                this.$xToast.show({
-                  message: `打开课程失败`,
-                  duration: 1000,
-                  forbidClick: true,
-                  icon: 'toast_ic_remind',
-                })
-            })
-          } catch (error) {
-            console.error('changeTop error:', error)
-          }
+        try {
+          this.$appFn.dggOpenVideo(item.id, (res) => {
+            const { code } = res || {}
+            if (code !== 200)
+              this.$xToast.show({
+                message: `打开视频失败`,
+                duration: 1000,
+                forbidClick: true,
+                icon: 'toast_ic_remind',
+              })
+          })
+        } catch (error) {
+          console.error('changeTop error:', error)
         }
       } else if (this.isInApp && this.appInfo.appCode === 'syscode') {
         this.showItem = false
@@ -299,7 +283,6 @@ export default {
       return time.substring(0, time.length - 3)
     },
     totime(time) {
-      console.log('+++++++', time)
       let hour = Math.floor(time / 3600)
       let mid = Math.floor((time - 3600 * hour) / 60)
       // math.flotime / 60
