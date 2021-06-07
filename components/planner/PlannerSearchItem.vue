@@ -17,7 +17,7 @@
       <div class="planner-search-item__detail">
         <h4>
           <span class="planner-search-item__detail-name">{{
-            itemData.userName
+            itemData.userName || itemData.mchUserName
           }}</span>
         </h4>
 
@@ -103,11 +103,11 @@ export default {
       return this.$store.state.city.currentCity
     },
   },
-  async mounted() {
-    if (!this.city.code) {
-      await this.POSITION_CITY({ type: 'init' })
-    }
-  },
+  // async mounted() {
+  //   if (!this.city.code) {
+  //     await this.POSITION_CITY({ type: 'init' })
+  //   }
+  // },
 
   methods: {
     async handleClick(type) {

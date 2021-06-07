@@ -3,6 +3,7 @@
     ref="item"
     :title="dropdownTitle"
     :title-class="moreTextCss"
+    @open="open"
   >
     <div class="sort-content">
       <sp-cell
@@ -51,6 +52,7 @@ export default {
       selectValue: {},
       option: [],
       sortfilterDom: null,
+      isOne: true,
     }
   },
   watch: {
@@ -68,6 +70,28 @@ export default {
     }
   },
   methods: {
+    open() {
+      this.$nextTick(() => {
+        if (
+          this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 &&
+          this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
+            .sort &&
+          this.isOne
+        ) {
+          for (let i = 0; i < this.option.length; i++) {
+            if (
+              parseInt(
+                this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
+                  .sort
+              ) === this.option[i].id
+            ) {
+              this.selectValue = this.option[i]
+            }
+          }
+          this.isOne = false
+        }
+      })
+    },
     isActive(item) {
       return item.id === this.selectValue.id
     },

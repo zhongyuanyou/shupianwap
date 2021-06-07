@@ -172,6 +172,7 @@ export default {
         const res = await this.$axios.get(interviewApi.detail, { params })
         if (res.code === 200) {
           this.info = res.data || this.info
+          this.$forceUpdate()
         }
       } catch (err) {}
     },

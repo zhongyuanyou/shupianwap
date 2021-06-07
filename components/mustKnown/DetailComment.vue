@@ -44,7 +44,7 @@
       <my-icon name="you" size="0.2rem"></my-icon>
     </div>
 
-    <comment-list v-model="commentShow" :article-id="articleId"></comment-list>
+    <comment-list v-model="commentShow" :article-id="articleId" :source-type="sourceType"></comment-list>
   </div>
 </template>
 

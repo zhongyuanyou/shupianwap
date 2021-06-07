@@ -311,7 +311,7 @@ export default {
       )[2] // 产品三级分类
       const formatId = formatId3 || formatId2
       this.$axios
-        .get(recommendApi.recommendProduct, {
+        .get(recommendApi.saleList, {
           params: {
             userId: this.$cookies.get('userId', { path: '/' }), // 用户id
             deviceId: this.deviceId, // 设备ID

@@ -13,6 +13,7 @@
       }"
     >
       <price-filter-components
+        ref="price"
         :price-list="selectList"
         :echo-data="echoData"
         :is-show-all-option="false"
@@ -78,6 +79,7 @@ export default {
         activeItems: [],
       }, // 存储的回显数据
       contentMaxHeight: 0,
+      isOne: true,
     }
   },
   watch: {
@@ -125,7 +127,57 @@ export default {
     getPriceFilterVue(ref) {
       this.priceComponent = ref
     },
-    open() {},
+    open() {
+      this.$nextTick(() => {
+        if (
+          this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 &&
+          this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
+            .price &&
+          this.isOne &&
+          this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
+            .pricecode
+        ) {
+          for (let i = 0; i < this.selectList.length; i++) {
+            if (
+              this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
+                .pricecode === this.selectList[i].code
+            ) {
+              this.priceComponent.$refs.selectCheckBox.selectFilter(
+                this.selectList[i],
+                this.priceComponent.$refs.selectCheckBox.isActive(
+                  this.selectList[i].id
+                )
+              )
+              // this.$refs.price.priceFit(this.selectList[i])
+            }
+          }
+          this.isOne = false
+        } else if (
+          this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 &&
+          this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
+            .price &&
+          this.isOne
+        ) {
+          this.$refs.price.minPrice =
+            this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1.price.slice(
+              0,
+              this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1.price.match(
+                '-'
+              ).index
+            )
+          this.$refs.price.maxPrice =
+            this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1.price.slice(
+              this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1.price.match(
+                '-'
+              ).index + 1,
+              -1
+            ) +
+            this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1.price.slice(
+              0
+            )
+        }
+      })
+    },
     close() {
       this.echoData = clone(this.saveEchoData, true)
     },

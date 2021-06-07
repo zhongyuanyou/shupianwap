@@ -138,7 +138,6 @@ export default ({ app, store }) => {
         let userId = app.$cookies.get('userId', { path: '/' })
         let userType = app.$cookies.get('userType', { path: '/' })
         const deviceId = await getUserSign()
-
         if (!token) {
           const info = localStorage.getItem('myInfo')
             ? JSON.parse(localStorage.getItem('myInfo'))

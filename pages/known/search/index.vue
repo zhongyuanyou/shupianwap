@@ -36,7 +36,7 @@
             class="clock"
             name="shanchu"
             size="0.32rem"
-            color="#999999"
+            color="#CCCCCC"
           ></my-icon>
         </span>
       </div>
@@ -205,7 +205,7 @@ export default {
       justify-content: space-between;
       margin-bottom: 40px;
       > h1 {
-        font-size: 30px;
+        font-size: 32px;
         font-weight: bold;
         color: #222222;
       }

@@ -36,7 +36,7 @@
             <div class="desc">
               <p>{{ item.salesGoodsOperatings.slogan }}</p>
             </div>
-            <p class="money">{{ item.price }}元</p>
+            <p class="money">{{ item.salesPrice || item.price }}元</p>
           </div>
         </nuxt-link>
       </div>

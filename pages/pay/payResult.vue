@@ -8,7 +8,7 @@
         color="rgba(26, 26, 26, 1)"
         @click.native="onLeftClick"
       ></my-icon>
-      <p v-if="payStatus == 2" class="title title1">
+      <p v-if="payStatus === 2" class="title title1">
         <my-icon
           name="pay_ic_fail"
           size="0.4rem"
@@ -16,7 +16,7 @@
         ></my-icon>
         支付失败
       </p>
-      <p v-else class="title title1">
+      <p v-else-if="payStatus === 1" class="title title1">
         <my-icon
           name="pay_ic_success"
           size="0.4rem"
@@ -24,16 +24,17 @@
         ></my-icon>
         支付成功
       </p>
-
-      <p v-if="payStatus == 2" class="toast">
+      <p v-else class="title title1">查询中</p>
+      <p v-if="payStatus === 2" class="toast">
         请尽快完成付款，超过订单付款期限，<br />
         系统将自动取消订单
       </p>
-      <p v-else class="toast">
+      <p v-else-if="payStatus === 1" class="toast">
         本次支付已完成，付款{{ payMoney }}元，<br />
         详细信息请点击查看订单
       </p>
-      <div class="btn-area">
+      <p v-else class="toast">正在查询本次付款信息，请稍后</p>
+      <div v-if="payStatus" class="btn-area">
         <sp-button class="btn1" @click="toOrder">查看订单</sp-button>
         <sp-button v-if="payStatus == 2" class="btn3" @click="againPay"
           >重新支付</sp-button
@@ -127,10 +128,6 @@
             </div>
           </div>
         </div>
-        <div v-if="!productList.length && !noData" class="no-data">
-          <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
-          <p>暂无数据</p>
-        </div>
       </div>
       <!-- <Recommend ref="recommendRef" /> -->
       <!-- <sp-skeleton
@@ -174,6 +171,8 @@
 import { Button, Skeleton, Image } from '@chipspc/vant-dgg'
 import { pay, recommendApi } from '@/api'
 import getUserSign from '~/utils/fingerprint'
+// 支付结果回调定时器
+let payResultTimer
 export default {
   components: {
     [Button.name]: Button,
@@ -187,11 +186,13 @@ export default {
       formData: {
         payCusId: 10000000,
       }, // 请求数据
-      payStatus: 1, // 1成功 2失败
+      payStatus: '', // 1成功 2失败
       deviceId: null, // 设备唯一码
       loading: true,
       payMoney: '',
       noData: false,
+      payCallBackData: {},
+      number: 0,
     }
   },
   computed: {
@@ -209,9 +210,35 @@ export default {
   },
   methods: {
     init() {
-      this.payStatus = this.$route.query.payStatus
-      this.payMoney = this.$route.query.payMoney
+      this.payMoney = localStorage.getItem('payMoney')
       this.findRecomList()
+      const startTime = localStorage.getItem('startTime')
+      if (
+        localStorage.getItem('cusOrderId') &&
+        localStorage.getItem('serialNumber')
+      ) {
+        if (startTime) {
+          const nowTime = this.getNowTime()
+          if (nowTime - startTime < 3 * 60 * 1000) {
+            this.resultLoading = true
+            payResultTimer = setInterval(() => {
+              this.number++
+              this.getPayResult()
+            }, 2000)
+          } else {
+            this.clearLocalStorage()
+            // this.$router.replace({
+            //   path: '/pay/payResult',
+            //   query: {
+            //     payStatus: 2,
+            //     orderId: this.$route.query.orderId,
+            //     cusOrderId: this.formData.cusOrderId,
+            //     batchIds: this.$route.query.batchIds,
+            //   },
+            // })
+          }
+        }
+      }
     },
     onLeftClick() {
       this.$router.go(-1)
@@ -226,6 +253,10 @@ export default {
         },
       })
     },
+    // 获取当前时间戳
+    getNowTime() {
+      return new Date().getTime()
+    },
     toOrder() {
       this.$router.replace({
         path: '/order/detail',
@@ -235,6 +266,38 @@ export default {
           batchIds: this.$route.query.batchIds,
         },
       })
+    },
+    // 获取回调信息
+    getPayResult() {
+      this.payCallBackData.cusOrderId = localStorage.getItem('cusOrderId')
+      this.payCallBackData.serialNumber = localStorage.getItem('serialNumber')
+      pay
+        .getPayResult(this.payCallBackData)
+        .then((result) => {
+          if (result.data === 1 || result.data === '1') {
+            this.resultLoading = false
+            this.payStatus = 1
+            clearInterval(payResultTimer)
+            this.clearLocalStorage()
+          } else if (this.number > 10) {
+            this.resultLoading = false
+            this.payStatus = 2
+            clearInterval(payResultTimer)
+            this.clearLocalStorage()
+          }
+        })
+        .catch((e) => {
+          if (e.code !== 200) {
+            console.log(e)
+          }
+        })
+    },
+    // 清空localStorage
+    clearLocalStorage() {
+      localStorage.removeItem('cusOrderId')
+      localStorage.removeItem('serialNumber')
+      localStorage.removeItem('startTime')
+      localStorage.removeItem('payMoney')
     },
     jumpPage(item) {
       this.$router.push({
@@ -303,6 +366,7 @@ export default {
   background: #f4f4f4;
   position: relative;
   padding-top: 88px;
+  padding-bottom: 20px;
   .back-icon {
     position: absolute;
     left: 40px;
@@ -331,7 +395,7 @@ export default {
     justify-content: space-between;
     margin: 40px auto 0 auto;
     width: 60%;
-    height: 120px;
+    height: 100px;
     .sp-button {
       width: 210px;
       height: 72px;
