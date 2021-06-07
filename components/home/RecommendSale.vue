@@ -103,7 +103,7 @@
                     >{{ tagItem.tagName }}</span
                   >
                 </p>
-                <p
+                <!-- <p
                   v-if="
                     item.salesGoodsSubVos && item.salesGoodsSubVos.length === 1
                   "
@@ -113,8 +113,8 @@
                     item.salesGoodsSubVos[0] &&
                     item.salesGoodsSubVos[0].goodsSubDetailsName
                   }}
-                </p>
-                <p v-else class="goods-slogan goods-slogan1">
+                </p> -->
+                <p class="goods-slogan goods-slogan1">
                   {{
                     item.salesGoodsOperatings &&
                     item.salesGoodsOperatings.slogan

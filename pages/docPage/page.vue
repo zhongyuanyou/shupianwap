@@ -19,7 +19,10 @@
     </div>
     <div v-if="isShow" class="download">
       <div class="close" @click="close">
-        <img :src="$ossImgSet('do4300nohi80000.png')" alt="" />
+        <img
+          src="https://cdn.shupian.cn/sp-pt/wap/do4300nohi80000.png"
+          alt=""
+        />
       </div>
       <div class="download_left">
         <div class="download_left_icon">
@@ -33,11 +36,13 @@
       <div class="download_right" @click="openApp">立即打开</div>
     </div>
     <div class="content_panel">
-      <!-- <iframe
-        :src="pageUrl"
-        sandbox="allow-forms allow-scripts"
-        class="content_panel_iframe"
-      ></iframe> -->
+      <Pdf
+        v-for="i in numPages"
+        :key="i"
+        :src="src"
+        :page="i"
+        class="pdf-set"
+      />
     </div>
     <div :class="showPop ? 'fixed' : ''"></div>
     <div class="footer">
@@ -70,19 +75,22 @@
 </template>
 
 <script>
+import Pdf from '@fe/vue-pdf'
 import { CenterPopup, Field } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { documentApi } from '@/api'
 
 export default {
-  name: 'DocPage',
+  name: 'Page',
   components: {
     [CenterPopup.name]: CenterPopup,
     [Field.name]: Field,
+    Pdf,
   },
 
   data() {
     return {
+      docType: 'office',
       pageUrl: '',
       Field: {
         type: 'functional',
@@ -93,10 +101,11 @@ export default {
       },
       showPop: false,
       email: '',
-      documentId: '123',
-      fileUrl: '',
+      documentId: '',
+      src: '',
       isShow: true,
       title: '',
+      numPages: 0,
     }
   },
   computed: {
@@ -104,20 +113,28 @@ export default {
       isInApp: (state) => state.app.isInApp,
     }),
   },
+  created() {
+    this.src = this.$route.query.fileUrl
+    this.pdfTask(this.src)
+  },
   mounted() {
     this.init()
-    if (location.href.indexOf('shupian.cn') !== -1) {
-      document.domain = 'shupian.cn'
-    }
   },
   methods: {
     init() {
-      this.fileUrl = this.$route.query.fileUrl
-      this.pageUrl =
-        'https://view.officeapps.live.com/op/view.aspx?src=' + this.fileUrl
-      // this.pageUrl = 'http://view.xdocin.com/xdoc?_xdoc=' + this.fileUrl
       this.title = this.$route.query.title
-      // this.pageUrl = 'ow365.cn/?i=18679&ssl=1&furl=' + fileUrl
+      this.documentId = this.$route.query.documentId
+      console.log(
+        'fileUrl,title,documentId',
+        this.fileUrl,
+        this.title,
+        this.documentId
+      )
+    },
+    pdfTask() {
+      Pdf.createLoadingTask(this.src).promise.then((pdf) => {
+        this.numPages = pdf.numPages
+      })
     },
     goBack() {
       this.$router.push({
@@ -293,6 +310,8 @@ export default {
     width: 100%;
     height: calc(100vh - 280px);
     position: absolute;
+    overflow: hidden;
+    overflow-y: scroll;
     &_iframe {
       width: 100%;
       height: 100%;
