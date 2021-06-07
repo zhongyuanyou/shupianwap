@@ -207,9 +207,7 @@ export default {
           const res = await this.$axios.post(interviewApi.cancel, params)
           this.loading = false
           if (res.code === 200) {
-            setTimeout(function () {
-              this.getInterviewDetail()
-            }, 2000)
+            this.getInterviewDetail()
           } else {
             this.$refs.spToast.show({
               message: res.data.error,
