@@ -27,7 +27,7 @@
       <p :class="tabIndex === '2' ? 'act' : ''" @click="changeTab('2')">
         <span>文章</span><i></i>
       </p>
-      <!-- <p
+      <p
         v-if="showItem"
         :class="tabIndex === '4' ? 'act' : ''"
         @click="changeTab('4')"
@@ -40,7 +40,7 @@
         @click="changeTab('5')"
       >
         <span>大讲堂</span><i></i>
-      </p> -->
+      </p>
       <p :class="tabIndex === '3' ? 'act' : ''" @click="changeTab('3')">
         <span>用户</span><i></i>
       </p>
