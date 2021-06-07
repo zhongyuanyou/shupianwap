@@ -11,6 +11,7 @@ const userinfoApi = {
   addressDetail: `${CHIPS_WAP_BASE_URL}/yk/address/v1/shipping_address_info.do`, // 获取收货地址详情
   updateAddress: `${CHIPS_WAP_BASE_URL}/yk/address/v1/add_shipping_address.do`, // 新增/修改收货地址
   delAddress: `${CHIPS_WAP_BASE_URL}/yk/address/v1/del_address.do`, // 删除收货地址
-  getMap:`${CHIPS_WAP_BASE_URL}/nk/home/v1/gdmap.do`
+  getMap:`${CHIPS_WAP_BASE_URL}/nk/home/v1/gdmap.do`,
+  info_decrypt: `${CHIPS_WAP_BASE_URL}/yk/user/v1/find_user_decrypt_by_id.do`, // 获取用户信息明文
 }
 export { userinfoApi }

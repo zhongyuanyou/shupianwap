@@ -1,18 +1,20 @@
 <template>
   <div>
-    <div class="content">
+    <!-- <div class="content">
       <h2>文本区域111</h2>
-    </div>
+    </div> -->
     <!-- <div class="page-btn">
       <sp-field type="text" placeholder="请输入1" />
     </div> -->
     <div>下单协议</div>
+    <p>网络类型{{ networkType }}</p>
   </div>
 </template>
 
 <script>
 import { Field } from '@chipspc/vant-dgg'
 import { auth, ossApi, evaluateApi } from '@/api'
+import { getNetworkType } from '@/utils/getNetworkType'
 export default {
   components: {
     [Field.name]: Field,
@@ -20,13 +22,15 @@ export default {
   data() {
     return {
       images: [],
+      networkType: '',
     }
   },
-  mounted() { 
+  mounted() {
     // 获取协议
     this.getProtocol('protocol100008')
     // 数据加密
     this.jiami()
+    this.networkType = getNetworkType()
   },
   methods: {
     onOversize() {
@@ -102,7 +106,7 @@ export default {
 
 <style lang="less">
 .content {
-  height: 120vh;
+  height: 40vh;
 }
 .page-btn {
   position: fixed;

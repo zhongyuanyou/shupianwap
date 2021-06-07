@@ -119,6 +119,7 @@ export default {
           transactionConsApi.get_sms_code,
           {
             tel: this.phone,
+            type: 'zc',
           },
           {
             headers: {
