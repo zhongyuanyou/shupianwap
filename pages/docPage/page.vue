@@ -157,11 +157,16 @@ export default {
           })
         } else {
           console.log(message)
+          this.$xToast.show({
+            message: '转发失败',
+            duration: 1000,
+            icon: 'toast_ic_comp',
+            forbidClick: true,
+          })
         }
       }
     },
     async confirm() {
-      this.showPop = false
       const isLogin = await this.$isLogin
       if (isLogin) {
         const { code, message } = await this.$axios.post(documentApi.download, {
@@ -169,6 +174,7 @@ export default {
           email: this.email,
         })
         if (code === 200) {
+          this.showPop = false
           this.$xToast.show({
             message: '下载成功',
             duration: 1000,
@@ -176,7 +182,14 @@ export default {
             forbidClick: true,
           })
         } else {
+          this.showPop = false
           console.log(message)
+          this.$xToast.show({
+            message: '下载失败',
+            duration: 1000,
+            icon: 'toast_ic_comp',
+            forbidClick: true,
+          })
         }
       }
     },
