@@ -441,6 +441,8 @@ export default {
       position: relative;
       width: 220px;
       height: 220px;
+      min-width: 220px;
+      max-width: 220px;
       border-radius: 8px;
       overflow: hidden;
       margin-right: 22px;
