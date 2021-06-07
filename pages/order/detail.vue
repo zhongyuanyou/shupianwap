@@ -97,7 +97,7 @@
           </span>
         </p> -->
       </div>
-      <!-- <div
+      <div
         v-if="
           orderData.evaluateStatus &&
           orderData.orderSplitAndCusVo.signerId &&
@@ -130,7 +130,7 @@
             ></my-icon>
           </span>
         </p>
-      </div> -->
+      </div>
       <div class="order-info order-info2">
         <p class="order-item">
           <span class="label">订单编号</span>
