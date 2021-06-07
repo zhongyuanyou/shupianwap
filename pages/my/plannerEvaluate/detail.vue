@@ -137,7 +137,9 @@ export default {
     if (this.$route.query.plannerId) {
       this.getPlannerInfo()
     } else {
-      this.avatar = this.$route.query.plannerAvatar
+      this.avatar =
+        this.$route.query.plannerAvatar ||
+        'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
     }
   },
   methods: {
