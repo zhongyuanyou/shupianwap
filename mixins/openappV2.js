@@ -20,8 +20,6 @@ export default {
       showPop: false,
       isIOS: false,
       isAndroid: false,
-      myIosLink: 'cpsccustomer://',
-      myAndrodLink: 'cpsccustomer://',
     }
   },
   mounted() {
@@ -31,9 +29,9 @@ export default {
     this.isIOS = userAgent.match(/iPhone|iPad|iPod/i) // ios终端
   },
   methods: {
-    confirm() {
+    confirm(myIosLink = 'cpsccustomer://', myAndrodLink = 'cpsccustomer://') {
       this.showPop = false
-      this.checkOutApp()
+      this.checkOutApp(myIosLink, myAndrodLink)
     },
     openApp() {
       this.showPop = true
@@ -41,16 +39,19 @@ export default {
     cancel() {
       this.showPop = false
     },
-    checkOutApp() {
+    checkOutApp(
+      myIosLink = 'cpsccustomer://',
+      myAndrodLink = 'cpsccustomer://'
+    ) {
       const ua = window.navigator.userAgent
       let isBlur = false
       let url = ''
       let downLoadUrl = ''
       if (this.isIOS) {
-        url = this.myIosLink
+        url = myIosLink
         downLoadUrl = 'https://apps.apple.com/cn/app/薯片找人/id1535886630'
       } else if (this.isAndroid) {
-        url = this.myAndrodLink
+        url = myAndrodLink
         downLoadUrl =
           'http://m.pp.cn/detail.html?appid=8180749&ch_src=pp_dev&ch=default'
       } else {
