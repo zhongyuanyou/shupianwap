@@ -41,6 +41,7 @@
             v-for="(item, index) in serviceTag.slice(0, 3)"
             :key="index"
             class="item"
+            :class="index === 2 ? 'last-item' : ''"
             >{{ item.title }}</span
           >
         </div>
@@ -468,7 +469,7 @@ export default {
           color: #cccccc;
         }
         .item {
-          margin-right: 24px;
+          margin-right: 32px;
           &::before {
             content: '1';
             display: inline-block;
@@ -488,6 +489,9 @@ export default {
           &:nth-child(3)::before {
             content: '3';
           }
+        }
+        .last-item{
+          margin-right: 0;
         }
       }
     }
