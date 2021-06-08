@@ -30,6 +30,8 @@ import fullscreen from 'xgplayer/dist/controls/fullscreen' // 引入全屏
 import progress from 'xgplayer/dist/controls/progress' // 引入进度条
 import volume from 'xgplayer/dist/controls/volume' // 引入声音
 import flex from 'xgplayer/dist/controls/flex' // 引入 flex
+import poster from 'xgplayer/dist/controls/poster' // 引入 背景图
+
 import { Button } from '@chipspc/vant-dgg'
 import { deepCopy, custTypeOf } from '@/utils/common'
 
@@ -115,7 +117,7 @@ export default {
       baseConfig = deepCopy(baseConfig, this.xgVideoConfig)
       // 引入需要视频插件
       const basePlugins = {
-        controlPlugins: [play, fullscreen, progress, volume, flex],
+        controlPlugins: [play, fullscreen, progress, volume, flex, poster],
       }
       // 删除忽略插件
       this.xgIgnorePlugins.forEach((item) => {
