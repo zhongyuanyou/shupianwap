@@ -78,36 +78,38 @@
           </div>
         </div>
         <sp-button
-          v-if="info.inviteStatus === 0"
+          v-if="info.inviteStatus == 0"
           type="primary"
           @click="handleInterStatus(1)"
           >确认，已完成面谈</sp-button
         >
         <sp-button
-          v-if="info.inviteStatus === 0"
+          v-if="info.inviteStatus == 0"
           type="primary"
           @click="handleInterStatus(0)"
           >取消面谈</sp-button
         >
         <sp-button
-          v-if="info.inviteStatus === 1 && info.evaluateInfoStatus === 1"
+          v-if="info.inviteStatus == 1 && info.evaluateInfoStatus == 1"
           type="primary"
           :class="'evaluating'"
           @click="goEvaluate(info)"
           >进行评价</sp-button
         >
         <div
-          v-if="info.inviteStatus !== 0 && info.evaluateInfoStatus !== 1"
+          v-if="info.inviteStatus != 0 && info.evaluateInfoStatus != 1"
           class="status"
         >
           {{
-            info.inviteStatus === 1 && info.evaluateInfoStatus !== 1
+            info.inviteStatus == 1 && info.evaluateInfoStatus != 1
               ? '已面谈'
-              : info.inviteStatus === 2 && info.evaluateInfoStatus === 3
+              : info.inviteStatus == 2 && info.evaluateInfoStatus == 3
               ? '已评价'
               : '已取消'
           }}
         </div>
+        <p>测试字段1inviteStatus：{{ info.inviteStatus }}</p>
+        <p>测试字段2evaluateInfoStatus：{{ info.evaluateInfoStatus }}</p>
       </div>
     </div>
     <!--E content-->
