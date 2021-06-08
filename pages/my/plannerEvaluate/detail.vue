@@ -187,8 +187,9 @@ export default {
       const res = await this.$axios.get(evaluateApi.getAvatar, { params })
       if (res.code === 200) {
         this.avatar =
-          res.data.img ||
-          'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
+          res.data.length > 0
+            ? res.data[0].img
+            : 'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
       } else {
         this.$xToast.show({ message: '获取信息失败' })
       }
@@ -221,9 +222,10 @@ export default {
       margin-right: 24px;
     }
     .desc {
+      width: 566px;
       .name {
+        width: 100%;
         justify-content: space-between;
-        margin-right: 0.4rem;
         .mixin-flex();
         align-items: center;
         margin-bottom: 24px;
