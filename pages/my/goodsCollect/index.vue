@@ -44,6 +44,7 @@
             v-for="(item, index) in serveList"
             :key="index"
             class="goods-item"
+            @click="toGoodsDetail('/detail?productId=' + item.id)"
           >
             <div class="left">
               <img :src="item.img" alt="" />
@@ -283,6 +284,9 @@ export default {
     },
   },
   methods: {
+    toGoodsDetail(url) {
+      this.$router.push(url)
+    },
     getList() {},
     handleScollList(e) {
       this.throttle(this.scollChange(), 1000, 1000)
