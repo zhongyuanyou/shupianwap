@@ -16,7 +16,9 @@
   </div>
 </template>
 <script>
-import { Button, CenterPopup } from '@chipspc/vant-dgg'
+import { Button } from '@chipspc/vant-dgg'
+import openappV2 from '@/mixins/openappV2'
+
 export default {
   name: 'DownLoadArea',
   props: {
@@ -29,96 +31,13 @@ export default {
       default: 'cpsccustomer://', //  主页'cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":2}}'
     },
   },
-  components: { [Button.name]: Button, [CenterPopup.name]: CenterPopup },
+  components: { [Button.name]: Button },
+  mixins: [openappV2],
   data() {
     return {
-      Field: {
-        type: 'functional',
-        title: '即将离开当页，进入APP',
-        confirmButtonText: '立即进入',
-        cancelButtonText: '取消',
-      },
-      showPop: false,
-      isIOS: false,
-      isAndroid: false,
+      myIosLink: this.iosLink,
+      myAndrodLink: this.androdLink,
     }
-  },
-  mounted() {
-    const userAgent = window.navigator.userAgent
-    this.isAndroid =
-      userAgent.indexOf('Android') > -1 || userAgent.indexOf('Adr') > -1 // android终端
-    this.isIOS = userAgent.match(/iPhone|iPad|iPod/i) // ios终端
-  },
-  methods: {
-    confirm() {
-      this.showPop = false
-      this.checkOutApp()
-    },
-    openApp() {
-      this.showPop = true
-    },
-    cancel() {
-      this.showPop = false
-    },
-    checkOutApp() {
-      const ua = window.navigator.userAgent
-      let isBlur = false
-      let url = ''
-      let downLoadUrl = ''
-      if (this.isIOS) {
-        url = this.iosLink
-        downLoadUrl = 'https://apps.apple.com/cn/app/薯片找人/id1535886630'
-      } else if (this.isAndroid) {
-        url = this.androdLink
-        downLoadUrl =
-          'http://m.pp.cn/detail.html?appid=8180749&ch_src=pp_dev&ch=default'
-      } else {
-        this.$xToast.show({
-          message: '请使用手机浏览器访问本页面即可打开薯片找人APP',
-          duration: 3000,
-          icon: 'toast_ic_remind',
-          forbidClick: true,
-        })
-        return
-      }
-      if (ua.match(/MicroMessenger/i) === 'micromessenger') {
-        // 是否微信打开
-        this.$xToast.show({
-          message: '微信内不支持打开外部应用，请更换为其他浏览器打开本页面。',
-          duration: 3000,
-          icon: 'toast_ic_remind',
-          forbidClick: true,
-        })
-      } else {
-        location.href = url
-        setTimeout(function () {
-          if (!isBlur) {
-            window.location.href = downLoadUrl
-          }
-        }, 1000)
-      }
-      window.onblur = function () {
-        isBlur = true
-      }
-      const hiddenProperty =
-        'hidden' in document
-          ? 'hidden'
-          : 'webkitHidden' in document
-          ? 'webkitHidden'
-          : 'mozHidden' in document
-          ? 'mozHidden'
-          : null
-      const visibilityChangeEvent = hiddenProperty.replace(
-        /hidden/i,
-        'visibilitychange'
-      )
-      const onVisibilityChange = function () {
-        if (document[hiddenProperty]) {
-          isBlur = true
-        }
-      }
-      document.addEventListener(visibilityChangeEvent, onVisibilityChange)
-    },
   },
 }
 </script>
