@@ -167,12 +167,9 @@
                     </div>
                   </div>
                   <div class="right-content">
-                    <span class="rc-span">
-                      <span>特卖</span>
-                      <span>千万补贴</span>
-                    </span>
-                    <div class="rc-top">
-                      {{ item.skuName }}
+                    <div class="goods-name">
+                      <span class="rc-span">特卖</span>
+                      <span class="rc-span">千万补贴</span>{{ item.skuName }}
                     </div>
                     <div class="rc-middle">
                       <div class="reduce-price">
@@ -590,10 +587,6 @@ html::-webkit-scrollbar {
           color: #ec5330;
           line-height: 32px;
         }
-        li:nth-child(1) {
-        }
-        li:nth-last-child(1) {
-        }
       }
     }
     .sp-sticky--fixed .body-tabs {
@@ -644,39 +637,16 @@ html::-webkit-scrollbar {
         align-content: flex-start;
         flex-direction: column;
         position: relative;
-        .rc-span {
-          display: inline-flex;
-          align-items: center;
-          position: absolute;
-          top: 3px;
-          span:nth-child(1) {
-            margin-right: 8px;
-          }
-          span {
-            line-height: 22px;
-            height: 32px;
-            background: #ec5330;
-            border-radius: 4px;
-            padding: 0 8px;
-            font-size: 20px;
-            font-weight: bold;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            font-family: PingFangSC-Medium, PingFang SC;
-          }
-        }
-        .rc-top {
+        .goods-name {
           font-size: 32px;
-          max-height: 84px;
+          height: 92px;
           font-weight: bold;
           color: #222222;
           line-height: 0.42rem;
-          text-indent: 172px;
-          margin-bottom: 12px;
+          padding-bottom: 24px;
           .multiRowOverflowDot();
           span {
-            margin-right: 8px;
+            margin-right: 4px;
             background: #ec5330;
             border-radius: 4px;
             padding: 6px 8px;
