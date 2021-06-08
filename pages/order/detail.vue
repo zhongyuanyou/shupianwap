@@ -106,7 +106,10 @@
         class="order-info order-info1"
       >
         <p
-          v-if="cusOrderStatusType !== 4 && orderData.evaluateStatus !== 1"
+          v-if="
+            (cusOrderStatusType == 4 && orderData.evaluateStatus !== 1) ||
+            cusOrderStatusType != 4
+          "
           class="order-item"
         >
           <span class="label">签单人</span>
