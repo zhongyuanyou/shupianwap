@@ -52,5 +52,11 @@ const knownApi = {
   createCenter: {
     findListByStatus: `${CHIPS_WAP_BASE_URL}/yk/known/v2/find_question_article_bystatus.do`, // 搜索 文章 | 问题 | 回答 list
   },
+  video: {
+    videoList: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/video_list.do`,
+    videoDetail: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/video_detail.do`,
+    courseList: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/course_list.do`,
+    courseDetail: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/course_detail.do`,
+  },
 }
 export default knownApi
