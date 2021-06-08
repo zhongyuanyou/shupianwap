@@ -108,8 +108,6 @@
               : '已取消'
           }}
         </div>
-        <p>测试字段1inviteStatus：{{ info.inviteStatus }}</p>
-        <p>测试字段2evaluateInfoStatus：{{ info.evaluateInfoStatus }}</p>
       </div>
     </div>
     <!--E content-->
@@ -211,6 +209,7 @@ export default {
           if (res.code === 200) {
             this.getInterviewDetail()
           } else {
+            this.getInterviewDetail()
             this.$refs.spToast.show({
               message: res.data.error,
               duration: 1000,
