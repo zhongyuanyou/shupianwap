@@ -217,12 +217,14 @@ export default {
   }
   .info {
     .mixin-flex();
-    margin: 41px 40px 40px 40px;
+    margin: 41px 0 40px 40px;
     .img {
       margin-right: 24px;
     }
     .desc {
+      width: 566px;
       .name {
+        width: 100%;
         justify-content: space-between;
         .mixin-flex();
         align-items: center;
