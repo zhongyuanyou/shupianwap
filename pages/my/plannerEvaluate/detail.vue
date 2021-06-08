@@ -151,7 +151,7 @@ export default {
       }
       const res = await this.$axios.get(evaluateApi.detail, { params })
       if (res.code === 200) {
-        console.log(res)
+        console.log('res.data.serverScore', res.data.serverScore)
         this.evaluateContent = res.data.evaluateContent
         if (res.data.evaluateTagList.length > 0) {
           this.evaluateTagList = (
