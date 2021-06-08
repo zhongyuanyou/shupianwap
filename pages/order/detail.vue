@@ -107,7 +107,6 @@
       >
         <p
           v-if="
-            (cusOrderStatusType == 4 && orderData.evaluateStatus !== 1) ||
             cusOrderStatusType != 4
           "
           class="order-item"
