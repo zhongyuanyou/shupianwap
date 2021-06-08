@@ -3,13 +3,14 @@
     <div class="head head2">
       <!-- <sp-icon name="arrow-left" color="#1a1a1a" size="0.4rem" @click="$back" /> -->
       <my-icon
+        v-if="!isShare"
         name="nav_ic_back"
         size="0.40rem"
         color="#1a1a1a"
         class="my_icon"
         @click.native="$back()"
       ></my-icon>
-      <div class="user-info">
+      <div class="user-info" :class="isShare ? 'pl-none' : 'pl-has'">
         <sp-image
           class="img"
           :src="headerData.avatar"
@@ -61,6 +62,14 @@ export default {
       default: false,
     },
   },
+  data() {
+    return {
+      isShare: false,
+    }
+  },
+  mounted() {
+    this.isShare = this.$route.query.isShare
+  },
   methods: {
     goUser(id, usertype) {
       this.$router.push({
@@ -90,17 +99,30 @@ export default {
   }
 }
 .head2 {
+  position: relative;
+  .my_icon {
+    position: absolute;
+    left: 32px;
+    width: 42px;
+    height: 100%;
+  }
   // height: 104px;
   background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  // display: flex;
+  // align-items: center;
+  // justify-content: space-between;
+  .pl-none {
+    padding-left: 0;
+  }
+  .pl-has {
+    padding-left: 54px;
+  }
   .user-info {
-    flex: 1;
+    padding-top: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-left: 20px;
+    width: 100%;
     .img {
       width: 72px;
       height: 72px;

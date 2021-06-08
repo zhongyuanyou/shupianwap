@@ -1,8 +1,8 @@
 <template>
   <div class="sp-popup">
-    <div v-show="!visible" class="inception" @click="showFullScreen">
+    <!-- <div v-show="!visible" class="inception" @click="showFullScreen">
       <img src="@/static/image/page/kefu.png" />
-    </div>
+    </div> -->
     <div
       :class="{ fullscreen: visible, hideFullScreen: !visible }"
       @click="showInception"
