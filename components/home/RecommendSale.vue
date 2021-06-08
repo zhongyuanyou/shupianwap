@@ -485,6 +485,7 @@ export default {
       flex: 1;
       display: flex;
       flex-direction: column;
+      max-width: calc(100% - 2.4rem);
       .goods-name {
         font-size: 32px;
         font-family: PingFang SC;
@@ -518,8 +519,7 @@ export default {
       }
       .goods-tag {
         margin-top: 12px;
-        overflow: hidden;
-        white-space: nowrap;
+        .textOverflow(1);
         .tag-item {
           display: inline-block;
           height: 0.32rem;
