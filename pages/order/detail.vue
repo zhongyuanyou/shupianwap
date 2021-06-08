@@ -97,7 +97,7 @@
           </span>
         </p> -->
       </div>
-      <!-- <div
+      <div
         v-if="
           orderData.evaluateStatus &&
           orderData.orderSplitAndCusVo.signerId &&
@@ -107,7 +107,7 @@
       >
         <p class="order-item">
           <span class="label">签单人</span>
-          <span class="text">{{
+          <span class="text user-name">{{
             orderData.orderSplitAndCusVo.signerName
           }}</span>
           <span
@@ -130,7 +130,7 @@
             ></my-icon>
           </span>
         </p>
-      </div> -->
+      </div>
       <div class="order-info order-info2">
         <p class="order-item">
           <span class="label">订单编号</span>
@@ -400,13 +400,15 @@ export default {
     },
   },
   created() {
-    if (this.$route.query.id) {
-      this.orderId = this.$route.query.id
-      this.cusOrderId = this.$route.query.cusOrderId
-      this.getDetail()
-    } else {
-      this.$xToast.error('缺少参数')
-      this.$router.back(-1)
+    if (process && process.client) {
+      if (this.$route.query.id) {
+        this.orderId = this.$route.query.id
+        this.cusOrderId = this.$route.query.cusOrderId
+        this.getDetail()
+      } else {
+        this.$xToast.error('缺少参数')
+        this.$router.back(-1)
+      }
     }
   },
   async mounted() {
@@ -651,6 +653,10 @@ export default {
       font-weight: bold;
       color: #1a1a1a;
       width: auto;
+    }
+    .user-name {
+      max-width: calc(100% - 320px);
+      .textOverflow(1);
     }
     .btn {
       margin-left: 12px;

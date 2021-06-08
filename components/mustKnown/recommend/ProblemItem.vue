@@ -177,7 +177,7 @@ export default {
 .item {
   background: linear-gradient(180deg, #f1f3fa 0%, #fafafa 100%);
   border-radius: 12px;
-  padding: 44px 32px;
+  padding: 52px 32px 44px;
   width: 710px;
   .item_title {
     min-height: 36px;

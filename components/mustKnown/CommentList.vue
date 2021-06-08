@@ -47,6 +47,7 @@
               <div>
                 <my-icon
                   v-if="item.userId === userInfo.userId"
+                  style="margin-right: 0.32rem"
                   name="shanchu"
                   size="0.32rem"
                   :color="'#999999'"

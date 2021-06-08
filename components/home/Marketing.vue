@@ -168,6 +168,11 @@ export default {
       ],
     }
   },
+  computed: {
+    imgWidth() {
+      return this.subsidyData && this.subsidyData.length > 1 ? '48%' : '100%'
+    },
+  },
   mounted() {
     let url = ''
     const localHerf = window.location.href
@@ -179,11 +184,6 @@ export default {
       url = 'https://dmtg.shupian.cn/spread/myDemandCard'
     }
     this.list[2].materialLink = url
-  },
-  computed: {
-    imgWidth() {
-      return this.subsidyData && this.subsidyData.length > 1 ? '48%' : '100%'
-    },
   },
   methods: {
     linkUrl(url) {

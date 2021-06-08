@@ -276,8 +276,7 @@ export default {
 
       if (this.isInApp) {
         const iOSRouter = {
-          path:
-            'CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation',
+          path: 'CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation',
           parameter: {
             routerPath: 'cpsc/goods/details/service',
             parameter: { productId },
@@ -326,6 +325,8 @@ export default {
     position: relative;
     width: 160px;
     height: 160px;
+    min-width: 160px;
+    max-width: 160px;
     border-radius: 8px;
     overflow: hidden;
     margin-right: 32px;

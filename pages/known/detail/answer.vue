@@ -2,12 +2,13 @@
   <div class="answer">
     <div>
       <header-slot>
-        <div v-if="!showHead2" class="head1">
+        <div v-show="!showHead2" class="head1">
           <my-icon
+            v-if="!isShare"
             name="nav_ic_back"
             size="0.40rem"
             color="#1a1a1a"
-            class="my_icon"
+            class="my_icon nav-back"
             @click.native="$back()"
           ></my-icon>
           <div class="btn-area">
@@ -34,12 +35,13 @@
             </p>
           </div>
         </div>
-        <div v-if="showHead2" class="head2">
+        <div v-show="showHead2" class="head2">
           <my-icon
+            v-if="!isShare"
             name="nav_ic_back"
             size="0.40rem"
             color="#1a1a1a"
-            class="my_icon"
+            class="my_icon nav-back"
             @click.native="$back()"
           ></my-icon>
           <div class="user-info">
@@ -64,6 +66,11 @@
         </div>
       </header-slot>
     </div>
+    <DownLoadArea
+      v-if="isShare"
+      :ios-link="iosLink"
+      :androd-link="androdLink"
+    />
     <div class="title-area" @click="toQueDetail">
       <div class="title">{{ answerDetails.title }}</div>
       <div class="nums-area">
@@ -182,6 +189,7 @@
         <div class="cancel" @click="cancel">取消</div>
       </div>
     </sp-popup>
+    <ShareModal v-if="isShare"></ShareModal>
   </div>
 </template>
 
@@ -197,8 +205,10 @@ import {
   Icon,
   Bottombar,
 } from '@chipspc/vant-dgg'
-import Comment from '~/components/mustKnown/DetailComment'
+import Comment from '@/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
+import DownLoadArea from '@/components/common/downLoadArea'
+import ShareModal from '@/components/common/ShareModal'
 import { knownApi, userinfoApi } from '@/api'
 import util from '@/utils/changeBusinessData'
 export default {
@@ -213,6 +223,8 @@ export default {
     [Bottombar.name]: Bottombar,
     Comment,
     HeaderSlot,
+    DownLoadArea,
+    ShareModal,
   },
   async asyncData({ $axios, query, store }) {
     let answerDetails = {}
@@ -235,6 +247,9 @@ export default {
   },
   data() {
     return {
+      iosLink: 'cpsccustomer://',
+      androdLink: 'cpsccustomer://',
+      isShare: false,
       showHead2: false,
       answerDetails: '',
       popupShow: false,
@@ -251,6 +266,7 @@ export default {
     }),
   },
   created() {
+    this.isShare = this.$route.query.isShare
     if (this.$route.query.id) {
       this.currentDetailsId = this.$route.query.id
     }
@@ -571,15 +587,17 @@ export default {
     border-top: 1px solid #f4f4f4;
   }
 }
+.nav-back {
+  float: left;
+  margin-top: 20px;
+}
 .head1 {
   padding: 0 40px;
   height: 88px;
   font-size: 30px;
   background: #ffffff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   .btn-area {
+    float: right;
     display: flex;
     align-items: center;
     height: 100%;
@@ -598,9 +616,6 @@ export default {
   padding: 0 40px;
   height: 88px;
   background: #ffffff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   .user-info {
     flex: 1;
     display: flex;
@@ -711,6 +726,12 @@ export default {
       font-size: 30px;
       font-weight: bold;
       color: #999999;
+      background: #f5f5f5;
+      height: 72px;
+      border-radius: 0.12rem;
+      padding: 0 25px;
+      display: flex;
+      align-items: center;
     }
     .btn {
       height: 72px;

@@ -209,7 +209,7 @@ export default {
       background: #ffffff;
       box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.06);
       border-radius: 12px;
-      padding: 44px 32px;
+      padding: 52px 32px 44px;
       box-sizing: border-box;
       > h1 {
         font-size: 36px;

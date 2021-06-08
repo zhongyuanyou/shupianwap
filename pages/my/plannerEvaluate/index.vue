@@ -107,7 +107,9 @@ export default {
       if (this.$route.query.plannerId) {
         this.getPlannerInfo()
       } else {
-        this.avatar = this.$route.query.plannerAvatar
+        this.avatar =
+          this.$route.query.plannerAvatar ||
+          'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
       }
       this.plannerName = this.$route.query.plannerName || ''
       this.plannerId = this.$route.query.plannerId || ''
@@ -129,7 +131,9 @@ export default {
       }
       const res = await this.$axios.get(evaluateApi.getAvatar, { params })
       if (res.code === 200) {
-        this.avatar = res.data[0].img
+        this.avatar =
+          res.data[0].img ||
+          'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
       } else {
         this.$xToast.error('获取头像失败')
       }
@@ -197,6 +201,13 @@ export default {
         color: #1a1a1a;
         line-height: 34px;
         margin-right: 16px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: break-all;
+        width: 300px;
       }
       .planer_right {
         background: #ffffff;
