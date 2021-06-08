@@ -99,6 +99,8 @@ export default {
     position: relative;
     width: 240px;
     height: 240px;
+    min-width: 240px;
+    max-width: 240px;
     border-radius: 8px;
     overflow: hidden;
     margin-right: 32px;

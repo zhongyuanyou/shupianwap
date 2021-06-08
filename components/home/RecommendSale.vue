@@ -96,11 +96,11 @@
                     >套餐</span
                   >
                   <span
-                    v-for="(tagItem, index2) in item.tag"
-                    v-show="index2 < 3"
+                    v-for="(tagItem, index2) in item.salesGoodsTags"
+                    v-show="tagItem.categoryCode === 'DSJTC20210514000042'"
                     :key="index2"
                     class="tag-item"
-                    >{{ tagItem.tagName }}</span
+                    >{{ tagItem.tagValueName }}</span
                   >
                 </p>
                 <!-- <p
@@ -442,6 +442,8 @@ export default {
       position: relative;
       width: 220px;
       height: 220px;
+      min-width: 220px;
+      max-width: 220px;
       border-radius: 8px;
       overflow: hidden;
       margin-right: 22px;
@@ -516,7 +518,8 @@ export default {
       }
       .goods-tag {
         margin-top: 12px;
-        .textOverflow(1);
+        overflow: hidden;
+        white-space: nowrap;
         .tag-item {
           display: inline-block;
           height: 0.32rem;

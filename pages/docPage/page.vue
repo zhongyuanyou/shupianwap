@@ -36,7 +36,7 @@
       <div class="download_right" @click="openApp">立即打开</div>
     </div>
     <div class="content_panel">
-      <Pdf
+      <pdf
         v-for="i in numPages"
         :key="i"
         :src="src"
@@ -75,7 +75,6 @@
 </template>
 
 <script>
-import Pdf from '@fe/vue-pdf'
 import { CenterPopup, Field } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { documentApi } from '@/api'
@@ -85,7 +84,6 @@ export default {
   components: {
     [CenterPopup.name]: CenterPopup,
     [Field.name]: Field,
-    Pdf,
   },
 
   data() {
@@ -105,7 +103,7 @@ export default {
       src: '',
       isShow: true,
       title: '',
-      numPages: 0,
+      numPages: undefined,
     }
   },
   computed: {
@@ -113,27 +111,18 @@ export default {
       isInApp: (state) => state.app.isInApp,
     }),
   },
-  created() {
-  this.src = this.$route.query.fileUrl
-  this.pdfTask(this.src)
-  },
   mounted() {
     this.init()
+    this.pdfTask()
   },
   methods: {
     init() {
+      this.src = this.$route.query.fileUrl
       this.title = this.$route.query.title
       this.documentId = this.$route.query.documentId
-            console.log(
-        'fileUrl,title,documentId',
-        this.fileUrl,
-        this.title,
-        this.documentId
-      )
-   
     },
     pdfTask() {
-      Pdf.createLoadingTask(this.src).promise.then((pdf) => {
+      this.$pdf.createLoadingTask(this.src).promise.then((pdf) => {
         this.numPages = pdf.numPages
       })
     },
@@ -168,11 +157,16 @@ export default {
           })
         } else {
           console.log(message)
+          this.$xToast.show({
+            message: '转发失败',
+            duration: 1000,
+            icon: 'toast_ic_comp',
+            forbidClick: true,
+          })
         }
       }
     },
     async confirm() {
-      this.showPop = false
       const isLogin = await this.$isLogin
       if (isLogin) {
         const { code, message } = await this.$axios.post(documentApi.download, {
@@ -180,14 +174,20 @@ export default {
           email: this.email,
         })
         if (code === 200) {
+          this.showPop = false
           this.$xToast.show({
             message: '下载成功',
             duration: 1000,
-            icon: 'toast_ic_comp',
             forbidClick: true,
           })
         } else {
+          this.showPop = false
           console.log(message)
+          this.$xToast.show({
+            message,
+            duration: 1000,
+            forbidClick: true,
+          })
         }
       }
     },

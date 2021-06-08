@@ -542,7 +542,6 @@ export default {
     padding: 0 94px 0 40px;
     margin-top: 48px;
     .item {
-      .mixin-text-oneoverflow();
       font: 400 24px @fontf-pfsc-reg;
       color: #222222;
       height: 56px;
@@ -552,8 +551,7 @@ export default {
       border-radius: 4px;
       margin-right: 16px;
       margin-top: 16px;
-      min-width: 128px;
-      max-width: 176px;
+      padding: 0 16px;
       &.z-active {
         color: #4974f5;
         background: rgba(73, 116, 245, 0.1);
