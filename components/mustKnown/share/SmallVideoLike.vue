@@ -1,30 +1,59 @@
 <template>
   <div class="m-known-share svlike">
     <div class="like">猜你喜欢</div>
-    <div class="video-list">
-      <div class="item">
+    <div v-if="mVlist.length > 0" class="video-list">
+      <div
+        v-for="(item, index) in mVlist"
+        :key="index"
+        class="item"
+        :style="{
+          backgroundImage: 'url(' + item.image + ')',
+          backgroundSize: '100%',
+          'background-repeat': 'no-repeat',
+        }"
+        @click="openApp"
+      >
         <div class="content">
-          <div class="count">20.5w次观看</div>
-          <div class="tile">#感谢薯片 #工作历程全记录</div>
+          <div class="count">{{ item.custTotalCount }} 次观看</div>
+          <div class="tile">{{ item.videoName }}</div>
         </div>
       </div>
-      <div class="item">
-        <div class="content">
-          <div class="count">20.5w次观看</div>
-          <div class="tile">论团队和团伙的区别</div>
-        </div>
-      </div>
-      <div class="item"></div>
-      <div class="item"></div>
-      <div class="item"></div>
     </div>
     <div class="placeholder"></div>
+    <sp-center-popup
+      v-model="showPop"
+      button-type="confirm"
+      :field="Field"
+      @confirm="confirm"
+      @cancel="cancel"
+    />
   </div>
 </template>
 
 <script>
+import openappV2 from '@/mixins/openappV2'
+
 export default {
   name: 'KnownSmallVideoLike',
+  mixins: [openappV2],
+  props: {
+    vList: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
+  },
+  data() {
+    return {}
+  },
+  computed: {
+    mVlist() {
+      return this.vList
+    },
+  },
+  mounted() {},
+  methods: {},
 }
 </script>
 
@@ -46,8 +75,7 @@ export default {
       box-sizing: border-box;
       border: 1px #1a1a1a solid;
       width: 50%;
-      height: 40vh;
-      background: #ccc;
+      height: 660px;
       .content {
         position: absolute;
         display: flex;
