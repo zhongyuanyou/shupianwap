@@ -1,19 +1,16 @@
 <template>
   <div class="company">
     <DetailTemplate scene-id1="app-fwcpxq-01" scene-id2="app-jycpxq-02" />
-    <ShareModal v-if="isShare" />
   </div>
 </template>
 
 <script>
 import DetailTemplate from '~/components/detail/DetailTemplate1'
 import { productDetailsApi } from '~/api'
-import ShareModal from '@/components/common/ShareModal'
 export default {
   name: 'SellingGoodsDetail',
   components: {
     DetailTemplate,
-    ShareModal,
   },
   async asyncData({ $axios, query, store }) {
     try {
@@ -42,17 +39,12 @@ export default {
     }
   },
   data() {
-    return {
-      isShare: false,
-    }
+    return {}
   },
   computed: {
     city() {
       return this.$store.state.city.currentCity
     },
-  },
-  mounted() {
-    this.isShare = this.$route.query.isShare
   },
   layout: 'keepAlive',
   watchQuery: ['productId'],

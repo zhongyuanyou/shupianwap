@@ -44,11 +44,7 @@
       <my-icon name="you" size="0.2rem"></my-icon>
     </div>
 
-    <comment-list
-      v-model="commentShow"
-      :article-id="articleId"
-      :source-type="sourceType"
-    ></comment-list>
+    <comment-list v-model="commentShow" :article-id="articleId" :source-type="sourceType"></comment-list>
   </div>
 </template>
 
@@ -146,7 +142,6 @@ export default {
       })
     },
     submit() {
-      console.log('userInfo', this.userInfo)
       if (!this.userInfo.userId) {
         return this.$xToast.error('请先登录')
       }
@@ -175,7 +170,6 @@ export default {
         })
     },
     async getCommentsList() {
-      console.log('this.userInfo', this.userInfo)
       const { code, message, data } = await this.$axios.post(
         knownApi.comments.list,
         {
