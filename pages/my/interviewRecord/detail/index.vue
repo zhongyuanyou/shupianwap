@@ -90,14 +90,18 @@
           >取消面谈</sp-button
         >
         <sp-button
-          v-if="info.inviteStatus == 1 && info.evaluateInfoStatus == 1"
+          v-if="
+            showData && info.inviteStatus == 1 && info.evaluateInfoStatus == 1
+          "
           type="primary"
           :class="'evaluating'"
           @click="goEvaluate(info)"
           >进行评价</sp-button
         >
         <div
-          v-if="info.inviteStatus != 0 && info.evaluateInfoStatus != 1"
+          v-if="
+            showData && info.inviteStatus != 0 && info.evaluateInfoStatus != 1
+          "
           class="status"
         >
           {{
@@ -138,11 +142,12 @@ export default {
   },
   data() {
     return {
+      showData: false,
       info: {
         inviteAddress: '', // 面谈地址
         accompanyName: '', // 陪谈人
         inviteTime: '', // 面谈时间
-        inviteStatus: 0, // 面谈状态
+        inviteStatus: null, // 面谈状态
         inviterName: '', // 规划师
         inviterId: '', // 规划师Id
         evaluateId: '', // 评价Id
@@ -190,9 +195,12 @@ export default {
         const res = await this.$axios.get(interviewApi.detail, { params })
         if (res.code === 200) {
           this.info = res.data || this.info
+          this.showData = true
           this.$forceUpdate()
         }
-      } catch (err) {}
+      } catch (err) {
+        console.log('error', err)
+      }
     },
     async handleInterStatus(val) {
       this.loading = true
