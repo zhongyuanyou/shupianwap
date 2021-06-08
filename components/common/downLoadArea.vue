@@ -21,6 +21,8 @@ import openappV2 from '@/mixins/openappV2'
 
 export default {
   name: 'DownLoadArea',
+  components: { [Button.name]: Button },
+  mixins: [openappV2],
   props: {
     iosLink: {
       type: String,
@@ -31,8 +33,6 @@ export default {
       default: 'cpsccustomer://', //  主页'cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":2}}'
     },
   },
-  components: { [Button.name]: Button },
-  mixins: [openappV2],
   data() {
     return {
       myIosLink: this.iosLink,

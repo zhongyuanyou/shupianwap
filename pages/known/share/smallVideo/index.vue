@@ -1,18 +1,32 @@
 <template>
   <div class="m-known-share smallVideo">
     <app-link />
-    <div class="small-video">
+    <div
+      class="small-video"
+      :style="{
+        backgroundImage: 'url(' + vDetail.image + ')',
+        backgroundSize: '100%',
+      }"
+    >
       <my-icon
         name="bofang_mian"
         size="1.28rem"
         color="rgba(0,0,0,0.40)"
+        @click.native="openApp"
       ></my-icon>
       <div class="content">
-        <div class="name">@黄奇帆</div>
+        <div class="name">{{ vDetail.videoName }}</div>
         <div class="desc">
-          王健林批评马云：平时不看书，还讲一堆大道理,给青少年灌输不好思想
+          {{ vDetail.videoDesc }}
         </div>
       </div>
+      <sp-center-popup
+        v-model="showPop"
+        button-type="confirm"
+        :field="Field"
+        @confirm="confirm"
+        @cancel="cancel"
+      />
     </div>
     <small-video-like />
   </div>
@@ -20,20 +34,24 @@
 
 <script>
 import knownApi from '@/api/known'
+import openappV2 from '@/mixins/openappV2'
 
 export default {
   name: 'KnownSmallVideo',
   components: {
-    AppLink: () => import('@/components/mustKnown/share/AppLink'),
+    AppLink: () => import('@/components/common/downLoadArea'),
     SmallVideoLike: () => import('@/components/mustKnown/share/SmallVideoLike'),
   },
+  mixins: [openappV2],
   data() {
     return {
       vId: '',
+      vDetail: {},
+      vLikeList: [],
     }
   },
   mounted() {
-    this.vId = this.$route.query.id
+    this.vId = this.$route.query.id || '8086177830335741952'
     this.getVDetailApi()
   },
   methods: {
@@ -42,7 +60,6 @@ export default {
         const params = {
           ids: [this.vId],
         }
-        console.log(`output params:\n ${JSON.stringify(params)}`)
         const { code, data } = await this.$axios.post(
           knownApi.video.videoList,
           params
@@ -50,6 +67,7 @@ export default {
         if (code !== 200) {
           throw new Error('查询视频失败')
         }
+        this.vDetail = data[0]
       } catch (e) {}
     },
     async getVListApi() {},
@@ -68,7 +86,7 @@ export default {
     justify-content: center;
     background: #ccc;
     width: 100%;
-    height: 80vh;
+    height: 640px;
     .content {
       position: absolute;
       display: flex;

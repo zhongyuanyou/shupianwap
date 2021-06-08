@@ -46,13 +46,13 @@ export default {
       isShare: false,
     }
   },
-  mounted() {
-    this.isShare = this.$route.query.isShare
-  },
   computed: {
     city() {
       return this.$store.state.city.currentCity
     },
+  },
+  mounted() {
+    this.isShare = this.$route.query.isShare
   },
   layout: 'keepAlive',
   watchQuery: ['productId'],
