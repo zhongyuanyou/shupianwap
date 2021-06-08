@@ -335,6 +335,9 @@
       ref="cancleOrderModel"
       :order-id="orderData.orderId"
       :cus-order-id="orderData.cusOrderId"
+      :cus-order-cancel-reason="
+        orderData.orderSplitAndCusVo.cusOrderCancelReason
+      "
       @setCancelOrderName="setCancelOrderName"
       @cancleOrder="cancleOrder"
       @getBatchList="getBatchList"
@@ -493,6 +496,9 @@ export default {
           this.getChildOrders(this.orderData)
           this.hasData = true
           this.loading = false
+          this.$refs.cancleOrderModel.setCancelName(
+            this.orderData.orderSplitAndCusVo.cusOrderCancelReason
+          )
         })
         .catch((err) => {
           this.loading = false
