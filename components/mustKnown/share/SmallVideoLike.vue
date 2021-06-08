@@ -32,28 +32,65 @@
 
 <script>
 import openappV2 from '@/mixins/openappV2'
+import knownApi from '@/api/known'
+import { numChangeW } from '@/utils/common'
 
 export default {
   name: 'KnownSmallVideoLike',
   mixins: [openappV2],
   props: {
-    vList: {
-      type: Array,
-      default() {
-        return []
-      },
+    categoryId: {
+      type: String,
+      default: '',
     },
   },
   data() {
-    return {}
+    return {
+      mVlist: [],
+      apiLock: false,
+    }
   },
-  computed: {
-    mVlist() {
-      return this.vList
+  watch: {
+    categoryId() {
+      this.getVideoApi()
     },
   },
-  mounted() {},
-  methods: {},
+  mounted() {
+    if (this.categoryId !== '' && !this.apiLock) {
+      this.getVideoApi()
+    }
+  },
+  methods: {
+    // 查询视频信息
+    getVideoApi() {
+      this.apiLock = true
+      const params = {
+        categoryIds: [this.categoryId],
+      }
+      this.$axios
+        .post(knownApi.video.videoList, params)
+        .then((res) => {
+          if (res.code !== 200) {
+            throw new Error('查询视频失败')
+          }
+          this.buildVLikeList(res.data)
+        })
+
+        .catch((e) => {
+          this.$xToast.error(e.message)
+        })
+    },
+    buildVLikeList(data) {
+      // 这里注意,按照需求取 <= 4条(总共4条)
+      this.mVlist = data.filter((item, index) => {
+        return index < 4
+      })
+      // 重新处理观看数
+      this.mVlist.forEach((item) => {
+        item.custTotalCount = numChangeW(item.totalViewCount)
+      })
+    },
+  },
 }
 </script>
 
