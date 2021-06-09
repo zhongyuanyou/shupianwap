@@ -269,7 +269,7 @@ export default {
         .post(shopApi.cancelSave, formData)
         .then((res) => {
           if (res.code === 200) {
-            this.$xToast.success('取消收藏成功')
+            this.$xToast.success('取消成功')
             this.proDetail.isSave = false
           } else {
             this.$xToast.error(res.message || '操作失败')
@@ -287,6 +287,7 @@ export default {
       if (classCodeLevel) {
         codeArr = classCodeLevel.split(',')
       }
+      console.log('classCodeLevel', classCodeLevel)
       const params = {
         goodsDtos: [
           {
@@ -295,17 +296,22 @@ export default {
             catalog1: codeArr.length && codeArr.length > 0 ? codeArr[0] : '',
             catalog2: codeArr.length && codeArr.length > 1 ? codeArr[1] : '',
             catalog3: codeArr.length && codeArr.length > 2 ? codeArr[2] : '',
-            goodsType: 'proTypeJyGoods',
+            goodsType: 'proGoodsJy',
+            ext1: 2,
           },
         ],
-        ext1: 1,
       }
       this.$axios
         .post(shopApi.addGoods, params)
         .then((res) => {
           console.log('shouchang res', res)
           if (res.code === 200) {
-            this.$xToast.success('收藏成功')
+            this.$xToast.show({
+              message: '收藏成功,可在"个人中心-我的收藏"中查看',
+              duration: 3000,
+              icon: 'toast_ic_comp',
+              forbidClick: true,
+            })
             this.proDetail.isSave = true
           } else {
             this.$xToast.error(res.message || '收藏失败')
