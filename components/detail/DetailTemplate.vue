@@ -22,6 +22,16 @@
         <template #right>
           <div>
             <my-icon
+              style="margin-right: 0.36rem"
+              name="shoucang"
+              size="0.4rem"
+              color="#fff"
+              :class="proDetail.isSave ? 'icon-red' : ''"
+              @click.native="handleClickSave"
+            />
+          </div>
+          <div>
+            <my-icon
               class="head__icon-share"
               name="nav_ic_share"
               size="0.4rem"
@@ -135,7 +145,7 @@ import Need from '~/components/detail/Need'
 import tcCommodityConsultation from '@/components/common/commodityConsultation/tcCommodityConsultation'
 import getUserSign from '~/utils/fingerprint'
 import tcBasicData from '~/mock/tcBasicData'
-import { productDetailsApi, recommendApi, userinfoApi } from '~/api'
+import { productDetailsApi, recommendApi, userinfoApi, shopApi } from '~/api'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import BasicItem from '~/components/detail/BasicItem'
 import QftDetails from '~/components/detail/QftDetails'
@@ -242,6 +252,70 @@ export default {
     ...mapActions({
       POSITION_CITY: 'city/POSITION_CITY',
     }),
+    // shouchang
+    handleClickSave() {
+      if (this.proDetail.isSave) {
+        this.cancelSave()
+      } else {
+        this.addSave()
+      }
+    },
+    // 取消收藏
+    cancelSave() {
+      // 直接调商户中心接口，未经过node中间层，中间层无法处理formData
+      const formData = new FormData()
+      formData.append('goodsId', this.proDetail.id)
+      this.$axios
+        .post(shopApi.cancelSave, formData)
+        .then((res) => {
+          if (res.code === 200) {
+            this.$xToast.success('取消收藏成功')
+            this.proDetail.isSave = false
+          } else {
+            this.$xToast.error(res.message || '操作失败')
+          }
+        })
+        .catch((err) => {
+          console.log('err', err)
+          this.$xToast.error(err.message || '操作失败')
+        })
+    },
+    // 添加收藏
+    addSave() {
+      const classCodeLevel = this.proDetail.classCodeLevel
+      let codeArr = []
+      if (classCodeLevel) {
+        codeArr = classCodeLevel.split(',')
+      }
+      const params = {
+        goodsDtos: [
+          {
+            goodsId: this.proDetail.id,
+            goodsCode: this.proDetail.classCode,
+            catalog1: codeArr.length && codeArr.length > 0 ? codeArr[0] : '',
+            catalog2: codeArr.length && codeArr.length > 1 ? codeArr[1] : '',
+            catalog3: codeArr.length && codeArr.length > 2 ? codeArr[2] : '',
+            goodsType: 'proTypeJyGoods',
+          },
+        ],
+        ext1: 1,
+      }
+      this.$axios
+        .post(shopApi.addGoods, params)
+        .then((res) => {
+          console.log('shouchang res', res)
+          if (res.code === 200) {
+            this.$xToast.success('收藏成功')
+            this.proDetail.isSave = true
+          } else {
+            this.$xToast.error(res.message || '收藏失败')
+          }
+        })
+        .catch((err) => {
+          console.log('err', err)
+          this.$xToast.error(err.message || '操作失败')
+        })
+    },
     scrollHandle({ scrollTop }) {
       // 滚动事件
       if (scrollTop > 216) {
@@ -503,6 +577,9 @@ export default {
       background-color: #fff !important;
       .spiconfont {
         color: #1a1a1a !important;
+      }
+      .icon-red {
+        color: red !important;
       }
     }
   }
