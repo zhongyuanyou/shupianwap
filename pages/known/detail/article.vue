@@ -156,7 +156,7 @@
         <div class="cancel" @click="popupShow = false">取消</div>
       </div>
     </sp-popup>
-    <ShareModal v-if="isShare"/>
+    <ShareModal />
   </div>
 </template>
 
