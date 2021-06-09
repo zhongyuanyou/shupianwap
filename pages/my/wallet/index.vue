@@ -8,6 +8,7 @@
             name="shezhi"
             size="0.32rem"
             color="#fff"
+            @click="$router.push('/my/settings')"
           ></sp-icon>
         </template>
       </Header>

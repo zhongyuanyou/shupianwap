@@ -1,10 +1,10 @@
 <template>
   <div class="refund">
     <Header title="退款" />
-    <div class="select-row" @click="openPullPop">
+    <div class="select-row" @click="openPullPop(0)">
       <div class="title">售后类型</div>
       <div class="select-val">
-        <span class="c22">退款</span>
+        <span class="c88">{{ afterTypeText || '请选择售后类型' }}</span>
         <sp-icon
           class-prefix="spiconfont"
           size="0.25rem"
@@ -13,10 +13,10 @@
         />
       </div>
     </div>
-    <div class="select-row" @click="openPullPop">
+    <div class="select-row" @click="openPullPop(1)">
       <div class="title">申请原因</div>
       <div class="select-val">
-        <span class="c22">请选择申请原因</span>
+        <span class="c88">{{ applyReasonText || '请选择申请原因' }}</span>
         <sp-icon
           class-prefix="spiconfont"
           size="0.25rem"
@@ -35,7 +35,10 @@
           maxlength="500"
           placeholder="请描述您遇到的问题～"
         />
-        <div class="num">{{ descInfo.length }}/500</div>
+        <div class="num">
+          <span>{{ descInfo.length }}</span
+          >/500
+        </div>
       </div>
       <div class="up-pic">
         <sp-uploader
@@ -43,8 +46,6 @@
           :max-count="3"
           :max-size="20 * 1024 * 1024"
           :after-read="afterRead"
-          :before-delete="beforeDelete"
-          @oversize="onOversize"
         >
           <template>
             <div class="upload-add">
@@ -65,9 +66,15 @@
     <div class="doubt">有其他问题？<span>联系客服</span></div>
     <div class="submit">
       <p>售后单提交后，售后专员可能与您电话沟通，请保持手机畅通</p>
-      <button>提交</button>
+      <button @click="submit">提交</button>
     </div>
-    <PullUp ref="pull" />
+    <PullUp
+      ref="pull"
+      :title="title"
+      :list="pullDataList"
+      :active-index="activeIndex"
+      @selectItem="selectItem"
+    />
   </div>
 </template>
 
@@ -85,16 +92,73 @@ export default {
   },
   data() {
     return {
+      uploader: [],
       descInfo: '',
+      pullDataList: [],
+      afterSaleType: [{ name: '我要退款' }, { name: '我要换业务' }],
+      applyReason: [{ name: '办理超期退款' }, { name: '业务办错了，需要更换' }],
+      afterTypeText: '',
+      applyReasonText: '',
+      activeTypeIndex: -1,
+      activeReagonIndex: -1,
+      title: '',
+      currentIndex: '',
+      activeIndex: null,
     }
   },
+  created() {},
   methods: {
+    submit() {
+      if (this.afterTypeText === '') {
+        this.$xToast.show({
+          message: '请选择售后类型',
+          duration: 1000,
+        })
+        return false
+      } else if (this.applyReasonText === '') {
+        this.$xToast.show({
+          message: '请选择申请原因',
+          duration: 1000,
+        })
+        return false
+      } else if (this.descInfo === '') {
+        this.$xToast.show({
+          message: '请描述您遇到的问题～',
+          duration: 1000,
+        })
+        return false
+      }
+
+      this.$router.push('/my/afterSale/apply')
+    },
     afterRead(file) {
       // 此时可以自行将文件上传至服务器
       console.log(file)
     },
-    openPullPop() {
+    openPullPop(index) {
+      this.pullDataList = []
+      this.currentIndex = index
+      if (index === 0) {
+        this.title = '请选择售后类型'
+        this.pullDataList = this.afterSaleType
+        this.activeIndex = this.activeTypeIndex
+      } else {
+        this.title = '申请原因'
+        this.pullDataList = this.applyReason
+        this.activeIndex = this.activeReagonIndex
+      }
       this.$refs.pull.showPullPop = true
+    },
+    selectItem(data) {
+      if (this.currentIndex === 0) {
+        this.afterTypeText = data.name
+        this.activeTypeIndex = data.index
+      } else {
+        this.applyReasonText = data.name
+        this.activeReagonIndex = data.index
+      }
+
+      this.$refs.pull.showPullPop = false
     },
   },
 }
@@ -127,8 +191,8 @@ export default {
         font-size: 32px;
         color: #999999;
         margin-right: 16px;
-        &.c22 {
-          color: #222 !important;
+        &.c88 {
+          color: #888 !important;
         }
       }
     }

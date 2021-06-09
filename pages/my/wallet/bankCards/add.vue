@@ -40,7 +40,6 @@
             block
             type="info"
             native-type="submit"
-            @click="$router.push('/my/wallet/bankCards/list')"
           >
             提交
           </sp-button>
@@ -67,6 +66,11 @@ export default {
       bankName: '',
       accountBank: '',
     }
+  },
+  methods: {
+    onSubmit() {
+      this.$router.push('/my/wallet/bankCards/list')
+    },
   },
 }
 </script>

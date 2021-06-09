@@ -11,7 +11,7 @@
           placeholder="请输入手机号"
         />
         <sp-field
-          v-model="sms"
+          v-model="smsCode"
           center
           clearable
           label="验证码"
@@ -24,7 +24,9 @@
         </sp-field>
       </sp-cell-group>
     </div>
-    <div class="submit"><button>下一步</button></div>
+    <div class="submit">
+      <button @click="$router.push('/my/settings/setPwd')">下一步</button>
+    </div>
   </div>
 </template>
 

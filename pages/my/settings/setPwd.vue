@@ -1,0 +1,174 @@
+<template>
+  <div class="set-pwd">
+    <Header title="密码设置" />
+    <!-- <div class="title">
+      <p class="tips">请输入支付密码</p>
+      <p v-show="valid" class="valid-text">密码错误请重新输入</p>
+    </div> -->
+    <div v-if="step === 0" class="set-pwd_input">
+      <p>为了提高支付安全性</p>
+      <p>请设置6位数字提现密码</p>
+      <sp-password-input
+        :value="password"
+        :focused="showKeyboard"
+        @focus="showKeyboard = true"
+      />
+      <!-- 数字键盘 -->
+      <sp-number-keyboard
+        :show="showKeyboard"
+        theme="custom"
+        extra-key="."
+        close-button-text="确定"
+        @blur="showKeyboard = false"
+        @input="onInput"
+        @delete="onDelete"
+        @close="onClose"
+      />
+    </div>
+    <div v-else class="set-pwd_input">
+      <p></p>
+      <p>请再次确认支付密码</p>
+      <sp-password-input
+        :value="confirmPassword"
+        :focused="showKeyboardConfirm"
+        @focus="showKeyboardConfirm = true"
+      />
+      <!-- 数字键盘 -->
+      <sp-number-keyboard
+        :show="showKeyboardConfirm"
+        theme="custom"
+        extra-key="."
+        close-button-text="确定"
+        @blur="showKeyboardConfirm = false"
+        @input="onInputConfirm"
+        @delete="onDeleteConfirm"
+        @close="onCloseConfirm"
+      />
+    </div>
+  </div>
+</template>
+
+<script>
+import { PasswordInput, NumberKeyboard } from '@chipspc/vant-dgg'
+import Header from '@/components/common/head/header'
+export default {
+  components: {
+    Header,
+    [PasswordInput.name]: PasswordInput,
+    [NumberKeyboard.name]: NumberKeyboard,
+  },
+  data() {
+    return {
+      password: '',
+      confirmPassword: '',
+      showKeyboard: true,
+      valid: false,
+      showKeyboardConfirm: true,
+      validConfirm: false,
+      step: 0,
+    }
+  },
+  methods: {
+    onInput(key) {
+      this.password = (this.password + key).slice(0, 6)
+      // if (this.password.length === 6) {
+      //   this.errorInfo = '密码错误'
+      // } else {
+      //   this.errorInfo = ''
+      // }
+    },
+    onDelete() {
+      this.password = this.password.slice(0, this.password.length - 1)
+    },
+    onClose() {
+      if (this.password.length !== 6) {
+        this.$xToast.show({
+          message: '请输入6位提现密码',
+          duration: 1000,
+        })
+        return false
+      }
+      console.log('完成时触发', this.password.length)
+      this.step = 1
+    },
+    onInputConfirm(key) {
+      this.confirmPassword = (this.confirmPassword + key).slice(0, 6)
+    },
+    onDeleteConfirm() {
+      this.confirmPassword = this.confirmPassword.slice(
+        0,
+        this.confirmPassword.length - 1
+      )
+    },
+    onCloseConfirm() {
+      if (this.confirmPassword.length !== 6) {
+        this.$xToast.show({
+          message: '请输入6位提现密码',
+          duration: 1000,
+        })
+        return false
+      }
+      if (this.password !== this.confirmPassword) {
+        this.$xToast.show({
+          message: '密码与确认密码不一致',
+          duration: 1000,
+        })
+        return false
+      }
+
+      this.$router.push('/my/settings')
+    },
+  },
+}
+</script>
+
+<style lang="less" scoped>
+.set-pwd {
+  .title {
+    line-height: 50px;
+    margin-top: 85px;
+    margin-bottom: 145px;
+    text-align: center;
+    .tips {
+      font-family: PingFangSC-Medium;
+      font-size: 36px;
+      font-weight: bold;
+    }
+    .valid-text {
+      font-family: PingFangSC-Regular;
+      font-size: 32px;
+      color: #ff3b30;
+      text-align: center;
+      line-height: 44px;
+      margin-top: 16px;
+    }
+  }
+  .set-pwd_input {
+    text-align: center;
+    > p:nth-child(1) {
+      font-size: 36px;
+      color: #999999;
+      margin-top: 83px;
+      height: 50px;
+      line-height: 50px;
+    }
+    > p:nth-child(2) {
+      margin-top: 12px;
+      height: 50px;
+      line-height: 50px;
+      color: #222;
+      font-size: 36px;
+      margin-bottom: 84px;
+      font-weight: bold;
+    }
+    ::v-deep .sp-password-input__security {
+      border: 2px solid #4974f5;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    ::v-deep .sp-hairline--left::after {
+      border-color: #bbbbbb;
+    }
+  }
+}
+</style>

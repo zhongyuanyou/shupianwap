@@ -2,7 +2,7 @@
   <div class="settings">
     <Header title="密码设置" />
     <div class="set-pwd">
-      <div class="item" @click="$router.push('/my/settings/setPassword')">
+      <div class="item" @click="$router.push('/my/settings/phoneVerify')">
         <h3>重置支付密码</h3>
         <sp-icon
           class-prefix="spiconfont"
@@ -22,7 +22,7 @@
         />请不要设置与常用软件(如社交软件)、网站(如社交平台、论坛)等相同；或相似的密码，并做定期修改。
       </p>
     </div>
-    <div class="submit"><button>提交</button></div>
+    <!-- <div class="submit"><button>提交</button></div> -->
   </div>
 </template>
 

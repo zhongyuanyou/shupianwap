@@ -68,7 +68,7 @@
           <my-icon name="per_ic_debunk" size="0.36rem" color="#10BBB8" />
         </div>
         <div class="my_btns_item_con">
-          我要钱包
+          我的钱包
           <div class="item_lf">
             <my-icon
               name="order_ic_listnext"
@@ -237,6 +237,10 @@ export default {
           iconName: 'per_ic_whole',
           name: '全部订单',
         },
+        {
+          iconName: 'trading_ic_price',
+          name: '退款/售后',
+        },
       ],
 
       info: {
@@ -280,7 +284,7 @@ export default {
 
   methods: {
     clickTab(index) {
-      // console.log('index', index)
+      console.log('index', index)
       if (this.token) {
         this.$router.push({
           path: '/order',

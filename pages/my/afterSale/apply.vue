@@ -10,8 +10,8 @@
       />
       <p>售后单申请成功</p>
       <div class="countdown">
-        预计<span class="num">47</span><span class="time-unit">时</span
-        ><span class="num">59</span
+        预计<span class="num">{{ hour }}</span
+        ><span class="time-unit">时</span><span class="num">{{ min }}</span
         ><span class="time-unit">分钟</span
         >内为您处理请您保持手机畅通，耐心等待！
       </div>
@@ -46,9 +46,60 @@ export default {
     SpIcon: Icon,
   },
   data() {
-    return {}
+    return {
+      // 倒计时
+      hour: '00',
+      min: '00',
+      cancelPayTime: '2021-6-9 10:30',
+    }
   },
-  methods: {},
+  created() {
+    this.countTime()
+  },
+  methods: {
+    // 倒计时
+    countTime() {
+      // 获取当前时间
+      const date = new Date()
+      const now = date.getTime()
+      // 设置截止时间
+      const endDate = new Date(this.cancelPayTime) // this.curStartTime需要倒计时的日期
+      const end = endDate.getTime()
+      // 时间差
+      const leftTime = end - now
+      // 定义变量 d,h,m,s保存倒计时的时间
+      if (leftTime >= 0) {
+        // 天
+        // this.day = Math.floor(leftTime / 1000 / 60 / 60 / 24)
+        // 时
+        const h = Math.floor((leftTime / 1000 / 60 / 60) % 24)
+        this.hour = h < 10 ? '0' + h : h
+        // 分
+        const m = Math.floor((leftTime / 1000 / 60) % 60)
+        this.min = m < 10 ? '0' + m : m
+        // 秒
+        const s = Math.floor((leftTime / 1000) % 60)
+        this.second = s < 10 ? '0' + s : s
+      } else {
+        // this.day = 0
+        this.hour = '00'
+        this.min = '00'
+        this.second = '00'
+      }
+      // 等于0的时候不调用
+      if (
+        Number(this.hour) === 0 &&
+        // Number(this.day) === 0 &&
+        Number(this.min) === 0 &&
+        Number(this.second) === 0
+      ) {
+        return false
+      } else {
+        // 递归每秒调用countTime方法，显示动态时间效果,
+        setTimeout(this.countTime, 1000)
+      }
+    },
+  },
 }
 </script>
 

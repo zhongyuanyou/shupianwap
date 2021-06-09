@@ -5,23 +5,26 @@
       closeable
       round
       position="bottom"
-      close-icon-position="top-left"
+      close-icon-position="top-right"
       :style="{ width: '100%', height: '60%' }"
     >
-      <div class="title">title</div>
+      <div class="title">{{ title }}</div>
       <div class="bank-list">
-        <ul class="bank-ul">
-          <li class="bank-li">
-            <p>我要退款</p>
+        <ul v-if="list.length > 0" class="bank-ul">
+          <li
+            v-for="(item, index) in list"
+            :key="index"
+            class="bank-li"
+            @click="selectItem(item.name, index)"
+          >
+            <p>{{ item.name }}</p>
             <sp-icon
+              v-if="index === activeIndex"
               class-prefix="spiconfont"
               name="gou"
               size="0.30rem"
               color="#4974F5"
             ></sp-icon>
-          </li>
-          <li class="bank-li">
-            <p>我要更换业务</p>
           </li>
         </ul>
       </div>
@@ -35,6 +38,20 @@ export default {
     [Popup.name]: Popup,
     [Icon.name]: Icon,
   },
+  props: {
+    list: {
+      type: Array,
+      default: () => [],
+    },
+    title: {
+      type: String,
+      default: '',
+    },
+    activeIndex: {
+      type: Number,
+      default: null,
+    },
+  },
   data() {
     return {
       showPullPop: false,
@@ -43,6 +60,13 @@ export default {
   methods: {
     clickClosePop() {
       this.showPullPop = false
+    },
+    selectItem(name, index) {
+      const itemData = {
+        name,
+        index,
+      }
+      this.$emit('selectItem', itemData)
     },
   },
 }
@@ -60,8 +84,9 @@ export default {
     color: #1a1a1a;
     letter-spacing: 0;
     line-height: 136px;
-    text-align: center;
+    text-align: left;
     font-weight: bold;
+    padding-left: 40px;
   }
   ::v-deep .sp-popup {
     .bank-list {
@@ -73,6 +98,7 @@ export default {
           display: flex;
           align-items: center;
           height: 112px;
+          justify-content: space-between;
           .spiconfont-gou {
             font-weight: bold;
           }
@@ -90,7 +116,6 @@ export default {
             font-family: PingFangSC-Regular;
             font-size: 32px;
             color: #222222;
-            margin-left: 20px;
           }
           span {
             margin-left: auto;

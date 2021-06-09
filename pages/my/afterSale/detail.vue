@@ -2,27 +2,62 @@
   <div class="sale-detail">
     <Header title="售后单详情">
       <template #right>
-        <span class="recording">处理记录</span>
+        <span
+          class="recording"
+          @click="$router.push('/my/afterSale/processRecords')"
+          >处理记录</span
+        >
       </template>
     </Header>
     <div class="container">
-      <div class="status-bar">
-        <div class="status-bar_box">
-          <div class="icon-box">
+      <StatusBar :status="status">
+        <!-- 请您确认，待处理，售后中状态栏样式 commodity_ic_ttime-->
+        <template #icon>
+          <div class="icon-box" :style="{ background: icon_bg }">
             <sp-icon
               class-prefix="spiconfont"
               size="0.46rem"
-              color="#4974F5"
-              name="commodity_ic_ttime"
+              :color="status.icon_color"
+              :name="status.icon_name"
             ></sp-icon>
           </div>
-          <div class="desc">
-            <h3>请您确认</h3>
-            <p>如未有问题请您点击"<span>确认方案</span>"</p>
+        </template>
+      </StatusBar>
+
+      <div class="content">
+        <!-- 处理意见 -->
+        <div class="content-box">
+          <div class="idea">
+            <h3>处理意见</h3>
+            <p>
+              商家处理商家处理意见商家处理意见商家处理意见商家处理意见商家处理意见商家处理意见商家处理意见商家
+            </p>
           </div>
         </div>
-      </div>
-      <div class="content">
+        <!-- 退款 -->
+        <div class="content-box">
+          <div class="refund-box">
+            <div class="title">
+              <div class="left">
+                <div>退</div>
+                <p>退款</p>
+              </div>
+              <div
+                class="right"
+                @click="$router.push('/my/afterSale/refundRecord')"
+              >
+                退款明细
+              </div>
+            </div>
+            <div class="amount">
+              <div class="left">
+                <h3>退款金额</h3>
+                <p>预计1-5个工作日到账</p>
+              </div>
+              <div class="right">500<span>元</span></div>
+            </div>
+          </div>
+        </div>
         <!-- 售后方案 -->
         <div class="content-box">
           <div class="title-row">售后方案</div>
@@ -32,7 +67,7 @@
                 <div class="mark">换</div>
                 <h3>业务变更</h3>
               </div>
-              <div class="title-rt">
+              <div class="title-rt" @click="concatKefu(2)">
                 <div class="img-box"><img /></div>
                 <span>刘雅婷</span>
                 <sp-icon
@@ -165,25 +200,162 @@
     <!-- 操作按钮 -->
     <div class="footer-btns">
       <button>联系客服</button>
-      <button>平台介入</button>
-      <button>撤销</button>
-      <button>确认方案</button>
+      <button @click="openDialog(0)">平台介入</button>
+      <button @click="openDialog(1)">撤销</button>
+      <button @click="openDialog(2)">确认方案</button>
+      <!-- <button class="pay-btn">去支付</button> -->
     </div>
   </div>
 </template>
 
 <script>
-import { Icon } from '@chipspc/vant-dgg'
+import { Dialog, Icon } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
+import StatusBar from '@/components/afterSale/StatusBar'
 export default {
   components: {
     Header,
+    StatusBar,
     SpIcon: Icon,
   },
   data() {
-    return {}
+    return {
+      // 状态栏
+      status: {},
+      // 双按钮弹窗
+      doubleBtnDialog: [
+        {
+          title: '申请平台介入',
+          message:
+            '您好，申请平台介入后，平台客服将在24小时内联系您，请您保存电话畅通，耐心等待。',
+          cancelButtonText: '',
+          confirmButtonText: '',
+        },
+        {
+          title: '您确定撤销此售后申请？',
+          message: '提交后此售后方案将会关闭，如有需要您可重新发起售后。',
+          cancelButtonText: '暂不取消',
+          confirmButtonText: '确定撤销',
+        },
+        {
+          title: '确认售后方案',
+          message: '请您仔细阅读售后方案，是否要同意此售后方案？',
+          cancelButtonText: '',
+          confirmButtonText: '',
+        },
+        {
+          title: '售后方案已确认',
+          message:
+            '您好，为您推送业务变更订单，你可在我的订单中查看订单详情。您的退款平台可能会多笔打到您原路退回到您支付的账户或打打您平台注册账户的钱包，请您注意查收',
+          cancelButtonText: '查看订单',
+          confirmButtonText: '我知道了',
+        },
+      ],
+      // 单按钮alert弹窗
+      singleBtnDialog: [
+        {
+          title: '操作成功',
+          message: '平台客服将在47小时59分钟内为你处理，请您保持电话畅通',
+          cancelButtonText: '',
+          confirmButtonText: '我知道了',
+        },
+        {
+          title: '售后方案已确认',
+          message:
+            '平台为您推送业务变更订单，请您及时支付订单剩余金额，以便尽快为您办理变更后的业务',
+          cancelButtonText: '',
+          confirmButtonText: '去支付',
+        },
+        {
+          title: '售后方案已确认',
+          message: '为您推送业务变更订单，你可在我的订单中查看订单详情。',
+          cancelButtonText: '',
+          confirmButtonText: '查看订单',
+        },
+        {
+          title: '售后方案已确认',
+          message:
+            '您好，您的售后处理已完成，您的退款平台可能会多笔打到您原路退回到您支付的账户或打打您平台注册账户的钱包，请您注意查收',
+          cancelButtonText: '',
+          confirmButtonText: '我知道了',
+        },
+      ],
+    }
   },
-  methods: {},
+  created() {
+    // 请您确认状态栏样式
+    // this.status.title = '请您支付'
+    // this.status.desc = '请您支付业务变更的剩余款项，以便尽快为您办理新业务'
+    // this.status.bgColor = '#4974F5'
+    // this.status.icon_color = '#4974F5'
+    // this.status.icon_name = 'commodity_ic_ttime'
+    // this.status.icon_bg = '#F2F5FF'
+    // 售后关闭状态栏样式
+    // this.status.title = '售后关闭'
+    // this.status.desc = '如有需要可重新发起'
+    // this.status.bgColor = '#808080'
+    // this.status.icon_color = '#BBBBBB'
+    // this.status.icon_name = 'popup_ic_closeb'
+    // this.status.icon_bg = '#F8F8F8'
+    // 已完成
+    this.status.title = '已完成'
+    this.status.desc = '退款将会在5个工作日打款到您的账户，请注意查收'
+    this.status.bgColor = '#00B365'
+    this.status.icon_color = '#00B365'
+    this.status.icon_name = 'wancheng'
+    this.status.icon_bg = '#E5F7EF'
+  },
+  methods: {
+    openDialog(index) {
+      Dialog.confirm({
+        title: this.doubleBtnDialog[index].title,
+        message: this.doubleBtnDialog[index].message,
+        cancelButtonText: this.doubleBtnDialog[index].cancelButtonText,
+        confirmButtonText: this.doubleBtnDialog[index].confirmButtonText,
+      })
+        .then(() => {
+          if (index === 0) {
+            this.alertDialog(index)
+          } else if (index === 1) {
+            this.$xToast.show({
+              message: '撤销成功',
+              duration: 1000,
+            })
+          } else if (index === 2) {
+            // 如果确认方案的状态是是业务变更-有退款
+            // this.confirmDialog(3)
+            // 其它状态弹窗
+            this.alertDialog(3)
+          }
+        })
+        .catch(() => {
+          if (index === 3) {
+            console.log('查看订单')
+          }
+        })
+    },
+    alertDialog(index) {
+      Dialog.alert({
+        title: this.singleBtnDialog[index].title,
+        message: this.singleBtnDialog[index].message,
+        cancelButtonText: this.singleBtnDialog[index].cancelButtonText,
+        confirmButtonText: this.singleBtnDialog[index].confirmButtonText,
+      }).then(() => {})
+    },
+    concatKefu(kefuType) {
+      let typeName = ''
+      console.log(kefuType)
+      kefuType === 1 ? (typeName = '规划师') : (typeName = '平台客服')
+      Dialog.confirm({
+        title: '',
+        message: `您的业务变更方案，由企服${typeName}刘雅婷为您提供，你将收到${typeName}为您推送的订单，请及时查看，如有问题您可直接与${typeName}沟通`,
+        cancelButtonText: '去联系',
+        confirmButtonText: '我知道了',
+      })
+        .then(() => {})
+        .catch(() => {})
+    },
+  },
 }
 </script>
 
@@ -200,45 +372,6 @@ export default {
     font-weight: bold;
   }
   .container {
-    .status-bar {
-      height: 268px;
-      background: #4974f5;
-      padding: 40px 40px 0px 40px;
-      .status-bar_box {
-        display: flex;
-        height: 160px;
-        background: #ffffff;
-        border-radius: 12px;
-        padding: 40px;
-        .icon-box {
-          width: 80px;
-          height: 80px;
-          background: #f2f5ff;
-          border-radius: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .desc {
-          color: #222222;
-          margin-left: 28px;
-          h3 {
-            font-family: PingFangSC-Medium;
-            font-size: 32px;
-            line-height: 40px;
-          }
-          p {
-            margin-top: 10px;
-            font-family: PingFangSC-Regular;
-            font-size: 24px;
-            line-height: 34px;
-            span {
-              color: #4974f5 !important;
-            }
-          }
-        }
-      }
-    }
     .content {
       min-height: 400px;
       margin-top: -28px;
@@ -303,7 +436,7 @@ export default {
               }
             }
           }
-          ul {
+          > ul {
             padding: 0 40px;
             li {
               display: flex;
@@ -316,7 +449,7 @@ export default {
                 border-radius: 8px;
                 overflow: hidden;
               }
-              .info {
+              > .info {
                 margin-left: 25px;
                 .top {
                   display: flex;
@@ -434,7 +567,7 @@ export default {
             }
           }
         }
-        .info {
+        > .info {
           padding: 38px 40px;
           background: #fff;
           margin-top: 20px;
@@ -479,7 +612,89 @@ export default {
                   border-radius: 4px;
                   overflow: hidden;
                   margin-right: 16px;
+                  margin-bottom: 16px;
                 }
+              }
+            }
+          }
+        }
+        .idea {
+          padding: 35px 40px;
+          background: #fff;
+          margin-bottom: 20px;
+          h3 {
+            font-size: 26px;
+            color: #222222;
+            font-weight: bold;
+            line-height: 36px;
+          }
+          p {
+            font-size: 26px;
+            color: #222222;
+            line-height: 36px;
+            margin-top: 10px;
+          }
+        }
+        .refund-box {
+          height: 244px;
+          background: #fff;
+          .title {
+            height: 104px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #f4f4f4;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            .left {
+              display: flex;
+              align-items: center;
+              > div {
+                width: 32px;
+                height: 34px;
+                line-height: 34px;
+                border: 1px solid #ec5330;
+                border-radius: 4px;
+                font-size: 24px;
+                color: #ec5330;
+              }
+              > p {
+                font-size: 32px;
+                color: #222222;
+                font-weight: bold;
+                margin-left: 8px;
+              }
+            }
+            .right {
+              color: #4974f5;
+              font-size: 28px;
+            }
+          }
+          .amount {
+            display: flex;
+            height: 138px;
+            padding: 28px 40px;
+            align-items: center;
+            justify-content: space-between;
+            .left {
+              h3 {
+                font-size: 28px;
+                color: #222222;
+                font-weight: normal;
+                line-height: 38px;
+              }
+              p {
+                font-size: 24px;
+                color: #999999;
+                line-height: 34px;
+                margin-top: 7px;
+              }
+            }
+            .right {
+              color: #ff3b30;
+              font-size: 36px;
+              span {
+                font-size: 24px !important;
               }
             }
           }
@@ -507,6 +722,12 @@ export default {
       font-size: 28px;
       color: #222222;
       margin: 0 8px;
+    }
+    .pay-btn {
+      background: #ec5330 !important;
+      border-radius: 8px;
+      color: #fff;
+      border-color: #ec5330 !important;
     }
   }
 }

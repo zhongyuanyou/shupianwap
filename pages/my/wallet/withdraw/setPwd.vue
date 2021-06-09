@@ -7,7 +7,7 @@
     </div>
     <div class="set-pwd_input">
       <sp-password-input
-        :value="value"
+        :value="password"
         :focused="showKeyboard"
         @focus="showKeyboard = true"
       />
@@ -38,24 +38,26 @@ export default {
   },
   data() {
     return {
-      value: '',
+      password: '',
       showKeyboard: true,
       valid: false,
     }
   },
   methods: {
     onInput(key) {
-      this.value = (this.value + key).slice(0, 6)
-      if (this.value.length === 6) {
-        this.errorInfo = '密码错误'
-      } else {
-        this.errorInfo = ''
-      }
+      this.password = (this.password + key).slice(0, 6)
     },
     onDelete() {
-      this.value = this.value.slice(0, this.value.length - 1)
+      this.password = this.password.slice(0, this.password.length - 1)
     },
     onClose() {
+      if (this.password.length !== 6) {
+        this.$xToast.show({
+          message: '请输入6位提现密码',
+          duration: 1000,
+        })
+        return false
+      }
       console.log('完成时触发')
       this.$router.push('/my/wallet/bankCards/untieSuccess')
     },
