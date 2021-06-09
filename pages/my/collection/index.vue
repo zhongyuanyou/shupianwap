@@ -22,43 +22,55 @@
       error-text="请求失败，点击重新加载"
       @load="onLoad"
     >
-      <div
-        v-for="(item, index) in list"
-        :key="index"
-        class="item"
-        @click="toDetail(item)"
-      >
-        <div class="title clamp2">{{ item.title }}</div>
-        <!-- 除了回答,都有人物头像和图片 -->
-        <div v-if="tabIndex !== 1" class="user">
-          <sp-image
-            round
-            class="user_avatar"
-            fit="cover"
-            :src="item.avatar"
-            @click.stop="toHome(item)"
-          />{{ item.userName }}
-        </div>
-        <div v-if="item.contentImageUrl === ''" class="content clamp2">
-          {{ item.contentText }}
-        </div>
-        <div v-else class="content_img">
-          <div class="left_content clamp3">
+      <div v-if="tabIndex == 1 || tabIndex == 2 || tabIndex == 3">
+        <div
+          v-for="(item, index) in list"
+          :key="index"
+          class="item"
+          @click="toDetail(item)"
+        >
+          <div class="title clamp2">{{ item.title }}</div>
+          <!-- 除了回答,都有人物头像和图片 -->
+          <div v-if="tabIndex !== 1" class="user">
+            <sp-image
+              round
+              class="user_avatar"
+              fit="cover"
+              :src="item.avatar"
+              @click.stop="toHome(item)"
+            />{{ item.userName }}
+          </div>
+          <div v-if="item.contentImageUrl === ''" class="content clamp2">
             {{ item.contentText }}
           </div>
-          <sp-image
-            radius="0.12rem"
-            class="right_img"
-            fit="cover"
-            :src="item.contentImageUrl.split(',')[0]"
-          />
+          <div v-else class="content_img">
+            <div class="left_content clamp3">
+              {{ item.contentText }}
+            </div>
+            <sp-image
+              radius="0.12rem"
+              class="right_img"
+              fit="cover"
+              :src="item.contentImageUrl.split(',')[0]"
+            />
+          </div>
+          <div class="bottom">
+            {{
+              tabIndex !== 1
+                ? `${item.applaudCount} 赞 ${item.remarkCount} 评论`
+                : `${item.answerCount} 回答 · ${item.collectCount} 收藏`
+            }}
+          </div>
         </div>
-        <div class="bottom">
-          {{
-            tabIndex !== 1
-              ? `${item.applaudCount} 赞 ${item.remarkCount} 评论`
-              : `${item.answerCount} 回答 · ${item.collectCount} 收藏`
-          }}
+      </div>
+      <div v-else-if="tabIndex == 4">
+        <div
+          v-for="(item, index) in list"
+          :key="index"
+          class="item"
+          @click="toDetail(item)"
+        >
+          <ServiceGoods :info="item"></ServiceGoods>
         </div>
       </div>
     </sp-list>
@@ -72,6 +84,8 @@ import knownApi from '@/api/known'
 import { shopApi } from '@/api'
 import Header from '@/components/common/head/header'
 
+import ServiceGoods from '@/components/my/collection/ServiceGoods.vue'
+
 export default {
   name: 'Collection',
   components: {
@@ -80,6 +94,7 @@ export default {
     [Image.name]: Image,
     [List.name]: List,
     Header,
+    ServiceGoods,
   },
   data() {
     return {
@@ -190,6 +205,8 @@ export default {
       }
     },
     getGoodsList() {
+      this.list = [{}, {}]
+      this.loading = false
       this.$axios
         .post(shopApi.saveList)
         .then((res) => {
