@@ -123,3 +123,40 @@ export const deepCopy = (dst, src) => {
     return dst
   }
 }
+
+/**
+ * 数字转化为万
+ * @param {Number} num 正整数
+ * @param {Str} suffix 后缀标识,默认为w
+ * @returns 返回加下标识的值
+ */
+export const numChangeW = (num, suffix = 'w') => {
+  if (custTypeOf(num) === 'Number') {
+    if (num < 10000) {
+      return num
+    } else {
+      const temp = num / 10000
+      const regInt = /^[0-9][0-9]*$/
+      const regFloorOne = /^[1-9][0-9]*.[1-9][0-9]*$/
+      if (regInt.test(temp)) {
+        // 正整数
+        return `${temp} ${suffix}`
+      } else if (regFloorOne.test(temp)) {
+        // 处理小数点后 > 1情况
+        return `${temp.toFixed(1)} ${suffix}`
+      } else {
+        // 处理小数点后 为0 情况
+        const tempStr = temp.toFixed(1) + ''
+        const tempArr = tempStr.split('.')
+        if (tempArr[1] > 0) {
+          return `${temp.toFixed(1)} ${suffix}`
+        } else {
+          // 如果小数点后为0,而不是四舍五入后的1,则默认显示整数
+          return `${tempArr[0]} ${suffix}`
+        }
+      }
+    }
+  } else {
+    return 0
+  }
+}

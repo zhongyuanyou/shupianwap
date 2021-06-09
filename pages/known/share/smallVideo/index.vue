@@ -12,7 +12,7 @@
         name="bofang_mian"
         size="1.28rem"
         color="rgba(0,0,0,0.40)"
-        @click.native="openApp"
+        @click.native="link"
       ></my-icon>
       <div class="content">
         <div class="name">{{ vDetail.videoName }}</div>
@@ -28,7 +28,7 @@
         @cancel="cancel"
       />
     </div>
-    <small-video-like />
+    <small-video-like :category-id="categoryId" />
   </div>
 </template>
 
@@ -46,31 +46,50 @@ export default {
   data() {
     return {
       vId: '',
+      categoryId: '', // 种类id
+      vurl: '', // 视频url
       vDetail: {},
-      vLikeList: [],
     }
   },
   mounted() {
-    this.vId = this.$route.query.id || '8086177830335741952'
-    this.getVDetailApi()
+    /*
+    if (!this.$route.query.id) {
+      this.$xToast.error('获取视频信息失败')
+      return
+    }
+    */
+    this.vId = this.$route.query.id || '8086190052126556160'
+    this.getVideoApi()
   },
   methods: {
-    async getVDetailApi() {
-      try {
-        const params = {
-          ids: [this.vId],
-        }
-        const { code, data } = await this.$axios.post(
-          knownApi.video.videoList,
-          params
-        )
-        if (code !== 200) {
-          throw new Error('查询视频失败')
-        }
-        this.vDetail = data[0]
-      } catch (e) {}
+    // 查询视频信息
+    getVideoApi() {
+      const params = {
+        id: this.vId,
+      }
+      this.$axios
+        .post(knownApi.video.videoDetail, params)
+        .then((res) => {
+          if (res.code !== 200) {
+            throw new Error('查询视频失败')
+          }
+          this.vDetail = res.data
+          this.categoryId = res.data.categoryId
+          this.vurl = res.data.videoUrl
+        })
+        .catch((e) => {
+          this.$xToast.error(e.message)
+        })
     },
-    async getVListApi() {},
+    link() {
+      this.$router.push({
+        path: '/known/share/smallvideo/detail',
+        query: {
+          categoryId: this.categoryId,
+          vurl: this.vurl,
+        },
+      })
+    },
   },
 }
 </script>

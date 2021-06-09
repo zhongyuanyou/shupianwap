@@ -1,30 +1,96 @@
 <template>
   <div class="m-known-share svlike">
     <div class="like">猜你喜欢</div>
-    <div class="video-list">
-      <div class="item">
+    <div v-if="mVlist.length > 0" class="video-list">
+      <div
+        v-for="(item, index) in mVlist"
+        :key="index"
+        class="item"
+        :style="{
+          backgroundImage: 'url(' + item.image + ')',
+          backgroundSize: '100%',
+          'background-repeat': 'no-repeat',
+        }"
+        @click="openApp"
+      >
         <div class="content">
-          <div class="count">20.5w次观看</div>
-          <div class="tile">#感谢薯片 #工作历程全记录</div>
+          <div class="count">{{ item.custTotalCount }} 次观看</div>
+          <div class="tile">{{ item.videoName }}</div>
         </div>
       </div>
-      <div class="item">
-        <div class="content">
-          <div class="count">20.5w次观看</div>
-          <div class="tile">论团队和团伙的区别</div>
-        </div>
-      </div>
-      <div class="item"></div>
-      <div class="item"></div>
-      <div class="item"></div>
     </div>
     <div class="placeholder"></div>
+    <sp-center-popup
+      v-model="showPop"
+      button-type="confirm"
+      :field="Field"
+      @confirm="confirm"
+      @cancel="cancel"
+    />
   </div>
 </template>
 
 <script>
+import openappV2 from '@/mixins/openappV2'
+import knownApi from '@/api/known'
+import { numChangeW } from '@/utils/common'
+
 export default {
   name: 'KnownSmallVideoLike',
+  mixins: [openappV2],
+  props: {
+    categoryId: {
+      type: String,
+      default: '',
+    },
+  },
+  data() {
+    return {
+      mVlist: [],
+      apiLock: false,
+    }
+  },
+  watch: {
+    categoryId() {
+      this.getVideoApi()
+    },
+  },
+  mounted() {
+    if (this.categoryId !== '' && !this.apiLock) {
+      this.getVideoApi()
+    }
+  },
+  methods: {
+    // 查询视频信息
+    getVideoApi() {
+      this.apiLock = true
+      const params = {
+        categoryIds: [this.categoryId],
+      }
+      this.$axios
+        .post(knownApi.video.videoList, params)
+        .then((res) => {
+          if (res.code !== 200) {
+            throw new Error('查询视频失败')
+          }
+          this.buildVLikeList(res.data)
+        })
+
+        .catch((e) => {
+          this.$xToast.error(e.message)
+        })
+    },
+    buildVLikeList(data) {
+      // 这里注意,按照需求取 <= 4条(总共4条)
+      this.mVlist = data.filter((item, index) => {
+        return index < 4
+      })
+      // 重新处理观看数
+      this.mVlist.forEach((item) => {
+        item.custTotalCount = numChangeW(item.totalViewCount)
+      })
+    },
+  },
 }
 </script>
 
@@ -46,8 +112,7 @@ export default {
       box-sizing: border-box;
       border: 1px #1a1a1a solid;
       width: 50%;
-      height: 40vh;
-      background: #ccc;
+      height: 660px;
       .content {
         position: absolute;
         display: flex;
