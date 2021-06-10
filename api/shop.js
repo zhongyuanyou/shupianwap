@@ -16,6 +16,7 @@ const shopApi = {
 
   saveList: `${CHIPS_WAP_BASE_URL}/yk/save/v1/save_list.do`, // 收藏列表
   checkSave: `${CHIPS_WAP_BASE_URL}/yk/save/v1/check_save.do`, // 是否收藏
+  batchCanelSave: `${CHIPS_WAP_BASE_URL}/yk/save/v1/batch_dlt_goods.do`, // 批量取消收藏 根据收藏id
   cancelSave: `${CHIPS_MERCHANT_URL}/yk/ordinary/user_personal_shop/v1/delete_personal_by_goods_id_or_code.do`, // 商户中心取消收藏
 }
 export { shopApi }

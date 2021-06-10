@@ -301,6 +301,7 @@ export default {
         this.loading = false
       }
     },
+
     async getGoodsList() {
       try {
         const goodstype = this.tabIndex === 4 ? 1 : 2 // 服务商品1，交易商品2

@@ -5,7 +5,7 @@
       scene-id1="app-jycpxq-01"
       scene-id2="app-jycpxq-02"
     />
-    <ShareModal v-if="isShare" />
+    <ShareModal />
   </div>
 </template>
 
@@ -44,7 +44,7 @@ export default {
   },
   data() {
     return {
-      isShare:false,
+      isShare: false,
       tcProductDetailData: {
         classCodeLevelList: [],
         platformPrice: '0',
@@ -76,7 +76,7 @@ export default {
       return imdata
     },
   },
-  mounted(){
+  mounted() {
     this.isShare = this.$route.query.isShare
   },
   head: {

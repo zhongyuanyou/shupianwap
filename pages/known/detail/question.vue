@@ -38,7 +38,6 @@
       </div>
     </HeaderSlot>
     <DownLoadArea
-      v-if="isShare"
       :ios-link="iosLink"
       :androd-link="androdLink"
     />

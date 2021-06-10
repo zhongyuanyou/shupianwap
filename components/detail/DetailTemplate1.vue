@@ -14,7 +14,7 @@
         @on-click-left="onClickLeft"
       >
         <template #left>
-          <div>
+          <div v-if="!isShare">
             <my-icon name="nav_ic_back" size="0.4rem" color="#fff"></my-icon>
           </div>
         </template>
@@ -319,6 +319,7 @@ export default {
         },
       ],
       commentdata: [],
+      isShare: false,
     }
   },
   computed: {
@@ -343,6 +344,7 @@ export default {
     }
   },
   async mounted() {
+    this.isShare = this.$route.query.isShare
     // 假如未获取到站点信息,再获取地理位置
     if (!this.city.code) {
       await this.POSITION_CITY({ type: 'init' })
@@ -458,6 +460,7 @@ export default {
       }
     },
     onClickLeft() {
+      if (this.isShare) return
       // 返回上一页
       if (history.length < 2) {
         this.$router.push({

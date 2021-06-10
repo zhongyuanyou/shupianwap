@@ -86,7 +86,7 @@
       :options="shareOptions"
       @select="onSelect"
     />
-    <ShareModal v-if="isShare" />
+    <ShareModal />
   </div>
 </template>
 
