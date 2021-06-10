@@ -7,10 +7,16 @@
     </client-only>
     <div class="info">
       <div class="info-brand">
-        <sp-image width="0.84rem" height="0.84rem" round fit="cover" src="" />
+        <sp-image
+          width="0.84rem"
+          height="0.84rem"
+          round
+          fit="cover"
+          :src="vDetail.custavatar"
+        />
         <div class="info-brand-tile">
-          <div class="name">乐享werewdfsdfsdweerwerwerwerwerwer创业帮</div>
-          <div class="desc">商业因服务更美werewrwerwerewre好</div>
+          <div class="name">{{ vDetail.authorName }}</div>
+          <div class="desc">{{ vDetail.custbriefIntroduction }}</div>
         </div>
         <sp-button color="#4974F5" @click="openApp">
           <my-icon name="tianjia" size="0.2rem" color="#FFFFFF" />
@@ -24,7 +30,7 @@
         }}
       </div>
     </div>
-    <video-like></video-like>
+    <video-like :category-id="categoryId"></video-like>
     <sp-center-popup
       v-model="showPop"
       button-type="confirm"
@@ -79,7 +85,7 @@ export default {
         id: this.vId,
       }
       this.$axios
-        .post(knownApi.video.videoDetail, params)
+        .post(knownApi.video.videoUserDetail, params)
         .then((res) => {
           if (res.code !== 200) {
             throw new Error('查询视频失败')
