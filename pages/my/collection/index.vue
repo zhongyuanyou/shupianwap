@@ -1,6 +1,13 @@
 <template>
   <div class="collection_container">
-    <Header title="我的收藏" />
+    <Header title="我的收藏">
+      <template v-if="tabIndex == 4 || tabIndex == 5" #right>
+        <div class="rightBtn" @click="ChangeSelectedGoodsState">
+          <span v-if="!selectGoodsState">编辑</span>
+          <span v-else>完成</span>
+        </div>
+      </template>
+    </Header>
     <sp-tabs
       title-active-color="#4974F5"
       title-inactive-color="#222222"
@@ -13,6 +20,7 @@
         :name="item.id"
       ></sp-tab>
     </sp-tabs>
+
     <sp-list
       v-model="loading"
       :finished="finished"
@@ -63,55 +71,107 @@
           </div>
         </div>
       </div>
-      <div v-else-if="tabIndex == 4">
-        <div
-          v-for="(item, index) in list"
-          :key="index"
-          class="item"
-          @click="toDetail(item)"
-        >
-          <ServiceGoods :info="item"></ServiceGoods>
-        </div>
+      <div v-else-if="tabIndex == 4 || tabIndex == 5">
+        <client-only>
+          <sp-checkbox-group ref="checkboxGroup" v-model="selectDelGoods">
+            <div
+              v-for="(item, index) in list"
+              :key="index"
+              class="good-list"
+              @click="toServiceGoodsDetail(item)"
+            >
+              <sp-swipe-cell>
+                <ServiceGoods class="flex-1" :info="item">
+                  <template v-if="selectGoodsState" #left>
+                    <sp-checkbox
+                      style="padding-right: 10px"
+                      :name="item.goodsId"
+                    ></sp-checkbox>
+                  </template>
+                </ServiceGoods>
+
+                <template #right>
+                  <sp-button
+                    square
+                    type="danger"
+                    style="height: 100%"
+                    @click.stop="delGoods(item)"
+                    >取消<br />收藏</sp-button
+                  >
+                </template>
+              </sp-swipe-cell>
+            </div>
+          </sp-checkbox-group>
+        </client-only>
       </div>
     </sp-list>
+    <div
+      v-if="(tabIndex == 4 || tabIndex == 5) && selectGoodsState"
+      class="footer-nav"
+    >
+      <sp-checkbox v-model="checkedAllState" @change="checkedAllChange"
+        >全选</sp-checkbox
+      >
+
+      <div class="footer-btn">
+        <sp-button plain hairline type="primary" @click="delGoodsList"
+          >取消收藏</sp-button
+        >
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import { Tabs, Tab, Image, List } from '@chipspc/vant-dgg'
+import {
+  Tabs,
+  Tab,
+  Image,
+  List,
+  Button,
+  SwipeCell,
+  CheckboxGroup,
+  Checkbox,
+} from '@chipspc/vant-dgg'
 import knownApi from '@/api/known'
 import { shopApi } from '@/api'
-import Header from '@/components/common/head/header'
+import Header from '@/components/common/head/header.vue'
 
 import ServiceGoods from '@/components/my/collection/ServiceGoods.vue'
 
 export default {
   name: 'Collection',
   components: {
+    [Button.name]: Tabs,
     [Tabs.name]: Tabs,
     [Tab.name]: Tab,
     [Image.name]: Image,
     [List.name]: List,
+    [Button.name]: Button,
+
+    [SwipeCell.name]: SwipeCell,
     Header,
     ServiceGoods,
+    [CheckboxGroup.name]: CheckboxGroup,
+    [Checkbox.name]: Checkbox,
   },
   data() {
     return {
       content: '',
       tabs: [
-        {
-          tile: '问题',
-          id: 1,
-        },
-        {
-          tile: '回答',
-          id: 3,
-        },
-        {
-          tile: '文章',
-          id: 2,
-        },
+        // {
+        //   tile: '问题',
+        //   id: 1,
+        // },
+        // {
+        //   tile: '回答',
+        //   id: 3,
+        // },
+        // {
+        //   tile: '文章',
+        //   id: 2,
+        // },
         {
           tile: '服务商品',
           id: 4,
@@ -122,8 +182,11 @@ export default {
         },
       ],
       list: [],
+      selectDelGoods: [],
+      selectGoodsState: false, // 是否开启多选
+      checkedAllState: false, // 全选状态
       page: 1,
-      tabIndex: 1,
+      tabIndex: 4,
       limit: 15,
       error: false,
       loading: false,
@@ -136,6 +199,35 @@ export default {
     }),
   },
   methods: {
+    checkedAllChange(state) {
+      if (state) {
+        this.$refs.checkboxGroup.toggleAll(true)
+      } else {
+        this.$refs.checkboxGroup.toggleAll(false)
+      }
+    },
+
+    toServiceGoodsDetail(info) {
+      if (this.selectGoodsState) {
+        return
+      }
+      if (this.tabIndex === 4) {
+        this.$router.push({
+          path: '/detail',
+          query: {
+            productId: info.goodsId,
+          },
+        })
+      } else {
+        this.$router.push({
+          path: '/detail/transactionDetails',
+          query: {
+            productId: info.goodsId,
+          },
+        })
+      }
+    },
+
     toDetail(item) {
       this.$router.push({
         path:
@@ -166,12 +258,17 @@ export default {
       this.init()
       this.onLoad()
     },
+
     init() {
       this.page = 1
       this.finished = false
       this.error = false
       this.loading = true
       this.list = []
+
+      this.checkedAllState = false // 全选状态
+      this.selectGoodsState = false // 开启多选
+      this.selectDelGoods = [] // 选择的商品id
     },
     onLoad() {
       if (this.tabIndex < 4) {
@@ -204,25 +301,85 @@ export default {
         this.loading = false
       }
     },
-    getGoodsList() {
-      this.list = [{}, {}]
-      this.loading = false
-      this.$axios
-        .post(shopApi.saveList)
-        .then((res) => {
-          console.log('goodsList', res)
+    async getGoodsList() {
+      try {
+        const goodstype = this.tabIndex === 4 ? 1 : 2 // 服务商品1，交易商品2
+
+        const res = await this.$axios.post(shopApi.saveList, {
+          type: 'COLLECT', //	string非必须收藏 COLLECT 分享 SHARE
+          goodsType: goodstype, // 服务商品1，交易商品2
         })
-        .catch((err) => {
-          console.log('error', err)
-        })
+
+        if (res.code === 200) {
+          this.list.push(...res.data.records)
+          this.page++
+          if (this.page > res.data.totalPage || !res.data.totalPage) {
+            this.finished = true
+          }
+        } else {
+          this.error = true
+        }
+        this.loading = false
+      } catch (error) {
+        this.error = true
+        this.loading = false
+      }
+    },
+    // 切换选择状态
+    ChangeSelectedGoodsState() {
+      this.selectGoodsState = !this.selectGoodsState
+      this.selectDelGoods = []
+    },
+    delGoods(item) {
+      this.selectDelGoods = [item.goodsId]
+      this.delGoodsList()
+    },
+    async delGoodsList() {
+      console.log('delGoodsList')
+      try {
+        const goodstype = this.tabIndex === 4 ? 1 : 2 // 服务商品1，交易商品2
+
+        const data = new FormData()
+        data.append('number', JSON.stringify(this.selectDelGoods))
+        const res = await this.$axios.post(shopApi.batch_dlt_goods, data)
+        // await this.$axios({
+        //   method: 'post',
+        //   url: '/abc/login',
+        //   data,
+        // }).then((res) => {
+        //   console.log(res)
+        // })
+
+        console.log(res)
+        // if (res.code === 200) {
+        //   this.init()
+        // } else {
+        // }
+      } catch (error) {
+        console.log(error)
+      }
     },
   },
 }
 </script>
 
 <style lang="less" scoped>
+.flex {
+  display: flex;
+}
+.flex-1 {
+  flex: 1;
+}
+.rightBtn {
+  padding: 0 32px;
+}
+
+.good-list {
+  margin: 24px 0px 0px;
+}
 .collection_container {
-  height: 100%;
+  min-height: 100vh;
+  padding-bottom: 160px;
   background-color: #f8f8f8;
 
   .sp-tabs {
@@ -312,5 +469,24 @@ export default {
     -webkit-line-clamp: 3;
     overflow: hidden;
   }
+}
+.footer-nav {
+  position: fixed;
+  bottom: 0;
+  z-index: 999;
+  width: 100%;
+  background: #ffffff;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+
+  font-size: 28px;
+  padding: 24px 40px;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+::v-deep.sp-hairline--surround::after {
+  border-radius: 30px !important;
 }
 </style>
