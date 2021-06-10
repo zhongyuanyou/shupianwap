@@ -191,7 +191,9 @@ export default {
     },
     getGoodsList() {
       this.$axios
-        .post(shopApi.saveList)
+        .post(shopApi.saveList, {
+          goodsType: 1,
+        })
         .then((res) => {
           console.log('goodsList', res)
         })
