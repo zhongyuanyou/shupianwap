@@ -44,6 +44,7 @@
             v-for="(item, index) in serveList"
             :key="index"
             class="goods-item"
+            @click="toGoodsDetail('/detail?productId=' + item.id)"
           >
             <div class="left">
               <img :src="item.img" alt="" />
@@ -132,7 +133,7 @@ import {
   List,
 } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
-import orderApi from '@/api/order'
+import { shopApi } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 export default {
@@ -283,7 +284,19 @@ export default {
     },
   },
   methods: {
-    getList() {},
+    toGoodsDetail(url) {
+      this.$router.push(url)
+    },
+    getList() {
+      this.$axios
+        .post(shopApi.getList)
+        .then((res) => {
+          console.log('收藏列表', res)
+        })
+        .catch((err) => {
+          console.log('err', err)
+        })
+    },
     handleScollList(e) {
       this.throttle(this.scollChange(), 1000, 1000)
     },
@@ -331,44 +344,44 @@ export default {
     toCar() {
       this.$router.push('../shopCart/')
     },
-    getOrderList() {
-      this.noMore = false
-      orderApi
-        .list(
-          { axios: this.$axios },
-          {
-            page: this.page,
-            limit: this.limit,
-            cusOrderStatusNo: this.selectedOrderStatus,
-          }
-        )
-        .then((res) => {
-          if (res.totalCount <= this.page * this.limit) {
-            this.noMore = true
-          }
-          this.loading = false
-          this.loadingMore = false
-          const arr = res.records
-          if (this.page === 1) {
-            this.list = arr
-          } else {
-            const nowData = JSON.parse(JSON.stringify(this.list))
-            const allData = nowData.concat(arr)
-            this.list = allData
-          }
-          this.loadingList = false
-        })
-        .catch((error) => {
-          console.log('error', error)
-          if (this.page === 1) {
-            this.list = []
-          }
-          this.loading = false
-          this.loadingMore = false
-          this.$xToast.error(error.message || '请求失败，请重试')
-          this.loadingList = false
-        })
-    },
+    // getOrderList() {
+    //   this.noMore = false
+    //   orderApi
+    //     .list(
+    //       { axios: this.$axios },
+    //       {
+    //         page: this.page,
+    //         limit: this.limit,
+    //         cusOrderStatusNo: this.selectedOrderStatus,
+    //       }
+    //     )
+    //     .then((res) => {
+    //       if (res.totalCount <= this.page * this.limit) {
+    //         this.noMore = true
+    //       }
+    //       this.loading = false
+    //       this.loadingMore = false
+    //       const arr = res.records
+    //       if (this.page === 1) {
+    //         this.list = arr
+    //       } else {
+    //         const nowData = JSON.parse(JSON.stringify(this.list))
+    //         const allData = nowData.concat(arr)
+    //         this.list = allData
+    //       }
+    //       this.loadingList = false
+    //     })
+    //     .catch((error) => {
+    //       console.log('error', error)
+    //       if (this.page === 1) {
+    //         this.list = []
+    //       }
+    //       this.loading = false
+    //       this.loadingMore = false
+    //       this.$xToast.error(error.message || '请求失败，请重试')
+    //       this.loadingList = false
+    //     })
+    // },
     handleClickItem(type, order) {
       this.initItem(order)
       switch (type) {

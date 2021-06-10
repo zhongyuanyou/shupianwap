@@ -1,5 +1,5 @@
 <template>
-  <div class="sp-popup">
+  <div v-if="partnerId && plannerId" class="sp-popup">
     <!-- <div v-show="!visible" class="inception" @click="showFullScreen">
       <img src="@/static/image/page/kefu.png" />
     </div> -->
@@ -105,7 +105,6 @@ export default {
   },
   created() {
     this.plannerId = this.$route.query.plannerId
-    this.shareId = this.$route.query.shareId
     this.partnerId = this.$route.query.partnerId
   },
   methods: {

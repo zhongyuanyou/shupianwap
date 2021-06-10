@@ -69,6 +69,7 @@
 import { mapState } from 'vuex'
 import { Tabs, Tab, Image, List } from '@chipspc/vant-dgg'
 import knownApi from '@/api/known'
+import { shopApi } from '@/api'
 import Header from '@/components/common/head/header'
 
 export default {
@@ -95,6 +96,14 @@ export default {
         {
           tile: '文章',
           id: 2,
+        },
+        {
+          tile: '服务商品',
+          id: 4,
+        },
+        {
+          tile: '交易商品',
+          id: 5,
         },
       ],
       list: [],
@@ -150,7 +159,11 @@ export default {
       this.list = []
     },
     onLoad() {
-      this.getList()
+      if (this.tabIndex < 4) {
+        this.getList()
+      } else {
+        this.getGoodsList()
+      }
     },
     async getList() {
       try {
@@ -175,6 +188,18 @@ export default {
         this.error = true
         this.loading = false
       }
+    },
+    getGoodsList() {
+      this.$axios
+        .post(shopApi.saveList, {
+          goodsType: 1,
+        })
+        .then((res) => {
+          console.log('goodsList', res)
+        })
+        .catch((err) => {
+          console.log('error', err)
+        })
     },
   },
 }
