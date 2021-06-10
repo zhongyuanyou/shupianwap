@@ -86,6 +86,7 @@
       :options="shareOptions"
       @select="onSelect"
     />
+    <ShareModal v-if="isShare" />
   </div>
 </template>
 
@@ -110,7 +111,7 @@ import getUserSign from '~/utils/fingerprint'
 import { productDetailsApi, recommendApi } from '~/api'
 import { copyToClipboard } from '~/utils/common'
 import { GOODSLIST } from '~/config/constant'
-
+import ShareModal from '@/components/common/ShareModal'
 export default {
   name: 'ServiceDetails',
   components: {
@@ -127,6 +128,7 @@ export default {
     Planners,
     RecommendScProduct,
     commodityConsultation,
+    ShareModal,
   },
   layout: 'keepAlive',
   watchQuery: ['productId'],
@@ -158,6 +160,7 @@ export default {
   },
   data() {
     return {
+      isShare: false,
       opacity: 0,
       // 服务详情数据
       scProductDetailData: {
@@ -233,6 +236,7 @@ export default {
     this.handleGetRecProduct()
     // 获取钻展规划师
     this.getRemPlanner()
+    this.isShare = this.$route.query.isShare
   },
   methods: {
     ...mapActions({
@@ -303,15 +307,13 @@ export default {
       if (!this.deviceId) {
         this.deviceId = await getUserSign()
       }
-      const formatId2 = this.scProductDetailData.baseData.parentClassCode.split(
-        ','
-      )[1] // 产品二级分类
-      const formatId3 = this.scProductDetailData.baseData.parentClassCode.split(
-        ','
-      )[2] // 产品三级分类
+      const formatId2 =
+        this.scProductDetailData.baseData.parentClassCode.split(',')[1] // 产品二级分类
+      const formatId3 =
+        this.scProductDetailData.baseData.parentClassCode.split(',')[2] // 产品三级分类
       const formatId = formatId3 || formatId2
       this.$axios
-        .get(recommendApi.recommendProduct, {
+        .get(recommendApi.saleList, {
           params: {
             userId: this.$cookies.get('userId', { path: '/' }), // 用户id
             deviceId: this.deviceId, // 设备ID

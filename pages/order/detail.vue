@@ -97,8 +97,41 @@
           </span>
         </p> -->
       </div>
-
-      <div class="order-info">
+      <div
+        v-if="
+          orderData.evaluateStatus &&
+          orderData.orderSplitAndCusVo.signerId &&
+          (orderData.evaluateStatus !== 3 || orderData.evaluateStatus !== '3')
+        "
+        class="order-info order-info1"
+      >
+        <p class="order-item">
+          <span class="label">签单人</span>
+          <span class="text user-name">{{
+            orderData.orderSplitAndCusVo.signerName
+          }}</span>
+          <span
+            v-if="orderData.evaluateStatus == 1"
+            class="right"
+            @click="navToUrl(1)"
+            >写评价
+            <my-icon
+              name="order_ic_listnext"
+              size="0.28rem"
+              color="#222222"
+            ></my-icon>
+          </span>
+          <span v-else class="right" @click="navToUrl(2)"
+            >查看评价
+            <my-icon
+              name="order_ic_listnext"
+              size="0.28rem"
+              color="#222222"
+            ></my-icon>
+          </span>
+        </p>
+      </div>
+      <div class="order-info order-info2">
         <p class="order-item">
           <span class="label">订单编号</span>
           <span class="text">{{ orderData.orderNo }}</span>
@@ -345,11 +378,11 @@ export default {
       hasData: false,
       orderId: '',
       cusOrderId: '',
-      cusOrderStatusType: null, // 1为未付款 2进行中3已完成4已取消
+      cusOrderStatusType: null, // 1为未付款 2进行中 3已完成 4已取消
       orderData: {
         orderStatus: '',
         orderList: [],
-        orderSplitAndCusVo: [],
+        orderSplitAndCusVo: {},
       },
       showPayBtn: false,
       payList: [], // 支付列表
@@ -367,13 +400,15 @@ export default {
     },
   },
   created() {
-    if (this.$route.query.id) {
-      this.orderId = this.$route.query.id
-      this.cusOrderId = this.$route.query.cusOrderId
-      this.getDetail()
-    } else {
-      this.$xToast.error('缺少参数')
-      this.$router.back(-1)
+    if (process && process.client) {
+      if (this.$route.query.id) {
+        this.orderId = this.$route.query.id
+        this.cusOrderId = this.$route.query.cusOrderId
+        this.getDetail()
+      } else {
+        this.$xToast.error('缺少参数')
+        this.$router.back(-1)
+      }
     }
   },
   async mounted() {
@@ -390,7 +425,6 @@ export default {
       } else {
         this.showHead = false
       }
-      console.log('scrollTop', scrollTop)
     },
     onLeftClick() {
       this.$router.back(-1)
@@ -408,9 +442,6 @@ export default {
             ? res.data.orderSplitAndCusVo
             : res.orderSplitAndCusVo
           this.orderData = Object.assign(cusDetail, res.data || res)
-          this.orderData.statusName = this.getStatusName(
-            this.orderData.orderStatusNo
-          )
           if (
             this.orderData.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
             this.orderData.payStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
@@ -425,6 +456,13 @@ export default {
           this.cusOrderStatusType = orderUtils.checkCusOrderStatus(
             this.orderData.cusOrderStatusNo
           )
+          if (this.cusOrderStatusType === 3) {
+            this.orderData.statusName = '已完成'
+          } else {
+            this.orderData.statusName = this.getStatusName(
+              this.orderData.orderStatusNo
+            )
+          }
           if (
             this.orderData.orderSplitAndCusVo.cusOrderStatusNo !==
               'ORDER_CUS_STATUS_CANCELLED' &&
@@ -498,6 +536,31 @@ export default {
           break
       }
     },
+    navToUrl(type) {
+      const query = {
+        infoId:
+          this.orderData.evaluateCenterId ||
+          this.orderData.orderSplitAndCusVo.evaluateCenterId, // 评价id
+        plannerId: this.orderData.orderSplitAndCusVo.signerSubjectUserId, // 签单人员id
+        signerNo: this.orderData.orderSplitAndCusVo.signerNo, // 签单人员编号
+        plannerName: this.orderData.orderSplitAndCusVo.signerName,
+        signerSubjectUserId:
+          this.orderData.orderSplitAndCusVo.signerSubjectUserId, // 签单人商户用户id
+        orderId: this.orderData.id,
+        cusOrderId: this.orderData.cusOrderId,
+      }
+      if (type === 1) {
+        this.$router.push({
+          path: '/my/plannerEvaluate',
+          query,
+        })
+      } else {
+        this.$router.push({
+          path: '/my/plannerEvaluate/detail',
+          query,
+        })
+      }
+    },
     // 设置取消订单原因name 中文
     setCancelOrderName(val) {
       this.canCelReasonName = val
@@ -566,10 +629,10 @@ export default {
     font-size: 36px;
   }
 }
+
 .order-info {
   background: white;
   padding: 40px;
-  margin-bottom: 150px;
   font-size: 26px;
   .order-item {
     font-size: 26px;
@@ -590,6 +653,10 @@ export default {
       font-weight: bold;
       color: #1a1a1a;
       width: auto;
+    }
+    .user-name {
+      max-width: calc(100% - 320px);
+      .textOverflow(1);
     }
     .btn {
       margin-left: 12px;
@@ -669,6 +736,20 @@ export default {
     }
   }
 }
+
+.order-info2 {
+  margin-bottom: 150px;
+}
+.order-info1 {
+  margin-bottom: 20px;
+  .order-item {
+    margin-bottom: 0;
+    .right {
+      float: right;
+    }
+  }
+}
+
 .serve-time {
   margin-top: 20px;
   width: 100%;

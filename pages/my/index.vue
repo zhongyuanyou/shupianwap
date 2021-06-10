@@ -28,11 +28,20 @@
           class="my_order_type_list"
         >
           <div class="icon">
-            <my-icon
-              :name="item.iconName"
-              color="#4E78F5"
-              size="0.44rem"
-            ></my-icon>
+            <my-icon :name="item.iconName" color="#4E78F5" size="0.44rem">
+            </my-icon>
+            <span
+              v-if="item.type === 'daipingjia' && evaluateNumFlag !== 'none'"
+              class="icon_daipingjia"
+              :class="[
+                evaluateNumFlag === 'small'
+                  ? 'icon_daipingjia_small'
+                  : evaluateNumFlag === 'med'
+                  ? 'icon_daipingjia_med'
+                  : 'icon_daipingjia_lar',
+              ]"
+              >{{ evaluateNum }}</span
+            >
           </div>
           <div class="order_text" @click="clickTab(++index)">
             {{ item.name }}
@@ -43,7 +52,10 @@
     <!--E 我的订单-->
     <!--S 按钮区-->
     <div class="my_btns">
-      <div class="my_btns_item" @click="handleClick(1)">
+      <div
+        class="my_btns_item"
+        @click="handleClick('/contract/contractList', 'login')"
+      >
         <div class="my_btns_item_icon">
           <my-icon
             name="gerenzhongxin_hetongicon"
@@ -63,23 +75,7 @@
           </div>
         </div>
       </div>
-      <div class="my_btns_item" @click="handleClick(7)">
-        <div class="my_btns_item_icon">
-          <my-icon name="per_ic_debunk" size="0.36rem" color="#10BBB8" />
-        </div>
-        <div class="my_btns_item_con">
-          我的钱包
-          <div class="item_lf">
-            <my-icon
-              name="order_ic_listnext"
-              size="0.24rem"
-              color="#CCCCCC"
-              class="myIcon"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="my_btns_item" @click="handleClick(2)">
+      <div class="my_btns_item" @click="handleClick('/my/coupon', 'login')">
         <div class="my_btns_item_icon">
           <my-icon
             name="gerenzhongxin_youhuiquanicon"
@@ -99,7 +95,23 @@
           </div>
         </div>
       </div>
-      <div class="my_btns_item" @click="handleClick(3)">
+      <div class="my_btns_item" @click="handleClick('/my/interviewRecord')">
+        <div class="my_btns_item_icon">
+          <my-icon name="caifang_mian" size="0.36rem" color="#4974f5" />
+        </div>
+        <div class="my_btns_item_con no_line">
+          面谈记录
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="my_btns_item" @click="linkAuth">
         <div class="my_btns_item_icon">
           <my-icon name="shimingrenzheng" size="0.36rem" color="#00B365" />
         </div>
@@ -124,7 +136,7 @@
           </div>
         </div>
       </div>
-      <div class="my_btns_item" @click="handleClick(4)">
+      <div class="my_btns_item" @click="handleClick('/my/help')">
         <div class="my_btns_item_icon">
           <my-icon name="per_ic_help" size="0.36rem" color="#00B365" />
         </div>
@@ -140,7 +152,7 @@
           </div>
         </div>
       </div>
-      <div class="my_btns_item" @click="handleClick(5)">
+      <div class="my_btns_item" @click="handleClick('/my/complain')">
         <div class="my_btns_item_icon">
           <my-icon name="per_ic_debunk" size="0.36rem" color="#10BBB8" />
         </div>
@@ -157,7 +169,7 @@
         </div>
       </div>
 
-      <div class="my_btns_item" @click="handleClick(6)">
+      <div class="my_btns_item" @click="handleClick('/my/about')">
         <div class="my_btns_item_icon">
           <my-icon name="per_ic_about" size="0.36rem" color="#4974F5" />
         </div>
@@ -197,7 +209,7 @@
 <script>
 import { Button, Image, CenterPopup } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import { userinfoApi } from '@/api'
+import { userinfoApi, evaluateApi } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import { GOODSLIST } from '~/config/constant'
 import { imInit } from '@/utils/im'
@@ -234,8 +246,9 @@ export default {
           name: '已取消',
         },
         {
-          iconName: 'per_ic_whole',
-          name: '全部订单',
+          iconName: 'daipingjia',
+          name: '待评价',
+          type: 'daipingjia',
         },
         {
           iconName: 'trading_ic_price',
@@ -255,6 +268,8 @@ export default {
       loading: false,
       userName: '',
       realStatus: 'NO_AUTHENTICATION',
+      evaluateNumFlag: 'none', // 评论标识状态
+      evaluateNum: 0, // 评价数量
     }
   },
   computed: {
@@ -276,6 +291,7 @@ export default {
         console.log('myInfo', this.info)
       }
       this.getUserInfo()
+      this.getEvaluateNumApi()
       if (!this.token) {
         localStorage.removeItem('info')
       }
@@ -284,7 +300,21 @@ export default {
 
   methods: {
     clickTab(index) {
-      console.log('index', index)
+      // 进入待评价页面
+      if (index === 5) {
+        if (this.token) {
+          this.$router.push({ path: '/my/evaluate' })
+        } else {
+          this.$router.push({
+            path: '/login',
+            query: {
+              redirect: '/my/evaluate',
+            },
+          })
+        }
+        return
+      }
+      // console.log('index', index)
       if (this.token) {
         this.$router.push({
           path: '/order',
@@ -353,37 +383,45 @@ export default {
         this.loading = false
       }
     },
-    async handleClick(val) {
-      if (val === 1) {
+    async getEvaluateNumApi() {
+      try {
+        const { code, data } = await this.$axios.get(evaluateApi.evaluateNum)
+        if (code !== 200) {
+          throw new Error('请求评价数量失败')
+        }
+        if (typeof data !== 'number' || data === 0) {
+          this.evaluateNumFlag = 'none'
+        } else if (data < 10) {
+          this.evaluateNumFlag = 'small'
+          this.evaluateNum = data
+        } else if (data > 99) {
+          this.evaluateNumFlag = 'lar'
+          this.evaluateNum = '99+'
+        } else {
+          this.evaluateNumFlag = 'med'
+          this.evaluateNum = data
+        }
+      } catch (e) {}
+    },
+    async handleClick(val, type) {
+      if (type === 'login') {
         const isLogin = await this.judgeLoginMixin()
         if (isLogin) {
-          this.$router.push('/contract/contractList')
-        } else {
-          this.$router.push('/login')
+          this.$router.push(val)
         }
-      } else if (val === 2) {
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          this.$router.push('/my/coupon')
-        } else {
-          this.$router.push('/login')
-        }
-      } else if (val === 3) {
-        if (
-          this.realStatus === 'NO_AUTHENTICATION' ||
+      } else {
+        this.$router.push(val)
+      }
+    },
+    async linkAuth() {
+      const isLogin = await this.judgeLoginMixin()
+      if (
+        isLogin &&
+        (this.realStatus === 'NO_AUTHENTICATION' ||
           this.realStatus === 'AUTHENTICATION_FAIL' ||
-          this.realStatus === 'AUTHENTICATION_INVALID'
-        ) {
-          this.$router.push('/contract/authentication')
-        }
-      } else if (val === 4) {
-        this.$router.push('/my/help')
-      } else if (val === 5) {
-        this.$router.push('/my/complain')
-      } else if (val === 6) {
-        this.$router.push('/my/about')
-      } else if (val === 7) {
-        this.$router.push('/my/wallet')
+          this.realStatus === 'AUTHENTICATION_INVALID')
+      ) {
+        this.$router.push('/contract/authentication')
       }
     },
     async showExit() {
@@ -408,8 +446,14 @@ export default {
         // 清除cookie中的数据
         this.info = {}
         this.$store.dispatch('user/clearUser')
+        // 清除查询的评价内容
+        this.clearEvaluate()
         // localStorage.removeItem('info')
       }
+    },
+    clearEvaluate() {
+      this.evaluateNumFlag = 'none'
+      this.evaluateNum = 0
     },
   },
 }
@@ -469,10 +513,27 @@ export default {
       &_list {
         text-align: center;
         .icon {
-          height: 44px;
-          line-height: 44px;
-          display: flex;
-          justify-content: center;
+          position: relative;
+          &_daipingjia {
+            position: absolute;
+            font: 24px @fontf-pfsc-med;
+            left: 41px;
+            top: -18px;
+            background: #ec5330;
+            border-radius: 16px;
+            color: #fff;
+            text-align: center;
+            box-shadow: -1px 1px #fff;
+            &_small {
+              width: 30px;
+            }
+            &_med {
+              width: 40px;
+            }
+            &_lar {
+              width: 53px;
+            }
+          }
         }
         .order_text {
           font-size: 24px;

@@ -2,8 +2,9 @@
   <div class="article">
     <HeaderSlot>
       <div v-if="!showHead" class="flex">
-        <div>
+        <div class="nav-back">
           <my-icon
+            v-if="!isShare"
             name="nav_ic_back"
             size="0.40rem"
             color="#1a1a1a"
@@ -11,7 +12,7 @@
             @click.native="$back()"
           ></my-icon>
         </div>
-        <div>
+        <div class="search">
           <my-icon
             style="margin-right: 0.15rem"
             name="nav_ic_searchbig"
@@ -39,6 +40,11 @@
         />
       </div>
     </HeaderSlot>
+    <DownLoadArea
+      v-if="isShare"
+      :ios-link="iosLink"
+      :androd-link="androdLink"
+    />
     <div class="title-area">
       <div class="title">{{ articleDetails.title }}</div>
     </div>
@@ -66,7 +72,11 @@
       <p class="pub-time">编辑于 {{ articleDetails.createTime }}</p>
       <DetailArticleList :article-list="articleList" />
     </div>
-    <Comment ref="openComment" :article-id="articleDetails.id" />
+    <Comment
+      ref="openComment"
+      :article-id="articleDetails.id"
+      :source-type="articleDetails.type"
+    />
     <sp-bottombar safe-area-inset-bottom>
       <div
         v-if="
@@ -146,6 +156,7 @@
         <div class="cancel" @click="popupShow = false">取消</div>
       </div>
     </sp-popup>
+    <ShareModal v-if="isShare"/>
   </div>
 </template>
 
@@ -170,6 +181,9 @@ import DetailArticleList from '@/components/mustKnown/DetailArticleList'
 // 默认评论列表
 import Comment from '~/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
+import DownLoadArea from '@/components/common/downLoadArea'
+import ShareModal from '@/components/common/ShareModal'
+// import SpBottom from '@/components/common/spBottom/SpBottom'
 export default {
   layout: 'keepAlive',
   components: {
@@ -185,7 +199,9 @@ export default {
     // PageHead,
     PageHead2,
     DetailArticleList,
+    DownLoadArea,
     // Header,
+    ShareModal,
   },
   async asyncData({ $axios, query, store }) {
     let articleDetails = {}
@@ -208,6 +224,9 @@ export default {
   },
   data() {
     return {
+      iosLink: 'cpsccustomer://',
+      androdLink: 'cpsccustomer://',
+      isShare: false,
       popupShow: false,
       articleList: [],
       showHead: false,
@@ -233,6 +252,7 @@ export default {
     },
   },
   created() {
+    this.isShare = this.$route.query.isShare
     this.getRecommendData()
     if (this.userInfo.token) {
       this.initFollow()
@@ -260,7 +280,7 @@ export default {
         .get(knownApi.questionArticle.findAttention, {
           params: {
             currentUserId: this.userInfo.userId,
-            homeUserId: this.articleDetails.createrId,
+            homeUserId: this.articleDetails.userId,
           },
         })
         .then((res) => {
@@ -407,7 +427,7 @@ export default {
           businessId: this.id,
           handleType: this.handleType,
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-          dateType: 1,
+          dateType: 2,
         })
         .then((res) => {
           if (res.code === 200) {
@@ -499,11 +519,20 @@ export default {
 //   z-index: 99;
 // }
 .flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  // display: flex;
+  // justify-content: space-between;
+  // align-items: center;
   height: 0.88rem;
   padding: 0 0.32rem;
+  .nav-back {
+    float: left;
+    margin-top: 24px;
+    width: 40px;
+    height: 40px;
+  }
+  .search {
+    float: right;
+  }
   div {
     display: flex;
     height: 0.88rem;
@@ -564,6 +593,7 @@ export default {
 .main {
   padding: 40px;
   .user-info {
+    margin-top: 10px;
     display: flex;
     align-items: center;
     .img {
@@ -587,6 +617,12 @@ export default {
       font-size: 30px;
       font-weight: bold;
       color: #999999;
+      background: #f5f5f5;
+      height: 72px;
+      border-radius: 0.12rem;
+      padding: 0 25px;
+      display: flex;
+      align-items: center;
     }
     .btn {
       height: 72px;
@@ -609,7 +645,8 @@ export default {
   .content {
     word-break: break-all;
     padding-top: 40px;
-    font-size: 34px;
+    font-size: 32px;
+    line-height: 50px;
     color: #666;
     font-weight: 400;
     color: #555555;

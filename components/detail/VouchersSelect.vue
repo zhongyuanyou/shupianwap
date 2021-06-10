@@ -33,7 +33,7 @@
       </div>
       <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
     </div>
-    <div v-if="serviceTag.length > 0" class="cell" @click="safeguardIsShow">
+    <div v-if="serviceTag && serviceTag.length > 0" class="cell">
       <div class="cell_left">
         <div class="label">保障</div>
         <div class="content">
@@ -45,7 +45,7 @@
           >
         </div>
       </div>
-      <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
+      <!-- <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" /> -->
     </div>
     <sp-popup
       v-model="show"
@@ -228,15 +228,23 @@ export default {
     serviceTag() {
       const salesGoodsTags =
         this.$store.state.sellingGoodsDetail.sellingGoodsData.salesGoodsTags
-      const serviceTag = salesGoodsTags.map((item) => {
-        if (item.tagType === 'PRO_SERVICE_TAG') {
-          return {
-            text: item.description,
-            title: item.tagName,
-            icon: 'sp-iconfont sp-iconfont-security2',
-          }
-        }
-      })
+      console.log('salesGoodsTags', salesGoodsTags)
+      let serviceTag = []
+      if (salesGoodsTags) {
+        // 产品中心605版本筛选服务标签 code DSJTC20210514000043
+        serviceTag = salesGoodsTags
+          .filter((item) => {
+            return item.categoryCode === 'DSJTC20210514000042'
+          })
+          .map((item) => {
+            return {
+              text: item.ext1 || item.ext2 || item.ext3,
+              title: item.tagValueName,
+              icon: 'sp-iconfont sp-iconfont-security2',
+            }
+          })
+      }
+      console.log('serviceTag', serviceTag)
       return serviceTag
     },
     // 优惠券列表
@@ -460,7 +468,7 @@ export default {
           color: #cccccc;
         }
         .item {
-          margin-right: 40px;
+          margin-right: 24px;
           &::before {
             content: '1';
             display: inline-block;

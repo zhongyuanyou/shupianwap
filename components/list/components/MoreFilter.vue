@@ -95,6 +95,7 @@ export default {
       activeItems: [], // 默认激活的
       saveActiveItems: [], // 存储的筛选项数据
       contentMaxHeight: 0, // 内容的最大高
+      isOne: true,
     }
   },
   watch: {
@@ -149,6 +150,44 @@ export default {
       this.$nextTick(() => {
         // 重置内容据顶部的距离
         document.querySelector('.more-content').scrollTop = 0
+        if (
+          this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 &&
+          this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
+            .classCode &&
+          this.isOne
+        ) {
+          for (
+            let b = 0;
+            b <
+            this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
+              .classCode.length;
+            b++
+          ) {
+            for (let a = 0; a < this.children.length; a++) {
+              if (
+                this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1
+                  .pcode[b] === this.children[a].ext1
+              ) {
+                for (let i = 0; i < this.children[a].children.length; i++) {
+                  if (
+                    this.$parent.$parent.$parent.$parent.$parent.$parent
+                      .classCode1.classCode[b] ===
+                    this.children[a].children[i].ext2
+                  ) {
+                    this.activeItems[0].push(this.children[a].children[i])
+                  } else if (
+                    this.$parent.$parent.$parent.$parent.$parent.$parent
+                      .classCode1.classCode[b] ===
+                    this.children[a].children[i].code
+                  ) {
+                    this.activeItems[1].push(this.children[a].children[i])
+                  }
+                }
+              }
+            }
+          }
+          this.isOne = false
+        }
       })
     },
     close() {

@@ -407,12 +407,12 @@ export default {
           deviceId: this.deviceId, // 设备ID
           formatId: formatId2 || formatId3, // 产品二级类别,没有二级类别用三级类别（首页等场景不需传，如其他场景能获取到必传）
           classCode: formatId1,
-          areaCode: this.city.code, // 区域编码
+          areaCode: this.$store.state.city.currentCity.code || '510100', // 区域编码
           sceneId: 'app-fwcpxq-01', // 场景ID
           productId: this.sellingDetail.id, // 产品ID（产品详情页必传）
           productType: 'PRO_CLASS_TYPE_SALES', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
           title: this.sellingDetail.name, // 产品名称（产品详情页传、咨询页等）
-          platform: 'm', // 平台（app,m,pc）
+          platform: 'app', // 平台（app,m,pc）
           formatIdOne: formatId1 || formatId2,
           page: { pageNo: this.productPage, pageSize: this.productLimit },
         })
@@ -451,7 +451,7 @@ export default {
           params: {
             limit: this.plannerLimit,
             page: this.plannerPage,
-            area: this.city.code, // 区域编码
+            area: this.$store.state.city.currentCity.code || '510100',
             deviceId: this.deviceId, // 设备ID
             level_2_ID: this.sellingDetail.classCodeLevel
               ? this.sellingDetail.classCodeLevel.split(',')[1]
@@ -485,7 +485,7 @@ export default {
         params: {
           limit: 1,
           page: 1,
-          area: this.city.code, // 区域编码
+          area: this.$store.state.city.currentCity.code || '510100',
           deviceId, // 设备ID
           level_2_ID: this.sellingDetail.classCodeLevel
             ? this.sellingDetail.classCodeLevel.split(',')[1]

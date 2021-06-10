@@ -96,14 +96,14 @@
                     >套餐</span
                   >
                   <span
-                    v-for="(tagItem, index2) in item.tag"
-                    v-show="index2 < 3"
+                    v-for="(tagItem, index2) in item.salesGoodsTags"
+                    v-show="tagItem.categoryCode === 'DSJTC20210514000042'"
                     :key="index2"
                     class="tag-item"
-                    >{{ tagItem.tagName }}</span
+                    >{{ tagItem.tagValueName }}</span
                   >
                 </p>
-                <p
+                <!-- <p
                   v-if="
                     item.salesGoodsSubVos && item.salesGoodsSubVos.length === 1
                   "
@@ -113,8 +113,8 @@
                     item.salesGoodsSubVos[0] &&
                     item.salesGoodsSubVos[0].goodsSubDetailsName
                   }}
-                </p>
-                <p v-else class="goods-slogan goods-slogan1">
+                </p> -->
+                <p class="goods-slogan goods-slogan1">
                   {{
                     item.salesGoodsOperatings &&
                     item.salesGoodsOperatings.slogan
@@ -442,6 +442,8 @@ export default {
       position: relative;
       width: 220px;
       height: 220px;
+      min-width: 220px;
+      max-width: 220px;
       border-radius: 8px;
       overflow: hidden;
       margin-right: 22px;
@@ -516,7 +518,8 @@ export default {
       }
       .goods-tag {
         margin-top: 12px;
-        .textOverflow(1);
+        overflow: hidden;
+        white-space: nowrap;
         .tag-item {
           display: inline-block;
           height: 0.32rem;
@@ -528,6 +531,7 @@ export default {
           font-family: PingFang SC;
           font-weight: 400;
           color: #5c7499;
+          margin-right: 10px;
           // margin-right: 10px;
         }
         .tag-tc {

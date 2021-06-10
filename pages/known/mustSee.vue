@@ -202,19 +202,21 @@ export default {
     background: #fff;
     padding: 40px 20px;
     box-sizing: border-box;
+    position: absolute;
+    margin-top: -22px;
     > .list {
       margin-top: 32px;
       background: #ffffff;
       box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.06);
       border-radius: 12px;
-      padding: 44px 32px;
+      padding: 52px 32px 44px;
       box-sizing: border-box;
       > h1 {
         font-size: 36px;
         font-weight: bold;
         color: #1a1a1a;
         display: -webkit-box;
-        line-height: 40px;
+        line-height: 45px;
         word-break: break-all;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -248,6 +250,7 @@ export default {
             margin-top: 10px;
             font-size: 30px;
             font-weight: 400;
+            line-height: 0.42rem;
             color: #555555;
             display: -webkit-box;
             -webkit-box-orient: vertical;

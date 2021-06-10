@@ -342,6 +342,9 @@ export default {
       )
     },
     handleRegion(item, index) {
+      if (!item || !item.name) {
+        return
+      }
       // 点击区
       this.rIndex = index
       const arr = this.selectData[2]
@@ -422,7 +425,7 @@ export default {
   display: flex;
   overflow: hidden;
   position: relative;
-  max-height: 400px;
+  max-height: 80vh;
   min-height: 200px;
   .fix_shadow {
     position: absolute;

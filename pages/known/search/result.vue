@@ -27,6 +27,20 @@
       <p :class="tabIndex === '2' ? 'act' : ''" @click="changeTab('2')">
         <span>文章</span><i></i>
       </p>
+      <p
+        v-if="showItem"
+        :class="tabIndex === '4' ? 'act' : ''"
+        @click="changeTab('4')"
+      >
+        <span>视频</span><i></i>
+      </p>
+      <p
+        v-if="showItem"
+        :class="tabIndex === '5' ? 'act' : ''"
+        @click="changeTab('5')"
+      >
+        <span>大讲堂</span><i></i>
+      </p>
       <p :class="tabIndex === '3' ? 'act' : ''" @click="changeTab('3')">
         <span>用户</span><i></i>
       </p>
@@ -104,11 +118,84 @@
         </div>
       </sp-list>
     </div>
+    <div v-show="tabIndex === '4'" class="videolist">
+      <sp-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        :error.sync="error"
+        error-text="请求失败，点击重新加载"
+        @load="onLoad"
+      >
+        <div
+          v-for="(item, index) in searchList"
+          :key="index"
+          class="list"
+          @click="open(item)"
+        >
+          <div class="item">
+            <div class="lf_img">
+              <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
+              <div class="time">{{ totime(item.duration) }}</div>
+            </div>
+            <div class="rt_content">
+              <div class="title">
+                <p v-html="item.videoNameHtml"></p>
+                <!-- {{ item.videoName }} -->
+              </div>
+              <div class="name_time">
+                <div class="name">{{ item.createrName }}</div>
+                <div class="time">
+                  {{ timeSplice(item.createTime) }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sp-list>
+    </div>
+    <div v-show="tabIndex === '5'" class="videolist">
+      <sp-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        :error.sync="error"
+        error-text="请求失败，点击重新加载"
+        @load="onLoad"
+      >
+        <div
+          v-for="(item, index) in searchList"
+          :key="index"
+          class="list"
+          @click="open(item)"
+        >
+          <div class="item">
+            <div class="lf_img">
+              <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
+              <div class="time">{{ totime(item.duration) }}</div>
+            </div>
+            <div class="rt_content">
+              <div class="title">
+                <p v-html="item.courseNameHtml"></p>
+                <!-- {{ item.videoName }} -->
+              </div>
+              <div class="name_time">
+                <div class="name">{{ item.createrName }}</div>
+                <div class="time">
+                  {{ timeSplice(item.createTime) }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sp-list>
+    </div>
+    <sp-center-popup v-model="showPop" :field="Filed4" button-type="confirm" />
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
-import { Sticky, Icon, Dialog, List } from '@chipspc/vant-dgg'
+import { Sticky, Icon, Dialog, List, CenterPopup } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import knownApi from '@/api/known'
 import utils from '@/utils/changeBusinessData'
@@ -122,6 +209,7 @@ export default {
     Search,
     [Dialog.name]: Dialog,
     [List.name]: List,
+    [CenterPopup.name]: CenterPopup,
     HeaderSlot,
   },
   filters: {
@@ -143,12 +231,24 @@ export default {
       error: false,
       loading: false,
       finished: false,
+      showPop: false,
+      Filed4: {
+        type: 'functional',
+        showCancelButton: false,
+        title: '提示！',
+        description: `请到App去观看`,
+        confirmButtonText: '好的',
+      },
+      showItem: true,
     }
   },
   computed: {
     ...mapState({
       userInfo: (state) => state.user, // 登录的用户信息
       userId: (state) => state.user.userId, // userId 用于判断登录
+      isInApp: (state) => state.app.isInApp, // 是否app中
+      appInfo: (state) => state.app.appInfo, // app信息
+      // isApplets: (state) => state.app.isApplets,
     }),
     appInfo() {
       return this.$store.state.app.appInfo
@@ -160,6 +260,30 @@ export default {
     this.value = query.keyword
   },
   methods: {
+    timeSplice(time) {
+      return time.substring(0, time.length - 3)
+    },
+    totime(time) {
+      if (!time) {
+        return ''
+      }
+
+      let hour = Math.floor(time / 3600)
+      let mid = Math.floor((time - 3600 * hour) / 60)
+      // math.flotime / 60
+      let sec = Math.floor((time - 3600 * hour) % 60)
+      if (hour < 10) {
+        hour = '0' + hour
+      }
+      if (mid < 10) {
+        mid = '0' + mid
+      }
+      if (sec < 10) {
+        sec = '0' + sec
+      }
+
+      return hour + ':' + mid + ':' + sec
+    },
     keyClickHandle() {
       this.$router.replace({
         path: '/known/search',
@@ -283,6 +407,45 @@ export default {
     },
     onLoad() {
       this.getSearchListApi()
+    },
+    open(item) {
+      if (this.isInApp && this.appInfo.appCode === 'CPSAPP') {
+        if (this.tabIndex === '4') {
+          try {
+            this.$appFn.dggOpenVideo(item.id, (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `打开视频失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            })
+          } catch (error) {
+            console.error('changeTop error:', error)
+          }
+        } else if (this.tabIndex === '5') {
+          try {
+            this.$appFn.dggOpenCourse(item.id, (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `打开课程失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            })
+          } catch (error) {
+            console.error('changeTop error:', error)
+          }
+        }
+      } else if (this.isInApp && this.appInfo.appCode === 'syscode') {
+        this.showItem = false
+      } else {
+        this.showPop = true
+      }
     },
   },
 }
@@ -466,6 +629,68 @@ export default {
         justify-content: center;
         > span {
           margin-left: 13px;
+        }
+      }
+    }
+  }
+  > .videolist {
+    .list {
+      .item {
+        padding: 28px 40px;
+        display: flex;
+        align-items: center;
+        .lf_img {
+          width: 240px;
+          height: 135px;
+          background: #f5f5f5;
+          border-radius: 8px;
+          position: relative;
+          margin-right: 28px;
+          img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: 8px;
+          }
+          .time {
+            background: #000000;
+            border-radius: 8px;
+            opacity: 0.6;
+            position: absolute;
+            bottom: 8px;
+            left: 9px;
+            font: bold 22px/30px PingFangSC-Medium, PingFang SC;
+            color: #ffffff;
+            padding: 3px 8px;
+          }
+        }
+        .rt_content {
+          width: 402px;
+          .title {
+            color: #222222;
+            font: bold 30px/42px PingFangSC-Medium, PingFang SC;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-all;
+            height: 84px;
+          }
+          .name_time {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .name {
+              color: #555555;
+              font: bold 26px/36px PingFangSC-Medium, PingFang SC;
+            }
+            .time {
+              color: #999999;
+              font: 400 26px/32px PingFangSC-Regular, PingFang SC;
+            }
+          }
         }
       }
     }
