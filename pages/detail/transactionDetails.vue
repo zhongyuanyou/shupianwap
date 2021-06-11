@@ -19,6 +19,7 @@ export default {
   name: 'Id',
   components: {
     DetailTemplate,
+    ShareModal,
   },
   async asyncData({ $axios, query, app, store }) {
     try {

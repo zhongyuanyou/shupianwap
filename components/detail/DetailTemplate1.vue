@@ -21,11 +21,11 @@
         <template #right>
           <div>
             <my-icon
+              :class="sellingDetail.isSave ? 'icon-red' : ''"
               style="margin-right: 0.36rem"
-              name="shoucang"
+              name="shoucang_mian"
               size="0.4rem"
               color="#fff"
-              :class="sellingDetail.isSave ? 'icon-red' : ''"
               @click.native="handleClickSave"
             />
           </div>
@@ -420,7 +420,6 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             this.$xToast.show({
-              content: '收藏成功',
               message: '收藏成功,可在"个人中心-我的收藏"中查看',
               duration: 3000,
               icon: 'toast_ic_comp',
@@ -664,8 +663,11 @@ export default {
       .spiconfont {
         color: #1a1a1a !important;
       }
+      #icon-red {
+        color: #4974f5 !important;
+      }
       .icon-red {
-        color: red !important;
+        color: #4974f5 !important;
       }
     }
   }

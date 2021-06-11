@@ -10,7 +10,7 @@
         name="nav_ic_back"
         size="0.4rem"
         :color="fixed ? '#1A1A1A' : '#D8D8D8'"
-        @click.native="goBack()"
+        @click.native="$back"
       ></my-icon>
       <div style="margin-left: 0.2rem">{{ fixed ? userName : '' }}</div>
     </div>
@@ -265,10 +265,6 @@ export default {
     }
   },
   methods: {
-    goBack(){
-      const list=window.history
-      console.log('goBack',list)
-    },
     open(item) {
       console.log(item)
       if (this.isInApp && this.appInfo.appCode === 'CPSAPP') {
