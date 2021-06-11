@@ -32,8 +32,7 @@ export default {
   },
   methods: {
     // 直接调用打开方法,不加dialog
-    confirm(iosLink = '', androdLink = '') {
-      this.showPop = false
+    confirm(event, iosLink = '', androdLink = '') {
       // 优化传链接的2种方式,一种直接通过方法调用,一种通过组件
       if (iosLink !== '') {
         this.myIosLink = iosLink
@@ -44,7 +43,7 @@ export default {
       this.checkOutApp()
     },
     // 调用dialog打开方法
-    openApp(iosLink = '', androdLink = '') {
+    openApp(event, iosLink = '', androdLink = '') {
       this.showPop = true
       // 优化传链接的2种方式,一种直接通过方法调用,一种通过组件
       if (iosLink !== '') {
@@ -53,6 +52,10 @@ export default {
       if (androdLink !== '') {
         this.myAndrodLink = androdLink
       }
+    },
+    openAppConfirm() {
+      this.showPop = false
+      this.checkOutApp()
     },
     cancel() {
       this.showPop = false
@@ -92,7 +95,7 @@ export default {
           if (!isBlur) {
             window.location.href = downLoadUrl
           }
-        }, 1000)
+        }, 2000)
       }
       window.onblur = function () {
         isBlur = true

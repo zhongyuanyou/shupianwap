@@ -224,7 +224,6 @@ export default {
         })
         .catch((e) => {
           this.$parent.skeletonloading = false
-          console.log(e)
           Toast({
             message: e.data.error,
             iconPrefix: 'sp-iconfont',

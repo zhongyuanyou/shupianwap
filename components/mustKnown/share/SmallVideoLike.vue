@@ -6,13 +6,14 @@
         v-for="(item, index) in mVlist"
         :key="index"
         class="item"
-        :style="{
-          backgroundImage: 'url(' + item.image + ')',
-          backgroundSize: '100%',
-          'background-repeat': 'no-repeat',
-        }"
         @click="openApp"
       >
+        <sp-image
+          width="3.72rem"
+          height="6.61rem"
+          fit="cover"
+          :src="item.image"
+        />
         <div class="content">
           <div class="count">{{ item.custTotalCount }} 次观看</div>
           <div class="tile">{{ item.videoName }}</div>
@@ -24,19 +25,23 @@
       v-model="showPop"
       button-type="confirm"
       :field="Field"
-      @confirm="confirm"
+      @confirm="openAppConfirm"
       @cancel="cancel"
     />
   </div>
 </template>
 
 <script>
+import { Image } from '@chipspc/vant-dgg'
 import openappV2 from '@/mixins/openappV2'
 import knownApi from '@/api/known'
 import { numChangeW } from '@/utils/common'
 
 export default {
   name: 'KnownSmallVideoLike',
+  components: {
+    [Image.name]: Image,
+  },
   mixins: [openappV2],
   props: {
     categoryId: {
@@ -103,16 +108,16 @@ export default {
     color: #fff;
   }
   .video-list {
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
-    width: 100%;
     .item {
       position: relative;
       display: inline-block;
       box-sizing: border-box;
       border: 1px #1a1a1a solid;
       width: 50%;
-      height: 660px;
+      height: 661px;
       .content {
         position: absolute;
         display: flex;
@@ -124,13 +129,9 @@ export default {
         color: #fff;
         width: 100%;
         height: 200px;
-        background-image: linear-gradient(
-          0deg,
-          rgba(0, 0, 0, 0.4) 0%,
-          rgba(0, 0, 0, 0) 100%
-        );
         bottom: 0;
         left: 0;
+        right: 0;
         .count {
           font-size: 24px;
           opacity: 0.8;

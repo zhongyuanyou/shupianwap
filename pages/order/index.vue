@@ -217,7 +217,6 @@ export default {
     changeTab(name) {
       // 初始化数据列表
       this.page = 1
-      console.log('selectedOrderStatus', name)
       this.selectedOrderStatus = name
       this.loadingMore = false
       this.noMore = false
@@ -248,7 +247,6 @@ export default {
           const arr = res.records
           for (let i = 0, l = arr.length; i < l; i++) {
             this.changeMoney(arr[i])
-            console.log('arr[i].cusOrderPayType', arr[i].cusOrderPayType)
             if (
               arr[i].cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
               arr[i].payStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
@@ -273,7 +271,7 @@ export default {
           this.loadingList = false
         })
         .catch((error) => {
-          console.log('error', error)
+          console.error(error)
           if (this.page === 1) {
             this.list = []
           }

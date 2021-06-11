@@ -1,6 +1,6 @@
 <template>
   <div class="m-known-share vlike">
-    <div class="like">猜你喜欢</div>
+    <div v-if="mVlist.length > 0" class="like">猜你喜欢</div>
     <div v-if="mVlist.length > 0" class="video-list">
       <div
         v-for="(item, index) in mVlist"
@@ -8,14 +8,14 @@
         class="item"
         @click="openApp"
       >
-        <div
-          class="item-video"
-          :style="{
-            backgroundImage: 'url(' + item.image + ')',
-            backgroundSize: '100%',
-            'background-repeat': 'no-repeat',
-          }"
-        >
+        <div class="item-video">
+          <sp-image
+            width="2.4rem"
+            height="1.35rem"
+            radius="8px"
+            fit="cover"
+            :src="item.image"
+          />
           <div class="time">{{ item.custVideoTime }}</div>
         </div>
         <div class="item-desc">
@@ -31,19 +31,23 @@
       v-model="showPop"
       button-type="confirm"
       :field="Field"
-      @confirm="confirm"
+      @confirm="openAppConfirm"
       @cancel="cancel"
     />
   </div>
 </template>
 
 <script>
+import { Image } from '@chipspc/vant-dgg'
 import openappV2 from '@/mixins/openappV2'
 import knownApi from '@/api/known'
 import { secondToTime } from '@/utils/common'
 
 export default {
   name: 'KnownVideoLike',
+  components: {
+    [Image.name]: Image,
+  },
   mixins: [openappV2],
   props: {
     categoryId: {
@@ -102,7 +106,6 @@ export default {
 
 <style lang="less" scoped>
 .m-known-share.vlike {
-  padding: 16px 32px;
   .like {
     color: #222222;
     font: bold 32px/44px @fontf-pfsc-med;
@@ -114,11 +117,15 @@ export default {
       display: flex;
       &-video {
         position: relative;
+        background: #f5f5f5;
+        margin-right: 28px;
         width: 240px;
         height: 135px;
-        background: #f5f5f5;
-        border-radius: 8px;
-        margin-right: 28px;
+        img {
+          width: 240px;
+          height: 135px;
+          border-radius: 8px;
+        }
         .time {
           position: absolute;
           padding: 3px 8px;
