@@ -1,58 +1,46 @@
 <template>
   <div class="m-known-share courseVideo">
     <app-link />
-    <div class="placeholder"></div>
     <client-only>
-      <sp-video :vod-url="url" :sp-config="config" :show-video="true">
+      <sp-video :vod-url="vurl" :sp-config="config" :show-video="true">
       </sp-video>
     </client-only>
     <sp-tabs>
       <sp-tab title="简介">
         <div class="introduction">
           <div class="introduction-tile">
-            新时代下中国开放新格局、新趋势和中美贸易摩擦
+            {{ vDetail.courseName }}
           </div>
           <div class="introduction-desc">
             <div class="name">
-              <span>黄奇帆</span>
-              <span>中国国际经济交流中心副理事长</span>
+              <span>{{ vDetail.authorName }}</span>
+              <span>{{ vDetail.authorTitle }}</span>
             </div>
-            <div class="date">956次播放 · 2021-11-01发布</div>
+            <div class="date">
+              {{ vDetail.custTotalViewCount }} 次播放 ·
+              {{ vDetail.custUpdateTime }} 发布
+            </div>
           </div>
           <div class="introduction-course">
             <div class="tile">课程简介</div>
-            <div class="richtxt"></div>
+            <div class="richtxt" v-html="vDetail.courseDesc"></div>
           </div>
         </div>
       </sp-tab>
       <sp-tab title="目录">
         <div class="list">
-          <div class="tile">目录 3</div>
+          <div class="tile">目录 {{ vDetail.custCourseCount }}</div>
           <div class="section-block">
-            <div class="section">
+            <div
+              v-for="(item, index) in vDetail.courseVideos"
+              :key="index"
+              class="section z-active"
+            >
               <div class="desc">
-                <span>1</span>
-                <span
-                  >通过设计让品牌起死回生，对于商业设计而言到底有什么用？</span
-                >
+                <span>{{ index + 1 }}</span>
+                <span>{{ item.videoName }}</span>
               </div>
-              <div>08:00</div>
-            </div>
-            <div class="section z-active">
-              <div class="desc">
-                <span>2</span>
-                <span
-                  >通过设计让品牌起死回生，对于商业设计而言到底有什么用？</span
-                >
-              </div>
-              <div>08:00</div>
-            </div>
-            <div class="section">
-              <div class="desc">
-                <span>3</span>
-                <span>通过设计让品牌起死</span>
-              </div>
-              <div>08:00</div>
+              <div>{{ item.custDuration }}</div>
             </div>
           </div>
           <video-like></video-like>
@@ -64,6 +52,9 @@
 
 <script>
 import { Tab, Tabs } from '@chipspc/vant-dgg'
+import knownApi from '@/api/known'
+import openappV2 from '@/mixins/openappV2'
+import { numChangeW, secondToTime } from '@/utils/common'
 
 export default {
   name: 'KnownCourseVideo',
@@ -73,25 +64,68 @@ export default {
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
   },
+  mixins: [openappV2],
   data() {
     return {
-      url: '//sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/mp4/xgplayer-demo-360p.mp4',
       config: {
-        height: '30vh',
+        height: '4.22rem',
         width: '100vw',
       },
+      vId: '',
+      categoryId: '', // 种类id
+      vurl: '', // 视频url
+      vDetail: {},
     }
   },
-  methods: {},
+  mounted() {
+    /*
+    if (!this.$route.query.id) {
+      this.$xToast.error('获取视频信息失败')
+      return
+    }
+    */
+    this.vId = this.$route.query.id || '8088995553897938944'
+    this.getVideoApi()
+  },
+  methods: {
+    // 查询视频信息
+    getVideoApi() {
+      const params = {
+        id: this.vId,
+      }
+      this.$axios
+        .post(knownApi.video.courseDetail, params)
+        .then((res) => {
+          if (res.code !== 200) {
+            throw new Error('查询视频失败')
+          }
+          this.vDetail = res.data
+          this.categoryId = res.data.courseVideos[0].categoryId
+          this.vurl = res.data.courseVideos[0].videoUrl
+          this.config.poster = res.data.courseVideos[0].image
+          this.buildDetail()
+        })
+        .catch((e) => {
+          this.$xToast.error(e.message)
+        })
+    },
+    buildDetail() {
+      this.vDetail.custUpdateTime = this.vDetail.updateTime.split(' ')[0]
+      this.vDetail.custTotalViewCount = numChangeW(this.vDetail.totalViewCount)
+      this.vDetail.courseVideos.forEach((element) => {
+        element.custDuration = secondToTime(element.duration)
+      })
+      this.vDetail.custCourseCount = this.vDetail
+        ? this.vDetail.courseVideos.length
+        : 0
+    },
+  },
 }
 </script>
 
 <style lang="less" scoped>
 .m-known-share.courseVideo {
   background: #fff;
-  .placeholder {
-    height: 120px;
-  }
   ::v-deep.sp-tabs {
     .sp-tabs__wrap {
       height: 80px;

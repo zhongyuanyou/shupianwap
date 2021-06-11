@@ -1,6 +1,6 @@
 <template>
   <div class="m-known-share vlike">
-    <div class="like">猜你喜欢</div>
+    <div v-if="mVlist.length > 0" class="like">猜你喜欢</div>
     <div v-if="mVlist.length > 0" class="video-list">
       <div
         v-for="(item, index) in mVlist"
