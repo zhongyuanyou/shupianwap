@@ -56,7 +56,7 @@
       v-model="showPop"
       button-type="confirm"
       :field="Field"
-      @confirm="confirm"
+      @confirm="openAppConfirm"
       @cancel="cancel"
     />
   </div>
@@ -71,7 +71,7 @@ import { numChangeW, secondToTime } from '@/utils/common'
 export default {
   name: 'KnownCourseVideo',
   components: {
-    AppLink: () => import('@/components/mustKnown/share/AppLink'),
+    AppLink: () => import('@/components/common/downLoadArea'),
     VideoLike: () => import('@/components/mustKnown/share/VideoLike'),
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,

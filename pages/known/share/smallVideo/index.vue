@@ -24,7 +24,7 @@
         v-model="showPop"
         button-type="confirm"
         :field="Field"
-        @confirm="confirm"
+        @confirm="openAppConfirm"
         @cancel="cancel"
       />
     </div>
