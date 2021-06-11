@@ -7,24 +7,31 @@
     </client-only>
     <div class="info">
       <div class="info-brand">
-        <sp-image width="0.84rem" height="0.84rem" round fit="cover" src="" />
-        <div class="info-brand-tile">
-          <div class="name">乐享werewdfsdfsdweerwerwerwerwerwer创业帮</div>
-          <div class="desc">商业因服务更美werewrwerwerewre好</div>
+        <sp-image
+          width="0.84rem"
+          height="0.84rem"
+          round
+          fit="cover"
+          :src="vDetail.custavatar"
+          @click="openApp"
+        />
+        <div class="info-brand-tile" @click="openApp">
+          <div class="name">{{ vDetail.authorName }}</div>
+          <div class="desc">{{ vDetail.custbriefIntroduction }}</div>
         </div>
         <sp-button color="#4974F5" @click="openApp">
           <my-icon name="tianjia" size="0.2rem" color="#FFFFFF" />
           关注</sp-button
         >
       </div>
-      <div class="info-tile">{{ vDetail.videoName }}</div>
+      <div class="info-tile" @click="openApp">{{ vDetail.videoName }}</div>
       <div class="info-desc">
         {{ vDetail.custTotalViewCount }}次播放 · 发布于{{
           vDetail.custUpdateTime
         }}
       </div>
     </div>
-    <video-like></video-like>
+    <video-like :category-id="categoryId"></video-like>
     <sp-center-popup
       v-model="showPop"
       button-type="confirm"
@@ -79,7 +86,7 @@ export default {
         id: this.vId,
       }
       this.$axios
-        .post(knownApi.video.videoDetail, params)
+        .post(knownApi.video.videoUserDetail, params)
         .then((res) => {
           if (res.code !== 200) {
             throw new Error('查询视频失败')

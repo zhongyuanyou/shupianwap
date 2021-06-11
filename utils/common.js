@@ -160,3 +160,26 @@ export const numChangeW = (num, suffix = 'w') => {
     return 0
   }
 }
+
+/**
+ *
+ * @param {秒} second
+ * @returns
+ * 将秒转化为 '00 : 21 : 44' 这种形式返回
+ */
+export const secondToTime = (second) => {
+  const num = Number(second)
+  const hour =
+    Math.floor(num / 3600) < 10
+      ? '0' + Math.floor(num / 3600)
+      : Math.floor(num / 3600) < 10
+  const minute =
+    Math.floor((num - hour * 3600) / 60) < 10
+      ? '0' + Math.floor((num - hour * 3600) / 60)
+      : Math.floor((num - hour * 3600) / 60)
+  const sed =
+    num - hour * 3600 - minute * 60 < 10
+      ? '0' + (num - hour * 3600 - minute * 60)
+      : num - hour * 3600 - minute * 60
+  return `${hour}:${minute}:${sed}`
+}

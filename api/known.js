@@ -53,10 +53,11 @@ const knownApi = {
     findListByStatus: `${CHIPS_WAP_BASE_URL}/yk/known/v2/find_question_article_bystatus.do`, // 搜索 文章 | 问题 | 回答 list
   },
   video: {
-    videoList: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/video_list.do`,
-    videoDetail: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/video_detail.do`,
-    courseList: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/course_list.do`,
-    courseDetail: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/course_detail.do`,
+    videoList: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/video_list.do`, // 查询视频列表
+    videoDetail: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/video_detail.do`, // 查询视频详情
+    videoUserDetail: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/video_user_detail.do`, // 查询视频详情,包含用户信息及头像
+    courseList: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/course_list.do`, // 查询课程列表
+    courseDetail: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/course_detail.do`, // 查询课程详情
   },
 }
 export default knownApi
