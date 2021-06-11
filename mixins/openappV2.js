@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     // 直接调用打开方法,不加dialog
-    confirm(iosLink = '', androdLink = '') {
+    confirm(event, iosLink = '', androdLink = '') {
       // 优化传链接的2种方式,一种直接通过方法调用,一种通过组件
       if (iosLink !== '') {
         this.myIosLink = iosLink
