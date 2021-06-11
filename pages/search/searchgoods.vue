@@ -156,7 +156,6 @@ export default {
         // 那么在切换列表的时候需要重新请求数据
         setTimeout(() => {
           // 将事件放到eventloop中去
-          console.log('this.tabVues[this.reqType]', this.tabVues[this.reqType])
           this.tabVues[this.reqType] &&
             this.tabVues[this.reqType].initGoodsList()
         }, 0)
@@ -211,7 +210,7 @@ export default {
         .then((result) => result)
         .catch((e) => {
           if (e.code !== 200) {
-            console.log(e)
+            console.error(e)
           }
         })
       const b = dict
@@ -219,7 +218,7 @@ export default {
         .then((result) => result)
         .catch((e) => {
           if (e.code !== 200) {
-            console.log(e)
+            console.error(e)
           }
         })
       Promise.all([a, b]).then((res) => {

@@ -185,7 +185,6 @@ export default {
       }
     },
     setCancelName(cusOrderCancelReason) {
-      console.log('setCancelName', cusOrderCancelReason)
       cusOrderCancelReason = cusOrderCancelReason || this.cusOrderCancelReason
       if (cusOrderCancelReason) {
         const data = JSON.parse(JSON.stringify(this.reasonList))

@@ -384,6 +384,7 @@ export default {
         .catch((err) => {
           this.loading = false
           this.$xToast.error(err.message || '获取支付信息失败')
+          console.error(err)
         })
     },
     // 判断是分批支付还是全款支付等
@@ -646,6 +647,7 @@ export default {
           .catch((err) => {
             this.loading = false
             this.$xToast.error(err.message || '操作失败')
+            console.error(err)
           })
       } else {
         this.switchOptionType()
@@ -672,7 +674,8 @@ export default {
           else this.getDetail()
         })
         .catch((error) => {
-          console.log('err', error)
+          console.error(error)
+          this.$xToast.error('操作失败，请稍后重试')
         })
     },
     // 不同意协议
@@ -742,6 +745,7 @@ export default {
         })
         .catch((err) => {
           this.$xToast.error(err.message || '操作失败')
+          console.error(err)
         })
     },
     // 取消订单
@@ -770,6 +774,7 @@ export default {
         .catch((err) => {
           this.loading = false
           this.$xToast.error(err.message || '操作失败')
+          console.error(err)
         })
     },
     // 价格处理分转元

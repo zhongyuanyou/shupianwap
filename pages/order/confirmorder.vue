@@ -333,7 +333,7 @@ export default {
         .catch((e) => {
           if (e.code !== 200) {
             this.$xToast.show(e.message)
-            console.log(e)
+            console.error(e)
             setTimeout(function () {
               that.$router.back(-1)
             }, 2000)
@@ -382,7 +382,7 @@ export default {
         }
       } catch (err) {
         this.$xToast.show('请求数据失败，请稍后再试')
-        console.log(err)
+        console.error(err)
         setTimeout(function () {
           that.$router.back(-1)
         }, 2000)
@@ -500,7 +500,7 @@ export default {
               icon: 'popup_ic_fail',
               overlay: true,
             })
-            console.log(e)
+            console.error(e)
           })
       }
     },
