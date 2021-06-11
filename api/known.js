@@ -27,6 +27,9 @@ const knownApi = {
     subjectList: `${CHIPS_WAP_BASE_URL}/nk/known_category/v1/subject.do`, // 获取分类列表
     attentionMore: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/attention_more.do`, // 关注更多列表
     detail: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_detail.do`,
+
+    articleDetail: `${CHIPS_WAP_BASE_URL}/nk/known_share/v1/article_detail.do`,
+
     recommendArticle: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/recommendArticle.do`,
     findAttention: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/findAttention.do`,
     findMyInvitedPage: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_my_invited_page.do`, // 我被邀请回答的问题分页查询
