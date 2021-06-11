@@ -77,6 +77,7 @@ export default {
     border: none;
     border-radius: 8px;
     color: #ffffff;
+    padding: 0;
   }
   ::v-deep .sp-center-popup {
     width: 540px;
