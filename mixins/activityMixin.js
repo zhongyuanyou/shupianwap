@@ -53,6 +53,8 @@ export default {
   },
   data() {
     return {
+      isInit: true,
+      initList: [],
       endCountDownTimer: null,
       countDownTimer: null,
       defaultData: {
@@ -370,9 +372,24 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.activityProductList = this.activityProductList.concat(
-              res.data.rows
-            )
+            if (
+              this.isInit &&
+              location.href.match('activity/special') &&
+              !this.recommendProductList.length
+            ) {
+              this.initList = res.data.rows
+              this.recommendProductList = JSON.parse(
+                JSON.stringify(res.data.rows)
+              ).splice(0, 3)
+              this.activityProductList = JSON.parse(
+                JSON.stringify(res.data.rows)
+              ).splice(3, res.data.rows.length)
+            } else {
+              this.activityProductList = this.activityProductList.concat(
+                res.data.rows
+              )
+            }
+            this.isInit = false
             if (this.activityProductList.length === 0) {
               // this.isNoData = true
             }
@@ -426,7 +443,11 @@ export default {
           .get(activityApi.activityProductList, { params })
           .then((res) => {
             if (res.code === 200) {
-              this.recommendProductList = res.data.rows
+              if (res.data.rows.length) {
+                this.recommendProductList = res.data.rows
+              } else {
+                this.recommendProductList = this.initList.splice(0, 3)
+              }
             } else {
               throw new Error('服务异常，请刷新重试！')
             }
@@ -452,10 +473,8 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             if (res.data.sortMaterialList.length) {
-              this.productAdvertData = res.data.sortMaterialList[0].materialList.slice(
-                0,
-                3
-              )
+              this.productAdvertData =
+                res.data.sortMaterialList[0].materialList.slice(0, 3)
             }
           } else {
             Toast.fail({
@@ -479,8 +498,7 @@ export default {
     clickInputHandle() {
       if (this.isInApp) {
         const iOSRouter = {
-          path:
-            'CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation',
+          path: 'CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation',
           parameter: {
             routerPath: 'cpsc/search/page',
           },

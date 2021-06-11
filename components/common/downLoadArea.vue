@@ -1,20 +1,28 @@
 <template>
   <div class="download-area">
-    <div class="download_left">
-      <div class="download_left_icon">
-        <my-icon name="logo_mian" size="0.40rem" color="#4974F7" />
-      </div>
-      <div class="download_left_des">
-        <div class="download_left_des_title">薯片找人APP</div>
-        <div class="download_left_des_word">找人服务，尽在薯片找人</div>
-      </div>
+    <img :src="$ossImgSetV2('g6trabnxtg80000.png')" class="logo" />
+    <div class="desc">
+      <div class="desc-name">薯片APP</div>
+      <div class="desc-desc">企业服务大平台</div>
     </div>
-    <div class="download_right" @click="openApp">立即打开</div>
+    <sp-button class="button" @click="openApp">立刻打开</sp-button>
+    <sp-center-popup
+      v-model="showPop"
+      button-type="confirm"
+      :field="Field"
+      @confirm="openAppConfirm"
+      @cancel="cancel"
+    />
   </div>
 </template>
-
 <script>
+import { Button } from '@chipspc/vant-dgg'
+import openappV2 from '@/mixins/openappV2'
+
 export default {
+  name: 'DownLoadArea',
+  components: { [Button.name]: Button },
+  mixins: [openappV2],
   props: {
     iosLink: {
       type: String,
@@ -27,127 +35,77 @@ export default {
   },
   data() {
     return {
-      url: '',
-      showConfirm: false,
-      downLoadUrl: '',
+      myIosLink: this.iosLink,
+      myAndrodLink: this.androdLink,
     }
-  },
-  mounted() {
-    const userAgent = window.navigator.userAgent
-    this.isAndroid =
-      userAgent.indexOf('Android') > -1 || userAgent.indexOf('Adr') > -1 // android终端
-    this.isIOS = userAgent.match(/iPhone|iPad|iPod/i) ? 1 : 0 // ios终端
-    // this.showDownLoadArea = this.isAndroid || this.isIOS
-  },
-  methods: {
-    openApp() {
-      this.checkOutApp()
-    },
-    checkOutApp() {
-      const ua = window.navigator.userAgent
-      let isBlur = false
-      let url = ''
-      let downLoadUrl = ''
-      if (this.isIOS) {
-        url = this.iosLink
-        downLoadUrl = 'https://apps.apple.com/cn/app/薯片找人/id1535886630'
-      } else if (this.isAndroid) {
-        url = this.androdLink
-        downLoadUrl =
-          'http://m.pp.cn/detail.html?appid=8180749&ch_src=pp_dev&ch=default'
-      } else {
-        this.$xToast.show({
-          message: '请使用手机浏览器访问本页面即可打开薯片找人APP',
-          duration: 3000,
-          icon: 'toast_ic_remind',
-          forbidClick: true,
-        })
-        return
-      }
-      if (ua.match(/MicroMessenger/i) === 'micromessenger') {
-        // 是否微信打开
-        this.$xToast.show({
-          message: '微信内不支持打开外部应用，请更换为其他浏览器打开本页面。',
-          duration: 3000,
-          icon: 'toast_ic_remind',
-          forbidClick: true,
-        })
-      } else {
-        location.href = url // app的 url scheme
-        setTimeout(function () {
-          if (!isBlur) {
-            window.location.href = downLoadUrl
-          }
-        }, 1000)
-      }
-      window.onblur = function () {
-        isBlur = true
-      }
-      const hiddenProperty =
-        'hidden' in document
-          ? 'hidden'
-          : 'webkitHidden' in document
-          ? 'webkitHidden'
-          : 'mozHidden' in document
-          ? 'mozHidden'
-          : null
-      const visibilityChangeEvent = hiddenProperty.replace(
-        /hidden/i,
-        'visibilitychange'
-      )
-      const onVisibilityChange = function () {
-        if (document[hiddenProperty]) {
-          console.log('失去焦點')
-          isBlur = true
-        }
-      }
-      document.addEventListener(visibilityChangeEvent, onVisibilityChange)
-    },
   },
 }
 </script>
-
 <style lang="less" scoped>
-@font-medium: pingfangsc-medium;
-@font-regular: pingfangsc-regular;
-.mixin-flex {
+.download-area {
+  position: relative;
   display: flex;
   align-items: center;
-}
-
-.download-area {
-  font-size: 24px;
-  padding: 14px 40px 0 40px;
-  height: 90px;
-  display: flex;
-  justify-content: space-between;
-  color: #222;
-  .icon {
-    width: 40px;
+  width: 100%;
+  height: 120px;
+  padding: 0 28px;
+  background: #fff;
+  .logo {
+    height: 80px;
+    width: 80px;
   }
-  .download_left {
-    width: 320px;
-    height: 100%;
+  .desc {
+    margin-left: 16px;
     display: flex;
-    justify-content: space-between;
-    .download_left_icon {
-      width: 40px;
-      height: 40px;
-      margin-top: 10px;
-      font-size: 36px;
-      overflow: hidden;
+    flex-direction: column;
+    &-name {
+      font: bold 32px @fontf-pfsc-med;
+      color: #222;
+    }
+    &-desc {
+      font: 24px @fontf-pfsc-reg;
+      color: #999;
     }
   }
-  .download_right {
-    font-size: 24px;
-    width: 120px;
+  .button {
+    position: absolute;
+    right: 28px;
+    font: bold 26px @fontf-pfsc-med;
+    background: #4974f5;
+    width: 160px;
+    height: 64px;
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+  }
+  ::v-deep .sp-center-popup {
+    width: 540px;
+  }
+  ::v-deep .sp-center-popup__containerConfirm {
+    width: 540px;
+  }
+  ::v-deep .sp-center-popup__title {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+    height: 130px;
+    font: bold 36px/130px @fontf-pfsc-med;
+    color: #1a1a1a;
     text-align: center;
-    height: 50px;
-    margin-top: 10px;
-    line-height: 50px;
-    color: #4974f7;
-    border: 1px solid #4974f7;
-    border-radius: 12px;
+    box-sizing: border-box;
+  }
+  ::v-deep .sp-center-popup__cancel {
+    line-height: 96px;
+    height: 96px;
+    font-size: 32px;
+    color: #222222;
+  }
+  ::v-deep .sp-center-popup__confirm {
+    line-height: 96px;
+    height: 96px;
+    font-size: 32px;
+    font-weight: bold;
+    color: #4974f5;
   }
 }
 </style>

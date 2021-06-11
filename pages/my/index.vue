@@ -52,6 +52,26 @@
     <!--E 我的订单-->
     <!--S 按钮区-->
     <div class="my_btns">
+      <div class="my_btns_item" @click="handleClick('/my/collection', 'login')">
+        <div class="my_btns_item_icon">
+          <my-icon
+            name="shoucang"
+            size="0.36rem"
+            color="#D80808"
+          />
+        </div>
+        <div class="my_btns_item_con">
+          我的收藏
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
       <div
         class="my_btns_item"
         @click="handleClick('/contract/contractList', 'login')"

@@ -6,11 +6,10 @@
         :sp-config="config"
         :show-video="true"
         :ignore-plugins="iplugins"
-        @errorBtnHandle="errorBtnHandle"
       >
       </sp-video>
     </client-only>
-    <small-video-like />
+    <small-video-like :category-id="categoryId" />
   </div>
 </template>
 
@@ -26,15 +25,16 @@ export default {
       config: {
         height: '100vh',
         width: '100vw',
+        autoplay: true,
       },
       iplugins: ['fullscreen'],
+      categoryId: '',
+      vLikeList: [],
     }
   },
-  methods: {
-    errorBtnHandle(vThis) {
-      this.url =
-        '//sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/mp4/xgplayer-demo-360p.mp4'
-    },
+  mounted() {
+    this.url = this.$route.query.vurl
+    this.categoryId = this.$route.query.categoryId
   },
 }
 </script>

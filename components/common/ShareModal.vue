@@ -1,5 +1,5 @@
 <template>
-  <div class="sp-popup">
+  <div v-if="partnerId && plannerId" class="sp-popup">
     <!-- <div v-show="!visible" class="inception" @click="showFullScreen">
       <img src="@/static/image/page/kefu.png" />
     </div> -->
@@ -103,9 +103,8 @@ export default {
       partnerId: '',
     }
   },
-  created() {
-    this.plannerId = this.$route.query.plannerId
-    this.shareId = this.$route.query.shareId
+  mounted() {
+    this.plannerId = this.$route.query.plannerId || this.$route.query.homeUserId
     this.partnerId = this.$route.query.partnerId
   },
   methods: {
@@ -121,6 +120,9 @@ export default {
       console.log('plannerId', this.plannerId)
       console.log('shareId', this.shareId)
       console.log('partnerId', this.partnerId)
+      this.$xToast.success('该功能正在开发中')
+      this.visible = false
+      this.$router.push({ query: {} })
     },
   },
 }

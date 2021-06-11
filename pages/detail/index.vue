@@ -1,7 +1,7 @@
 <template>
   <div class="company">
     <DetailTemplate scene-id1="app-fwcpxq-01" scene-id2="app-jycpxq-02" />
-    <ShareModal v-if="isShare" />
+    <ShareModal />
   </div>
 </template>
 
@@ -46,13 +46,13 @@ export default {
       isShare: false,
     }
   },
-  mounted() {
-    this.isShare = this.$route.query.isShare
-  },
   computed: {
     city() {
       return this.$store.state.city.currentCity
     },
+  },
+  mounted() {
+    this.isShare = this.$route.query.isShare
   },
   layout: 'keepAlive',
   watchQuery: ['productId'],

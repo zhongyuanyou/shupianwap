@@ -1,52 +1,102 @@
 <template>
   <div class="m-known-share vlike">
-    <div class="like">猜你喜欢</div>
-    <div class="video-list">
-      <div class="item">
-        <div class="item-video">
-          <div class="time">00:15:50</div>
+    <div v-if="mVlist.length > 0" class="like">猜你喜欢</div>
+    <div v-if="mVlist.length > 0" class="video-list">
+      <div
+        v-for="(item, index) in mVlist"
+        :key="index"
+        class="item"
+        @click="openApp"
+      >
+        <div
+          class="item-video"
+          :style="{
+            backgroundImage: 'url(' + item.image + ')',
+            backgroundSize: '100%',
+            'background-repeat': 'no-repeat',
+          }"
+        >
+          <div class="time">{{ item.custVideoTime }}</div>
         </div>
         <div class="item-desc">
-          <div class="tile">12314212523123213213213213</div>
+          <div class="tile">{{ item.videoName }}</div>
           <div class="desc">
-            <span>徐志斌</span>
-            <span>2021.05.17 12:30</span>
-          </div>
-        </div>
-      </div>
-      <div class="item">
-        <div class="item-video">
-          <div class="time">00:15:50</div>
-        </div>
-        <div class="item-desc">
-          <div class="tile">
-            顶呱呱科技有限公司10周庆，邀您好看顶呱呱科技有限公司10周庆，邀您好看顶呱呱科技有限公司10周庆，邀您好看
-          </div>
-          <div class="desc">
-            <span>徐志斌</span>
-            <span>2021.05.17 12:30</span>
-          </div>
-        </div>
-      </div>
-      <div class="item">
-        <div class="item-video">
-          <div class="time">00:15:50</div>
-        </div>
-        <div class="item-desc">
-          <div class="tile">顶呱呱科技有限公司10周庆，邀您好看</div>
-          <div class="desc">
-            <span>徐志斌</span>
-            <span>2021.05.17 12:30</span>
+            <span>{{ item.authorName }}</span>
+            <span>{{ item.createTime }}</span>
           </div>
         </div>
       </div>
     </div>
+    <sp-center-popup
+      v-model="showPop"
+      button-type="confirm"
+      :field="Field"
+      @confirm="openAppConfirm"
+      @cancel="cancel"
+    />
   </div>
 </template>
 
 <script>
+import openappV2 from '@/mixins/openappV2'
+import knownApi from '@/api/known'
+import { secondToTime } from '@/utils/common'
+
 export default {
   name: 'KnownVideoLike',
+  mixins: [openappV2],
+  props: {
+    categoryId: {
+      type: String,
+      default: '',
+    },
+  },
+  data() {
+    return {
+      mVlist: [],
+      apiLock: false,
+    }
+  },
+  watch: {
+    categoryId() {
+      this.getVideoApi()
+    },
+  },
+  mounted() {
+    if (this.categoryId !== '' && !this.apiLock) {
+      this.getVideoApi()
+    }
+  },
+  methods: {
+    // 查询视频信息
+    getVideoApi() {
+      this.apiLock = true
+      const params = {
+        categoryIds: [this.categoryId],
+      }
+      this.$axios
+        .post(knownApi.video.videoList, params)
+        .then((res) => {
+          if (res.code !== 200) {
+            throw new Error('查询视频失败')
+          }
+          this.buildVLikeList(res.data)
+        })
+
+        .catch((e) => {
+          this.$xToast.error(e.message)
+        })
+    },
+    buildVLikeList(data) {
+      // 这里注意,按照需求取 <= 4条(总共4条)
+      this.mVlist = data.filter((item, index) => {
+        return index < 4
+      })
+      this.mVlist.forEach((item) => {
+        item.custVideoTime = secondToTime(item.duration)
+      })
+    },
+  },
 }
 </script>
 

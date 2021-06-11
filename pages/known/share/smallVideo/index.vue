@@ -1,34 +1,96 @@
 <template>
   <div class="m-known-share smallVideo">
     <app-link />
-    <div class="small-video">
+    <div
+      class="small-video"
+      :style="{
+        backgroundImage: 'url(' + vDetail.image + ')',
+        backgroundSize: '100%',
+      }"
+    >
       <my-icon
         name="bofang_mian"
         size="1.28rem"
         color="rgba(0,0,0,0.40)"
+        @click.native="link"
       ></my-icon>
       <div class="content">
-        <div class="name">@黄奇帆</div>
+        <div class="name">{{ vDetail.videoName }}</div>
         <div class="desc">
-          王健林批评马云：平时不看书，还讲一堆大道理,给青少年灌输不好思想
+          {{ vDetail.videoDesc }}
         </div>
       </div>
+      <sp-center-popup
+        v-model="showPop"
+        button-type="confirm"
+        :field="Field"
+        @confirm="openAppConfirm"
+        @cancel="cancel"
+      />
     </div>
-    <small-video-like />
+    <small-video-like :category-id="categoryId" />
   </div>
 </template>
 
 <script>
+import knownApi from '@/api/known'
+import openappV2 from '@/mixins/openappV2'
+
 export default {
   name: 'KnownSmallVideo',
   components: {
-    AppLink: () => import('@/components/mustKnown/share/AppLink'),
+    AppLink: () => import('@/components/common/downLoadArea'),
     SmallVideoLike: () => import('@/components/mustKnown/share/SmallVideoLike'),
   },
+  mixins: [openappV2],
   data() {
-    return {}
+    return {
+      vId: '',
+      categoryId: '', // 种类id
+      vurl: '', // 视频url
+      vDetail: {},
+    }
   },
-  methods: {},
+  mounted() {
+    /*
+    if (!this.$route.query.id) {
+      this.$xToast.error('获取视频信息失败')
+      return
+    }
+    */
+    this.vId = this.$route.query.id || '8086190052126556160'
+    this.getVideoApi()
+  },
+  methods: {
+    // 查询视频信息
+    getVideoApi() {
+      const params = {
+        id: this.vId,
+      }
+      this.$axios
+        .post(knownApi.video.videoDetail, params)
+        .then((res) => {
+          if (res.code !== 200) {
+            throw new Error('查询视频失败')
+          }
+          this.vDetail = res.data
+          this.categoryId = res.data.categoryId
+          this.vurl = res.data.videoUrl
+        })
+        .catch((e) => {
+          this.$xToast.error(e.message)
+        })
+    },
+    link() {
+      this.$router.push({
+        path: '/known/share/smallvideo/detail',
+        query: {
+          categoryId: this.categoryId,
+          vurl: this.vurl,
+        },
+      })
+    },
+  },
 }
 </script>
 
@@ -43,7 +105,7 @@ export default {
     justify-content: center;
     background: #ccc;
     width: 100%;
-    height: 80vh;
+    height: 640px;
     .content {
       position: absolute;
       display: flex;

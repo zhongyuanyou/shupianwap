@@ -235,6 +235,7 @@ export default {
       handleType: '',
       isFollow: false,
       releaseFlag: false, // 是否发布的新文章
+      shareId: '', // 分享id
     }
   },
   computed: {
@@ -252,19 +253,18 @@ export default {
     },
   },
   created() {
-    if (process.client) {
-      this.getRecommendData()
-      if (this.userInfo.token) {
-        this.initFollow()
-      }
+    this.getRecommendData()
+    if (this.userInfo.token) {
+      this.initFollow()
     }
   },
 
   mounted() {
-    this.isShare = this.$route.query.isShare
     if (this.$route.query.status === 'release') {
       this.releaseFlag = true
     }
+    this.isShare = this.$route.query.isShare
+    this.shareId = this.$route.query.shareId
     window.addEventListener('scroll', this.handleScroll)
   },
   destroyed() {
