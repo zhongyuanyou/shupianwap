@@ -95,7 +95,7 @@ export default {
           if (!isBlur) {
             window.location.href = downLoadUrl
           }
-        }, 1000)
+        }, 2000)
       }
       window.onblur = function () {
         isBlur = true
