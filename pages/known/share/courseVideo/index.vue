@@ -8,10 +8,10 @@
     <sp-tabs>
       <sp-tab title="简介">
         <div class="introduction">
-          <div class="introduction-tile">
+          <div class="introduction-tile" @click="openApp">
             {{ vDetail.courseName }}
           </div>
-          <div class="introduction-desc">
+          <div class="introduction-desc" @click="openApp">
             <div class="name">
               <span>{{ vDetail.authorName }}</span>
               <span>{{ vDetail.authorTitle }}</span>
@@ -23,7 +23,11 @@
           </div>
           <div class="introduction-course">
             <div class="tile">课程简介</div>
-            <div class="richtxt" v-html="vDetail.courseDesc"></div>
+            <div
+              class="richtxt"
+              @click="openApp"
+              v-html="vDetail.courseDesc"
+            ></div>
           </div>
         </div>
       </sp-tab>
@@ -35,6 +39,7 @@
               v-for="(item, index) in vDetail.courseVideos"
               :key="index"
               class="section z-active"
+              @click="openApp"
             >
               <div class="desc">
                 <span>{{ index + 1 }}</span>
@@ -47,6 +52,13 @@
         </div>
       </sp-tab>
     </sp-tabs>
+    <sp-center-popup
+      v-model="showPop"
+      button-type="confirm"
+      :field="Field"
+      @confirm="confirm"
+      @cancel="cancel"
+    />
   </div>
 </template>
 

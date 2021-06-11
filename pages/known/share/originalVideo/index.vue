@@ -13,8 +13,9 @@
           round
           fit="cover"
           :src="vDetail.custavatar"
+          @click="openApp"
         />
-        <div class="info-brand-tile">
+        <div class="info-brand-tile" @click="openApp">
           <div class="name">{{ vDetail.authorName }}</div>
           <div class="desc">{{ vDetail.custbriefIntroduction }}</div>
         </div>
@@ -23,7 +24,7 @@
           关注</sp-button
         >
       </div>
-      <div class="info-tile">{{ vDetail.videoName }}</div>
+      <div class="info-tile" @click="openApp">{{ vDetail.videoName }}</div>
       <div class="info-desc">
         {{ vDetail.custTotalViewCount }}次播放 · 发布于{{
           vDetail.custUpdateTime
