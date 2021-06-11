@@ -252,14 +252,16 @@ export default {
     },
   },
   created() {
-    this.isShare = this.$route.query.isShare
-    this.getRecommendData()
-    if (this.userInfo.token) {
-      this.initFollow()
+    if (process.client) {
+      this.getRecommendData()
+      if (this.userInfo.token) {
+        this.initFollow()
+      }
     }
   },
 
   mounted() {
+    this.isShare = this.$route.query.isShare
     if (this.$route.query.status === 'release') {
       this.releaseFlag = true
     }

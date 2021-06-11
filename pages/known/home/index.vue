@@ -6,13 +6,15 @@
       :style="{ paddingTop: (appInfo.statusBarHeight || 0) + 'px' }"
     >
       <my-icon
+        v-if="!isShare"
         name="nav_ic_back"
         size="0.4rem"
         :color="fixed ? '#1A1A1A' : '#D8D8D8'"
-        @click.native="$back"
+        @click.native="goBack()"
       ></my-icon>
       <div style="margin-left: 0.2rem">{{ fixed ? userName : '' }}</div>
     </div>
+    <DownLoadArea v-if="isShare" />
     <div class="top_box">
       <div class="card">
         <sp-image round class="user_avatar" fit="cover" :src="avatar" />
@@ -125,6 +127,7 @@
       @release="release"
     ></comment-list>
     <sp-center-popup v-model="showPop" :field="Filed4" button-type="confirm" />
+    <ShareModal />
   </div>
 </template>
 
@@ -143,6 +146,8 @@ import Item from '@/components/mustKnown/home/Item'
 import { knownApi } from '~/api'
 import utils from '@/utils/changeBusinessData'
 import { domainUrl } from '~/config/index'
+import DownLoadArea from '@/components/common/downLoadArea'
+import ShareModal from '@/components/common/ShareModal'
 
 export default {
   name: 'Collection',
@@ -156,6 +161,8 @@ export default {
     [CenterPopup.name]: CenterPopup,
     CommentList,
     Item,
+    DownLoadArea,
+    ShareModal,
   },
   async asyncData({ $axios, query, store, redirect }) {
     if (!query.homeUserId && !store.state.user.userId) {
@@ -188,6 +195,7 @@ export default {
   },
   data() {
     return {
+      isShare: false,
       articleId: '', // 打开评论列表需要传的id
       userName: '',
       active: 0,
@@ -244,6 +252,7 @@ export default {
     },
   },
   mounted() {
+    this.isShare = this.$route.query.isShare
     this.getAdList()
     window.addEventListener('scroll', this.getScroll)
     const userType = this.type || utils.getUserType(this.type)
@@ -256,6 +265,10 @@ export default {
     }
   },
   methods: {
+    goBack(){
+      const list=window.history
+      console.log('goBack',list)
+    },
     open(item) {
       console.log(item)
       if (this.isInApp && this.appInfo.appCode === 'CPSAPP') {

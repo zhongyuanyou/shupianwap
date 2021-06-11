@@ -123,10 +123,12 @@
                 <div class="goods-price">
                   <span
                     v-if="
-                      item.price == 0 ||
-                      item.price === '0.00' ||
-                      item.price === '0.0' ||
-                      item.price === '0'
+                      !item.price ||
+                      (item.price &&
+                        (item.price == 0 ||
+                          item.price === '0.00' ||
+                          item.price === '0.0' ||
+                          item.price === '0'))
                     "
                     class="sales-proce"
                     ><span class="big-value">面议</span></span
