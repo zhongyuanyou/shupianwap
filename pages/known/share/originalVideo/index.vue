@@ -2,7 +2,12 @@
   <div class="m-known-share originalVideo">
     <app-link />
     <client-only>
-      <sp-video :vod-url="vurl" :sp-config="config" :show-video="true">
+      <sp-video
+        :vod-url="vurl"
+        :sp-config="config"
+        :show-video="true"
+        @errorBtnHandle="errorBtnHandle"
+      >
       </sp-video>
     </client-only>
     <div class="info">
@@ -104,6 +109,13 @@ export default {
     buildDetail() {
       this.vDetail.custUpdateTime = this.vDetail.updateTime.split(' ')[0]
       this.vDetail.custTotalViewCount = numChangeW(this.vDetail.totalViewCount)
+    },
+    errorBtnHandle() {
+      if (this.vId) {
+        this.getVideoApi()
+      } else {
+        this.$xToast.error('获取视频信息失败')
+      }
     },
   },
 }

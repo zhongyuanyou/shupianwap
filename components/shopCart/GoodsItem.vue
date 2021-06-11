@@ -330,11 +330,9 @@ export default {
 
   methods: {
     handleAsyncCheckboxChange(value) {
-      console.log('handleAsyncCheckboxChange:', value)
       this.handleOperation({ type: 'select', data: { value } })
     },
     beforeClose({ position, instance }) {
-      console.log('position:', position)
       switch (position) {
         case 'left':
         case 'cell':
@@ -346,11 +344,9 @@ export default {
       }
     },
     handleDetele() {
-      console.log('handleDetele')
       this.handleOperation({ type: 'detele', data: {} })
     },
     handleAttention() {
-      console.log('handleAttention')
       // this.$refs.swipeCell.close()
       this.handleOperation({ type: 'attention', data: {} })
     },
@@ -468,7 +464,6 @@ export default {
 
     // 增值服务的选择
     selecteAddService(data = {}) {
-      console.log('结果')
       const { activedList = [], id } = data
 
       const originData = this.skuData.specialItemList
@@ -516,7 +511,6 @@ export default {
 
     // 加入购物车
     addShoppingCar(data = {}) {
-      console.log(data)
       const {
         goodsId,
         skuAttrKey,
@@ -683,7 +677,6 @@ export default {
     getAppDeviceInfo() {
       return new Promise((resolve, reject) => {
         this.$appFn.dggDeviceInfo((res) => {
-          console.log('dggDeviceInfo res:', res)
           const { code, data = {} } = res
           if (code === 200) {
             resolve(data['X-Device-Code'])
@@ -698,7 +691,6 @@ export default {
     getAppRegion() {
       return new Promise((resolve, reject) => {
         this.$appFn.dggCityCode((res) => {
-          console.log('dggCityCode:', res)
           const { code, data } = res || {}
           if (code === 200) {
             const { adCode } = data
@@ -762,7 +754,6 @@ export default {
         }
         this.skuData = data
         this.loading = false
-        console.log(data)
         return data
       } catch (error) {
         console.error('getList:', error)
@@ -803,7 +794,6 @@ export default {
           specialItemList,
         }
         this.tempGoods = { ...this.tempGoods, ...data, price: salesPriceSum }
-        console.log(data)
         return data
       } catch (error) {
         console.error('getGoodsDetail:', error)
@@ -835,7 +825,6 @@ export default {
           type,
         }
         let data = await shoppingCar.update({ ...defalutParams, ...params })
-        console.log(data)
         data = data || {}
         return data
       } catch (error) {

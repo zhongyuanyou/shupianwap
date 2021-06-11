@@ -15,9 +15,9 @@
         @click.native="link"
       ></my-icon>
       <div class="content">
-        <div class="name">{{ vDetail.videoName }}</div>
+        <div class="name">{{ vDetail.authorName }}</div>
         <div class="desc">
-          {{ vDetail.videoDesc }}
+          {{ vDetail.videoName }}
         </div>
       </div>
       <sp-center-popup
@@ -59,6 +59,7 @@ export default {
     }
     */
     this.vId = this.$route.query.id || '8086190052126556160'
+
     this.getVideoApi()
   },
   methods: {
@@ -82,6 +83,10 @@ export default {
         })
     },
     link() {
+      if (!this.vId || !this.vurl) {
+        this.$xToast.error('获取视频信息失败')
+        return
+      }
       this.$router.push({
         path: '/known/share/smallvideo/detail',
         query: {

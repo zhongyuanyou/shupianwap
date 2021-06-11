@@ -183,7 +183,7 @@ export default {
         initData,
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return {
         initData,
       }
@@ -317,7 +317,7 @@ export default {
           this.initData = initData
         }
       } catch (error) {
-        console.log('error', error)
+        console.error(error)
       }
     },
     getMoreData() {

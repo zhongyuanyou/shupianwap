@@ -107,7 +107,6 @@ export default {
   },
   methods: {
     handleAsyncCheckboxChange(value) {
-      console.log('handleChange:', value)
       this.handleOperation({ type: 'selectAll', data: { value } })
     },
     handleOperation(value = {}) {

@@ -36,6 +36,7 @@ export default {
     this.url = this.$route.query.vurl
     this.categoryId = this.$route.query.categoryId
   },
+  methods: {},
 }
 </script>
 
