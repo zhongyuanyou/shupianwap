@@ -2,7 +2,12 @@
   <div class="m-known-share courseVideo">
     <app-link />
     <client-only>
-      <sp-video :vod-url="vurl" :sp-config="config" :show-video="true">
+      <sp-video
+        :vod-url="vurl"
+        :sp-config="config"
+        :show-video="true"
+        @errorBtnHandle="errorBtnHandle"
+      >
       </sp-video>
     </client-only>
     <sp-tabs>
@@ -38,7 +43,8 @@
             <div
               v-for="(item, index) in vDetail.courseVideos"
               :key="index"
-              class="section z-active"
+              class="section"
+              :class="[index === 0 ? 'z-active' : '']"
               @click="openApp"
             >
               <div class="desc">
@@ -48,7 +54,7 @@
               <div>{{ item.custDuration }}</div>
             </div>
           </div>
-          <video-like></video-like>
+          <video-like :category-id="categoryId"></video-like>
         </div>
       </sp-tab>
     </sp-tabs>
@@ -96,7 +102,7 @@ export default {
       return
     }
     */
-    this.vId = this.$route.query.id || '8088995553897938944'
+    this.vId = this.$route.query.id || '8089328421073170432'
     this.getVideoApi()
   },
   methods: {
@@ -112,7 +118,8 @@ export default {
             throw new Error('查询视频失败')
           }
           this.vDetail = res.data
-          this.categoryId = res.data.courseVideos[0].categoryId
+          // 这里是拿课程的类型
+          this.categoryId = res.data.categoryId
           this.vurl = res.data.courseVideos[0].videoUrl
           this.config.poster = res.data.courseVideos[0].image
           this.buildDetail()
@@ -130,6 +137,13 @@ export default {
       this.vDetail.custCourseCount = this.vDetail
         ? this.vDetail.courseVideos.length
         : 0
+    },
+    errorBtnHandle() {
+      if (this.vId) {
+        this.getVideoApi()
+      } else {
+        this.$xToast.error('获取视频信息失败')
+      }
     },
   },
 }
@@ -246,6 +260,14 @@ export default {
       .section:last-child {
         margin-bottom: 56px;
       }
+    }
+  }
+  ::v-deep .richtxt {
+    img {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
     }
   }
 }

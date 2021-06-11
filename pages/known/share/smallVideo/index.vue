@@ -1,17 +1,18 @@
 <template>
   <div class="m-known-share smallVideo">
     <app-link />
-    <div
-      class="small-video"
-      :style="{
-        backgroundImage: 'url(' + vDetail.image + ')',
-        backgroundSize: '100%',
-      }"
-    >
+    <div class="small-video">
+      <sp-image
+        width="100vw"
+        height="6.4rem"
+        fit="cover"
+        :src="vDetail.image"
+      />
       <my-icon
         name="bofang_mian"
         size="1.28rem"
         color="rgba(0,0,0,0.40)"
+        class="my-icon"
         @click.native="link"
       ></my-icon>
       <div class="content">
@@ -33,6 +34,7 @@
 </template>
 
 <script>
+import { Image } from '@chipspc/vant-dgg'
 import knownApi from '@/api/known'
 import openappV2 from '@/mixins/openappV2'
 
@@ -41,6 +43,7 @@ export default {
   components: {
     AppLink: () => import('@/components/common/downLoadArea'),
     SmallVideoLike: () => import('@/components/mustKnown/share/SmallVideoLike'),
+    [Image.name]: Image,
   },
   mixins: [openappV2],
   data() {
@@ -105,12 +108,15 @@ export default {
   min-height: 100vh;
   .small-video {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background: #ccc;
     width: 100%;
     height: 640px;
+    .my-icon {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
     .content {
       position: absolute;
       display: flex;
