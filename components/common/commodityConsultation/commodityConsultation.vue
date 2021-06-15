@@ -163,7 +163,6 @@ export default {
     if (this.$route.query.isShare && this.$route.plannerId) {
       this.getPlanerInfo(this.$route.plannerId)
     }
-    this.getPlanerInfo('607997736314102930')
   },
   methods: {
     getPlanerInfo(id) {
