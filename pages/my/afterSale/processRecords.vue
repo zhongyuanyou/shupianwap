@@ -2,18 +2,18 @@
   <div class="process-record">
     <Header title="处理记录" />
     <div class="process-box">
-      <sp-steps direction="vertical" :active="active">
-        <sp-step>
-          <h3>退款成功</h3>
-          <div class="date">2020年09月31日 10:00</div>
-          <p>已将500元入账至您的支付宝支付账户</p>
+      <sp-steps direction="vertical" :active="processRecordData.length - 1">
+        <sp-step v-for="(item, index) in processRecordData" :key="index">
+          <h3>{{ item.dealStatusNo }}</h3>
+          <div class="date">{{ item.dealTime }}</div>
+          <!-- <p>申请原因：{{ item.dealStatusNo }}</p>
           <div class="desc">
-            解决方案内容解决方案内容解决方案内容解决方案内容解决方案内容解决方案内容解决方案内容解决方案内容解决
+            {{ item.dealDetail }}
           </div>
           <ul>
             <li><img /></li>
             <li><img /></li>
-          </ul>
+          </ul> -->
         </sp-step>
       </sp-steps>
     </div>
@@ -26,6 +26,7 @@
 
 <script>
 import { Step, Steps } from '@chipspc/vant-dgg'
+import { afterSaleApi } from '@/api'
 import Header from '@/components/common/head/header'
 export default {
   components: {
@@ -36,7 +37,27 @@ export default {
   data() {
     return {
       active: 1,
+      page: 1,
+      limit: 1000,
+      processRecordData: [],
     }
+  },
+  created() {
+    this.getProcessRecords()
+  },
+  methods: {
+    async getProcessRecords() {
+      const res = await this.$axios.post(afterSaleApi.record, {
+        afterSaleId: this.$route.query.id,
+        limit: this.limit,
+        page: this.page,
+      })
+      if (res.code === 200) {
+        this.processRecordData = res.data.records
+      } else {
+        this.$message.error(res.message)
+      }
+    },
   },
 }
 </script>

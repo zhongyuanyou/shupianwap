@@ -4,13 +4,13 @@
     <div class="bank-list">
       <ul>
         <li
-          style="
-            background-image: linear-gradient(90deg, #14bdbb 0%, #0bb3b3 100%);
-          "
+          v-for="(item, index) in bankCardStyle"
+          :key="index"
+          :style="{ background: item.bg_color }"
           @click="$router.push('/my/wallet/bankCards/detail')"
         >
           <div class="left-logo">
-            <img />
+            <img :src="item.icon" />
           </div>
           <div class="right-info">
             <h3>中国工商银行</h3>
@@ -20,8 +20,9 @@
               ><span>3253</span>
             </div>
           </div>
+          <div class="bg-img"><img :src="item.bg_icon" /></div>
         </li>
-        <li
+        <!-- <li
           style="
             background-image: linear-gradient(90deg, #14bdbb 0%, #0bb3b3 100%);
           "
@@ -37,7 +38,7 @@
               ><span>3253</span>
             </div>
           </div>
-        </li>
+        </li> -->
       </ul>
     </div>
     <div class="footer-btn">
@@ -50,9 +51,64 @@
 
 <script>
 import Header from '@/components/common/head/header'
+
 export default {
   components: {
     Header,
+  },
+  data() {
+    return {
+      bankCardStyle: [
+        {
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/2k0jjobfx4c0000.png',
+          bg_icon:
+            'https://cdn.shupian.cn/sp-pt/wap/images/chze1ksovcg0000.png',
+          bg_color: '#0BB3B3',
+        },
+        {
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/byc0c33glcw0000.png',
+          bg_icon: 'https://cdn.shupian.cn/sp-pt/wap/images/rlbycqvjsb4000.png',
+          bg_color: '#E63B47',
+        },
+        {
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/3p91fh7h6t60000.png',
+          bg_icon:
+            'https://cdn.shupian.cn/sp-pt/wap/images/bnivu4nkbm80000.png',
+          bg_color: '#3777E5',
+        },
+        {
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/aexk52ox6sw0000.png',
+          bg_icon:
+            'https://cdn.shupian.cn/sp-pt/wap/images/e5m4yxb0se00000.png',
+          bg_color: '#28A264',
+        },
+        {
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png',
+          bg_icon:
+            'https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png',
+          bg_color: '#3777E5',
+        },
+      ],
+    }
+  },
+  created() {
+    this.bankCardsList()
+  },
+  methods: {
+    async bankCardsList() {
+      const res = await this.$axios.get(
+        'http://172.16.135.181:7001/service/yk/wallet/v1/card_list.do',
+        {
+          params: {
+            accountId: '1031618090432080787',
+          },
+        }
+      )
+      console.log(res)
+      if (res.code === 200) {
+        console.log(11111111)
+      }
+    },
   },
 }
 </script>
@@ -75,16 +131,32 @@ export default {
         align-items: center;
         margin-top: 32px;
         border-radius: 8px;
+        position: relative;
+        .bg-img {
+          position: absolute;
+          width: 190px;
+          height: 150px;
+          right: 16px;
+          bottom: 0;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
         .left-logo {
           display: inline-block;
           width: 60px;
           height: 60px;
-          background: #000;
+          background: #fff;
           overflow: hidden;
           display: flex;
+          align-items: center;
+          text-align: center;
+          border-radius: 60px;
+          justify-content: center;
           img {
-            width: 60px;
-            height: 60px;
+            width: 40px;
+            height: 40px;
             border: none;
           }
         }

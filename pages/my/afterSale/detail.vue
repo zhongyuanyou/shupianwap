@@ -4,21 +4,25 @@
       <template #right>
         <span
           class="recording"
-          @click="$router.push('/my/afterSale/processRecords')"
+          @click="
+            $router.push(
+              `/my/afterSale/processRecords?id=${afterSaleDetail.id}`
+            )
+          "
           >处理记录</span
         >
       </template>
     </Header>
     <div class="container">
-      <StatusBar :status="status">
+      <StatusBar :status="statusBar">
         <!-- 请您确认，待处理，售后中状态栏样式 commodity_ic_ttime-->
         <template #icon>
-          <div class="icon-box" :style="{ background: icon_bg }">
+          <div class="icon-box" :style="{ background: statusBar.icon_bg }">
             <sp-icon
               class-prefix="spiconfont"
               size="0.46rem"
-              :color="status.icon_color"
-              :name="status.icon_name"
+              :color="statusBar.icon_color"
+              :name="statusBar.icon_name"
             ></sp-icon>
           </div>
         </template>
@@ -26,7 +30,10 @@
 
       <div class="content">
         <!-- 处理意见 -->
-        <div class="content-box">
+        <div
+          v-if="afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_2'"
+          class="content-box"
+        >
           <div class="idea">
             <h3>处理意见</h3>
             <p>
@@ -35,7 +42,7 @@
           </div>
         </div>
         <!-- 退款 -->
-        <div class="content-box">
+        <div v-if="afterSaleDetail.afterSaleTotalMoney" class="content-box">
           <div class="refund-box">
             <div class="title">
               <div class="left">
@@ -44,7 +51,11 @@
               </div>
               <div
                 class="right"
-                @click="$router.push('/my/afterSale/refundRecord')"
+                @click="
+                  $router.push(
+                    `/my/afterSale/refundRecord?id=${afterSaleDetail.id}&orderId=${afterSaleDetail.orderId}`
+                  )
+                "
               >
                 退款明细
               </div>
@@ -54,12 +65,14 @@
                 <h3>退款金额</h3>
                 <p>预计1-5个工作日到账</p>
               </div>
-              <div class="right">500<span>元</span></div>
+              <div class="right">
+                {{ afterSaleDetail.afterSaleTotalMoney }}<span>元</span>
+              </div>
             </div>
           </div>
         </div>
         <!-- 售后方案 -->
-        <div class="content-box">
+        <!-- <div class="content-box">
           <div class="title-row">售后方案</div>
           <div class="row-list">
             <div class="row-list_title">
@@ -115,24 +128,37 @@
             </div>
             <div class="tips">退款将在确认方案后在1-5个工作日到账</div>
           </div>
-        </div>
+        </div> -->
         <!-- 售后明细 -->
         <div class="content-box">
           <div class="title-row">售后明细</div>
           <div class="row-list">
             <ul>
-              <li>
+              <li v-for="(item, index) in afterSaleDetail.skuList" :key="index">
                 <div class="img-box">
                   <img />
                 </div>
                 <div class="info">
                   <div class="top">
-                    <span class="mark blue">换</span>
-                    <span class="title">刻章</span>
+                    <span
+                      v-if="
+                        afterSaleDetail.afterSaleFactType ===
+                        'AFTER_SALE_TYPE_1'
+                      "
+                      class="mark red"
+                      >退</span
+                    >
+                    <span v-else class="mark blue">换</span>
+                    <span class="title">{{ item.spuName }}</span>
                   </div>
-                  <div class="center">武侯区；无注册地址；认缴申请税务</div>
-                  <div class="bottom">应付 500元，实付 500元</div>
-                  <div class="refund-money">退款金额 200元</div>
+                  <div class="center">{{ item.skuExtInfo }}</div>
+                  <div class="bottom">
+                    应付 {{ item.enablePayMoney }}元，实付
+                    {{ item.actualPayMoney }}元
+                  </div>
+                  <div class="refund-money">
+                    退款金额 {{ item.afterSaleMoney }}元
+                  </div>
                 </div>
               </li>
               <li>
@@ -141,8 +167,16 @@
                 </div>
                 <div class="info">
                   <div class="top">
-                    <span class="mark blue">换</span>
-                    <span class="title">刻章</span>
+                    <span
+                      v-if="
+                        afterSaleDetail.afterSaleFactType ===
+                        'AFTER_SALE_TYPE_1'
+                      "
+                      class="mark red"
+                      >退</span
+                    >
+                    <span v-else class="mark blue">换</span>
+                    <span class="title">测试页面展示</span>
                   </div>
                   <div class="center">武侯区；无注册地址；认缴申请税务</div>
                   <div class="bottom">应付 500元，实付 500元</div>
@@ -150,10 +184,11 @@
                 </div>
               </li>
             </ul>
-
             <div class="total-refund_amount">
-              <div class="title">退款金额：</div>
-              <div class="money">100<span>元</span></div>
+              <div class="title">应退款：</div>
+              <div class="money">
+                {{ afterSaleDetail.afterSaleTotalMoney }}<span>元</span>
+              </div>
             </div>
           </div>
         </div>
@@ -162,35 +197,41 @@
           <div class="info">
             <div class="item-row">
               <h3>售后编号</h3>
-              <p>DD201982652586353</p>
+              <p>{{ afterSaleDetail.afterSaleNo }}</p>
               <div class="copy">复制</div>
             </div>
             <div class="item-row">
               <h3>申请时间</h3>
-              <p>2020-09-21 12:40</p>
+              <p>{{ afterSaleDetail.afterSaleApplyTime }}</p>
             </div>
             <div class="item-row">
               <h3>关联订单</h3>
-              <p>2001</p>
+              <p>{{ afterSaleDetail.orderNo }}</p>
             </div>
             <div class="item-row">
               <h3>售后类型</h3>
-              <p>业务变更</p>
+              <p>
+                {{
+                  afterSaleDetail.afterSaleExpType === 'AFTER_SALE_TYPE_1'
+                    ? '退款'
+                    : '业务变更'
+                }}
+              </p>
             </div>
             <div class="item-row">
               <h3>售后原因</h3>
-              <p>办理超期</p>
+              <p>{{ afterSaleDetail.afterSaleReasonNo }}</p>
             </div>
             <div class="item-row">
               <h3>描述问题</h3>
               <div class="question">
                 <p>
-                  问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述
+                  {{ afterSaleDetail.afterSaleProblemDetail }}
                 </p>
-                <ul>
+                <!--  <ul>
                   <li><img /></li>
                   <li><img /></li>
-                </ul>
+                </ul> -->
               </div>
             </div>
           </div>
@@ -200,9 +241,31 @@
     <!-- 操作按钮 -->
     <div class="footer-btns">
       <button>联系客服</button>
-      <button @click="openDialog(0)">平台介入</button>
-      <button @click="openDialog(1)">撤销</button>
-      <button @click="openDialog(2)">确认方案</button>
+      <button
+        v-if="
+          afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_1' ||
+          afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_3'
+        "
+        @click="openDialog(0)"
+      >
+        平台介入
+      </button>
+      <button
+        v-if="
+          afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_1' ||
+          afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_2' ||
+          afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_3'
+        "
+        @click="openDialog(1)"
+      >
+        撤销
+      </button>
+      <button
+        v-if="afterSaleDetail.afterSaleStatusNoList === 'AFTERSALE_STATUS_3'"
+        @click="openDialog(2)"
+      >
+        确认方案
+      </button>
       <!-- <button class="pay-btn">去支付</button> -->
     </div>
   </div>
@@ -210,6 +273,7 @@
 
 <script>
 import { Dialog, Icon } from '@chipspc/vant-dgg'
+import { afterSaleApi } from '@/api'
 import Header from '@/components/common/head/header'
 import StatusBar from '@/components/afterSale/StatusBar'
 export default {
@@ -220,8 +284,6 @@ export default {
   },
   data() {
     return {
-      // 状态栏
-      status: {},
       // 双按钮弹窗
       doubleBtnDialog: [
         {
@@ -280,32 +342,90 @@ export default {
           confirmButtonText: '我知道了',
         },
       ],
+      afterSaleDetail: {},
+      // 状态栏
+      status: [
+        {
+          title: '请您确认',
+          desc: '请您确认售后方案',
+          bgColor: '#4974F5',
+          icon_color: '#4974F5',
+          icon_name: 'commodity_ic_ttime',
+          icon_bg: '#F2F5FF',
+        },
+        {
+          title: '售后关闭',
+          desc: '如有需要可重新发起',
+          bgColor: '#808080',
+          icon_color: '#BBBBBB',
+          icon_name: 'popup_ic_closeb',
+          icon_bg: '#F8F8F8',
+        },
+        {
+          title: '已完成',
+          desc: '退款将会在5个工作日打款到您的账户，请注意查',
+          bgColor: '#00B365',
+          icon_color: '#00B365',
+          icon_name: 'wancheng',
+          icon_bg: '#E5F7EF',
+        },
+      ],
+      statusBar: {},
     }
   },
   created() {
-    // 请您确认状态栏样式
-    // this.status.title = '请您支付'
-    // this.status.desc = '请您支付业务变更的剩余款项，以便尽快为您办理新业务'
-    // this.status.bgColor = '#4974F5'
-    // this.status.icon_color = '#4974F5'
-    // this.status.icon_name = 'commodity_ic_ttime'
-    // this.status.icon_bg = '#F2F5FF'
-    // 售后关闭状态栏样式
-    // this.status.title = '售后关闭'
-    // this.status.desc = '如有需要可重新发起'
-    // this.status.bgColor = '#808080'
-    // this.status.icon_color = '#BBBBBB'
-    // this.status.icon_name = 'popup_ic_closeb'
-    // this.status.icon_bg = '#F8F8F8'
-    // 已完成
-    this.status.title = '已完成'
-    this.status.desc = '退款将会在5个工作日打款到您的账户，请注意查收'
-    this.status.bgColor = '#00B365'
-    this.status.icon_color = '#00B365'
-    this.status.icon_name = 'wancheng'
-    this.status.icon_bg = '#E5F7EF'
+    this.getAfterSaleDetails()
   },
   methods: {
+    async getAfterSaleDetails() {
+      console.log(afterSaleApi.detail)
+      const res = await this.$axios.get(afterSaleApi.detail, {
+        params: {
+          id: this.$route.query.id,
+        },
+      })
+      if (res.code === 200) {
+        this.afterSaleDetail = res.data
+        switch (this.afterSaleDetail.afterSaleStatusNo) {
+          case 'AFTERSALE_STATUS_1':
+            this.statusBar = this.status[0]
+            this.statusBar.title = '待处理'
+            this.statusBar.desc = '您的售后正在飞速处理中，请耐心等待'
+            break
+          case 'AFTERSALE_STATUS_2':
+            this.statusBar = this.status[0]
+            this.statusBar.title = '商户驳回'
+            this.statusBar.desc = '商家驳回，请您处理'
+            break
+          case 'AFTERSALE_STATUS_3':
+            this.statusBar = this.status[0]
+            this.statusBar.title = '待确认'
+            this.statusBar.desc = '请您确认售后方案'
+            break
+          case 'AFTERSALE_STATUS_4':
+            this.statusBar = this.status[2]
+            this.statusBar.title = '已完成'
+            this.statusBar.desc = '退款成功'
+            break
+          case 'AFTERSALE_STATUS_5':
+            this.statusBar = this.status[1]
+            this.statusBar.title = '已关闭'
+            break
+        }
+      }
+    },
+    async updateAfterSaleStatus() {
+      const res = await this.$axios.post(afterSaleApi.operation, {
+        updaterId: this.afterSaleDetail.updaterId,
+        updaterName: this.afterSaleDetail.updaterName,
+        updaterCode: this.afterSaleDetail.updaterCode,
+        afterSaleId: this.afterSaleDetail.afterSaleId,
+        userDoType: this.afterSaleDetail.userDoType,
+        afterSaleAgreementIds: this.afterSaleDetail.afterSaleAgreementIds,
+      })
+      if (res.code === 200) {
+      }
+    },
     openDialog(index) {
       Dialog.confirm({
         title: this.doubleBtnDialog[index].title,
@@ -360,6 +480,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.red {
+  color: #ec5330 !important;
+  border-color: #ec5330 !important;
+}
+.blue {
+  border: 1px solid #4974f5 !important;
+  color: #4974f5 !important;
+}
 .sale-detail {
   min-height: 100vh;
   background: #f8f8f8;
@@ -455,10 +583,7 @@ export default {
                   display: flex;
                   line-height: 38px;
                   align-items: center;
-                  .blue {
-                    border: 1px solid #4974f5 !important;
-                    color: #4974f5 !important;
-                  }
+
                   .mark {
                     background: #ffffff;
                     border: 1px solid #00b365;

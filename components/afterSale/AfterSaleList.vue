@@ -1,56 +1,103 @@
 <template>
   <div>
     <ul class="sale-list_ul">
-      <li>
+      <li v-for="(item, index) in saleList" :key="index">
         <div class="row-title">
-          <div class="sale-type">售后单：2001</div>
+          <div class="sale-type">售后单：{{ item.afterSaleNo }}</div>
           <div class="refund-type">
-            <div>换</div>
-            <p>业务变更</p>
+            <div
+              v-if="item.afterSaleFactType === 'AFTER_SALE_TYPE_1'"
+              class="red"
+            >
+              退
+            </div>
+            <div v-else class="blue">换</div>
+            <p v-if="item.afterSaleFactType === 'AFTER_SALE_TYPE_1'">退款</p>
+            <p v-else>业务变更</p>
           </div>
         </div>
         <div class="row-cont">
           <ul>
-            <li>
+            <li v-for="(child, index2) in item.skuList" :key="index2">
               <div class="img-box">
                 <img />
               </div>
               <div class="info">
                 <div class="top">
-                  <span class="mark blue">换</span>
-                  <span class="title">刻章</span>
+                  <span
+                    v-if="item.afterSaleFactType === 'AFTER_SALE_TYPE_1'"
+                    class="mark red"
+                  >
+                    退</span
+                  >
+                  <span v-else class="mark blue"> 换</span>
+                  <span class="title">{{ child.spuName }}</span>
                 </div>
-                <div class="center">武侯区；无注册地址；认缴申请税务</div>
-                <div class="bottom">应付 500元，实付 500元</div>
-              </div>
-            </li>
-            <li>
-              <div class="img-box">
-                <img />
-              </div>
-              <div class="info">
-                <div class="top">
-                  <span class="mark blue">换</span>
-                  <span class="title">刻章</span>
+                <div class="center">
+                  {{ child.skuExtInfo }}
                 </div>
-                <div class="center">武侯区；无注册地址；认缴申请税务</div>
-                <div class="bottom">应付 500元，实付 500元</div>
+                <div class="bottom">
+                  应付 {{ child.enablePayMoney }}元，实付
+                  {{ child.actualPayMoney }}元
+                </div>
               </div>
             </li>
           </ul>
         </div>
-        <div class="status">
-          <!-- 售后中,待确认，退款中，已关闭 -->
-          <strong>售后中</strong>
-          <span>售后专员飞速处理中，请您耐心等待</span>
+
+        <!-- 售后中,待确认，退款中，已关闭 -->
+        <div
+          v-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_1'"
+          class="status"
+        >
+          <strong>待处理</strong>
+          <span>待处理</span>
         </div>
+        <div
+          v-else-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_2'"
+          class="status"
+        >
+          <strong>商户驳回</strong>
+          <span>商户驳回</span>
+        </div>
+        <div
+          v-else-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_3'"
+          class="status"
+        >
+          <strong>待确认</strong>
+          <span>待确认</span>
+        </div>
+        <div
+          v-else-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_4'"
+          class="status"
+        >
+          <strong>已完成</strong>
+          <span>已完成</span>
+        </div>
+        <div
+          v-else-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_5'"
+          class="status"
+        >
+          <strong>已关闭</strong>
+          <span>已关闭</span>
+        </div>
+
         <div class="detail-btn">
-          <button @click="$router.push('/my/afterSale/detail')">
+          <button
+            v-if="
+              item.afterSaleStatusNo === 'AFTERSALE_STATUS_4' &&
+              item.afterSaleStatusNo === 'AFTERSALE_STATUS_5'
+            "
+            @click="$router.push('/my/afterSale/refundDetails')"
+          >
+            退款详情
+          </button>
+          <button @click="$router.push(`/my/afterSale/detail?id=${item.id}`)">
             售后详情
           </button>
         </div>
       </li>
-      <li>
+      <!-- <li>
         <div class="row-title">
           <div class="sale-type">售后单：2001</div>
           <div class="refund-type">
@@ -88,7 +135,6 @@
             </li>
           </ul>
         </div>
-        <!-- 状态 -->
         <div class="status">
           <strong>售后中</strong>
           <span>售后专员飞速处理中，请您耐心等待</span>
@@ -96,7 +142,7 @@
         <div class="detail-btn">
           <button>售后详情</button>
         </div>
-      </li>
+      </li> -->
     </ul>
   </div>
 </template>
@@ -116,6 +162,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.red {
+  color: #ec5330 !important;
+  border-color: #ec5330 !important;
+}
+.blue {
+  border: 1px solid #4974f5 !important;
+  color: #4974f5 !important;
+}
 .sale-list_ul {
   > li {
     background: #fff;
@@ -175,10 +229,7 @@ export default {
               display: flex;
               line-height: 38px;
               align-items: center;
-              .blue {
-                border: 1px solid #4974f5 !important;
-                color: #4974f5 !important;
-              }
+
               .mark {
                 background: #ffffff;
                 border: 1px solid #00b365;
@@ -190,10 +241,6 @@ export default {
                 width: 30px;
                 height: 30px;
                 line-height: 30px;
-                &.red {
-                  color: #ec5330 !important;
-                  border-color: #ec5330 !important;
-                }
               }
               .title {
                 font-size: 28px;
@@ -234,12 +281,10 @@ export default {
       }
     }
     .status {
-      padding: 0 40px;
-      height: 74px;
+      padding: 20px 40px;
       font-size: 24px;
       display: flex;
       color: #222222;
-      align-items: center;
       background: #f8f8f8;
       strong {
         font-weight: bold;
@@ -247,9 +292,6 @@ export default {
       }
       span {
         max-width: 460px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
         margin-left: 40px;
         font-size: 24px;
       }
@@ -270,6 +312,7 @@ export default {
         color: #222222;
         text-align: center;
         margin-top: 32px;
+        margin-left: 20px;
       }
     }
   }

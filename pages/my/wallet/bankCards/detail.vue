@@ -4,7 +4,9 @@
     <div class="bank-list">
       <ul>
         <li
-          style=" background-image: linear-gradient(90deg, #14bdbb 0%, #0bb3b3 100%);"
+          style="
+            background-image: linear-gradient(90deg, #14bdbb 0%, #0bb3b3 100%);
+          "
         >
           <div class="left-logo">
             <img />
@@ -31,6 +33,41 @@ import Header from '@/components/common/head/header'
 export default {
   components: {
     Header,
+  },
+  data() {
+    return {
+      bankCardStyle: [
+        {
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/2k0jjobfx4c0000.png',
+          bg_icon:
+            'https://cdn.shupian.cn/sp-pt/wap/images/chze1ksovcg0000.png',
+          bg_color: '#0BB3B3',
+        },
+        {
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/byc0c33glcw0000.png',
+          bg_icon: 'https://cdn.shupian.cn/sp-pt/wap/images/rlbycqvjsb4000.png',
+          bg_color: '#E63B47',
+        },
+        {
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/3p91fh7h6t60000.png',
+          bg_icon:
+            'https://cdn.shupian.cn/sp-pt/wap/images/bnivu4nkbm80000.png',
+          bg_color: '#3777E5',
+        },
+        {
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/aexk52ox6sw0000.png',
+          bg_icon:
+            'https://cdn.shupian.cn/sp-pt/wap/images/e5m4yxb0se00000.png',
+          bg_color: '#28A264',
+        },
+        {
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png',
+          bg_icon:
+            'https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png',
+          bg_color: '#3777E5',
+        },
+      ],
+    }
   },
 }
 </script>

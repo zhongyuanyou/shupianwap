@@ -78,15 +78,21 @@
       <h2>更多功能</h2>
       <ul>
         <li @click="$router.push('/my/wallet/bill/list')">
-          <img />
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/images/cywftptrfq80000.png"
+          />
           <p>账单</p>
         </li>
         <li @click="$router.push('/my/wallet/bankCards/list')">
-          <img />
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/images/1vqyes3vygdc000.png"
+          />
           <p>银行卡</p>
         </li>
-        <li>
-          <img />
+        <li @click="more">
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/images/5goi47anw8g0000.png"
+          />
           <p>敬请期待</p>
         </li>
       </ul>
@@ -109,8 +115,11 @@ export default {
   data() {
     return {}
   },
+  created() {
+    this.getAccountInfo()
+  },
   mounted() {
-    this.openActivationDialog()
+    // this.openActivationDialog()
   },
   methods: {
     openActivationDialog() {
@@ -131,6 +140,25 @@ export default {
     },
     openBalanceDesc() {
       this.$refs.balanceDesc.showBalanceDesc = true
+    },
+
+    async getAccountInfo() {
+      const res = await this.$axios.post(
+        'http://172.16.135.181:7001/service/yk/wallet/v1/info.do',
+        {
+          accountId: '',
+          relationId: '767584840682202065',
+        }
+      )
+      console.log(res)
+      if (res.code === 200) {
+        console.log(11111111)
+      }
+    },
+    more() {
+      this.$xToast.show({
+        message: '功能建设中...',
+      })
     },
   },
 }
@@ -261,7 +289,6 @@ export default {
         img {
           width: 88px;
           height: 88px;
-          background: #4974f5;
         }
         p {
           font-size: 28px;

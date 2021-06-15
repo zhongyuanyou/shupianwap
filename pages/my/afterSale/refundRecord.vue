@@ -2,7 +2,11 @@
   <div class="refund-record">
     <Header title="退款明细" />
     <ul v-if="!showNoData">
-      <li @click="$router.push('/my/afterSale/refundDetails')">
+      <li
+        v-for="(item, index) in refundRecordData"
+        :key="index"
+        @click="$router.push(`/my/afterSale/refundDetails?id=${item.id}`)"
+      >
         <div class="pic">
           <sp-icon
             class-prefix="spiconfont"
@@ -13,11 +17,11 @@
         </div>
         <div class="desc">
           <h3>换业务</h3>
-          <p>变更业务，继续办理</p>
+          <p>{{ item.afterSalesRemark }}</p>
         </div>
-        <div class="amount">100<span>元</span></div>
+        <div class="amount">{{ item.reimburseAmount }}<span>元</span></div>
       </li>
-      <li>
+      <!-- <li>
         <div class="pic">
           <sp-icon
             class-prefix="spiconfont"
@@ -31,7 +35,7 @@
           <p>变更业务，继续办理</p>
         </div>
         <div class="amount">100<span>元</span></div>
-      </li>
+      </li> -->
     </ul>
     <!-- 无退款明细 -->
     <div v-else class="no-refund">
@@ -47,6 +51,7 @@
 
 <script>
 import { Icon } from '@chipspc/vant-dgg'
+import { afterSaleApi } from '@/api'
 import Header from '@/components/common/head/header'
 export default {
   components: {
@@ -56,7 +61,28 @@ export default {
   data() {
     return {
       showNoData: false,
+      page: 1,
+      limit: 1000,
+      refundRecordData: '',
     }
+  },
+  created() {
+    this.getRefundRecords()
+  },
+  methods: {
+    async getRefundRecords() {
+      const res = await this.$axios.post(afterSaleApi.refundList, {
+        afterSaleId: this.$route.query.id,
+        orderId: this.$route.query.orderId,
+        limit: this.limit,
+        page: this.page,
+      })
+      if (res.code === 200) {
+        this.refundRecordData = res.data.list
+      } else {
+        this.$message.error(res.message)
+      }
+    },
   },
 }
 </script>

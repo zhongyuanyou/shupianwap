@@ -21,7 +21,9 @@
         </div>
         <div class="row">
           <div class="title">提现明细</div>
-          <div class="cash">查看提现详情</div>
+          <div class="cash" @click="$router.push('/my/wallet/withdraw/detail')">
+            查看提现详情
+          </div>
           <!-- <div class="cash">查看佣金详情</div>
           <div class="cash">查看退款详情</div> -->
         </div>

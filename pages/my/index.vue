@@ -95,6 +95,22 @@
           </div>
         </div>
       </div>
+      <div class="my_btns_item" @click="handleClick('/my/wallet')">
+        <div class="my_btns_item_icon">
+          <my-icon name="caifang_mian" size="0.36rem" color="#4974f5" />
+        </div>
+        <div class="my_btns_item_con no_line">
+          我的钱包
+          <div class="item_lf">
+            <my-icon
+              name="zhifu"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
       <div class="my_btns_item" @click="handleClick('/my/interviewRecord')">
         <div class="my_btns_item_icon">
           <my-icon name="caifang_mian" size="0.36rem" color="#4974f5" />
@@ -309,6 +325,19 @@ export default {
             path: '/login',
             query: {
               redirect: '/my/evaluate',
+            },
+          })
+        }
+        return
+      }
+      if (index === 6) {
+        if (this.token) {
+          this.$router.push({ path: '/my/afterSale/list' })
+        } else {
+          this.$router.push({
+            path: '/login',
+            query: {
+              redirect: '/my/afterSale/list',
             },
           })
         }

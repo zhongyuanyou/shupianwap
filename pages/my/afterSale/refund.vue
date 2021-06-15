@@ -80,6 +80,7 @@
 
 <script>
 import { Icon, Field, Uploader } from '@chipspc/vant-dgg'
+import { afterSaleApi } from '@/api'
 import Header from '@/components/common/head/header'
 import PullUp from '@/components/afterSale/PullUp'
 export default {
@@ -108,7 +109,7 @@ export default {
   },
   created() {},
   methods: {
-    submit() {
+    async submit() {
       if (this.afterTypeText === '') {
         this.$xToast.show({
           message: '请选择售后类型',
@@ -128,8 +129,27 @@ export default {
         })
         return false
       }
-
-      this.$router.push('/my/afterSale/apply')
+      const res = await this.$axios.post(afterSaleApi.refundApply, {
+        orderId: '11111',
+        afterSaleExpType: 'AFTER_SALE_CENTER_REFUND',
+        afterSaleReasonNo: 'AFTER_SALE_REASON_1',
+        afterSaleProblemDetail: this.descInfo,
+        pictrueDetail: this.uploader,
+        createrId: this.createrId,
+        createrName: this.createrName,
+        updaterId: this.updaterId,
+        updaterName: this.updaterName,
+        createrNo: this.createrNo,
+        updaterNo: this.updaterNo,
+      })
+      if (res.code === 200) {
+        this.$xToast.show({
+          message: '申请成功',
+        })
+        this.$router.push('/my/afterSale/apply')
+      } else {
+        this.$message.error(res.message)
+      }
     },
     afterRead(file) {
       // 此时可以自行将文件上传至服务器

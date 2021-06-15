@@ -12,15 +12,15 @@
           ></sp-icon>
         </div>
         <div class="desc">
-          <h3>退款成功</h3>
-          <p>2020年09月31日 10:00</p>
+          <h3>{{ refundDetailData.reimburseStatusName }}</h3>
+          <p>{{ refundDetailData.updateTime }}</p>
         </div>
       </div>
     </div>
     <div class="content-box">
       <div class="item">
         <h3>退款金额</h3>
-        <p>500元</p>
+        <p>{{ refundDetailData.reimburseAmount }}元</p>
       </div>
       <div class="item">
         <h3>退款账户</h3>
@@ -28,25 +28,15 @@
       </div>
       <div class="item">
         <h3>退款状态</h3>
-        <p>已到账</p>
+        <p>{{ refundDetailData.reimburseStatusName }}</p>
       </div>
     </div>
     <div class="refund-process">
       <sp-steps direction="vertical" :active="active">
-        <sp-step>
-          <h3>退款成功</h3>
-          <p>已将500元入账至您的支付宝支付账户</p>
-          <div class="date">2020年09月31日 10:00</div>
-        </sp-step>
-        <sp-step>
-          <h3>退款成功</h3>
-          <p>已将500元入账至您的支付宝支付账户</p>
-          <div class="date">2020年09月31日 10:00</div>
-        </sp-step>
-        <sp-step>
-          <h3>退款成功</h3>
-          <p>已将500元入账至您的支付宝支付账户</p>
-          <div class="date">2020年09月31日 10:00</div>
+        <sp-step v-for="(item, index) in refundDetailData.process" :key="index">
+          <h3>{{ item.operationStatus }}</h3>
+          <!-- <p>已将500元入账至您的支付宝支付账户</p> -->
+          <div class="date">{{ item.craeteTime }}</div>
         </sp-step>
       </sp-steps>
     </div>
@@ -55,6 +45,7 @@
 
 <script>
 import { Icon, Step, Steps } from '@chipspc/vant-dgg'
+import { afterSaleApi } from '@/api'
 import Header from '@/components/common/head/header'
 export default {
   components: {
@@ -62,6 +53,28 @@ export default {
     SpIcon: Icon,
     [Step.name]: Step,
     [Steps.name]: Steps,
+  },
+  data() {
+    return {
+      refundDetailData: '',
+    }
+  },
+  created() {
+    this.getRefundDetails()
+  },
+  methods: {
+    async getRefundDetails() {
+      const res = await this.$axios.get(afterSaleApi.refundInfo, {
+        params: {
+          id: this.$route.query.id,
+        },
+      })
+      if (res.code === 200) {
+        this.refundDetailData = res.data
+      } else {
+        this.$message.error(res.message)
+      }
+    },
   },
 }
 </script>
