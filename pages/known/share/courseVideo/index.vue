@@ -4,8 +4,7 @@
     <client-only>
       <sp-video
         :vod-url="vurl"
-        :sp-config="config"
-        :show-video="true"
+        :options="playerOptions"
         @errorBtnHandle="errorBtnHandle"
       >
       </sp-video>
@@ -85,9 +84,12 @@ export default {
   mixins: [openappV2],
   data() {
     return {
-      config: {
-        height: '4.22rem',
+      // videojs options
+      playerOptions: {
+        muted: true,
+        poster: '',
         width: '100vw',
+        height: '4.22rem',
       },
       vId: '',
       categoryId: '', // 种类id
@@ -102,7 +104,7 @@ export default {
       return
     }
     */
-    this.vId = this.$route.query.id || '8089328421073170432'
+    this.vId = this.$route.query.id || '8088687517639704576'
     this.getVideoApi()
   },
   methods: {
@@ -120,8 +122,10 @@ export default {
           this.vDetail = res.data
           // 这里是拿课程的类型
           this.categoryId = res.data.categoryId
-          this.vurl = res.data.courseVideos[0].videoUrl
-          this.config.poster = res.data.courseVideos[0].image
+          if (res.data.courseVideos && res.data.courseVideos.length > 0) {
+            this.vurl = res.data.courseVideos[0].videoUrl
+            this.playerOptions.poster = res.data.courseVideos[0].image
+          }
           this.buildDetail()
         })
         .catch((e) => {

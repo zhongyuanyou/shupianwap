@@ -1,14 +1,33 @@
 <template>
   <div class="sp-video">
     <div v-if="reseted" class="video-player">
-      <video
-        ref="spVideo"
-        class="
-          video-js
-          vjs-default-skin vjs-big-play-centered vjs-16-9
-          video-size_small
-        "
-      ></video>
+      <div v-show="!videoError">
+        <video
+          ref="spVideo"
+          class="video-js vjs-default-skin vjs-big-play-centered vjs-16-9"
+          :style="{
+            width: options.width,
+            height: options.height,
+          }"
+        ></video>
+      </div>
+      <div
+        v-show="videoError"
+        class="video-error"
+        :style="{
+          width: options.width,
+          height: options.height,
+        }"
+      >
+        <div class="content">
+          <div class="desc">{{ videoErrorConfig.desc }}</div>
+          <sp-button
+            v-if="videoErrorConfig.btn.status"
+            @click="errorBtnHandle"
+            >{{ videoErrorConfig.btn.txt }}</sp-button
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -16,7 +35,8 @@
 <script>
 // lib
 import videojs from 'video.js'
-import { deepCopy } from '@/utils/common'
+import { Button } from '@chipspc/vant-dgg'
+import { deepCopy, custTypeOf } from '@/utils/common'
 
 // video.js 默认配置
 const defaultOptions = {
@@ -29,10 +49,19 @@ const defaultOptions = {
     },
   },
   techOrder: ['html5'],
+  sources: [
+    {
+      type: 'video/mp4',
+      src: '',
+    },
+  ],
 }
 
 export default {
   name: 'SpVideo',
+  components: {
+    [Button.name]: Button,
+  },
   props: {
     vodUrl: {
       // 视频源
@@ -40,7 +69,7 @@ export default {
       default: '',
     },
     options: {
-      // 西瓜视频配置,参考西瓜视频配置文档
+      // video视频配置
       type: Object,
       default() {
         return {}
@@ -58,31 +87,28 @@ export default {
         }
       },
     },
-    showVideo: {
-      // 是否显示视频
-      type: Boolean,
-      default: false,
-    },
   },
   data() {
     return {
       reseted: true,
       player: null,
+      videoError: false, // 判断视频是否异常
+      videoErrorConfig: this.errorCofing,
+      isAndroid: false, // 安卓机器会出现适配问题,这里需要特殊处理
     }
   },
   watch: {
-    options: {
-      deep: true,
-      handler(options, oldOptions) {
-        this.dispose(() => {
-          if (options && options.sources && options.sources.length) {
-            this.initialize()
-          }
-        })
-      },
+    vodUrl(val) {
+      if (!this.player) {
+        this.initialize()
+      }
     },
   },
   mounted() {
+    const userAgent = window.navigator.userAgent
+    this.isAndroid =
+      userAgent.indexOf('Android') > -1 || userAgent.indexOf('Adr') > -1 // android终端
+
     if (!this.player) {
       this.initialize()
     }
@@ -97,19 +123,21 @@ export default {
     initialize() {
       // videojs options
       const videoOptions = deepCopy(defaultOptions, this.options)
+      if (custTypeOf(this.vodUrl) !== 'String' || this.vodUrl.trim() === '') {
+        this.videoError = true
+        return
+      }
+      this.videoError = false
+      // build video url
+      videoOptions.sources[0].src = this.vodUrl
 
       // start: fix ios fullscreen
+      this.$refs.spVideo.setAttribute('x5-playsinline', true)
       this.$refs.spVideo.setAttribute('playsinline', true)
       this.$refs.spVideo.setAttribute('webkit-playsinline', true)
-      this.$refs.spVideo.setAttribute('x5-playsinline', true)
       this.$refs.spVideo.setAttribute('x5-video-player-type', 'h5')
-      this.$refs.spVideo.setAttribute('x5-video-player-fullscreen', false)
+      this.$refs.spVideo.setAttribute('x5-video-player-fullscreen', true)
       // end: fix ios fullscreen
-      // this.$refs.spVideo.setAttribute('class', 'video-size_small')
-      // avoid error "VIDEOJS: ERROR: Unable to find plugin: __ob__"
-      if (videoOptions.plugins) {
-        delete videoOptions.plugins.__ob__
-      }
 
       /*
       // emit event
@@ -146,14 +174,6 @@ export default {
           }
         }
         */
-          // const myPlayer = _this.player
-          // myPlayer.on('pause', function () {
-          //   console.log('hahahha')
-          //   myPlayer.bigPlayButton.show()
-          // })
-          // myPlayer.on('play', function () {
-          //   myPlayer.bigPlayButton.hide()
-          // })
           // player readied
           _this.$emit('ready', this)
         }
@@ -174,6 +194,9 @@ export default {
           })
         })
       }
+    },
+    errorBtnHandle() {
+      this.$emit('errorBtnHandle', this)
     },
   },
 }
@@ -203,9 +226,10 @@ export default {
   }
   ::v-deep .video-js .vjs-tech {
     object-fit: fill;
-  }
-  .video-size_small {
-    height: 100vh;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   .video-error {
     display: flex;

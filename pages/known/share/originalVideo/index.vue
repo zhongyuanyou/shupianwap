@@ -3,12 +3,10 @@
     <app-link />
     <client-only>
       <sp-video
+        :options="playerOptions"
         :vod-url="vurl"
-        :sp-config="config"
-        :show-video="true"
         @errorBtnHandle="errorBtnHandle"
-      >
-      </sp-video>
+      />
     </client-only>
     <div class="info">
       <div class="info-brand">
@@ -64,14 +62,17 @@ export default {
   mixins: [openappV2],
   data() {
     return {
-      config: {
-        height: '4.22rem',
-        width: '100vw',
-      },
       vId: '',
       categoryId: '', // 种类id
       vurl: '', // 视频url
       vDetail: {},
+      // videojs options
+      playerOptions: {
+        muted: true,
+        poster: '',
+        width: '100vw',
+        height: '4.22rem',
+      },
     }
   },
   mounted() {
@@ -99,7 +100,7 @@ export default {
           this.vDetail = res.data
           this.categoryId = res.data.categoryId
           this.vurl = res.data.videoUrl
-          this.config.poster = res.data.image
+          this.playerOptions.poster = res.data.image
           this.buildDetail()
         })
         .catch((e) => {

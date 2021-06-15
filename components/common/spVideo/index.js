@@ -2,7 +2,7 @@
  * @Author: majinghe
  * @Date: 2021-05-27
  * @Description: 基于 video.js 进行封装视频组件.
- * @Document: http://v2.h5player.bytedance.com/config/
+ * @Document: https://docs.videojs.com/
  */
 import SpVideo from './src/component'
 
