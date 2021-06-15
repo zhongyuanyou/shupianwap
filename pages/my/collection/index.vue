@@ -89,7 +89,7 @@
                   <template v-if="selectGoodsState" #left>
                     <sp-checkbox
                       style="padding-right: 10px"
-                      :name="item.goodsId"
+                      :name="item.id"
                     ></sp-checkbox>
                   </template>
                 </ServiceGoods>
@@ -338,7 +338,7 @@ export default {
       this.selectDelGoods = []
     },
     delGoods(item) {
-      this.selectDelGoods = [item.goodsId]
+      this.selectDelGoods = [item.id]
       this.delGoodsList()
     },
     async delGoodsList() {
