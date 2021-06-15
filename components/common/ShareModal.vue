@@ -32,9 +32,15 @@
             </slot>
           </div>
           <div class="popup-banner__con">
-            <img class="avatar" :src="planerInfo.img" />
+            <img
+              class="avatar"
+              :src="
+                planerInfo.img ||
+                'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni-app-doc/6acec660-4f31-11eb-a16f-5b3e54966275.jpg'
+              "
+            />
             <div class="planner-info">
-              <span>您好，我是{{ planerInfo.name }}</span>
+              <span>您好，我是{{ planerInfo.name || '规划师' }}</span>
             </div>
           </div>
         </div>
@@ -73,7 +79,8 @@
 
 <script>
 import { Icon } from '@chipspc/vant-dgg'
-import { planner } from '~/api'
+import { planner, userinfoApi, formApi } from '~/api'
+const BASE = require('~/config/index.js')
 export default {
   name: 'SpPopup',
   components: {
@@ -81,18 +88,30 @@ export default {
   },
   data() {
     return {
-      visible: true, // 是否最大化显示 true为最大化显示 false为最小化显示
+      visible: false, // 是否最大化显示 true为最大化显示 false为最小化显示
       plannerId: '',
       shareId: '',
       partnerId: '',
       planerInfo: {},
+      userInfoData: {},
     }
+  },
+  computed: {
+    userInfo() {
+      return this.$store.state.user
+    },
+    city() {
+      return this.$store.state.city
+    },
   },
   mounted() {
     this.plannerId = this.$route.query.plannerId || this.$route.query.homeUserId
     this.partnerId = this.$route.query.partnerId
     if (this.$route.query.isShare && this.plannerId) {
       this.getPlanerInfo(this.plannerId)
+    }
+    if (this.userInfo.userId) {
+      this.getUserIndo()
     }
   },
   methods: {
@@ -105,13 +124,12 @@ export default {
           postName: res.zwName,
           type: res.mchClass,
         }
-        res.tagList = res.tagList.concat(['工商变更', '个体服务记账'])
         this.planerInfo = {
           ...obj,
           ...res,
         }
-        console.log('getPlanerInfo', this.planerInfo)
         this.$forceUpdate()
+        this.visible = true
       })
     },
     showFullScreen() {
@@ -122,13 +140,118 @@ export default {
       // 显示最小化
       this.visible = false
     },
+    // 获取用户信息 明文
+    getUserIndo() {
+      this.$axios
+        .get(userinfoApi.info_decrypt, {
+          params: {
+            id: this.userInfo.userId,
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.userInfoData = res.data
+            // this.$store.dispatch('user/setInfo', res.data)
+          } else {
+            this.$xToast.show({
+              message: '网络错误,请刷稍后再试',
+              duration: 1000,
+              icon: 'toast_ic_error',
+              forbidClick: true,
+            })
+          }
+        })
+        .catch((err) => {
+          console.log('err', err)
+        })
+    },
     handleClickBtn() {
-      console.log('plannerId', this.plannerId)
-      console.log('shareId', this.shareId)
-      console.log('partnerId', this.partnerId)
-      this.$xToast.success('该功能正在开发中')
-      this.visible = false
-      this.$router.push({ query: {} })
+      if (!this.userInfo.userId) {
+        this.$router.push({
+          path: '/login',
+          query: {
+            redirect: this.$route.fullPath,
+          },
+        })
+        return
+      }
+      planner
+        .bindCustomer({
+          copartnerId: this.partnerId,
+          customerId: this.userInfoData.id,
+          customerPhone: this.userInfoData.mainAccount,
+          customerName: this.userInfoData.fullName,
+          requestPlatform: 'crips-c',
+        })
+        .then((res) => {
+          console.log('res', res)
+          this.$xToast.success('委托成功，请静候规划师与您电话联系联系！')
+          this.visible = false
+        })
+        .catch((err) => {
+          console.log('err', err)
+          this.$xToast.error('委托失败')
+          this.visible = true
+        })
+    },
+    // 生成客户资源并分配
+    async consultForm() {
+      this.loading = true
+      const userInfo = await this.getUserInfo(this.userId)
+      if (!userInfo) return
+      const params = {
+        bizAreaCode: this.city.code,
+        bizAreaName: this.city.name,
+        comment: '',
+        customerAttribute: '',
+        customerName: userInfo.fullName,
+        customerPhone: userInfo.mainAccount,
+        customerSex: userInfo.sex || 2,
+        sourceUrl: location.href,
+        sourceSyscode: 'crisps-app', // 来源系统
+        firstSourceChannel: 'crisps-app-one-home-page', // 一级来源渠道
+        secondSourceChannel: 'crisps-app-two-look-service', // 二级来源渠道
+        requireCode: localStorage.getItem('needCode'), // 需求编码
+        requireName: '交易委托', // 需求名称
+      }
+      this.$axios
+        .post(BASE.formApi + formApi, params)
+        .then((res) => {
+          this.loading = false
+          if (res.code === 200) {
+            this.$xToast.success('提交成功，请注意接听电话')
+            sessionStorage.removeItem('formData')
+            this.formData = {
+              type: 'gszc',
+              tel: '', // 电话
+              name: '', // 姓名
+              web: 'sp', // 归属（原网站类型）
+              place: 'all',
+              url: '',
+              content: {
+                备注: '',
+                是否允许电话联系: '是',
+              },
+            }
+            this.$router.go(-2)
+          } else {
+            this.$xToast.show({
+              message: res.message || '提交失败，请稍后再试！',
+              duration: 1000,
+              icon: 'toast_ic_error',
+              forbidClick: true,
+            })
+          }
+        })
+        .catch((error) => {
+          this.loading = false
+          this.$xToast.show({
+            message: error.message || '提交失败，请稍后再试！',
+            duration: 1000,
+            icon: 'toast_ic_error',
+            forbidClick: true,
+          })
+        })
     },
   },
 }

@@ -28,4 +28,5 @@ module.exports = {
     'https://spmicrouag.shupian.cn/tac-external-platform-server/oss/find',
   mutlefindUrl:
     'https://spmicrouag.shupian.cn/tac-external-platform-server/oss/mutlefind',
+    formApi: 'https://spmicrouag.shupian.cn/crisps-resource-house', // 资源表单地址 新 -企大顺
 }

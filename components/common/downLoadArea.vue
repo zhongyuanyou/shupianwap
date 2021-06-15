@@ -50,6 +50,7 @@ export default {
   height: 120px;
   padding: 0 28px;
   background: #fff;
+  z-index: 99;
   .logo {
     height: 80px;
     width: 80px;
