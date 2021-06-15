@@ -17,7 +17,7 @@
         </div>
 
         <span class="txt" @click="handleAvatar">
-          {{ userId ? info.nickName || '' : '登录/注册' }}
+          {{ userId ? nickName || '' : '登录/注册' }}
           <img
             v-if="userId"
             class="icon-plus"
@@ -159,7 +159,7 @@ import { Button, Image, CenterPopup } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { userinfoApi, evaluateApi } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
-import { GOODSLIST } from '~/config/constant'
+// import { GOODSLIST } from '~/config/constant'
 import { imInit } from '@/utils/im'
 import getUserSign from '~/utils/fingerprint'
 import imHandle from '~/mixins/imHandle'
@@ -222,6 +222,7 @@ export default {
 
       info: {
         fullName: '', // 用户昵称
+        nickName: '',
         url: '', // 头像
       }, // 用户信息
       loginStatus: false, // 弹框显示状态
@@ -242,8 +243,14 @@ export default {
       token: (state) => state.user.token,
       userPhone: (state) => state.user.userPhone,
     }),
-    avatar() {
-      return GOODSLIST
+
+    nickName() {
+      if (this.info.nickName) {
+        const arr = this.info.nickName.split('')
+        arr.splice(2, 7, '****') // .join('')
+        return arr.join('')
+      }
+      return ''
     },
     CollectionTabs() {
       return [
