@@ -1,63 +1,49 @@
 <template>
-  <div class="m-video">
-    <template v-if="videoStatus">
-      <div v-show="!videoError" id="xg-player">
-        <slot name="shade"></slot>
-      </div>
-      <div
-        v-show="videoError"
-        class="video-error"
-        :style="{ width: xgVideoConfig.width, height: xgVideoConfig.height }"
-      >
-        <div class="content">
-          <div class="desc">{{ videoErrorConfig.desc }}</div>
-          <sp-button
-            v-if="videoErrorConfig.btn.status"
-            @click="errorBtnHandle"
-            >{{ videoErrorConfig.btn.txt }}</sp-button
-          >
-        </div>
-      </div>
-    </template>
-    <template v-else><slot name="imitate"></slot></template>
+  <div class="sp-video">
+    <div v-if="reseted" class="video-player">
+      <video
+        ref="spVideo"
+        class="
+          video-js
+          vjs-default-skin vjs-big-play-centered vjs-16-9
+          video-size_small
+        "
+      ></video>
+    </div>
   </div>
 </template>
 
 <script>
-import Player from 'xgplayer/dist/core_player' // 引入播放内核
-import play from 'xgplayer/dist/controls/play' // 引入播放
-import fullscreen from 'xgplayer/dist/controls/fullscreen' // 引入全屏
-import progress from 'xgplayer/dist/controls/progress' // 引入进度条
-import volume from 'xgplayer/dist/controls/volume' // 引入声音
-import flex from 'xgplayer/dist/controls/flex' // 引入 flex
-import poster from 'xgplayer/dist/controls/poster' // 引入 背景图
+// lib
+import videojs from 'video.js'
+import { deepCopy } from '@/utils/common'
 
-import { Button } from '@chipspc/vant-dgg'
-import { deepCopy, custTypeOf } from '@/utils/common'
+// video.js 默认配置
+const defaultOptions = {
+  preload: true,
+  controls: true,
+  controlBar: {
+    pictureInPictureToggle: false,
+    volumePanel: {
+      inline: false,
+    },
+  },
+  techOrder: ['html5'],
+}
 
 export default {
   name: 'SpVideo',
-  components: {
-    [Button.name]: Button,
-  },
   props: {
     vodUrl: {
       // 视频源
       type: String,
       default: '',
     },
-    spConfig: {
+    options: {
       // 西瓜视频配置,参考西瓜视频配置文档
       type: Object,
       default() {
         return {}
-      },
-    },
-    ignorePlugins: {
-      // 忽略插件
-      type: Array,
-      default() {
-        return []
       },
     },
     errorCofing: {
@@ -80,71 +66,147 @@ export default {
   },
   data() {
     return {
+      reseted: true,
       player: null,
-      xgVideoConfig: this.spConfig,
-      xgIgnorePlugins: this.ignorePlugins,
-      videoErrorConfig: this.errorCofing,
-      videoStatus: this.showVideo,
-      videoError: false, // 判断视频是否异常
     }
   },
   watch: {
-    vodUrl(val) {
-      this.initVideo()
+    options: {
+      deep: true,
+      handler(options, oldOptions) {
+        this.dispose(() => {
+          if (options && options.sources && options.sources.length) {
+            this.initialize()
+          }
+        })
+      },
     },
   },
   mounted() {
-    this.init()
+    if (!this.player) {
+      this.initialize()
+    }
+  },
+  beforeDestroy() {
+    if (this.player) {
+      this.dispose()
+    }
   },
   methods: {
-    init() {
-      // 判断是否显示模拟页,非模拟页加载视频组件
-      if (this.videoStatus) {
-        this.initVideo()
+    // 初始化视频
+    initialize() {
+      // videojs options
+      const videoOptions = deepCopy(defaultOptions, this.options)
+
+      // start: fix ios fullscreen
+      this.$refs.spVideo.setAttribute('playsinline', true)
+      this.$refs.spVideo.setAttribute('webkit-playsinline', true)
+      this.$refs.spVideo.setAttribute('x5-playsinline', true)
+      this.$refs.spVideo.setAttribute('x5-video-player-type', 'h5')
+      this.$refs.spVideo.setAttribute('x5-video-player-fullscreen', false)
+      // end: fix ios fullscreen
+      // this.$refs.spVideo.setAttribute('class', 'video-size_small')
+      // avoid error "VIDEOJS: ERROR: Unable to find plugin: __ob__"
+      if (videoOptions.plugins) {
+        delete videoOptions.plugins.__ob__
       }
-    },
-    initVideo() {
-      if (custTypeOf(this.vodUrl) !== 'String' || this.vodUrl.trim() === '') {
-        this.videoError = true
-        return
-      }
-      // 初始化 videoError 状态
-      this.videoError = false
-      let baseConfig = {
-        id: 'xg-player',
-        url: this.vodUrl,
-      }
-      baseConfig = deepCopy(baseConfig, this.xgVideoConfig)
-      // 引入需要视频插件
-      const basePlugins = {
-        controlPlugins: [play, fullscreen, progress, volume, flex, poster],
-      }
-      // 删除忽略插件
-      this.xgIgnorePlugins.forEach((item) => {
-        let i
-        const plugins = basePlugins.controlPlugins
-        if (
-          plugins.some((itemItem, index) => {
-            i = index
-            return itemItem.name === item
-          })
-        ) {
-          plugins.splice(i, 1)
+
+      /*
+      // emit event
+      const emitPlayerState = (event) => {
+        if (event) {
+          this.$emit(event, this.player)
         }
-      })
-      const config = { ...baseConfig, ...basePlugins }
-      console.log(`output xg-video config:\n ${JSON.stringify(config)}`)
-      this.player = new Player(config)
+      }
+      */
+
+      // player
+      const _this = this
+      this.player = videojs(
+        this.$refs.spVideo,
+        videoOptions,
+        function onPlayerReady() {
+          /*
+        // events
+        const events = DEFAULT_EVENTS
+        const onEdEvents = {}
+
+        // player 注册事件
+        for (let i = 0; i < events.length; i++) {
+          if (
+            typeof events[i] === 'string' &&
+            onEdEvents[events[i]] === undefined
+          ) {
+            ;((event) => {
+              onEdEvents[event] = null
+              this.on(event, () => {
+                emitPlayerState(event, true)
+              })
+            })(events[i])
+          }
+        }
+        */
+          // const myPlayer = _this.player
+          // myPlayer.on('pause', function () {
+          //   console.log('hahahha')
+          //   myPlayer.bigPlayButton.show()
+          // })
+          // myPlayer.on('play', function () {
+          //   myPlayer.bigPlayButton.hide()
+          // })
+          // player readied
+          _this.$emit('ready', this)
+        }
+      )
     },
-    errorBtnHandle() {
-      this.$emit('errorBtnHandle', this)
+    // 销毁视频
+    dispose(callback) {
+      if (this.player && this.player.dispose) {
+        this.player.dispose()
+        this.player = null
+        this.$nextTick(() => {
+          this.reseted = false
+          this.$nextTick(() => {
+            this.reseted = true
+            this.$nextTick(() => {
+              callback && callback()
+            })
+          })
+        })
+      }
     },
   },
 }
 </script>
 
 <style lang="less" scoped>
-.m-video {
+.sp-video {
+  ::v-deep .vjs-paused .vjs-big-play-button,
+  .vjs-paused.vjs-has-started .vjs-big-play-button {
+    display: block;
+  }
+  ::v-deep .vjs-big-play-button {
+    border: none;
+    font-size: 4em;
+    width: 1.5em;
+    height: 1.5em;
+    line-height: 1.5em;
+    border-radius: 100%;
+    margin-left: -0.8em;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  ::v-deep .video-js:hover .vjs-big-play-button {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  ::v-deep .vjs-poster {
+    background-size: cover;
+  }
+  ::v-deep .video-js .vjs-tech {
+    object-fit: fill;
+  }
+  .video-size_small {
+    height: 100vh;
+  }
   .video-error {
     display: flex;
     align-items: center;
