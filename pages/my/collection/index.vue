@@ -348,7 +348,7 @@ export default {
 
         // const data = new FormData()
         // data.append('number', this.selectDelGoods)
-        const data = { number: this.selectDelGoods }
+        const data = this.selectDelGoods || []
         const res = await this.$axios.post(shopApi.batch_dlt_goods, data)
         // await this.$axios({
         //   method: 'post',
