@@ -309,7 +309,7 @@ export default {
           console.log('shouchang res', res)
           if (res.code === 200) {
             this.$xToast.show({
-              message: '收藏成功,可在"个人中心-我的收藏"中查看',
+              message: '收藏成功',
               duration: 3000,
               icon: 'toast_ic_comp',
               forbidClick: true,
@@ -378,7 +378,7 @@ export default {
             productId: this.proDetail.id, // 产品ID（产品详情页必传）
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
             title: this.proDetail.name, // 产品名称（产品详情页传、咨询页等）
-            platform: 'app', // 平台（app,m,pc）
+            platform: 'm', // 平台（app,m,pc）
             page: this.productPage,
             limit: this.productLimit,
             searchType: 1, // 搜索推荐产品类型：1：交易，2服务
@@ -432,7 +432,7 @@ export default {
             productId: this.proDetail.id, // 产品ID（产品详情页必传）
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
             title: this.proDetail.name, // 产品名称（产品详情页传、咨询页等）
-            platform: 'app', // 平台（app,m,pc）
+            platform: 'm', // 平台（app,m,pc）
             page: 1,
             limit: 5,
             searchType: 1, // 搜索推荐产品类型：1：交易，2服务
@@ -471,11 +471,8 @@ export default {
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
             sceneId: 'app-cpxqye-01', // 场景ID
             user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-            platform: 'app', // 平台（app,m,pc）
+            platform: 'm', // 平台（app,m,pc）
             productId: this.proDetail.id, // 产品id
-            formatIdOne:
-              this.proDetail.classCodeLevel.split(',')[0] ||
-              this.proDetail.classCodeLevel.split(',')[1],
           },
         })
         .then((res) => {
@@ -505,7 +502,7 @@ export default {
           productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
           sceneId: 'app-cpxqye-02', // 场景ID
           user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-          platform: 'app', // 平台（app,m,pc）
+          platform: 'm', // 平台（app,m,pc）
           productId: this.proDetail.id, // 产品id
         },
       })

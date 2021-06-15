@@ -6,19 +6,19 @@
           v-md:p_plannerBoothClick
           data-even_name="p_plannerBoothClick"
           data-track_code="SPW000032"
-          :data-recommend_number="plannerInfo.dggPlannerRecomLog"
-          :data-planner_number="plannerInfo.userCenterNo"
-          :data-planner_name="plannerInfo.userName"
-          :data-crisps_fraction="plannerInfo.point"
+          :data-recommend_number="plannerDetail.dggPlannerRecomLog"
+          :data-planner_number="plannerDetail.userCenterNo"
+          :data-planner_name="plannerDetail.userName"
+          :data-crisps_fraction="plannerDetail.point"
           href="javascript:void(0);"
-          @click="plannerInfoUrlJump(plannerInfo.mchUserId)"
+          @click="plannerInfoUrlJump(plannerDetail.mchUserId)"
         >
           <sp-image
             width="0.8rem"
             height="0.8rem"
             round
             fit="cover"
-            :src="plannerInfo.portrait"
+            :src="plannerDetail.portrait"
           />
         </a>
         <div class="commodityConsult-containner-userInfo-name">
@@ -26,19 +26,19 @@
             v-md:p_plannerBoothClick
             data-even_name="p_plannerBoothClick"
             data-track_code="SPW000032"
-            :data-recommend_number="plannerInfo.dggPlannerRecomLog"
-            :data-planner_number="plannerInfo.userCenterNo"
-            :data-planner_name="plannerInfo.userName"
-            :data-crisps_fraction="plannerInfo.point"
+            :data-recommend_number="plannerDetail.dggPlannerRecomLog"
+            :data-planner_number="plannerDetail.userCenterNo"
+            :data-planner_name="plannerDetail.userName"
+            :data-crisps_fraction="plannerDetail.point"
             href="javascript:void(0);"
-            @click="plannerInfoUrlJump(plannerInfo.mchUserId)"
+            @click="plannerInfoUrlJump(plannerDetail.mchUserId)"
           >
-            <p :class="{ isTitle: plannerInfo.postName ? false : true }">
-              {{ plannerInfo.userName }}
+            <p :class="{ isTitle: plannerDetail.postName ? false : true }">
+              {{ plannerDetail.userName }}
             </p>
           </a>
-          <span v-if="plannerInfo.postName ? true : false">
-            {{ plannerInfo.postName }}
+          <span v-if="plannerDetail.postName ? true : false">
+            {{ plannerDetail.postName }}
           </span>
         </div>
       </div>
@@ -47,7 +47,7 @@
           v-md:p_IMClick
           data-even_name="p_IMClick"
           data-track_code="SPW000030"
-          :data-recommend_number="plannerInfo.dggPlannerRecomLog"
+          :data-recommend_number="plannerDetail.dggPlannerRecomLog"
           data-im_type="售前"
           :data-commodity_number="baseData.productNo"
           :data-commodity_name="operatingData.showName"
@@ -61,12 +61,12 @@
             baseData.parentClassCode && baseData.parentClassCode.split(',')[1]
           "
           :data-n_now_price="baseData.referencePrice"
-          :data-planner_number="plannerInfo.userCenterNo"
-          :data-crisps_fraction="plannerInfo.point"
-          :data-planner_name="plannerInfo.userName"
+          :data-planner_number="plannerDetail.userCenterNo"
+          :data-crisps_fraction="plannerDetail.point"
+          :data-planner_name="plannerDetail.userName"
           type="primary"
           @click="
-            sendTemplateMsgWithImg(plannerInfo.mchUserId, plannerInfo.type)
+            sendTemplateMsgWithImg(plannerDetail.mchUserId, plannerDetail.type)
           "
         >
           在线咨询
@@ -75,7 +75,7 @@
           v-md:p_IMClick
           data-even_name="p_IMClick"
           data-track_code="SPW000030"
-          :data-recommend_number="plannerInfo.dggPlannerRecomLog"
+          :data-recommend_number="plannerDetail.dggPlannerRecomLog"
           data-im_type="售前"
           :data-commodity_number="baseData.productNo"
           :data-commodity_name="operatingData.showName"
@@ -89,11 +89,11 @@
             baseData.parentClassCode && baseData.parentClassCode.split(',')[1]
           "
           :data-n_now_price="baseData.referencePrice"
-          :data-planner_number="plannerInfo.userCenterNo"
-          :data-crisps_fraction="plannerInfo.point"
-          :data-planner_name="plannerInfo.userName"
+          :data-planner_number="plannerDetail.userCenterNo"
+          :data-crisps_fraction="plannerDetail.point"
+          :data-planner_name="plannerDetail.userName"
           type="info"
-          @click="handleTel(plannerInfo.mchUserId)"
+          @click="handleTel(plannerDetail.mchUserId)"
         >
           电话联系
         </sp-button>
@@ -142,6 +142,13 @@ export default {
     },
   },
   computed: {
+    plannerDetail() {
+      if (this.sharePlaner) {
+        return this.sharePlaner
+      } else {
+        return this.plannerInfo
+      }
+    },
     city() {
       return this.$store.state.city.currentCity
     },
@@ -153,8 +160,29 @@ export default {
     if (!this.city.code) {
       await this.POSITION_CITY({ type: 'init' })
     }
+    if (this.$route.query.isShare && this.$route.plannerId) {
+      this.getPlanerInfo(this.$route.plannerId)
+    }
+    this.getPlanerInfo('607997736314102930')
   },
   methods: {
+    getPlanerInfo(id) {
+      planner.detail({ id }).then((res) => {
+        const obj = {
+          mchUserId: res.id,
+          portrait: res.img,
+          userName: res.name,
+          postName: res.zwName,
+          type: res.mchClass,
+        }
+        this.sharePlaner = {
+          ...obj,
+          ...res,
+        }
+        console.log('getPlanerInfo', res)
+        this.$forceUpdate()
+      })
+    },
     // 规划师详情跳转
     plannerInfoUrlJump(mchUserId) {
       this.$router.push({
