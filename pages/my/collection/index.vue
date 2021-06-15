@@ -81,7 +81,11 @@
               @click="toServiceGoodsDetail(item)"
             >
               <sp-swipe-cell>
-                <ServiceGoods class="flex-1" :info="item">
+                <ServiceGoods
+                  class="flex-1"
+                  :info="item"
+                  :type="tabIndex == 4 ? 'Service' : 'Trading'"
+                >
                   <template v-if="selectGoodsState" #left>
                     <sp-checkbox
                       style="padding-right: 10px"
@@ -319,11 +323,13 @@ export default {
           }
         } else {
           this.error = true
+          // this.$xToast.error(res.message || '请求错误')
         }
         this.loading = false
-      } catch (error) {
+      } catch (err) {
         this.error = true
         this.loading = false
+        // this.$xToast.error(err.message || '操作失败')
       }
     },
     // 切换选择状态
@@ -340,8 +346,9 @@ export default {
       try {
         const goodstype = this.tabIndex === 4 ? 1 : 2 // 服务商品1，交易商品2
 
-        const data = new FormData()
-        data.append('number', JSON.stringify(this.selectDelGoods))
+        // const data = new FormData()
+        // data.append('number', this.selectDelGoods)
+        const data = { number: this.selectDelGoods }
         const res = await this.$axios.post(shopApi.batch_dlt_goods, data)
         // await this.$axios({
         //   method: 'post',
@@ -352,12 +359,14 @@ export default {
         // })
 
         console.log(res)
-        // if (res.code === 200) {
-        //   this.init()
-        // } else {
-        // }
-      } catch (error) {
-        console.log(error)
+        if (res.code === 200) {
+          //   this.init()
+          this.$xToast.success('取消成功')
+        } else {
+        }
+      } catch (err) {
+        console.log(err)
+        this.$xToast.error(err.message || '操作失败')
       }
     },
   },

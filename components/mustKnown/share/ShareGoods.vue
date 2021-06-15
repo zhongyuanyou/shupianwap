@@ -1,9 +1,6 @@
 <template>
-  <div class="service-goods-component">
-    <div
-      class="service-goods-component-item"
-      :class="{ invalid: info.status !== 'PRO_STATUS_PUT_AWAY' }"
-    >
+  <div class="service-goods-component" @click="toDetail">
+    <div class="service-goods-component-item">
       <slot name="left"></slot>
       <sp-image
         class="img"
@@ -23,8 +20,8 @@
               套餐
             </span>
             <span
-              v-for="(item, index) of info.salesGoodsTags"
-              v-show="item.categoryCode === 'DSJTC20210514000042' && index < 3"
+              v-for="item of info.salesGoodsTags"
+              v-show="item.categoryCode === 'DSJTC20210514000042'"
               :key="item.tagValueCode"
             >
               {{ item.tagValueName }}
@@ -93,6 +90,23 @@ export default {
     return {}
   },
   methods: {
+    toDetail() {
+      if (this.type === 'Service') {
+        this.$router.push({
+          path: '/detail',
+          query: {
+            productId: this.info.id,
+          },
+        })
+      } else {
+        this.$router.push({
+          path: '/detail/transactionDetails',
+          query: {
+            productId: this.info.id,
+          },
+        })
+      }
+    },
     // linkServiceGoodsDetail(info) {
     //   this.$router.push({
     //     path: '/detail',
@@ -117,7 +131,9 @@ export default {
     background-size: 162px;
   }
   .service-goods-component-item {
-    padding: 24px 32px 28px;
+    border-bottom: 1px solid #f4f4f4;
+
+    padding: 24px 0px 28px;
     background-color: #fff;
     // padding: @item-padding;
     font-family: @fontf-pfsc-med;

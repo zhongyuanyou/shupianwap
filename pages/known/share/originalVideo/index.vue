@@ -24,7 +24,7 @@
           <div class="name">{{ vDetail.authorName }}</div>
           <div class="desc">{{ vDetail.custbriefIntroduction }}</div>
         </div>
-        <sp-button color="#4974F5" @click="openApp">
+        <sp-button color="#4974F5" class="button" @click="openApp">
           <my-icon name="tianjia" size="0.2rem" color="#FFFFFF" />
           关注</sp-button
         >
@@ -36,7 +36,7 @@
         }}
       </div>
     </div>
-    <video-like :category-id="categoryId"></video-like>
+    <video-like :category-id="categoryId" class="like"></video-like>
     <sp-center-popup
       v-model="showPop"
       button-type="confirm"
@@ -81,7 +81,7 @@ export default {
       return
     }
     */
-    this.vId = this.$route.query.id || '8086190052126556160'
+    this.vId = this.$route.query.id || '8088997202200690688'
     this.getVideoApi()
   },
   methods: {
@@ -166,6 +166,13 @@ export default {
       font: 28px @fontf-pfsc-reg;
       color: #999999;
     }
+  }
+  .like {
+    padding: 16px 32px;
+  }
+  .button {
+    width: 144px;
+    padding: 0;
   }
 }
 </style>

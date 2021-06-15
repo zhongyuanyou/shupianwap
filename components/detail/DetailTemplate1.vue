@@ -420,7 +420,7 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             this.$xToast.show({
-              message: '收藏成功,可在"个人中心-我的收藏"中查看',
+              message: '收藏成功',
               duration: 3000,
               icon: 'toast_ic_comp',
               forbidClick: true,
@@ -499,7 +499,7 @@ export default {
           productId: this.sellingDetail.id, // 产品ID（产品详情页必传）
           productType: 'PRO_CLASS_TYPE_SALES', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
           title: this.sellingDetail.name, // 产品名称（产品详情页传、咨询页等）
-          platform: 'app', // 平台（app,m,pc）
+          platform: 'm', // 平台（app,m,pc）
           formatIdOne: formatId1 || formatId2,
           page: { pageNo: this.productPage, pageSize: this.productLimit },
         })
@@ -544,14 +544,11 @@ export default {
               ? this.sellingDetail.classCodeLevel.split(',')[1]
               : null, // 二级产品分类
             login_name: null, // 规划师ID(选填)
-            productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
+            productType: 'PRO_CLASS_TYPE_TRANSACTIO3333N', // 产品类型
             sceneId: 'app-cpxqye-01', // 场景ID
             user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-            platform: 'app', // 平台（app,m,pc）
+            platform: 'm', // 平台（app,m,pc）
             productId: this.sellingDetail.id, // 产品id
-            formatIdOne:
-              this.sellingDetail.classCodeLevel.split(',')[0] ||
-              this.sellingDetail.classCodeLevel.split(',')[1],
           },
         })
         .then((res) => {
@@ -581,15 +578,13 @@ export default {
           productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
           sceneId: 'app-cpxqye-02', // 场景ID
           user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-          platform: 'app', // 平台（app,m,pc）
+          platform: 'm', // 平台（app,m,pc）
           productId: this.sellingDetail.id, // 产品id
-          formatIdOne:
-            this.sellingDetail.classCodeLevel.split(',')[0] ||
-            this.sellingDetail.classCodeLevel.split(',')[1],
         },
       })
       if (plannerRes.code === 200) {
         this.tcPlannerBooth = plannerRes.data.records[0]
+        console.log('tcPlannerBooth', this.tcPlannerBooth)
       }
     },
     // 购物车

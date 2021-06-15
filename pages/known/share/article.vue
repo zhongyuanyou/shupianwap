@@ -34,9 +34,8 @@
       <div v-if="showHead" class="flex">
         <PageHead2
           :header-data="articleDetails"
-          :is-follow="isFollow"
-          :is-show-follow="articleDetails.createrId !== userInfo.userId"
-          @follow="follow"
+          :is-follow="false"
+          :is-show-follow="false"
         />
       </div>
     </HeaderSlot>
@@ -57,82 +56,55 @@
         />
         <div class="infos">{{ articleDetails.userName }}</div>
         <template v-if="articleDetails.createrId !== userInfo.userId">
-          <div v-if="!isFollow" class="btn" @click="follow">
-            <sp-button>
-              <my-icon name="tianjia" size="0.27rem" color="#4974F5" />
-              关注
-            </sp-button>
-          </div>
-          <div v-else class="btn2" @click="follow">
-            <span class="follow">已关注</span>
+          <div class="btn">
+            <sp-button
+              size="small"
+              type="primary"
+              @click="
+                sendTemplateMsgWithImg(
+                  articleDetails.userId,
+                  plannerInfo.userType
+                )
+              "
+              >在线问</sp-button
+            >
+            <sp-button
+              size="small"
+              type="info"
+              @click="handleTel(articleDetails.userId)"
+              >打电话</sp-button
+            >
           </div>
         </template>
       </div>
       <div class="content" v-html="articleDetails.content"></div>
       <p class="pub-time">编辑于 {{ articleDetails.createTime }}</p>
-      <DetailArticleList :article-list="articleList" />
-    </div>
-    <Comment
-      ref="openComment"
-      :article-id="articleDetails.id"
-      :source-type="articleDetails.type"
-    />
-    <sp-bottombar safe-area-inset-bottom>
+
+      <!-- 推荐文章 -->
+      <DetailArticleList :article-list="articleDetails.relatedArticles" />
+
       <div
         v-if="
-          articleDetails.isApplaudFlag === 0 &&
-          articleDetails.isDisapplaudFlag === 0
+          articleDetails &&
+          articleDetails.goodsList &&
+          articleDetails.goodsList.length > 0
         "
-        class="left-area"
+        class="recommend"
       >
-        <span class="icon" @click="handleClickBottom(1)">
-          <my-icon name="zantong" size="0.28rem" color="#4974F5"></my-icon
-        ></span>
-        <span class="text" @click="handleClickBottom(1)"
-          >赞同{{ articleDetails.applaudCount }}</span
-        >
-      </div>
-      <div
-        v-if="articleDetails.isApplaudFlag === 1"
-        class="applaud"
-        @click="handleClickBottom(1)"
-      >
-        <span class="icon">
-          <my-icon name="zantong_mian" size="0.28rem" color="#fff"></my-icon
-        ></span>
-        <span class="text">已赞同</span>
-      </div>
-      <div
-        v-if="articleDetails.isDisapplaudFlag === 1"
-        class="applaud dis-applaud"
-        @click="handleClickBottom(2)"
-      >
-        <span class="icon">
-          <my-icon name="fandui_mian" size="0.28rem" color="#fff"></my-icon
-        ></span>
-        <span class="text">已反对</span>
-      </div>
-      <div class="right-area">
-        <div
-          class="item"
-          :style="{
-            color: articleDetails.isCollectFlag === 1 ? '#4974F5' : '#999999',
-          }"
-          @click="handleClickBottom(3)"
-        >
-          <div class="icon">
-            <my-icon name="shoucang" size="0.4rem"></my-icon>
-          </div>
-          收藏
-        </div>
-        <div class="item" @click="comment()">
-          <div class="icon">
-            <my-icon name="pinglun" size="0.4rem" color="#999999"></my-icon>
-          </div>
-          评论
+        <div class="recommend-title">推荐商品</div>
+        <div v-for="goods of articleDetails.goodsList" :key="goods.id">
+          <ShareGoods
+            :info="goods"
+            :type="
+              goods.productType === 'PRO_CLASS_TYPE_SALES'
+                ? 'Service'
+                : 'Trading'
+            "
+          ></ShareGoods>
         </div>
       </div>
-    </sp-bottombar>
+    </div>
+
     <!--    上拉组件-->
     <sp-popup
       v-model="popupShow"
@@ -175,15 +147,20 @@ import {
 } from '@chipspc/vant-dgg'
 import { knownApi } from '@/api'
 import PageHead from '@/components/common/head/header'
-import PageHead2 from '@/components/mustKnown/DetailHeaderUser'
+import PageHead2 from '@/components/mustKnown/DetailHeaderUser.vue'
 // 推荐文章列表
-import DetailArticleList from '@/components/mustKnown/DetailArticleList'
-// 默认评论列表
-import Comment from '~/components/mustKnown/DetailComment'
-import HeaderSlot from '@/components/common/head/HeaderSlot'
-import DownLoadArea from '@/components/common/downLoadArea'
-import ShareModal from '@/components/common/ShareModal'
+import DetailArticleList from '@/components/mustKnown/DetailArticleList.vue'
+// 推荐商品组件
+import ShareGoods from '@/components/mustKnown/share/ShareGoods.vue'
+
+import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
+import DownLoadArea from '@/components/common/downLoadArea.vue'
+import ShareModal from '@/components/common/ShareModal.vue'
 // import SpBottom from '@/components/common/spBottom/SpBottom'
+
+import { planner } from '~/api'
+import imHandle from '~/mixins/imHandle'
+
 export default {
   layout: 'keepAlive',
   components: {
@@ -194,7 +171,7 @@ export default {
     [Field.name]: Field,
     [Dialog.name]: Dialog,
     [Bottombar.name]: Bottombar,
-    Comment,
+
     HeaderSlot,
     // PageHead,
     PageHead2,
@@ -202,15 +179,14 @@ export default {
     DownLoadArea,
     // Header,
     ShareModal,
+    ShareGoods,
   },
   async asyncData({ $axios, query, store }) {
     let articleDetails = {}
     try {
-      const res = await $axios.get(knownApi.questionArticle.detail, {
+      const res = await $axios.get(knownApi.questionArticle.articleDetail, {
         params: {
-          id: query.id,
-          userId: store.state.user.userId,
-          userHandleFlag: store.state.user.userId ? 1 : 0,
+          shareId: query.id,
         },
       })
       if (res.code === 200) {
@@ -233,7 +209,7 @@ export default {
       // articleDetails: '',
       currentDetailsId: '',
       handleType: '',
-      isFollow: false,
+
       releaseFlag: false, // 是否发布的新文章
       shareId: '', // 分享id
     }
@@ -252,14 +228,13 @@ export default {
       return this.$store.state.app.appInfo
     },
   },
-  created() {
-    this.getRecommendData()
-    if (this.userInfo.token) {
-      this.initFollow()
-    }
-  },
+  created() {},
 
   mounted() {
+    console.log('this.articleDetails', this.articleDetails)
+    console.log('goodsList', this.articleDetails.goodsList)
+    console.log('relatedArticles', this.articleDetails.relatedArticles)
+
     if (this.$route.query.status === 'release') {
       this.releaseFlag = true
     }
@@ -277,76 +252,11 @@ export default {
         query: { homeUserId: id, type: usertype },
       })
     },
-    initFollow() {
-      this.$axios
-        .get(knownApi.questionArticle.findAttention, {
-          params: {
-            currentUserId: this.userInfo.userId,
-            homeUserId: this.articleDetails.userId,
-          },
-        })
-        .then((res) => {
-          if (res.data) {
-            this.isFollow = true
-          } else {
-            this.isFollow = false
-          }
-        })
-    },
-    async follow() {
-      const res = await this.$isLogin()
-      if (res === 'app_login_success') {
-        this.initFollow()
-        return
-      }
-      this.$axios
-        .post(knownApi.home.attention, {
-          handleUserName: this.userInfo.userName,
-          handleUserId: this.userInfo.userId,
-          handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-          handleType: this.isFollow ? 2 : 1,
-          attentionUserId: this.articleDetails.userId,
-          attentionUserName: this.articleDetails.userName,
-          attentionUserType: this.articleDetails.userType,
-        })
-        .then((res) => {
-          this.loading = false
-          if (res.code === 200) {
-            this.$xToast.show({
-              message: this.isFollow ? '取消关注' : '关注成功',
-            })
-            this.isFollow = !this.isFollow
-          } else {
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
-          }
-        })
-    },
+
     comment() {
       this.$refs.openComment.commentShow = true
     },
-    getRecommendData() {
-      this.loading = true
-      this.$axios
-        .get(knownApi.questionArticle.recommendArticle, { params: {} })
-        .then((res) => {
-          this.loading = false
-          if (res.code === 200) {
-            this.articleList = res.data
-          } else {
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
-          }
-        })
-    },
+
     getDetailData() {
       this.loading = true
       this.$axios
@@ -504,6 +414,84 @@ export default {
           console.log(err)
         })
     },
+    // 拨打电话
+    async handleTel(mchUserId) {
+      try {
+        const telData = await planner.newtel({
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          plannerId: mchUserId,
+          requireCode: '',
+          requireName: '',
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+        })
+        // 解密电话
+        if (telData.status === 1) {
+          const tel = telData.phone
+          window.location.href = `tel://${tel}`
+        } else if (telData.status === 0) {
+          Toast({
+            message: '当前人员已禁用，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+        } else if (telData.status === 3) {
+          Toast({
+            message: '当前人员已离职，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+        }
+      } catch (err) {
+        // Toast({
+        //   message: '未获取到划师联系方式',
+        //   iconPrefix: 'sp-iconfont',
+        //   icon: 'popup_ic_fail',
+        // })
+      }
+    },
+    // 调起IM
+    // 发送模板消息(带图片)
+    sendTemplateMsgWithImg(mchUserId, type) {
+      // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
+      // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
+      const intentionType = {}
+      intentionType[
+        this.baseData.parentClassCode &&
+          this.baseData.parentClassCode.split(',')[0]
+      ] = this.baseData.className
+      // 意向城市
+      const intentionCity = {}
+      intentionCity[this.city.code] = this.city.name
+      const sessionParams = {
+        imUserId: mchUserId, // 商户用户ID
+        imUserType: type, // 用户类型
+        requireCode: this.baseData.requireCode,
+        requireName: this.baseData.requireName,
+        ext: {
+          intentionType, // 意向业务 非必传
+          intentionCity, // 意向城市 非必传
+          recommendId: '',
+          recommendAttrJson: {},
+          startUserType: 'cps-app', //
+        },
+      }
+      const msgParams = {
+        sendType: 0, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
+        msgType: 'im_tmplate', // 消息类型
+        extContent: this.$route.query, // 路由参数
+        productName: this.imJumpQuery.productName, // 产品名称
+        productContent: this.imJumpQuery.productContent, // 产品信息
+        price: this.imJumpQuery.price, // 价格
+        forwardAbstract: this.imJumpQuery.forwardAbstract, // 摘要信息，可与显示内容保持一致
+        routerId: this.imJumpQuery.routerId, // 路由ID
+        imageUrl: this.imJumpQuery.imageUrl[0], // 产品图片
+        unit: this.imJumpQuery.unit, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+      }
+      this.sendTemplateMsgMixin({ sessionParams, msgParams })
+    },
   },
 }
 </script>
@@ -512,6 +500,16 @@ export default {
 .article {
   background: #fff;
 }
+// 推荐标题
+.recommend-title {
+  font-size: 32px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: bold;
+  color: #222222;
+  line-height: 32px;
+  padding: 40px 0;
+}
+
 // .fixed-head {
 //   position: fixed;
 //   left: 0;
@@ -631,17 +629,24 @@ export default {
       border-radius: 12px;
       display: flex;
       align-items: center;
-      .sp-button {
-        width: 100%;
-        height: 100%;
-        background: #f5f5f5;
-        border-radius: 12px;
-        color: rgba(73, 116, 245, 1);
-        display: block;
-        font-weight: bold;
-        float: left;
-        display: flex;
+
+      ::v-deep.sp-button--info {
+        margin-left: 12px;
+        background-color: #24ae68;
+        border: 1px solid #24ae68;
       }
+
+      // .sp-button {
+      //   width: 100%;
+      //   height: 100%;
+      //   background: #f5f5f5;
+      //   border-radius: 12px;
+      //   color: rgba(73, 116, 245, 1);
+      //   display: block;
+      //   font-weight: bold;
+      //   float: left;
+      //   display: flex;
+      // }
     }
   }
   .content {
