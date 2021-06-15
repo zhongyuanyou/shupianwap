@@ -2,19 +2,29 @@
   <div class="my">
     <!--S 顶部-->
     <div class="my_tp">
-      <div class="my_tp_info" @click="handleAvatar">
+      <div class="my_tp_info">
         <sp-image
           round
           width="1.06rem"
           height="1.06rem"
           fit="cover"
           class="my_tp_info_img"
-          :src="info.url ? info.url : avatar"
+          :src="info.url ? info.url : $ossImgSetV2(imgList.tx)"
+          @click="handleAvatar"
         />
-        <span class="txt">
-          {{ info.id ? info.nickName || '' : '登录/注册' }}
+        <div class="icon_edit">
+          <img :src="$ossImgSetV2(imgList.edit)" alt="" />
+        </div>
+
+        <span class="txt" @click="handleAvatar">
+          {{ userId ? info.nickName || '' : '登录/注册' }}
+          <img
+            v-if="userId"
+            class="icon-plus"
+            :src="$ossImgSetV2(imgList.plus)"
+          />
         </span>
-        <div v-if="info.id" class="right">
+        <div v-if="userId" class="right" @click="toKnownHome">
           <span class="home">个人主页</span>
           <my-icon
             name="order_ic_listnext"
@@ -34,17 +44,18 @@
           v-for="(item, index) in CollectionTabs"
           :key="index"
           class="my_order_type_list"
+          @click="clickServiceTabs(item)"
         >
           <div class="icon">
-            <img v-if="item.img" class="img" :src="item.img" alt="" />
+            <img v-if="item.img" class="icon_img" :src="item.img" alt="" />
             <my-icon
-              v-if="item.iconName"
+              v-else-if="item.iconName"
               :name="item.iconName"
               color="#4E78F5"
               size="0.44rem"
             ></my-icon>
           </div>
-          <div class="order_text" @click="clickServiceTabs(item)">
+          <div class="order_text">
             {{ item.name }}
           </div>
         </div>
@@ -60,6 +71,7 @@
           v-for="(item, index) in orderTabs"
           :key="index"
           class="my_order_type_list"
+          @click="clickTab(++index)"
         >
           <div class="icon">
             <my-icon :name="item.iconName" color="#4E78F5" size="0.44rem">
@@ -77,7 +89,7 @@
               >{{ evaluateNum }}</span
             >
           </div>
-          <div class="order_text" @click="clickTab(++index)">
+          <div class="order_text">
             {{ item.name }}
           </div>
         </div>
@@ -93,12 +105,18 @@
           v-for="(item, index) in ServiceTabs"
           :key="index"
           class="my_order_type_list"
+          @click="clickServiceTabs(item)"
         >
           <div class="icon">
-            <my-icon :name="item.iconName" color="#4E78F5" size="0.44rem">
-            </my-icon>
+            <img v-if="item.img" class="icon_img" :src="item.img" alt="" />
+            <my-icon
+              v-else-if="item.iconName"
+              :name="item.iconName"
+              color="#4E78F5"
+              size="0.44rem"
+            ></my-icon>
           </div>
-          <div class="order_text regular" @click="clickServiceTabs(item)">
+          <div class="order_text regular">
             {{ item.name }}
           </div>
         </div>
@@ -115,6 +133,14 @@
         >退出登录</sp-button
       >
     </div>
+    <client-only>
+      <DownLoadArea
+        v-if="!userId"
+        :ios-link="iosLink"
+        :androd-link="androdLink"
+      />
+    </client-only>
+
     <!--E 退出登录-->
     <!--S 弹框-->
     <sp-center-popup
@@ -137,6 +163,7 @@ import { GOODSLIST } from '~/config/constant'
 import { imInit } from '@/utils/im'
 import getUserSign from '~/utils/fingerprint'
 import imHandle from '~/mixins/imHandle'
+import DownLoadArea from '@/components/common/downLoadArea.vue'
 
 export default {
   layout: 'nav',
@@ -146,10 +173,14 @@ export default {
     [Image.name]: Image,
     [CenterPopup.name]: CenterPopup,
     LoadingCenter,
+    DownLoadArea,
   },
   mixins: [imHandle],
   data() {
     return {
+      iosLink: 'cpsccustomer://',
+      androdLink: 'cpsccustomer://',
+      // isShare: true,
       orderTabs: [
         {
           iconName: 'per_ic_payment',
@@ -174,6 +205,10 @@ export default {
         },
       ],
       imgList: {
+        tx: '2exrifx8gxes000.png',
+        edit: '72tvzeql0iw0000.png',
+        plus: '895bdylh5rg000.png',
+
         contract: '2ghw6duy8l0k000.png', // 合同
         collection: 'axvqykli9yg0000.png', // 收藏
         coupon: '1gw9pvueyc68000.png', // 优惠券
@@ -230,7 +265,18 @@ export default {
           img: this.$ossImgSetV2(this.imgList.coupon),
           url: '/my/coupon',
         },
-        {},
+        // {
+        //   // iconName: 'gerenzhongxin_youhuiquanicon',
+        //   name: '优惠券',
+        //   img: this.$ossImgSetV2(this.imgList.coupon),
+        //   url: '/my/coupon',
+        // },
+        // {
+        //   // iconName: 'gerenzhongxin_youhuiquanicon',
+        //   name: '优惠券',
+        //   img: this.$ossImgSetV2(this.imgList.coupon),
+        //   url: '/my/coupon',
+        // },
         {},
         {},
       ]
@@ -247,28 +293,33 @@ export default {
 
       return [
         {
-          iconName: 'caifang_mian',
+          // iconName: 'caifang_mian',
           name: '面试记录',
+          img: this.$ossImgSetV2(this.imgList.mianTanJiLu),
           url: '/my/interviewRecord',
         },
         {
-          iconName: 'shimingrenzheng',
+          // iconName: 'shimingrenzheng',
           name: realStatus, // 实名认证
+          img: this.$ossImgSetV2(this.imgList.real),
           url: '/my/interviewRecord',
         },
         {
-          iconName: 'per_ic_help',
+          // iconName: 'per_ic_help',
           name: '帮助中心',
+          img: this.$ossImgSetV2(this.imgList.help),
           url: '/my/help',
         },
         {
-          iconName: 'per_ic_debunk',
+          // iconName: 'per_ic_debunk',
           name: '我要吐槽',
+          img: this.$ossImgSetV2(this.imgList.complain),
           url: '/my/complain',
         },
         {
-          iconName: 'per_ic_about',
+          // iconName: 'per_ic_about',
           name: '关于我们',
+          img: this.$ossImgSetV2(this.imgList.about),
           url: '/my/about',
         },
       ]
@@ -291,6 +342,23 @@ export default {
   },
 
   methods: {
+    toKnownHome(info) {
+      if (this.token && this.userId) {
+        this.$router.push({
+          path: '/known/home',
+          query: {
+            homeUserId: this.userId,
+          },
+        })
+      } else {
+        this.$router.push({
+          path: '/known/home?homeUserId=420882',
+          query: {
+            redirect: '/login',
+          },
+        })
+      }
+    },
     clickServiceTabs(item) {
       if (this.token) {
         this.$router.push({ path: item.url })
@@ -466,7 +534,8 @@ export default {
 <style lang="less" scoped>
 .my {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
+  padding-bottom: 220px;
   overflow: auto;
   background-color: #ffffff;
   &_tp {
@@ -483,7 +552,24 @@ export default {
       display: flex;
       // justify-content: center;
       align-items: center;
+      position: relative;
       // flex-direction: column;
+      .icon_edit {
+        position: absolute;
+        bottom: 8px;
+        left: 80px;
+
+        width: 32px;
+        height: 32px;
+        background: #ffffff;
+        border-radius: 32px;
+        font-size: 0;
+        text-align: center;
+        line-height: 32px;
+        img {
+          width: 14px;
+        }
+      }
       &_img {
         width: 112px;
         height: 112px;
@@ -499,6 +585,10 @@ export default {
         font-weight: bold;
 
         line-height: 44px;
+
+        .icon-plus {
+          height: 44px;
+        }
       }
       .right {
         display: flex;
@@ -528,11 +618,18 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      // flex-wrap: wrap;
       &_list {
+        cursor: pointer;
         text-align: center;
+        min-width: 76px;
+        // flex-shrink: 0;
+        // flex: 1;
         .icon {
           position: relative;
-          .img {
+          font-size: 0;
+          box-sizing: border-box;
+          .icon_img {
             width: 52px;
             height: 52px;
           }
@@ -573,8 +670,8 @@ export default {
   }
 
   .exit_btn {
-    margin: 65px 24px 246px 24px;
-    height: 96px;
+    margin: 65px 24px 65px 24px;
+    // height: 96px;
     ::v-deep .sp-button {
       width: 100%;
       border: none;
@@ -584,6 +681,10 @@ export default {
       font-size: 32px;
       color: #4974f5;
     }
+  }
+  ::v-deep .download-area {
+    position: fixed;
+    bottom: 100px;
   }
   .spiconfont {
     display: block;

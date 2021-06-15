@@ -360,9 +360,11 @@ export default {
 
         console.log(res)
         if (res.code === 200) {
-          //   this.init()
+          this.init()
+          this.onLoad()
           this.$xToast.success('取消成功')
         } else {
+          this.$xToast.error(res.message || '取消失败')
         }
       } catch (err) {
         console.log(err)
