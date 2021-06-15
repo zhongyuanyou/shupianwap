@@ -246,9 +246,13 @@ export default {
 
     nickName() {
       if (this.info.nickName) {
-        const arr = this.info.nickName.split('')
-        arr.splice(2, 7, '****') // .join('')
-        return arr.join('')
+        if (this.info.nickName.indexOf('****') !== -1) {
+          const arr = this.info.nickName.split('')
+          arr.splice(2, 7, '****') // .join('')
+          return arr.join('')
+        } else {
+          return this.info.nickName
+        }
       }
       return ''
     },
