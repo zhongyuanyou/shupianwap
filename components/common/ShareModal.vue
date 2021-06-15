@@ -32,12 +32,9 @@
             </slot>
           </div>
           <div class="popup-banner__con">
-            <img
-              class="avatar"
-              src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni-app-doc/6acec660-4f31-11eb-a16f-5b3e54966275.jpg"
-            />
+            <img class="avatar" :src="planerInfo.img" />
             <div class="planner-info">
-              <span>您好，我是{{ info.name }}</span>
+              <span>您好，我是{{ planerInfo.name }}</span>
             </div>
           </div>
         </div>
@@ -48,24 +45,18 @@
             <span>委托我为您提供以下服务</span>
           </div>
           <div class="popup-content__tags">
-            <div class="item">
-              <!--              <icon type="success" size="12" />-->
-              <span class="txt">快速服务咨询</span>
-            </div>
-            <div class="item">
-              <!--              <icon type="success" size="12" />-->
-              <span class="txt">快速服务咨询</span>
-            </div>
-          </div>
-          <div class="popup-content__tags">
-            <div class="item">
-              <!--              <icon type="success" size="12" />-->
-              <span class="txt">快速服务咨询</span>
-            </div>
-            <div class="item">
-              <!--              <icon type="success" size="12" />-->
-              <span class="txt">快速服务咨询</span>
-            </div>
+            <span
+              v-for="(item, index) in planerInfo.tagList"
+              :key="index"
+              class="item"
+            >
+              <my-icon
+                name="toast_ic_comp"
+                size="0.24rem"
+                color="#146F18"
+              ></my-icon>
+              <span class="txt">{{ item }}</span>
+            </span>
           </div>
           <div class="popup-btn" @click="handleClickBtn()">
             <span>同意委托</span>
@@ -81,19 +72,12 @@
 </template>
 
 <script>
+import { Icon } from '@chipspc/vant-dgg'
+import { planner } from '~/api'
 export default {
   name: 'SpPopup',
-  props: {
-    info: {
-      type: Object,
-      default: () => {
-        return {
-          name: '规划师', // 规划师姓名
-          tel: '13131313131', // 规划师电话号码
-          id: '131311414', // 规划师id
-        }
-      },
-    },
+  components: {
+    [Icon.name]: Icon,
   },
   data() {
     return {
@@ -101,13 +85,35 @@ export default {
       plannerId: '',
       shareId: '',
       partnerId: '',
+      planerInfo: {},
     }
   },
   mounted() {
     this.plannerId = this.$route.query.plannerId || this.$route.query.homeUserId
     this.partnerId = this.$route.query.partnerId
+    if (this.$route.query.isShare && this.plannerId) {
+      this.getPlanerInfo(this.plannerId)
+    }
   },
   methods: {
+    getPlanerInfo(id) {
+      planner.detail({ id }).then((res) => {
+        const obj = {
+          mchUserId: res.id,
+          portrait: res.img,
+          userName: res.name,
+          postName: res.zwName,
+          type: res.mchClass,
+        }
+        res.tagList = res.tagList.concat(['工商变更', '个体服务记账'])
+        this.planerInfo = {
+          ...obj,
+          ...res,
+        }
+        console.log('getPlanerInfo', this.planerInfo)
+        this.$forceUpdate()
+      })
+    },
     showFullScreen() {
       // 显示全屏
       this.visible = true
@@ -283,26 +289,23 @@ export default {
           color: #555555;
           margin-top: 40px;
         }
-        &__tags {
+        .popup-content__tags {
           display: flex;
           justify-content: space-between;
-          align-items: center;
-          flex-direction: row;
-          margin-top: 48px;
-          &:first-child {
-            margin-top: 63px;
-          }
+          flex-wrap: wrap;
+          height: 190px;
           > .item {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            flex-direction: row;
+            height: 60px;
+            width: auto;
+            color: #222222;
+            padding-right: 20px;
+            clear: both;
             .txt {
+              line-height: 24px;
               font-size: 28px;
               font-family: PingFang SC;
               font-weight: 400;
               color: #222222;
-              margin-left: 17px;
             }
           }
         }

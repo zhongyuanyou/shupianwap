@@ -5,23 +5,23 @@
   >
     <div class="commodityConsult-containner">
       <div class="commodityConsult-containner-userInfo">
-        <a @click="plannerInfoUrlJump(plannerInfo.mchUserId)">
+        <a @click="plannerInfoUrlJump(plannerDetail.mchUserId)">
           <sp-image
             width="0.8rem"
             height="0.8rem"
             round
             fit="cover"
-            :src="plannerInfo.portrait"
+            :src="plannerDetail.portrait"
           />
         </a>
         <div class="commodityConsult-containner-userInfo-name">
-          <a @click="plannerInfoUrlJump(plannerInfo.mchUserId)">
+          <a @click="plannerInfoUrlJump(plannerDetail.mchUserId)">
             <p>
-              {{ plannerInfo.userName }}
+              {{ plannerDetail.userName }}
             </p>
           </a>
-          <span v-if="plannerInfo.postName">
-            {{ plannerInfo.postName }}
+          <span v-if="plannerDetail.postName">
+            {{ plannerDetail.postName }}
           </span>
         </div>
       </div>
@@ -38,7 +38,7 @@
           v-if="[2, 3].includes(salesGoodsSubVos)"
           class="consulting"
           @click="
-            sendTemplateMsgWithImg(plannerInfo.mchUserId, plannerInfo.type)
+            sendTemplateMsgWithImg(plannerDetail.mchUserId, plannerDetail.type)
           "
         >
           在线咨询
@@ -53,7 +53,7 @@
         <sp-button
           v-if="salesGoodsSubVos === 3"
           type="primary"
-          @click="handleTel(plannerInfo.mchUserId)"
+          @click="handleTel(plannerDetail.mchUserId)"
         >
           电话联系
         </sp-button>
@@ -96,6 +96,7 @@ export default {
       type: 1,
       article: {}, // 下单协议信息
       carSub: null,
+      sharePlaner: null,
     }
   },
   computed: {
@@ -133,8 +134,37 @@ export default {
         }
       },
     }),
+    plannerDetail() {
+      if (this.sharePlaner) {
+        return this.sharePlaner
+      } else {
+        return this.plannerInfo
+      }
+    },
+  },
+  mounted() {
+    if (this.$route.query.isShare && this.$route.plannerId) {
+      this.getPlanerInfo(this.$route.plannerId)
+    }
+    // this.getPlanerInfo('607997736314102930')
   },
   methods: {
+    getPlanerInfo(id) {
+      planner.detail({ id }).then((res) => {
+        const obj = {
+          mchUserId: res.id,
+          portrait: res.img,
+          userName: res.name,
+          postName: res.zwName,
+          type: res.mchClass,
+        }
+        this.sharePlaner = {
+          ...obj,
+          ...res,
+        }
+        this.$forceUpdate()
+      })
+    },
     addCart() {
       // 库存不足,不能加购
       if (this.sellingGoodsData.stock > 0) {
@@ -246,9 +276,8 @@ export default {
       // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
       // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
       const intentionType = {}
-      intentionType[
-        this.sellingGoodsData.classCode
-      ] = this.sellingGoodsData.classCodeName
+      intentionType[this.sellingGoodsData.classCode] =
+        this.sellingGoodsData.classCodeName
       // 意向城市
       const intentionCity = {}
       intentionCity[this.city.code] = this.city.name
@@ -269,14 +298,15 @@ export default {
         msgType: 'im_tmplate', // 消息类型
         extContent: this.$route.query, // 路由参数
         productName: this.sellingGoodsData.name, // 产品名称
-        productContent: this.sellingGoodsData.salesGoodsOperatings
-          .productDescribe, // 产品信息
+        productContent:
+          this.sellingGoodsData.salesGoodsOperatings.productDescribe, // 产品信息
         price: `${this.sellingGoodsData.salesPrice}元`, // 价格
-        forwardAbstract: this.sellingGoodsData.salesGoodsOperatings
-          .productDescribe, // 摘要信息，可与显示内容保持一致
+        forwardAbstract:
+          this.sellingGoodsData.salesGoodsOperatings.productDescribe, // 摘要信息，可与显示内容保持一致
         routerId: 'IMRouter_APP_ProductDetail_Service', // 路由ID
-        imageUrl: this.sellingGoodsData.salesGoodsOperatings.clientDetails[0]
-          .imgFileIdPaths[0], // 产品图片
+        imageUrl:
+          this.sellingGoodsData.salesGoodsOperatings.clientDetails[0]
+            .imgFileIdPaths[0], // 产品图片
         unit: this.sellingGoodsData.salesPrice.split('.')[1], // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
       }
       this.sendTemplateMsgMixin({ sessionParams, msgParams })
