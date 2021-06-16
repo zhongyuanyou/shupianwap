@@ -208,11 +208,11 @@ export default {
     }
   },
 
-  computed: {
-    ...mapState({
-      imExample: (state) => state.im.imExample, // IM 实例
-    }),
-  },
+  // computed: {
+  //   ...mapState({
+  //     imExample: (state) => state.im.imExample, // IM 实例
+  //   }),
+  // },
   mounted() {
     this.$store.dispatch('user/clearUser')
   },
@@ -229,9 +229,11 @@ export default {
         return
       }
       this.login().then((data) => {
+        this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
         this.getUserInfo(data)
       })
     },
+
     handleSwitchLookPassword() {
       this.passwordFieldType =
         this.passwordFieldType === 'password' ? 'text' : 'password'
@@ -391,7 +393,6 @@ export default {
           localStorage.setItem('info', JSON.stringify(this.info))
           // console.log(res.data.realStatus)
           this.$store.dispatch('user/setInfo', res.data)
-          this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
           // 使用定时器，等待提示信息展示1.5s 再跳转
           this.$xToast.success('登录成功！')
           setTimeout(() => {
