@@ -544,11 +544,14 @@ export default {
               ? this.sellingDetail.classCodeLevel.split(',')[1]
               : null, // 二级产品分类
             login_name: null, // 规划师ID(选填)
-            productType: 'PRO_CLASS_TYPE_TRANSACTIO3333N', // 产品类型
+            productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
             sceneId: 'app-cpxqye-01', // 场景ID
             user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-            platform: 'm', // 平台（app,m,pc）
+            platform: 'app', // 平台（app,m,pc）
             productId: this.sellingDetail.id, // 产品id
+            formatIdOne:
+              this.sellingDetail.classCodeLevel.split(',')[0] ||
+              this.sellingDetail.classCodeLevel.split(',')[1],
           },
         })
         .then((res) => {
@@ -578,13 +581,15 @@ export default {
           productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
           sceneId: 'app-cpxqye-02', // 场景ID
           user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-          platform: 'm', // 平台（app,m,pc）
+          platform: 'app', // 平台（app,m,pc）
           productId: this.sellingDetail.id, // 产品id
+          formatIdOne:
+            this.sellingDetail.classCodeLevel.split(',')[0] ||
+            this.sellingDetail.classCodeLevel.split(',')[1],
         },
       })
       if (plannerRes.code === 200) {
         this.tcPlannerBooth = plannerRes.data.records[0]
-        console.log('tcPlannerBooth', this.tcPlannerBooth)
       }
     },
     // 购物车
