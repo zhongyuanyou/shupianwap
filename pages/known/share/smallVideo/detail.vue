@@ -1,7 +1,8 @@
 <template>
   <div class="m-known-share smallVideoDetail">
     <client-only>
-      <sp-video :options="playerOptions" :vod-url="url"> </sp-video>
+      <sp-video :options="playerOptions" :vod-url="url" :v-type="videoType">
+      </sp-video>
     </client-only>
     <small-video-like :category-id="categoryId" />
   </div>
@@ -28,6 +29,7 @@ export default {
           fullscreenToggle: false,
         },
       },
+      videoType: 'small',
     }
   },
   mounted() {
