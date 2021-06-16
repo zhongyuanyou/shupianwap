@@ -5,6 +5,7 @@
         <video
           ref="spVideo"
           class="video-js vjs-default-skin vjs-big-play-centered vjs-16-9"
+          :class="[vType === 'small' ? 'video-js__customer' : '']"
           :style="{
             width: options.width,
             height: options.height,
@@ -86,6 +87,10 @@ export default {
           desc: '视频播放失败,请重试',
         }
       },
+    },
+    vType: {
+      type: String,
+      default: '',
     },
   },
   data() {
@@ -224,12 +229,15 @@ export default {
   ::v-deep .vjs-poster {
     background-size: cover;
   }
-  ::v-deep .video-js .vjs-tech {
+  ::v-deep .video-js__customer .vjs-tech {
+    object-fit: fill;
+    /*
     object-fit: fill;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    */
   }
   .video-error {
     display: flex;

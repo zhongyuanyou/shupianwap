@@ -6,7 +6,7 @@
         v-for="(item, index) in mVlist"
         :key="index"
         class="item"
-        @click="openApp"
+        @click="myOpenApp(item)"
       >
         <sp-image
           width="3.72rem"
@@ -35,7 +35,7 @@
 import { Image } from '@chipspc/vant-dgg'
 import openappV2 from '@/mixins/openappV2'
 import knownApi from '@/api/known'
-import { numChangeW } from '@/utils/common'
+import { numChangeW, deepCopy } from '@/utils/common'
 
 export default {
   name: 'KnownSmallVideoLike',
@@ -53,6 +53,24 @@ export default {
     return {
       mVlist: [],
       apiLock: false,
+      prefixPath: 'cpsccustomer://',
+      iosPath: {
+        path: 'CPSCustomer:CPSCustomer/CPSCKnowCommonDetailViewController///push/animation',
+        parameter: {
+          selectedIndex: 1,
+          type: '',
+          id: '',
+        },
+      },
+      androdPath: {
+        path: '/main/android/main',
+        parameter: {
+          selectedIndex: 1,
+          isLogin: '0',
+          secondLink: '/savvy/chips/small_video_details',
+          id: '',
+        },
+      },
     }
   },
   watch: {
@@ -94,6 +112,17 @@ export default {
       this.mVlist.forEach((item) => {
         item.custTotalCount = numChangeW(item.totalViewCount)
       })
+    },
+    myOpenApp(item) {
+      // 构建传参数
+      const tempIos = deepCopy({}, this.iosPath)
+      tempIos.parameter.type = item.videoType
+      tempIos.parameter.id = item.id
+      const iosPathFinally = this.prefixPath + JSON.stringify(tempIos)
+      const tempAndrod = deepCopy({}, this.androdPath)
+      tempAndrod.parameter.id = item.id
+      const androdPathFinally = this.prefixPath + JSON.stringify(tempAndrod)
+      this.openApp(iosPathFinally, androdPathFinally)
     },
   },
 }

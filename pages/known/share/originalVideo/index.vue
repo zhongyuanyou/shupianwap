@@ -70,8 +70,6 @@ export default {
       playerOptions: {
         muted: true,
         poster: '',
-        width: '100vw',
-        height: '4.22rem',
       },
     }
   },

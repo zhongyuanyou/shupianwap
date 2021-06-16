@@ -471,8 +471,11 @@ export default {
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
             sceneId: 'app-cpxqye-01', // 场景ID
             user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-            platform: 'm', // 平台（app,m,pc）
+            platform: 'app', // 平台（app,m,pc）
             productId: this.proDetail.id, // 产品id
+            formatIdOne:
+              this.proDetail.classCodeLevel.split(',')[0] ||
+              this.proDetail.classCodeLevel.split(',')[1],
           },
         })
         .then((res) => {
@@ -502,7 +505,7 @@ export default {
           productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
           sceneId: 'app-cpxqye-02', // 场景ID
           user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-          platform: 'm', // 平台（app,m,pc）
+          platform: 'app', // 平台（app,m,pc）
           productId: this.proDetail.id, // 产品id
         },
       })

@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     // 直接调用打开方法,不加dialog
-    confirm(event, iosLink = '', androdLink = '') {
+    confirm(iosLink = '', androdLink = '') {
       // 优化传链接的2种方式,一种直接通过方法调用,一种通过组件
       if (iosLink !== '') {
         this.myIosLink = iosLink
@@ -43,7 +43,7 @@ export default {
       this.checkOutApp()
     },
     // 调用dialog打开方法
-    openApp(event, iosLink = '', androdLink = '') {
+    openApp(iosLink = '', androdLink = '') {
       this.showPop = true
       // 优化传链接的2种方式,一种直接通过方法调用,一种通过组件
       if (iosLink !== '') {
@@ -65,6 +65,8 @@ export default {
       let isBlur = false
       let url = ''
       let downLoadUrl = ''
+      console.log(`output this.myIosLink: ${this.myIosLink}`)
+      console.log(`output this.myAndrodLink: ${this.myAndrodLink}`)
       if (this.isIOS) {
         url = this.myIosLink
         downLoadUrl = 'https://apps.apple.com/cn/app/薯片找人/id1535886630'
