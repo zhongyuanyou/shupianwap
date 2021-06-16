@@ -186,7 +186,7 @@ export default {
     try {
       const res = await $axios.get(knownApi.questionArticle.articleDetail, {
         params: {
-          shareId: query.id,
+          shareId: query.shareId,
         },
       })
       if (res.code === 200) {
