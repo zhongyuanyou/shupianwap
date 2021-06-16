@@ -285,10 +285,19 @@ export default {
     // 开始支付时判断
     startPay() {
       if (
-        !this.orderData.payType ||
-        this.orderData.payType !== 'ORDER_PAY_MODE_ONLINE'
+        this.orderData.payType &&
+        this.orderData.payType === 'ORDER_PAY_MODE_OFFLINE'
       ) {
-        this.$xToast.error('该订单为线下支付，请联系规划师付款')
+        this.$xToast.error('该订单为线下支付，请联系规划师付款！')
+        return
+      }
+      if (
+        this.orderData.payType &&
+        this.orderData.payType === 'ORDER_PAY_MODE_SECURED'
+      ) {
+        this.$xToast.error(
+          '该订单为担保交易，请访问薯片PC网站或联系规划师付款！'
+        )
         return
       }
       if (this.fromPage === 'orderList' || this.fromPage === 'orderDetail') {
