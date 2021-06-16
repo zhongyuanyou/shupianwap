@@ -91,34 +91,74 @@
           :name="item.index"
         ></sp-tab>
       </sp-tabs>
-      <sp-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        class="list_container"
-        @load="getList"
-      >
-        <div v-for="(item, index) in list" :key="index">
-          <Item v-if="active !== 5" :item="item" @comments="comments" />
-          <div v-else class="item_five">
-            <div class="item" @click="open(item)">
-              <div class="lf_img">
-                <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
-                <div class="time">{{ totime(item.duration) }}</div>
-              </div>
-              <div class="rt_content">
-                <div class="title">{{ item.videoName }}</div>
-                <div class="name_time">
-                  <div class="name">{{ userName }}</div>
-                  <div class="time">
-                    {{ timeSplice(item.createTime) }}
+      <div v-if="active !== 6">
+        <sp-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          class="list_container"
+          @load="getList"
+        >
+          <div v-for="(item, index) in list" :key="index">
+            <Item
+              v-if="active !== 5 && active !== 6"
+              :item="item"
+              @comments="comments"
+            />
+            <div v-else-if="active === 5" class="item_five">
+              <div class="item" @click="open(item)">
+                <div class="lf_img">
+                  <img
+                    v-if="item.image"
+                    :src="item.image.split(',')[0]"
+                    alt=""
+                  />
+                  <div class="time">{{ totime(item.duration) }}</div>
+                </div>
+                <div class="rt_content">
+                  <div class="title">{{ item.videoName }}</div>
+                  <div class="name_time">
+                    <div class="name">{{ userName }}</div>
+                    <div class="time">
+                      {{ timeSplice(item.createTime) }}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </sp-list>
+        </sp-list>
+      </div>
+      <div v-else class="smallVideolist">
+        <sp-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          :error.sync="error"
+          error-text="请求失败，点击重新加载"
+          @load="getList"
+        >
+          <div v-if="list.length > 0" class="video-list">
+            <div
+              v-for="(item, index) in list"
+              :key="index"
+              class="item"
+              @click="open"
+            >
+              <sp-image
+                width="3.72rem"
+                height="6.61rem"
+                fit="cover"
+                :src="item.image"
+              />
+              <div class="content">
+                <div class="count">{{ item.custTotalCount }} 次观看</div>
+                <div class="tile">{{ item.videoName }}</div>
+              </div>
+            </div>
+          </div>
+        </sp-list>
+      </div>
     </div>
     <comment-list
       v-model="commentShow"
@@ -223,6 +263,14 @@ export default {
           name: '文章',
           index: 2,
         },
+        {
+          name: '视频',
+          index: 5,
+        },
+        {
+          name: '小视频',
+          index: 6,
+        },
       ],
       list: [],
       loading: false,
@@ -255,32 +303,50 @@ export default {
     this.isShare = this.$route.query.isShare
     this.getAdList()
     window.addEventListener('scroll', this.getScroll)
-    const userType = this.type || utils.getUserType(this.type)
+    // const userType = this.type || utils.getUserType(this.type)
     // 到时候这里改成5
-    if (userType !== 1) {
-      this.menuList.push({
-        name: '视频',
-        index: 5,
-      })
-    }
+    // if (userType !== 1) {
+    //   this.menuList.push({
+    //     name: '视频',
+    //     index: 5,
+    //   })
+    // }
   },
   methods: {
     open(item) {
-      console.log(item)
       if (this.isInApp && this.appInfo.appCode === 'CPSAPP') {
-        try {
-          this.$appFn.dggOpenVideo(item.id, (res) => {
-            const { code } = res || {}
-            if (code !== 200)
-              this.$xToast.show({
-                message: `打开视频失败`,
-                duration: 1000,
-                forbidClick: true,
-                icon: 'toast_ic_remind',
-              })
-          })
-        } catch (error) {
-          console.error('changeTop error:', error)
+        console.log('++++++++this.active', this.active)
+        console.log('++++++++this.item', item.id)
+        if (this.active === 5) {
+          try {
+            this.$appFn.dggOpenVideo(item.id, (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `打开视频失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            })
+          } catch (error) {
+            console.error('changeTop error:', error)
+          }
+        } else {
+          try {
+            this.$appFn.dggOpenSmallVideo(item.id, (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `打开小视频失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            })
+          } catch (error) {
+            console.error('changeTop error:', error)
+          }
         }
       } else if (this.isInApp && this.appInfo.appCode === 'syscode') {
         this.showItem = false
@@ -406,7 +472,6 @@ export default {
       this.list = []
       this.finished = false
       this.loading = true
-
       this.getList()
     },
     async init() {
@@ -787,6 +852,46 @@ export default {
                 color: #999999;
                 font: 400 26px/32px PingFangSC-Regular, PingFang SC;
               }
+            }
+          }
+        }
+      }
+    }
+    .smallVideolist {
+      .video-list {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        background-color: #fff;
+        .item {
+          position: relative;
+          display: inline-block;
+          box-sizing: border-box;
+          width: 50%;
+          height: 661px;
+          margin: 2px 0;
+          .content {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 20px;
+            font-family: @fontf-pfsc-med;
+            font-weight: bold;
+            color: #fff;
+            width: 100%;
+            height: 200px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            .count {
+              font-size: 24px;
+              opacity: 0.8;
+              margin-bottom: 8px;
+            }
+            .tile {
+              font-size: 36px;
+              .textOverflow(2);
             }
           }
         }
