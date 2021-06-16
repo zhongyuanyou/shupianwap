@@ -62,6 +62,15 @@ export default {
           id: '',
         },
       },
+      androdPath: {
+        path: '/main/android/main',
+        parameter: {
+          selectedIndex: 1,
+          isLogin: '0',
+          secondLink: '/savvy/chips/small_video_details',
+          id: '',
+        },
+      },
     }
   },
   watch: {
@@ -110,7 +119,10 @@ export default {
       tempIos.parameter.type = item.videoType
       tempIos.parameter.id = item.id
       const iosPathFinally = this.prefixPath + JSON.stringify(tempIos)
-      this.openApp(iosPathFinally)
+      const tempAndrod = deepCopy({}, this.androdPath)
+      tempAndrod.parameter.id = item.id
+      const androdPathFinally = this.prefixPath + JSON.stringify(tempAndrod)
+      this.openApp(iosPathFinally, androdPathFinally)
     },
   },
 }
