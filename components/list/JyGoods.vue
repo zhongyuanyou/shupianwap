@@ -382,7 +382,6 @@ export default {
     },
     initGoodsList() {
       // 获取初始数据
-      console.log(this.formData, 321)
       this.formData[this.currentTabJyCode].start = 1
       this.loading = true
       this.jyGoodsListData[this.currentTabJyCode] = []
@@ -486,7 +485,6 @@ export default {
     computedHeight() {
       // 计算列表的最大高
       const top = this.$refs.spList[0].$el.getBoundingClientRect().top
-      console.log('top', top)
       this.maxHeight = document.body.clientHeight - top + 'px'
       /* const installAPPHeight = this.$refs.installApp
         ? this.$refs.installApp[0].$el.clientHeight

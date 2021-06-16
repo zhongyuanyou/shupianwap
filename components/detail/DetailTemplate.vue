@@ -15,11 +15,21 @@
         @on-click-left="onClickLeft"
       >
         <template #left>
-          <div>
+          <div v-if="!isShare">
             <my-icon name="nav_ic_back" size="0.4rem" color="#fff"></my-icon>
           </div>
         </template>
         <template #right>
+          <div>
+            <my-icon
+              :class="proDetail.isSave ? 'icon-red' : ''"
+              style="margin-right: 0.36rem"
+              name="shoucang_mian"
+              size="0.4rem"
+              color="#fff"
+              @click.native="handleClickSave"
+            />
+          </div>
           <div>
             <my-icon
               class="head__icon-share"
@@ -135,7 +145,7 @@ import Need from '~/components/detail/Need'
 import tcCommodityConsultation from '@/components/common/commodityConsultation/tcCommodityConsultation'
 import getUserSign from '~/utils/fingerprint'
 import tcBasicData from '~/mock/tcBasicData'
-import { productDetailsApi, recommendApi, userinfoApi } from '~/api'
+import { productDetailsApi, recommendApi, userinfoApi, shopApi } from '~/api'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import BasicItem from '~/components/detail/BasicItem'
 import QftDetails from '~/components/detail/QftDetails'
@@ -207,7 +217,8 @@ export default {
       plannerLimit: 3,
       plannerPage: 1,
       tcPlannerBooth: {},
-      deviceId: null, // 设备唯一码
+      deviceId: null, // 设备唯一码\
+      isShare: false,
     }
   },
   computed: {
@@ -223,6 +234,7 @@ export default {
     }),
   },
   async mounted() {
+    this.isShare = this.$route.query.isShare
     this.fieldListFun() // 加载基本信息
     this.getUserIndo()
     // 假如未获取到站点信息,再获取地理位置
@@ -242,6 +254,76 @@ export default {
     ...mapActions({
       POSITION_CITY: 'city/POSITION_CITY',
     }),
+    // shouchang
+    handleClickSave() {
+      if (this.proDetail.isSave) {
+        this.cancelSave()
+      } else {
+        this.addSave()
+      }
+    },
+    // 取消收藏
+    cancelSave() {
+      // 直接调商户中心接口，未经过node中间层，中间层无法处理formData
+      const formData = new FormData()
+      formData.append('goodsId', this.proDetail.id)
+      this.$axios
+        .post(shopApi.cancelSave, formData)
+        .then((res) => {
+          if (res.code === 200) {
+            this.$xToast.success('取消成功')
+            this.proDetail.isSave = false
+          } else {
+            this.$xToast.error(res.message || '操作失败')
+          }
+        })
+        .catch((err) => {
+          console.log('err', err)
+          this.$xToast.error(err.message || '操作失败')
+        })
+    },
+    // 添加收藏
+    addSave() {
+      const classCodeLevel = this.proDetail.classCodeLevel
+      let codeArr = []
+      if (classCodeLevel) {
+        codeArr = classCodeLevel.split(',')
+      }
+      console.log('classCodeLevel', classCodeLevel)
+      const params = {
+        goodsDtos: [
+          {
+            goodsId: this.proDetail.id,
+            goodsCode: this.proDetail.classCode,
+            catalog1: codeArr.length && codeArr.length > 0 ? codeArr[0] : '',
+            catalog2: codeArr.length && codeArr.length > 1 ? codeArr[1] : '',
+            catalog3: codeArr.length && codeArr.length > 2 ? codeArr[2] : '',
+            goodsType: 'proGoodsJy',
+            ext1: 2,
+          },
+        ],
+      }
+      this.$axios
+        .post(shopApi.addGoods, params)
+        .then((res) => {
+          console.log('shouchang res', res)
+          if (res.code === 200) {
+            this.$xToast.show({
+              message: '收藏成功',
+              duration: 3000,
+              icon: 'toast_ic_comp',
+              forbidClick: true,
+            })
+            this.proDetail.isSave = true
+          } else {
+            this.$xToast.error(res.message || '收藏失败')
+          }
+        })
+        .catch((err) => {
+          console.log('err', err)
+          this.$xToast.error(err.message || '操作失败')
+        })
+    },
     scrollHandle({ scrollTop }) {
       // 滚动事件
       if (scrollTop > 216) {
@@ -251,6 +333,7 @@ export default {
       }
     },
     onClickLeft() {
+      if (this.isShare) return
       // 返回上一页
       if (history.length < 2) {
         this.$router.push({
@@ -295,7 +378,7 @@ export default {
             productId: this.proDetail.id, // 产品ID（产品详情页必传）
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
             title: this.proDetail.name, // 产品名称（产品详情页传、咨询页等）
-            platform: 'app', // 平台（app,m,pc）
+            platform: 'm', // 平台（app,m,pc）
             page: this.productPage,
             limit: this.productLimit,
             searchType: 1, // 搜索推荐产品类型：1：交易，2服务
@@ -349,7 +432,7 @@ export default {
             productId: this.proDetail.id, // 产品ID（产品详情页必传）
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
             title: this.proDetail.name, // 产品名称（产品详情页传、咨询页等）
-            platform: 'app', // 平台（app,m,pc）
+            platform: 'm', // 平台（app,m,pc）
             page: 1,
             limit: 5,
             searchType: 1, // 搜索推荐产品类型：1：交易，2服务
@@ -388,11 +471,8 @@ export default {
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
             sceneId: 'app-cpxqye-01', // 场景ID
             user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-            platform: 'app', // 平台（app,m,pc）
+            platform: 'm', // 平台（app,m,pc）
             productId: this.proDetail.id, // 产品id
-            formatIdOne:
-              this.proDetail.classCodeLevel.split(',')[0] ||
-              this.proDetail.classCodeLevel.split(',')[1],
           },
         })
         .then((res) => {
@@ -422,7 +502,7 @@ export default {
           productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
           sceneId: 'app-cpxqye-02', // 场景ID
           user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-          platform: 'app', // 平台（app,m,pc）
+          platform: 'm', // 平台（app,m,pc）
           productId: this.proDetail.id, // 产品id
         },
       })
@@ -503,6 +583,12 @@ export default {
       background-color: #fff !important;
       .spiconfont {
         color: #1a1a1a !important;
+      }
+      #icon-red {
+        color: #4974f5 !important;
+      }
+      .icon-red {
+        color: #4974f5 !important;
       }
     }
   }

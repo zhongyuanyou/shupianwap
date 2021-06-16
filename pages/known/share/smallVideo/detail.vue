@@ -1,16 +1,10 @@
 <template>
   <div class="m-known-share smallVideoDetail">
     <client-only>
-      <sp-video
-        :vod-url="url"
-        :sp-config="config"
-        :show-video="true"
-        :ignore-plugins="iplugins"
-        @errorBtnHandle="errorBtnHandle"
-      >
+      <sp-video :options="playerOptions" :vod-url="url" :v-type="videoType">
       </sp-video>
     </client-only>
-    <small-video-like />
+    <small-video-like :category-id="categoryId" />
   </div>
 </template>
 
@@ -23,19 +17,26 @@ export default {
   data() {
     return {
       url: '',
-      config: {
-        height: '100vh',
-        width: '100vw',
-      },
       iplugins: ['fullscreen'],
+      categoryId: '',
+      vLikeList: [],
+      playerOptions: {
+        autoplay: true,
+        muted: true,
+        width: '100vw',
+        height: '100vh',
+        controlBar: {
+          fullscreenToggle: false,
+        },
+      },
+      videoType: 'small',
     }
   },
-  methods: {
-    errorBtnHandle(vThis) {
-      this.url =
-        '//sf1-hscdn-tos.pstatp.com/obj/media-fe/xgplayer_doc_video/mp4/xgplayer-demo-360p.mp4'
-    },
+  mounted() {
+    this.url = this.$route.query.vurl
+    this.categoryId = this.$route.query.categoryId
   },
+  methods: {},
 }
 </script>
 

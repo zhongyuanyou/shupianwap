@@ -20,6 +20,8 @@ export default {
       showPop: false,
       isIOS: false,
       isAndroid: false,
+      myIosLink: 'cpsccustomer://',
+      myAndrodLink: 'cpsccustomer://',
     }
   },
   mounted() {
@@ -29,29 +31,45 @@ export default {
     this.isIOS = userAgent.match(/iPhone|iPad|iPod/i) // ios终端
   },
   methods: {
-    confirm(myIosLink = 'cpsccustomer://', myAndrodLink = 'cpsccustomer://') {
-      this.showPop = false
-      this.checkOutApp(myIosLink, myAndrodLink)
+    // 直接调用打开方法,不加dialog
+    confirm(event, iosLink = '', androdLink = '') {
+      // 优化传链接的2种方式,一种直接通过方法调用,一种通过组件
+      if (iosLink !== '') {
+        this.myIosLink = iosLink
+      }
+      if (androdLink !== '') {
+        this.myAndrodLink = androdLink
+      }
+      this.checkOutApp()
     },
-    openApp() {
+    // 调用dialog打开方法
+    openApp(event, iosLink = '', androdLink = '') {
       this.showPop = true
+      // 优化传链接的2种方式,一种直接通过方法调用,一种通过组件
+      if (iosLink !== '') {
+        this.myIosLink = iosLink
+      }
+      if (androdLink !== '') {
+        this.myAndrodLink = androdLink
+      }
+    },
+    openAppConfirm() {
+      this.showPop = false
+      this.checkOutApp()
     },
     cancel() {
       this.showPop = false
     },
-    checkOutApp(
-      myIosLink = 'cpsccustomer://',
-      myAndrodLink = 'cpsccustomer://'
-    ) {
+    checkOutApp() {
       const ua = window.navigator.userAgent
       let isBlur = false
       let url = ''
       let downLoadUrl = ''
       if (this.isIOS) {
-        url = myIosLink
+        url = this.myIosLink
         downLoadUrl = 'https://apps.apple.com/cn/app/薯片找人/id1535886630'
       } else if (this.isAndroid) {
-        url = myAndrodLink
+        url = this.myAndrodLink
         downLoadUrl =
           'http://m.pp.cn/detail.html?appid=8180749&ch_src=pp_dev&ch=default'
       } else {
@@ -77,7 +95,7 @@ export default {
           if (!isBlur) {
             window.location.href = downLoadUrl
           }
-        }, 1000)
+        }, 2000)
       }
       window.onblur = function () {
         isBlur = true

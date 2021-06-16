@@ -408,7 +408,7 @@ export default {
     // 监听滚动吸顶与触底加载更多
     searchHandle({ scrollTop, isFixed }) {
       if (!this.isApplets) {
-        this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
+        this.headHeight = this.$refs?.headerRef?.$el?.clientHeight // 获取头部高度
       }
       this.isFixed = isFixed
       if (

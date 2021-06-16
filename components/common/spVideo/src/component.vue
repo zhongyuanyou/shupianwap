@@ -1,13 +1,24 @@
 <template>
-  <div class="m-video">
-    <template v-if="videoStatus">
-      <div v-show="!videoError" id="xg-player">
-        <slot name="shade"></slot>
+  <div class="sp-video">
+    <div v-if="reseted" class="video-player">
+      <div v-show="!videoError">
+        <video
+          ref="spVideo"
+          class="video-js vjs-default-skin vjs-big-play-centered vjs-16-9"
+          :class="[vType === 'small' ? 'video-js__customer' : '']"
+          :style="{
+            width: options.width,
+            height: options.height,
+          }"
+        ></video>
       </div>
       <div
         v-show="videoError"
         class="video-error"
-        :style="{ width: xgVideoConfig.width, height: xgVideoConfig.height }"
+        :style="{
+          width: options.width,
+          height: options.height,
+        }"
       >
         <div class="content">
           <div class="desc">{{ videoErrorConfig.desc }}</div>
@@ -18,20 +29,34 @@
           >
         </div>
       </div>
-    </template>
-    <template v-else><slot name="imitate"></slot></template>
+    </div>
   </div>
 </template>
 
 <script>
-import Player from 'xgplayer/dist/core_player' // 引入播放内核
-import play from 'xgplayer/dist/controls/play' // 引入播放
-import fullscreen from 'xgplayer/dist/controls/fullscreen' // 引入全屏
-import progress from 'xgplayer/dist/controls/progress' // 引入进度条
-import volume from 'xgplayer/dist/controls/volume' // 引入声音
-import flex from 'xgplayer/dist/controls/flex' // 引入 flex
+// lib
+import videojs from 'video.js'
 import { Button } from '@chipspc/vant-dgg'
 import { deepCopy, custTypeOf } from '@/utils/common'
+
+// video.js 默认配置
+const defaultOptions = {
+  preload: true,
+  controls: true,
+  controlBar: {
+    pictureInPictureToggle: false,
+    volumePanel: {
+      inline: false,
+    },
+  },
+  techOrder: ['html5'],
+  sources: [
+    {
+      type: 'video/mp4',
+      src: '',
+    },
+  ],
+}
 
 export default {
   name: 'SpVideo',
@@ -44,18 +69,11 @@ export default {
       type: String,
       default: '',
     },
-    spConfig: {
-      // 西瓜视频配置,参考西瓜视频配置文档
+    options: {
+      // video视频配置
       type: Object,
       default() {
         return {}
-      },
-    },
-    ignorePlugins: {
-      // 忽略插件
-      type: Array,
-      default() {
-        return []
       },
     },
     errorCofing: {
@@ -70,69 +88,117 @@ export default {
         }
       },
     },
-    showVideo: {
-      // 是否显示视频
-      type: Boolean,
-      default: false,
+    vType: {
+      type: String,
+      default: '',
     },
   },
   data() {
     return {
+      reseted: true,
       player: null,
-      xgVideoConfig: this.spConfig,
-      xgIgnorePlugins: this.ignorePlugins,
-      videoErrorConfig: this.errorCofing,
-      videoStatus: this.showVideo,
       videoError: false, // 判断视频是否异常
+      videoErrorConfig: this.errorCofing,
+      isAndroid: false, // 安卓机器会出现适配问题,这里需要特殊处理
     }
   },
   watch: {
     vodUrl(val) {
-      this.initVideo()
+      if (!this.player) {
+        this.initialize()
+      }
     },
   },
   mounted() {
-    this.init()
+    const userAgent = window.navigator.userAgent
+    this.isAndroid =
+      userAgent.indexOf('Android') > -1 || userAgent.indexOf('Adr') > -1 // android终端
+
+    if (!this.player) {
+      this.initialize()
+    }
+  },
+  beforeDestroy() {
+    if (this.player) {
+      this.dispose()
+    }
   },
   methods: {
-    init() {
-      // 判断是否显示模拟页,非模拟页加载视频组件
-      if (this.videoStatus) {
-        this.initVideo()
-      }
-    },
-    initVideo() {
+    // 初始化视频
+    initialize() {
+      // videojs options
+      const videoOptions = deepCopy(defaultOptions, this.options)
       if (custTypeOf(this.vodUrl) !== 'String' || this.vodUrl.trim() === '') {
         this.videoError = true
         return
       }
-      // 初始化 videoError 状态
       this.videoError = false
-      let baseConfig = {
-        id: 'xg-player',
-        url: this.vodUrl,
-      }
-      baseConfig = deepCopy(baseConfig, this.xgVideoConfig)
-      // 引入需要视频插件
-      const basePlugins = {
-        controlPlugins: [play, fullscreen, progress, volume, flex],
-      }
-      // 删除忽略插件
-      this.xgIgnorePlugins.forEach((item) => {
-        let i
-        const plugins = basePlugins.controlPlugins
-        if (
-          plugins.some((itemItem, index) => {
-            i = index
-            return itemItem.name === item
-          })
-        ) {
-          plugins.splice(i, 1)
+      // build video url
+      videoOptions.sources[0].src = this.vodUrl
+
+      // start: fix ios fullscreen
+      this.$refs.spVideo.setAttribute('x5-playsinline', true)
+      this.$refs.spVideo.setAttribute('playsinline', true)
+      this.$refs.spVideo.setAttribute('webkit-playsinline', true)
+      this.$refs.spVideo.setAttribute('x5-video-player-type', 'h5')
+      this.$refs.spVideo.setAttribute('x5-video-player-fullscreen', true)
+      // end: fix ios fullscreen
+
+      /*
+      // emit event
+      const emitPlayerState = (event) => {
+        if (event) {
+          this.$emit(event, this.player)
         }
-      })
-      const config = { ...baseConfig, ...basePlugins }
-      console.log(`output xg-video config:\n ${JSON.stringify(config)}`)
-      this.player = new Player(config)
+      }
+      */
+
+      // player
+      const _this = this
+      this.player = videojs(
+        this.$refs.spVideo,
+        videoOptions,
+        function onPlayerReady() {
+          /*
+        // events
+        const events = DEFAULT_EVENTS
+        const onEdEvents = {}
+
+        // player 注册事件
+        for (let i = 0; i < events.length; i++) {
+          if (
+            typeof events[i] === 'string' &&
+            onEdEvents[events[i]] === undefined
+          ) {
+            ;((event) => {
+              onEdEvents[event] = null
+              this.on(event, () => {
+                emitPlayerState(event, true)
+              })
+            })(events[i])
+          }
+        }
+        */
+          // player readied
+          _this.$emit('ready', this)
+        }
+      )
+    },
+    // 销毁视频
+    dispose(callback) {
+      if (this.player && this.player.dispose) {
+        this.player.dispose()
+        this.player = null
+        this.$nextTick(() => {
+          this.reseted = false
+          this.$nextTick(() => {
+            this.reseted = true
+            this.$nextTick(() => {
+              callback && callback()
+            })
+          })
+        })
+      }
     },
     errorBtnHandle() {
       this.$emit('errorBtnHandle', this)
@@ -142,7 +208,37 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.m-video {
+.sp-video {
+  ::v-deep .vjs-paused .vjs-big-play-button,
+  .vjs-paused.vjs-has-started .vjs-big-play-button {
+    display: block;
+  }
+  ::v-deep .vjs-big-play-button {
+    border: none;
+    font-size: 4em;
+    width: 1.5em;
+    height: 1.5em;
+    line-height: 1.5em;
+    border-radius: 100%;
+    margin-left: -0.8em;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  ::v-deep .video-js:hover .vjs-big-play-button {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  ::v-deep .vjs-poster {
+    background-size: cover;
+  }
+  ::v-deep .video-js__customer .vjs-tech {
+    object-fit: fill;
+    /*
+    object-fit: fill;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    */
+  }
   .video-error {
     display: flex;
     align-items: center;

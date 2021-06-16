@@ -61,7 +61,9 @@ module.exports = {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     script: [
-      {src:"http://webapi.amap.com/maps?v=1.4.4&key=5111f49d979a509f1e96420a1b456ff4"},
+      {
+        src: 'http://webapi.amap.com/maps?v=1.4.4&key=5111f49d979a509f1e96420a1b456ff4',
+      },
       {
         src: '/js/sppt-mdweb-sdk-conf.js',
         ssr: false,
@@ -109,12 +111,14 @@ module.exports = {
     'assets/css/reset.css',
     'assets/icons/iconfont.css',
     'assets/iconsNew/iconfont.css',
+    'assets/icons630/iconfont.css',
     'assets/styles/reset-vant.less',
     'quill/dist/quill.snow.css',
     'quill/dist/quill.bubble.css',
     'quill/dist/quill.core.css',
     'vant/lib/index.css',
     '@fe/sp-ui-mobile/lib/index.css',
+    'video.js/dist/video-js.min.css',
   ],
   styleResources: {
     less: 'assets/styles/variables.less',

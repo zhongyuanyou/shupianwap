@@ -76,5 +76,13 @@ const planner = {
       url: CRM_MIDDLE_APP + '/yk/outbound/shupiancall/bind_hidden.do',
     })
   },
+  // 同意委托
+  bindCustomer(params) {
+    return request({
+      params,
+      method: 'post',
+      url: '/crisps-marketing-web/yk/branchsell/copartner/v1/add_copartner_customer_bind.do',
+    })
+  },
 }
 export default planner

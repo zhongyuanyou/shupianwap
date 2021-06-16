@@ -1,5 +1,5 @@
 <template>
-  <div class="sp-popup">
+  <div v-if="partnerId && plannerId" class="sp-popup">
     <!-- <div v-show="!visible" class="inception" @click="showFullScreen">
       <img src="@/static/image/page/kefu.png" />
     </div> -->
@@ -34,10 +34,13 @@
           <div class="popup-banner__con">
             <img
               class="avatar"
-              src="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni-app-doc/6acec660-4f31-11eb-a16f-5b3e54966275.jpg"
+              :src="
+                planerInfo.img ||
+                'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni-app-doc/6acec660-4f31-11eb-a16f-5b3e54966275.jpg'
+              "
             />
             <div class="planner-info">
-              <span>您好，我是{{ info.name }}</span>
+              <span>您好，我是{{ planerInfo.name || '规划师' }}</span>
             </div>
           </div>
         </div>
@@ -48,24 +51,18 @@
             <span>委托我为您提供以下服务</span>
           </div>
           <div class="popup-content__tags">
-            <div class="item">
-              <!--              <icon type="success" size="12" />-->
-              <span class="txt">快速服务咨询</span>
-            </div>
-            <div class="item">
-              <!--              <icon type="success" size="12" />-->
-              <span class="txt">快速服务咨询</span>
-            </div>
-          </div>
-          <div class="popup-content__tags">
-            <div class="item">
-              <!--              <icon type="success" size="12" />-->
-              <span class="txt">快速服务咨询</span>
-            </div>
-            <div class="item">
-              <!--              <icon type="success" size="12" />-->
-              <span class="txt">快速服务咨询</span>
-            </div>
+            <span
+              v-for="(item, index) in planerInfo.tagList"
+              :key="index"
+              class="item"
+            >
+              <my-icon
+                name="toast_ic_comp"
+                size="0.24rem"
+                color="#146F18"
+              ></my-icon>
+              <span class="txt">{{ item }}</span>
+            </span>
           </div>
           <div class="popup-btn" @click="handleClickBtn()">
             <span>同意委托</span>
@@ -81,34 +78,60 @@
 </template>
 
 <script>
+import { Icon } from '@chipspc/vant-dgg'
+import { planner, userinfoApi, formApi } from '~/api'
+const BASE = require('~/config/index.js')
 export default {
   name: 'SpPopup',
-  props: {
-    info: {
-      type: Object,
-      default: () => {
-        return {
-          name: '规划师', // 规划师姓名
-          tel: '13131313131', // 规划师电话号码
-          id: '131311414', // 规划师id
-        }
-      },
-    },
+  components: {
+    [Icon.name]: Icon,
   },
   data() {
     return {
-      visible: true, // 是否最大化显示 true为最大化显示 false为最小化显示
+      visible: false, // 是否最大化显示 true为最大化显示 false为最小化显示
       plannerId: '',
       shareId: '',
       partnerId: '',
+      planerInfo: {},
+      userInfoData: {},
     }
   },
-  created() {
-    this.plannerId = this.$route.query.plannerId
-    this.shareId = this.$route.query.shareId
+  computed: {
+    userInfo() {
+      return this.$store.state.user
+    },
+    city() {
+      return this.$store.state.city
+    },
+  },
+  mounted() {
+    this.plannerId = this.$route.query.plannerId || this.$route.query.homeUserId
     this.partnerId = this.$route.query.partnerId
+    if (this.$route.query.isShare && this.plannerId) {
+      this.getPlanerInfo(this.plannerId)
+    }
+    if (this.userInfo.userId) {
+      this.getUserIndo()
+    }
   },
   methods: {
+    getPlanerInfo(id) {
+      planner.detail({ id }).then((res) => {
+        const obj = {
+          mchUserId: res.id,
+          portrait: res.img,
+          userName: res.name,
+          postName: res.zwName,
+          type: res.mchClass,
+        }
+        this.planerInfo = {
+          ...obj,
+          ...res,
+        }
+        this.$forceUpdate()
+        this.visible = true
+      })
+    },
     showFullScreen() {
       // 显示全屏
       this.visible = true
@@ -117,10 +140,118 @@ export default {
       // 显示最小化
       this.visible = false
     },
+    // 获取用户信息 明文
+    getUserIndo() {
+      this.$axios
+        .get(userinfoApi.info_decrypt, {
+          params: {
+            id: this.userInfo.userId,
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.userInfoData = res.data
+            // this.$store.dispatch('user/setInfo', res.data)
+          } else {
+            this.$xToast.show({
+              message: '网络错误,请刷稍后再试',
+              duration: 1000,
+              icon: 'toast_ic_error',
+              forbidClick: true,
+            })
+          }
+        })
+        .catch((err) => {
+          console.log('err', err)
+        })
+    },
     handleClickBtn() {
-      console.log('plannerId', this.plannerId)
-      console.log('shareId', this.shareId)
-      console.log('partnerId', this.partnerId)
+      if (!this.userInfo.userId) {
+        this.$router.push({
+          path: '/login',
+          query: {
+            redirect: this.$route.fullPath,
+          },
+        })
+        return
+      }
+      planner
+        .bindCustomer({
+          copartnerId: this.partnerId,
+          customerId: this.userInfoData.id,
+          customerPhone: this.userInfoData.mainAccount,
+          customerName: this.userInfoData.fullName,
+          requestPlatform: 'crips-c',
+        })
+        .then((res) => {
+          console.log('res', res)
+          this.$xToast.success('委托成功，请静候规划师与您电话联系联系！')
+          this.visible = false
+        })
+        .catch((err) => {
+          console.log('err', err)
+          this.$xToast.error('委托失败')
+          this.visible = true
+        })
+    },
+    // 生成客户资源并分配
+    async consultForm() {
+      this.loading = true
+      const userInfo = await this.getUserInfo(this.userId)
+      if (!userInfo) return
+      const params = {
+        bizAreaCode: this.city.code,
+        bizAreaName: this.city.name,
+        comment: '',
+        customerAttribute: '',
+        customerName: userInfo.fullName,
+        customerPhone: userInfo.mainAccount,
+        customerSex: userInfo.sex || 2,
+        sourceUrl: location.href,
+        sourceSyscode: 'crisps-app', // 来源系统
+        firstSourceChannel: 'crisps-app-one-home-page', // 一级来源渠道
+        secondSourceChannel: 'crisps-app-two-look-service', // 二级来源渠道
+        requireCode: localStorage.getItem('needCode'), // 需求编码
+        requireName: '交易委托', // 需求名称
+      }
+      this.$axios
+        .post(BASE.formApi + formApi, params)
+        .then((res) => {
+          this.loading = false
+          if (res.code === 200) {
+            this.$xToast.success('提交成功，请注意接听电话')
+            sessionStorage.removeItem('formData')
+            this.formData = {
+              type: 'gszc',
+              tel: '', // 电话
+              name: '', // 姓名
+              web: 'sp', // 归属（原网站类型）
+              place: 'all',
+              url: '',
+              content: {
+                备注: '',
+                是否允许电话联系: '是',
+              },
+            }
+            this.$router.go(-2)
+          } else {
+            this.$xToast.show({
+              message: res.message || '提交失败，请稍后再试！',
+              duration: 1000,
+              icon: 'toast_ic_error',
+              forbidClick: true,
+            })
+          }
+        })
+        .catch((error) => {
+          this.loading = false
+          this.$xToast.show({
+            message: error.message || '提交失败，请稍后再试！',
+            duration: 1000,
+            icon: 'toast_ic_error',
+            forbidClick: true,
+          })
+        })
     },
   },
 }
@@ -281,26 +412,23 @@ export default {
           color: #555555;
           margin-top: 40px;
         }
-        &__tags {
+        .popup-content__tags {
           display: flex;
           justify-content: space-between;
-          align-items: center;
-          flex-direction: row;
-          margin-top: 48px;
-          &:first-child {
-            margin-top: 63px;
-          }
+          flex-wrap: wrap;
+          height: 190px;
           > .item {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            flex-direction: row;
+            height: 60px;
+            width: auto;
+            color: #222222;
+            padding-right: 20px;
+            clear: both;
             .txt {
+              line-height: 24px;
               font-size: 28px;
               font-family: PingFang SC;
               font-weight: 400;
               color: #222222;
-              margin-left: 17px;
             }
           }
         }

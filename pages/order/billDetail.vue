@@ -103,7 +103,6 @@ export default {
                 allOrderSkuList[i].skuPayableTotalMoney
               )
           }
-          console.log('allOrderSkuList', allOrderSkuList)
           this.allOrderSkuList = allOrderSkuList
           localStorage.setItem('nodeList', JSON.stringify(allOrderSkuList))
         })

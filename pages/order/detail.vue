@@ -111,7 +111,7 @@
             orderData.orderSplitAndCusVo.signerName
           }}</span>
           <span
-            v-if="orderData.evaluateStatus == 1"
+            v-if="orderData.evaluateStatus == 1 && cusOrderStatusType != 4"
             class="right"
             @click="navToUrl(1)"
             >写评价
@@ -121,7 +121,10 @@
               color="#222222"
             ></my-icon>
           </span>
-          <span v-else class="right" @click="navToUrl(2)"
+          <span
+            v-if="orderData.evaluateStatus == 2 && cusOrderStatusType != 4"
+            class="right"
+            @click="navToUrl(2)"
             >查看评价
             <my-icon
               name="order_ic_listnext"
@@ -335,6 +338,9 @@
       ref="cancleOrderModel"
       :order-id="orderData.orderId"
       :cus-order-id="orderData.cusOrderId"
+      :cus-order-cancel-reason="
+        orderData.orderSplitAndCusVo.cusOrderCancelReason
+      "
       @setCancelOrderName="setCancelOrderName"
       @cancleOrder="cancleOrder"
       @getBatchList="getBatchList"
@@ -493,6 +499,9 @@ export default {
           this.getChildOrders(this.orderData)
           this.hasData = true
           this.loading = false
+          this.$refs.cancleOrderModel.setCancelName(
+            this.orderData.orderSplitAndCusVo.cusOrderCancelReason
+          )
         })
         .catch((err) => {
           this.loading = false
