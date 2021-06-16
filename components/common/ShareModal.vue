@@ -51,17 +51,8 @@
             <span>委托我为您提供以下服务</span>
           </div>
           <div class="popup-content__tags">
-            <span
-              v-for="(item, index) in planerInfo.tagList"
-              :key="index"
-              class="item"
-            >
-              <my-icon
-                name="toast_ic_comp"
-                size="0.24rem"
-                color="#146F18"
-              ></my-icon>
-              <span class="txt">{{ item }}</span>
+            <span v-for="(item, index) in tagList" :key="index" class="item">
+              {{ item }}
             </span>
           </div>
           <div class="popup-btn" @click="handleClickBtn()">
@@ -94,6 +85,7 @@ export default {
       partnerId: '',
       planerInfo: {},
       userInfoData: {},
+      tagList: ['快速服务咨询', '详细政策解读', '优质服务推荐', '最新优惠讲解'],
     }
   },
   computed: {
@@ -181,11 +173,11 @@ export default {
           customerId: this.userInfoData.id,
           customerPhone: this.userInfoData.mainAccount,
           customerName: this.userInfoData.fullName,
-          requestPlatform: 'crips-c',
+          requestPlatform: 'crisps-app',
         })
         .then((res) => {
           console.log('res', res)
-          this.$xToast.success('委托成功，请静候规划师与您电话联系联系！')
+          this.$xToast.success('委托成功，请静候规划师与您电话联系！')
           this.visible = false
         })
         .catch((err) => {
@@ -416,20 +408,14 @@ export default {
           display: flex;
           justify-content: space-between;
           flex-wrap: wrap;
-          height: 190px;
+          height: 180px;
           > .item {
-            height: 60px;
-            width: auto;
+            height: 40px;
+            width: 50%;
             color: #222222;
-            padding-right: 20px;
-            clear: both;
-            .txt {
-              line-height: 24px;
-              font-size: 28px;
-              font-family: PingFang SC;
-              font-weight: 400;
-              color: #222222;
-            }
+            text-align: center;
+            font-size: 28px;
+            margin-top: 44px;
           }
         }
         .popup-btn {
