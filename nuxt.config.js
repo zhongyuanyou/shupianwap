@@ -118,6 +118,7 @@ module.exports = {
     'quill/dist/quill.core.css',
     'vant/lib/index.css',
     '@fe/sp-ui-mobile/lib/index.css',
+    'video.js/dist/video-js.min.css',
   ],
   styleResources: {
     less: 'assets/styles/variables.less',

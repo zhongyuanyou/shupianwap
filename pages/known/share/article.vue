@@ -63,7 +63,7 @@
               @click="
                 sendTemplateMsgWithImg(
                   articleDetails.userId,
-                  plannerInfo.userType
+                  articleDetails.userType
                 )
               "
               >在线问</sp-button

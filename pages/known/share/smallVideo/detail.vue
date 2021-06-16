@@ -1,13 +1,7 @@
 <template>
   <div class="m-known-share smallVideoDetail">
     <client-only>
-      <sp-video
-        :vod-url="url"
-        :sp-config="config"
-        :show-video="true"
-        :ignore-plugins="iplugins"
-      >
-      </sp-video>
+      <sp-video :options="playerOptions" :vod-url="url"> </sp-video>
     </client-only>
     <small-video-like :category-id="categoryId" />
   </div>
@@ -22,14 +16,18 @@ export default {
   data() {
     return {
       url: '',
-      config: {
-        height: '100vh',
-        width: '100vw',
-        autoplay: true,
-      },
       iplugins: ['fullscreen'],
       categoryId: '',
       vLikeList: [],
+      playerOptions: {
+        autoplay: true,
+        muted: true,
+        width: '100vw',
+        height: '100vh',
+        controlBar: {
+          fullscreenToggle: false,
+        },
+      },
     }
   },
   mounted() {

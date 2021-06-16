@@ -9,60 +9,15 @@
           height="1.06rem"
           fit="cover"
           class="my_tp_info_img"
-          :src="info.url ? info.url : $ossImgSetV2(imgList.tx)"
+          :src="info.url ? info.url : avatar"
           @click="handleAvatar"
         />
-        <div class="icon_edit">
-          <img :src="$ossImgSetV2(imgList.edit)" alt="" />
-        </div>
-
-        <span class="txt" @click="handleAvatar">
-          {{ userId ? nickName || '' : '登录/注册' }}
-          <img
-            v-if="userId"
-            class="icon-plus"
-            :src="$ossImgSetV2(imgList.plus)"
-          />
-        </span>
-        <div v-if="userId" class="right" @click="toKnownHome">
-          <span class="home">个人主页</span>
-          <my-icon
-            name="order_ic_listnext"
-            size="0.24rem"
-            color="#CCCCCC"
-            class="myIcon"
-          />
-        </div>
+        <p class="txt" @click="handleClickLogin">
+          {{ info.nickName ? '欢迎你，' + info.nickName || '' : '登录/注册' }}
+        </p>
       </div>
     </div>
     <!--E 顶部-->
-
-    <!--收藏、合同、优惠券-->
-    <div class="my_order">
-      <div class="my_order_type">
-        <div
-          v-for="(item, index) in CollectionTabs"
-          :key="index"
-          class="my_order_type_list"
-          @click="clickServiceTabs(item)"
-        >
-          <div class="icon">
-            <img v-if="item.img" class="icon_img" :src="item.img" alt="" />
-            <my-icon
-              v-else-if="item.iconName"
-              :name="item.iconName"
-              color="#4E78F5"
-              size="0.44rem"
-            ></my-icon>
-          </div>
-          <div class="order_text">
-            {{ item.name }}
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--收藏、合同、优惠券-->
-
     <!--S 我的订单-->
     <div class="my_order">
       <div class="my_order_title">我的订单</div>
@@ -71,7 +26,6 @@
           v-for="(item, index) in orderTabs"
           :key="index"
           class="my_order_type_list"
-          @click="clickTab(++index)"
         >
           <div class="icon">
             <my-icon :name="item.iconName" color="#4E78F5" size="0.44rem">
@@ -89,43 +43,169 @@
               >{{ evaluateNum }}</span
             >
           </div>
-          <div class="order_text">
+          <div class="order_text" @click="clickTab(++index)">
             {{ item.name }}
           </div>
         </div>
       </div>
     </div>
     <!--E 我的订单-->
-
-    <!--S 我的服务-->
-    <div class="my_order">
-      <div class="my_order_title">我的服务</div>
-      <div class="my_order_type">
-        <div
-          v-for="(item, index) in ServiceTabs"
-          :key="index"
-          class="my_order_type_list"
-          @click="clickServiceTabs(item)"
-        >
-          <div class="icon">
-            <img v-if="item.img" class="icon_img" :src="item.img" alt="" />
+    <!--S 按钮区-->
+    <div class="my_btns">
+      <div class="my_btns_item" @click="handleClick('/my/collection', 'login')">
+        <div class="my_btns_item_icon">
+          <my-icon
+            name="shoucang"
+            size="0.36rem"
+            color="#D80808"
+          />
+        </div>
+        <div class="my_btns_item_con">
+          我的收藏
+          <div class="item_lf">
             <my-icon
-              v-else-if="item.iconName"
-              :name="item.iconName"
-              color="#4E78F5"
-              size="0.44rem"
-            ></my-icon>
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
           </div>
-          <div class="order_text regular">
-            {{ item.name }}
+        </div>
+      </div>
+      <div
+        class="my_btns_item"
+        @click="handleClick('/contract/contractList', 'login')"
+      >
+        <div class="my_btns_item_icon">
+          <my-icon
+            name="gerenzhongxin_hetongicon"
+            size="0.36rem"
+            color="#4F9BFF"
+          />
+        </div>
+        <div class="my_btns_item_con">
+          我的合同
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="my_btns_item" @click="handleClick('/my/coupon', 'login')">
+        <div class="my_btns_item_icon">
+          <my-icon
+            name="gerenzhongxin_youhuiquanicon"
+            size="0.36rem"
+            color="#FFA416"
+          />
+        </div>
+        <div class="my_btns_item_con">
+          我的优惠券
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="my_btns_item" @click="handleClick('/my/interviewRecord')">
+        <div class="my_btns_item_icon">
+          <my-icon name="caifang_mian" size="0.36rem" color="#4974f5" />
+        </div>
+        <div class="my_btns_item_con no_line">
+          面谈记录
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="my_btns_item" @click="linkAuth">
+        <div class="my_btns_item_icon">
+          <my-icon name="shimingrenzheng" size="0.36rem" color="#00B365" />
+        </div>
+        <div class="my_btns_item_con">
+          实名认证
+          <div class="item_lf">
+            <span>{{
+              info.realStatus === 'NO_AUTHENTICATION'
+                ? '未实名认证'
+                : info.realStatus === 'AUTHENTICATION_SUCCESS'
+                ? '已实名认证'
+                : info.realStatus === 'AUTHENTICATION_ING'
+                ? '认证中'
+                : '未实名认证'
+            }}</span>
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="my_btns_item" @click="handleClick('/my/help')">
+        <div class="my_btns_item_icon">
+          <my-icon name="per_ic_help" size="0.36rem" color="#00B365" />
+        </div>
+        <div class="my_btns_item_con">
+          帮助中心
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="my_btns_item" @click="handleClick('/my/complain')">
+        <div class="my_btns_item_icon">
+          <my-icon name="per_ic_debunk" size="0.36rem" color="#10BBB8" />
+        </div>
+        <div class="my_btns_item_con">
+          我要吐槽
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="my_btns_item" @click="handleClick('/my/about')">
+        <div class="my_btns_item_icon">
+          <my-icon name="per_ic_about" size="0.36rem" color="#4974F5" />
+        </div>
+        <div class="my_btns_item_con no_line">
+          关于我们
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
           </div>
         </div>
       </div>
     </div>
-    <!--E 我的服务-->
-
-    <!--S 按钮区-->
-
     <!--S 按钮区-->
     <!--S 退出登录-->
     <div class="exit_btn">
@@ -133,14 +213,6 @@
         >退出登录</sp-button
       >
     </div>
-    <client-only>
-      <DownLoadArea
-        v-if="!userId"
-        :ios-link="iosLink"
-        :androd-link="androdLink"
-      />
-    </client-only>
-
     <!--E 退出登录-->
     <!--S 弹框-->
     <sp-center-popup
@@ -159,11 +231,10 @@ import { Button, Image, CenterPopup } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { userinfoApi, evaluateApi } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
-// import { GOODSLIST } from '~/config/constant'
+import { GOODSLIST } from '~/config/constant'
 import { imInit } from '@/utils/im'
 import getUserSign from '~/utils/fingerprint'
 import imHandle from '~/mixins/imHandle'
-import DownLoadArea from '@/components/common/downLoadArea.vue'
 
 export default {
   layout: 'nav',
@@ -173,14 +244,10 @@ export default {
     [Image.name]: Image,
     [CenterPopup.name]: CenterPopup,
     LoadingCenter,
-    DownLoadArea,
   },
   mixins: [imHandle],
   data() {
     return {
-      iosLink: 'cpsccustomer://',
-      androdLink: 'cpsccustomer://',
-      // isShare: true,
       orderTabs: [
         {
           iconName: 'per_ic_payment',
@@ -204,25 +271,9 @@ export default {
           type: 'daipingjia',
         },
       ],
-      imgList: {
-        tx: '2exrifx8gxes000.png',
-        edit: '72tvzeql0iw0000.png',
-        plus: '895bdylh5rg000.png',
-
-        contract: '2ghw6duy8l0k000.png', // 合同
-        collection: 'axvqykli9yg0000.png', // 收藏
-        coupon: '1gw9pvueyc68000.png', // 优惠券
-
-        mianTanJiLu: '714jp73eal40000.png', // 面谈记录
-        real: 'f9q1kjsywx40000.png', // 实名认证
-        help: 'g956fupye1c00.png', // 帮助中心
-        complain: '6v7la4yubzk0000.png', // 我要吐槽
-        about: 'ea2fs9wtslk0000.png', // 关于我们
-      },
 
       info: {
         fullName: '', // 用户昵称
-        nickName: '',
         url: '', // 头像
       }, // 用户信息
       loginStatus: false, // 弹框显示状态
@@ -243,97 +294,8 @@ export default {
       token: (state) => state.user.token,
       userPhone: (state) => state.user.userPhone,
     }),
-
-    nickName() {
-      if (this.info.nickName) {
-        if (this.info.nickName.indexOf('****') !== -1) {
-          const arr = this.info.nickName.split('')
-          arr.splice(2, 7, '****') // .join('')
-          return arr.join('')
-        } else {
-          return this.info.nickName
-        }
-      }
-      return ''
-    },
-    CollectionTabs() {
-      return [
-        {
-          // iconName: 'gerenzhongxin_hetongicon',
-          name: '合同',
-          img: this.$ossImgSetV2(this.imgList.contract),
-          url: '/contract/contractList',
-        },
-        {
-          // iconName: 'shoucang',
-          name: '收藏',
-          img: this.$ossImgSetV2(this.imgList.collection),
-          url: '/my/collection',
-        },
-        {
-          // iconName: 'gerenzhongxin_youhuiquanicon',
-          name: '优惠券',
-          img: this.$ossImgSetV2(this.imgList.coupon),
-          url: '/my/coupon',
-        },
-        // {
-        //   // iconName: 'gerenzhongxin_youhuiquanicon',
-        //   name: '优惠券',
-        //   img: this.$ossImgSetV2(this.imgList.coupon),
-        //   url: '/my/coupon',
-        // },
-        // {
-        //   // iconName: 'gerenzhongxin_youhuiquanicon',
-        //   name: '优惠券',
-        //   img: this.$ossImgSetV2(this.imgList.coupon),
-        //   url: '/my/coupon',
-        // },
-        {},
-        {},
-      ]
-    },
-    ServiceTabs() {
-      const realStatus =
-        this.info.realStatus === 'NO_AUTHENTICATION'
-          ? '未实名认证'
-          : this.info.realStatus === 'AUTHENTICATION_SUCCESS'
-          ? '已实名认证'
-          : this.info.realStatus === 'AUTHENTICATION_ING'
-          ? '认证中'
-          : '未实名认证'
-
-      return [
-        {
-          // iconName: 'caifang_mian',
-          name: '面试记录',
-          img: this.$ossImgSetV2(this.imgList.mianTanJiLu),
-          url: '/my/interviewRecord',
-        },
-        {
-          // iconName: 'shimingrenzheng',
-          name: realStatus, // 实名认证
-          img: this.$ossImgSetV2(this.imgList.real),
-          url: '/my/interviewRecord',
-        },
-        {
-          // iconName: 'per_ic_help',
-          name: '帮助中心',
-          img: this.$ossImgSetV2(this.imgList.help),
-          url: '/my/help',
-        },
-        {
-          // iconName: 'per_ic_debunk',
-          name: '我要吐槽',
-          img: this.$ossImgSetV2(this.imgList.complain),
-          url: '/my/complain',
-        },
-        {
-          // iconName: 'per_ic_about',
-          name: '关于我们',
-          img: this.$ossImgSetV2(this.imgList.about),
-          url: '/my/about',
-        },
-      ]
+    avatar() {
+      return GOODSLIST
     },
   },
   mounted() {
@@ -353,35 +315,6 @@ export default {
   },
 
   methods: {
-    toKnownHome(info) {
-      if (this.token && this.userId) {
-        this.$router.push({
-          path: '/known/home',
-          query: {
-            homeUserId: this.userId,
-          },
-        })
-      } else {
-        this.$router.push({
-          path: '/known/home?homeUserId=420882',
-          query: {
-            redirect: '/login',
-          },
-        })
-      }
-    },
-    clickServiceTabs(item) {
-      if (this.token) {
-        this.$router.push({ path: item.url })
-      } else {
-        this.$router.push({
-          path: '/login',
-          query: {
-            redirect: item.url,
-          },
-        })
-      }
-    },
     clickTab(index) {
       // 进入待评价页面
       if (index === 5) {
@@ -426,13 +359,13 @@ export default {
         this.$router.push('/my/information')
       }
     },
-    // handleClickLogin() {
-    //   if (this.token) return
-    //   this.$router.push({
-    //     name: 'login',
-    //     query: { redirect: this.$route.fullPath },
-    //   })
-    // },
+    handleClickLogin() {
+      if (this.token) return
+      this.$router.push({
+        name: 'login',
+        query: { redirect: this.$route.fullPath },
+      })
+    },
     async getUserInfo() {
       if (!this.info && !this.info.fullName) {
         this.loading = true
@@ -545,105 +478,58 @@ export default {
 <style lang="less" scoped>
 .my {
   width: 100%;
-  min-height: 100%;
-  padding-bottom: 220px;
-  overflow: auto;
-  background-color: #ffffff;
+  background-color: #f8f8f8;
   &_tp {
     width: 100%;
-    height: 176px;
-    padding: 0 40px;
-    background-color: #ffffff;
+    height: 394px;
+    background-color: #4974f5;
     display: flex;
-    // justify-content: flex-start;
+    justify-content: flex-start;
     align-items: center;
-    // flex-direction: row;
+    flex-direction: column;
     &_info {
-      flex: 1;
       display: flex;
-      // justify-content: center;
+      justify-content: center;
       align-items: center;
-      position: relative;
-      // flex-direction: column;
-      .icon_edit {
-        position: absolute;
-        bottom: 8px;
-        left: 80px;
-
-        width: 32px;
-        height: 32px;
-        background: #ffffff;
-        border-radius: 32px;
-        font-size: 0;
-        text-align: center;
-        line-height: 32px;
-        img {
-          width: 14px;
-        }
-      }
+      flex-direction: column;
       &_img {
-        width: 112px;
-        height: 112px;
+        width: 106px;
+        height: 106px;
         border-radius: 53px;
+        margin-top: 80px;
       }
       .txt {
-        flex: 1;
-        margin-left: 24px;
-        font-size: 44px;
-        color: #1a1a1a;
-
+        font-size: 32px;
         font-family: PingFang SC;
         font-weight: bold;
-
-        line-height: 44px;
-
-        .icon-plus {
-          height: 44px;
-        }
-      }
-      .right {
-        display: flex;
-        font-size: 28px;
-        color: #555555;
-        letter-spacing: 0;
-        line-height: 28px;
-      }
-      .home {
-        margin-right: 17px;
+        color: #ffffff;
+        line-height: 32px;
+        margin-top: 48px;
       }
     }
   }
   &_order {
-    // height: 240px;
-    padding: 0 40px 33px;
+    height: 240px;
+    padding: 0 40px;
+    margin-top: 25px;
     background: #ffffff;
+    border-top: 1px solid rgba(205, 205, 205, 0.5);
+    border-bottom: 1px solid rgba(205, 205, 205, 0.5);
     &_title {
       font-size: 40px;
       font-family: PingFang-SC-Bold, PingFang-SC;
       font-weight: bold;
       color: #1a1a1a;
-      padding: 32px 0 0px;
+      padding: 32px 0;
     }
     &_type {
-      padding-top: 52px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      // flex-wrap: wrap;
       &_list {
-        cursor: pointer;
         text-align: center;
-        min-width: 76px;
-        // flex-shrink: 0;
-        // flex: 1;
         .icon {
           position: relative;
-          font-size: 0;
-          box-sizing: border-box;
-          .icon_img {
-            width: 52px;
-            height: 52px;
-          }
           &_daipingjia {
             position: absolute;
             font: 24px @fontf-pfsc-med;
@@ -676,26 +562,66 @@ export default {
       }
     }
   }
-  .regular {
-    font-weight: 500;
-  }
-
-  .exit_btn {
-    margin: 65px 24px 65px 24px;
-    // height: 96px;
-    ::v-deep .sp-button {
-      width: 100%;
-      border: none;
-      background: #f2f5ff;
-      border-radius: 8px;
-      height: 96px;
-      font-size: 32px;
-      color: #4974f5;
+  &_btns {
+    width: 100%;
+    border-bottom: 1px solid rgba(205, 205, 205, 0.5);
+    border-top: 1px solid rgba(205, 205, 205, 0.5);
+    margin-top: 24px;
+    &_item {
+      height: 107px;
+      background-color: #fff;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-direction: row;
+      padding-left: 40px;
+      &_icon {
+        width: 0.36rem;
+        height: 107px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .no_line {
+        border-bottom: none;
+      }
+      &_con {
+        height: 107px;
+        margin-left: 24px;
+        width: 100%;
+        border-bottom: 1px solid #f4f4f4;
+        text-align: left;
+        line-height: 107px;
+        font-size: 28px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #1a1a1a;
+        display: flex;
+        justify-content: space-between;
+        .item_lf {
+          display: flex;
+          padding-right: 40px;
+          span {
+            padding-right: 8px;
+            font-size: 28px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #999999;
+          }
+          .myIcon {
+            color: #cccccc;
+          }
+        }
+      }
     }
   }
-  ::v-deep .download-area {
-    position: fixed;
-    bottom: 100px;
+  .exit_btn {
+    margin: 65px 24px 0 24px;
+    height: 280px;
+    ::v-deep .sp-button {
+      width: 100%;
+      border: 1px solid #cdcdcd;
+    }
   }
   .spiconfont {
     display: block;

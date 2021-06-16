@@ -89,7 +89,7 @@
                   <template v-if="selectGoodsState" #left>
                     <sp-checkbox
                       style="padding-right: 10px"
-                      :name="item.goodsId"
+                      :name="item.id"
                     ></sp-checkbox>
                   </template>
                 </ServiceGoods>
@@ -338,7 +338,7 @@ export default {
       this.selectDelGoods = []
     },
     delGoods(item) {
-      this.selectDelGoods = [item.goodsId]
+      this.selectDelGoods = [item.id]
       this.delGoodsList()
     },
     async delGoodsList() {
@@ -348,7 +348,7 @@ export default {
 
         // const data = new FormData()
         // data.append('number', this.selectDelGoods)
-        const data = { number: this.selectDelGoods }
+        const data = this.selectDelGoods || []
         const res = await this.$axios.post(shopApi.batch_dlt_goods, data)
         // await this.$axios({
         //   method: 'post',
@@ -360,9 +360,11 @@ export default {
 
         console.log(res)
         if (res.code === 200) {
-          //   this.init()
+          this.init()
+          this.onLoad()
           this.$xToast.success('取消成功')
         } else {
+          this.$xToast.error(res.message || '取消失败')
         }
       } catch (err) {
         console.log(err)
