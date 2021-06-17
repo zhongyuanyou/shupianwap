@@ -59,7 +59,14 @@
           @click="toInvoiceApply"
           >申请开发票</sp-button
         >
-        <sp-button plain size="small" round type="default">查看发票</sp-button>
+        <sp-button
+          plain
+          size="small"
+          round
+          type="default"
+          @click="toInvoiceDetail"
+          >查看发票</sp-button
+        >
       </div>
     </div>
   </div>
@@ -108,7 +115,14 @@ export default {
       ],
     }
   },
-  methods: {},
+  methods: {
+    toInvoiceApply() {
+      this.$router.push('/order/invoice/invoiceApply')
+    },
+    toInvoiceDetail() {
+      this.$router.push('/order/invoice/detail')
+    },
+  },
 }
 </script>
 

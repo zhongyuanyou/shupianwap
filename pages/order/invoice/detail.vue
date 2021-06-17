@@ -1,18 +1,13 @@
 <template>
   <div class="invoice_apply">
     <sp-sticky>
-      <Header class="my-header" title="发票信息"></Header>
+      <Header class="my-header" title="发票详情"></Header>
     </sp-sticky>
 
     <div class="card">
-      <div class="title">发票类型</div>
-      <div class="options">
-        <sp-button class="btn active" size="small" type="primary">
-          电子普通发票
-        </sp-button>
-      </div>
-      <div class="des">
-        电子发票与纸质发票具有相同的法律效力，可以报销、售后、维权凭证，使用电子发票，不易丢失，更方便环保。
+      <div class="title">
+        <span>发票类型</span>
+        <span>电子普通发票</span>
       </div>
     </div>
 
@@ -133,11 +128,6 @@
         商品明细
       </sp-button>
     </div>
-    <!--
-    <sp-bottombar :fixed="false">
-      <sp-bottombar-button type="primary" text="商品明细" @click="submit" />
-    </sp-bottombar> -->
-
     <LoadingCenter v-show="loading" />
   </div>
 </template>
@@ -169,8 +159,6 @@ export default {
     [WorkTabs.name]: WorkTabs,
     [Sticky.name]: Sticky,
     [Button.name]: Button,
-    [Bottombar.name]: Bottombar,
-    [BottombarButton.name]: BottombarButton,
     [Field.name]: Field,
   },
   data() {
