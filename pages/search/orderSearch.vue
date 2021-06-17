@@ -70,6 +70,7 @@ export default {
         isJumpLink: 0,
       }
       this.addSearchHistoryMixin(data)
+      this.$router.push(`/my/afterSale/list?id=${this.keyValue}`)
     },
     clooseHandle() {
       this.$router.back()
@@ -119,6 +120,8 @@ export default {
       background: #f9f9f9;
       text-align: center;
       .textOverflow(1);
+      align-items: center;
+      display: flex;
       > a {
         font-size: 24px;
         font-family: PingFang SC;

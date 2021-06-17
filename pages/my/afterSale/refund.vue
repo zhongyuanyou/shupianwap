@@ -1,16 +1,16 @@
 <template>
   <div class="refund">
     <Header title="退款" />
-    <div class="select-row" @click="openPullPop(0)">
+    <div class="select-row">
       <div class="title">售后类型</div>
       <div class="select-val">
         <span class="c88">{{ afterTypeText || '请选择售后类型' }}</span>
-        <sp-icon
+        <!-- <sp-icon
           class-prefix="spiconfont"
           size="0.25rem"
           color="#ccc"
           name="you"
-        />
+        /> -->
       </div>
     </div>
     <div class="select-row" @click="openPullPop(1)">
@@ -96,18 +96,41 @@ export default {
       uploader: [],
       descInfo: '',
       pullDataList: [],
-      afterSaleType: [{ name: '我要退款' }, { name: '我要换业务' }],
-      applyReason: [{ name: '办理超期退款' }, { name: '业务办错了，需要更换' }],
-      afterTypeText: '',
+      afterSaleType: [
+        { name: '我要退款', code: 'AFTER_SALE_CENTER_REFUND' },
+        // { name: '我要换业务', code: 'AFTER_SALE_CENTER_BUSINESS_CHANGE' },
+      ],
+      applyReason: [
+        { name: '需求变更/无业务需求', code: 'AFTER_SALE_REASON_1' },
+        { name: '证据不足/条件不符/资料不齐', code: 'AFTER_SALE_REASON_2' },
+        { name: '公司注销', code: 'AFTER_SALE_REASON_3' },
+        { name: '公司转让', code: 'AFTER_SALE_REASON_4' },
+        { name: '股东/合伙人未达成共识', code: 'AFTER_SALE_REASON_5' },
+        { name: '公司经营方向变更', code: 'AFTER_SALE_REASON_6' },
+        { name: '下单错误', code: 'AFTER_SALE_REASON_7' },
+        { name: '过度承诺/承诺不符', code: 'AFTER_SALE_REASON_8' },
+        { name: '服务态度不好', code: 'AFTER_SALE_REASON_9' },
+        { name: '跟进处理不及时', code: 'AFTER_SALE_REASON_10' },
+        { name: '专业度欠佳', code: 'AFTER_SALE_REASON_11' },
+        { name: '业务办理出错', code: 'AFTER_SALE_REASON_12' },
+      ],
+      afterTypeText: '我要退款',
+      afterTypeCode: 'AFTER_SALE_CENTER_REFUND',
       applyReasonText: '',
+      applyReasonCode: '',
       activeTypeIndex: -1,
       activeReagonIndex: -1,
       title: '',
       currentIndex: '',
       activeIndex: null,
+      fileObj: '',
     }
   },
-  created() {},
+  computed: {
+    userInfo() {
+      return JSON.parse(localStorage.getItem('info'))
+    },
+  },
   methods: {
     async submit() {
       if (this.afterTypeText === '') {
@@ -130,17 +153,18 @@ export default {
         return false
       }
       const res = await this.$axios.post(afterSaleApi.refundApply, {
-        orderId: '11111',
-        afterSaleExpType: 'AFTER_SALE_CENTER_REFUND',
-        afterSaleReasonNo: 'AFTER_SALE_REASON_1',
+        orderId: '8084013204512768000',
+        afterSaleExpType: this.afterTypeCode,
+        afterSaleReasonNo: this.applyReasonCode,
         afterSaleProblemDetail: this.descInfo,
-        pictrueDetail: this.uploader,
-        createrId: this.createrId,
-        createrName: this.createrName,
-        updaterId: this.updaterId,
-        updaterName: this.updaterName,
-        createrNo: this.createrNo,
-        updaterNo: this.updaterNo,
+        pictrueDetail: this.fileObj.file,
+        createrId: this.userInfo.id,
+        createrName: this.userInfo.fullName,
+        updaterId: this.userInfo.id,
+        updaterName: this.userInfo.fullName,
+        createrNo: this.userInfo.no,
+        updaterNo: this.userInfo.no,
+        afterSaleAgreementIds: '111111111',
       })
       if (res.code === 200) {
         this.$xToast.show({
@@ -152,8 +176,9 @@ export default {
       }
     },
     afterRead(file) {
+      this.file = file
       // 此时可以自行将文件上传至服务器
-      console.log(file)
+      console.log(file.file)
     },
     openPullPop(index) {
       this.pullDataList = []
@@ -172,12 +197,13 @@ export default {
     selectItem(data) {
       if (this.currentIndex === 0) {
         this.afterTypeText = data.name
+        this.afterTypeCode = data.code
         this.activeTypeIndex = data.index
       } else {
         this.applyReasonText = data.name
         this.activeReagonIndex = data.index
+        this.applyReasonCode = data.code
       }
-
       this.$refs.pull.showPullPop = false
     },
   },

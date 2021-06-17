@@ -15,7 +15,7 @@
             v-for="(item, index) in list"
             :key="index"
             class="bank-li"
-            @click="selectItem(item.name, index)"
+            @click="selectItem(item.name, item.code, index)"
           >
             <p>{{ item.name }}</p>
             <sp-icon
@@ -61,9 +61,10 @@ export default {
     clickClosePop() {
       this.showPullPop = false
     },
-    selectItem(name, index) {
+    selectItem(name, code, index) {
       const itemData = {
         name,
+        code,
         index,
       }
       this.$emit('selectItem', itemData)

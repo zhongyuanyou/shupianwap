@@ -8,7 +8,7 @@
             name="sear_ic_sear"
             size="0.36rem"
             color="#1A1A1A"
-            @click="$router.push('/index')"
+            @click="$router.push('/search/orderSearch')"
           ></sp-icon>
         </template>
       </Header>

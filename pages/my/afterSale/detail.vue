@@ -161,7 +161,7 @@
                   </div>
                 </div>
               </li>
-              <li>
+              <!-- <li>
                 <div class="img-box">
                   <img />
                 </div>
@@ -182,7 +182,7 @@
                   <div class="bottom">应付 500元，实付 500元</div>
                   <div class="refund-money">退款金额 200元</div>
                 </div>
-              </li>
+              </li> -->
             </ul>
             <div class="total-refund_amount">
               <div class="title">应退款：</div>
@@ -261,7 +261,7 @@
         撤销
       </button>
       <button
-        v-if="afterSaleDetail.afterSaleStatusNoList === 'AFTERSALE_STATUS_3'"
+        v-if="afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_3'"
         @click="openDialog(2)"
       >
         确认方案
@@ -371,10 +371,30 @@ export default {
         },
       ],
       statusBar: {},
+      info: '',
+      userDoType: [
+        {
+          typeCode: 'AFTER_SALE_CENTER_USER_CALLbACK',
+          typeName: '用户撤回',
+        },
+        { typeCode: 'AFTER_SALE_CENTER_USER_ASK', typeName: ' 用户确认' },
+        {
+          typeCode: 'AFTER_SALE_CENTER_USER_SE_PLAYFORM',
+          typeName: '平台介入',
+        },
+      ],
     }
+  },
+  computed: {
+    userInfo() {
+      return JSON.parse(localStorage.getItem('info'))
+    },
   },
   created() {
     this.getAfterSaleDetails()
+  },
+  mounted() {
+    console.log(this.userInfo)
   },
   methods: {
     async getAfterSaleDetails() {
@@ -382,10 +402,13 @@ export default {
       const res = await this.$axios.get(afterSaleApi.detail, {
         params: {
           id: this.$route.query.id,
+          isProduct: '1',
+          isAfterSaleFlow: '1',
         },
       })
       if (res.code === 200) {
         this.afterSaleDetail = res.data
+        console.log(this.afterSaleDetail)
         switch (this.afterSaleDetail.afterSaleStatusNo) {
           case 'AFTERSALE_STATUS_1':
             this.statusBar = this.status[0]
@@ -416,14 +439,16 @@ export default {
     },
     async updateAfterSaleStatus() {
       const res = await this.$axios.post(afterSaleApi.operation, {
-        updaterId: this.afterSaleDetail.updaterId,
-        updaterName: this.afterSaleDetail.updaterName,
-        updaterCode: this.afterSaleDetail.updaterCode,
-        afterSaleId: this.afterSaleDetail.afterSaleId,
-        userDoType: this.afterSaleDetail.userDoType,
-        afterSaleAgreementIds: this.afterSaleDetail.afterSaleAgreementIds,
+        updaterId: this.userInfo.id,
+        updaterName: this.userInfo.fullName,
+        updaterCode: this.userInfo.no,
+        afterSaleId: this.afterSaleDetail.id,
+        userDoType: this.userDoType[1].typeCode,
+        afterSaleAgreementIds: '1111111111111',
       })
       if (res.code === 200) {
+        this.getAfterSaleDetails()
+        this.alertDialog(3)
       }
     },
     openDialog(index) {
@@ -445,7 +470,8 @@ export default {
             // 如果确认方案的状态是是业务变更-有退款
             // this.confirmDialog(3)
             // 其它状态弹窗
-            this.alertDialog(3)
+            console.log(index)
+            this.updateAfterSaleStatus() // 调用操作接口
           }
         })
         .catch(() => {
