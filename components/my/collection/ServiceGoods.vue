@@ -12,8 +12,20 @@
       />
       <div class="desc">
         <div class="desc-container">
-          <div class="desc-name">
+          <!-- <div class="desc-name">
             {{ info.name || '' }}
+          </div> -->
+          <div
+            class="desc-name"
+            v-if="
+              info.classCodeLevelList &&
+              info.classCodeLevelList[0] === 'FL20201224136319'
+            "
+          >
+            {{ info.name || info.showName }}
+          </div>
+          <div v-else class="desc-name">
+            {{ info.showName || info.name }}
           </div>
           <div v-if="type === 'Service'" class="desc-label">
             <span

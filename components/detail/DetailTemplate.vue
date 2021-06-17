@@ -314,7 +314,7 @@ export default {
             })
             this.proDetail.isSave = true
           } else {
-            this.$xToast.error('收藏失败')
+            this.$xToast.error(res.message || '收藏失败')
           }
         })
         .catch((err) => {

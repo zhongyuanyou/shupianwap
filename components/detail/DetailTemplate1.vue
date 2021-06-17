@@ -417,6 +417,7 @@ export default {
       this.$axios
         .post(shopApi.addGoods, params)
         .then((res) => {
+          console.log('res', res)
           if (res && res.code === 200) {
             this.$xToast.show({
               message: '收藏成功',
@@ -426,7 +427,7 @@ export default {
             })
             this.sellingDetail.isSave = true
           } else {
-            this.$xToast.error(res.message || '收藏失败')
+            this.$xToast.error(res || '收藏失败')
           }
         })
         .catch((err) => {
