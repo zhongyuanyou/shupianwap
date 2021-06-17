@@ -123,19 +123,19 @@
                 <div class="goods-price">
                   <span
                     v-if="
-                      !item.price ||
-                      (item.price &&
-                        (item.price == 0 ||
-                          item.price === '0.00' ||
-                          item.price === '0.0' ||
-                          item.price === '0'))
+                      !item.settlementPrice ||
+                      (item.settlementPrice &&
+                        (item.settlementPrice == 0 ||
+                          item.settlementPrice === '0.00' ||
+                          item.settlementPrice === '0.0' ||
+                          item.settlementPrice === '0'))
                     "
                     class="sales-proce"
                     ><span class="big-value">面议</span></span
                   >
                   <span v-else class="sales-proce">
                     <span class="big-value"
-                      >{{ item.price || item.salesPrice }}元</span
+                      >{{ item.settlementPrice || item.salesPrice }}元</span
                     >
                   </span>
                 </div>
