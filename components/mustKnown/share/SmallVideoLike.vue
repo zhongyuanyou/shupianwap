@@ -58,7 +58,7 @@ export default {
         path: 'CPSCustomer:CPSCustomer/CPSCKnowCommonDetailViewController///push/animation',
         parameter: {
           selectedIndex: 1,
-          type: '',
+          type: '7', // 小视频
           id: '',
         },
       },
@@ -88,7 +88,8 @@ export default {
     getVideoApi() {
       this.apiLock = true
       const params = {
-        categoryIds: [this.categoryId],
+        // categoryIds: [this.categoryId],
+        originalVideoType: 2, // 小视频
       }
       this.$axios
         .post(knownApi.video.videoList, params)
@@ -104,19 +105,20 @@ export default {
         })
     },
     buildVLikeList(data) {
-      // 这里注意,按照需求取 <= 4条(总共4条)
-      this.mVlist = data.filter((item, index) => {
-        return index < 4
-      })
-      // 重新处理观看数
-      this.mVlist.forEach((item) => {
-        item.custTotalCount = numChangeW(item.totalViewCount)
-      })
+      if (data.rows.length > 0) {
+        // 这里注意,按照需求取 <= 4条(总共4条)
+        this.mVlist = data.rows.filter((item, index) => {
+          return index < 4
+        })
+        // 重新处理观看数
+        this.mVlist.forEach((item) => {
+          item.custTotalCount = numChangeW(item.totalViewCount)
+        })
+      }
     },
     myOpenApp(item) {
       // 构建传参数
       const tempIos = deepCopy({}, this.iosPath)
-      tempIos.parameter.type = item.videoType
       tempIos.parameter.id = item.id
       const iosPathFinally = this.prefixPath + JSON.stringify(tempIos)
       const tempAndrod = deepCopy({}, this.androdPath)
