@@ -55,23 +55,26 @@
           @click.stop="goUser(articleDetails.userId, articleDetails.userType)"
         />
         <div class="infos">{{ articleDetails.userName }}</div>
-        <template v-if="articleDetails.createrId !== userInfo.userId">
+        <!-- && planerInfo.mchUserId -->
+        <template
+          v-if="
+            articleDetails.createrId !== userInfo.userId &&
+            articleDetails.userType == 2
+          "
+        >
           <div class="btn">
             <sp-button
               size="small"
               type="primary"
               @click="
-                sendTemplateMsgWithImg(
-                  articleDetails.userId,
-                  articleDetails.userType
-                )
+                sendTemplateMsgWithImg(planerInfo.mchUserId, planerInfo.type)
               "
               >在线问</sp-button
             >
             <sp-button
               size="small"
               type="info"
-              @click="handleTel(articleDetails.userId)"
+              @click="handleTel(planerInfo.mchUserId)"
               >打电话</sp-button
             >
           </div>
@@ -159,7 +162,7 @@ import ShareModal from '@/components/common/ShareModal.vue'
 // import SpBottom from '@/components/common/spBottom/SpBottom'
 import { callPhone } from '@/utils/common'
 
-import { planner } from '~/api'
+import { planner, userinfoApi } from '~/api'
 import imHandle from '~/mixins/imHandle'
 
 export default {
@@ -182,6 +185,7 @@ export default {
     ShareModal,
     ShareGoods,
   },
+  mixins: [imHandle],
   async asyncData({ $axios, query, store }) {
     let articleDetails = {}
     try {
@@ -213,6 +217,8 @@ export default {
 
       releaseFlag: false, // 是否发布的新文章
       shareId: '', // 分享id
+
+      planerInfo: {},
     }
   },
   computed: {
@@ -244,12 +250,40 @@ export default {
     }
     this.isShare = this.$route.query.isShare
     this.shareId = this.$route.query.shareId
+    if (this.articleDetails.userId) {
+      this.getPlanerInfo(this.articleDetails.userId)
+    }
+
     window.addEventListener('scroll', this.handleScroll)
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    getPlanerInfo(id) {
+      // const res = await this.$axios.get(userinfoApi.info, {
+      //   params: { id },
+      // })
+      // console.log('res', res)
+      // if (res.code === 200) {
+      // }
+
+      planner.detail({ id }).then((res) => {
+        const obj = {
+          mchUserId: res.id,
+          portrait: res.img,
+          userName: res.name,
+          postName: res.zwName,
+          type: res.mchClass,
+        }
+
+        this.planerInfo = {
+          ...obj,
+          ...res,
+        }
+        console.log('planerInfo', this.planerInfo)
+      })
+    },
     goUser(id, usertype) {
       this.$router.push({
         path: '/known/home',
@@ -420,6 +454,7 @@ export default {
     },
     // 拨打电话
     async handleTel(mchUserId) {
+      console.log('mchUserId', mchUserId)
       try {
         if (this.isInApp) {
           this.$appFn.dggBindHiddenPhone({ plannerId: mchUserId }, (res) => {
@@ -435,51 +470,65 @@ export default {
           })
           return
         }
-        if (this.$store.state.user.userId) {
-          const params = {
-            areaCode: this.city.code,
-            areaName: this.city.name,
-            customerUserId: this.$store.state.user.userId,
-            plannerId: mchUserId,
-            // customerPhone:this.phone,
-            requireCode: '',
-            requireName: '',
-          }
-          try {
-            const telData = await planner.newtel(params)
-            // 解密电话
-            if (telData.status === 1) {
-              const tel = telData.phone
-              window.location.href = `tel://${tel}`
-            } else if (telData.status === 0) {
-              Toast({
-                message: '当前人员已禁用，无法拨打电话',
-                iconPrefix: 'sp-iconfont',
-                icon: 'popup_ic_fail',
-              })
-            } else if (telData.status === 3) {
-              Toast({
-                message: '当前人员已离职，无法拨打电话',
-                iconPrefix: 'sp-iconfont',
-                icon: 'popup_ic_fail',
-              })
-            }
-          } catch (error) {
+
+        // if (this.planerInfo.phone) {
+        //   window.location.href = `tel://${this.planerInfo.phone}`
+        //   return
+        // } else {
+        //   Toast({
+        //     message: '无法拨打电话',
+        //     iconPrefix: 'sp-iconfont',
+        //     icon: 'popup_ic_fail',
+        //   })
+        //   return
+        // }
+
+        // if (this.$store.state.user.userId) {
+        const params = {
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          plannerId: mchUserId,
+          customerPhone: this.planerInfo.phone,
+          requireCode: '',
+          requireName: '',
+        }
+
+        try {
+          const telData = await planner.newtel(params)
+          // 解密电话
+          if (telData.status === 1) {
+            const tel = telData.phone
+            window.location.href = `tel://${tel}`
+          } else if (telData.status === 0) {
             Toast({
-              message: error.message || '无法拨打电话',
+              message: '当前人员已禁用，无法拨打电话',
               iconPrefix: 'sp-iconfont',
               icon: 'popup_ic_fail',
             })
-            console.error('getTel:', error)
-            return Promise.reject(error)
+          } else if (telData.status === 3) {
+            Toast({
+              message: '当前人员已离职，无法拨打电话',
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_fail',
+            })
           }
-        } else {
+        } catch (error) {
           Toast({
-            message: '未登录',
+            message: error.message || '无法拨打电话',
             iconPrefix: 'sp-iconfont',
             icon: 'popup_ic_fail',
           })
+          console.error('getTel:', error)
+          return Promise.reject(error)
         }
+        // } else {
+        //   Toast({
+        //     message: '未登录',
+        //     iconPrefix: 'sp-iconfont',
+        //     icon: 'popup_ic_fail',
+        //   })
+        // }
       } catch (err) {
         console.log(err)
         Toast({
@@ -494,40 +543,45 @@ export default {
     sendTemplateMsgWithImg(mchUserId, type) {
       // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
       // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
-      const intentionType = {}
-      intentionType[
-        this.baseData.parentClassCode &&
-          this.baseData.parentClassCode.split(',')[0]
-      ] = this.baseData.className
-      // 意向城市
-      const intentionCity = {}
-      intentionCity[this.city.code] = this.city.name
+      // const intentionType = {}
+      // intentionType[
+      //   this.baseData.parentClassCode &&
+      //     this.baseData.parentClassCode.split(',')[0]
+      // ] = this.baseData.className
+      // // 意向城市
+      // const intentionCity = {}
+      // intentionCity[this.city.code] = this.city.name
+      console.log(mchUserId, type)
       const sessionParams = {
         imUserId: mchUserId, // 商户用户ID
         imUserType: type, // 用户类型
-        requireCode: this.baseData.requireCode,
-        requireName: this.baseData.requireName,
+        requireCode: '',
+        requireName: '',
         ext: {
-          intentionType, // 意向业务 非必传
-          intentionCity, // 意向城市 非必传
+          intentionType: '', // 意向业务 非必传
+          intentionCity: '', // 意向城市 非必传
           recommendId: '',
           recommendAttrJson: {},
           startUserType: 'cps-app', //
         },
       }
       const msgParams = {
-        sendType: 0, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
-        msgType: 'im_tmplate', // 消息类型
+        sendType: 1, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
+        msgType: 'text', // 消息类型
+        content: JSON.stringify({
+          text: this.articleDetails.title,
+        }),
         extContent: this.$route.query, // 路由参数
-        productName: this.imJumpQuery.productName, // 产品名称
-        productContent: this.imJumpQuery.productContent, // 产品信息
-        price: this.imJumpQuery.price, // 价格
-        forwardAbstract: this.imJumpQuery.forwardAbstract, // 摘要信息，可与显示内容保持一致
-        routerId: this.imJumpQuery.routerId, // 路由ID
-        imageUrl: this.imJumpQuery.imageUrl[0], // 产品图片
-        unit: this.imJumpQuery.unit, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+        productName: this.articleDetails.title, // 产品名称
+        productContent: this.articleDetails.content, // 产品信息
+        price: 0, // 价格
+        forwardAbstract: this.articleDetails.content, // 摘要信息，可与显示内容保持一致
+        // routerId: this.articleDetails.routerId, // 路由ID
+        // imageUrl: this.articleDetails.imageUrl[0], // 产品图片
+        // unit: this.articleDetails.unit, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
       }
       this.sendTemplateMsgMixin({ sessionParams, msgParams })
+      // this.sendTemplateMsgMixin({ sessionParams })
     },
   },
 }
