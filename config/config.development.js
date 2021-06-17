@@ -1,7 +1,8 @@
 /* T环境配置文件 */
 
 module.exports = {
-  baseURL: 'http://172.16.135.181:7001', // 网关地址
+  // baseURL: 'http://172.16.135.181:7001', // 网关地址
+  baseURL:'https://dspmicrouag.shupian.cn',
   mchMerchantSgin: '62070A76D7BF904888B75450D2D6B4C4',
   mchCoding: '20190620000111',
   imBaseUrl: 'https://dcpsim.shupian.cn', // IM 地址
