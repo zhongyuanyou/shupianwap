@@ -301,6 +301,14 @@ export default {
           : this.info.realStatus === 'AUTHENTICATION_ING'
           ? '认证中'
           : '未实名认证'
+      let realUrl = ''
+      if (
+        this.info.realStatus === 'NO_AUTHENTICATION' ||
+        this.info.realStatus === 'AUTHENTICATION_FAIL' ||
+        this.info.realStatus === 'AUTHENTICATION_INVALID'
+      ) {
+        realUrl = '/contract/authentication'
+      }
 
       return [
         {
@@ -313,7 +321,7 @@ export default {
           // iconName: 'shimingrenzheng',
           name: realStatus, // 实名认证
           img: this.$ossImgSetV2(this.imgList.real),
-          url: '/my/interviewRecord',
+          url: realUrl,
         },
         {
           // iconName: 'per_ic_help',
@@ -372,7 +380,7 @@ export default {
     },
     clickServiceTabs(item) {
       if (this.token) {
-        this.$router.push({ path: item.url })
+        item.url && this.$router.push({ path: item.url })
       } else {
         this.$router.push({
           path: '/login',

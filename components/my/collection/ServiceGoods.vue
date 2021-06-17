@@ -31,10 +31,13 @@
             </span>
           </div>
           <div
-            v-if="info.goodsSubDetailsName && type === 'Trading'"
-            class="desc-text"
+            v-if="
+              info.fieldList && info.fieldList.length > 0 && type === 'Trading'
+            "
+            class="desc-text desc-text-field"
           >
-            {{ info.goodsSubDetailsName }}
+            <!-- {{ info.goodsSubDetailsName }} -->
+            {{ joinFieldList(info.fieldList) }}
           </div>
           <div v-if="type === 'Service'" class="desc-text">
             {{ info.salesGoodsOperatings && info.salesGoodsOperatings.slogan }}
@@ -92,7 +95,15 @@ export default {
   data() {
     return {}
   },
+
   methods: {
+    joinFieldList(list = []) {
+      const arr = []
+      list.map((item) => {
+        arr.push(item.fieldValueCn || item.fieldValue)
+      })
+      return arr.join(' | ')
+    },
     // linkServiceGoodsDetail(info) {
     //   this.$router.push({
     //     path: '/detail',

@@ -259,5 +259,48 @@ export default {
       }
       // })
     },
+    // 普通会话
+    sendTextMessage(mchUserId) {
+      const userInfo = this.$store.state.user.userInfo
+      // this.judgeLoginMixin(true).then((userInfo) => {
+      if (userInfo) {
+        const userInfo = this.$store.state.user.userInfo
+        const userType = userInfo && userInfo.type ? userInfo.type : 'VISITOR'
+        const params = {
+          operUserType: userType,
+          imUserId: mchUserId,
+          imUserType: 'MERCHANT_USER',
+          ext: {
+            intentionType: '',
+            intentionCity: '',
+            recommendId: '',
+            recommendAttrJson: {},
+            startUserType: 'cps-app',
+          },
+        }
+        // 发送消息前先创建会话
+        this.imExample.createSession(params, (res) => {
+          if (res.code === 200) {
+            const myInfo = localStorage.getItem('myInfo')
+              ? JSON.parse(localStorage.getItem('myInfo'))
+              : {}
+            const token = this.userType ? this.token : myInfo.token
+            const userId = this.userType ? this.userId : myInfo.imUserId
+            const userType = this.userType || 'VISITOR'
+            if (this.isApplets) {
+              window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}&isApplets=true`
+            } else {
+              window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}`
+            }
+          } else if (res.code === 5223) {
+            console.log('发送消息', res)
+            this.clearUserInfoAndJumpLoging()
+          } else {
+            console.log('发送消息', res)
+            this.$xToast.warning(res.msg)
+          }
+        })
+      }
+    },
   },
 }
