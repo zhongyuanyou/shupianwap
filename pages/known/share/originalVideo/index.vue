@@ -34,7 +34,11 @@
         }}
       </div>
     </div>
-    <video-like :category-id="categoryId" class="like"></video-like>
+    <video-like
+      :category-id="categoryId"
+      :type="vType"
+      class="like"
+    ></video-like>
     <sp-center-popup
       v-model="showPop"
       button-type="confirm"
@@ -71,6 +75,7 @@ export default {
         muted: true,
         poster: '',
       },
+      vType: 'original',
     }
   },
   mounted() {

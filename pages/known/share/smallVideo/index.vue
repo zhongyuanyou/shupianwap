@@ -58,7 +58,7 @@ export default {
         path: 'CPSCustomer:CPSCustomer/CPSCKnowCommonDetailViewController///push/animation',
         parameter: {
           selectedIndex: 1,
-          type: '',
+          type: '7',
           id: '',
         },
       },
@@ -103,7 +103,6 @@ export default {
           this.vDetail = res.data
           this.categoryId = res.data.categoryId
           this.vurl = res.data.videoUrl
-          this.iosPath.parameter.type = res.data.videoType
           this.iosPathFinally = this.prefixPath + JSON.stringify(this.iosPath)
         })
         .catch((e) => {

@@ -54,6 +54,10 @@ export default {
       type: String,
       default: '',
     },
+    type: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
@@ -67,8 +71,12 @@ export default {
     },
   },
   mounted() {
-    if (this.categoryId !== '' && !this.apiLock) {
-      this.getVideoApi()
+    if (this.categoryId !== '' && !this.apiLock && this.type !== '') {
+      if (this.type === 'course') {
+        this.getCourseApi()
+      } else {
+        this.getVideoApi()
+      }
     }
   },
   methods: {
@@ -77,6 +85,7 @@ export default {
       this.apiLock = true
       const params = {
         categoryIds: [this.categoryId],
+        originalVideoType: 1, // 原创视频
       }
       this.$axios
         .post(knownApi.video.videoList, params)
@@ -91,14 +100,34 @@ export default {
           this.$xToast.error(e.message)
         })
     },
+    getCourseApi() {
+      this.apiLock = true
+      const params = {
+        categoryIds: [this.categoryId],
+      }
+      this.$axios
+        .post(knownApi.video.courseList, params)
+        .then((res) => {
+          if (res.code !== 200) {
+            throw new Error('查询视频失败')
+          }
+          this.buildVLikeList(res.data)
+        })
+
+        .catch((e) => {
+          this.$xToast.error(e.message)
+        })
+    },
     buildVLikeList(data) {
       // 这里注意,按照需求取 <= 4条(总共4条)
-      this.mVlist = data.filter((item, index) => {
-        return index < 4
-      })
-      this.mVlist.forEach((item) => {
-        item.custVideoTime = secondToTime(item.duration)
-      })
+      if (data.rows.length > 0) {
+        this.mVlist = data.rows.filter((item, index) => {
+          return index < 4
+        })
+        this.mVlist.forEach((item) => {
+          item.custVideoTime = secondToTime(item.duration)
+        })
+      }
     },
   },
 }
