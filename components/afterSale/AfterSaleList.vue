@@ -51,35 +51,45 @@
           class="status"
         >
           <strong>待处理</strong>
-          <span>待处理</span>
+          <span>您的售后正在飞速处理中，请您耐心等待</span>
         </div>
         <div
           v-else-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_2'"
           class="status"
         >
           <strong>商户驳回</strong>
-          <span>商户驳回</span>
+          <span>卖家驳回了您的申请，请您及时处理</span>
         </div>
         <div
           v-else-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_3'"
           class="status"
         >
           <strong>待确认</strong>
-          <span>待确认</span>
+          <span>请您确认售后方案</span>
         </div>
         <div
           v-else-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_4'"
           class="status"
         >
           <strong>已完成</strong>
-          <span>已完成</span>
+          <span>退款完成</span>
         </div>
         <div
           v-else-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_5'"
           class="status"
         >
           <strong>已关闭</strong>
-          <span>已关闭</span>
+          <span v-if="item.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_9'"
+            >平台驳回了您的申请，售后关闭，如您的问题未解决，您可重新发起申请</span
+          >
+          <span
+            v-else-if="item.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_10'"
+            >因您撤销申请，售后关闭，如您的问题未解决，您可重新发起申请</span
+          >
+          <span
+            v-else-if="item.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_11'"
+            >因您超时未处理，售后关闭，如您的问题未解决，您可重新发起申请</span
+          >
         </div>
 
         <div class="detail-btn">

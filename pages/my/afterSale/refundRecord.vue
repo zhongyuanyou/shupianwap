@@ -1,27 +1,36 @@
 <template>
   <div class="refund-record">
     <Header title="退款明细" />
-    <ul v-if="!showNoData">
-      <li
-        v-for="(item, index) in refundRecordData"
-        :key="index"
-        @click="$router.push(`/my/afterSale/refundDetails?id=${item.id}`)"
-      >
-        <div class="pic">
-          <sp-icon
-            class-prefix="spiconfont"
-            size="0.82rem"
-            color="#1797EC"
-            name="pay_ic_alipay"
-          ></sp-icon>
-        </div>
-        <div class="desc">
-          <h3>换业务</h3>
-          <p>{{ item.afterSalesRemark }}</p>
-        </div>
-        <div class="amount">{{ item.reimburseAmount }}<span>元</span></div>
-      </li>
-      <!-- <li>
+    <sp-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="getRefundRecords"
+    >
+      <ul v-if="refundRecordData.length > 0">
+        <li
+          v-for="(item, index) in refundRecordData"
+          :key="index"
+          @click="$router.push(`/my/afterSale/refundDetails?id=${item.id}`)"
+        >
+          <div class="pic">
+            <sp-icon
+              class-prefix="spiconfont"
+              size="0.82rem"
+              color="#1797EC"
+              name="pay_ic_alipay"
+            ></sp-icon>
+          </div>
+          <div class="desc">
+            <h3>{{ item.passTypeCodeName }}</h3>
+            <p>{{ item.reimburseCompleteTime }}</p>
+          </div>
+          <div class="amount">
+            {{ item.reimburseAmountYuan }}<span>元</span>
+          </div>
+        </li>
+
+        <!-- <li>
         <div class="pic">
           <sp-icon
             class-prefix="spiconfont"
@@ -36,38 +45,42 @@
         </div>
         <div class="amount">100<span>元</span></div>
       </li> -->
-    </ul>
+      </ul>
+    </sp-list>
     <!-- 无退款明细 -->
-    <div v-else class="no-refund">
-      <div class="middle">
-        <div class="img-box">
-          <img src="" alt="" />
-        </div>
-        <p>退款中，请您耐心等待额~</p>
-      </div>
+    <div v-if="!refundRecordData.length && showNoData" class="no-data-area">
+      <img
+        src="https://cdn.shupian.cn/sp-pt/wap/images/4cnzucsyu6m0000.png"
+        alt=""
+        srcset=""
+      />
+      <p class="text">退款中，请您耐心等待额~</p>
     </div>
   </div>
 </template>
 
 <script>
-import { Icon } from '@chipspc/vant-dgg'
+import { Icon, List } from '@chipspc/vant-dgg'
 import { afterSaleApi } from '@/api'
 import Header from '@/components/common/head/header'
 export default {
   components: {
     Header,
     SpIcon: Icon,
+    [List.name]: List,
   },
   data() {
     return {
       showNoData: false,
+      refundRecordData: [],
+      loading: false,
+      finished: false,
       page: 1,
-      limit: 1000,
-      refundRecordData: '',
+      limit: 10,
     }
   },
   created() {
-    this.getRefundRecords()
+    // this.getRefundRecords()
   },
   methods: {
     async getRefundRecords() {
@@ -78,9 +91,22 @@ export default {
         page: this.page,
       })
       if (res.code === 200) {
-        this.refundRecordData = res.data.list
+        this.refundRecordData = [...this.refundRecordData, ...res.data.list]
+        debugger
+        if (this.refundRecordData.length === 0) {
+          this.showNoData = true
+        } else {
+          this.showNoData = false
+        }
+        this.loading = false
+        this.page++
+        if (this.page > res.data.total) {
+          this.finished = true
+        }
       } else {
         this.$message.error(res.message)
+        this.loading = false
+        this.finished = true
       }
     },
   },
@@ -88,6 +114,28 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.no-data-area {
+  width: 100%;
+  height: 100vh;
+  background: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  img {
+    width: 340px;
+    height: 340px;
+    margin: 20vh auto 40px auto;
+    display: block;
+  }
+  .text {
+    height: 29px;
+    font-size: 30px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #1a1a1a;
+    text-align: center;
+  }
+}
 .refund-record {
   min-height: 100vh;
   background: #f8f8f8;
@@ -133,29 +181,28 @@ export default {
       }
     }
   }
-  .no-refund {
-    display: flex;
-    justify-content: center;
-    text-align: center;
-    min-height: 100vh;
-    background: #f8f8f8;
-    padding-top: 200px;
-    .img-box {
-      width: 340px;
-      height: 340px;
-      background: #000;
-      .img {
-        width: 340px;
-        height: 340px;
-      }
-    }
+  // .no-refund {
+  //   display: flex;
+  //   justify-content: center;
+  //   text-align: center;
+  //   min-height: 100vh;
+  //   background: #f8f8f8;
+  //   padding-top: 200px;
+  //   .img-box {
+  //     width: 340px;
+  //     height: 340px;
+  //     img {
+  //       width: 100%;
+  //       height: 100%;
+  //     }
+  //   }
 
-    p {
-      margin-top: 24px;
-      font-size: 30px;
-      line-height: 30px;
-      color: #222222;
-    }
-  }
+  //   p {
+  //     margin-top: 24px;
+  //     font-size: 30px;
+  //     line-height: 30px;
+  //     color: #222222;
+  //   }
+  // }
 }
 </style>

@@ -64,8 +64,17 @@
       <div class="tips">为了更好的为你解决问题，请您务必上传有效凭证</div>
     </div>
     <div class="doubt">有其他问题？<span>联系客服</span></div>
+    <!-- <div class="doubt">
+      温馨提示：售后单提交后，售后专员可能与您电话沟通，请保持手机畅通
+    </div> -->
     <div class="submit">
-      <p>售后单提交后，售后专员可能与您电话沟通，请保持手机畅通</p>
+      <p>
+        <sp-checkbox v-model="checked"></sp-checkbox>我已阅读过并知晓<span
+          class="blue"
+          @click="afterSaleProtocol('protocol100121')"
+          >《薯片平台用户售后协议》</span
+        >
+      </p>
       <button @click="submit">提交</button>
     </div>
     <PullUp
@@ -79,7 +88,7 @@
 </template>
 
 <script>
-import { Icon, Field, Uploader } from '@chipspc/vant-dgg'
+import { Icon, Field, Uploader, Checkbox } from '@chipspc/vant-dgg'
 import { afterSaleApi } from '@/api'
 import Header from '@/components/common/head/header'
 import PullUp from '@/components/afterSale/PullUp'
@@ -90,12 +99,14 @@ export default {
     [Icon.name]: Icon,
     [Field.name]: Field,
     [Uploader.name]: Uploader,
+    [Checkbox.name]: Checkbox,
   },
   data() {
     return {
       uploader: [],
       descInfo: '',
       pullDataList: [],
+      checked: false,
       afterSaleType: [
         { name: '我要退款', code: 'AFTER_SALE_CENTER_REFUND' },
         // { name: '我要换业务', code: 'AFTER_SALE_CENTER_BUSINESS_CHANGE' },
@@ -206,11 +217,21 @@ export default {
       }
       this.$refs.pull.showPullPop = false
     },
+    // 售后协议
+    afterSaleProtocol(code) {
+      this.$router.push({
+        name: 'login-protocol',
+        query: { code },
+      })
+    },
   },
 }
 </script>
 
 <style lang="less" scoped>
+.blue {
+  color: #4974f5;
+}
 .refund {
   min-height: 100vh;
   background: #f4f4f4;
@@ -361,6 +382,11 @@ export default {
       line-height: 32px;
       margin-bottom: 20px;
       text-align: center;
+      display: flex;
+      align-items: center;
+      ::v-deep .sp-checkbox {
+        margin-right: 10px;
+      }
     }
     > button {
       font-size: 32px;

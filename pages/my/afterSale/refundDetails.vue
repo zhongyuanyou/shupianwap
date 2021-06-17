@@ -12,28 +12,28 @@
           ></sp-icon>
         </div>
         <div class="desc">
-          <h3>{{ refundDetailData.reimburseStatusName }}</h3>
-          <p>{{ refundDetailData.updateTime }}</p>
+          <h3>{{ refundDetailData.reimburseStatusCodeName }}</h3>
+          <p>{{ refundDetailData.reimburseCompleteTime }}</p>
         </div>
       </div>
     </div>
     <div class="content-box">
       <div class="item">
         <h3>退款金额</h3>
-        <p>{{ refundDetailData.reimburseAmount }}元</p>
+        <p>{{ refundDetailData.reimburseAmountYuan }}元</p>
       </div>
       <div class="item">
         <h3>退款账户</h3>
-        <p>支付宝支付账户</p>
+        <p>{{ refundDetailData.passTypeCodeName }}</p>
       </div>
-      <div class="item">
+      <!-- <div class="item">
         <h3>退款状态</h3>
-        <p>{{ refundDetailData.reimburseStatusName }}</p>
-      </div>
+        <p>{{ refundDetailData.reimburseStatusCodeName }}</p>
+      </div> -->
     </div>
-    <div class="refund-process">
-      <sp-steps direction="vertical" :active="active">
-        <sp-step v-for="(item, index) in refundDetailData.process" :key="index">
+    <div v-if="refundProcessData.length > 0" class="refund-process">
+      <sp-steps direction="vertical" :active="refundProcessData.length - 1">
+        <sp-step v-for="(item, index) in refundProcessData" :key="index">
           <h3>{{ item.operationStatus }}</h3>
           <!-- <p>已将500元入账至您的支付宝支付账户</p> -->
           <div class="date">{{ item.craeteTime }}</div>
@@ -57,6 +57,7 @@ export default {
   data() {
     return {
       refundDetailData: '',
+      refundProcessData: [],
     }
   },
   created() {
@@ -70,7 +71,8 @@ export default {
         },
       })
       if (res.code === 200) {
-        this.refundDetailData = res.data
+        this.refundDetailData = res.data.refundDetail
+        this.refundProcessData = res.data.refundProcess
       } else {
         this.$message.error(res.message)
       }

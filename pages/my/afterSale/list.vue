@@ -27,10 +27,18 @@
       finished-text="没有更多了"
       @load="getAfterSaleList"
     >
-      <div>
+      <div v-if="saleDataList.length > 0">
         <after-sale-list :sale-list="saleDataList"></after-sale-list>
       </div>
     </sp-list>
+    <div v-if="!saleDataList.length && showNoDataImg" class="no-data-area">
+      <img
+        src="https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png"
+        alt=""
+        srcset=""
+      />
+      <p class="text">暂无售后单</p>
+    </div>
   </div>
 </template>
 
@@ -63,6 +71,8 @@ export default {
         'AFTERSALE_STATUS_2 ',
         'AFTERSALE_STATUS_3',
       ],
+      queryId: '',
+      showNoDataImg: false,
     }
   },
   created() {},
@@ -75,9 +85,16 @@ export default {
         page: this.page,
         limit: this.limit,
         afterSaleStatusNoList: this.afterSaleStatus,
+        type: '3',
+        code: this.$route.query.id || '',
       })
       if (res.code === 200) {
         this.saleDataList = [...this.saleDataList, ...res.data.records]
+        if (this.saleDataList.length === 0) {
+          this.showNoDataImg = true
+        } else {
+          this.showNoDataImg = false
+        }
         this.loading = false
         this.page++
         if (this.page > res.data.totalPage) {
@@ -94,7 +111,11 @@ export default {
       } else {
         this.afterSaleStatus = []
       }
+      const newQuery = JSON.parse(JSON.stringify(this.$route.query)) // 深拷贝
+      delete newQuery.id // 删除路由参数
+      this.$router.replace({ query: newQuery }) // 跳转路由
       this.page = 1
+      this.$route.query.id = ''
       this.saleDataList = []
       this.finished = false
       this.loading = true
@@ -105,9 +126,36 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.no-data-area {
+  width: 100%;
+  height: 100vh;
+  background: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  img {
+    width: 340px;
+    height: 340px;
+    margin: 20vh auto 40px auto;
+    display: block;
+  }
+  .text {
+    height: 29px;
+    font-size: 30px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #1a1a1a;
+    text-align: center;
+  }
+}
 .sale-list {
+  position: relative;
+  z-index: 9;
   min-height: 100vh;
   background: #f8f8f8;
+  ::v-deep .sp-tabs {
+    z-index: 9;
+  }
   ::v-deep .spiconfont-sear_ic_sear {
     margin-right: 34px;
   }

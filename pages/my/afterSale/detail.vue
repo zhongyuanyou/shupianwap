@@ -31,18 +31,27 @@
       <div class="content">
         <!-- 处理意见 -->
         <div
-          v-if="afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_2'"
+          v-if="
+            afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_6' ||
+            afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_9'
+          "
           class="content-box"
         >
           <div class="idea">
             <h3>处理意见</h3>
             <p>
-              商家处理商家处理意见商家处理意见商家处理意见商家处理意见商家处理意见商家处理意见商家处理意见商家
+              {{ afterSaleDetail.dealMark }}
             </p>
           </div>
         </div>
         <!-- 退款 -->
-        <div v-if="afterSaleDetail.afterSaleTotalMoney" class="content-box">
+        <div
+          v-if="
+            afterSaleDetail.afterSaleTotalMoney &&
+            afterSaleDetail.afterSaleTotalMoney > 0
+          "
+          class="content-box"
+        >
           <div class="refund-box">
             <div class="title">
               <div class="left">
@@ -66,7 +75,7 @@
                 <p>预计1-5个工作日到账</p>
               </div>
               <div class="right">
-                {{ afterSaleDetail.afterSaleTotalMoney }}<span>元</span>
+                {{ afterSaleDetail.afterSaleTotalMoneyYuan }}<span>元</span>
               </div>
             </div>
           </div>
@@ -187,7 +196,7 @@
             <div class="total-refund_amount">
               <div class="title">应退款：</div>
               <div class="money">
-                {{ afterSaleDetail.afterSaleTotalMoney }}<span>元</span>
+                {{ afterSaleDetail.realRefundTotalMoney }}<span>元</span>
               </div>
             </div>
           </div>
@@ -198,7 +207,7 @@
             <div class="item-row">
               <h3>售后编号</h3>
               <p>{{ afterSaleDetail.afterSaleNo }}</p>
-              <div class="copy">复制</div>
+              <div class="copy" @click="copy">复制</div>
             </div>
             <div class="item-row">
               <h3>申请时间</h3>
@@ -220,7 +229,7 @@
             </div>
             <div class="item-row">
               <h3>售后原因</h3>
-              <p>{{ afterSaleDetail.afterSaleReasonNo }}</p>
+              <p>{{ afterSaleDetail.afterSaleReasonName }}</p>
             </div>
             <div class="item-row">
               <h3>描述问题</h3>
@@ -239,12 +248,12 @@
       </div>
     </div>
     <!-- 操作按钮 -->
-    <div class="footer-btns">
-      <button>联系客服</button>
+    <div class="footer-btns" ref="btns">
+      <!-- <button>联系客服</button> -->
       <button
         v-if="
-          afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_1' ||
-          afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_3'
+          afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_5' ||
+          afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_6'
         "
         @click="openDialog(0)"
       >
@@ -268,6 +277,9 @@
       </button>
       <!-- <button class="pay-btn">去支付</button> -->
     </div>
+    <!--S loding-->
+    <LoadingCenter v-show="loading" />
+    <!--E loding-->
   </div>
 </template>
 
@@ -276,11 +288,13 @@ import { Dialog, Icon } from '@chipspc/vant-dgg'
 import { afterSaleApi } from '@/api'
 import Header from '@/components/common/head/header'
 import StatusBar from '@/components/afterSale/StatusBar'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   components: {
     Header,
     StatusBar,
     SpIcon: Icon,
+    LoadingCenter,
   },
   data() {
     return {
@@ -374,7 +388,7 @@ export default {
       info: '',
       userDoType: [
         {
-          typeCode: 'AFTER_SALE_CENTER_USER_CALLbACK',
+          typeCode: 'AFTER_SALE_CENTER_USER_CALLBACK',
           typeName: '用户撤回',
         },
         { typeCode: 'AFTER_SALE_CENTER_USER_ASK', typeName: ' 用户确认' },
@@ -383,6 +397,7 @@ export default {
           typeName: '平台介入',
         },
       ],
+      userDoTypeCode: '',
     }
   },
   computed: {
@@ -399,6 +414,7 @@ export default {
   methods: {
     async getAfterSaleDetails() {
       console.log(afterSaleApi.detail)
+      this.loading = true
       const res = await this.$axios.get(afterSaleApi.detail, {
         params: {
           id: this.$route.query.id,
@@ -406,6 +422,7 @@ export default {
           isAfterSaleFlow: '1',
         },
       })
+      this.loading = false
       if (res.code === 200) {
         this.afterSaleDetail = res.data
         console.log(this.afterSaleDetail)
@@ -432,23 +449,36 @@ export default {
             break
           case 'AFTERSALE_STATUS_5':
             this.statusBar = this.status[1]
-            this.statusBar.title = '已关闭'
+            this.statusBar.title = '售后关闭'
             break
         }
       }
     },
-    async updateAfterSaleStatus() {
+    async updateAfterSaleStatus(btnIndex) {
       const res = await this.$axios.post(afterSaleApi.operation, {
         updaterId: this.userInfo.id,
         updaterName: this.userInfo.fullName,
         updaterCode: this.userInfo.no,
         afterSaleId: this.afterSaleDetail.id,
-        userDoType: this.userDoType[1].typeCode,
+        userDoType: this.userDoTypeCode,
         afterSaleAgreementIds: '1111111111111',
       })
       if (res.code === 200) {
+        switch (btnIndex) {
+          case 0:
+            this.alertDialog(0)
+            break
+          case 1:
+            this.$xToast.show({
+              message: '撤销成功',
+              duration: 1000,
+            })
+            break
+          case 2:
+            this.alertDialog(3)
+            break
+        }
         this.getAfterSaleDetails()
-        this.alertDialog(3)
       }
     },
     openDialog(index) {
@@ -460,19 +490,16 @@ export default {
       })
         .then(() => {
           if (index === 0) {
-            this.alertDialog(index)
+            this.userDoTypeCode = this.userDoType[2].typeCode
           } else if (index === 1) {
-            this.$xToast.show({
-              message: '撤销成功',
-              duration: 1000,
-            })
+            this.userDoTypeCode = this.userDoType[0].typeCode
           } else if (index === 2) {
             // 如果确认方案的状态是是业务变更-有退款
             // this.confirmDialog(3)
             // 其它状态弹窗
-            console.log(index)
-            this.updateAfterSaleStatus() // 调用操作接口
+            this.userDoTypeCode = this.userDoType[1].typeCode
           }
+          this.updateAfterSaleStatus(index)
         })
         .catch(() => {
           if (index === 3) {
@@ -500,6 +527,15 @@ export default {
       })
         .then(() => {})
         .catch(() => {})
+    },
+    copy() {
+      const oInput = document.createElement('input')
+      oInput.value = this.afterSaleDetail.afterSaleNo
+      document.body.appendChild(oInput)
+      oInput.select() // 选择对象;
+      document.execCommand('Copy') // 执行浏览器复制命令
+      oInput.remove()
+      this.$xToast.success('复制成功')
     },
   },
 }
@@ -856,7 +892,8 @@ export default {
   .footer-btns {
     padding: 24px;
     display: flex;
-    height: 128px;
+    // height: 128px;
+    height: auto;
     background: #fff;
     position: fixed;
     justify-content: flex-end;

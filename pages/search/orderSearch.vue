@@ -5,7 +5,7 @@
         ref="searchRef"
         v-model="keyValue"
         :icon-left="0.24"
-        placeholder="请输入搜索内容"
+        placeholder="订单编号/售后单号"
         @searchKeydownHandle="keyClickHandle"
       >
         <template v-slot:right>
@@ -79,6 +79,18 @@ export default {
     removeHistory() {
       this.$cookies.remove('searchHistory')
       this.historyData = []
+    },
+    // 缓存搜索
+    cacheSearch(item) {
+      // const data = {
+      //   name: item.name,
+      //   isJumpLink: item.isJumpLink,
+      //   wapRoute: item.wapRoute,
+      //   url: item.url,
+      //   imageUrl: item.imageUrl,
+      // }
+      // this.addSearchHistoryMixin(data)
+      this.$router.push(`/my/afterSale/list?id=${item.name}`)
     },
   },
 }

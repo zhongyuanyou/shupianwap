@@ -4,7 +4,7 @@
     <div class="process-box">
       <sp-steps direction="vertical" :active="processRecordData.length - 1">
         <sp-step v-for="(item, index) in processRecordData" :key="index">
-          <h3>{{ item.dealStatusNo }}</h3>
+          <h3>{{ item.dealStatusName }}</h3>
           <div class="date">{{ item.dealTime }}</div>
           <!-- <p>申请原因：{{ item.dealStatusNo }}</p>
           <div class="desc">
