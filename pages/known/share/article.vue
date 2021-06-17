@@ -51,7 +51,7 @@
       <div ref="myPage" class="user-info">
         <sp-image
           class="img"
-          :src="articleDetails.avatar"
+          :src="articleDetails.avatar || $ossImgSetV2('9zzzas17j8k0000.png')"
           @click.stop="goUser(articleDetails.userId, articleDetails.userType)"
         />
         <div class="infos">{{ articleDetails.userName }}</div>
@@ -157,6 +157,7 @@ import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
 import DownLoadArea from '@/components/common/downLoadArea.vue'
 import ShareModal from '@/components/common/ShareModal.vue'
 // import SpBottom from '@/components/common/spBottom/SpBottom'
+import { callPhone } from '@/utils/common'
 
 import { planner } from '~/api'
 import imHandle from '~/mixins/imHandle'
@@ -217,6 +218,9 @@ export default {
   computed: {
     userInfo() {
       return this.$store.state.user
+    },
+    city() {
+      return this.$store.state.city.currentCity
     },
     id() {
       return this.$route.query.id
@@ -417,39 +421,72 @@ export default {
     // 拨打电话
     async handleTel(mchUserId) {
       try {
-        const telData = await planner.newtel({
-          areaCode: this.city.code,
-          areaName: this.city.name,
-          customerUserId: this.$store.state.user.userId,
-          plannerId: mchUserId,
-          requireCode: '',
-          requireName: '',
-          // id: mchUserId,
-          // sensitiveInfoType: 'MCH_USER',
-        })
-        // 解密电话
-        if (telData.status === 1) {
-          const tel = telData.phone
-          window.location.href = `tel://${tel}`
-        } else if (telData.status === 0) {
-          Toast({
-            message: '当前人员已禁用，无法拨打电话',
-            iconPrefix: 'sp-iconfont',
-            icon: 'popup_ic_fail',
+        if (this.isInApp) {
+          this.$appFn.dggBindHiddenPhone({ plannerId: mchUserId }, (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '拨号失败！',
+                duration: 1000,
+                forbidClick: true,
+                icon: 'toast_ic_remind',
+              })
+            }
           })
-        } else if (telData.status === 3) {
+          return
+        }
+        if (this.$store.state.user.userId) {
+          const params = {
+            areaCode: this.city.code,
+            areaName: this.city.name,
+            customerUserId: this.$store.state.user.userId,
+            plannerId: mchUserId,
+            // customerPhone:this.phone,
+            requireCode: '',
+            requireName: '',
+          }
+          try {
+            const telData = await planner.newtel(params)
+            // 解密电话
+            if (telData.status === 1) {
+              const tel = telData.phone
+              window.location.href = `tel://${tel}`
+            } else if (telData.status === 0) {
+              Toast({
+                message: '当前人员已禁用，无法拨打电话',
+                iconPrefix: 'sp-iconfont',
+                icon: 'popup_ic_fail',
+              })
+            } else if (telData.status === 3) {
+              Toast({
+                message: '当前人员已离职，无法拨打电话',
+                iconPrefix: 'sp-iconfont',
+                icon: 'popup_ic_fail',
+              })
+            }
+          } catch (error) {
+            Toast({
+              message: error.message || '无法拨打电话',
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_fail',
+            })
+            console.error('getTel:', error)
+            return Promise.reject(error)
+          }
+        } else {
           Toast({
-            message: '当前人员已离职，无法拨打电话',
+            message: '未登录',
             iconPrefix: 'sp-iconfont',
             icon: 'popup_ic_fail',
           })
         }
       } catch (err) {
-        // Toast({
-        //   message: '未获取到划师联系方式',
-        //   iconPrefix: 'sp-iconfont',
-        //   icon: 'popup_ic_fail',
-        // })
+        console.log(err)
+        Toast({
+          message: '未获取到划师联系方式',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
       }
     },
     // 调起IM
