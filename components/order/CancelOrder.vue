@@ -178,21 +178,25 @@ export default {
           )
           .then((res) => {
             this.reasonList = res
-            const data = JSON.parse(JSON.stringify(res))
-            if (this.cusOrderCancelReason) {
-              const canCelReson = data.filter((item) => {
-                return item.code === this.cusOrderCancelReason
-              })[0]
-              let canCelResonName
-              if (canCelReson) canCelResonName = canCelReson.name
-              else if (this.cusOrderCancelReason === 'EXPIRE_AUTO_CANCEL') {
-                canCelResonName = '超时自动取消'
-              }
-              this.$emit('setCancelOrderName', canCelResonName)
-            }
+            this.setCancelName()
           })
       } catch (error) {
         this.$xToast.error('获取订单取消原因失败')
+      }
+    },
+    setCancelName(cusOrderCancelReason) {
+      cusOrderCancelReason = cusOrderCancelReason || this.cusOrderCancelReason
+      if (cusOrderCancelReason) {
+        const data = JSON.parse(JSON.stringify(this.reasonList))
+        const canCelReson = data.filter((item) => {
+          return item.code === cusOrderCancelReason
+        })[0]
+        let canCelResonName
+        if (canCelReson) canCelResonName = canCelReson.name
+        else if (cusOrderCancelReason === 'EXPIRE_AUTO_CANCEL') {
+          canCelResonName = '超时自动取消'
+        }
+        this.$emit('setCancelOrderName', canCelResonName)
       }
     },
     changeMoney(num) {

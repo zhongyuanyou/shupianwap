@@ -204,7 +204,6 @@ export default {
       this.showPop = false
     },
     toDetail(type) {
-      console.log('isPayAll', type)
       this.$router.push({
         path: '/order/billDetail',
         query: { cusOrderId: this.orderData.cusOrderId, isPayAll: type },

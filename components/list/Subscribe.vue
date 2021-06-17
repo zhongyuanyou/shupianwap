@@ -165,7 +165,7 @@ export default {
             this.$xToast.hideLoading()
           })
           .catch((e) => {
-            console.log('---', e)
+            console.error(e)
             this.$xToast.hideLoading()
             this.$xToast.show({
               message: e.message,

@@ -116,7 +116,7 @@ export default {
           })[0]
         })
         .catch((err) => {
-          console.log('err', err)
+          console.error(err)
           this.$xToast.show(err.message)
           // this.$router.back(-1)
         })

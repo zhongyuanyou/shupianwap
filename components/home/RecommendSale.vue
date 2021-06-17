@@ -123,10 +123,12 @@
                 <div class="goods-price">
                   <span
                     v-if="
-                      item.price == 0 ||
-                      item.price === '0.00' ||
-                      item.price === '0.0' ||
-                      item.price === '0'
+                      !item.price ||
+                      (item.price &&
+                        (item.price == 0 ||
+                          item.price === '0.00' ||
+                          item.price === '0.0' ||
+                          item.price === '0'))
                     "
                     class="sales-proce"
                     ><span class="big-value">面议</span></span
@@ -485,6 +487,7 @@ export default {
       flex: 1;
       display: flex;
       flex-direction: column;
+      max-width: calc(100% - 2.4rem);
       .goods-name {
         font-size: 32px;
         font-family: PingFang SC;
@@ -518,8 +521,7 @@ export default {
       }
       .goods-tag {
         margin-top: 12px;
-        overflow: hidden;
-        white-space: nowrap;
+        .textOverflow(1);
         .tag-item {
           display: inline-block;
           height: 0.32rem;

@@ -149,13 +149,10 @@
                       />
                     </div>
                     <div class="right-content">
-                      <span class="rc-span">
-                        <span>特卖</span>
-                        <span>千万补贴</span>
-                      </span>
-                      <p class="rc-top">
-                        <span class="rc-title">{{ item.skuName }}</span>
-                      </p>
+                      <div class="goods-name">
+                        <span class="rc-span">特卖</span>
+                        <span class="rc-span">千万补贴</span>{{ item.skuName }}
+                      </div>
                       <div class="rc-middle">
                         <div
                           v-for="tag in item.tags.split(',').slice(0, 2)"
@@ -652,26 +649,23 @@ html::-webkit-scrollbar {
           position: relative;
           height: 260px;
           flex-direction: column;
-          .rc-span {
-            display: inline-flex;
-            align-items: center;
-            position: absolute;
-            top: 3px;
-            span:nth-child(1) {
-              margin-right: 8px;
-            }
+          .goods-name {
+            font-size: 32px;
+            height: 92px;
+            font-weight: bold;
+            color: #222222;
+            line-height: 0.42rem;
+            padding-bottom: 24px;
+            .multiRowOverflowDot();
             span {
-              line-height: 22px;
-              height: 32px;
+              margin-right: 4px;
               background: #ec5330;
               border-radius: 4px;
-              padding: 0 8px;
+              padding: 6px 8px;
               font-size: 20px;
               font-weight: bold;
               color: #ffffff;
-              display: flex;
-              align-items: center;
-              font-family: PingFangSC-Medium, PingFang SC;
+              line-height: 20px;
             }
           }
           .rc-top {

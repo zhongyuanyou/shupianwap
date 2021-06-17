@@ -285,10 +285,19 @@ export default {
     // 开始支付时判断
     startPay() {
       if (
-        !this.orderData.payType ||
-        this.orderData.payType !== 'ORDER_PAY_MODE_ONLINE'
+        this.orderData.payType &&
+        this.orderData.payType === 'ORDER_PAY_MODE_OFFLINE'
       ) {
-        this.$xToast.error('该订单为线下支付，请联系规划师付款')
+        this.$xToast.error('该订单为线下支付，请联系规划师付款！')
+        return
+      }
+      if (
+        this.orderData.payType &&
+        this.orderData.payType === 'ORDER_PAY_MODE_SECURED'
+      ) {
+        this.$xToast.error(
+          '该订单为担保交易，请访问薯片PC网站或联系规划师付款！'
+        )
         return
       }
       if (this.fromPage === 'orderList' || this.fromPage === 'orderDetail') {
@@ -384,6 +393,7 @@ export default {
         .catch((err) => {
           this.loading = false
           this.$xToast.error(err.message || '获取支付信息失败')
+          console.error(err)
         })
     },
     // 判断是分批支付还是全款支付等
@@ -427,7 +437,43 @@ export default {
         this.$refs.cancleOrderModel.showPop = false
       }
     },
-    // 判断展示合同按钮 false不展示  1签署合同 2查看合同
+    // 仅用于发起支付时判断
+    checkContractIsOver(orderData) {
+      const data = orderData || this.orderData
+      // 当客户订单状态为已取消时不展示按钮
+      if (data.cusOrderStatusNo === ORDERSTATUSCODE[4]) return false
+      if (this.fromPage === 'orderList') {
+        if (
+          !data.contractStatus ||
+          (data.contractStatus && data.contractStatus !== 'STRUTS_YWC')
+        ) {
+          // 此时需先签合同再支付
+          return 1
+        }
+        // 已签完合同
+        if (data.contractStatus && data.contractStatus === 'STRUTS_YWC') {
+          return 2
+        }
+        if (!data.contractStatus) {
+          // 当无合同信息时显示签署合同 515合同附件版本
+          return 1
+        } else {
+          // 当有合同时显示查看合同 515合同附件版本
+          return 2
+        }
+      } else {
+        // 订单详情页面根据合同列表判断
+        // 当合同状态为已完成时显示查看合同按钮
+        if (
+          data.contractVo2s &&
+          data.contractVo2s.length &&
+          data.contractVo2s[0].contractStatus === 'STRUTS_YWC'
+        )
+          return 2
+        return 1
+      }
+    },
+    // 判断展示合同按钮 false不展示  1签署合同 2查看合同 515 版本 仅用于展示合同按钮判断
     checkContractStatus(orderData) {
       const data = orderData || this.orderData
       // 当客户订单状态为已取消时不展示按钮
@@ -541,11 +587,21 @@ export default {
           this.showMydialog = true
           return
         }
+        if (this.checkContractIsOver(order) === 1) {
+          // 交易商品付款之前检测有无签署合同
+          this.$xToast.show({
+            message: '为满足您的合法权益，请先和卖家签署合同后再付款',
+            duration: 3000,
+            icon: 'toast_ic_remind',
+            forbidClick: true,
+          })
+          return
+        }
         if (
           this.opType === 'payMoney' &&
           order.orderSkuEsList[0].skuType === 'PRO_CLASS_TYPE_TRANSACTION'
         ) {
-          if (this.checkContractStatus(order) === 1) {
+          if (this.checkContractIsOver(order) === 1) {
             // 交易商品付款之前检测有无签署合同
             this.$xToast.show({
               message: '为满足您的合法权益，请先和卖家签署合同后再付款',
@@ -573,7 +629,7 @@ export default {
             this.showMydialog = true
             return
           }
-          if (this.checkContractStatus() === 1) {
+          if (this.checkContractIsOver() === 1) {
             // 交易商品付款之前检测有无签署合同
             this.$xToast.show({
               message: '为满足您的合法权益，请先和卖家签署合同后再付款',
@@ -600,6 +656,7 @@ export default {
           .catch((err) => {
             this.loading = false
             this.$xToast.error(err.message || '操作失败')
+            console.error(err)
           })
       } else {
         this.switchOptionType()
@@ -626,7 +683,8 @@ export default {
           else this.getDetail()
         })
         .catch((error) => {
-          console.log('err', error)
+          console.error(error)
+          this.$xToast.error('操作失败，请稍后重试')
         })
     },
     // 不同意协议
@@ -696,6 +754,7 @@ export default {
         })
         .catch((err) => {
           this.$xToast.error(err.message || '操作失败')
+          console.error(err)
         })
     },
     // 取消订单
@@ -724,6 +783,7 @@ export default {
         .catch((err) => {
           this.loading = false
           this.$xToast.error(err.message || '操作失败')
+          console.error(err)
         })
     },
     // 价格处理分转元

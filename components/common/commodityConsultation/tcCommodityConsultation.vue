@@ -1,33 +1,33 @@
 <template>
   <div
     class="commodityConsult"
-    :style="{ opacity: plannerInfo.mchUserId ? 1 : 0 }"
+    :style="{ opacity: plannerDetail.mchUserId ? 1 : 0 }"
   >
     <div class="commodityConsult-containner">
       <div class="commodityConsult-containner-userInfo">
         <a
           href="javascript:void(0);"
-          @click="plannerInfoUrlJump(plannerInfo.mchUserId)"
+          @click="plannerInfoUrlJump(plannerDetail.mchUserId)"
         >
           <sp-image
             width="0.8rem"
             height="0.8rem"
             round
             fit="cover"
-            :src="plannerInfo.portrait"
+            :src="plannerDetail.portrait"
           />
         </a>
         <div class="commodityConsult-containner-userInfo-name">
           <a
             href="javascript:void(0);"
-            @click="plannerInfoUrlJump(plannerInfo.mchUserId)"
+            @click="plannerInfoUrlJump(plannerDetail.mchUserId)"
           >
-            <p :class="{ isTitle: plannerInfo.postName ? false : true }">
-              {{ plannerInfo.userName }}
+            <p :class="{ isTitle: plannerDetail.postName ? false : true }">
+              {{ plannerDetail.userName }}
             </p>
           </a>
-          <span v-if="plannerInfo.postName ? true : false">
-            {{ plannerInfo.postName }}
+          <span v-if="plannerDetail.postName ? true : false">
+            {{ plannerDetail.postName }}
           </span>
         </div>
       </div>
@@ -35,12 +35,12 @@
         <sp-button
           type="primary"
           @click="
-            sendTemplateMsgWithImg(plannerInfo.mchUserId, plannerInfo.type)
+            sendTemplateMsgWithImg(plannerDetail.mchUserId, plannerDetail.type)
           "
         >
           在线咨询
         </sp-button>
-        <sp-button type="info" @click="handleTel(plannerInfo.mchUserId)">
+        <sp-button type="info" @click="handleTel(plannerDetail.mchUserId)">
           电话联系
         </sp-button>
       </div>
@@ -95,8 +95,36 @@ export default {
     city() {
       return this.$store.state.city.currentCity
     },
+    plannerDetail() {
+      if (this.sharePlaner) {
+        return this.sharePlaner
+      } else {
+        return this.plannerInfo
+      }
+    },
+  },
+  mounted() {
+    if (this.$route.query.isShare && this.$route.plannerId) {
+      this.getPlanerInfo(this.$route.plannerId)
+    }
   },
   methods: {
+    getPlanerInfo(id) {
+      planner.detail({ id }).then((res) => {
+        const obj = {
+          mchUserId: res.id,
+          portrait: res.img,
+          userName: res.name,
+          postName: res.zwName,
+          type: res.mchClass,
+        }
+        this.sharePlaner = {
+          ...obj,
+          ...res,
+        }
+        this.$forceUpdate()
+      })
+    },
     // 规划师详情跳转
     plannerInfoUrlJump(mchUserId) {
       this.$router.push({

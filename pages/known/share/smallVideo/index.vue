@@ -1,38 +1,40 @@
 <template>
   <div class="m-known-share smallVideo">
     <app-link />
-    <div
-      class="small-video"
-      :style="{
-        backgroundImage: 'url(' + vDetail.image + ')',
-        backgroundSize: '100%',
-      }"
-    >
+    <div class="small-video">
+      <sp-image
+        width="100vw"
+        height="6.4rem"
+        fit="cover"
+        :src="vDetail.image"
+      />
       <my-icon
         name="bofang_mian"
         size="1.28rem"
         color="rgba(0,0,0,0.40)"
-        @click.native="openApp"
+        class="my-icon"
+        @click.native="link"
       ></my-icon>
       <div class="content">
-        <div class="name">{{ vDetail.videoName }}</div>
+        <div class="name">{{ vDetail.authorName }}</div>
         <div class="desc">
-          {{ vDetail.videoDesc }}
+          {{ vDetail.videoName }}
         </div>
       </div>
       <sp-center-popup
         v-model="showPop"
         button-type="confirm"
         :field="Field"
-        @confirm="confirm"
+        @confirm="openAppConfirm"
         @cancel="cancel"
       />
     </div>
-    <small-video-like />
+    <small-video-like :category-id="categoryId" />
   </div>
 </template>
 
 <script>
+import { Image } from '@chipspc/vant-dgg'
 import knownApi from '@/api/known'
 import openappV2 from '@/mixins/openappV2'
 
@@ -41,36 +43,61 @@ export default {
   components: {
     AppLink: () => import('@/components/common/downLoadArea'),
     SmallVideoLike: () => import('@/components/mustKnown/share/SmallVideoLike'),
+    [Image.name]: Image,
   },
   mixins: [openappV2],
   data() {
     return {
       vId: '',
+      categoryId: '', // 种类id
+      vurl: '', // 视频url
       vDetail: {},
-      vLikeList: [],
     }
   },
   mounted() {
-    this.vId = this.$route.query.id || '8086177830335741952'
-    this.getVDetailApi()
+    /*
+    if (!this.$route.query.id) {
+      this.$xToast.error('获取视频信息失败')
+      return
+    }
+    */
+    this.vId = this.$route.query.id || '8086190052126556160'
+
+    this.getVideoApi()
   },
   methods: {
-    async getVDetailApi() {
-      try {
-        const params = {
-          ids: [this.vId],
-        }
-        const { code, data } = await this.$axios.post(
-          knownApi.video.videoList,
-          params
-        )
-        if (code !== 200) {
-          throw new Error('查询视频失败')
-        }
-        this.vDetail = data[0]
-      } catch (e) {}
+    // 查询视频信息
+    getVideoApi() {
+      const params = {
+        id: this.vId,
+      }
+      this.$axios
+        .post(knownApi.video.videoDetail, params)
+        .then((res) => {
+          if (res.code !== 200) {
+            throw new Error('查询视频失败')
+          }
+          this.vDetail = res.data
+          this.categoryId = res.data.categoryId
+          this.vurl = res.data.videoUrl
+        })
+        .catch((e) => {
+          this.$xToast.error(e.message)
+        })
     },
-    async getVListApi() {},
+    link() {
+      if (!this.vId || !this.vurl) {
+        this.$xToast.error('获取视频信息失败')
+        return
+      }
+      this.$router.push({
+        path: '/known/share/smallvideo/detail',
+        query: {
+          categoryId: this.categoryId,
+          vurl: this.vurl,
+        },
+      })
+    },
   },
 }
 </script>
@@ -81,12 +108,15 @@ export default {
   min-height: 100vh;
   .small-video {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background: #ccc;
     width: 100%;
     height: 640px;
+    .my-icon {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
     .content {
       position: absolute;
       display: flex;

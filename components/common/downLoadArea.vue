@@ -10,7 +10,7 @@
       v-model="showPop"
       button-type="confirm"
       :field="Field"
-      @confirm="confirm"
+      @confirm="openAppConfirm"
       @cancel="cancel"
     />
   </div>
@@ -50,6 +50,7 @@ export default {
   height: 120px;
   padding: 0 28px;
   background: #fff;
+  z-index: 99;
   .logo {
     height: 80px;
     width: 80px;
@@ -77,6 +78,7 @@ export default {
     border: none;
     border-radius: 8px;
     color: #ffffff;
+    padding: 0;
   }
   ::v-deep .sp-center-popup {
     width: 540px;
