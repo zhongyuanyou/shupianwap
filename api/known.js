@@ -1,7 +1,7 @@
 'use strict'
 
 import { CHIPS_WAP_BASE_URL } from '../config/constant'
-// const CHIPS_WAP_BASE_URL = 'http://172.16.133.115:7001/service'
+// const CHIPS_WAP_BASE_URL = 'http://172.16.133.214:7001/service'
 
 const knownApi = {
   comments: {

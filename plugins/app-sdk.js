@@ -74,7 +74,7 @@ const Bridge = {
 }
 
 // 数据状态判断
-const handleRequest = (ret, fn = () => {}) => {
+const handleRequest = (ret, fn = () => { }) => {
   try {
     const result = typeof ret === 'string' ? JSON.parse(ret) : ret
     fn(result)
@@ -87,13 +87,13 @@ const handleRequest = (ret, fn = () => {}) => {
 
 const appHandler = {
   // 获取用户信息
-  dggGetUserInfo: (fn = () => {}) => {
+  dggGetUserInfo: (fn = () => { }) => {
     Bridge.callHandler('dgg_getUserInfo', {}, (res) => {
       handleRequest(res, fn)
     })
   },
   // 调用webView返回上一级网页
-  dggWebGoBack: (fn = () => {}) => {
+  dggWebGoBack: (fn = () => { }) => {
     if (miniProgram) {
       uni.navigateBack({
         delta: 1,
@@ -105,13 +105,13 @@ const appHandler = {
     })
   },
   // 调用webView关闭
-  dggCloseWebView: (fn = () => {}) => {
+  dggCloseWebView: (fn = () => { }) => {
     Bridge.callHandler('dgg_close_webView', {}, (res) => {
       handleRequest(res, fn)
     })
   },
   // 设置App导航栏标题
-  dggSetTitle: (data = { title: '标题' }, fn = () => {}) => {
+  dggSetTitle: (data = { title: '标题' }, fn = () => { }) => {
     Bridge.callHandler('dgg_setTitle', data, (res) => {
       handleRequest(res, fn)
     })
@@ -119,7 +119,7 @@ const appHandler = {
   // 跳转App页面
   dggJumpRoute: (
     data = { iOSRouter: '', androidRouter: '', miniRouter: '' },
-    fn = () => {}
+    fn = () => { }
   ) => {
     if (miniProgram && data.miniRouter) {
       uni.navigateTo({
@@ -132,19 +132,19 @@ const appHandler = {
     })
   },
   // 调用App登录
-  dggLogin: (fn = () => {}) => {
+  dggLogin: (fn = () => { }) => {
     Bridge.callHandler('dgg_login', {}, (res) => {
       handleRequest(res, fn)
     })
   },
   // app定位
-  dggLocation: (fn = () => {}) => {
+  dggLocation: (fn = () => { }) => {
     Bridge.callHandler('dgg_location', {}, (res) => {
       handleRequest(res, fn)
     })
   },
   // app当前定位的站点
-  dggCityCode: (fn = () => {}) => {
+  dggCityCode: (fn = () => { }) => {
     Bridge.callHandler('dgg_cityCode', {}, (res) => {
       handleRequest(res, fn)
     })
@@ -152,26 +152,26 @@ const appHandler = {
   // 打开新的webView
   dggOpenNewWeb: (
     data = { urlString: 'https://www.baidu.com', title: '' },
-    fn = () => {}
+    fn = () => { }
   ) => {
     Bridge.callHandler('dgg_openNewWeb', data, (res) => {
       handleRequest(res, fn)
     })
   },
   // 拨打电话
-  dggCallPhone: (data = { phone: '17755021122' }, fn = () => {}) => {
+  dggCallPhone: (data = { phone: '17755021122' }, fn = () => { }) => {
     Bridge.callHandler('dgg_callPhone', data, (res) => {
       handleRequest(res, fn)
     })
   },
   // 隐藏导航头部
-  dggHideNav: (fn = () => {}) => {
+  dggHideNav: (fn = () => { }) => {
     Bridge.callHandler('dgg_hideNav', {}, (res) => {
       handleRequest(res, fn)
     })
   },
   // wap返回数据给到flutter
-  dggWebBackValueToFlutter: (data = {}, fn = () => {}) => {
+  dggWebBackValueToFlutter: (data = {}, fn = () => { }) => {
     Bridge.callHandler('dgg_webBackValueToFlutter', data, (res) => {
       handleRequest(res, fn)
     })
@@ -179,14 +179,14 @@ const appHandler = {
   // 调用分享
   dggShare: (
     data = { image: '', title: '', subTitle: '', url: '' },
-    fn = () => {}
+    fn = () => { }
   ) => {
     Bridge.callHandler('dgg_share', data, (res) => {
       handleRequest(res, fn)
     })
   },
   // 调用设备信息
-  dggDeviceInfo: (fn = () => {}) => {
+  dggDeviceInfo: (fn = () => { }) => {
     Bridge.callHandler('dgg_deviceInfo', {}, (res) => {
       handleRequest(res, fn)
     })
@@ -200,38 +200,38 @@ const appHandler = {
       requireCode: '',
       requireName: '',
     },
-    fn = () => {}
+    fn = () => { }
   ) => {
     Bridge.callHandler('dgg_openIM', data, (res) => {
       handleRequest(res, fn)
     })
   },
   // 认证
-  dggGetRealNameAuthAddress: (fn = () => {}) => {
+  dggGetRealNameAuthAddress: (fn = () => { }) => {
     Bridge.callHandler('dgg_GetRealNameAuthAddress', {}, (res) => {
       handleRequest(res, fn)
     })
   },
   // 调用安卓相册
-  dggPhoneAlbum: (data = { fileId: '' }, fn = () => {}) => {
+  dggPhoneAlbum: (data = { fileId: '' }, fn = () => { }) => {
     Bridge.callHandler('dgg_phoneAlbum', data, (res) => {
       handleRequest(res, fn)
     })
   },
   // 调用安卓权限
-  dggPermission: (fn = () => {}) => {
+  dggPermission: (fn = () => { }) => {
     Bridge.callHandler('dgg_Permission', {}, (res) => {
       handleRequest(res, fn)
     })
   },
   // 修改登录密码
-  dggChangePwd: (fn = () => {}) => {
+  dggChangePwd: (fn = () => { }) => {
     Bridge.callHandler('dgg_changePwd', {}, (res) => {
       handleRequest(res, fn)
     })
   },
   // 修改手机号
-  dggChangePhone: (fn = () => {}) => {
+  dggChangePhone: (fn = () => { }) => {
     Bridge.callHandler('dgg_changePhone', {}, (res) => {
       handleRequest(res, fn)
     })
@@ -239,61 +239,67 @@ const appHandler = {
   // 存储wap数据到App本地
   dggSaveWapData: (
     params = { key: 'foundHistory', data: '' },
-    fn = () => {}
+    fn = () => { }
   ) => {
     Bridge.callHandler('dgg_SaveWapData', params, (res) => {
       handleRequest(res, fn)
     })
   },
   // 获取存储到App本地的wap数据
-  dggGotWapData: (data = { key: 'foundHistory' }, fn = () => {}) => {
+  dggGotWapData: (data = { key: 'foundHistory' }, fn = () => { }) => {
     Bridge.callHandler('dgg_GotWapData', data, (res) => {
       handleRequest(res, fn)
     })
   },
   // 隐号拨打
 
-  dggBindHiddenPhone: (data = { plannerId: '' }, fn = () => {}) => {
+  dggBindHiddenPhone: (data = { plannerId: '' }, fn = () => { }) => {
     Bridge.callHandler('dgg_bindHiddenPhone', data, (res) => {
       handleRequest(res, fn)
     })
   },
   // 开启在线聊天
-  dggOpenOnlineServiceIM: (data = { entranceId: '' }, fn = () => {}) => {
+  dggOpenOnlineServiceIM: (data = { entranceId: '' }, fn = () => { }) => {
     Bridge.callHandler('dgg_openOnlineServiceIM', data, (res) => {
       handleRequest(res, fn)
     })
   },
   // 修改顶部颜色
-  dggChangeTopColor: (data = { flags: '' }, fn = () => {}) => {
+  dggChangeTopColor: (data = { flags: '' }, fn = () => { }) => {
     Bridge.callHandler('dgg_changeStatusBar', data, (res) => {
       console.log('修改颜色', 1111)
       handleRequest(res, fn)
     })
   },
   // 打开App视频页面
-  dggOpenVideo: (id, fn = () => {}) => {
+  dggOpenVideo: (id, fn = () => { }) => {
     Bridge.callHandler('dgg_open_video_details', { id }, (res) => {
       handleRequest(res, fn)
     })
   },
+  // 打开小视频页面
+  dggOpenSmallVideo: (id, fn = () => { }) => {
+    Bridge.callHandler('dgg_open_smallVideo_details', { id }, (res) => {
+      handleRequest(res, fn)
+    })
+  },
   // 打开App课程页面
-  dggOpenCourse: (id, fn = () => {}) => {
+  dggOpenCourse: (id, fn = () => { }) => {
     Bridge.callHandler('dgg_open_classroom_details_page', { id }, (res) => {
       handleRequest(res, fn)
     })
   },
 }
 // 注册APP调用的js方法
-const registHandler = (handlerName, fn = () => {}) => {
+const registHandler = (handlerName, fn = () => { }) => {
   handlerName
     ? Bridge.registerHandler(handlerName, (data, responseCallback) => {
-        try {
-          fn(data, responseCallback)
-        } catch (error) {
-          console.error('handlerName error:', error)
-        }
-      })
+      try {
+        fn(data, responseCallback)
+      } catch (error) {
+        console.error('handlerName error:', error)
+      }
+    })
     : appHandler.dgg_errorTip({ msg: '请注册方法名' })
 }
 
