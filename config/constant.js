@@ -7,15 +7,15 @@
  * @FilePath: /chips-wap/client/config/constant.js
  */
 
-// const CHIPS_WAP_INSTANCE_NAME = 'crisps-app-wap-bff-api'
+const CHIPS_WAP_INSTANCE_NAME = 'crisps-app-wap-bff-api'
 const CHIPS_WAP_SERVICE_PREFIX = 'service'
 
 // c端 app调用的java聚合中间层
 const CHIPS_APP_INSTANCE_NAME = 'crisps-c-middle-service-api'
 const CHIPS_APP_SERVICE_PREFIX = ''
 export const CRM_MIDDLE_APP = `/crm-middle-app/api/crisps-crm/${CHIPS_WAP_SERVICE_PREFIX}`
-// export const CHIPS_WAP_BASE_URL = `/${CHIPS_WAP_INSTANCE_NAME}/${CHIPS_WAP_SERVICE_PREFIX}` // 使用网关调用路径的规则：项目实例名 / 自己服务路径前缀
-export const CHIPS_WAP_BASE_URL = `/${CHIPS_WAP_SERVICE_PREFIX}`
+export const CHIPS_WAP_BASE_URL = `/${CHIPS_WAP_INSTANCE_NAME}/${CHIPS_WAP_SERVICE_PREFIX}` // 使用网关调用路径的规则：项目实例名 / 自己服务路径前缀
+// export const CHIPS_WAP_BASE_URL = `/${CHIPS_WAP_SERVICE_PREFIX}`
 // export const CHIPS_WAP_BASE_URL = `http://172.16.132.240:7001/service`
 
 export const CHIPS_APP_BASE_URL = `/${CHIPS_APP_INSTANCE_NAME}/${CHIPS_APP_SERVICE_PREFIX}` // 使用网关调用路径的规则：项目实例名 / 自己服务路径前缀
