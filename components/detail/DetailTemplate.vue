@@ -289,7 +289,6 @@ export default {
       if (classCodeLevel) {
         codeArr = classCodeLevel.split(',')
       }
-      console.log('classCodeLevel', classCodeLevel)
       const params = {
         goodsDtos: [
           {
@@ -306,8 +305,7 @@ export default {
       this.$axios
         .post(shopApi.addGoods, params)
         .then((res) => {
-          console.log('shouchang res', res)
-          if (res.code === 200) {
+          if (res && res.code === 200) {
             this.$xToast.show({
               message: '收藏成功',
               duration: 3000,
@@ -316,12 +314,12 @@ export default {
             })
             this.proDetail.isSave = true
           } else {
-            this.$xToast.error(res.message || '收藏失败')
+            this.$xToast.error('收藏失败')
           }
         })
         .catch((err) => {
           console.log('err', err)
-          this.$xToast.error(err.message || '操作失败')
+          this.$xToast.error('收藏失败')
         })
     },
     scrollHandle({ scrollTop }) {
