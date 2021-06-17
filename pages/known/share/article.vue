@@ -66,9 +66,7 @@
             <sp-button
               size="small"
               type="primary"
-              @click="
-                sendTemplateMsgWithImg(planerInfo.mchUserId, planerInfo.type)
-              "
+              @click="sendTextMessage(planerInfo.mchUserId)"
               >在线问</sp-button
             >
             <sp-button
@@ -538,51 +536,51 @@ export default {
         })
       }
     },
-    // 调起IM
-    // 发送模板消息(带图片)
-    sendTemplateMsgWithImg(mchUserId, type) {
-      // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
-      // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
-      // const intentionType = {}
-      // intentionType[
-      //   this.baseData.parentClassCode &&
-      //     this.baseData.parentClassCode.split(',')[0]
-      // ] = this.baseData.className
-      // // 意向城市
-      // const intentionCity = {}
-      // intentionCity[this.city.code] = this.city.name
-      console.log(mchUserId, type)
-      const sessionParams = {
-        imUserId: mchUserId, // 商户用户ID
-        imUserType: type, // 用户类型
-        requireCode: '',
-        requireName: '',
-        ext: {
-          intentionType: '', // 意向业务 非必传
-          intentionCity: '', // 意向城市 非必传
-          recommendId: '',
-          recommendAttrJson: {},
-          startUserType: 'cps-app', //
-        },
-      }
-      const msgParams = {
-        sendType: 1, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
-        msgType: 'text', // 消息类型
-        content: JSON.stringify({
-          text: this.articleDetails.title,
-        }),
-        extContent: this.$route.query, // 路由参数
-        productName: this.articleDetails.title, // 产品名称
-        productContent: this.articleDetails.content, // 产品信息
-        price: 0, // 价格
-        forwardAbstract: this.articleDetails.content, // 摘要信息，可与显示内容保持一致
-        // routerId: this.articleDetails.routerId, // 路由ID
-        // imageUrl: this.articleDetails.imageUrl[0], // 产品图片
-        // unit: this.articleDetails.unit, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
-      }
-      this.sendTemplateMsgMixin({ sessionParams, msgParams })
-      // this.sendTemplateMsgMixin({ sessionParams })
-    },
+    // // 调起IM
+    // // 发送模板消息(带图片)
+    // sendTemplateMsgWithImg(mchUserId, type) {
+    //   // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
+    //   // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
+    //   // const intentionType = {}
+    //   // intentionType[
+    //   //   this.baseData.parentClassCode &&
+    //   //     this.baseData.parentClassCode.split(',')[0]
+    //   // ] = this.baseData.className
+    //   // // 意向城市
+    //   // const intentionCity = {}
+    //   // intentionCity[this.city.code] = this.city.name
+    //   console.log(mchUserId, type)
+    //   const sessionParams = {
+    //     imUserId: mchUserId, // 商户用户ID
+    //     imUserType: type, // 用户类型
+    //     requireCode: '',
+    //     requireName: '',
+    //     ext: {
+    //       intentionType: '', // 意向业务 非必传
+    //       intentionCity: '', // 意向城市 非必传
+    //       recommendId: '',
+    //       recommendAttrJson: {},
+    //       startUserType: 'cps-app', //
+    //     },
+    //   }
+    //   const msgParams = {
+    //     sendType: 1, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
+    //     msgType: 'text', // 消息类型
+    //     content: JSON.stringify({
+    //       text: this.articleDetails.title,
+    //     }),
+    //     extContent: this.$route.query, // 路由参数
+    //     productName: this.articleDetails.title, // 产品名称
+    //     productContent: this.articleDetails.content, // 产品信息
+    //     price: 0, // 价格
+    //     forwardAbstract: this.articleDetails.content, // 摘要信息，可与显示内容保持一致
+    //     // routerId: this.articleDetails.routerId, // 路由ID
+    //     // imageUrl: this.articleDetails.imageUrl[0], // 产品图片
+    //     // unit: this.articleDetails.unit, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+    //   }
+    //   this.sendTemplateMsgMixin({ sessionParams, msgParams })
+    //   // this.sendTemplateMsgMixin({ sessionParams })
+    // },
   },
 }
 </script>

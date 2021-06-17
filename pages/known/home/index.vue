@@ -267,10 +267,10 @@ export default {
           name: '视频',
           index: 5,
         },
-        {
-          name: '小视频',
-          index: 6,
-        },
+        // {
+        //   name: '小视频',
+        //   index: 6,
+        // },
       ],
       list: [],
       loading: false,
