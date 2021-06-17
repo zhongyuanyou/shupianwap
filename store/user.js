@@ -26,17 +26,17 @@ export const mutations = {
     this.$cookies.set('token', String(data.token), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.set('userId', String(data.userId), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.set('userType', String(data.userType || data.type), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     state.userInfo = data
     state.token = String(data.token)
@@ -49,43 +49,43 @@ export const mutations = {
   CLEAR_USER(state) {
     this.$cookies.remove('token', {
       path: '/',
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userId', {
       path: '/',
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('avatar', {
       path: '/',
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userNo', {
       path: '/',
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userName', {
       path: '/',
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userPhone', {
       path: '/',
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('realStatus', {
       path: '/',
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('mainAccountFull', {
       path: '/',
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userNo', {
       path: '/',
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userType', {
       path: '/',
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     state.token = ''
     state.userId = ''
@@ -102,37 +102,37 @@ export const mutations = {
     this.$cookies.set('userNo', String(data.no), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.set('userName', data.nickName, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.set('userPhone', data.decodePhone, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.set('realStatus', data.realStatus, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.set('mainAccountFull', data.mainAccountFull, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.set('avatar', data.url || AVATAR, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.set('userType', String(data.type || data.userType), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     state.userNo = data.no
     state.userName = data.nickName
