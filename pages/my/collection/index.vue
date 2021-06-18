@@ -121,6 +121,7 @@
       <sp-checkbox
         v-model="checkedAllState"
         checked-color="#4E78F5"
+        icon-size="0.4rem"
         @change="checkedAllChange"
         >全选</sp-checkbox
       >
@@ -398,13 +399,18 @@ export default {
   margin: 24px 0px 0px;
 
   .good-list-checkbox {
-    padding-right: 10px;
+    padding-right: 20px;
   }
 }
 ::v-deep .sp-checkbox__icon .sp-icon {
   border: 1px solid #999999;
 }
-
+::v-deep .sp-checkbox__label {
+  font-family: PingFangSC-Medium;
+  font-size: 28px;
+  color: #222222;
+  letter-spacing: 0;
+}
 .collection_container {
   min-height: 100vh;
   padding-bottom: 160px;
