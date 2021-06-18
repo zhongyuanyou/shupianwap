@@ -140,7 +140,7 @@ export default {
     background-size: 162px;
   }
   .service-goods-component-item {
-    padding: 24px 32px 28px;
+    padding: 24px 40px 28px;
     background-color: #fff;
     // padding: @item-padding;
     font-family: @fontf-pfsc-med;
@@ -172,6 +172,7 @@ export default {
       }
       .desc-name {
         font-family: @fontf-pfsc-med;
+        font-weight: 600;
         font-size: 32px;
         color: #222222;
         letter-spacing: 0;
