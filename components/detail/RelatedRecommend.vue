@@ -2,7 +2,11 @@
   <div class="need">
     <p class="need_title">猜您需要</p>
     <sp-skeleton :row="20" :loading="needLoading">
-      <div v-for="item in productData" :key="item.id" class="need_item">
+      <div
+        v-for="(item, index) in productData"
+        :key="index + '' + item.id"
+        class="need_item"
+      >
         <nuxt-link
           :to="{
             path: '/detail',
