@@ -130,12 +130,12 @@
     </div>
     <div class="card">
       <sp-button size="normal" block type="primary" disabled @click="submit">
-        商品明细
+        申请开票
       </sp-button>
     </div>
     <!--
     <sp-bottombar :fixed="false">
-      <sp-bottombar-button type="primary" text="商品明细" @click="submit" />
+      <sp-bottombar-button type="primary" text="申请开票" @click="submit" />
     </sp-bottombar> -->
 
     <LoadingCenter v-show="loading" />

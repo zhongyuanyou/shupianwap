@@ -5,114 +5,64 @@
     </sp-sticky>
 
     <div class="card">
-      <div class="title">
+      <div class="type_list">
         <span>发票类型</span>
         <span>电子普通发票</span>
       </div>
     </div>
 
     <div class="card">
-      <div class="title">发票抬头</div>
-      <div class="options">
-        <sp-button
-          class="btn"
-          :class="{ active: type === 1 }"
-          size="small"
-          type="primary"
-          @click="type = 1"
-        >
-          个人
-        </sp-button>
-        <sp-button
-          class="btn"
-          :class="{ active: type === 2 }"
-          size="small"
-          type="primary"
-          @click="type = 2"
-        >
-          单位
-        </sp-button>
-      </div>
-      <div class="invoice_info">
-        <sp-field
-          v-if="type == 1"
-          v-model="formData.username"
-          required
-          label="个人名称"
-          placeholder="请填写“个人”或您的姓名"
-        />
-        <div v-if="type == 2">
-          <sp-field
-            v-model="formData.username"
-            required
-            label="单位名称"
-            placeholder="请填写单位名称"
-          />
-          <sp-field
-            v-model="formData.username"
-            required
-            label="纳税人识别号"
-            placeholder="请填写纳税人识别号"
-          />
+      <div class="title">发票信息</div>
 
-          <div v-show="show_more_input" class="more_input">
-            <sp-field
-              v-model="formData.username"
-              label="注册地址"
-              placeholder="请填写注册地址"
-            />
-            <sp-field
-              v-model="formData.username"
-              label="注册电话"
-              placeholder="请填写注册电话"
-            />
-            <sp-field
-              v-model="formData.username"
-              label="开户银行"
-              placeholder="请填写开户银行"
-            />
-            <sp-field
-              v-model="formData.username"
-              label="银行账号"
-              placeholder="请填写银行账号"
-            />
-          </div>
-          <div class="more_btn">
-            <span @click="show_more_input = !show_more_input">
-              更多选填项
-              <my-icon
-                :name="show_more_input ? 'shang' : 'xia'"
-                size="0.2rem"
-                color="#222222"
-              ></my-icon>
-            </span>
-          </div>
+      <div class="invoice_info_list">
+        <div>发票内容</div>
+        <div>商品明细</div>
+      </div>
+      <div class="invoice_info_list">
+        <div>抬头类型</div>
+        <div>个人</div>
+      </div>
+      <div class="invoice_info_list">
+        <div>抬头名</div>
+        <div>哼哼哼</div>
+      </div>
+      <div class="invoice_info_list">
+        <div>开票金额</div>
+        <div>
+          229.80元
+          <span @click="moneyTips">
+            <my-icon
+              name="guanyu_mian"
+              color="#D8D8D8"
+              size="0.28rem"
+            ></my-icon>
+          </span>
         </div>
       </div>
-    </div>
-
-    <div class="card">
-      <div class="title">收票人信息</div>
-      <div class="form">
-        <sp-field
-          v-model="formData.username"
-          label="收票人手机"
-          placeholder=""
-        />
-        <sp-field
-          v-model="formData.email"
-          label="收票人邮箱"
-          placeholder="用来接收电子发票邮件，可选填"
-        />
+      <div class="invoice_info_list">
+        <div>申请时间</div>
+        <div>2020-08-25 18:58:35</div>
       </div>
+      <div class="invoice_info_list">
+        <div>开票时间</div>
+        <div>-</div>
+      </div>
+
+      <div v-if="type == 1"></div>
+      <div v-if="type == 2"></div>
     </div>
 
     <div class="card">
-      <div class="title">发票内容</div>
-      <div class="options">
-        <sp-button class="btn active" size="small" type="primary">
-          商品明细
-        </sp-button>
+      <div class="title">接受信息</div>
+      <div class>
+        <div class="invoice_info_list">
+          <div>手机号码</div>
+          <div>{{ formData.username }}</div>
+        </div>
+        <div class="invoice_info_list">
+          <div>电子邮箱</div>
+          <div>{{ formData.email }}</div>
+        </div>
       </div>
     </div>
 
@@ -123,26 +73,52 @@
         <div>2、电子发票可以在订单确认后，在订单详情中查看和下载。</div>
       </div>
     </div>
-    <div class="card">
-      <sp-button size="normal" block type="primary" disabled @click="submit">
-        商品明细
+    <div class="card footer">
+      <sp-button size="normal" type="primary" plain @click="submit">
+        重新申请
+      </sp-button>
+      <sp-button
+        size="normal"
+        type="default"
+        plain
+        @click="showEmailDialog = true"
+      >
+        发送邮箱
+      </sp-button>
+      <sp-button size="normal" type="default" plain @click="submit">
+        查看发票
       </sp-button>
     </div>
     <LoadingCenter v-show="loading" />
+    <sp-dialog
+      v-model="showEmailDialog"
+      title="请确认邮箱地址"
+      show-cancel-button
+      :before-close="emailConfirm"
+    >
+      <div class="email_input">
+        <input
+          v-model="sendEmail"
+          type="text"
+          class=""
+          placeholder="用来接收电子发票邮件"
+        />
+      </div>
+    </sp-dialog>
   </div>
 </template>
 <script>
 import {
   Toast,
   TopNavBar,
-  Uploader,
   Bottombar,
-  Sticky,
   BottombarButton,
+  Sticky,
   WorkTab,
   WorkTabs,
   Button,
   Field,
+  Dialog,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 
@@ -160,6 +136,7 @@ export default {
     [Sticky.name]: Sticky,
     [Button.name]: Button,
     [Field.name]: Field,
+    [Dialog.Component.name]: Dialog.Component,
   },
   data() {
     return {
@@ -167,17 +144,43 @@ export default {
       tabActive: 0,
 
       type: 1, // 发票类型
-      show_more_input: false,
+      show_more_input: true,
       formData: {
-        username: '',
-        email: '',
+        username: '1111111111111111111111111111111111111111111111',
+        email: '1111111111111111111111111111111111111@qq.com',
       },
+
+      sendEmail: '',
+      showEmailDialog: false,
     }
+  },
+  mounted() {
+    // this.moneyTips()
   },
   methods: {
     submit() {
       // this.$xToast.show({ message: '提交成功' })
       this.$xToast.success('提交成功')
+    },
+    moneyTips() {
+      // 待审核弹窗
+      Dialog.alert({
+        title: '温馨提示',
+        message: '您好！现展示的为订单预计开票金额，最终金额以发票实际开具为准',
+      }).then(() => {
+        // on close
+      })
+    },
+    emailConfirm(action, done) {
+      if (action === 'cancel') {
+        return done()
+      }
+      if (this.sendEmail) {
+        done()
+      } else {
+        this.$xToast.error('请输入邮箱地址')
+        done(false)
+      }
     },
     // back() {
     //   if (this.isInApp) {
@@ -201,19 +204,52 @@ export default {
     margin-bottom: 20px;
     padding: 40px;
 
+    .type_list {
+      font-size: 32px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 600;
+      color: #000000;
+      line-height: 32px;
+      display: flex;
+      & > span:nth-child(1) {
+        flex: 1;
+      }
+      & > span:nth-child(2) {
+        font-size: 30px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #222222;
+        line-height: 30px;
+      }
+    }
     .title {
       font-size: 32px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
+      font-weight: 600;
       color: #000000;
       line-height: 32px;
-      padding-bottom: 40px;
+      padding-bottom: 20px;
+      display: flex;
     }
 
     .options {
       padding-bottom: 20px;
-      .btn {
-        margin-right: 32px;
+      .options .btn::v-deep.sp-button--primary {
+        min-width: 152px;
+        background: #f5f5f5;
+        color: #999999;
+
+        border-radius: 8px;
+        border: none;
+
+        font-size: 26px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        line-height: 26px;
+      }
+      .options .btn.active::v-deep.sp-button--primary {
+        background: #f2f5ff;
+        color: #4974f5;
       }
     }
     .des {
@@ -232,40 +268,52 @@ export default {
     }
 
     .invoice_info {
-      .more_btn {
-        text-align: center;
-        & > span {
-          margin-top: 32px;
-          display: inline-block;
-          border-radius: 24px;
-          border: 1px solid #dddddd;
-          font-size: 22px;
-          font-family: PingFangSC-Regular, PingFang SC;
-          font-weight: 400;
-          color: #1a1a1a;
-          line-height: 22px;
-          text-align: center;
-          padding: 13px 28px;
-        }
+    }
+    .invoice_info_list {
+      display: flex;
+      padding: 16px 0;
+      & > div:nth-child(1) {
+        width: 150px;
+        font-size: 30px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #999999;
+        line-height: 40px;
+      }
+      & > div:nth-child(2) {
+        flex: 1;
+        padding-left: 10px;
+        font-size: 28px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #222222;
+        line-height: 40px;
       }
     }
   }
-  .options .btn::v-deep.sp-button--primary {
-    min-width: 152px;
-    background: #f5f5f5;
-    color: #999999;
+  .card.footer {
+    text-align: right;
+    padding: 24px;
 
-    border-radius: 8px;
-    border: none;
-
-    font-size: 26px;
-    font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
-    line-height: 26px;
+    ::v-deep.sp-button {
+      margin-left: 20px;
+    }
   }
-  .options .btn.active::v-deep.sp-button--primary {
-    background: #f2f5ff;
-    color: #4974f5;
+  .email_input {
+    display: block;
+    margin: 40px 44px 48px;
+    border-radius: 8px;
+    border: 1px solid #dddddd;
+    font-size: 28px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #999999;
+    input {
+      width: 100%;
+      border: 0;
+      padding: 22px 24px;
+      box-sizing: border-box;
+    }
   }
 }
 </style>
