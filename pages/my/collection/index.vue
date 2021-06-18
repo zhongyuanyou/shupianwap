@@ -73,14 +73,19 @@
       </div>
       <div v-else-if="tabIndex == 4 || tabIndex == 5">
         <client-only>
-          <sp-checkbox-group ref="checkboxGroup" v-model="selectDelGoods">
+          <sp-checkbox-group
+            ref="checkboxGroup"
+            v-model="selectDelGoods"
+            checked-color="#4E78F5"
+            icon-size="0.4rem"
+          >
             <div
               v-for="(item, index) in list"
               :key="index"
               class="good-list"
               @click="toServiceGoodsDetail(item)"
             >
-              <sp-swipe-cell>
+              <sp-swipe-cell :disabled="selectGoodsState">
                 <ServiceGoods
                   class="flex-1"
                   :info="item"
@@ -88,7 +93,7 @@
                 >
                   <template v-if="selectGoodsState" #left>
                     <sp-checkbox
-                      style="padding-right: 10px"
+                      class="good-list-checkbox"
                       :name="item.id"
                     ></sp-checkbox>
                   </template>
@@ -113,7 +118,10 @@
       v-if="(tabIndex == 4 || tabIndex == 5) && selectGoodsState"
       class="footer-nav"
     >
-      <sp-checkbox v-model="checkedAllState" @change="checkedAllChange"
+      <sp-checkbox
+        v-model="checkedAllState"
+        checked-color="#4E78F5"
+        @change="checkedAllChange"
         >全选</sp-checkbox
       >
 
@@ -388,7 +396,15 @@ export default {
 
 .good-list {
   margin: 24px 0px 0px;
+
+  .good-list-checkbox {
+    padding-right: 10px;
+  }
 }
+::v-deep .sp-checkbox__icon .sp-icon {
+  border: 1px solid #999999;
+}
+
 .collection_container {
   min-height: 100vh;
   padding-bottom: 160px;
