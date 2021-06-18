@@ -1,8 +1,19 @@
 <template>
   <div class="invoice_apply">
-    <sp-sticky>
+    <sp-sticky
+      :class="{
+        scroTopStyle: Boolean(opacity),
+      }"
+      @scroll="scrollHandle"
+    >
       <Header class="my-header" title="发票详情"></Header>
     </sp-sticky>
+
+    <div class="status_container">
+      <div class="status_title">{{ status.title }}</div>
+      <div class="status_des">{{ status.des }}</div>
+      <div class="status_tips">{{ status.tips }}</div>
+    </div>
 
     <div class="card">
       <div class="type_list">
@@ -140,6 +151,7 @@ export default {
   },
   data() {
     return {
+      opacity: 0,
       loading: false, // 加载效果状态
       tabActive: 0,
 
@@ -153,6 +165,11 @@ export default {
       sendEmail: '',
       showEmailDialog: false,
     }
+  },
+  computed: {
+    status() {
+      return {}
+    },
   },
   mounted() {
     // this.moneyTips()
@@ -182,6 +199,15 @@ export default {
         done(false)
       }
     },
+    scrollHandle({ scrollTop }) {
+      // 滚动事件
+      if (scrollTop > 303) {
+        this.opacity = 1
+      } else {
+        this.opacity = 0
+      }
+    },
+
     // back() {
     //   if (this.isInApp) {
     //     this.$appFn.dggWebGoBack((res) => {})
@@ -194,11 +220,51 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.scroTopStyle {
+  ::v-deep.sp-sticky {
+    border: 1px solid #f4f4f4;
+    background-color: #ccc !important;
+    .sp-top-nav-bar {
+      background-color: #ccc !important;
+    }
+  }
+
+  // .spiconfont {
+  //   color: #1a1a1a !important;
+  // }
+}
+::v-deep.my-head {
+}
 .invoice_apply {
   background: #f5f5f5;
   min-height: 100vh;
   font-size: 0;
 
+  .status_container {
+    height: 303px;
+    background: #fe8c29;
+    .status_title {
+      font-size: 40px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #ffffff;
+      line-height: 40px;
+    }
+    .status_des {
+      font-size: 28px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #ffffff;
+      line-height: 28px;
+    }
+    .status_tips {
+      font-size: 24px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #ffffff;
+      line-height: 24px;
+    }
+  }
   .card {
     background: #fff;
     margin-bottom: 20px;
