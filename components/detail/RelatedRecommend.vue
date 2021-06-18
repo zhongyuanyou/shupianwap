@@ -31,8 +31,8 @@
             </p>
             <div class="label">
               <span
-                v-for="(labelItem, index) in item.tag"
-                :key="index"
+                v-for="(labelItem, index2) in item.tag"
+                :key="index2"
                 class="label_item"
                 >{{ labelItem.tagName }}</span
               >

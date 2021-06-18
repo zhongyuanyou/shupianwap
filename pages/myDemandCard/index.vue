@@ -86,7 +86,7 @@ export default {
       handler(to, from) {
         if (to.path === '/myDemandCard') {
           this.$nextTick(() => {
-            sessionStorage.removeItem('formData')
+            sessionStorage && sessionStorage.removeItem('formData')
           })
         }
       },
