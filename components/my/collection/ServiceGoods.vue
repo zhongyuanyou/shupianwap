@@ -16,11 +16,11 @@
             {{ info.name || '' }}
           </div> -->
           <div
-            class="desc-name"
             v-if="
               info.classCodeLevelList &&
               info.classCodeLevelList[0] === 'FL20201224136319'
             "
+            class="desc-name"
           >
             {{ info.name || info.showName }}
           </div>

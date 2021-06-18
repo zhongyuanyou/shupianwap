@@ -6,9 +6,9 @@
 </template>
 
 <script>
-import DetailTemplate from '~/components/detail/DetailTemplate1'
-import { productDetailsApi } from '~/api'
-import ShareModal from '@/components/common/ShareModal'
+import DetailTemplate from '@/components/detail/DetailTemplate1.vue'
+import { productDetailsApi } from '@/api'
+import ShareModal from '@/components/common/ShareModal.vue'
 export default {
   name: 'SellingGoodsDetail',
   components: {
