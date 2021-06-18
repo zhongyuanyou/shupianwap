@@ -558,10 +558,10 @@ export default {
     // 判断订单状态 返回数字
     checkOrderStatus(code) {
       const ALLSTATUS = {
-        1: 'ORDER_ORDER_SALE_STATUS_UN_PAID,ORDER_ORDER_TRADE_STATUS_UN_PAID,ORDER_ORDER_RESOURCE_STATUS_UN_PAID,ORDER_ORDER_SERVER_STATUS_UN_PAID', // 可取消订单的状态 未付款时
-        2: 'ORDER_ORDER_SALE_STATUS_HANDLING,ORDER_ORDER_SALE_STATUS_HANDLED,ORDER_ORDER_TRADE_STATUS_HANDLING,ORDER_ORDER_RESOURCE_STATUS_HANDLING,ORDER_ORDER_SERVER_STATUS_UN_ASSIGN,ORDER_ORDER_SERVER_STATUS_UN_RECEICE_ORDER,ORDER_ORDER_SERVER_STATUS_HANDLING', // 进行中
-        3: 'ORDER_ORDER_SALE_STATUS_COMPLETED,ORDER_ORDER_TRADE_STATUS_COMPLETED,ORDER_ORDER_RESOURCE_STATUS_COMPLETED,ORDER_ORDER_SERVER_STATUS_HANDLED,ORDER_ORDER_SERVER_STATUS_COMPLETED', // 已完成
-        4: 'ORDER_ORDER_SALE_STATUS_CANCELLED,ORDER_ORDER_TRADE_STATUS_CANCELLED,ORDER_ORDER_RESOURCE_STATUS_CANCELLED,ORDER_ORDER_SERVER_STATUS_CANCELLED', // 已取消
+        1: 'ORDER_ORDER_TRADE_STATUS_UN_PAID,ORDER_ORDER_SALE_STATUS_UN_PAID,ORDER_ORDER_RESOURCE_STATUS_UN_PAID,ORDER_ORDER_SERVER_STATUS_UN_PAID', // 可取消订单的状态 未付款时
+        2: 'ORDER_ORDER_TRADE_STATUS_HANDLING,ORDER_ORDER_TRADE_STATUS_HANDLED,ORDER_ORDER_SALE_STATUS_HANDLING,ORDER_ORDER_SALE_STATUS_HANDLED,ORDER_ORDER_RESOURCE_STATUS_HANDLING,ORDER_ORDER_RESOURCE_STATUS_HANDLED,ORDER_ORDER_SERVER_STATUS_UN_ASSIGN,ORDER_ORDER_SERVER_STATUS_UN_RECEICE_ORDER,ORDER_ORDER_SERVER_STATUS_HANDLING,ORDER_ORDER_SERVER_STATUS_HANDLED', // 进行中
+        3: 'ORDER_ORDER_TRADE_STATUS_COMPLETED,ORDER_ORDER_SALE_STATUS_COMPLETED,ORDER_ORDER_RESOURCE_STATUS_COMPLETED,ORDER_ORDER_SERVER_STATUS_COMPLETED', // 已完成
+        4: 'ORDER_ORDER_TRADE_STATUS_CANCELLED,ORDER_ORDER_SALE_STATUS_CANCELLED,ORDER_ORDER_RESOURCE_STATUS_CANCELLED,ORDER_ORDER_SERVER_STATUS_CANCELLED', // 已取消
       }
       for (const key of ALLSTATUS) {
         if (ALLSTATUS[key].match(code)) {
@@ -576,6 +576,27 @@ export default {
         if (PAYTYPECODE[key] === this.orderData.cusOrderPayType)
           return Number(key)
       }
+    },
+    // 判断订单售后状态 是否展示售后按钮 展示何种售后按钮
+    checkAfterSaleStatus(orderData) {
+      orderData = orderData || this.orderData || this.orderDetail
+      // 1.意向单、担保交易订单不展示售后按钮，
+      if (
+        orderData.orderType === 0 ||
+        orderData.payType === 'ORDER_PAY_MODE_SECURED'
+      ) {
+        return 0
+      }
+      // 正式单待付款、已完成、已取消不展示售后按钮，只有处理中状态的订单根据订单售后标签、产品是否可售后判断是否可展示售后按钮，
+      // 全部产品不可售后，则不展示售后按钮
+      // 无售后、部分售后标签，点击跳转到申请售后页面，
+      // 售后中，则跳转到订单最新的售后中的售后详情，
+      // 已售后则不展示售后按钮
+      const orderStatusNum = this.checkOrderStatus(orderData.orderStatusNo)
+      if (orderStatusNum !== 2) {
+        return 0
+      }
+      return 1
     },
     // 查询客户单下的关联订单
     getChildOrders(order) {
@@ -1030,6 +1051,8 @@ export default {
         })
       }
     },
+    //  跳转售后
+    toAfterSale() {},
     // 获取交易协议
     async getProtocol(categoryCode) {
       if (!categoryCode) {
