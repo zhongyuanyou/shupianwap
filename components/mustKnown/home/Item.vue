@@ -19,19 +19,45 @@
       <div class="title clamp2">
         {{ item.title }}
       </div>
-      <div v-if="!item.contentImageUrl" class="content clamp3">
-        {{ item.contentText }}
-      </div>
-      <div v-else class="content_img">
-        <div class="left_content clamp3">
+      <div v-if="item.type !== 7 && item.type !== 6 && item.type != 5">
+        <div v-if="!item.contentImageUrl" class="content clamp3">
           {{ item.contentText }}
         </div>
-        <sp-image
-          class="right_img"
-          fit="cover"
-          radius="0.12rem"
-          :src="item.contentImageUrl.split(',')[0]"
-        />
+        <div v-else class="content_img">
+          <div class="left_content clamp3">
+            {{ item.contentText }}
+          </div>
+          <sp-image
+            class="right_img"
+            fit="cover"
+            radius="0.12rem"
+            :src="item.contentImageUrl.split(',')[0]"
+          />
+        </div>
+      </div>
+      <div
+        v-if="item.type === 5 && item.originalVideoType === 1"
+        class="video_content"
+      >
+        <div class="video">
+          <img :src="item.imageUrl" alt="" class="cover_img" />
+        </div>
+        <my-icon name="bofang_mian" size="0.96rem" class="play_btn"></my-icon>
+        <div class="bottom_time">
+          <div class="time">{{ totime(item.duration) }}</div>
+        </div>
+      </div>
+      <div
+        v-if="item.type === 5 && item.originalVideoType === 2"
+        class="small_video_content"
+      >
+        <div class="video">
+          <img :src="item.imageUrl" alt="" class="cover_img" />
+        </div>
+        <my-icon name="bofang_mian" size="0.96rem" class="play_btn"></my-icon>
+        <div class="bottom_time">
+          <div class="time">{{ totime(item.duration) }}</div>
+        </div>
       </div>
     </div>
     <div v-if="item.type !== 1" class="bottom">
@@ -41,14 +67,26 @@
         @click="like(item)"
       >
         <my-icon
-          v-show="item.isApplaudFlag"
+          v-show="item.isApplaudFlag && item.type < 4"
           name="zantong_mian"
           size="0.34rem"
           color="#4974f5"
         ></my-icon>
         <my-icon
-          v-show="!item.isApplaudFlag"
+          v-show="!item.isApplaudFlag && item.type < 4"
           name="zantong"
+          size="0.34rem"
+          color="#999999"
+        ></my-icon>
+        <my-icon
+          v-show="item.isApplaudFlag && item.type > 4"
+          name="dianzan_mian"
+          size="0.34rem"
+          color="#4974f5"
+        ></my-icon>
+        <my-icon
+          v-show="!item.isApplaudFlag && item.type > 4"
+          name="dianzan"
           size="0.34rem"
           color="#999999"
         ></my-icon>
@@ -87,6 +125,10 @@ export default {
         return '发布了问题'
       } else if (type === 2) {
         return '发表了文章'
+      } else if (type === 5) {
+        return '发布了视频'
+      } else if (type === 6) {
+        return '发布了小视频'
       } else {
         return '回答了问题'
       }
@@ -205,25 +247,61 @@ export default {
       }
     },
     open(item) {
-      console.log('+++++++++++', item)
       if (this.isInApp && this.appInfo.appCode === 'CPSAPP') {
-        try {
-          this.$appFn.dggOpenVideo(item.id, (res) => {
-            const { code } = res || {}
-            if (code !== 200)
-              this.$xToast.show({
-                message: `打开视频失败`,
-                duration: 1000,
-                forbidClick: true,
-                icon: 'toast_ic_remind',
-              })
-          })
-        } catch (error) {
-          console.error('changeTop error:', error)
+        // console.log('++++++++this.active', this.active)
+        // console.log('++++++++this.item', item.id)
+        if (item.type === 5 && item.originalVideoType === 1) {
+          try {
+            this.$appFn.dggOpenVideo(item.id, (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `打开视频失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            })
+          } catch (error) {
+            console.error('changeTop error:', error)
+          }
+        } else {
+          try {
+            this.$appFn.dggOpenSmallVideo(item.id, (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `打开小视频失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            })
+          } catch (error) {
+            console.error('changeTop error:', error)
+          }
         }
+      } else if (this.isInApp && this.appInfo.appCode === 'syscode') {
+        this.showItem = false
       } else {
         this.showPop = true
       }
+    },
+    totime(time) {
+      let hour = Math.floor(time / 3600)
+      let mid = Math.floor((time - 3600 * hour) / 60)
+      // math.flotime / 60
+      let sec = Math.floor((time - 3600 * hour) % 60)
+      if (hour < 10) {
+        hour = '0' + hour
+      }
+      if (mid < 10) {
+        mid = '0' + mid
+      }
+      if (sec < 10) {
+        sec = '0' + sec
+      }
+      return hour + ':' + mid + ':' + sec
     },
   },
 }
@@ -289,6 +367,100 @@ export default {
       width: 190px;
       height: 127px;
       background: #cccccc;
+    }
+  }
+  .video_content {
+    width: 686px;
+    height: 384px;
+    background: #f5f5f5;
+    border-radius: 12px;
+    position: relative;
+    margin-top: 28px;
+    .video {
+      height: 100%;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .play_btn {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin-top: -48px;
+      margin-left: -48px;
+      opacity: 0.4;
+    }
+    .bottom_time {
+      position: absolute;
+      background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0) 100%
+      );
+      border-radius: 0 0 12px 12px;
+      height: 88px;
+      bottom: 0;
+      width: 100%;
+      padding: 20px;
+      .time {
+        font: bold 24px PingFangSC-Medium;
+        height: 24px;
+        color: #ffffff;
+        text-align: right;
+        height: 20px;
+        margin-top: 20px;
+      }
+    }
+  }
+  .small_video_content {
+    width: 483px;
+    height: 852px;
+    background: #f5f5f5;
+    border-radius: 12px;
+    position: relative;
+    margin-top: 28px;
+    .video {
+      height: 100%;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .play_btn {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin-top: -48px;
+      margin-left: -48px;
+      opacity: 0.4;
+    }
+    .bottom_time {
+      position: absolute;
+      background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0) 100%
+      );
+      border-radius: 0 0 12px 12px;
+      height: 88px;
+      bottom: 0;
+      width: 100%;
+      padding: 20px;
+      .time {
+        font: bold 24px PingFangSC-Medium;
+        height: 24px;
+        color: #ffffff;
+        text-align: right;
+        height: 20px;
+        margin-top: 20px;
+      }
     }
   }
   .bottom {
