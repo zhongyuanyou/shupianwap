@@ -179,7 +179,6 @@ export default {
               this.$cookies.get('userId', { path: '/' }),
           ],
         }
-        debugger
         const { code, data } = await this.$axios.post(
           knownApi.createCenter.findListByStatus,
           params
