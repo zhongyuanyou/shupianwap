@@ -111,6 +111,7 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import { Image, CenterPopup } from '@chipspc/vant-dgg'
 import { knownApi } from '~/api'
 export default {
@@ -154,7 +155,14 @@ export default {
       showPop: false,
     }
   },
+
   computed: {
+    ...mapState({
+      userId: (state) => state.user.userId, // userId 用于判断登录
+      isInApp: (state) => state.app.isInApp, // 是否app中
+      appInfo: (state) => state.app.appInfo, // app信息
+      // isApplets: (state) => state.app.isApplets,
+    }),
     userInfo() {
       return this.$store.state.user
     },
@@ -171,7 +179,7 @@ export default {
     },
     toDetail(item) {
       if (item.type === 5) {
-        this.open()
+        this.open(item)
       } else {
         this.$router.push({
           path:
@@ -248,8 +256,9 @@ export default {
     },
     open(item) {
       if (this.isInApp && this.appInfo.appCode === 'CPSAPP') {
-        // console.log('++++++++this.active', this.active)
-        // console.log('++++++++this.item', item.id)
+        console.log('++++++++this.active', this.active)
+        console.log('++++++++this.item', item.id)
+        console.log('++++++++this.originalVideoType', item.originalVideoType)
         if (item.type === 5 && item.originalVideoType === 1) {
           try {
             this.$appFn.dggOpenVideo(item.id, (res) => {
