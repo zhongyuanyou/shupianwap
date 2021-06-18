@@ -104,6 +104,7 @@ export default {
         bizAreaName: this.city.name || '成都市',
         customerPhone:
           this.$refs.bargCom.phone || this.userInfoData.mainAccount,
+        sourceUrl: location.href,
         customerName: this.userInfoData.fullName || '游客',
         customerSex: this.userInfoData.sex || 2,
         customerAttribute: JSON.stringify({
