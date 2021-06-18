@@ -289,7 +289,6 @@ export default {
       if (classCodeLevel) {
         codeArr = classCodeLevel.split(',')
       }
-      console.log('classCodeLevel', classCodeLevel)
       const params = {
         goodsDtos: [
           {
@@ -306,8 +305,7 @@ export default {
       this.$axios
         .post(shopApi.addGoods, params)
         .then((res) => {
-          console.log('shouchang res', res)
-          if (res.code === 200) {
+          if (res && res.code === 200) {
             this.$xToast.show({
               message: '收藏成功',
               duration: 3000,
@@ -321,7 +319,7 @@ export default {
         })
         .catch((err) => {
           console.log('err', err)
-          this.$xToast.error(err.message || '操作失败')
+          this.$xToast.error('收藏失败')
         })
     },
     scrollHandle({ scrollTop }) {
@@ -471,8 +469,11 @@ export default {
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
             sceneId: 'app-cpxqye-01', // 场景ID
             user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-            platform: 'm', // 平台（app,m,pc）
+            platform: 'app', // 平台（app,m,pc）
             productId: this.proDetail.id, // 产品id
+            formatIdOne:
+              this.proDetail.classCodeLevel.split(',')[0] ||
+              this.proDetail.classCodeLevel.split(',')[1],
           },
         })
         .then((res) => {
@@ -502,7 +503,7 @@ export default {
           productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
           sceneId: 'app-cpxqye-02', // 场景ID
           user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-          platform: 'm', // 平台（app,m,pc）
+          platform: 'app', // 平台（app,m,pc）
           productId: this.proDetail.id, // 产品id
         },
       })

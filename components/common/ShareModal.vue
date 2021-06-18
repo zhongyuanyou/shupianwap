@@ -17,7 +17,7 @@
       >
         <!--S 弹框banner-->
         <div class="popup-banner">
-          <img src="@/static/image/page/bg.png" />
+          <img src="https://cdn.shupian.cn/sp-pt/wap/23qhsm9soy5c000.png" />
           <div class="popup-header">
             <slot name="head">
               <div class="popup-header__con">
@@ -51,17 +51,8 @@
             <span>委托我为您提供以下服务</span>
           </div>
           <div class="popup-content__tags">
-            <span
-              v-for="(item, index) in planerInfo.tagList"
-              :key="index"
-              class="item"
-            >
-              <my-icon
-                name="toast_ic_comp"
-                size="0.24rem"
-                color="#146F18"
-              ></my-icon>
-              <span class="txt">{{ item }}</span>
+            <span v-for="(item, index) in tagList" :key="index" class="item">
+              {{ item }}
             </span>
           </div>
           <div class="popup-btn" @click="handleClickBtn()">
@@ -94,6 +85,7 @@ export default {
       partnerId: '',
       planerInfo: {},
       userInfoData: {},
+      tagList: ['快速服务咨询', '详细政策解读', '优质服务推荐', '最新优惠讲解'],
     }
   },
   computed: {
@@ -181,11 +173,14 @@ export default {
           customerId: this.userInfoData.id,
           customerPhone: this.userInfoData.mainAccount,
           customerName: this.userInfoData.fullName,
-          requestPlatform: 'crips-c',
+          copartnerPort: 'COMDIC_PLATFORM_CRISPS',
+          customerPort: 'COMDIC_PLATFORM_CRISPS',
+          bindType: 'CUSTOMER_BDLX_FXBD',
+          requestPlatform: 'COMDIC_PLATFORM_CRISPS',
         })
         .then((res) => {
           console.log('res', res)
-          this.$xToast.success('委托成功，请静候规划师与您电话联系联系！')
+          this.$xToast.success('委托成功，请静候规划师与您电话联系！')
           this.visible = false
         })
         .catch((err) => {
@@ -252,6 +247,31 @@ export default {
             forbidClick: true,
           })
         })
+    },
+    // 获取合伙人信息 明文
+    getBindUserIndo() {
+      if (this.token) {
+        this.$axios
+          .get(userinfoApi.info_decrypt, {
+            params: {
+              id: this.partnerId,
+            },
+          })
+          .then((res) => {
+            if (res.code === 200) {
+              console.log('合伙人信息', res)
+              // this.userInfoData = res.data
+              // this.$store.dispatch('user/setInfo', res.data)
+            } else {
+              this.$xToast.show({
+                message: '网络错误,请刷稍后再试',
+                duration: 1000,
+                icon: 'toast_ic_error',
+                forbidClick: true,
+              })
+            }
+          })
+      }
     },
   },
 }
@@ -416,20 +436,14 @@ export default {
           display: flex;
           justify-content: space-between;
           flex-wrap: wrap;
-          height: 190px;
+          height: 180px;
           > .item {
-            height: 60px;
-            width: auto;
+            height: 40px;
+            width: 50%;
             color: #222222;
-            padding-right: 20px;
-            clear: both;
-            .txt {
-              line-height: 24px;
-              font-size: 28px;
-              font-family: PingFang SC;
-              font-weight: 400;
-              color: #222222;
-            }
+            text-align: center;
+            font-size: 28px;
+            margin-top: 44px;
           }
         }
         .popup-btn {

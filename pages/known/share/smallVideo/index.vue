@@ -1,6 +1,6 @@
 <template>
   <div class="m-known-share smallVideo">
-    <app-link />
+    <app-link :ios-link="iosPathFinally" :androd-link="androdFinally" />
     <div class="small-video">
       <sp-image
         width="100vw"
@@ -52,6 +52,27 @@ export default {
       categoryId: '', // 种类id
       vurl: '', // 视频url
       vDetail: {},
+      videoType: '',
+      prefixPath: 'cpsccustomer://',
+      iosPath: {
+        path: 'CPSCustomer:CPSCustomer/CPSCKnowCommonDetailViewController///push/animation',
+        parameter: {
+          selectedIndex: 1,
+          type: '7',
+          id: '',
+        },
+      },
+      iosPathFinally: '',
+      androdPath: {
+        path: '/main/android/main',
+        parameter: {
+          selectedIndex: 1,
+          isLogin: '0',
+          secondLink: '/savvy/chips/small_video_details',
+          id: '',
+        },
+      },
+      androdFinally: '',
     }
   },
   mounted() {
@@ -62,7 +83,10 @@ export default {
     }
     */
     this.vId = this.$route.query.id || '8086190052126556160'
-
+    this.iosPath.parameter.id = this.vId
+    this.iosPathFinally = this.prefixPath + JSON.stringify(this.iosPath)
+    this.androdPath.parameter.id = this.vId
+    this.androdFinally = this.prefixPath + JSON.stringify(this.androdPath)
     this.getVideoApi()
   },
   methods: {

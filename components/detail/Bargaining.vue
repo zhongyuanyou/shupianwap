@@ -16,6 +16,7 @@
           type="primary"
           block
           :disabled="isBtnDisabled"
+          :loading="btnLoading"
           @click="handleSub"
           >确定</sp-button
         >
@@ -43,6 +44,7 @@ export default {
   },
   data() {
     return {
+      btnLoading: false,
       show: false,
       radio: '1',
       isBtnDisabled: false,
@@ -68,6 +70,7 @@ export default {
   },
   methods: {
     async handleSub() {
+      this.btnLoading = true
       //    接入客源中心
       //   bizAreaCode: this.city.code, // 区域Code
       //   bizAreaName: this.city.name,
@@ -89,6 +92,7 @@ export default {
         isCheckPhone = true
       }
       if (!isCheckPhone) {
+        this.btnLoading = false
         return
       }
       const goodsDetail = this.$store.state.tcProductDetail.detailData
@@ -113,6 +117,7 @@ export default {
       this.$axios
         .post(transactionConsApi.resouse_form, formData)
         .then((res) => {
+          this.btnLoading = false
           if (res.code === 200) {
             // 初始化表单
             if (!this.token) {
@@ -137,15 +142,34 @@ export default {
             this.isBtnDisabled = false
             this.$xToast.show({
               message: '信息提交失败,请稍后重试',
-              duration: 1000,
+              duration: 1500,
               icon: 'toast_ic_error',
               forbidClick: true,
             })
           }
         })
+        .catch((err) => {
+          this.btnLoading = false
+          console.error(err)
+          this.$xToast.show({
+            message: '信息提交失败,请稍后重试',
+            duration: 1500,
+            icon: 'toast_ic_error',
+            forbidClick: true,
+          })
+        })
     },
     checkPhoneCode() {
       return new Promise((resolve, reject) => {
+        if (!this.$refs.bargCom.phone || !this.$refs.bargCom.code) {
+          this.$xToast.show({
+            message: '请输入电话号码和验证码',
+            duration: 1500,
+            icon: 'toast_ic_error',
+            forbidClick: true,
+          })
+          resolve(false)
+        }
         // 先验证电话
         auth
           .checkSmsCode(
@@ -157,11 +181,9 @@ export default {
             }
           )
           .then((res) => {
-            console.log('验证电话', res)
             resolve(true)
           })
           .catch((e) => {
-            resolve(false)
             this.$xToast.hideLoading()
             this.$xToast.show({
               message: e.message,
@@ -169,6 +191,7 @@ export default {
               icon: 'toast_ic_error',
               forbidClick: true,
             })
+            resolve(false)
           })
       })
     },

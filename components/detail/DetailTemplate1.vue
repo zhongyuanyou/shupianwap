@@ -123,7 +123,6 @@ import { productDetailsApi, recommendApi, shopApi } from '~/api'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import { copyToClipboard } from '~/utils/common'
 import imHandle from '~/mixins/imHandle'
-import { error } from '~/static/js/jweixin_1.4.0'
 export default {
   name: 'DetailTemplate',
   components: {
@@ -418,7 +417,8 @@ export default {
       this.$axios
         .post(shopApi.addGoods, params)
         .then((res) => {
-          if (res.code === 200) {
+          console.log('res', res)
+          if (res && res.code === 200) {
             this.$xToast.show({
               message: '收藏成功',
               duration: 3000,
@@ -427,12 +427,12 @@ export default {
             })
             this.sellingDetail.isSave = true
           } else {
-            this.$xToast.error(res.message || '收藏失败')
+            this.$xToast.error(res || '收藏失败')
           }
         })
         .catch((err) => {
           console.log('err', err)
-          this.$xToast.error(err.message || '操作失败')
+          this.$xToast.error('收藏失败')
         })
     },
     comment() {

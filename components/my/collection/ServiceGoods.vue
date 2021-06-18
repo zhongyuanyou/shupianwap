@@ -12,8 +12,20 @@
       />
       <div class="desc">
         <div class="desc-container">
-          <div class="desc-name">
+          <!-- <div class="desc-name">
             {{ info.name || '' }}
+          </div> -->
+          <div
+            class="desc-name"
+            v-if="
+              info.classCodeLevelList &&
+              info.classCodeLevelList[0] === 'FL20201224136319'
+            "
+          >
+            {{ info.name || info.showName }}
+          </div>
+          <div v-else class="desc-name">
+            {{ info.showName || info.name }}
           </div>
           <div v-if="type === 'Service'" class="desc-label">
             <span
@@ -31,10 +43,13 @@
             </span>
           </div>
           <div
-            v-if="info.goodsSubDetailsName && type === 'Trading'"
-            class="desc-text"
+            v-if="
+              info.fieldList && info.fieldList.length > 0 && type === 'Trading'
+            "
+            class="desc-text desc-text-field"
           >
-            {{ info.goodsSubDetailsName }}
+            <!-- {{ info.goodsSubDetailsName }} -->
+            {{ joinFieldList(info.fieldList) }}
           </div>
           <div v-if="type === 'Service'" class="desc-text">
             {{ info.salesGoodsOperatings && info.salesGoodsOperatings.slogan }}
@@ -92,7 +107,15 @@ export default {
   data() {
     return {}
   },
+
   methods: {
+    joinFieldList(list = []) {
+      const arr = []
+      list.map((item) => {
+        arr.push(item.fieldValueCn || item.fieldValue)
+      })
+      return arr.join(' | ')
+    },
     // linkServiceGoodsDetail(info) {
     //   this.$router.push({
     //     path: '/detail',

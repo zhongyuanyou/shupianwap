@@ -19,7 +19,6 @@ export const actions = {
     const imId = localStorage.getItem('myInfo')
       ? JSON.parse(localStorage.getItem('myInfo')).imUserId
       : {}
-    console.log(state.imExample.regularVisitor, 123)
     // state.imExample.regularVisitor(
     //   {
     //     visitorId: imId,

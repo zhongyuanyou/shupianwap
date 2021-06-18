@@ -13,7 +13,7 @@
       <div class="user-info" :class="isShare ? 'pl-none' : 'pl-has'">
         <sp-image
           class="img"
-          :src="headerData.avatar"
+          :src="headerData.avatar || $ossImgSetV2('9zzzas17j8k0000.png')"
           @click.stop="goUser(headerData.userId, headerData.userType)"
         />
         <div class="infos">
