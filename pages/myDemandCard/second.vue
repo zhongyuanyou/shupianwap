@@ -66,7 +66,8 @@
 <script>
 import { Field, Toast, TopNavBar, Icon } from '@chipspc/vant-dgg'
 import { mapState, mapMutations } from 'vuex'
-import { userinfoApi, consult, transactionConsApi } from '@/api'
+import { userinfoApi, consult } from '@/api'
+import { transactionConsApi } from '@/api/transactionConsultation'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import Header from '@/components/common/head/header'
 export default {
