@@ -27,7 +27,15 @@
           <div v-else class="desc-name">
             {{ info.showName || info.name }}
           </div>
-          <div v-if="type === 'Service'" class="desc-label">
+
+          <div
+            v-if="
+              type === 'Service' &&
+              ((info.salesGoodsTags && info.salesGoodsTags.length > 0) ||
+                (info.salesGoodsSubVos && info.salesGoodsSubVos.length > 1))
+            "
+            class="desc-label"
+          >
             <span
               v-if="info.salesGoodsSubVos && info.salesGoodsSubVos.length > 1"
               class="desc-label-tc"
@@ -51,10 +59,17 @@
             <!-- {{ info.goodsSubDetailsName }} -->
             {{ joinFieldList(info.fieldList) }}
           </div>
-          <div v-if="type === 'Service'" class="desc-text">
+          <div
+            v-if="
+              type === 'Service' &&
+              info.salesGoodsOperatings &&
+              info.salesGoodsOperatings.slogan
+            "
+            class="desc-text"
+          >
             {{ info.salesGoodsOperatings && info.salesGoodsOperatings.slogan }}
           </div>
-          <div v-if="type === 'Trading'" class="desc-text">
+          <div v-if="type === 'Trading' && info.slogan" class="desc-text">
             {{ info.slogan }}
           </div>
         </div>
