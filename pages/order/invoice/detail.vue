@@ -1,15 +1,20 @@
 <template>
   <div class="invoice_apply">
     <sp-sticky
+      ref="sticky"
       :class="{
         scroTopStyle: Boolean(opacity),
       }"
       @scroll="scrollHandle"
     >
-      <Header class="my-header" title="发票详情"></Header>
+      <Header
+        class="my-header"
+        :back-icon-color="opacity == 1 ? '' : '#fff'"
+        :title="opacity == 1 ? '发票详情' : ''"
+      ></Header>
     </sp-sticky>
 
-    <div class="status_container">
+    <div ref="status_container" class="status_container">
       <div class="status_title">{{ status.title }}</div>
       <div class="status_des">{{ status.des }}</div>
       <div class="status_tips">{{ status.tips }}</div>
@@ -168,7 +173,38 @@ export default {
   },
   computed: {
     status() {
-      return {}
+      const info = {
+        underRreview: {
+          title: '审核中',
+          des: '您的开票申请正在审核中',
+          tips: '请耐心等待',
+        },
+        reject() {
+          return {
+            title: '已驳回',
+            des: '您的开票申请已被驳回，请和商户沟通后再重新提交',
+            tips: '驳回原因：发票信息错误',
+          }
+        },
+        billingInProgress: {
+          title: '开票中',
+          des: '您的发票正在开票中',
+          tips: '请耐心等待',
+        },
+        invoiceFailed() {
+          return {
+            title: '开票失败',
+            des: '您的开票申请已失败，请核对开票信息后再重新提交',
+            tips: '失败原因：未查询到对应的企业信息',
+          }
+        },
+        success: {
+          title: '已开票',
+          des: '您的开票申请已经办理完成',
+          tips: '请对本次服务进行评价，谢谢您的支持',
+        },
+      }
+      return info.underRreview
     },
   },
   mounted() {
@@ -200,8 +236,13 @@ export default {
       }
     },
     scrollHandle({ scrollTop }) {
+      const statusContainerHeight = this.$refs.status_container.offsetHeight
+      // console.log(this.$refs.sticky)
+      const headerHeight = this.$refs.sticky.height
+      console.log(statusContainerHeight, headerHeight)
+
       // 滚动事件
-      if (scrollTop > 303) {
+      if (scrollTop > statusContainerHeight - headerHeight) {
         this.opacity = 1
       } else {
         this.opacity = 0
@@ -222,25 +263,29 @@ export default {
 <style lang="less" scoped>
 .scroTopStyle {
   ::v-deep.sp-sticky {
-    border: 1px solid #f4f4f4;
+    // border: 1px solid #f4f4f4;
     background-color: #ccc !important;
-    .sp-top-nav-bar {
-      background-color: #ccc !important;
-    }
+  }
+  ::v-deep .my-head {
+    background: #fff;
   }
 
   // .spiconfont {
   //   color: #1a1a1a !important;
   // }
 }
-::v-deep.my-head {
+::v-deep .my-head {
+  background: none;
 }
+
 .invoice_apply {
   background: #f5f5f5;
   min-height: 100vh;
   font-size: 0;
 
   .status_container {
+    margin-top: -0.88rem;
+    text-align: center;
     height: 303px;
     background: #fe8c29;
     .status_title {
@@ -249,13 +294,15 @@ export default {
       font-weight: 500;
       color: #ffffff;
       line-height: 40px;
+      padding: 100px 0 34px;
     }
     .status_des {
       font-size: 28px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: #ffffff;
-      line-height: 28px;
+      line-height: 32px;
+      padding-bottom: 16px;
     }
     .status_tips {
       font-size: 24px;
