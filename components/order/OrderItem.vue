@@ -189,17 +189,17 @@
           >退款/售后</sp-button
         >
         <sp-button
-          v-if="checkAfterSaleStatus() === 2"
+          v-if="checkAfterSaleStatus() === 2 || checkAfterSaleStatus() === 5"
           class="btn-look"
           @click="handleClickItem(7)"
           >售后中</sp-button
         >
-        <sp-button
+        <!-- <sp-button
           v-if="checkAfterSaleStatus() === 3"
           class="btn-look"
           @click="handleClickItem(7)"
           >已售后</sp-button
-        >
+        > -->
         <sp-button
           v-if="checkAfterSaleStatus() === 4"
           type="primary"

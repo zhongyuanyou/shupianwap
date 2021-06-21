@@ -247,7 +247,7 @@
       <div v-if="cusOrderStatusType !== 4" class="btn-area">
         <div class="inner">
           <sp-button
-            v-if="checkAfterSaleStatus() === 1"
+            v-if="checkAfterSaleStatus() === 1 || checkAfterSaleStatus() === 4"
             class="btn-look"
             @click="handleClickItem(7)"
             >退款/售后</sp-button
@@ -258,12 +258,12 @@
             @click="handleClickItem(7)"
             >售后中</sp-button
           >
-          <sp-button
+          <!-- <sp-button
             v-if="checkAfterSaleStatus() === 3"
             class="btn-look"
             @click="handleClickItem(7)"
             >已售后</sp-button
-          >
+          > -->
           <sp-button
             v-if="checkAfterSaleStatus() === 4"
             class="btn-look"

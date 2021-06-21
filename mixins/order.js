@@ -310,7 +310,10 @@ export default {
         )
         return
       }
-      if (this.orderData.isSecuredTrade && this.orderData.isSecuredTrade === 1) {
+      if (
+        this.orderData.isSecuredTrade &&
+        this.orderData.isSecuredTrade === 1
+      ) {
         this.$xToast.error(
           '该订单付款方式为担保交易付款，请访问薯片PC网站或联系规划师付款！'
         )
@@ -651,6 +654,29 @@ export default {
         orderData.afterSaleStatus === 'AFTER_SALE_STATUS_5'
       ) {
         return 5
+      }
+    },
+    //  跳转售后
+    toAfterSale(orderData) {
+      orderData = orderData || this.orderDetail || this.orderData
+      const statusNum = this.checkAfterSaleStatus(orderData)
+      if (statusNum === 1 || statusNum === 4) {
+        // 未售后和部分售后跳转至申请页面
+        this.$router.push({
+          path: '/my/afterSale/apply',
+          query: {
+            orderId: orderData.id,
+          },
+        })
+      } else {
+        // 跳转售后详情页面
+        this.$router.push({
+          path: '/my/afterSale/detail',
+          query: {
+            orderId: orderData.id,
+            id: orderData.afterSaleId || orderData.id,
+          },
+        })
       }
     },
     // 查询客户单下的关联订单
@@ -1105,16 +1131,6 @@ export default {
           },
         })
       }
-    },
-    //  跳转售后
-    toAfterSale(orderData) {
-      orderData = orderData || this.orderDetail || this.orderData
-      this.$router.push({
-        path: 'my/afterSale/list',
-        query: {
-          orderId: orderData.id,
-        },
-      })
     },
     // 获取交易协议
     async getProtocol(categoryCode) {
