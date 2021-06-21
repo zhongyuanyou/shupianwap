@@ -11,7 +11,9 @@
       <div class="user_info">
         <div class="user_info_name">{{ item.userName }}</div>
         <div class="user_info_time">
-          {{ item.createTime }}·{{ item.type | filterType }}
+          {{ item.createTime }}·{{
+            item.type | filterType(item.originalVideoType)
+          }}
         </div>
       </div>
     </div>
@@ -42,7 +44,8 @@
         <div class="video">
           <img :src="item.imageUrl" alt="" class="cover_img" />
         </div>
-        <my-icon name="bofang_mian" size="0.96rem" class="play_btn"></my-icon>
+        <img :src="play" alt="" class="play_btn" />
+        <!-- <my-icon name="bofang_mian" size="0.96rem" class="play_btn"></my-icon> -->
         <div class="bottom_time">
           <div class="time">{{ totime(item.duration) }}</div>
         </div>
@@ -54,7 +57,8 @@
         <div class="video">
           <img :src="item.imageUrl" alt="" class="cover_img" />
         </div>
-        <my-icon name="bofang_mian" size="0.96rem" class="play_btn"></my-icon>
+        <!-- <my-icon name="bofang_mian" size="0.96rem" class="play_btn"></my-icon> -->
+        <img :src="play" alt="" class="play_btn" />
         <div class="bottom_time">
           <div class="time">{{ totime(item.duration) }}</div>
         </div>
@@ -121,14 +125,14 @@ export default {
     [CenterPopup.name]: CenterPopup,
   },
   filters: {
-    filterType(type) {
+    filterType(type, originalVideoType) {
       if (type === 1) {
         return '发布了问题'
       } else if (type === 2) {
         return '发表了文章'
-      } else if (type === 5) {
+      } else if (type === 5 && originalVideoType === 1) {
         return '发布了视频'
-      } else if (type === 6) {
+      } else if (type === 5 && originalVideoType === 2) {
         return '发布了小视频'
       } else {
         return '回答了问题'
@@ -153,6 +157,7 @@ export default {
         confirmButtonText: '好的',
       },
       showPop: false,
+      play: 'https://cdn.shupian.cn/sp-pt/wap/images/fqrewnz3wu80000.png',
     }
   },
 
@@ -256,9 +261,6 @@ export default {
     },
     open(item) {
       if (this.isInApp && this.appInfo.appCode === 'CPSAPP') {
-        console.log('++++++++this.active', this.active)
-        console.log('++++++++this.item', item.id)
-        console.log('++++++++this.originalVideoType', item.originalVideoType)
         if (item.type === 5 && item.originalVideoType === 1) {
           try {
             this.$appFn.dggOpenVideo(item.id, (res) => {
@@ -382,7 +384,6 @@ export default {
     width: 686px;
     height: 384px;
     background: #f5f5f5;
-    border-radius: 12px;
     position: relative;
     margin-top: 28px;
     .video {
@@ -390,6 +391,7 @@ export default {
       img {
         width: 100%;
         height: 100%;
+        border-radius: 12px;
       }
     }
     .play_btn {
@@ -401,7 +403,6 @@ export default {
       top: 50%;
       margin-top: -48px;
       margin-left: -48px;
-      opacity: 0.4;
     }
     .bottom_time {
       position: absolute;
@@ -429,7 +430,6 @@ export default {
     width: 483px;
     height: 852px;
     background: #f5f5f5;
-    border-radius: 12px;
     position: relative;
     margin-top: 28px;
     .video {
@@ -437,6 +437,7 @@ export default {
       img {
         width: 100%;
         height: 100%;
+        border-radius: 12px;
       }
     }
     .play_btn {
@@ -448,7 +449,6 @@ export default {
       top: 50%;
       margin-top: -48px;
       margin-left: -48px;
-      opacity: 0.4;
     }
     .bottom_time {
       position: absolute;
