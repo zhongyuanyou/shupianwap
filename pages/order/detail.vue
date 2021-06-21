@@ -231,7 +231,7 @@
       <!-- <div class="serve-time">
         <p>服务时间：9:00-24:00 周一至周日</p>
         <p class="btn">
-          <a href="tel://962540">
+          <a href="tel://028-954310">
             <my-icon
               name="per_ic_customer"
               size="0.28rem"
