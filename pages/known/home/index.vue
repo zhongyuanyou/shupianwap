@@ -143,7 +143,7 @@
               v-for="(item, index) in list"
               :key="index"
               class="item"
-              @click="open"
+              @click="open(item)"
             >
               <sp-image
                 width="3.72rem"
@@ -333,6 +333,7 @@ export default {
             console.error('changeTop error:', error)
           }
         } else {
+          console.log('item', item)
           try {
             this.$appFn.dggOpenSmallVideo(item.id, (res) => {
               const { code } = res || {}
