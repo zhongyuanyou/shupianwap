@@ -172,17 +172,31 @@
         <!-- 未支付订单可取消订单 根据订单状态判断-->
         <sp-button
           v-if="checkAfterSaleStatus() === 1"
-          type="primary"
-          class="btn-cancel"
+          class="btn-look"
           @click="handleClickItem(7)"
           >退款/售后</sp-button
         >
-        <!-- 未支付订单可取消订单 根据订单状态判断-->
         <sp-button
-          v-if="isShowCanCelBtn()"
+          v-if="checkAfterSaleStatus() === 2"
+          class="btn-look"
+          @click="handleClickItem(7)"
+          >售后中</sp-button
+        >
+        <sp-button
+          v-if="checkAfterSaleStatus() === 3"
+          class="btn-look"
+          @click="handleClickItem(7)"
+          >已售后</sp-button
+        >
+        <sp-button
+          v-if="checkAfterSaleStatus() === 4"
           type="primary"
-          class="btn-cancel"
-          @click="handleClickItem(1)"
+          class="btn-look"
+          @click="handleClickItem(7)"
+          >部分售后</sp-button
+        >
+        <!-- 未支付订单可取消订单 根据订单状态判断-->
+        <sp-button v-if="isShowCanCelBtn()" @click="handleClickItem(1)"
           >取消订单</sp-button
         >
         <!-- 客户订单状态 -->
@@ -428,15 +442,22 @@ export default {
       float: right;
       margin-bottom: 10px;
       height: auto;
-      margin-top: -20px;
+      margin-top: 30px;
+      overflow: hidden;
       .sp-button {
         font-size: 26px;
         height: 64px;
         border-radius: 32px;
-        padding: 0 25px;
+        padding: 0 20px;
         color: #999999;
         line-height: 1;
         margin: 0;
+        float: left;
+        margin-left: 14px;
+        border: 1px solid #cdcdcd;
+      }
+      .sp-button:first-child {
+        margin-left: 0;
       }
       .btn-cancel {
         color: #999999;
