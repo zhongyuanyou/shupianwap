@@ -300,6 +300,12 @@ export default {
         )
         return
       }
+      if (this.orderData.isSecuredTrade && this.orderData.isSecuredTrade === 1) {
+        this.$xToast.error(
+          '该订单付款方式为担保交易付款，请访问薯片PC网站或联系规划师付款！'
+        )
+        return
+      }
       if (this.fromPage === 'orderList' || this.fromPage === 'orderDetail') {
         // 同时判断有无关联订单
         if (this.checkHasOtherOrder()) {
