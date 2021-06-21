@@ -563,7 +563,7 @@ export default {
         3: 'ORDER_ORDER_TRADE_STATUS_COMPLETED,ORDER_ORDER_SALE_STATUS_COMPLETED,ORDER_ORDER_RESOURCE_STATUS_COMPLETED,ORDER_ORDER_SERVER_STATUS_COMPLETED', // 已完成
         4: 'ORDER_ORDER_TRADE_STATUS_CANCELLED,ORDER_ORDER_SALE_STATUS_CANCELLED,ORDER_ORDER_RESOURCE_STATUS_CANCELLED,ORDER_ORDER_SERVER_STATUS_CANCELLED', // 已取消
       }
-      for (const key of ALLSTATUS) {
+      for (const key in ALLSTATUS) {
         if (ALLSTATUS[key].match(code)) {
           return Number(key)
         }
@@ -577,9 +577,10 @@ export default {
           return Number(key)
       }
     },
-    // 判断订单售后状态 是否展示售后按钮 展示何种售后按钮
+    // 判断订单售后状态 是否展示售后按钮 展示何种售后按钮 0不售后 1退款售后 可售后 2 售后中 3售后完成 4 部分锁定 5已锁定
     checkAfterSaleStatus(orderData) {
       orderData = orderData || this.orderData || this.orderDetail
+
       // 1.意向单、担保交易订单不展示售后按钮，
       if (
         orderData.orderType === 0 ||
@@ -592,11 +593,49 @@ export default {
       // 无售后、部分售后标签，点击跳转到申请售后页面，
       // 售后中，则跳转到订单最新的售后中的售后详情，
       // 已售后则不展示售后按钮
-      const orderStatusNum = this.checkOrderStatus(orderData.orderStatusNo)
+      const orderStatusNum = this.checkOrderStatus(
+        orderData.orderStatusNo || ''
+      )
       if (orderStatusNum !== 2) {
         return 0
       }
-      return 1
+      // afterSaleStatus 售后状态
+      // AFTER_SALE_STATUS_0：不可售后;
+      // AFTER_SALE_STATUS_1：可售后;
+      // AFTER_SALE_STATUS_2：售后中;
+      // AFTER_SALE_STATUS_3:售后完成 ;
+      // AFTER_SALE_STATUS_4：部分售后;
+      // AFTER_SALE_STATUS_5：已锁定;
+      if (
+        orderData.afterSaleStatus &&
+        orderData.afterSaleStatus === 'AFTER_SALE_STATUS_1'
+      ) {
+        return 1
+      }
+      if (
+        orderData.afterSaleStatus &&
+        orderData.afterSaleStatus === 'AFTER_SALE_STATUS_2'
+      ) {
+        return 2
+      }
+      if (
+        orderData.afterSaleStatus &&
+        orderData.afterSaleStatus === 'AFTER_SALE_STATUS_3'
+      ) {
+        return 3
+      }
+      if (
+        orderData.afterSaleStatus &&
+        orderData.afterSaleStatus === 'AFTER_SALE_STATUS_4'
+      ) {
+        return 4
+      }
+      if (
+        orderData.afterSaleStatus &&
+        orderData.afterSaleStatus === 'AFTER_SALE_STATUS_5'
+      ) {
+        return 5
+      }
     },
     // 查询客户单下的关联订单
     getChildOrders(order) {
@@ -1052,7 +1091,15 @@ export default {
       }
     },
     //  跳转售后
-    toAfterSale() {},
+    toAfterSale(orderData) {
+      orderData = orderData || this.orderDetail || this.orderData
+      this.$router.push({
+        path: 'my/afterSale/list',
+        query: {
+          orderId: orderData.id,
+        },
+      })
+    },
     // 获取交易协议
     async getProtocol(categoryCode) {
       if (!categoryCode) {
