@@ -75,7 +75,7 @@ export default {
       this.showPop = false
     },
     checkOutApp() {
-      const ua = window.navigator.userAgent
+      const ua = window.navigator.userAgent.toLowerCase()
       let isBlur = false
       let url = ''
       let downLoadUrl = ''
