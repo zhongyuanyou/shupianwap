@@ -118,18 +118,20 @@
       v-if="(tabIndex == 4 || tabIndex == 5) && selectGoodsState"
       class="footer-nav"
     >
-      <sp-checkbox
-        v-model="checkedAllState"
-        checked-color="#4E78F5"
-        icon-size="0.4rem"
-        @change="checkedAllChange"
-        >全选</sp-checkbox
-      >
-
-      <div class="footer-btn">
-        <sp-button plain hairline type="primary" @click="delGoodsList"
-          >取消收藏</sp-button
+      <div class="footer_container">
+        <sp-checkbox
+          v-model="checkedAllState"
+          checked-color="#4E78F5"
+          icon-size="0.4rem"
+          @change="checkedAllChange"
+          >全选</sp-checkbox
         >
+
+        <div class="footer-btn">
+          <sp-button plain hairline type="primary" @click="delGoodsList"
+            >取消收藏</sp-button
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -353,22 +355,14 @@ export default {
     async delGoodsList() {
       console.log('delGoodsList')
       try {
-        const goodstype = this.tabIndex === 4 ? 1 : 2 // 服务商品1，交易商品2
-
-        // const data = new FormData()
-        // data.append('number', this.selectDelGoods)
         const data = this.selectDelGoods || []
+        this.loading = true
         const res = await this.$axios.post(shopApi.batch_dlt_goods, data)
-        // await this.$axios({
-        //   method: 'post',
-        //   url: '/abc/login',
-        //   data,
-        // }).then((res) => {
-        //   console.log(res)
-        // })
 
+        this.loading = false
         console.log(res)
         if (res.code === 200) {
+          this.ChangeSelectedGoodsState()
           this.init()
           this.onLoad()
           this.$xToast.success('取消成功')
@@ -399,11 +393,11 @@ export default {
   margin: 24px 0px 0px;
 
   .good-list-checkbox {
-    padding-right: 20px;
+    margin-right: 20px;
   }
 }
 ::v-deep .sp-checkbox__icon .sp-icon {
-  border: 1px solid #999999;
+  border: 1px solid #dddddd;
 }
 ::v-deep .sp-checkbox__label {
   font-family: PingFangSC-Medium;
@@ -514,10 +508,15 @@ export default {
   padding-bottom: env(safe-area-inset-bottom);
 
   font-size: 28px;
-  padding: 24px 40px;
+  min-width: 0%;
 
-  display: flex;
-  justify-content: space-between;
+  .footer_container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 40px;
+  }
 }
 
 ::v-deep.sp-hairline--surround::after {
