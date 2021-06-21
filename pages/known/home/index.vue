@@ -151,9 +151,11 @@
                 fit="cover"
                 :src="item.image"
               />
-              <div class="content">
-                <div class="count">{{ item.custTotalCount }} 次观看</div>
-                <div class="tile">{{ item.videoName }}</div>
+              <div class="content_box">
+                <div class="content">
+                  <div class="count">{{ item.custTotalCount }} 次观看</div>
+                  <div class="tile">{{ item.videoName }}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -721,6 +723,7 @@ export default {
     }
 
     .list_container {
+      background: #ffffff;
       .item {
         background: #ffffff;
         padding: 28px 32px 28px;
@@ -870,6 +873,7 @@ export default {
         display: flex;
         flex-wrap: wrap;
         background-color: #fff;
+        padding: 0 2px;
         .item {
           position: relative;
           display: inline-block;
@@ -877,28 +881,41 @@ export default {
           width: 50%;
           height: 661px;
           margin: 2px 0;
-          .content {
+          ::v-deep .sp-image__img {
+            border-radius: 4px;
+          }
+          .content_box {
             position: absolute;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 0 20px;
-            font-family: @fontf-pfsc-med;
-            font-weight: bold;
-            color: #fff;
-            width: 100%;
-            height: 200px;
             bottom: 0;
-            left: 0;
-            right: 0;
-            .count {
-              font-size: 24px;
-              opacity: 0.8;
-              margin-bottom: 8px;
-            }
-            .tile {
-              font-size: 36px;
-              .textOverflow(2);
+            height: 200px;
+            width: 100%;
+            background-image: linear-gradient(
+              0deg,
+              rgba(0, 0, 0, 0.4) 0%,
+              rgba(0, 0, 0, 0) 100%
+            );
+            border-radius: 0 0 12px 12px;
+            .content {
+              position: absolute;
+              bottom: 16px;
+              left: 20px;
+              .count {
+                font-size: 24px;
+                opacity: 0.8;
+                margin-bottom: 8px;
+                line-height: 32px;
+                color: #fff;
+                font-weight: bold;
+              }
+              .tile {
+                line-height: 44px;
+                font-size: 36px;
+                .textOverflow(2);
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+                color: #fff;
+                font-weight: bold;
+                width: 340px;
+              }
             }
           }
         }
