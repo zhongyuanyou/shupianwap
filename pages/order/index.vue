@@ -312,6 +312,11 @@ export default {
           this.opType = 'confirmComplete'
           this.confirmOrder()
           break
+        case 7:
+          // 退款 售后
+          this.opType = 'afterSale'
+          this.toAfterSale()
+          break
       }
     },
   },

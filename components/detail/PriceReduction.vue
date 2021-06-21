@@ -129,6 +129,7 @@ export default {
         customerPhone:
           this.$refs.priceFrom.phone || this.userInfoData.mainAccount,
         customerName: this.userInfoData.fullName || '游客',
+        sourceUrl: location.href,
         customerSex: this.userInfoData.sex || 2,
         customerAttribute: '交易商品降价提醒',
         // content: `yxjg:${this.$refs.bargCom.price}`, // 留言内容

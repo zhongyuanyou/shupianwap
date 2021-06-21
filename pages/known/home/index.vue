@@ -143,7 +143,7 @@
               v-for="(item, index) in list"
               :key="index"
               class="item"
-              @click="open"
+              @click="open(item)"
             >
               <sp-image
                 width="3.72rem"
@@ -188,6 +188,7 @@ import utils from '@/utils/changeBusinessData'
 import { domainUrl } from '~/config/index'
 import DownLoadArea from '@/components/common/downLoadArea'
 import ShareModal from '@/components/common/ShareModal'
+import { numChangeW } from '@/utils/common'
 
 export default {
   name: 'Collection',
@@ -267,10 +268,10 @@ export default {
           name: '视频',
           index: 5,
         },
-        // {
-        //   name: '小视频',
-        //   index: 6,
-        // },
+        {
+          name: '小视频',
+          index: 6,
+        },
       ],
       list: [],
       loading: false,
@@ -282,6 +283,7 @@ export default {
       adList: [],
       showPop: false,
       sourceType: 1,
+      error: false,
     }
   },
   computed: {
@@ -315,8 +317,6 @@ export default {
   methods: {
     open(item) {
       if (this.isInApp && this.appInfo.appCode === 'CPSAPP') {
-        console.log('++++++++this.active', this.active)
-        console.log('++++++++this.item', item.id)
         if (this.active === 5) {
           try {
             this.$appFn.dggOpenVideo(item.id, (res) => {
@@ -333,6 +333,7 @@ export default {
             console.error('changeTop error:', error)
           }
         } else {
+          console.log('item', item)
           try {
             this.$appFn.dggOpenSmallVideo(item.id, (res) => {
               const { code } = res || {}
@@ -522,10 +523,11 @@ export default {
       console.log('点击了发布')
     },
     async getList() {
+      // if (this.active === 0) {
       const { code, message, data } = await this.$axios.post(
         knownApi.home.list,
         {
-          type: this.active,
+          types: [this.active],
           userIds: this.homeUserId || this.userInfo.userId,
           currentUserId: this.userInfo.userId,
           page: this.page,
@@ -534,6 +536,11 @@ export default {
       )
       if (code === 200) {
         this.list = this.list.concat(data.rows)
+        if (this.active === 6) {
+          this.list.forEach((item) => {
+            item.custTotalCount = numChangeW(item.totalViewCount)
+          })
+        }
         this.loading = false
         this.page++
         if (this.page > data.totalPage) {
