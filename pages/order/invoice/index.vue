@@ -13,8 +13,19 @@
       </sp-work-tabs>
     </sp-sticky>
     <AllInvoice v-if="tabActive === 0"></AllInvoice>
-    <HistoryInvoice v-if="tabActive === 1"></HistoryInvoice>
-
+    <HistoryInvoice v-else-if="tabActive === 1"></HistoryInvoice>
+    <HeadManagement v-else-if="tabActive === 2"></HeadManagement>
+    <div>
+      <sp-empty
+        class="empty-text"
+        :description="
+          tabActive === 0 || tabActive === 1
+            ? '您还没有任何发票哦！'
+            : '您尚未添加发票抬头哦！'
+        "
+        :image="$ossImgSetV2('feper6k9s0o0000.png')"
+      />
+    </div>
     <!-- <template #left>
         <div @click="back">
           <my-icon
@@ -48,6 +59,7 @@ import {
   BottombarButton,
   WorkTab,
   WorkTabs,
+  Empty,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 
@@ -60,6 +72,7 @@ import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 
 import AllInvoice from '@/components/order/invoice/index/AllInvoice.vue'
 import HistoryInvoice from '@/components/order/invoice/index/HistoryInvoice.vue'
+import HeadManagement from '@/components/order/invoice/index/HeadManagement.vue'
 
 export default {
   layout: 'keepAlive',
@@ -70,11 +83,13 @@ export default {
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
     [Sticky.name]: Sticky,
+    [Empty.name]: Empty,
     // TabCurve,
     AllInvoice,
     AllInvoiceClassify,
     HistoryInvoice,
     HistoryInvoiceClassify,
+    HeadManagement,
   },
   data() {
     return {
@@ -96,5 +111,12 @@ export default {
 
 <style lang="less" scoped>
 .invoice {
+  .empty-text ::v-deep .sp-empty__description {
+    font-size: 30px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #222222;
+    line-height: 30px;
+  }
 }
 </style>
