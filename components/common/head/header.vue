@@ -27,7 +27,7 @@
               class="back-icon"
               name="nav_ic_back"
               size="0.4rem"
-              color="#1A1A1A"
+              :color="backIconColor"
               @click.native="onLeftClick"
             ></my-icon>
           </slot>
@@ -71,6 +71,10 @@ export default {
     fixed: {
       type: Boolean,
       default: () => true,
+    },
+    backIconColor: {
+      type: String,
+      default: () => '#1A1A1A',
     },
     // 自定义类名
     headClass: {

@@ -190,6 +190,16 @@ const orderStatusObj = {
     status: 'ORDER_CUS_STATUS_CANCELLED',
   },
 }
+
+// 发票
+const billStatusCodesObj = {
+  1: 'INVOICE_STATUS_WAITE',
+  2: 'INVOICE_STATUS_PROCESS',
+  3: 'INVOICE_STATUS_SUCCESS',
+  4: 'INVOICE_STATUS_FAIL',
+  5: 'INVOICE_STATUS_AUDIT',
+  6: 'INVOICE_STATUS_REJECT',
+}
 export default {
   data() {
     return {
@@ -1256,6 +1266,20 @@ export default {
         return '500-1000万'
       } else {
         return '1000万以上'
+      }
+    },
+    // 判断发票状态 return num 0 无发票 1待开票 2开票中 3开票成功 4开票失败 5审核中 6已驳回
+    checkBillStatus(orderData) {
+      orderData = orderData || this.orderData || this.orderDetail
+      if (this.checkOrderStatus(orderData.orderStatusNo) !== 3) {
+        return 0
+      }
+      const billStatusCode =
+        orderData.userInvoiceStatus || orderData.merchantInvoiceStatus
+      for (const key in billStatusCodesObj) {
+        if (billStatusCodesObj[key].match(billStatusCode)) {
+          return key
+        }
       }
     },
   },

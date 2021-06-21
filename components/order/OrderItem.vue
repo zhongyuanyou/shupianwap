@@ -169,6 +169,18 @@
     </div>
     <div class="btn-area">
       <div class="inner">
+        <sp-button
+          v-if="checkBillStatus() === 1"
+          class="btn-look"
+          @click="handleClickItem(8)"
+          >申请发票</sp-button
+        >
+        <sp-button
+          v-if="checkBillStatus() === 3"
+          class="btn-look"
+          @click="handleClickItem(8)"
+          >查看发票</sp-button
+        >
         <!-- 未支付订单可取消订单 根据订单状态判断-->
         <sp-button
           v-if="checkAfterSaleStatus() === 1"
