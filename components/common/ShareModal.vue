@@ -177,6 +177,7 @@ export default {
           customerPort: 'COMDIC_PLATFORM_CRISPS',
           bindType: 'CUSTOMER_BDLX_FXBD',
           requestPlatform: 'COMDIC_PLATFORM_CRISPS',
+          copartnerUserType: 'ORDINARY_USER',
         })
         .then((res) => {
           console.log('res', res)
