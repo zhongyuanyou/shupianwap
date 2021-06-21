@@ -164,7 +164,7 @@ import ProtocolField from '@/components/login/ProtocolField'
 import PhoneField from '@/components/login/PhoneField'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import formHandle from '@/mixins/formHandle'
-import { auth } from '@/api'
+import { auth, userinfoApi } from '@/api'
 import { checkPhone, checkAuthCode, checkPassword } from '@/utils/check.js'
 import { openLink } from '@/utils/common.js'
 import ImgAuthDialog from '@/components/common/imgAuth'
@@ -208,11 +208,11 @@ export default {
     }
   },
 
-  computed: {
-    ...mapState({
-      imExample: (state) => state.im.imExample, // IM 实例
-    }),
-  },
+  // computed: {
+  //   ...mapState({
+  //     imExample: (state) => state.im.imExample, // IM 实例
+  //   }),
+  // },
   mounted() {
     this.$store.dispatch('user/clearUser')
   },
@@ -229,29 +229,11 @@ export default {
         return
       }
       this.login().then((data) => {
-        this.$xToast.success('登录成功！')
         this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
-        // 使用定时器，等待提示信息展示1.5s 再跳转
-        setTimeout(() => {
-          // 跳转外连接
-          if (this.sourcePlatform) {
-            const keyList = SOURCE_PLATFROM_PARAMS[this.sourcePlatform]
-            const query = Array.isArray(keyList)
-              ? keyList.reduce((accumulator, key) => {
-                  data = data || {}
-                  if (data[key]) {
-                    accumulator[key] = data[key]
-                  }
-                  return accumulator
-                }, {})
-              : {}
-            openLink(this.redirect, query)
-            return
-          }
-          this.$router.replace(this.redirect)
-        }, 1500)
+        this.getUserInfo(data)
       })
     },
+
     handleSwitchLookPassword() {
       this.passwordFieldType =
         this.passwordFieldType === 'password' ? 'text' : 'password'
@@ -397,7 +379,53 @@ export default {
         return Promise.reject(error)
       }
     },
-
+    async getUserInfo(data) {
+      try {
+        const params = {
+          id: data.userId,
+        }
+        const res = await this.$axios.get(userinfoApi.info, { params })
+        this.loading = false
+        if (res.code === 200 && res.data && typeof res.data === 'object') {
+          this.info = res.data
+          this.userName = res.data.nickName
+          this.realStatus = res.data.realStatus
+          localStorage.setItem('info', JSON.stringify(this.info))
+          // console.log(res.data.realStatus)
+          this.$store.dispatch('user/setInfo', res.data)
+          // 使用定时器，等待提示信息展示1.5s 再跳转
+          this.$xToast.success('登录成功！')
+          setTimeout(() => {
+            // 跳转外连接
+            if (this.sourcePlatform) {
+              const keyList = SOURCE_PLATFROM_PARAMS[this.sourcePlatform]
+              const query = Array.isArray(keyList)
+                ? keyList.reduce((accumulator, key) => {
+                    data = data || {}
+                    if (data[key]) {
+                      accumulator[key] = data[key]
+                    }
+                    return accumulator
+                  }, {})
+                : {}
+              openLink(this.redirect, query)
+              return
+            }
+            this.$router.replace(this.redirect)
+          }, 1500)
+        } else {
+          // 清除用户缓存信息
+          this.info = {}
+          this.$store.dispatch('user/clearUser')
+          localStorage.removeItem('info')
+        }
+      } catch (err) {
+        this.info = {}
+        this.$store.dispatch('user/clearUser')
+        localStorage.removeItem('info')
+        localStorage.removeItem('userId')
+      }
+    },
     // 数据验证
     checkFormData() {
       const { tel, authCode, account, password, readed } = this.loginForm

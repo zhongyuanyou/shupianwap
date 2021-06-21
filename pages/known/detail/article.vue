@@ -2,8 +2,9 @@
   <div class="article">
     <HeaderSlot>
       <div v-if="!showHead" class="flex">
-        <div>
+        <div class="nav-back">
           <my-icon
+            v-if="!isShare"
             name="nav_ic_back"
             size="0.40rem"
             color="#1a1a1a"
@@ -11,7 +12,7 @@
             @click.native="$back()"
           ></my-icon>
         </div>
-        <div>
+        <div class="search">
           <my-icon
             style="margin-right: 0.15rem"
             name="nav_ic_searchbig"
@@ -39,6 +40,11 @@
         />
       </div>
     </HeaderSlot>
+    <DownLoadArea
+      v-if="isShare"
+      :ios-link="iosLink"
+      :androd-link="androdLink"
+    />
     <div class="title-area">
       <div class="title">{{ articleDetails.title }}</div>
     </div>
@@ -150,6 +156,7 @@
         <div class="cancel" @click="popupShow = false">取消</div>
       </div>
     </sp-popup>
+    <ShareModal />
   </div>
 </template>
 
@@ -174,6 +181,9 @@ import DetailArticleList from '@/components/mustKnown/DetailArticleList'
 // 默认评论列表
 import Comment from '~/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
+import DownLoadArea from '@/components/common/downLoadArea'
+import ShareModal from '@/components/common/ShareModal'
+// import SpBottom from '@/components/common/spBottom/SpBottom'
 export default {
   layout: 'keepAlive',
   components: {
@@ -189,7 +199,9 @@ export default {
     // PageHead,
     PageHead2,
     DetailArticleList,
+    DownLoadArea,
     // Header,
+    ShareModal,
   },
   async asyncData({ $axios, query, store }) {
     let articleDetails = {}
@@ -212,6 +224,9 @@ export default {
   },
   data() {
     return {
+      iosLink: 'cpsccustomer://',
+      androdLink: 'cpsccustomer://',
+      isShare: false,
       popupShow: false,
       articleList: [],
       showHead: false,
@@ -237,13 +252,16 @@ export default {
     },
   },
   created() {
-    this.getRecommendData()
-    if (this.userInfo.token) {
-      this.initFollow()
+    if (process.client) {
+      this.getRecommendData()
+      if (this.userInfo.token) {
+        this.initFollow()
+      }
     }
   },
 
   mounted() {
+    this.isShare = this.$route.query.isShare
     if (this.$route.query.status === 'release') {
       this.releaseFlag = true
     }
@@ -503,11 +521,20 @@ export default {
 //   z-index: 99;
 // }
 .flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  // display: flex;
+  // justify-content: space-between;
+  // align-items: center;
   height: 0.88rem;
   padding: 0 0.32rem;
+  .nav-back {
+    float: left;
+    margin-top: 24px;
+    width: 40px;
+    height: 40px;
+  }
+  .search {
+    float: right;
+  }
   div {
     display: flex;
     height: 0.88rem;
@@ -568,6 +595,7 @@ export default {
 .main {
   padding: 40px;
   .user-info {
+    margin-top: 10px;
     display: flex;
     align-items: center;
     .img {

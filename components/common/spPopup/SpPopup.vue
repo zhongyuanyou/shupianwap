@@ -67,7 +67,7 @@
               <span class="txt">快速服务咨询</span>
             </div>
           </div>
-          <div class="popup-btn">
+          <div class="popup-btn" @click="handleClickBtn()">
             <span>同意委托</span>
           </div>
           <div class="prompt">
@@ -89,8 +89,8 @@ export default {
       default: () => {
         return {
           name: '规划师', // 规划师姓名
-          tel: '', // 规划师电话号码
-          id: '', // 规划师id
+          tel: '13131313131', // 规划师电话号码
+          id: '131311414', // 规划师id
         }
       },
     },
@@ -98,7 +98,15 @@ export default {
   data() {
     return {
       visible: true, // 是否最大化显示 true为最大化显示 false为最小化显示
+      plannerId: '',
+      shareId: '',
+      partnerId: '',
     }
+  },
+  created() {
+    this.plannerId = this.$route.query.plannerId
+    this.shareId = this.$route.query.shareId
+    this.partnerId = this.$route.query.partnerId
   },
   methods: {
     showFullScreen() {
@@ -108,6 +116,11 @@ export default {
     showInception() {
       // 显示最小化
       this.visible = false
+    },
+    handleClickBtn() {
+      console.log('plannerId', this.plannerId)
+      console.log('shareId', this.shareId)
+      console.log('partnerId', this.partnerId)
     },
   },
 }

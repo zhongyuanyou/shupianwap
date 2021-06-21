@@ -195,7 +195,6 @@ export default {
   computed: {
     cityCode() {
       const cityObj = this.$store.state.city.currentCity
-      console.log('cityObj', cityObj)
       return cityObj
     },
     isShowOpenApp() {
@@ -291,7 +290,6 @@ export default {
     },
     confirmFilters() {
       // 确认筛选
-      console.log('this.activeData', this.activeData)
       this.saveActiveData = clone(this.activeData)
       this.formData.classCodes = this.typeDataHandle()
       this.initGoodsList()
@@ -389,7 +387,6 @@ export default {
     computedHeight() {
       // 计算列表的最大高
       const top = this.$refs.splist.$el.getBoundingClientRect().top
-      console.log('top', top)
       this.maxHeight = document.body.clientHeight - top
       // console.log('this.$refs.splist', this.$refs.splist)
       // const installAPPHeight = this.$refs.installApp.$el.clientHeight

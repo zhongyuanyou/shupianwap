@@ -40,9 +40,11 @@
     "swiper": "^6.4.5",
     "vant": "^2.12.19",
     "vconsole": "^3.3.4",
+    "video.js": "^7.12.3",
     "vue-awesome-swiper": "^4.1.1",
     "vue-html5-editor": "^1.1.1",
     "vue-quill-editor": "^3.0.6",
+    "xgplayer": "^2.22.1",
     "zipkin": "^0.22.0",
     "zipkin-transport-http": "^0.22.0"
   },

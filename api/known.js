@@ -1,7 +1,7 @@
 'use strict'
 
 import { CHIPS_WAP_BASE_URL } from '../config/constant'
-// const CHIPS_WAP_BASE_URL = 'http://172.16.133.115:7001/service'
+// const CHIPS_WAP_BASE_URL = 'http://172.16.133.214:7001/service'
 
 const knownApi = {
   comments: {
@@ -27,6 +27,9 @@ const knownApi = {
     subjectList: `${CHIPS_WAP_BASE_URL}/nk/known_category/v1/subject.do`, // 获取分类列表
     attentionMore: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/attention_more.do`, // 关注更多列表
     detail: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_detail.do`,
+
+    articleDetail: `${CHIPS_WAP_BASE_URL}/nk/known_share/v1/article_detail.do`,
+
     recommendArticle: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/recommendArticle.do`,
     findAttention: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/findAttention.do`,
     findMyInvitedPage: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_my_invited_page.do`, // 我被邀请回答的问题分页查询
@@ -51,6 +54,13 @@ const knownApi = {
   },
   createCenter: {
     findListByStatus: `${CHIPS_WAP_BASE_URL}/yk/known/v2/find_question_article_bystatus.do`, // 搜索 文章 | 问题 | 回答 list
+  },
+  video: {
+    videoList: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/video_list.do`, // 查询视频列表
+    videoDetail: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/video_detail.do`, // 查询视频详情
+    videoUserDetail: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/video_user_detail.do`, // 查询视频详情,包含用户信息及头像
+    courseList: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/course_list.do`, // 查询课程列表
+    courseDetail: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/course_detail.do`, // 查询课程详情
   },
 }
 export default knownApi

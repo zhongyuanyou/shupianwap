@@ -244,9 +244,7 @@ export default {
         .then((data) => {
           if (this.formData.needTypes === 1) {
             this.items = data
-            console.log('typeData',data.typeData)
             if (this.classcode && this.isOne) {
-              console.log('jyFilterData', this.jyFilterData)
               for (let i = 0; i < this.items.typeData.length; i++) {
                 if (this.classcode.navcode === this.items.typeData[i].code) {
                   this.$refs.dropDownMenu.navIndex = i + 1
@@ -285,7 +283,6 @@ export default {
                           } else {
                             this.jyFilterData[0].name = `${this.jyFilterData[0].name},${this.items.typeData[i].children[b].name}`
                           }
-                          console.log(this.jyFilterData[0].name)
                         }
                       }
                     }
@@ -293,7 +290,6 @@ export default {
                       this.itemsclass[1].services
                     this.isOne = false
                   }
-                  console.log('jyFilterData[0]', this.jyFilterData[0])
                 }
               }
               if (this.classcode.priceid) {
@@ -339,7 +335,7 @@ export default {
           this.skeletonLoading = false
         })
         .catch((err) => {
-          console.log(err)
+          console.error(err)
           this.skeletonLoading = false
           this.$refs.list.loading = false
         })
@@ -348,7 +344,6 @@ export default {
       console.log(data, filrerName)
     },
     pagefn(val) {
-      console.log(val)
       this.formData.start = val
       this.getlist()
     },

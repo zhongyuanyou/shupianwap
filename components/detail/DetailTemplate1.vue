@@ -14,11 +14,21 @@
         @on-click-left="onClickLeft"
       >
         <template #left>
-          <div>
+          <div v-if="!isShare">
             <my-icon name="nav_ic_back" size="0.4rem" color="#fff"></my-icon>
           </div>
         </template>
         <template #right>
+          <div>
+            <my-icon
+              :class="sellingDetail.isSave ? 'icon-red' : ''"
+              style="margin-right: 0.36rem"
+              name="shoucang_mian"
+              size="0.4rem"
+              color="#fff"
+              @click.native="handleClickSave"
+            />
+          </div>
           <div>
             <my-icon
               style="margin-right: 0.36rem"
@@ -109,7 +119,7 @@ import ServiceDetail from '~/components/detail/ServiceDetail'
 import RelatedRecommend from '~/components/detail/RelatedRecommend'
 import bottomBar from '@/components/detail/bottomBar/index'
 import getUserSign from '~/utils/fingerprint'
-import { productDetailsApi, recommendApi } from '~/api'
+import { productDetailsApi, recommendApi, shopApi } from '~/api'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import { copyToClipboard } from '~/utils/common'
 import imHandle from '~/mixins/imHandle'
@@ -308,6 +318,7 @@ export default {
         },
       ],
       commentdata: [],
+      isShare: false,
     }
   },
   computed: {
@@ -332,6 +343,7 @@ export default {
     }
   },
   async mounted() {
+    this.isShare = this.$route.query.isShare
     // 假如未获取到站点信息,再获取地理位置
     if (!this.city.code) {
       await this.POSITION_CITY({ type: 'init' })
@@ -349,6 +361,80 @@ export default {
     ...mapActions({
       POSITION_CITY: 'city/POSITION_CITY',
     }),
+    // shouchang
+    handleClickSave() {
+      if (this.sellingDetail.isSave) {
+        this.cancelSave()
+      } else {
+        this.addSave()
+      }
+    },
+    // 取消收藏
+    cancelSave() {
+      // 直接调商户中心接口，未经过node中间层，中间层无法处理formData
+      const classCodeLevel = this.sellingDetail.classCodeLevel
+      let codeArr = []
+      if (classCodeLevel) {
+        codeArr = classCodeLevel.split(',')
+      }
+      const formData = new FormData()
+      formData.append('goodsId', this.sellingDetail.id)
+      this.$axios
+        .post(shopApi.cancelSave, formData)
+        .then((res) => {
+          if (res.code === 200) {
+            this.$xToast.success('取消成功')
+            this.sellingDetail.isSave = false
+          } else {
+            this.$xToast.error(res.message || '操作失败')
+          }
+        })
+        .catch((err) => {
+          console.log('err', err)
+          this.$xToast.error(err.message || '操作失败')
+        })
+    },
+    // 添加收藏
+    addSave() {
+      const classCodeLevel = this.sellingDetail.classCodeLevel
+      let codeArr = []
+      if (classCodeLevel) {
+        codeArr = classCodeLevel.split(',')
+      }
+      const params = {
+        goodsDtos: [
+          {
+            goodsId: this.sellingDetail.id,
+            goodsCode: this.sellingDetail.classCode,
+            catalog1: codeArr.length && codeArr.length > 0 ? codeArr[0] : '',
+            catalog2: codeArr.length && codeArr.length > 1 ? codeArr[1] : '',
+            catalog3: codeArr.length && codeArr.length > 2 ? codeArr[2] : '',
+            goodsType: 'proGoodsServer',
+            ext1: 1,
+          },
+        ],
+      }
+      this.$axios
+        .post(shopApi.addGoods, params)
+        .then((res) => {
+          console.log('res', res)
+          if (res && res.code === 200) {
+            this.$xToast.show({
+              message: '收藏成功',
+              duration: 3000,
+              icon: 'toast_ic_comp',
+              forbidClick: true,
+            })
+            this.sellingDetail.isSave = true
+          } else {
+            this.$xToast.error(res.message || '收藏失败')
+          }
+        })
+        .catch((err) => {
+          console.log('err', err)
+          this.$xToast.error('收藏失败')
+        })
+    },
     comment() {
       const user = navigator.userAgent.toLowerCase()
       console.log(user)
@@ -373,6 +459,7 @@ export default {
       }
     },
     onClickLeft() {
+      if (this.isShare) return
       // 返回上一页
       if (history.length < 2) {
         this.$router.push({
@@ -412,7 +499,7 @@ export default {
           productId: this.sellingDetail.id, // 产品ID（产品详情页必传）
           productType: 'PRO_CLASS_TYPE_SALES', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
           title: this.sellingDetail.name, // 产品名称（产品详情页传、咨询页等）
-          platform: 'app', // 平台（app,m,pc）
+          platform: 'm', // 平台（app,m,pc）
           formatIdOne: formatId1 || formatId2,
           page: { pageNo: this.productPage, pageSize: this.productLimit },
         })
@@ -457,14 +544,11 @@ export default {
               ? this.sellingDetail.classCodeLevel.split(',')[1]
               : null, // 二级产品分类
             login_name: null, // 规划师ID(选填)
-            productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
+            productType: 'PRO_CLASS_TYPE_TRANSACTIO3333N', // 产品类型
             sceneId: 'app-cpxqye-01', // 场景ID
             user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-            platform: 'app', // 平台（app,m,pc）
+            platform: 'm', // 平台（app,m,pc）
             productId: this.sellingDetail.id, // 产品id
-            formatIdOne:
-              this.sellingDetail.classCodeLevel.split(',')[0] ||
-              this.sellingDetail.classCodeLevel.split(',')[1],
           },
         })
         .then((res) => {
@@ -494,15 +578,13 @@ export default {
           productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
           sceneId: 'app-cpxqye-02', // 场景ID
           user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-          platform: 'app', // 平台（app,m,pc）
+          platform: 'm', // 平台（app,m,pc）
           productId: this.sellingDetail.id, // 产品id
-          formatIdOne:
-            this.sellingDetail.classCodeLevel.split(',')[0] ||
-            this.sellingDetail.classCodeLevel.split(',')[1],
         },
       })
       if (plannerRes.code === 200) {
         this.tcPlannerBooth = plannerRes.data.records[0]
+        console.log('tcPlannerBooth', this.tcPlannerBooth)
       }
     },
     // 购物车
@@ -575,6 +657,12 @@ export default {
       background-color: #fff !important;
       .spiconfont {
         color: #1a1a1a !important;
+      }
+      #icon-red {
+        color: #4974f5 !important;
+      }
+      .icon-red {
+        color: #4974f5 !important;
       }
     }
   }

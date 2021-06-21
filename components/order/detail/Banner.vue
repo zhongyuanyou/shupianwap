@@ -169,7 +169,6 @@ export default {
         .enablePayMoney(postData)
         .then((res) => {
           this.countDown(res.countDownTimeLong || res.data.countDownTimeLong)
-          console.log('支付信息', res)
         })
         .catch((e) => {
           if (e.code !== 200) {

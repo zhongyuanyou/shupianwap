@@ -7,7 +7,7 @@
   >
     <HeaderSlot>
       <div class="flex">
-        <div>
+        <div v-if="!isShare">
           <my-icon
             name="nav_ic_back"
             size="0.40rem"
@@ -17,7 +17,7 @@
           ></my-icon>
         </div>
         <p class="title">{{ title }}</p>
-        <div>
+        <div class="right-area">
           <my-icon
             style="margin-right: 0.15rem"
             name="nav_ic_searchbig"
@@ -37,6 +37,10 @@
         </div>
       </div>
     </HeaderSlot>
+    <DownLoadArea
+      :ios-link="iosLink"
+      :androd-link="androdLink"
+    />
     <div class="problem">
       <div class="tag">
         <ul class="box">
@@ -295,6 +299,7 @@
         <div class="cancel" @click="cancel">取消</div>
       </div>
     </sp-popup>
+    <ShareModal v-if="isShare" />
   </div>
 </template>
 
@@ -305,6 +310,8 @@ import CommentList from '@/components/mustKnown/CommentList'
 import { knownApi, userinfoApi } from '@/api'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import util from '@/utils/changeBusinessData'
+import DownLoadArea from '@/components/common/downLoadArea'
+import ShareModal from '@/components/common/ShareModal'
 export default {
   layout: 'keepAlive',
   name: 'Detail',
@@ -316,6 +323,8 @@ export default {
     [Dialog.name]: Dialog,
     [Bottombar.name]: Bottombar,
     CommentList,
+    DownLoadArea,
+    ShareModal,
   },
   async asyncData({ $axios, query, store }) {
     let questionDetails = []
@@ -344,6 +353,9 @@ export default {
   },
   data() {
     return {
+      iosLink: 'cpsccustomer://',
+      androdLink: 'cpsccustomer://',
+      isShare: false,
       title: '',
       contentshow: false,
       answersort: 0,
@@ -373,6 +385,7 @@ export default {
     }),
   },
   created() {
+    this.isShare = this.$route.query.isShare
     if (this.$route.query.id) {
       this.currentDetailsId = this.$route.query.id
     }
@@ -676,7 +689,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   height: 0.88rem;
-  padding: 0 0.32rem;
+  padding: 0 32px;
   div {
     display: flex;
     height: 0.88rem;
@@ -691,6 +704,9 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .right-area {
+    float: right;
   }
 }
 .down_slide_list {

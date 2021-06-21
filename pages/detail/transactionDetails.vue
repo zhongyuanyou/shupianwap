@@ -5,6 +5,7 @@
       scene-id1="app-jycpxq-01"
       scene-id2="app-jycpxq-02"
     />
+    <ShareModal />
   </div>
 </template>
 
@@ -13,10 +14,12 @@ import DetailTemplate from '~/components/detail/DetailTemplate'
 import { productDetailsApi } from '~/api'
 import getUserSign from '~/utils/fingerprint'
 import { GOODSLIST } from '~/config/constant'
+import ShareModal from '@/components/common/ShareModal'
 export default {
   name: 'Id',
   components: {
     DetailTemplate,
+    ShareModal,
   },
   async asyncData({ $axios, query, app, store }) {
     try {
@@ -42,6 +45,7 @@ export default {
   },
   data() {
     return {
+      isShare: false,
       tcProductDetailData: {
         classCodeLevelList: [],
         platformPrice: '0',
@@ -72,6 +76,9 @@ export default {
       }
       return imdata
     },
+  },
+  mounted() {
+    this.isShare = this.$route.query.isShare
   },
   head: {
     title: '商品详情',

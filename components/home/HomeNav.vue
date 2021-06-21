@@ -106,11 +106,9 @@ export default {
       star.forEach((i, a) => {
         arr.push(star[a])
         if (end[a]) {
-          console.log(a)
           arr.push(end[a])
         }
       })
-      console.log(arr)
       // const oddNavArr =
       // 取前10个中的奇数项
       // const oddNavArr = rollNav.filter((item, index) => {

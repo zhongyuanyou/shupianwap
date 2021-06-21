@@ -87,3 +87,99 @@ export const setUrlParams = (url, data = {}) => {
   const newSearch = Qs.stringify(newSearchObj)
   return origin + pathname + '?' + newSearch
 }
+
+/**
+ * @param {Any} val
+ * @desc 判断类型
+ */
+export const custTypeOf = (val) => {
+  return Object.prototype.toString.call(val).match(/([^\s.*]+)(?=]$)/g)[0]
+}
+
+/**
+ *
+ * @param {Object} dst 目标对象
+ * @param {Object} src 被复制对象
+ * @returns 目标对象
+ */
+export const deepCopy = (dst, src) => {
+  if (custTypeOf(src) === 'Object' && custTypeOf(dst) === 'Object') {
+    Object.keys(src).forEach((key) => {
+      if (custTypeOf(src[key]) === 'Object' && !(src[key] instanceof Node)) {
+        if (!dst[key]) {
+          dst[key] = src[key]
+        } else {
+          deepCopy(dst[key], src[key])
+        }
+      } else if (custTypeOf(src[key]) === 'Array') {
+        dst[key] =
+          custTypeOf(dst[key]) === 'Array'
+            ? dst[key].concat(src[key])
+            : src[key]
+      } else {
+        dst[key] = src[key]
+      }
+    })
+    return dst
+  }
+}
+
+/**
+ * 数字转化为万
+ * @param {Number} num 正整数
+ * @param {Str} suffix 后缀标识,默认为w
+ * @returns 返回加下标识的值
+ */
+export const numChangeW = (num, suffix = 'w') => {
+  if (custTypeOf(num) === 'Number') {
+    if (num < 10000) {
+      return num
+    } else {
+      const temp = num / 10000
+      const regInt = /^[0-9][0-9]*$/
+      const regFloorOne = /^[1-9][0-9]*.[1-9][0-9]*$/
+      if (regInt.test(temp)) {
+        // 正整数
+        return `${temp} ${suffix}`
+      } else if (regFloorOne.test(temp)) {
+        // 处理小数点后 > 1情况
+        return `${temp.toFixed(1)} ${suffix}`
+      } else {
+        // 处理小数点后 为0 情况
+        const tempStr = temp.toFixed(1) + ''
+        const tempArr = tempStr.split('.')
+        if (tempArr[1] > 0) {
+          return `${temp.toFixed(1)} ${suffix}`
+        } else {
+          // 如果小数点后为0,而不是四舍五入后的1,则默认显示整数
+          return `${tempArr[0]} ${suffix}`
+        }
+      }
+    }
+  } else {
+    return 0
+  }
+}
+
+/**
+ *
+ * @param {秒} second
+ * @returns
+ * 将秒转化为 '00 : 21 : 44' 这种形式返回
+ */
+export const secondToTime = (second) => {
+  const num = Number(second)
+  const hour =
+    Math.floor(num / 3600) < 10
+      ? '0' + Math.floor(num / 3600)
+      : Math.floor(num / 3600) < 10
+  const minute =
+    Math.floor((num - hour * 3600) / 60) < 10
+      ? '0' + Math.floor((num - hour * 3600) / 60)
+      : Math.floor((num - hour * 3600) / 60)
+  const sed =
+    num - hour * 3600 - minute * 60 < 10
+      ? '0' + (num - hour * 3600 - minute * 60)
+      : num - hour * 3600 - minute * 60
+  return `${hour}:${minute}:${sed}`
+}

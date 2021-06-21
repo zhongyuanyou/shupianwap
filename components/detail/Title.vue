@@ -19,7 +19,15 @@
         />降价提醒
       </div>
     </div>
-    <p class="title_btitle">{{ proDetail.name }}</p>
+    <p
+      v-if="proDetail.classCodeLevelList[0] === 'FL20201224136319'"
+      class="title_btitle"
+    >
+      {{ proDetail.name || proDetail.showName }}
+    </p>
+    <p v-else class="title_btitle">
+      {{ proDetail.showName || proDetail.name }}
+    </p>
     <div class="imp_remind">
       <nuxt-link to="/spread/riskTips">
         <sp-image

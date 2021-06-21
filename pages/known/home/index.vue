@@ -6,6 +6,7 @@
       :style="{ paddingTop: (appInfo.statusBarHeight || 0) + 'px' }"
     >
       <my-icon
+        v-if="!isShare"
         name="nav_ic_back"
         size="0.4rem"
         :color="fixed ? '#1A1A1A' : '#D8D8D8'"
@@ -13,6 +14,7 @@
       ></my-icon>
       <div style="margin-left: 0.2rem">{{ fixed ? userName : '' }}</div>
     </div>
+    <DownLoadArea v-if="isShare" />
     <div class="top_box">
       <div class="card">
         <sp-image round class="user_avatar" fit="cover" :src="avatar" />
@@ -89,34 +91,76 @@
           :name="item.index"
         ></sp-tab>
       </sp-tabs>
-      <sp-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        class="list_container"
-        @load="getList"
-      >
-        <div v-for="(item, index) in list" :key="index">
-          <Item v-if="active !== 5" :item="item" @comments="comments" />
-          <div v-else class="item_five">
-            <div class="item" @click="open(item)">
-              <div class="lf_img">
-                <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
-                <div class="time">{{ totime(item.duration) }}</div>
-              </div>
-              <div class="rt_content">
-                <div class="title">{{ item.videoName }}</div>
-                <div class="name_time">
-                  <div class="name">{{ userName }}</div>
-                  <div class="time">
-                    {{ timeSplice(item.createTime) }}
+      <div v-if="active !== 6">
+        <sp-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          class="list_container"
+          @load="getList"
+        >
+          <div v-for="(item, index) in list" :key="index">
+            <Item
+              v-if="active !== 5 && active !== 6"
+              :item="item"
+              @comments="comments"
+            />
+            <div v-else-if="active === 5" class="item_five">
+              <div class="item" @click="open(item)">
+                <div class="lf_img">
+                  <img
+                    v-if="item.image"
+                    :src="item.image.split(',')[0]"
+                    alt=""
+                  />
+                  <div class="time">{{ totime(item.duration) }}</div>
+                </div>
+                <div class="rt_content">
+                  <div class="title">{{ item.videoName }}</div>
+                  <div class="name_time">
+                    <div class="name">{{ userName }}</div>
+                    <div class="time">
+                      {{ timeSplice(item.createTime) }}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </sp-list>
+        </sp-list>
+      </div>
+      <div v-else class="smallVideolist">
+        <sp-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          :error.sync="error"
+          error-text="请求失败，点击重新加载"
+          @load="getList"
+        >
+          <div v-if="list.length > 0" class="video-list">
+            <div
+              v-for="(item, index) in list"
+              :key="index"
+              class="item"
+              @click="open(item)"
+            >
+              <sp-image
+                width="3.72rem"
+                height="6.61rem"
+                fit="cover"
+                :src="item.image"
+              />
+              <div class="content_box">
+                <div class="content">
+                  <div class="count">{{ item.custTotalCount }} 次观看</div>
+                  <div class="tile">{{ item.videoName }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sp-list>
+      </div>
     </div>
     <comment-list
       v-model="commentShow"
@@ -125,6 +169,7 @@
       @release="release"
     ></comment-list>
     <sp-center-popup v-model="showPop" :field="Filed4" button-type="confirm" />
+    <ShareModal />
   </div>
 </template>
 
@@ -143,6 +188,9 @@ import Item from '@/components/mustKnown/home/Item'
 import { knownApi } from '~/api'
 import utils from '@/utils/changeBusinessData'
 import { domainUrl } from '~/config/index'
+import DownLoadArea from '@/components/common/downLoadArea'
+import ShareModal from '@/components/common/ShareModal'
+import { numChangeW } from '@/utils/common'
 
 export default {
   name: 'Collection',
@@ -156,6 +204,8 @@ export default {
     [CenterPopup.name]: CenterPopup,
     CommentList,
     Item,
+    DownLoadArea,
+    ShareModal,
   },
   async asyncData({ $axios, query, store, redirect }) {
     if (!query.homeUserId && !store.state.user.userId) {
@@ -188,6 +238,7 @@ export default {
   },
   data() {
     return {
+      isShare: false,
       articleId: '', // 打开评论列表需要传的id
       userName: '',
       active: 0,
@@ -215,6 +266,14 @@ export default {
           name: '文章',
           index: 2,
         },
+        {
+          name: '视频',
+          index: 5,
+        },
+        {
+          name: '小视频',
+          index: 6,
+        },
       ],
       list: [],
       loading: false,
@@ -226,6 +285,7 @@ export default {
       adList: [],
       showPop: false,
       sourceType: 1,
+      error: false,
     }
   },
   computed: {
@@ -244,34 +304,52 @@ export default {
     },
   },
   mounted() {
+    this.isShare = this.$route.query.isShare
     this.getAdList()
     window.addEventListener('scroll', this.getScroll)
-    const userType = this.type || utils.getUserType(this.type)
+    // const userType = this.type || utils.getUserType(this.type)
     // 到时候这里改成5
-    if (userType !== 1) {
-      this.menuList.push({
-        name: '视频',
-        index: 5,
-      })
-    }
+    // if (userType !== 1) {
+    //   this.menuList.push({
+    //     name: '视频',
+    //     index: 5,
+    //   })
+    // }
   },
   methods: {
     open(item) {
-      console.log(item)
       if (this.isInApp && this.appInfo.appCode === 'CPSAPP') {
-        try {
-          this.$appFn.dggOpenVideo(item.id, (res) => {
-            const { code } = res || {}
-            if (code !== 200)
-              this.$xToast.show({
-                message: `打开视频失败`,
-                duration: 1000,
-                forbidClick: true,
-                icon: 'toast_ic_remind',
-              })
-          })
-        } catch (error) {
-          console.error('changeTop error:', error)
+        if (this.active === 5) {
+          try {
+            this.$appFn.dggOpenVideo(item.id, (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `打开视频失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            })
+          } catch (error) {
+            console.error('changeTop error:', error)
+          }
+        } else {
+          console.log('item', item)
+          try {
+            this.$appFn.dggOpenSmallVideo(item.id, (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `打开小视频失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            })
+          } catch (error) {
+            console.error('changeTop error:', error)
+          }
         }
       } else if (this.isInApp && this.appInfo.appCode === 'syscode') {
         this.showItem = false
@@ -397,7 +475,6 @@ export default {
       this.list = []
       this.finished = false
       this.loading = true
-
       this.getList()
     },
     async init() {
@@ -448,10 +525,11 @@ export default {
       console.log('点击了发布')
     },
     async getList() {
+      // if (this.active === 0) {
       const { code, message, data } = await this.$axios.post(
         knownApi.home.list,
         {
-          type: this.active,
+          types: [this.active],
           userIds: this.homeUserId || this.userInfo.userId,
           currentUserId: this.userInfo.userId,
           page: this.page,
@@ -460,6 +538,11 @@ export default {
       )
       if (code === 200) {
         this.list = this.list.concat(data.rows)
+        if (this.active === 6) {
+          this.list.forEach((item) => {
+            item.custTotalCount = numChangeW(item.totalViewCount)
+          })
+        }
         this.loading = false
         this.page++
         if (this.page > data.totalPage) {
@@ -640,6 +723,7 @@ export default {
     }
 
     .list_container {
+      background: #ffffff;
       .item {
         background: #ffffff;
         padding: 28px 32px 28px;
@@ -777,6 +861,60 @@ export default {
               .time {
                 color: #999999;
                 font: 400 26px/32px PingFangSC-Regular, PingFang SC;
+              }
+            }
+          }
+        }
+      }
+    }
+    .smallVideolist {
+      .video-list {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        background-color: #fff;
+        padding: 0 2px;
+        .item {
+          position: relative;
+          display: inline-block;
+          box-sizing: border-box;
+          width: 50%;
+          height: 661px;
+          margin: 2px 0;
+          ::v-deep .sp-image__img {
+            border-radius: 4px;
+          }
+          .content_box {
+            position: absolute;
+            bottom: 0;
+            height: 200px;
+            width: 100%;
+            background-image: linear-gradient(
+              0deg,
+              rgba(0, 0, 0, 0.4) 0%,
+              rgba(0, 0, 0, 0) 100%
+            );
+            border-radius: 0 0 12px 12px;
+            .content {
+              position: absolute;
+              bottom: 16px;
+              left: 20px;
+              .count {
+                font-size: 24px;
+                opacity: 0.8;
+                margin-bottom: 8px;
+                line-height: 32px;
+                color: #fff;
+                font-weight: bold;
+              }
+              .tile {
+                line-height: 44px;
+                font-size: 36px;
+                .textOverflow(2);
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+                color: #fff;
+                font-weight: bold;
+                width: 340px;
               }
             }
           }

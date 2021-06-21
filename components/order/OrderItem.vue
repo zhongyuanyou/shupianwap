@@ -183,6 +183,14 @@
         >
         <!-- 未支付订单可取消订单 根据订单状态判断-->
         <sp-button
+          v-if="checkAfterSaleStatus() === 1"
+          type="primary"
+          class="btn-cancel"
+          @click="handleClickItem(7)"
+          >退款/售后</sp-button
+        >
+        <!-- 未支付订单可取消订单 根据订单状态判断-->
+        <sp-button
           v-if="isShowCanCelBtn()"
           type="primary"
           class="btn-cancel"
@@ -191,14 +199,14 @@
         >
         <!-- 客户订单状态 -->
         <sp-button
-          v-if="checkContractStatus(orderData) == 2"
+          v-if="checkContractStatus(orderData) === 2"
           type="info"
           class="btn-look"
           @click="handleClickItem(3)"
           >查看合同</sp-button
         >
         <sp-button
-          v-if="checkContractStatus(orderData) == 1"
+          v-if="checkContractStatus(orderData) === 1"
           type="info"
           class="btn-look"
           @click="handleClickItem(2)"

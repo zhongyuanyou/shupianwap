@@ -295,10 +295,25 @@ export default {
     // 开始支付时判断
     startPay() {
       if (
-        !this.orderData.payType ||
-        this.orderData.payType !== 'ORDER_PAY_MODE_ONLINE'
+        this.orderData.payType &&
+        this.orderData.payType === 'ORDER_PAY_MODE_OFFLINE'
       ) {
-        this.$xToast.error('该订单为线下支付，请联系规划师付款')
+        this.$xToast.error('该订单为线下支付，请联系规划师付款！')
+        return
+      }
+      if (
+        this.orderData.payType &&
+        this.orderData.payType === 'ORDER_PAY_MODE_SECURED'
+      ) {
+        this.$xToast.error(
+          '该订单为担保交易，请访问薯片PC网站或联系规划师付款！'
+        )
+        return
+      }
+      if (this.orderData.isSecuredTrade && this.orderData.isSecuredTrade === 1) {
+        this.$xToast.error(
+          '该订单付款方式为担保交易付款，请访问薯片PC网站或联系规划师付款！'
+        )
         return
       }
       if (this.fromPage === 'orderList' || this.fromPage === 'orderDetail') {
@@ -394,6 +409,7 @@ export default {
         .catch((err) => {
           this.loading = false
           this.$xToast.error(err.message || '获取支付信息失败')
+          console.error(err)
         })
     },
     // 判断是分批支付还是全款支付等
@@ -437,7 +453,43 @@ export default {
         this.$refs.cancleOrderModel.showPop = false
       }
     },
-    // 判断展示合同按钮 false不展示  1签署合同 2查看合同
+    // 仅用于发起支付时判断
+    checkContractIsOver(orderData) {
+      const data = orderData || this.orderData
+      // 当客户订单状态为已取消时不展示按钮
+      if (data.cusOrderStatusNo === ORDERSTATUSCODE[4]) return false
+      if (this.fromPage === 'orderList') {
+        if (
+          !data.contractStatus ||
+          (data.contractStatus && data.contractStatus !== 'STRUTS_YWC')
+        ) {
+          // 此时需先签合同再支付
+          return 1
+        }
+        // 已签完合同
+        if (data.contractStatus && data.contractStatus === 'STRUTS_YWC') {
+          return 2
+        }
+        if (!data.contractStatus) {
+          // 当无合同信息时显示签署合同 515合同附件版本
+          return 1
+        } else {
+          // 当有合同时显示查看合同 515合同附件版本
+          return 2
+        }
+      } else {
+        // 订单详情页面根据合同列表判断
+        // 当合同状态为已完成时显示查看合同按钮
+        if (
+          data.contractVo2s &&
+          data.contractVo2s.length &&
+          data.contractVo2s[0].contractStatus === 'STRUTS_YWC'
+        )
+          return 2
+        return 1
+      }
+    },
+    // 判断展示合同按钮 false不展示  1签署合同 2查看合同 515 版本 仅用于展示合同按钮判断
     checkContractStatus(orderData) {
       const data = orderData || this.orderData
       // 当客户订单状态为已取消时不展示按钮
@@ -522,10 +574,10 @@ export default {
     // 判断订单状态 返回数字
     checkOrderStatus(code) {
       const ALLSTATUS = {
-        1: 'ORDER_ORDER_SALE_STATUS_UN_PAID,ORDER_ORDER_TRADE_STATUS_UN_PAID,ORDER_ORDER_RESOURCE_STATUS_UN_PAID,ORDER_ORDER_SERVER_STATUS_UN_PAID', // 可取消订单的状态 未付款时
-        2: 'ORDER_ORDER_SALE_STATUS_HANDLING,ORDER_ORDER_SALE_STATUS_HANDLED,ORDER_ORDER_TRADE_STATUS_HANDLING,ORDER_ORDER_RESOURCE_STATUS_HANDLING,ORDER_ORDER_SERVER_STATUS_UN_ASSIGN,ORDER_ORDER_SERVER_STATUS_UN_RECEICE_ORDER,ORDER_ORDER_SERVER_STATUS_HANDLING', // 进行中
-        3: 'ORDER_ORDER_SALE_STATUS_COMPLETED,ORDER_ORDER_TRADE_STATUS_COMPLETED,ORDER_ORDER_RESOURCE_STATUS_COMPLETED,ORDER_ORDER_SERVER_STATUS_HANDLED,ORDER_ORDER_SERVER_STATUS_COMPLETED', // 已完成
-        4: 'ORDER_ORDER_SALE_STATUS_CANCELLED,ORDER_ORDER_TRADE_STATUS_CANCELLED,ORDER_ORDER_RESOURCE_STATUS_CANCELLED,ORDER_ORDER_SERVER_STATUS_CANCELLED', // 已取消
+        1: 'ORDER_ORDER_TRADE_STATUS_UN_PAID,ORDER_ORDER_SALE_STATUS_UN_PAID,ORDER_ORDER_RESOURCE_STATUS_UN_PAID,ORDER_ORDER_SERVER_STATUS_UN_PAID', // 可取消订单的状态 未付款时
+        2: 'ORDER_ORDER_TRADE_STATUS_HANDLING,ORDER_ORDER_TRADE_STATUS_HANDLED,ORDER_ORDER_SALE_STATUS_HANDLING,ORDER_ORDER_SALE_STATUS_HANDLED,ORDER_ORDER_RESOURCE_STATUS_HANDLING,ORDER_ORDER_RESOURCE_STATUS_HANDLED,ORDER_ORDER_SERVER_STATUS_UN_ASSIGN,ORDER_ORDER_SERVER_STATUS_UN_RECEICE_ORDER,ORDER_ORDER_SERVER_STATUS_HANDLING,ORDER_ORDER_SERVER_STATUS_HANDLED', // 进行中
+        3: 'ORDER_ORDER_TRADE_STATUS_COMPLETED,ORDER_ORDER_SALE_STATUS_COMPLETED,ORDER_ORDER_RESOURCE_STATUS_COMPLETED,ORDER_ORDER_SERVER_STATUS_COMPLETED', // 已完成
+        4: 'ORDER_ORDER_TRADE_STATUS_CANCELLED,ORDER_ORDER_SALE_STATUS_CANCELLED,ORDER_ORDER_RESOURCE_STATUS_CANCELLED,ORDER_ORDER_SERVER_STATUS_CANCELLED', // 已取消
       }
       for (const key in ALLSTATUS) {
         if (ALLSTATUS[key].match(code)) {
@@ -541,6 +593,27 @@ export default {
           return Number(key)
       }
     },
+    // 判断订单售后状态 是否展示售后按钮 展示何种售后按钮
+    checkAfterSaleStatus(orderData) {
+      orderData = orderData || this.orderData || this.orderDetail
+      // 1.意向单、担保交易订单不展示售后按钮，
+      if (
+        orderData.orderType === 0 ||
+        orderData.payType === 'ORDER_PAY_MODE_SECURED'
+      ) {
+        return 0
+      }
+      // 正式单待付款、已完成、已取消不展示售后按钮，只有处理中状态的订单根据订单售后标签、产品是否可售后判断是否可展示售后按钮，
+      // 全部产品不可售后，则不展示售后按钮
+      // 无售后、部分售后标签，点击跳转到申请售后页面，
+      // 售后中，则跳转到订单最新的售后中的售后详情，
+      // 已售后则不展示售后按钮
+      const orderStatusNum = this.checkOrderStatus(orderData.orderStatusNo)
+      if (orderStatusNum !== 2) {
+        return 0
+      }
+      return 1
+    },
     // 查询客户单下的关联订单
     getChildOrders(order) {
       order = order || this.orderData
@@ -551,11 +624,21 @@ export default {
           this.showMydialog = true
           return
         }
+        if (this.checkContractIsOver(order) === 1) {
+          // 交易商品付款之前检测有无签署合同
+          this.$xToast.show({
+            message: '为满足您的合法权益，请先和卖家签署合同后再付款',
+            duration: 3000,
+            icon: 'toast_ic_remind',
+            forbidClick: true,
+          })
+          return
+        }
         if (
           this.opType === 'payMoney' &&
           order.orderSkuEsList[0].skuType === 'PRO_CLASS_TYPE_TRANSACTION'
         ) {
-          if (this.checkContractStatus(order) === 1) {
+          if (this.checkContractIsOver(order) === 1) {
             // 交易商品付款之前检测有无签署合同
             this.$xToast.show({
               message: '为满足您的合法权益，请先和卖家签署合同后再付款',
@@ -583,7 +666,7 @@ export default {
             this.showMydialog = true
             return
           }
-          if (this.checkContractStatus() === 1) {
+          if (this.checkContractIsOver() === 1) {
             // 交易商品付款之前检测有无签署合同
             this.$xToast.show({
               message: '为满足您的合法权益，请先和卖家签署合同后再付款',
@@ -610,6 +693,7 @@ export default {
           .catch((err) => {
             this.loading = false
             this.$xToast.error(err.message || '操作失败')
+            console.error(err)
           })
       } else {
         this.switchOptionType()
@@ -636,7 +720,8 @@ export default {
           else this.getDetail()
         })
         .catch((error) => {
-          console.log('err', error)
+          console.error(error)
+          this.$xToast.error('操作失败，请稍后重试')
         })
     },
     // 不同意协议
@@ -706,6 +791,7 @@ export default {
         })
         .catch((err) => {
           this.$xToast.error(err.message || '操作失败')
+          console.error(err)
         })
     },
     // 取消订单
@@ -734,6 +820,7 @@ export default {
         .catch((err) => {
           this.loading = false
           this.$xToast.error(err.message || '操作失败')
+          console.error(err)
         })
     },
     // 价格处理分转元
@@ -980,6 +1067,8 @@ export default {
         })
       }
     },
+    //  跳转售后
+    toAfterSale() {},
     // 获取交易协议
     async getProtocol(categoryCode) {
       if (!categoryCode) {

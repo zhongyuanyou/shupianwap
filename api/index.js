@@ -27,7 +27,9 @@ import knownApi from './known'
 import knownQuestionArticleApi from './knownQuestionArticle' // 必懂文章集合api
 import { activityApi } from './activity' // 活动专题api
 import { evaluateApi } from './evaluate' // 评价api
-import { documentApi } from './document' // 文档api 
+import { documentApi } from './document' // 文档api
+import { shopApi } from './shop' // 店铺 收藏
+import { formApi } from './form'
 
 export { auth, shoppingCar, planner }
 export { category }
@@ -57,4 +59,5 @@ export { knownQuestionArticleApi }
 export { activityApi }
 export { evaluateApi }
 export { documentApi }
-
+export { shopApi }
+export { formApi }

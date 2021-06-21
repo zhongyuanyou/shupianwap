@@ -219,7 +219,6 @@ export default {
       }
 
       if (this.isInApp) {
-        console.log('appInfo:', this.appInfo)
         const { platformCode } = this.appInfo || {}
         let iOSRouter = {}
         let androidRouter = {}
@@ -297,7 +296,6 @@ export default {
     getAppDeviceInfo() {
       return new Promise((resolve, reject) => {
         this.$appFn.dggDeviceInfo((res) => {
-          console.log('dggDeviceInfo res:', res)
           const { code, data = {} } = res
 
           let deviceResData = {}
@@ -325,7 +323,6 @@ export default {
     getAppRegion() {
       return new Promise((resolve, reject) => {
         this.$appFn.dggCityCode((res) => {
-          console.log('dggCityCode:', res)
           const { code, data } = res || {}
 
           let regionResData = {}
