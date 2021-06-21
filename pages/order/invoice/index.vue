@@ -15,7 +15,7 @@
     <AllInvoice v-if="tabActive === 0"></AllInvoice>
     <HistoryInvoice v-else-if="tabActive === 1"></HistoryInvoice>
     <HeadManagement v-else-if="tabActive === 2"></HeadManagement>
-    <div>
+    <!-- <div>
       <sp-empty
         class="empty-text"
         :description="
@@ -25,7 +25,11 @@
         "
         :image="$ossImgSetV2('feper6k9s0o0000.png')"
       />
-    </div>
+    </div> -->
+    <sp-bottombar v-if="tabActive === 2" safe-area-inset-bottom>
+      <sp-bottombar-button type="primary" text="添加发票抬头" @click="toAdd" />
+    </sp-bottombar>
+
     <!-- <template #left>
         <div @click="back">
           <my-icon
@@ -84,6 +88,8 @@ export default {
     [WorkTabs.name]: WorkTabs,
     [Sticky.name]: Sticky,
     [Empty.name]: Empty,
+    [Bottombar.name]: Bottombar,
+    [BottombarButton.name]: BottombarButton,
     // TabCurve,
     AllInvoice,
     AllInvoiceClassify,
@@ -98,6 +104,9 @@ export default {
     }
   },
   methods: {
+    toAdd() {
+      this.$router.push('/order/invoice/add')
+    },
     // back() {
     //   if (this.isInApp) {
     //     this.$appFn.dggWebGoBack((res) => {})
@@ -118,5 +127,17 @@ export default {
     color: #222222;
     line-height: 30px;
   }
+  // .footer-nav {
+  //   position: fixed;
+  //   left: 50%;
+  //   transform: translateX(-50%);
+  //   bottom: 0;
+  //   z-index: 999;
+  //   width: 100%;
+  //   background: #ffffff;
+  //   padding-bottom: constant(safe-area-inset-bottom);
+  //   padding-bottom: env(safe-area-inset-bottom);
+  //   max-width: 1000px;
+  // }
 }
 </style>

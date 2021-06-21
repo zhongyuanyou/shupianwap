@@ -38,6 +38,63 @@
         </sp-cell>
       </div>
     </div>
+    <div class="card">
+      <div class="card_header">普通发票抬头-个人</div>
+      <div v-for="item of list" :key="item.id" class="card_content">
+        <sp-cell center title="单元格" label="描述信息">
+          <template #title>
+            <span class="custom-title">{{ item.name }}</span>
+            <sp-tag type="danger">默认</sp-tag>
+          </template>
+          <template #right-icon>
+            <my-icon
+              name="per_ic_addeditor"
+              size="0.28rem"
+              color="#222222"
+              class="myIcon"
+            />
+          </template>
+        </sp-cell>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card_header">普通发票抬头-个人</div>
+      <div v-for="item of list" :key="item.id" class="card_content">
+        <sp-cell center title="单元格" label="描述信息">
+          <template #title>
+            <span class="custom-title">{{ item.name }}</span>
+            <sp-tag type="danger">默认</sp-tag>
+          </template>
+          <template #right-icon>
+            <my-icon
+              name="per_ic_addeditor"
+              size="0.28rem"
+              color="#222222"
+              class="myIcon"
+            />
+          </template>
+        </sp-cell>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card_header">普通发票抬头-个人</div>
+      <div v-for="item of list" :key="item.id" class="card_content">
+        <sp-cell center title="单元格" label="描述信息">
+          <template #title>
+            <span class="custom-title">{{ item.name }}</span>
+            <sp-tag type="danger">默认</sp-tag>
+          </template>
+          <template #right-icon>
+            <my-icon
+              name="per_ic_addeditor"
+              size="0.28rem"
+              color="#222222"
+              class="myIcon"
+            />
+          </template>
+        </sp-cell>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -76,7 +133,8 @@ export default {
 .history_invoice {
   background: #f5f5f5;
   overflow: hidden;
-  padding: 0 0 20px;
+  padding: 0 0 170px;
+
   .flex {
     display: flex;
   }
