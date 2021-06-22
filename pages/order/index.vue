@@ -317,6 +317,11 @@ export default {
           this.opType = 'afterSale'
           this.toAfterSale()
           break
+        case 8:
+          // 发票
+          this.opType = 'invoice'
+          this.toInvoice()
+          break
       }
     },
   },

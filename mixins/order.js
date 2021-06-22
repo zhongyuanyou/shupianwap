@@ -310,7 +310,10 @@ export default {
         )
         return
       }
-      if (this.orderData.isSecuredTrade && this.orderData.isSecuredTrade === 1) {
+      if (
+        this.orderData.isSecuredTrade &&
+        this.orderData.isSecuredTrade === 1
+      ) {
         this.$xToast.error(
           '该订单付款方式为担保交易付款，请访问薯片PC网站或联系规划师付款！'
         )
@@ -1233,6 +1236,28 @@ export default {
         if (billStatusCodesObj[key].match(billStatusCode)) {
           return key
         }
+      }
+    },
+    // 发票操作
+    toInvoice(orderData) {
+      orderData = orderData || this.orderData || this.orderDetail
+      const billStatusNum = this.checkBillStatus(orderData)
+      if (billStatusNum === 1) {
+        this.$router.push({
+          path: '/order/invoice/add',
+          query: {
+            mechUserId: orderData.orderPersonSubjectUserId,
+            orderId: orderData.id,
+          },
+        })
+      } else {
+        this.$router.push({
+          path: '/order/invoice/detail',
+          query: {
+            mechUserId: orderData.orderPersonSubjectUserId,
+            orderId: orderData.id,
+          },
+        })
       }
     },
   },
