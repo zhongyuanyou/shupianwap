@@ -19,7 +19,10 @@
       <!--<span class="tag">急售</span>-->
     </div>
     <div class="goods-right">
-      <h3 v-html="heightLightHtml(itemData.name || getGoodsName())"></h3>
+      <h3 v-if="dictCode === 'CATE-JYZY-GS'">
+        {{ itemData.dzname }}
+      </h3>
+      <h3 v-else v-html="heightLightHtml(itemData.name || getGoodsName())"></h3>
       <p
         :style="{
           visibility: description ? 'visible' : 'hidden',
@@ -76,6 +79,10 @@ export default {
       default() {
         return {}
       },
+    },
+    dictCode: {
+      type: String,
+      default: '',
     },
   },
   data() {
@@ -265,7 +272,7 @@ export default {
     overflow: hidden;
     position: relative;
     min-height: 220px;
-    padding-bottom:40px;
+    padding-bottom: 40px;
     h3 {
       font-size: 32px;
       font-family: PingFang SC;
