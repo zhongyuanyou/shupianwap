@@ -73,11 +73,7 @@
       </div>
       <div v-else-if="tabIndex == 4 || tabIndex == 5">
         <client-only>
-          <sp-checkbox-group
-            ref="checkboxGroup"
-            v-model="selectDelGoods"
-            icon-size="0.41rem"
-          >
+          <sp-checkbox-group ref="checkboxGroup" v-model="selectDelGoods">
             <div
               v-for="(item, index) in list"
               :key="index"
@@ -127,10 +123,7 @@
       class="footer-nav"
     >
       <div class="footer_container">
-        <sp-checkbox
-          v-model="checkedAllState"
-          icon-size="0.41rem"
-          @change="checkedAllChange"
+        <sp-checkbox v-model="checkedAllState" @change="checkedAllChange"
           >全选
           <template #icon="props">
             <my-icon
