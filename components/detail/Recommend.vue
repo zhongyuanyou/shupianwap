@@ -5,7 +5,7 @@
       <div class="recommend_tp_more">
         <nuxt-link
           :to="{
-            path: '/list/jyList',
+            path: 'search/searchgoods',
             query: {
               typeCode: detailType,
             },
@@ -41,17 +41,23 @@
                     radius="0.04rem"
                     fit="cover"
                     lazy-load
-                    :src="`${item.productImgArr[0]}?x-oss-process=image/resize,m_fill,w_160,h_160,limit_0`"
+                    :src="`${item.goodsImg}?x-oss-process=image/resize,m_fill,w_160,h_160,limit_0`"
                   />
                 </div>
                 <div class="swipe_item_con_rt">
-                  <p class="title">{{ item.name }}</p>
+                  <p v-if="dictCode === 'CATE-JYZY-GS'" class="title">
+                    {{ item.dzname }}
+                  </p>
+                  <p v-else class="title">
+                    {{ item.name }}
+                  </p>
                   <div class="label">
                     {{ getItemList(item.fieldList).join(' | ') }}
                   </div>
                   <div class="swipe_item_con_rt_bot">
-                    <p class="money">{{ item.platformPrice }}元</p>
-                    <!-- <p class="province">四川省</p>-->
+                    <p class="money">
+                      {{ item.platformPrice || item.referencePrice }}元
+                    </p>
                   </div>
                 </div>
               </nuxt-link>
@@ -81,6 +87,10 @@ export default {
     similarRecommendData: {
       type: Array,
       default: () => [],
+    },
+    dictCode: {
+      type: String,
+      default: '',
     },
   },
   data() {

@@ -229,7 +229,6 @@ export default {
     serviceTag() {
       const salesGoodsTags =
         this.$store.state.sellingGoodsDetail.sellingGoodsData.salesGoodsTags
-      console.log('salesGoodsTags', salesGoodsTags)
       let serviceTag = []
       if (salesGoodsTags) {
         // 产品中心605版本筛选服务标签 code DSJTC20210514000043
