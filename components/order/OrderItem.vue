@@ -171,14 +171,6 @@
       <div class="inner">
         <!-- 未支付订单可取消订单 根据订单状态判断-->
         <sp-button
-          v-if="checkAfterSaleStatus() === 1"
-          type="primary"
-          class="btn-cancel"
-          @click="handleClickItem(7)"
-          >退款/售后</sp-button
-        >
-        <!-- 未支付订单可取消订单 根据订单状态判断-->
-        <sp-button
           v-if="isShowCanCelBtn()"
           type="primary"
           class="btn-cancel"
