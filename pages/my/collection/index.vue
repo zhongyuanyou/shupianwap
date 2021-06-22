@@ -418,9 +418,9 @@ export default {
   font-family: PingFangSC-Medium, PingFang SC;
   font-size: 28px;
   line-height: 40px;
+  height: 40px;
   color: #222222;
   letter-spacing: 0;
-  // padding-top: 2px;
 }
 .collection_container {
   min-height: 100vh;

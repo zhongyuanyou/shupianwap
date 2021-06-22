@@ -418,18 +418,6 @@ export default {
           img: this.$ossImgSetV2(this.imgList.coupon),
           url: '/my/coupon',
         },
-        // {
-        //   // iconName: 'gerenzhongxin_youhuiquanicon',
-        //   name: '优惠券',
-        //   img: this.$ossImgSetV2(this.imgList.coupon),
-        //   url: '/my/coupon',
-        // },
-        // {
-        //   // iconName: 'gerenzhongxin_youhuiquanicon',
-        //   name: '优惠券',
-        //   img: this.$ossImgSetV2(this.imgList.coupon),
-        //   url: '/my/coupon',
-        // },
         {},
         {},
       ]
