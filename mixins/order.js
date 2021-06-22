@@ -1298,5 +1298,27 @@ export default {
         }
       }
     },
+    // 发票操作
+    toInvoice(orderData) {
+      orderData = orderData || this.orderData || this.orderDetail
+      const billStatusNum = this.checkBillStatus(orderData)
+      if (billStatusNum === 1) {
+        this.$router.push({
+          path: '/order/invoice/add',
+          query: {
+            mechUserId: orderData.orderPersonSubjectUserId,
+            orderId: orderData.id,
+          },
+        })
+      } else {
+        this.$router.push({
+          path: '/order/invoice/detail',
+          query: {
+            mechUserId: orderData.orderPersonSubjectUserId,
+            orderId: orderData.id,
+          },
+        })
+      }
+    },
   },
 }
