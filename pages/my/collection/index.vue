@@ -269,6 +269,10 @@ export default {
       if (this.tabIndex === name) {
         return
       }
+      this.checkedAllState = false // 全选状态
+      this.selectGoodsState = false // 开启多选
+      this.selectDelGoods = [] // 选择的商品id
+
       this.tabIndex = name
       this.init()
       this.onLoad()
@@ -280,10 +284,6 @@ export default {
       this.error = false
       this.loading = true
       this.list = []
-
-      this.checkedAllState = false // 全选状态
-      this.selectGoodsState = false // 开启多选
-      this.selectDelGoods = [] // 选择的商品id
     },
     onLoad() {
       if (this.tabIndex < 4) {
@@ -347,6 +347,7 @@ export default {
     ChangeSelectedGoodsState() {
       this.selectGoodsState = !this.selectGoodsState
       this.selectDelGoods = []
+      this.checkedAllState = false // 全选状态
     },
     delGoods(item) {
       this.selectDelGoods = [item.id]
@@ -360,9 +361,8 @@ export default {
         const res = await this.$axios.post(shopApi.batch_dlt_goods, data)
 
         this.loading = false
-        console.log(res)
+
         if (res.code === 200) {
-          this.ChangeSelectedGoodsState()
           this.init()
           this.onLoad()
           this.$xToast.success('取消成功')
