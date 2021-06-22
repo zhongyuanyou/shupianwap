@@ -458,6 +458,7 @@ export default {
             code: 'ORDER_DISCOUNT_DISCOUNT',
             value: this.$refs.conpon.checkarr.marketingCouponVO.id,
             couponUseCode: this.$refs.conpon.checkarr.couponUseCode,
+            no: this.$refs.conpon.checkarr.couponCode,
           }
           this.Orderform.discount.push(arr)
         }
@@ -465,8 +466,10 @@ export default {
         this.Orderform.isFromCart = isFromCart
         this.Orderform.orderProvinceNo = this.$store.state.city.defaultCity.pid
         this.Orderform.orderCityNo = this.$store.state.city.defaultCity.code
-        this.Orderform.orderLocationProvinceName = this.$store.state.city.defaultCity.pname
-        this.Orderform.orderLocationCityName = this.$store.state.city.defaultCity.name
+        this.Orderform.orderLocationProvinceName =
+          this.$store.state.city.defaultCity.pname
+        this.Orderform.orderLocationCityName =
+          this.$store.state.city.defaultCity.name
         this.Orderform.customerOrderMark = this.message
         if (this.contaract) {
           this.Orderform.contractFormParam = this.contaract
@@ -549,7 +552,8 @@ export default {
               this.conpon = this.datalist[0]
               this.$refs.conpon.radio = 0
               this.$refs.conpon.checkarr = this.datalist[0]
-              this.$refs.conpon.num = this.$refs.conpon.checkarr.marketingCouponVO.reducePrice
+              this.$refs.conpon.num =
+                this.$refs.conpon.checkarr.marketingCouponVO.reducePrice
               this.$refs.conpon.sum()
             } else {
               this.skeletonloading = false
