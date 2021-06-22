@@ -14,8 +14,16 @@
       ></Header>
     </sp-sticky>
 
-    <div ref="status_container" class="status_container">
-      <div class="status_title">{{ status.title }}</div>
+    <div
+      ref="status_container"
+      class="status_container"
+      :style="{ backgroundImage: `url(${status.bk})` }"
+    >
+      <div class="status_title">
+        <my-icon :name="status.icon" color="#fff" size="0.4rem"></my-icon>
+
+        {{ status.title }}
+      </div>
       <div class="status_des">{{ status.des }}</div>
       <div class="status_tips">{{ status.tips }}</div>
     </div>
@@ -160,51 +168,80 @@ export default {
       loading: false, // 加载效果状态
       tabActive: 0,
 
-      type: 1, // 发票类型
+      type: 2, // 发票类型
       show_more_input: true,
       formData: {
+        status: 1,
         username: '1111111111111111111111111111111111111111111111',
         email: '1111111111111111111111111111111111111@qq.com',
       },
 
       sendEmail: '',
       showEmailDialog: false,
+
+      imgList: {
+        primary: '2s7aonmjbgq0000.png', // 审核中，开票中
+        warning: 'd3y3vfj6l9c0000.png', // 已驳回
+        danger: '7rkfmb1m3ig0000.png', // 开票失败
+        success: 'esetx9jdoag0000.png', // 已开票
+      },
     }
   },
   computed: {
     status() {
       const info = {
         underRreview: {
+          icon: 'shijian',
+          bk: this.$ossImgSetV2(this.imgList.primary),
           title: '审核中',
           des: '您的开票申请正在审核中',
           tips: '请耐心等待',
         },
-        reject() {
+        reject: (info = '发票信息错误') => {
           return {
+            icon: 'tixing',
+            bk: this.$ossImgSetV2(this.imgList.warning),
             title: '已驳回',
             des: '您的开票申请已被驳回，请和商户沟通后再重新提交',
-            tips: '驳回原因：发票信息错误',
+            tips: '驳回原因：' + info,
           }
         },
         billingInProgress: {
+          icon: 'shijian',
+          bk: this.$ossImgSetV2(this.imgList.primary),
           title: '开票中',
           des: '您的发票正在开票中',
           tips: '请耐心等待',
         },
-        invoiceFailed() {
+        invoiceFailed: (info) => {
           return {
+            icon: 'tixing',
+            bk: this.$ossImgSetV2(this.imgList.danger),
             title: '开票失败',
             des: '您的开票申请已失败，请核对开票信息后再重新提交',
-            tips: '失败原因：未查询到对应的企业信息',
+            tips: '失败原因：' + info,
           }
         },
         success: {
+          icon: 'wancheng',
+          bk: this.$ossImgSetV2(this.imgList.success),
           title: '已开票',
           des: '您的开票申请已经办理完成',
           tips: '请对本次服务进行评价，谢谢您的支持',
         },
       }
-      return info.underRreview
+      if (this.formData.status === 0) {
+        return info.underRreview
+      } else if (this.formData.status === 1) {
+        return info.reject('发票信息错误')
+      } else if (this.formData.status === 2) {
+        return info.billingInProgress
+      } else if (this.formData.status === 3) {
+        return info.invoiceFailed('未查询到对应的企业信息')
+      } else if (this.formData.status === 4) {
+        return info.success
+      }
+      return {}
     },
   },
   mounted() {
@@ -287,7 +324,10 @@ export default {
     margin-top: -0.88rem;
     text-align: center;
     height: 303px;
-    background: #fe8c29;
+    background-color: #f5f5f5;
+    background-size: cover;
+    background-repeat: no-repeat;
+
     .status_title {
       font-size: 40px;
       font-family: PingFangSC-Medium, PingFang SC;

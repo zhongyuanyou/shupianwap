@@ -1,29 +1,44 @@
 <template>
   <!-- 分类 -->
   <sp-dropdown-menu>
-    <!-- 国际分类 -->
-    <sp-dropdown-item ref="item1" v-model="value1" :title="title1">
+    <sp-dropdown-item
+      v-for="(item, index) of tabs"
+      ref="tabs"
+      :key="index"
+      v-model="item.value"
+      :title="item.title"
+    >
       <template>
         <div class="custom">
           <div class="custom-container">
             <div
-              v-for="item in option1"
-              :key="item.id"
-              :class="item.value === value1 ? 'active' : ''"
-              @click="custom1(item)"
+              v-for="option in item.options"
+              :key="option.id"
+              :class="option.value === item.value ? 'active' : ''"
+              @click="custom(item, option, index)"
             >
-              {{ item.text }}
+              {{ option.text }}
             </div>
           </div>
         </div>
       </template>
     </sp-dropdown-item>
 
-    <sp-dropdown-item ref="item2" v-model="value2" :title="title2">
+    <sp-dropdown-item
+      ref="timePickerContainer"
+      v-model="timePicker.value"
+      :title="timePicker.title"
+    >
       <template>
-        <sp-picker :show-toolbar="false" :columns="columns">
+        <sp-picker
+          ref="item2picker"
+          :show-toolbar="false"
+          :columns="timePickerColumns"
+        >
           <template #columns-bottom>
-            <sp-button class="btn" plain block type="primary">确认</sp-button>
+            <sp-button class="btn" plain block type="primary" @click="onConfirm"
+              >确认</sp-button
+            >
           </template>
         </sp-picker>
       </template>
@@ -40,71 +55,87 @@ export default {
     [Picker.name]: Picker,
     [Button.name]: Button,
   },
+  computed: {
+    timePickerColumns() {
+      const nowDate = new Date()
+      const year = nowDate.getFullYear()
+      const columns = [{ text: '全部', value: 0 }]
+
+      for (let i = 0; i <= year - 2000; i++) {
+        columns.push({ text: year - i + '年', value: year - i })
+      }
+      const PickerColumns = [
+        {
+          defaultIndex: 0,
+          values: columns,
+        },
+        {
+          defaultIndex: 0,
+          values: [
+            { text: '全年', value: 0 },
+            { text: '01月', value: 1 },
+            { text: '02月', value: 2 },
+            { text: '03月', value: 3 },
+            { text: '04月', value: 4 },
+            { text: '05月', value: 5 },
+            { text: '06月', value: 6 },
+            { text: '07月', value: 7 },
+            { text: '08月', value: 8 },
+            { text: '09月', value: 9 },
+            { text: '10月', value: 10 },
+            { text: '11月', value: 11 },
+            { text: '12月', value: 12 },
+          ],
+        },
+      ]
+      return PickerColumns
+    },
+  },
   data() {
     return {
-      value1: 0,
-      value2: 0,
-
-      title1: '全部发票类型',
-      title2: '开票时间',
-
-      option1: [
-        { text: '全部发票类型', value: 0 },
-        { text: '电子普通发票', value: 1 },
-        { text: '增值税专用电子发票', value: 2 },
-      ],
-      columns: [
-        // 第一列
+      tabs: [
         {
-          values: [
-            { text: '全部', value: '0' },
-            { text: '2021年', value: 2021 },
-            { text: '2020年', value: 2020 },
-            { text: '2019年', value: 2019 },
-            { text: '2018年', value: 2018 },
-            { text: '2017年', value: 2017 },
-            { text: '2016年', value: 2016 },
-            { text: '2015年', value: 2015 },
-            { text: '2014年', value: 2014 },
-            { text: '2013年', value: 2013 },
-            { text: '2012年', value: 2012 },
-            { text: '2011年', value: 2011 },
-            { text: '2010年', value: 2010 },
+          title: '全部发票类型',
+          value: 0,
+          options: [
+            { text: '全部发票类型', value: 0 },
+            { text: '电子普通发票', value: 1 },
+            { text: '增值税专用电子发票', value: 2 },
           ],
-          defaultIndex: 0,
-        },
-        // 第二列
-        {
-          values: [
-            { text: '全年' },
-            { text: '01月' },
-            { text: '02月' },
-            { text: '03月' },
-            { text: '04月' },
-            { text: '05月' },
-            { text: '06月' },
-            { text: '07月' },
-            { text: '08月' },
-            { text: '09月' },
-            { text: '10月' },
-            { text: '11月' },
-            { text: '12月' },
-          ],
-          defaultIndex: 0,
         },
       ],
+      timePicker: {
+        title: '开票时间',
+        value: 0,
+      },
     }
   },
   methods: {
-    custom1(item) {
-      this.title1 = item.text
-      this.value1 = item.value
-      this.$refs.item1.toggle()
+    custom(item, option, index) {
+      item.value = option.value
+      item.title = option.text
+      // console.log(item, option, index)
+      this.$refs.tabs[index].toggle()
+      this.$emit('select', this.tabs, this.timePicker)
     },
-    custom2(item) {
-      this.title2 = item.text
-      this.value2 = item.value
-      this.$refs.item2.toggle()
+
+    // custom1(item) {
+    //   this.title1 = item.text
+    //   this.value1 = item.value
+    //   this.$refs.item1.toggle()
+    // },
+    // custom2(item) {
+    //   this.title2 = item.text
+    //   this.value2 = item.value
+    //   this.$refs.timePickerContainer.toggle()
+    // },
+    onConfirm() {
+      const values = this.$refs.item2picker.getValues()
+      this.timePicker.value = values
+
+      console.log(values)
+      this.$refs.timePickerContainer.toggle()
+      this.$emit('select', this.tabs, this.timePicker.value)
     },
     // change1(val) {
     //   this.title1 = this.option1.find((item) => {

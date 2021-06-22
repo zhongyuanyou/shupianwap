@@ -81,38 +81,44 @@ export default {
     [Image.name]: Image,
     [Button.name]: Button,
   },
+  props: {
+    list: {
+      type: Array,
+      default: () => [],
+    },
+  },
   data() {
     return {
-      list: [
-        {
-          number: 1,
-          status: 1,
-          goods: [
-            {
-              name: '1111111111111111111111111111111111111111111111111',
-              img: '',
-            },
-            {
-              name: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-              img: '',
-            },
-          ],
-        },
-        {
-          number: 2,
-          status: 2,
-          goods: [
-            {
-              name: '1111111111111111111111111111111111111111111111111',
-              img: '',
-            },
-            {
-              name: '1111111111111111111111111111111111111111111111111',
-              img: '',
-            },
-          ],
-        },
-      ],
+      // list: [
+      //   {
+      //     number: 1,
+      //     status: 1,
+      //     goods: [
+      //       {
+      //         name: '1111111111111111111111111111111111111111111111111',
+      //         img: '',
+      //       },
+      //       {
+      //         name: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      //         img: '',
+      //       },
+      //     ],
+      //   },
+      //   {
+      //     number: 2,
+      //     status: 2,
+      //     goods: [
+      //       {
+      //         name: '1111111111111111111111111111111111111111111111111',
+      //         img: '',
+      //       },
+      //       {
+      //         name: '1111111111111111111111111111111111111111111111111',
+      //         img: '',
+      //       },
+      //     ],
+      //   },
+      // ],
     }
   },
   methods: {
@@ -179,7 +185,7 @@ export default {
       }
       .goods_info {
         min-width: 0;
-        padding: 0 32px 0 24px;
+        padding: 0 0px 0 24px;
       }
       .goods_info_title {
         padding-bottom: 14px;

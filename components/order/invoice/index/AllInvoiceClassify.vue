@@ -2,24 +2,30 @@
   <!-- 分类 -->
   <sp-dropdown-menu>
     <!-- 国际分类 -->
-    <sp-dropdown-item ref="item1" v-model="value1" :title="title1">
+    <sp-dropdown-item
+      v-for="(item, index) of tabs"
+      ref="tabs"
+      :key="index"
+      v-model="item.value"
+      :title="item.title"
+    >
       <template>
         <div class="custom">
           <div class="custom-container">
             <div
-              v-for="item in option1"
-              :key="item.id"
-              :class="item.value === value1 ? 'active' : ''"
-              @click="custom1(item)"
+              v-for="option in item.options"
+              :key="option.id"
+              :class="option.value === item.value ? 'active' : ''"
+              @click="custom(item, option, index)"
             >
-              {{ item.text }}
+              {{ option.text }}
             </div>
           </div>
         </div>
       </template>
     </sp-dropdown-item>
 
-    <sp-dropdown-item ref="item2" v-model="value2" :title="title2">
+    <!-- <sp-dropdown-item ref="item2" v-model="value2" :title="title2">
       <template>
         <div class="custom">
           <div class="custom-container">
@@ -34,7 +40,7 @@
           </div>
         </div>
       </template>
-    </sp-dropdown-item>
+    </sp-dropdown-item> -->
   </sp-dropdown-menu>
 </template>
 
@@ -47,38 +53,41 @@ export default {
   },
   data() {
     return {
-      value1: 0,
-
-      value2: 0,
-      title1: '开票状态',
-      title2: '订单类型',
-      option1: [
-        { text: '全部状态', value: 0 },
-        { text: '待开票', value: 1 },
-        { text: '开发票', value: 2 },
-        { text: '开票成功', value: 3 },
-        { text: '开票失败', value: 4 },
-        { text: '审核中', value: 5 },
-        { text: '已驳回', value: 6 },
-      ],
-      option2: [
-        { text: ' 全部类型', value: 0 },
-        { text: '服务订单', value: 1 },
-        { text: '资源订单', value: 2 },
+      tabs: [
+        {
+          title: '开票状态',
+          value: 0,
+          options: [
+            { text: '全部状态', value: 0 },
+            { text: '待开票', value: 1 },
+            { text: '开发票', value: 2 },
+            { text: '开票成功', value: 3 },
+            { text: '开票失败', value: 4 },
+            { text: '审核中', value: 5 },
+            { text: '已驳回', value: 6 },
+          ],
+        },
+        {
+          title: '订单类型',
+          value: 0,
+          options: [
+            { text: ' 全部类型', value: 0 },
+            { text: '服务订单', value: 1 },
+            { text: '资源订单', value: 2 },
+          ],
+        },
       ],
     }
   },
   methods: {
-    custom1(item) {
-      this.title1 = item.text
-      this.value1 = item.value
-      this.$refs.item1.toggle()
+    custom(item, option, index) {
+      item.value = option.value
+      item.title = option.text
+      // console.log(item, option, index)
+      this.$refs.tabs[index].toggle()
+      this.$emit('select', this.tabs)
     },
-    custom2(item) {
-      this.title2 = item.text
-      this.value2 = item.value
-      this.$refs.item2.toggle()
-    },
+
     // change1(val) {
     //   this.title1 = this.option1.find((item) => {
     //     return item.value === val
