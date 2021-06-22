@@ -136,6 +136,7 @@ export default {
   },
   mounted() {
     this.imgsrc = this.$ossImgSetV2(utils.getEmptyImgConfig('calendar'))
+    this.active = this.$route.query.active === '3' ? 3 : 0
     if (this.isInApp) {
       if (this.userInfo) {
         this.onLoad()
