@@ -1284,7 +1284,7 @@ export default {
         return '1000万以上'
       }
     },
-    // 判断发票状态 return num 0 无发票 1待开票 2开票中 3开票成功 4开票失败 5审核中 6已驳回
+    // 判断电子发票状态 return num 0 无发票 1待开票 2开票中 3开票成功 4开票失败 5审核中 6已驳回
     checkBillStatus(orderData) {
       orderData = orderData || this.orderData || this.orderDetail
       if (this.checkOrderStatus(orderData.orderStatusNo) !== 3) {
@@ -1301,12 +1301,21 @@ export default {
     // 发票操作
     toInvoice(orderData) {
       orderData = orderData || this.orderData || this.orderDetail
+      // signerSubjectUserId 签单人商户用户ID
+      // cusHousekeeperSubjectUserId 主管家商户用户ID
+      // orderPersonSubjectUserId 下单人商户用户ID
+      // merchantId 申请发票用商户id
+      const merchantId =
+        orderData.orderPersonSubjectUserId ||
+        orderData.signerSubjectUserId ||
+        orderData.cusHousekeeperSubjectUserId ||
+        ''
       const billStatusNum = this.checkBillStatus(orderData)
       if (billStatusNum === 1) {
         this.$router.push({
           path: '/order/invoice/add',
           query: {
-            mechUserId: orderData.orderPersonSubjectUserId,
+            merchantId,
             orderId: orderData.id,
           },
         })
@@ -1314,7 +1323,7 @@ export default {
         this.$router.push({
           path: '/order/invoice/detail',
           query: {
-            mechUserId: orderData.orderPersonSubjectUserId,
+            merchantId,
             orderId: orderData.id,
           },
         })

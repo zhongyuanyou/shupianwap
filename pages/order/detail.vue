@@ -219,7 +219,7 @@
       </p> -->
         <p class="order-item">
           <span class="label">发票类型</span>
-          <span class="text">暂无</span>
+          <span class="text">普通电子发票</span>
           <span v-if="checkBillStatus() === 1" class="btn">申请开票</span>
           <span v-if="checkBillStatus() === 3" class="btn">查看发票</span>
         </p>
