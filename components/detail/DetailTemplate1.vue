@@ -23,9 +23,9 @@
             <my-icon
               :class="sellingDetail.isSave ? 'icon-red' : ''"
               style="margin-right: 0.36rem"
-              name="shoucang_mian"
+              :name="sellingDetail.isSave ? 'shoucang_mian' : 'shoucang'"
               size="0.4rem"
-              color="#fff"
+              :color="sellingDetail.isSave ? '#4e78f5' : '#fff'"
               @click.native="handleClickSave"
             />
           </div>
@@ -427,7 +427,7 @@ export default {
             })
             this.sellingDetail.isSave = true
           } else {
-            this.$xToast.error(res.message || '收藏失败')
+            this.$xToast.error(res || '收藏失败')
           }
         })
         .catch((err) => {
@@ -658,11 +658,11 @@ export default {
       .spiconfont {
         color: #1a1a1a !important;
       }
-      #icon-red {
-        color: #4974f5 !important;
-      }
+      // #icon-red {
+      //   color: #4974f5 !important;
+      // }
       .icon-red {
-        color: #4974f5 !important;
+        color: #4e78f5 !important;
       }
     }
   }
