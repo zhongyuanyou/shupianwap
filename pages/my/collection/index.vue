@@ -76,8 +76,7 @@
           <sp-checkbox-group
             ref="checkboxGroup"
             v-model="selectDelGoods"
-            checked-color="#4E78F5"
-            icon-size="0.4rem"
+            icon-size="0.41rem"
           >
             <div
               v-for="(item, index) in list"
@@ -92,10 +91,19 @@
                   :type="tabIndex == 4 ? 'Service' : 'Trading'"
                 >
                   <template v-if="selectGoodsState" #left>
-                    <sp-checkbox
-                      class="good-list-checkbox"
-                      :name="item.id"
-                    ></sp-checkbox>
+                    <sp-checkbox class="good-list-checkbox" :name="item.id">
+                      <template #icon="props">
+                        <my-icon
+                          :name="
+                            props.checked
+                              ? 'order_ic_success'
+                              : 'pay_ic_radio_n'
+                          "
+                          size="0.4rem"
+                          :color="props.checked ? '#4E78F5' : '#dddddd'"
+                        ></my-icon>
+                      </template>
+                    </sp-checkbox>
                   </template>
                 </ServiceGoods>
 
@@ -121,11 +129,17 @@
       <div class="footer_container">
         <sp-checkbox
           v-model="checkedAllState"
-          checked-color="#4E78F5"
-          icon-size="0.4rem"
+          icon-size="0.41rem"
           @change="checkedAllChange"
-          >全选</sp-checkbox
-        >
+          >全选
+          <template #icon="props">
+            <my-icon
+              :name="props.checked ? 'order_ic_success' : 'pay_ic_radio_n'"
+              size="0.4rem"
+              :color="props.checked ? '#4E78F5' : '#dddddd'"
+            ></my-icon>
+          </template>
+        </sp-checkbox>
 
         <div class="footer-btn">
           <sp-button plain hairline type="primary" @click="delGoodsList"
@@ -393,17 +407,20 @@ export default {
   margin: 24px 0px 0px;
 
   .good-list-checkbox {
-    margin-right: 20px;
+    padding-right: 20px;
   }
 }
-::v-deep .sp-checkbox__icon .sp-icon {
-  border: 1px solid #dddddd;
-}
+// ::v-deep .sp-checkbox__icon .sp-icon {
+//   border: 1px solid #dddddd;
+// }
+
 ::v-deep .sp-checkbox__label {
-  font-family: PingFangSC-Medium;
+  font-family: PingFangSC-Medium, PingFang SC;
   font-size: 28px;
+  line-height: 40px;
   color: #222222;
   letter-spacing: 0;
+  // padding-top: 2px;
 }
 .collection_container {
   min-height: 100vh;

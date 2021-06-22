@@ -1,45 +1,14 @@
 <template>
   <div class="invoice_add">
     <sp-sticky>
-      <Header class="my-header" title="添加发票抬头"></Header>
+      <Header class="my-header" title="编辑发票抬头"></Header>
     </sp-sticky>
     <div class="card">
       <div class="invoice_info">
         <sp-cell-group>
-          <sp-field label="发票类型">
-            <template #input>
-              <div class="options">
-                <sp-button class="btn active" size="small" type="primary">
-                  电子普通发票
-                </sp-button>
-              </div>
-            </template>
-          </sp-field>
-
-          <sp-field label="发票类型">
-            <template #input>
-              <div class="options">
-                <sp-button
-                  class="btn"
-                  :class="{ active: type === 1 }"
-                  size="small"
-                  type="primary"
-                  @click="type = 1"
-                >
-                  个人
-                </sp-button>
-                <sp-button
-                  class="btn"
-                  :class="{ active: type === 2 }"
-                  size="small"
-                  type="primary"
-                  @click="type = 2"
-                >
-                  单位
-                </sp-button>
-              </div>
-            </template>
-          </sp-field>
+          <sp-cell v-if="type == 1" title="普通发票抬头-个人"></sp-cell>
+          <sp-cell v-else-if="type == 2" title="普通发票抬头-单位"></sp-cell>
+          <sp-cell v-else-if="type == 3" title="增值税专用发票抬头"></sp-cell>
 
           <sp-field
             v-model="formData.username"
@@ -79,18 +48,15 @@
         </sp-cell-group>
       </div>
     </div>
-    <div class="card set_default">
-      <sp-field label="设为默认">
-        <template #input>
-          <div class="placeholder">每次开票时会默认填写抬头信息</div>
-        </template>
-        <template #button>
-          <sp-switch class="switch" size="0.5rem" v-model="checked" />
-        </template>
-      </sp-field>
-    </div>
-    <sp-bottombar safe-area-inset-bottom>
-      <sp-bottombar-button type="primary" text="添加发票抬头" />
+
+    <sp-bottombar safe-area-inset-bottom class="submit_btns">
+      <sp-bottombar-button
+        type="default"
+        text="删除"
+        class="del_btn"
+        @click="del"
+      />
+      <sp-bottombar-button type="primary" text="提交" @click="submit" />
     </sp-bottombar>
 
     <Loading-center v-show="loading" />
@@ -100,18 +66,15 @@
 import {
   Button,
   Toast,
-  TopNavBar,
-  Uploader,
   Bottombar,
   Sticky,
   BottombarButton,
-  WorkTab,
-  WorkTabs,
   Empty,
   Field,
   Cell,
   CellGroup,
   Switch,
+  Dialog,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 
@@ -125,8 +88,7 @@ export default {
   components: {
     LoadingCenter,
     Header,
-    [WorkTab.name]: WorkTab,
-    [WorkTabs.name]: WorkTabs,
+
     [Sticky.name]: Sticky,
     [Empty.name]: Empty,
     [Button.name]: Button,
@@ -140,12 +102,25 @@ export default {
   data() {
     return {
       loading: false, // 加载效果状态
-      type: 1,
+      type: 2,
       formData: { username: '' },
       checked: true,
     }
   },
   methods: {
+    del() {
+      Dialog.confirm({
+        // title: '确定删除该发票抬头？',
+        message: '确定删除该发票抬头？',
+      })
+        .then(() => {
+          // on confirm
+        })
+        .catch(() => {
+          // on cancel
+        })
+    },
+    submit() {},
     // back() {
     //   if (this.isInApp) {
     //     this.$appFn.dggWebGoBack((res) => {})
@@ -170,45 +145,11 @@ export default {
     ::v-deep .sp-cell {
       padding: 40px 0px 40px 32px;
     }
-    .options {
-      // padding-bottom: 20px;
-      .btn {
-        margin-right: 32px;
-      }
-      .btn:last-child {
-        margin-right: 0;
-      }
-      .btn::v-deep.sp-button--primary {
-        min-width: 152px;
-        background: #f5f5f5;
-        color: #999999;
-
-        border-radius: 8px;
-        border: none;
-
-        font-size: 26px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        line-height: 26px;
-      }
-      .btn.active::v-deep.sp-button--primary {
-        background: #f2f5ff;
-        color: #4974f5;
-      }
-    }
   }
-  .set_default {
-    .placeholder {
-      font-size: 22px;
-      font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
-      color: #999999;
-      line-height: 22px;
-      vertical-align: top;
-    }
-    ::v-deep .sp-field__control--custom {
-      display: inline-block;
-    }
+  .submit_btns ::v-deep .sp-button__text {
+    font-weight: 500;
+    font-size: 30px;
+    font-family: PingFangSC-Medium, PingFang SC;
   }
 }
 </style>

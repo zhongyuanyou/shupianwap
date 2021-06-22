@@ -166,4 +166,7 @@ export default {
 ::v-deep .sp-cell::after {
   border: 0;
 }
+::v-deep .sp-dropdown-menu__bar {
+  box-shadow: none;
+}
 </style>
