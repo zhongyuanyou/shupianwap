@@ -350,13 +350,14 @@ export default {
       align-items: normal;
       padding-bottom: 32px;
       justify-content: space-between;
-      height: 160px;
       &-txt {
         font: 400 30px/42px @fontf-pfsc-reg;
         color: #555555;
-        .textOverflow(3);
-        height: 128px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
         overflow: hidden;
+        word-break: break-all;
       }
       &-img {
         margin-left: 40px;

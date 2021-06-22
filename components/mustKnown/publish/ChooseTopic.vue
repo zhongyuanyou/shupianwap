@@ -262,7 +262,7 @@ export default {
 .choose-topic {
   position: fixed;
   left: 0;
-  bottom: 120px;
+  bottom: 140px;
   height: 80px;
   padding: 20px 0 0 40px;
   width: 100%;
