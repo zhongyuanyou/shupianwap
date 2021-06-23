@@ -55,6 +55,25 @@ export default {
     [Picker.name]: Picker,
     [Button.name]: Button,
   },
+  data() {
+    return {
+      tabs: [
+        {
+          title: '全部发票类型',
+          value: 0,
+          options: [
+            { text: '全部发票类型', value: 0 },
+            { text: '电子普通发票', value: 1 },
+            { text: '增值税专用电子发票', value: 2 },
+          ],
+        },
+      ],
+      timePicker: {
+        title: '开票时间',
+        value: 0,
+      },
+    }
+  },
   computed: {
     timePickerColumns() {
       const nowDate = new Date()
@@ -90,25 +109,6 @@ export default {
       ]
       return PickerColumns
     },
-  },
-  data() {
-    return {
-      tabs: [
-        {
-          title: '全部发票类型',
-          value: 0,
-          options: [
-            { text: '全部发票类型', value: 0 },
-            { text: '电子普通发票', value: 1 },
-            { text: '增值税专用电子发票', value: 2 },
-          ],
-        },
-      ],
-      timePicker: {
-        title: '开票时间',
-        value: 0,
-      },
-    }
   },
   methods: {
     custom(item, option, index) {

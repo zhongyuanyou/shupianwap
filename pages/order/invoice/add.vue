@@ -85,7 +85,7 @@
           <div class="placeholder">每次开票时会默认填写抬头信息</div>
         </template>
         <template #button>
-          <sp-switch class="switch" size="0.5rem" v-model="checked" />
+          <sp-switch v-model="checked" class="switch" size="0.5rem" />
         </template>
       </sp-field>
     </div>
