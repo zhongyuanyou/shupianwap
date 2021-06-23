@@ -1,26 +1,30 @@
 <template>
   <div class="all_invoice">
-    <div v-for="item of list" :key="item.id" class="card">
+    <div v-for="orderData of list" :key="orderData.id" class="card">
       <div class="card_header flex">
-        <div class="card_number flex_1">订单编号：{{ item.number }}</div>
+        <div class="card_number flex_1">订单编号：{{ orderData.orderNo }}</div>
         <div class="card_status">已开票</div>
       </div>
-      <div v-for="goods of item.goods" :key="goods.id" class="card_item flex">
+      <div
+        v-for="item of orderData.orderSkuEsList || orderData.orderSkuList"
+        :key="item.id"
+        class="card_item flex"
+      >
         <div class="goods_img">
           <sp-image
             width="100%"
             height="100%"
             fit="cover"
-            :src="goods.img || 'https://img.yzcdn.cn/vant/cat.jpeg'"
+            :src="item.indexImg || 'https://img.yzcdn.cn/vant/cat.jpeg'"
           />
         </div>
         <div class="goods_info flex_1">
           <div class="flex">
             <div class="goods_info_title flex_1">
-              1111111111111111111111111111111111111111111
+              {{ item.spuHideName || item.spuName }}
             </div>
             <div class="goods_num goods_price">
-              22222<span class="unit">元</span>
+              {{ item.skuPrice }}<span class="unit">元</span>
             </div>
           </div>
 
@@ -42,11 +46,17 @@
       </div>
 
       <div class="card_price">
-        <span>总价 2480<span class="unit">元</span>，</span>
-        <span>优惠 280<span class="unit">元</span>，</span>
+        <span
+          >总价 {{ orderData.orderTotalMoney
+          }}<span class="unit">元</span>，</span
+        >
+        <span
+          >优惠 {{ orderData.orderDiscountMoney
+          }}<span class="unit">元</span>，</span
+        >
         <span class="card_price_real">
           <span>已付款</span>
-          <span class="bold">22222</span>
+          <span class="bold">{{ orderData.orderPayableMoney }}</span>
           <span class="unit">元</span>
         </span>
       </div>
@@ -74,6 +84,7 @@
 
 <script>
 import { DropdownMenu, DropdownItem, Image, Button } from '@chipspc/vant-dgg'
+import OrderMixins from '@/mixins/order'
 export default {
   components: {
     [DropdownMenu.name]: DropdownMenu,
@@ -81,6 +92,7 @@ export default {
     [Image.name]: Image,
     [Button.name]: Button,
   },
+  mixins: [OrderMixins],
   props: {
     list: {
       type: Array,

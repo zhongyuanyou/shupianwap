@@ -23,6 +23,19 @@
       error-text="请求失败，点击重新加载"
       @load="onLoad"
     >
+      <!-- <div v-if="tabActive === 0">
+        <orderItem
+          v-for="(item, index) in list"
+          :key="index"
+          :order-data="item"
+          :order-id="item.cusOrderId"
+          selected-order-status="ORDER_CUS_STATUS_COMPLETED"
+          :order-pro-type-no="item.orderProTypeNo"
+          @handleClickItem="handleClickOrderItem"
+        >
+        </orderItem>
+      </div> -->
+
       <AllInvoice v-if="tabActive === 0" :list="list"></AllInvoice>
       <HistoryInvoice v-else-if="tabActive === 1" :list="list"></HistoryInvoice>
       <HeadManagement v-else-if="tabActive === 2" :list="list"></HeadManagement>
@@ -69,9 +82,11 @@ import HistoryInvoiceClassify from '@/components/order/invoice/index/HistoryInvo
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 
+import OrderItem from '@/components/order/OrderItem.vue'
 import AllInvoice from '@/components/order/invoice/index/AllInvoice.vue'
 import HistoryInvoice from '@/components/order/invoice/index/HistoryInvoice.vue'
 import HeadManagement from '@/components/order/invoice/index/HeadManagement.vue'
+import orderApi from '@/api/order'
 
 export default {
   layout: 'keepAlive',
@@ -87,7 +102,7 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [List.name]: List,
 
-    // TabCurve,
+    // OrderItem,
     AllInvoice,
     AllInvoiceClassify,
     HistoryInvoice,
@@ -157,12 +172,15 @@ export default {
     },
     onLoad() {
       if (this.tabActive === 0) {
-        this.getList()
+        this.getOrderList()
       } else if (this.tabActive === 1) {
         this.getList()
       } else if (this.tabActive === 2) {
         this.getList()
       }
+    },
+    handleClickOrderItem(item) {
+      console.log(item)
     },
     onClickWorkTab() {
       if (this.tabActiveIndex === this.tabActive) {
@@ -182,6 +200,44 @@ export default {
       console.log('tabs', tabs)
       this.AllInvoiceSelectState = {}
     },
+
+    getOrderList() {
+      this.finished = false
+      orderApi
+        .list(
+          { axios: this.$axios },
+          {
+            page: this.page,
+            limit: this.limit,
+            cusOrderStatusNo: 'ORDER_CUS_STATUS_COMPLETED', // 已完成订单
+          }
+        )
+        .then((res) => {
+          if (res.totalCount <= this.page * this.limit) {
+            this.finished = true
+          }
+          this.loading = false
+
+          const arr = res.records
+          // for (let i = 0, l = arr.length; i < l; i++) {
+          //   this.changeMoney(arr[i])
+          // }
+          if (this.page === 1) {
+            this.list = arr
+          } else {
+            const nowData = JSON.parse(JSON.stringify(this.list))
+            const allData = nowData.concat(arr)
+            this.list = allData
+          }
+        })
+        .catch((error) => {
+          console.error(error)
+          this.error = true
+          this.loading = false
+          this.$xToast.error(error.message || '请求失败，请重试')
+        })
+    },
+
     getList() {
       const params = {
         type: this.tabActive, //  1问题 2文章 3回答.默认问题

@@ -1,5 +1,5 @@
 <template>
-  <div class="history_invoice">
+  <div class="invoice_head_management">
     <div v-if="companyList.length > 0" class="card">
       <div class="card_header">普通发票抬头-单位</div>
       <div v-for="item of companyList" :key="item.id" class="card_content">
@@ -89,7 +89,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.history_invoice {
+.invoice_head_management {
   background: #f5f5f5;
   overflow: hidden;
   padding: 0 0 170px;
@@ -108,13 +108,19 @@ export default {
       padding: 32px 40px;
       font-size: 30px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
+      font-weight: bold;
       color: #222222;
       line-height: 30px;
       border-bottom: 1px solid #f4f4f4;
     }
     .card_content {
       padding: 0px 40px;
+      .custom-title {
+        font-family: PingFangSC-Regular;
+        font-size: 30px;
+        color: #222222;
+        line-height: 30px;
+      }
       ::v-deep .sp-cell {
         padding: 32px 0;
         border-top: 1px solid #f4f4f4;
