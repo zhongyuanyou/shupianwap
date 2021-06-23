@@ -160,6 +160,8 @@ export default {
         this.getList()
       } else if (this.tabActive === 1) {
         this.getList()
+      } else if (this.tabActive === 2) {
+        this.getList()
       }
     },
     onClickWorkTab() {
@@ -195,7 +197,7 @@ export default {
             status: 1,
             goods: [
               {
-                name: '1111111111111111111111111111111111111111111111111',
+                name: '公司名称',
                 img: '',
               },
               {
@@ -208,10 +210,6 @@ export default {
             number: 2,
             status: 2,
             goods: [
-              {
-                name: '1111111111111111111111111111111111111111111111111',
-                img: '',
-              },
               {
                 name: '1111111111111111111111111111111111111111111111111',
                 img: '',

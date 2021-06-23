@@ -109,7 +109,7 @@
       >
         发送邮箱
       </sp-button>
-      <sp-button size="normal" type="default" plain @click="submit">
+      <sp-button size="normal" type="default" plain @click="toPreview">
         查看发票
       </sp-button>
     </div>
@@ -248,6 +248,9 @@ export default {
     // this.moneyTips()
   },
   methods: {
+    toPreview() {
+      this.$router.push('/order/invoice/preview')
+    },
     submit() {
       // this.$xToast.show({ message: '提交成功' })
       this.$xToast.success('提交成功')
@@ -420,8 +423,6 @@ export default {
       line-height: 36px;
     }
 
-    .invoice_info {
-    }
     .invoice_info_list {
       display: flex;
       padding: 16px 0;
