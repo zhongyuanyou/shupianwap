@@ -18,10 +18,13 @@
           <span>{{ item.categoryName }}</span>
         </p>
       </div>
-      <div v-if="item.contentImageUrl" class="right">
+      <div
+        v-if="item.contentImageUrl && item.contentImageUrl.split(',')[0]"
+        class="right"
+      >
         <sp-image
           width="100%"
-          height="l00%"
+          height="100%"
           fit="cover"
           :src="item.contentImageUrl.split(',')[0]"
         />
