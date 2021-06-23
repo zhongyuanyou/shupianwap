@@ -1,6 +1,6 @@
 <template>
   <div class="m-known-share courseVideo">
-    <app-link />
+    <app-link :ios-link="iosPathFinally" :androd-link="androdFinally" />
     <client-only>
       <sp-video
         :vod-url="vurl"
@@ -27,11 +27,7 @@
           </div>
           <div class="introduction-course">
             <div class="tile">课程简介</div>
-            <div
-              class="richtxt"
-              @click="openApp"
-              v-html="vDetail.courseDesc"
-            ></div>
+            <div class="richtxt" v-html="vDetail.courseDesc"></div>
           </div>
         </div>
       </sp-tab>
@@ -44,7 +40,7 @@
               :key="index"
               class="section"
               :class="[index === 0 ? 'z-active' : '']"
-              @click="openApp"
+              @click="myOpenApp(item)"
             >
               <div class="desc">
                 <span>{{ index + 1 }}</span>
@@ -53,7 +49,7 @@
               <div>{{ item.custDuration }}</div>
             </div>
           </div>
-          <video-like :category-id="categoryId"></video-like>
+          <video-like :category-id="categoryId" :type="vType"></video-like>
         </div>
       </sp-tab>
     </sp-tabs>
@@ -71,7 +67,7 @@
 import { Tab, Tabs } from '@chipspc/vant-dgg'
 import knownApi from '@/api/known'
 import openappV2 from '@/mixins/openappV2'
-import { numChangeW, secondToTime } from '@/utils/common'
+import { numChangeW, secondToTime, deepCopy } from '@/utils/common'
 
 export default {
   name: 'KnownCourseVideo',
@@ -93,6 +89,27 @@ export default {
       categoryId: '', // 种类id
       vurl: '', // 视频url
       vDetail: {},
+      vType: 'course',
+      prefixPath: 'cpsccustomer://',
+      iosPath: {
+        path: 'CPSCustomer:CPSCustomer/CPSCKnowCommonDetailViewController///push/animation',
+        parameter: {
+          selectedIndex: 1,
+          type: '6', // 课程
+          id: '',
+        },
+      },
+      iosPathFinally: '',
+      androdPath: {
+        path: '/main/android/main',
+        parameter: {
+          selectedIndex: 1,
+          isLogin: '0',
+          secondLink: '/savvy/chips/lecture_details',
+          id: '',
+        },
+      },
+      androdFinally: '',
     }
   },
   mounted() {
@@ -103,6 +120,11 @@ export default {
     }
     */
     this.vId = this.$route.query.id || '8088687517639704576'
+    this.iosPath.parameter.id = this.vId
+    this.iosPathFinally = this.prefixPath + JSON.stringify(this.iosPath)
+    this.androdPath.parameter.id = this.vId
+    this.androdFinally = this.prefixPath + JSON.stringify(this.androdPath)
+
     this.getVideoApi()
   },
   methods: {
@@ -146,6 +168,18 @@ export default {
       } else {
         this.$xToast.error('获取视频信息失败')
       }
+    },
+    myOpenApp(item) {
+      // 构建传参数
+      const tempIos = deepCopy({}, this.iosPath)
+      const tempAndrod = deepCopy({}, this.androdPath)
+
+      tempIos.parameter.id = item.id
+      tempAndrod.parameter.id = item.id
+
+      const iosPathFinally = this.prefixPath + JSON.stringify(tempIos)
+      const androdPathFinally = this.prefixPath + JSON.stringify(tempAndrod)
+      this.openApp(iosPathFinally, androdPathFinally)
     },
   },
 }

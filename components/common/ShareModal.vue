@@ -17,7 +17,7 @@
       >
         <!--S 弹框banner-->
         <div class="popup-banner">
-          <img src="@/static/image/page/bg.png" />
+          <img src="https://cdn.shupian.cn/sp-pt/wap/23qhsm9soy5c000.png" />
           <div class="popup-header">
             <slot name="head">
               <div class="popup-header__con">
@@ -173,7 +173,11 @@ export default {
           customerId: this.userInfoData.id,
           customerPhone: this.userInfoData.mainAccount,
           customerName: this.userInfoData.fullName,
-          requestPlatform: 'crisps-app',
+          copartnerPort: 'COMDIC_PLATFORM_CRISPS',
+          customerPort: 'COMDIC_PLATFORM_CRISPS',
+          bindType: 'CUSTOMER_BDLX_FXBD',
+          requestPlatform: 'COMDIC_PLATFORM_CRISPS',
+          copartnerUserType: 'ORDINARY_USER',
         })
         .then((res) => {
           console.log('res', res)
@@ -244,6 +248,31 @@ export default {
             forbidClick: true,
           })
         })
+    },
+    // 获取合伙人信息 明文
+    getBindUserIndo() {
+      if (this.token) {
+        this.$axios
+          .get(userinfoApi.info_decrypt, {
+            params: {
+              id: this.partnerId,
+            },
+          })
+          .then((res) => {
+            if (res.code === 200) {
+              console.log('合伙人信息', res)
+              // this.userInfoData = res.data
+              // this.$store.dispatch('user/setInfo', res.data)
+            } else {
+              this.$xToast.show({
+                message: '网络错误,请刷稍后再试',
+                duration: 1000,
+                icon: 'toast_ic_error',
+                forbidClick: true,
+              })
+            }
+          })
+      }
     },
   },
 }

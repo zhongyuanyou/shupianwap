@@ -17,11 +17,14 @@
         </div>
 
         <span class="txt" @click="handleAvatar">
-          {{ userId ? nickName || '' : '登录/注册' }}
+          <span class="nickName">{{
+            userId ? nickName || '' : '登录/注册'
+          }}</span>
           <img
             v-if="userId"
             class="icon-plus"
             :src="$ossImgSetV2(imgList.plus)"
+            alt=""
           />
         </span>
         <div v-if="userId" class="right" @click="toKnownHome">
@@ -301,6 +304,14 @@ export default {
           : this.info.realStatus === 'AUTHENTICATION_ING'
           ? '认证中'
           : '未实名认证'
+      let realUrl = ''
+      if (
+        this.info.realStatus === 'NO_AUTHENTICATION' ||
+        this.info.realStatus === 'AUTHENTICATION_FAIL' ||
+        this.info.realStatus === 'AUTHENTICATION_INVALID'
+      ) {
+        realUrl = '/contract/authentication'
+      }
 
       return [
         {
@@ -313,7 +324,7 @@ export default {
           // iconName: 'shimingrenzheng',
           name: realStatus, // 实名认证
           img: this.$ossImgSetV2(this.imgList.real),
-          url: '/my/interviewRecord',
+          url: realUrl,
         },
         {
           // iconName: 'per_ic_help',
@@ -372,7 +383,7 @@ export default {
     },
     clickServiceTabs(item) {
       if (this.token) {
-        this.$router.push({ path: item.url })
+        item.url && this.$router.push({ path: item.url })
       } else {
         this.$router.push({
           path: '/login',
@@ -589,16 +600,23 @@ export default {
       .txt {
         flex: 1;
         margin-left: 24px;
-        font-size: 44px;
-        color: #1a1a1a;
+        font-size: 0;
+        letter-spacing: 0;
+        // line-height: 44px;
 
-        font-family: PingFang SC;
-        font-weight: bold;
-
-        line-height: 44px;
-
+        .nickName {
+          margin-right: 10px;
+          font-size: 44px;
+          line-height: 44px;
+          color: #1a1a1a;
+          font-family: PingFang SC;
+          font-weight: bold;
+          vertical-align: middle;
+        }
         .icon-plus {
           height: 44px;
+          vertical-align: middle;
+          // line-height: 44px;
         }
       }
       .right {
@@ -681,7 +699,7 @@ export default {
   }
 
   .exit_btn {
-    margin: 65px 24px 65px 24px;
+    margin: 65px 40px 65px;
     // height: 96px;
     ::v-deep .sp-button {
       width: 100%;

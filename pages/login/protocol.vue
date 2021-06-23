@@ -1,7 +1,7 @@
 <template>
   <div class="protocol">
-    <header-slot>
-      <div v-if="!hideHeader" class="top">
+    <header-slot v-if="!hideHeader">
+      <div class="top">
         <sp-top-nav-bar
           ellipsis
           :title="article.title || '协议'"

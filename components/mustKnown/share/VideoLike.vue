@@ -6,7 +6,7 @@
         v-for="(item, index) in mVlist"
         :key="index"
         class="item"
-        @click="openApp"
+        @click="myOpenApp(item)"
       >
         <div class="item-video">
           <sp-image
@@ -16,7 +16,9 @@
             fit="cover"
             :src="item.image"
           />
-          <div class="time">{{ item.custVideoTime }}</div>
+          <div v-if="type !== 'course'" class="time">
+            {{ item.custVideoTime }}
+          </div>
         </div>
         <div class="item-desc">
           <div class="tile">{{ item.videoName }}</div>
@@ -41,7 +43,7 @@
 import { Image } from '@chipspc/vant-dgg'
 import openappV2 from '@/mixins/openappV2'
 import knownApi from '@/api/known'
-import { secondToTime } from '@/utils/common'
+import { secondToTime, deepCopy } from '@/utils/common'
 
 export default {
   name: 'KnownVideoLike',
@@ -63,6 +65,26 @@ export default {
     return {
       mVlist: [],
       apiLock: false,
+      prefixPath: 'cpsccustomer://',
+      iosPath: {
+        path: 'CPSCustomer:CPSCustomer/CPSCKnowCommonDetailViewController///push/animation',
+        parameter: {
+          selectedIndex: 1,
+          type: '', // 课程 | 原创视频
+          id: '',
+        },
+      },
+      iosPathFinally: '',
+      androdPath: {
+        path: '/main/android/main',
+        parameter: {
+          selectedIndex: 1,
+          isLogin: '0',
+          secondLink: '', // 课程 | 原创视频
+          id: '',
+        },
+      },
+      androdFinally: '',
     }
   },
   watch: {
@@ -111,7 +133,7 @@ export default {
           if (res.code !== 200) {
             throw new Error('查询视频失败')
           }
-          this.buildVLikeList(res.data)
+          this.buildCourseList(res.data)
         })
 
         .catch((e) => {
@@ -128,6 +150,37 @@ export default {
           item.custVideoTime = secondToTime(item.duration)
         })
       }
+    },
+    buildCourseList(data) {
+      if (data.length > 0) {
+        this.mVlist = data.filter((item, index) => {
+          return index < 4
+        })
+        this.mVlist.forEach((item) => {
+          item.videoName = item.courseName
+        })
+      }
+    },
+    myOpenApp(item) {
+      // 构建传参数
+      const tempIos = deepCopy({}, this.iosPath)
+      const tempAndrod = deepCopy({}, this.androdPath)
+
+      if (this.type === 'course') {
+        // 课程
+        tempIos.parameter.type = '6'
+        tempAndrod.parameter.secondLink = '/savvy/chips/lecture_details'
+      } else {
+        // 原生视频
+        tempIos.parameter.type = '5'
+        tempAndrod.parameter.secondLink = '/savvy/chips/video_details'
+      }
+      tempIos.parameter.id = item.id
+      tempAndrod.parameter.id = item.id
+
+      const iosPathFinally = this.prefixPath + JSON.stringify(tempIos)
+      const androdPathFinally = this.prefixPath + JSON.stringify(tempAndrod)
+      this.openApp(iosPathFinally, androdPathFinally)
     },
   },
 }

@@ -179,14 +179,14 @@
         >
         <!-- 客户订单状态 -->
         <sp-button
-          v-if="checkContractStatus(orderData) == 2"
+          v-if="checkContractStatus(orderData) === 2"
           type="info"
           class="btn-look"
           @click="handleClickItem(3)"
           >查看合同</sp-button
         >
         <sp-button
-          v-if="checkContractStatus(orderData) == 1"
+          v-if="checkContractStatus(orderData) === 1"
           type="info"
           class="btn-look"
           @click="handleClickItem(2)"

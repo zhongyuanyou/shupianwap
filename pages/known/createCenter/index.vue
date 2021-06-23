@@ -130,16 +130,24 @@ export default {
       userId: (state) => state.user.userId,
       isInApp: (state) => state.app.isInApp,
     }),
+    userInfo() {
+      return this.$store.state.user
+    },
   },
   mounted() {
     this.imgsrc = this.$ossImgSetV2(utils.getEmptyImgConfig('calendar'))
+    this.active = this.$route.query.active === '3' ? 3 : 0
     if (this.isInApp) {
-      this.$appFn.dggGetUserInfo((res) => {
-        if (res.code === 200 && res.data.userId && res.data.token) {
-          this.$store.dispatch('user/setUser', res.data)
-          this.onLoad()
-        }
-      })
+      if (this.userInfo) {
+        this.onLoad()
+      } else {
+        this.$appFn.dggGetUserInfo((res) => {
+          if (res.code === 200 && res.data.userId && res.data.token) {
+            this.$store.dispatch('user/setUser', res.data)
+            this.onLoad()
+          }
+        })
+      }
     } else {
       this.onLoad()
     }
@@ -166,7 +174,11 @@ export default {
           page: this.page,
           limit: this.limit,
           status: this.activeMapping[this.active],
-          userIds: [this.userId || this.$cookies.get('userId', { path: '/' })],
+          userIds: [
+            this.userId ||
+              this.userInfo.userId ||
+              this.$cookies.get('userId', { path: '/' }),
+          ],
         }
         const { code, data } = await this.$axios.post(
           knownApi.createCenter.findListByStatus,
@@ -338,13 +350,14 @@ export default {
       align-items: normal;
       padding-bottom: 32px;
       justify-content: space-between;
-      height: 160px;
       &-txt {
         font: 400 30px/42px @fontf-pfsc-reg;
         color: #555555;
-        .textOverflow(3);
-        height: 128px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
         overflow: hidden;
+        word-break: break-all;
       }
       &-img {
         margin-left: 40px;

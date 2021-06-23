@@ -229,7 +229,6 @@ export default {
     serviceTag() {
       const salesGoodsTags =
         this.$store.state.sellingGoodsDetail.sellingGoodsData.salesGoodsTags
-      console.log('salesGoodsTags', salesGoodsTags)
       let serviceTag = []
       if (salesGoodsTags) {
         // 产品中心605版本筛选服务标签 code DSJTC20210514000043
@@ -251,28 +250,30 @@ export default {
     // 优惠券列表
     coupon() {
       const list = []
-      for (
-        let i = 0;
-        i <
-        this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList.length;
-        i++
-      ) {
-        let time1 =
-          this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList[
-            i
-          ].serviceLife.slice(
-            this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList[
-              i
-            ].serviceLife.match('-').index + 1
-          )
-        time1 = new Date(time1)
-        const time2 = new Date()
-        if (time1.getTime() >= time2.getTime()) {
-          list.push(
-            this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList[i]
-          )
+      const couponList =
+        this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList
+
+      console.log('couponList', couponList)
+      try {
+        for (let i = 0; i < couponList.length; i++) {
+          const matchServiceLife = couponList[i].serviceLife.match('-')
+          if (matchServiceLife) {
+            let time1 = couponList[i].serviceLife.slice(
+              matchServiceLife.index + 1
+            )
+            time1 = new Date(time1)
+            const time2 = new Date()
+            if (time1.getTime() >= time2.getTime()) {
+              list.push(couponList[i])
+            }
+          } else {
+            list.push(couponList[i])
+          }
         }
+      } catch (error) {
+        console.log(error)
       }
+
       return list
     },
     //  服务商品的SKU集合
@@ -490,7 +491,7 @@ export default {
             content: '3';
           }
         }
-        .last-item{
+        .last-item {
           margin-right: 0;
         }
       }

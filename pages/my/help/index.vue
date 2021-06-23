@@ -388,7 +388,7 @@ export default {
       if (this.isInApp) {
         this.$appFn.dggCallPhone(
           {
-            phone: '4000-962540',
+            phone: '028-954310',
           },
           (res) => {
             const { code } = res || {}
@@ -396,7 +396,7 @@ export default {
           }
         )
       } else {
-        window.location.href = 'tel:4000-962540'
+        window.location.href = 'tel:028-954310'
       }
     },
     // tab切换

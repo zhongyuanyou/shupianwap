@@ -143,7 +143,7 @@
               v-for="(item, index) in list"
               :key="index"
               class="item"
-              @click="open"
+              @click="open(item)"
             >
               <sp-image
                 width="3.72rem"
@@ -151,9 +151,11 @@
                 fit="cover"
                 :src="item.image"
               />
-              <div class="content">
-                <div class="count">{{ item.custTotalCount }} 次观看</div>
-                <div class="tile">{{ item.videoName }}</div>
+              <div class="content_box">
+                <div class="content">
+                  <div class="count">{{ item.custTotalCount }} 次观看</div>
+                  <div class="tile">{{ item.videoName }}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -188,6 +190,7 @@ import utils from '@/utils/changeBusinessData'
 import { domainUrl } from '~/config/index'
 import DownLoadArea from '@/components/common/downLoadArea'
 import ShareModal from '@/components/common/ShareModal'
+import { numChangeW } from '@/utils/common'
 
 export default {
   name: 'Collection',
@@ -282,6 +285,7 @@ export default {
       adList: [],
       showPop: false,
       sourceType: 1,
+      error: false,
     }
   },
   computed: {
@@ -315,8 +319,6 @@ export default {
   methods: {
     open(item) {
       if (this.isInApp && this.appInfo.appCode === 'CPSAPP') {
-        console.log('++++++++this.active', this.active)
-        console.log('++++++++this.item', item.id)
         if (this.active === 5) {
           try {
             this.$appFn.dggOpenVideo(item.id, (res) => {
@@ -333,6 +335,7 @@ export default {
             console.error('changeTop error:', error)
           }
         } else {
+          console.log('item', item)
           try {
             this.$appFn.dggOpenSmallVideo(item.id, (res) => {
               const { code } = res || {}
@@ -522,10 +525,11 @@ export default {
       console.log('点击了发布')
     },
     async getList() {
+      // if (this.active === 0) {
       const { code, message, data } = await this.$axios.post(
         knownApi.home.list,
         {
-          type: this.active,
+          types: [this.active],
           userIds: this.homeUserId || this.userInfo.userId,
           currentUserId: this.userInfo.userId,
           page: this.page,
@@ -534,6 +538,11 @@ export default {
       )
       if (code === 200) {
         this.list = this.list.concat(data.rows)
+        if (this.active === 6) {
+          this.list.forEach((item) => {
+            item.custTotalCount = numChangeW(item.totalViewCount)
+          })
+        }
         this.loading = false
         this.page++
         if (this.page > data.totalPage) {
@@ -714,6 +723,7 @@ export default {
     }
 
     .list_container {
+      background: #ffffff;
       .item {
         background: #ffffff;
         padding: 28px 32px 28px;
@@ -863,6 +873,7 @@ export default {
         display: flex;
         flex-wrap: wrap;
         background-color: #fff;
+        padding: 0 2px;
         .item {
           position: relative;
           display: inline-block;
@@ -870,28 +881,41 @@ export default {
           width: 50%;
           height: 661px;
           margin: 2px 0;
-          .content {
+          ::v-deep .sp-image__img {
+            border-radius: 4px;
+          }
+          .content_box {
             position: absolute;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 0 20px;
-            font-family: @fontf-pfsc-med;
-            font-weight: bold;
-            color: #fff;
-            width: 100%;
-            height: 200px;
             bottom: 0;
-            left: 0;
-            right: 0;
-            .count {
-              font-size: 24px;
-              opacity: 0.8;
-              margin-bottom: 8px;
-            }
-            .tile {
-              font-size: 36px;
-              .textOverflow(2);
+            height: 200px;
+            width: 100%;
+            background-image: linear-gradient(
+              0deg,
+              rgba(0, 0, 0, 0.4) 0%,
+              rgba(0, 0, 0, 0) 100%
+            );
+            border-radius: 0 0 12px 12px;
+            .content {
+              position: absolute;
+              bottom: 16px;
+              left: 20px;
+              .count {
+                font-size: 24px;
+                opacity: 0.8;
+                margin-bottom: 8px;
+                line-height: 32px;
+                color: #fff;
+                font-weight: bold;
+              }
+              .tile {
+                line-height: 44px;
+                font-size: 36px;
+                .textOverflow(2);
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+                color: #fff;
+                font-weight: bold;
+                width: 340px;
+              }
             }
           }
         }

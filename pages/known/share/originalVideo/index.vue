@@ -1,6 +1,6 @@
 <template>
   <div class="m-known-share originalVideo">
-    <app-link />
+    <app-link :ios-link="iosPathFinally" :androd-link="androdFinally" />
     <client-only>
       <sp-video
         :options="playerOptions"
@@ -76,6 +76,26 @@ export default {
         poster: '',
       },
       vType: 'original',
+      prefixPath: 'cpsccustomer://',
+      iosPath: {
+        path: 'CPSCustomer:CPSCustomer/CPSCKnowCommonDetailViewController///push/animation',
+        parameter: {
+          selectedIndex: 1,
+          type: '5', // 视频
+          id: '',
+        },
+      },
+      iosPathFinally: '',
+      androdPath: {
+        path: '/main/android/main',
+        parameter: {
+          selectedIndex: 1,
+          isLogin: '0',
+          secondLink: '/savvy/chips/video_details',
+          id: '',
+        },
+      },
+      androdFinally: '',
     }
   },
   mounted() {
@@ -86,6 +106,11 @@ export default {
     }
     */
     this.vId = this.$route.query.id || '8088997202200690688'
+    this.iosPath.parameter.id = this.vId
+    this.iosPathFinally = this.prefixPath + JSON.stringify(this.iosPath)
+    this.androdPath.parameter.id = this.vId
+    this.androdFinally = this.prefixPath + JSON.stringify(this.androdPath)
+
     this.getVideoApi()
   },
   methods: {
@@ -176,6 +201,7 @@ export default {
   }
   .button {
     width: 144px;
+    height: 64px;
     padding: 0;
   }
 }

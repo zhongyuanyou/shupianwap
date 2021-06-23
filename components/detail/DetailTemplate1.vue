@@ -23,9 +23,9 @@
             <my-icon
               :class="sellingDetail.isSave ? 'icon-red' : ''"
               style="margin-right: 0.36rem"
-              name="shoucang_mian"
+              :name="sellingDetail.isSave ? 'shoucang_mian' : 'shoucang'"
               size="0.4rem"
-              color="#fff"
+              :color="sellingDetail.isSave ? '#4e78f5' : '#fff'"
               @click.native="handleClickSave"
             />
           </div>
@@ -123,7 +123,6 @@ import { productDetailsApi, recommendApi, shopApi } from '~/api'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import { copyToClipboard } from '~/utils/common'
 import imHandle from '~/mixins/imHandle'
-import { error } from '~/static/js/jweixin_1.4.0'
 export default {
   name: 'DetailTemplate',
   components: {
@@ -418,7 +417,8 @@ export default {
       this.$axios
         .post(shopApi.addGoods, params)
         .then((res) => {
-          if (res.code === 200) {
+          console.log('res', res)
+          if (res && res.code === 200) {
             this.$xToast.show({
               message: '收藏成功',
               duration: 3000,
@@ -427,12 +427,12 @@ export default {
             })
             this.sellingDetail.isSave = true
           } else {
-            this.$xToast.error(res.message || '收藏失败')
+            this.$xToast.error(res || '收藏失败')
           }
         })
         .catch((err) => {
           console.log('err', err)
-          this.$xToast.error(err.message || '操作失败')
+          this.$xToast.error('收藏失败')
         })
     },
     comment() {
@@ -544,14 +544,11 @@ export default {
               ? this.sellingDetail.classCodeLevel.split(',')[1]
               : null, // 二级产品分类
             login_name: null, // 规划师ID(选填)
-            productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
+            productType: 'PRO_CLASS_TYPE_TRANSACTIO3333N', // 产品类型
             sceneId: 'app-cpxqye-01', // 场景ID
             user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-            platform: 'app', // 平台（app,m,pc）
+            platform: 'm', // 平台（app,m,pc）
             productId: this.sellingDetail.id, // 产品id
-            formatIdOne:
-              this.sellingDetail.classCodeLevel.split(',')[0] ||
-              this.sellingDetail.classCodeLevel.split(',')[1],
           },
         })
         .then((res) => {
@@ -581,15 +578,13 @@ export default {
           productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
           sceneId: 'app-cpxqye-02', // 场景ID
           user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-          platform: 'app', // 平台（app,m,pc）
+          platform: 'm', // 平台（app,m,pc）
           productId: this.sellingDetail.id, // 产品id
-          formatIdOne:
-            this.sellingDetail.classCodeLevel.split(',')[0] ||
-            this.sellingDetail.classCodeLevel.split(',')[1],
         },
       })
       if (plannerRes.code === 200) {
         this.tcPlannerBooth = plannerRes.data.records[0]
+        console.log('tcPlannerBooth', this.tcPlannerBooth)
       }
     },
     // 购物车
@@ -663,11 +658,11 @@ export default {
       .spiconfont {
         color: #1a1a1a !important;
       }
-      #icon-red {
-        color: #4974f5 !important;
-      }
+      // #icon-red {
+      //   color: #4974f5 !important;
+      // }
       .icon-red {
-        color: #4974f5 !important;
+        color: #4e78f5 !important;
       }
     }
   }

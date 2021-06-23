@@ -2,7 +2,11 @@
   <div class="need">
     <p class="need_title">猜您需要</p>
     <sp-skeleton :row="20" :loading="needLoading">
-      <div v-for="item in productData" :key="item.id" class="need_item">
+      <div
+        v-for="(item, index) in productData"
+        :key="index + '' + item.id"
+        class="need_item"
+      >
         <nuxt-link
           :to="{
             path: '/detail',
@@ -27,12 +31,14 @@
             </p>
             <div class="label">
               <span
-                v-for="(labelItem, index) in item.tag"
-                :key="index"
+                v-for="(labelItem, index2) in item.salesGoodsTags"
+                v-show="labelItem.categoryCode === 'DSJTC20210514000042'"
+                :key="index2"
                 class="label_item"
-                >{{ labelItem.tagName }}</span
+                >{{ labelItem.tagValueName }}</span
               >
             </div>
+
             <div class="desc">
               <p>{{ item.salesGoodsOperatings.slogan }}</p>
             </div>

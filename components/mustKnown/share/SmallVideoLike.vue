@@ -58,7 +58,7 @@ export default {
         path: 'CPSCustomer:CPSCustomer/CPSCKnowCommonDetailViewController///push/animation',
         parameter: {
           selectedIndex: 1,
-          type: '',
+          type: '7', // 小视频
           id: '',
         },
       },
@@ -88,7 +88,7 @@ export default {
     getVideoApi() {
       this.apiLock = true
       const params = {
-        categoryIds: [this.categoryId],
+        // categoryIds: [this.categoryId],
         originalVideoType: 2, // 小视频
       }
       this.$axios
@@ -119,7 +119,6 @@ export default {
     myOpenApp(item) {
       // 构建传参数
       const tempIos = deepCopy({}, this.iosPath)
-      tempIos.parameter.type = item.videoType
       tempIos.parameter.id = item.id
       const iosPathFinally = this.prefixPath + JSON.stringify(tempIos)
       const tempAndrod = deepCopy({}, this.androdPath)

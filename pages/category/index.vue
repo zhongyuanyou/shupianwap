@@ -233,7 +233,7 @@ export default {
       // 点击每一个二级分类
       if (item.level === 2) {
         sessionStorage.categoryData = JSON.stringify(item)
-        this.$router.push('/list/serveList')
+        this.$router.push('/search/searchgoods')
       } else {
         this.$router.push({
           name: 'list-jyList',

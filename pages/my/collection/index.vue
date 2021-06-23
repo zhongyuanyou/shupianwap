@@ -73,14 +73,19 @@
       </div>
       <div v-else-if="tabIndex == 4 || tabIndex == 5">
         <client-only>
-          <sp-checkbox-group ref="checkboxGroup" v-model="selectDelGoods">
+          <sp-checkbox-group
+            ref="checkboxGroup"
+            v-model="selectDelGoods"
+            checked-color="#4E78F5"
+            icon-size="0.4rem"
+          >
             <div
               v-for="(item, index) in list"
               :key="index"
               class="good-list"
               @click="toServiceGoodsDetail(item)"
             >
-              <sp-swipe-cell>
+              <sp-swipe-cell :disabled="selectGoodsState">
                 <ServiceGoods
                   class="flex-1"
                   :info="item"
@@ -88,7 +93,7 @@
                 >
                   <template v-if="selectGoodsState" #left>
                     <sp-checkbox
-                      style="padding-right: 10px"
+                      class="good-list-checkbox"
                       :name="item.id"
                     ></sp-checkbox>
                   </template>
@@ -113,14 +118,20 @@
       v-if="(tabIndex == 4 || tabIndex == 5) && selectGoodsState"
       class="footer-nav"
     >
-      <sp-checkbox v-model="checkedAllState" @change="checkedAllChange"
-        >全选</sp-checkbox
-      >
-
-      <div class="footer-btn">
-        <sp-button plain hairline type="primary" @click="delGoodsList"
-          >取消收藏</sp-button
+      <div class="footer_container">
+        <sp-checkbox
+          v-model="checkedAllState"
+          checked-color="#4E78F5"
+          icon-size="0.4rem"
+          @change="checkedAllChange"
+          >全选</sp-checkbox
         >
+
+        <div class="footer-btn">
+          <sp-button plain hairline type="primary" @click="delGoodsList"
+            >取消收藏</sp-button
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -258,6 +269,10 @@ export default {
       if (this.tabIndex === name) {
         return
       }
+      this.checkedAllState = false // 全选状态
+      this.selectGoodsState = false // 开启多选
+      this.selectDelGoods = [] // 选择的商品id
+
       this.tabIndex = name
       this.init()
       this.onLoad()
@@ -269,10 +284,6 @@ export default {
       this.error = false
       this.loading = true
       this.list = []
-
-      this.checkedAllState = false // 全选状态
-      this.selectGoodsState = false // 开启多选
-      this.selectDelGoods = [] // 选择的商品id
     },
     onLoad() {
       if (this.tabIndex < 4) {
@@ -336,6 +347,7 @@ export default {
     ChangeSelectedGoodsState() {
       this.selectGoodsState = !this.selectGoodsState
       this.selectDelGoods = []
+      this.checkedAllState = false // 全选状态
     },
     delGoods(item) {
       this.selectDelGoods = [item.id]
@@ -344,21 +356,12 @@ export default {
     async delGoodsList() {
       console.log('delGoodsList')
       try {
-        const goodstype = this.tabIndex === 4 ? 1 : 2 // 服务商品1，交易商品2
-
-        // const data = new FormData()
-        // data.append('number', this.selectDelGoods)
         const data = this.selectDelGoods || []
+        this.loading = true
         const res = await this.$axios.post(shopApi.batch_dlt_goods, data)
-        // await this.$axios({
-        //   method: 'post',
-        //   url: '/abc/login',
-        //   data,
-        // }).then((res) => {
-        //   console.log(res)
-        // })
 
-        console.log(res)
+        this.loading = false
+
         if (res.code === 200) {
           this.init()
           this.onLoad()
@@ -388,6 +391,19 @@ export default {
 
 .good-list {
   margin: 24px 0px 0px;
+
+  .good-list-checkbox {
+    margin-right: 20px;
+  }
+}
+::v-deep .sp-checkbox__icon .sp-icon {
+  border: 1px solid #dddddd;
+}
+::v-deep .sp-checkbox__label {
+  font-family: PingFangSC-Medium;
+  font-size: 28px;
+  color: #222222;
+  letter-spacing: 0;
 }
 .collection_container {
   min-height: 100vh;
@@ -492,10 +508,15 @@ export default {
   padding-bottom: env(safe-area-inset-bottom);
 
   font-size: 28px;
-  padding: 24px 40px;
+  min-width: 0%;
 
-  display: flex;
-  justify-content: space-between;
+  .footer_container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 40px;
+  }
 }
 
 ::v-deep.sp-hairline--surround::after {
