@@ -368,7 +368,7 @@ export default {
   .inner {
     background: white;
     overflow: hidden;
-    border-radius: 16px;
+    border-radius: 24px;
     width: 100%;
   }
   img {
