@@ -49,6 +49,8 @@
         :bd-data="initData.bdData"
         :help-banner-data="initData.helpBannerData"
       />
+      <!-- 企服工具 -->
+      <FirmServeTool :tool-nav-list="initData.toolNavList" />
       <!-- E 营销入口区域 -->
       <!-- S 推荐服务 -->
       <Recommend ref="recommendRef" />
@@ -73,6 +75,7 @@ import Head from '@/components/home/Head'
 // import SearchBanner from '@/components/home/SearchBanner'
 import HomeNav from '@/components/home/HomeNav'
 import SkillGroup from '@/components/home/SkillGroup'
+import FirmServeTool from '@/components/home/FirmServeTool'
 // import SwiperBanner from '@/components/home/SwiperAd'
 // import Help from '@/components/home/HelpAd'
 // import Preferential from '@/components/home/Preferential'
@@ -89,6 +92,7 @@ export default {
     Head,
     // SearchBanner,
     HomeNav,
+    FirmServeTool,
     // SwiperBanner,
     // Help,
     // Preferential,
@@ -127,6 +131,7 @@ export default {
       fixedLimit: 5, // 固定导航每页条数
       fixedNavCategoryCode: 'nav100007', // 固定导航分类code
       rollNavCategoryCode: 'nav100012', // 滚动导航分类code
+      toolNavCategoryCode: 'nav100026', // 企服工具
       platformCode: PLATFORM_CODE.wap, // 平台code
       terminalCode: TERMINAL_CODE.wap, // 终端code
     }
@@ -177,6 +182,7 @@ export default {
           ? res.data.fixedNavList
           : []
         initData.rollNavData = res.data.rollNavList ? res.data.rollNavList : []
+        initData.toolNavList = res.data.toolNavList ? res.data.toolNavList : []
         initData.ddd = res.ddddd
       }
       return {
@@ -262,6 +268,7 @@ export default {
         fixedLimit: 5, // 固定导航每页条数
         fixedNavCategoryCode: 'nav100007', // 固定导航分类code
         rollNavCategoryCode: 'nav100012', // 滚动导航分类code
+        toolNavCategoryCode: 'nav100026', // 企服工具
         platformCode: PLATFORM_CODE.wap, // 平台code
         terminalCode: TERMINAL_CODE.wap, // 终端code
       }
@@ -274,6 +281,7 @@ export default {
         skillData: [],
         subsidyData: [], // 营销区域千万补贴
         bdData: [], // 营销区域必懂入口，直播入口广告
+        toolNavList: [], // 工具
       }
       try {
         const res = await this.$axios.post(homeApi.initRequest, initReqParams, {
@@ -313,6 +321,9 @@ export default {
             : []
           initData.rollNavData = res.data.rollNavList
             ? res.data.rollNavList
+            : []
+          initData.toolNavList = res.data.toolNavList
+            ? res.data.toolNavList
             : []
           this.initData = initData
         }
