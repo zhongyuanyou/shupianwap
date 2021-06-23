@@ -123,7 +123,10 @@
       class="footer-nav"
     >
       <div class="footer_container">
-        <sp-checkbox v-model="checkedAllState" @change="checkedAllChange"
+        <sp-checkbox
+          v-model="checkedAllState"
+          class="checkedAllState"
+          @change="checkedAllChange"
           >全选
           <template #icon="props">
             <my-icon
@@ -396,25 +399,6 @@ export default {
   padding: 0 32px;
 }
 
-.good-list {
-  margin: 24px 0px 0px;
-
-  .good-list-checkbox {
-    padding-right: 20px;
-  }
-}
-// ::v-deep .sp-checkbox__icon .sp-icon {
-//   border: 1px solid #dddddd;
-// }
-
-::v-deep .sp-checkbox__label {
-  font-family: PingFangSC-Medium, PingFang SC;
-  font-size: 28px;
-  line-height: 40px;
-  height: 40px;
-  color: #222222;
-  letter-spacing: 0;
-}
 .collection_container {
   min-height: 100vh;
   padding-bottom: 160px;
@@ -507,6 +491,16 @@ export default {
     -webkit-line-clamp: 3;
     overflow: hidden;
   }
+
+  .good-list {
+    margin: 24px 0px 0px;
+
+    .good-list-checkbox {
+      padding-right: 20px;
+      padding-left: 5px;
+      margin-left: -5px;
+    }
+  }
 }
 .footer-nav {
   position: fixed;
@@ -526,9 +520,24 @@ export default {
     justify-content: space-between;
     align-items: center;
     padding: 24px 40px;
+
+    // .checkedAllState {
+    //   height: 80px;
+    // }
+    ::v-deep .sp-checkbox__label {
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-size: 28px;
+      line-height: 40px;
+      height: 40px;
+      color: #222222;
+      letter-spacing: 0;
+    }
   }
 }
-
+::v-deep .sp-checkbox__icon {
+  height: auto;
+  line-height: normal;
+}
 ::v-deep.sp-hairline--surround::after {
   border-radius: 30px !important;
 }
