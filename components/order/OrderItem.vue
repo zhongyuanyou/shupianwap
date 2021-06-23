@@ -169,24 +169,58 @@
     </div>
     <div class="btn-area">
       <div class="inner">
+        <sp-button
+          v-if="checkBillStatus() === 1"
+          class="btn-look"
+          @click="handleClickItem(8)"
+          >申请发票</sp-button
+        >
+        <sp-button
+          v-if="checkBillStatus() === 3"
+          class="btn-look"
+          @click="handleClickItem(8)"
+          >查看发票</sp-button
+        >
         <!-- 未支付订单可取消订单 根据订单状态判断-->
         <sp-button
-          v-if="isShowCanCelBtn()"
+          v-if="checkAfterSaleStatus() === 1"
+          class="btn-look"
+          @click="handleClickItem(7)"
+          >退款/售后</sp-button
+        >
+        <sp-button
+          v-if="checkAfterSaleStatus() === 2 || checkAfterSaleStatus() === 5"
+          class="btn-look"
+          @click="handleClickItem(7)"
+          >售后中</sp-button
+        >
+        <!-- <sp-button
+          v-if="checkAfterSaleStatus() === 3"
+          class="btn-look"
+          @click="handleClickItem(7)"
+          >已售后</sp-button
+        > -->
+        <sp-button
+          v-if="checkAfterSaleStatus() === 4"
           type="primary"
-          class="btn-cancel"
-          @click="handleClickItem(1)"
+          class="btn-look"
+          @click="handleClickItem(7)"
+          >部分售后</sp-button
+        >
+        <!-- 未支付订单可取消订单 根据订单状态判断-->
+        <sp-button v-if="isShowCanCelBtn()" @click="handleClickItem(1)"
           >取消订单</sp-button
         >
         <!-- 客户订单状态 -->
         <sp-button
-          v-if="checkContractStatus(orderData) == 2"
+          v-if="checkContractStatus(orderData) === 2"
           type="info"
           class="btn-look"
           @click="handleClickItem(3)"
           >查看合同</sp-button
         >
         <sp-button
-          v-if="checkContractStatus(orderData) == 1"
+          v-if="checkContractStatus(orderData) === 1"
           type="info"
           class="btn-look"
           @click="handleClickItem(2)"
@@ -420,15 +454,22 @@ export default {
       float: right;
       margin-bottom: 10px;
       height: auto;
-      margin-top: -20px;
+      margin-top: 30px;
+      overflow: hidden;
       .sp-button {
         font-size: 26px;
         height: 64px;
         border-radius: 32px;
-        padding: 0 25px;
+        padding: 0 20px;
         color: #999999;
         line-height: 1;
         margin: 0;
+        float: left;
+        margin-left: 14px;
+        border: 1px solid #cdcdcd;
+      }
+      .sp-button:first-child {
+        margin-left: 0;
       }
       .btn-cancel {
         color: #999999;

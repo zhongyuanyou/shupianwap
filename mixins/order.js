@@ -190,6 +190,16 @@ const orderStatusObj = {
     status: 'ORDER_CUS_STATUS_CANCELLED',
   },
 }
+
+// 发票
+const billStatusCodesObj = {
+  1: 'INVOICE_STATUS_WAITE',
+  2: 'INVOICE_STATUS_PROCESS',
+  3: 'INVOICE_STATUS_SUCCESS',
+  4: 'INVOICE_STATUS_FAIL',
+  5: 'INVOICE_STATUS_AUDIT',
+  6: 'INVOICE_STATUS_REJECT',
+}
 export default {
   data() {
     return {
@@ -297,6 +307,15 @@ export default {
       ) {
         this.$xToast.error(
           '该订单为担保交易，请访问薯片PC网站或联系规划师付款！'
+        )
+        return
+      }
+      if (
+        this.orderData.isSecuredTrade &&
+        this.orderData.isSecuredTrade === 1
+      ) {
+        this.$xToast.error(
+          '该订单付款方式为担保交易付款，请访问薯片PC网站或联系规划师付款！'
         )
         return
       }
@@ -558,12 +577,12 @@ export default {
     // 判断订单状态 返回数字
     checkOrderStatus(code) {
       const ALLSTATUS = {
-        1: 'ORDER_ORDER_SALE_STATUS_UN_PAID,ORDER_ORDER_TRADE_STATUS_UN_PAID,ORDER_ORDER_RESOURCE_STATUS_UN_PAID,ORDER_ORDER_SERVER_STATUS_UN_PAID', // 可取消订单的状态 未付款时
-        2: 'ORDER_ORDER_SALE_STATUS_HANDLING,ORDER_ORDER_SALE_STATUS_HANDLED,ORDER_ORDER_TRADE_STATUS_HANDLING,ORDER_ORDER_RESOURCE_STATUS_HANDLING,ORDER_ORDER_SERVER_STATUS_UN_ASSIGN,ORDER_ORDER_SERVER_STATUS_UN_RECEICE_ORDER,ORDER_ORDER_SERVER_STATUS_HANDLING', // 进行中
-        3: 'ORDER_ORDER_SALE_STATUS_COMPLETED,ORDER_ORDER_TRADE_STATUS_COMPLETED,ORDER_ORDER_RESOURCE_STATUS_COMPLETED,ORDER_ORDER_SERVER_STATUS_HANDLED,ORDER_ORDER_SERVER_STATUS_COMPLETED', // 已完成
-        4: 'ORDER_ORDER_SALE_STATUS_CANCELLED,ORDER_ORDER_TRADE_STATUS_CANCELLED,ORDER_ORDER_RESOURCE_STATUS_CANCELLED,ORDER_ORDER_SERVER_STATUS_CANCELLED', // 已取消
+        1: 'ORDER_ORDER_TRADE_STATUS_UN_PAID,ORDER_ORDER_SALE_STATUS_UN_PAID,ORDER_ORDER_RESOURCE_STATUS_UN_PAID,ORDER_ORDER_SERVER_STATUS_UN_PAID', // 可取消订单的状态 未付款时
+        2: 'ORDER_ORDER_TRADE_STATUS_HANDLING,ORDER_ORDER_TRADE_STATUS_HANDLED,ORDER_ORDER_SALE_STATUS_HANDLING,ORDER_ORDER_SALE_STATUS_HANDLED,ORDER_ORDER_RESOURCE_STATUS_HANDLING,ORDER_ORDER_RESOURCE_STATUS_HANDLED,ORDER_ORDER_SERVER_STATUS_UN_ASSIGN,ORDER_ORDER_SERVER_STATUS_UN_RECEICE_ORDER,ORDER_ORDER_SERVER_STATUS_HANDLING,ORDER_ORDER_SERVER_STATUS_HANDLED', // 进行中
+        3: 'ORDER_ORDER_TRADE_STATUS_COMPLETED,ORDER_ORDER_SALE_STATUS_COMPLETED,ORDER_ORDER_RESOURCE_STATUS_COMPLETED,ORDER_ORDER_SERVER_STATUS_COMPLETED', // 已完成
+        4: 'ORDER_ORDER_TRADE_STATUS_CANCELLED,ORDER_ORDER_SALE_STATUS_CANCELLED,ORDER_ORDER_RESOURCE_STATUS_CANCELLED,ORDER_ORDER_SERVER_STATUS_CANCELLED', // 已取消
       }
-      for (const key of ALLSTATUS) {
+      for (const key in ALLSTATUS) {
         if (ALLSTATUS[key].match(code)) {
           return Number(key)
         }
@@ -575,6 +594,89 @@ export default {
       for (const key in PAYTYPECODE) {
         if (PAYTYPECODE[key] === this.orderData.cusOrderPayType)
           return Number(key)
+      }
+    },
+    // 判断订单售后状态 是否展示售后按钮 展示何种售后按钮 0不售后 1退款售后 可售后 2 售后中 3售后完成 4 部分锁定 5已锁定
+    checkAfterSaleStatus(orderData) {
+      orderData = orderData || this.orderData || this.orderDetail
+
+      // 1.意向单、担保交易订单不展示售后按钮，
+      if (
+        orderData.orderType === 0 ||
+        orderData.payType === 'ORDER_PAY_MODE_SECURED'
+      ) {
+        return 0
+      }
+      // 正式单待付款、已完成、已取消不展示售后按钮，只有处理中状态的订单根据订单售后标签、产品是否可售后判断是否可展示售后按钮，
+      // 全部产品不可售后，则不展示售后按钮
+      // 无售后、部分售后标签，点击跳转到申请售后页面，
+      // 售后中，则跳转到订单最新的售后中的售后详情，
+      // 已售后则不展示售后按钮
+      const orderStatusNum = this.checkOrderStatus(
+        orderData.orderStatusNo || ''
+      )
+      if (orderStatusNum !== 2) {
+        return 0
+      }
+      // afterSaleStatus 售后状态
+      // AFTER_SALE_STATUS_0：不可售后;
+      // AFTER_SALE_STATUS_1：可售后;
+      // AFTER_SALE_STATUS_2：售后中;
+      // AFTER_SALE_STATUS_3:售后完成 ;
+      // AFTER_SALE_STATUS_4：部分售后;
+      // AFTER_SALE_STATUS_5：已锁定;
+      if (
+        orderData.afterSaleStatus &&
+        orderData.afterSaleStatus === 'AFTER_SALE_STATUS_1'
+      ) {
+        return 1
+      }
+      if (
+        orderData.afterSaleStatus &&
+        orderData.afterSaleStatus === 'AFTER_SALE_STATUS_2'
+      ) {
+        return 2
+      }
+      if (
+        orderData.afterSaleStatus &&
+        orderData.afterSaleStatus === 'AFTER_SALE_STATUS_3'
+      ) {
+        return 3
+      }
+      if (
+        orderData.afterSaleStatus &&
+        orderData.afterSaleStatus === 'AFTER_SALE_STATUS_4'
+      ) {
+        return 4
+      }
+      if (
+        orderData.afterSaleStatus &&
+        orderData.afterSaleStatus === 'AFTER_SALE_STATUS_5'
+      ) {
+        return 5
+      }
+    },
+    //  跳转售后
+    toAfterSale(orderData) {
+      orderData = orderData || this.orderDetail || this.orderData
+      const statusNum = this.checkAfterSaleStatus(orderData)
+      if (statusNum === 1 || statusNum === 4) {
+        // 未售后和部分售后跳转至申请页面
+        this.$router.push({
+          path: '/my/afterSale/apply',
+          query: {
+            orderId: orderData.id,
+          },
+        })
+      } else {
+        // 跳转售后详情页面
+        this.$router.push({
+          path: '/my/afterSale/detail',
+          query: {
+            orderId: orderData.id,
+            id: orderData.afterSaleId || orderData.id,
+          },
+        })
       }
     },
     // 查询客户单下的关联订单
@@ -1180,6 +1282,51 @@ export default {
         return '500-1000万'
       } else {
         return '1000万以上'
+      }
+    },
+    // 判断电子发票状态 return num 0 无发票 1待开票 2开票中 3开票成功 4开票失败 5审核中 6已驳回
+    checkBillStatus(orderData) {
+      orderData = orderData || this.orderData || this.orderDetail
+      if (this.checkOrderStatus(orderData.orderStatusNo) !== 3) {
+        return 0
+      }
+      const billStatusCode =
+        orderData.userInvoiceStatus || orderData.merchantInvoiceStatus
+      for (const key in billStatusCodesObj) {
+        if (billStatusCodesObj[key].match(billStatusCode)) {
+          return key
+        }
+      }
+    },
+    // 发票操作
+    toInvoice(orderData) {
+      orderData = orderData || this.orderData || this.orderDetail
+      // signerSubjectUserId 签单人商户用户ID
+      // cusHousekeeperSubjectUserId 主管家商户用户ID
+      // orderPersonSubjectUserId 下单人商户用户ID
+      // merchantId 申请发票用商户id
+      const merchantId =
+        orderData.orderPersonSubjectUserId ||
+        orderData.signerSubjectUserId ||
+        orderData.cusHousekeeperSubjectUserId ||
+        ''
+      const billStatusNum = this.checkBillStatus(orderData)
+      if (billStatusNum === 1) {
+        this.$router.push({
+          path: '/order/invoice/add',
+          query: {
+            merchantId,
+            orderId: orderData.id,
+          },
+        })
+      } else {
+        this.$router.push({
+          path: '/order/invoice/detail',
+          query: {
+            merchantId,
+            orderId: orderData.id,
+          },
+        })
       }
     },
   },

@@ -85,12 +85,12 @@ module.exports = {
         type: 'text/javascript',
         charset: 'utf-8',
       },
-      {
-        src: 'https://res.wx.qq.com/open/js/jweixin-1.4.0.js',
-        ssr: false,
-        type: 'text/javascript',
-        charset: 'utf-8',
-      },
+      // {
+      //   src: 'https://res.wx.qq.com/open/js/jweixin-1.4.0.js',
+      //   ssr: false,
+      //   type: 'text/javascript',
+      //   charset: 'utf-8',
+      // },
       // {
       //   src:
       //     'https://b.bdstatic.com/searchbox/icms/searchbox/js/swan-2.0.18.js',

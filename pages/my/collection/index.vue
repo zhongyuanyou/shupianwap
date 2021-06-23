@@ -80,17 +80,26 @@
               class="good-list"
               @click="toServiceGoodsDetail(item)"
             >
-              <sp-swipe-cell>
+              <sp-swipe-cell :disabled="selectGoodsState">
                 <ServiceGoods
                   class="flex-1"
                   :info="item"
                   :type="tabIndex == 4 ? 'Service' : 'Trading'"
                 >
                   <template v-if="selectGoodsState" #left>
-                    <sp-checkbox
-                      style="padding-right: 10px"
-                      :name="item.id"
-                    ></sp-checkbox>
+                    <sp-checkbox class="good-list-checkbox" :name="item.id">
+                      <template #icon="props">
+                        <my-icon
+                          :name="
+                            props.checked
+                              ? 'order_ic_success'
+                              : 'pay_ic_radio_n'
+                          "
+                          size="0.4rem"
+                          :color="props.checked ? '#4E78F5' : '#dddddd'"
+                        ></my-icon>
+                      </template>
+                    </sp-checkbox>
                   </template>
                 </ServiceGoods>
 
@@ -113,14 +122,26 @@
       v-if="(tabIndex == 4 || tabIndex == 5) && selectGoodsState"
       class="footer-nav"
     >
-      <sp-checkbox v-model="checkedAllState" @change="checkedAllChange"
-        >全选</sp-checkbox
-      >
+      <div class="footer_container">
+        <sp-checkbox
+          v-model="checkedAllState"
+          class="checkedAllState"
+          @change="checkedAllChange"
+          >全选
+          <template #icon="props">
+            <my-icon
+              :name="props.checked ? 'order_ic_success' : 'pay_ic_radio_n'"
+              size="0.4rem"
+              :color="props.checked ? '#4E78F5' : '#dddddd'"
+            ></my-icon>
+          </template>
+        </sp-checkbox>
 
-      <div class="footer-btn">
-        <sp-button plain hairline type="primary" @click="delGoodsList"
-          >取消收藏</sp-button
-        >
+        <div class="footer-btn">
+          <sp-button plain hairline type="primary" @click="delGoodsList"
+            >取消收藏</sp-button
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -258,6 +279,10 @@ export default {
       if (this.tabIndex === name) {
         return
       }
+      this.checkedAllState = false // 全选状态
+      this.selectGoodsState = false // 开启多选
+      this.selectDelGoods = [] // 选择的商品id
+
       this.tabIndex = name
       this.init()
       this.onLoad()
@@ -269,10 +294,6 @@ export default {
       this.error = false
       this.loading = true
       this.list = []
-
-      this.checkedAllState = false // 全选状态
-      this.selectGoodsState = false // 开启多选
-      this.selectDelGoods = [] // 选择的商品id
     },
     onLoad() {
       if (this.tabIndex < 4) {
@@ -336,6 +357,7 @@ export default {
     ChangeSelectedGoodsState() {
       this.selectGoodsState = !this.selectGoodsState
       this.selectDelGoods = []
+      this.checkedAllState = false // 全选状态
     },
     delGoods(item) {
       this.selectDelGoods = [item.id]
@@ -344,21 +366,12 @@ export default {
     async delGoodsList() {
       console.log('delGoodsList')
       try {
-        const goodstype = this.tabIndex === 4 ? 1 : 2 // 服务商品1，交易商品2
-
-        // const data = new FormData()
-        // data.append('number', this.selectDelGoods)
         const data = this.selectDelGoods || []
+        this.loading = true
         const res = await this.$axios.post(shopApi.batch_dlt_goods, data)
-        // await this.$axios({
-        //   method: 'post',
-        //   url: '/abc/login',
-        //   data,
-        // }).then((res) => {
-        //   console.log(res)
-        // })
 
-        console.log(res)
+        this.loading = false
+
         if (res.code === 200) {
           this.init()
           this.onLoad()
@@ -386,9 +399,6 @@ export default {
   padding: 0 32px;
 }
 
-.good-list {
-  margin: 24px 0px 0px;
-}
 .collection_container {
   min-height: 100vh;
   padding-bottom: 160px;
@@ -481,6 +491,16 @@ export default {
     -webkit-line-clamp: 3;
     overflow: hidden;
   }
+
+  .good-list {
+    margin: 24px 0px 0px;
+
+    .good-list-checkbox {
+      padding-right: 20px;
+      padding-left: 5px;
+      margin-left: -5px;
+    }
+  }
 }
 .footer-nav {
   position: fixed;
@@ -492,12 +512,32 @@ export default {
   padding-bottom: env(safe-area-inset-bottom);
 
   font-size: 28px;
-  padding: 24px 40px;
+  min-width: 0%;
 
-  display: flex;
-  justify-content: space-between;
+  .footer_container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 40px;
+
+    // .checkedAllState {
+    //   height: 80px;
+    // }
+    ::v-deep .sp-checkbox__label {
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-size: 28px;
+      line-height: 40px;
+      height: 40px;
+      color: #222222;
+      letter-spacing: 0;
+    }
+  }
 }
-
+::v-deep .sp-checkbox__icon {
+  height: auto;
+  line-height: normal;
+}
 ::v-deep.sp-hairline--surround::after {
   border-radius: 30px !important;
 }

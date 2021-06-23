@@ -23,7 +23,7 @@
               {{ item.goodsSubDetailsName }}
             </div> -->
             <div class="content_price">
-              {{ item.salesPriceEdit }} <span>元</span>
+              {{ item.settlementPrice }} <span>元</span>
             </div>
           </div>
         </div>

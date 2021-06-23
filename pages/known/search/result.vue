@@ -36,6 +36,13 @@
       </p>
       <p
         v-if="showItem"
+        :class="tabIndex === '6' ? 'act' : ''"
+        @click="changeTab('6')"
+      >
+        <span>小视频</span><i></i>
+      </p>
+      <p
+        v-if="showItem"
         :class="tabIndex === '5' ? 'act' : ''"
         @click="changeTab('5')"
       >
@@ -190,16 +197,56 @@
         </div>
       </sp-list>
     </div>
+    <div v-show="tabIndex === '6'" class="smallVideolist">
+      <sp-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        :error.sync="error"
+        error-text="请求失败，点击重新加载"
+        @load="onLoad"
+      >
+        <div v-if="searchList.length > 0" class="video-list">
+          <div
+            v-for="(item, index) in searchList"
+            :key="index"
+            class="item"
+            @click="open(item)"
+          >
+            <sp-image
+              width="3.72rem"
+              height="6.61rem"
+              fit="cover"
+              :src="item.image"
+            />
+            <div class="content_box">
+              <div class="content">
+                <div class="count">{{ item.custTotalCount }} 次观看</div>
+                <div class="tile">{{ item.videoName }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sp-list>
+    </div>
     <sp-center-popup v-model="showPop" :field="Filed4" button-type="confirm" />
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
-import { Sticky, Icon, Dialog, List, CenterPopup } from '@chipspc/vant-dgg'
+import {
+  Sticky,
+  Icon,
+  Dialog,
+  List,
+  CenterPopup,
+  Image,
+} from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import knownApi from '@/api/known'
 import utils from '@/utils/changeBusinessData'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
+import { numChangeW } from '@/utils/common'
 
 export default {
   name: 'Searchresult',
@@ -210,6 +257,7 @@ export default {
     [Dialog.name]: Dialog,
     [List.name]: List,
     [CenterPopup.name]: CenterPopup,
+    [Image.name]: Image,
     HeaderSlot,
   },
   filters: {
@@ -232,6 +280,7 @@ export default {
       loading: false,
       finished: false,
       showPop: false,
+      originalVideoType: 1,
       Filed4: {
         type: 'functional',
         showCancelButton: false,
@@ -267,7 +316,6 @@ export default {
       if (!time) {
         return ''
       }
-
       let hour = Math.floor(time / 3600)
       let mid = Math.floor((time - 3600 * hour) / 60)
       // math.flotime / 60
@@ -374,6 +422,11 @@ export default {
       }
     },
     async getSearchListApi() {
+      if (this.tabIndex === '6') {
+        this.originalVideoType = 2
+      } else {
+        this.originalVideoType = 1
+      }
       // 请求后台接口
       try {
         const res = await this.$axios.post(knownApi.search.list, {
@@ -381,6 +434,7 @@ export default {
           type: parseInt(this.tabIndex),
           limit: this.limit,
           page: this.page,
+          originalVideoType: this.originalVideoType,
         })
         if (res.code === 200) {
           // 用户数据
@@ -389,6 +443,11 @@ export default {
               item.custAttentionFlag = false
             })
             this.userList.push(...res.data.records)
+          } else if (this.tabIndex === '6') {
+            res.data.records.forEach((item) => {
+              item.custTotalCount = numChangeW(item.totalViewCount)
+            })
+            this.searchList.push(...res.data.records)
           } else {
             this.searchList.push(...res.data.records)
           }
@@ -440,6 +499,21 @@ export default {
           } catch (error) {
             console.error('changeTop error:', error)
           }
+        } else if (this.tabIndex === '6') {
+          try {
+            this.$appFn.dggOpenSmallVideo(item.id, (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `打开小视频失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            })
+          } catch (error) {
+            console.error('changeTop error:', error)
+          }
         }
       } else if (this.isInApp && this.appInfo.appCode === 'syscode') {
         this.showItem = false
@@ -452,6 +526,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+::v-deep .sp-image__img {
+  border-radius: 4px;
+}
 .result {
   background: #f5f5f5;
   min-height: 100vh;
@@ -689,6 +766,56 @@ export default {
             .time {
               color: #999999;
               font: 400 26px/32px PingFangSC-Regular, PingFang SC;
+            }
+          }
+        }
+      }
+    }
+  }
+  > .smallVideolist {
+    .video-list {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 0 2px;
+      .item {
+        position: relative;
+        display: inline-block;
+        box-sizing: border-box;
+        width: 50%;
+        height: 661px;
+        margin: 2px 0;
+        .content_box {
+          position: absolute;
+          bottom: 0;
+          height: 200px;
+          width: 100%;
+          background-image: linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.4) 0%,
+            rgba(0, 0, 0, 0) 100%
+          );
+          border-radius: 0 0 4px 4px;
+          .content {
+            position: absolute;
+            bottom: 16px;
+            left: 20px;
+            .count {
+              font-size: 24px;
+              opacity: 0.8;
+              margin-bottom: 8px;
+              line-height: 32px;
+              color: #fff;
+              font-weight: bold;
+            }
+            .tile {
+              line-height: 44px;
+              font-size: 36px;
+              .textOverflow(2);
+              text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+              color: #fff;
+              font-weight: bold;
+              width: 340px;
             }
           }
         }

@@ -76,11 +76,7 @@
           v-if="item.buttonText && index === 2"
           type="primary"
           class="sp-goods-btn"
-          @click="
-            adJumpHandleMixin(
-              (helpBannerData[0] && helpBannerData[0].materialList[0]) || item
-            )
-          "
+          @click="toNeedPage()"
           >{{ item.buttonText }}</sp-button
         >
         <sp-button
@@ -153,7 +149,7 @@ export default {
           type: 'planner',
           titleIcon: '精选规划师',
           linkType: 2,
-          materialLink: 'this.list',
+          materialLink: '/myDemandCard',
         },
         {
           productName: '政策补贴',
@@ -177,15 +173,20 @@ export default {
     let url = ''
     const localHerf = window.location.href
     if (localHerf.match('https://m.shupian')) {
-      url = 'https://mtg.shupian.cn/spread/myDemandCard'
+      url = '/myDemandCard'
     } else if (localHerf.match('https://tm.shupian')) {
-      url = 'https://tmtg.shupian.cn/spread/myDemandCard'
+      url = '/myDemandCard'
+    } else if (localHerf.match('3001')) {
+      url = '/myDemandCard/'
     } else {
-      url = 'https://dmtg.shupian.cn/spread/myDemandCard'
+      url = '/myDemandCard'
     }
     this.list[2].materialLink = url
   },
   methods: {
+    toNeedPage() {
+      this.$router.push('/myDemandCard')
+    },
     linkUrl(url) {
       window.location.href = url
     },

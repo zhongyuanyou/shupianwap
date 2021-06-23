@@ -12,10 +12,30 @@
       />
       <div class="desc">
         <div class="desc-container">
-          <div class="desc-name">
+          <!-- <div class="desc-name">
             {{ info.name || '' }}
+          </div> -->
+          <div
+            v-if="
+              info.classCodeLevelList &&
+              info.classCodeLevelList[0] === 'FL20201224136319'
+            "
+            class="desc-name"
+          >
+            {{ info.name || info.showName }}
           </div>
-          <div v-if="type === 'Service'" class="desc-label">
+          <div v-else class="desc-name">
+            {{ info.showName || info.name }}
+          </div>
+
+          <div
+            v-if="
+              type === 'Service' &&
+              ((info.salesGoodsTags && info.salesGoodsTags.length > 0) ||
+                (info.salesGoodsSubVos && info.salesGoodsSubVos.length > 1))
+            "
+            class="desc-label"
+          >
             <span
               v-if="info.salesGoodsSubVos && info.salesGoodsSubVos.length > 1"
               class="desc-label-tc"
@@ -31,15 +51,25 @@
             </span>
           </div>
           <div
-            v-if="info.goodsSubDetailsName && type === 'Trading'"
+            v-if="
+              info.fieldList && info.fieldList.length > 0 && type === 'Trading'
+            "
+            class="desc-text desc-text-field"
+          >
+            <!-- {{ info.goodsSubDetailsName }} -->
+            {{ joinFieldList(info.fieldList) }}
+          </div>
+          <div
+            v-if="
+              type === 'Service' &&
+              info.salesGoodsOperatings &&
+              info.salesGoodsOperatings.slogan
+            "
             class="desc-text"
           >
-            {{ info.goodsSubDetailsName }}
-          </div>
-          <div v-if="type === 'Service'" class="desc-text">
             {{ info.salesGoodsOperatings && info.salesGoodsOperatings.slogan }}
           </div>
-          <div v-if="type === 'Trading'" class="desc-text">
+          <div v-if="type === 'Trading' && info.slogan" class="desc-text">
             {{ info.slogan }}
           </div>
         </div>
@@ -92,7 +122,15 @@ export default {
   data() {
     return {}
   },
+
   methods: {
+    joinFieldList(list = []) {
+      const arr = []
+      list.map((item) => {
+        arr.push(item.fieldValueCn || item.fieldValue)
+      })
+      return arr.join(' | ')
+    },
     // linkServiceGoodsDetail(info) {
     //   this.$router.push({
     //     path: '/detail',
@@ -117,7 +155,7 @@ export default {
     background-size: 162px;
   }
   .service-goods-component-item {
-    padding: 24px 32px 28px;
+    padding: 24px 40px 28px;
     background-color: #fff;
     // padding: @item-padding;
     font-family: @fontf-pfsc-med;
@@ -149,6 +187,7 @@ export default {
       }
       .desc-name {
         font-family: @fontf-pfsc-med;
+        font-weight: 600;
         font-size: 32px;
         color: #222222;
         letter-spacing: 0;

@@ -244,6 +244,7 @@ export default {
     align-items: center;
     justify-content: center;
     background: #000;
+    min-height: 422px;
     .content {
       display: flex;
       flex-direction: column;
