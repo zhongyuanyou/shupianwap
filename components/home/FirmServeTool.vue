@@ -42,6 +42,7 @@ export default {
 <style lang="less" scoped>
 .tool {
   padding: 0 0.2rem;
+  margin-bottom: 20px;
   > .content {
     padding: 24px 0.2rem 0;
     width: 100%;
