@@ -136,6 +136,7 @@ export default {
   },
   mounted() {
     this.imgsrc = this.$ossImgSetV2(utils.getEmptyImgConfig('calendar'))
+    this.active = this.$route.query.active === '3' ? 3 : 0
     if (this.isInApp) {
       if (this.userInfo) {
         this.onLoad()
@@ -349,13 +350,14 @@ export default {
       align-items: normal;
       padding-bottom: 32px;
       justify-content: space-between;
-      height: 160px;
       &-txt {
         font: 400 30px/42px @fontf-pfsc-reg;
         color: #555555;
-        .textOverflow(3);
-        height: 128px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
         overflow: hidden;
+        word-break: break-all;
       }
       &-img {
         margin-left: 40px;

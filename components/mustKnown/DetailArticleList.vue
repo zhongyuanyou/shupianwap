@@ -19,7 +19,12 @@
         </p>
       </div>
       <div v-if="item.contentImageUrl" class="right">
-        <sp-image :src="item.contentImageUrl.split(',')[0]" />
+        <sp-image
+          width="100%"
+          height="l00%"
+          fit="cover"
+          :src="item.contentImageUrl.split(',')[0]"
+        />
       </div>
     </div>
   </div>

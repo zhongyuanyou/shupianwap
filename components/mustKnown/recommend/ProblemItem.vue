@@ -27,10 +27,16 @@
           <p class="content">
             {{ item.contentText }}
           </p>
-          <img
+          <!-- <img
             v-if="item.contentImageUrl"
             :src="item.contentImageUrl.split(',')[0]"
             alt=""
+          /> -->
+          <sp-image
+            v-if="item.contentImageUrl"
+            class="img"
+            fit="cover"
+            :src="item.contentImageUrl.split(',')[0]"
           />
         </div>
         <div class="item_bottom">
@@ -178,7 +184,7 @@ export default {
   background: linear-gradient(180deg, #f1f3fa 0%, #fafafa 100%);
   border-radius: 12px;
   padding: 52px 32px 44px;
-  width: 710px;
+  // width: 710px;
   .item_title {
     min-height: 36px;
     font-size: 36px;
@@ -224,6 +230,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     .content {
+      flex: 1;
       font-size: 30px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
@@ -236,13 +243,13 @@ export default {
       -webkit-line-clamp: 4; /* 超出n行这里写n */
       -webkit-box-orient: vertical;
     }
-    img {
-      display: block;
+    .img {
       width: 190px;
       height: 127px;
       background: #cccccc;
       border-radius: 12px;
       margin-left: 0.32rem;
+      overflow: hidden;
     }
   }
   .item_bottom {
