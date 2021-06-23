@@ -33,10 +33,30 @@
 </template>
 
 <script>
+import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
 export default {
   components: {
     Header,
+  },
+  data() {
+    return {
+      billDetails: '',
+    }
+  },
+  created() {
+    this.getBillList()
+  },
+  methods: {
+    async getBillDetail() {
+      const res = await this.$axios.post(walletApi.bill_details, {
+        relationId: this.userInfo.id,
+      })
+      if (res.code === 200) {
+        this.billDetails = res.data
+      } else {
+      }
+    },
   },
 }
 </script>

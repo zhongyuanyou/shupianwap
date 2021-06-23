@@ -42,10 +42,11 @@
       </div>
       <div class="up-pic">
         <sp-uploader
-          v-model="uploader"
-          :max-count="3"
+          v-model="fileList"
+          :max-count="9"
           :max-size="20 * 1024 * 1024"
           :after-read="afterRead"
+          :before-delete="deleteImg"
         >
           <template>
             <div class="upload-add">
@@ -56,14 +57,16 @@
                 color="#999"
               ></my-icon>
               <p class="upload-add-text">上传凭证</p>
-              <p class="upload-add-text">(9张照片)</p>
+              <p class="upload-add-text">(最多9张)</p>
             </div>
           </template>
         </sp-uploader>
       </div>
       <div class="tips">为了更好的为你解决问题，请您务必上传有效凭证</div>
     </div>
-    <div class="doubt">有其他问题？<span>联系客服</span></div>
+    <div class="doubt">
+      有其他问题？<span @click="concatKefuBtn">联系客服</span>
+    </div>
     <!-- <div class="doubt">
       温馨提示：售后单提交后，售后专员可能与您电话沟通，请保持手机畅通
     </div> -->
@@ -71,7 +74,7 @@
       <p>
         <sp-checkbox v-model="checked"></sp-checkbox>我已阅读过并知晓<span
           class="blue"
-          @click="afterSaleProtocol('protocol100121')"
+          @click="afterSaleProtocol('protocol100039')"
           >《薯片平台用户售后协议》</span
         >
       </p>
@@ -84,6 +87,9 @@
       :active-index="activeIndex"
       @selectItem="selectItem"
     />
+    <!--S loding-->
+    <LoadingCenter v-show="loading" />
+    <!--E loding-->
   </div>
 </template>
 
@@ -92,6 +98,9 @@ import { Icon, Field, Uploader, Checkbox } from '@chipspc/vant-dgg'
 import { afterSaleApi } from '@/api'
 import Header from '@/components/common/head/header'
 import PullUp from '@/components/afterSale/PullUp'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import { uploadAndCallBack } from '@/utils/uploadFile'
+import imHandle from '@/mixins/imHandle'
 export default {
   components: {
     Header,
@@ -100,10 +109,13 @@ export default {
     [Field.name]: Field,
     [Uploader.name]: Uploader,
     [Checkbox.name]: Checkbox,
+    LoadingCenter,
   },
+  mixins: [imHandle],
   data() {
     return {
-      uploader: [],
+      loading: false,
+      fileList: [],
       descInfo: '',
       pullDataList: [],
       checked: false,
@@ -134,7 +146,7 @@ export default {
       title: '',
       currentIndex: '',
       activeIndex: null,
-      fileObj: '',
+      pictrueDetail: '',
     }
   },
   computed: {
@@ -162,34 +174,56 @@ export default {
           duration: 1000,
         })
         return false
+      } else if (!this.checked) {
+        this.$xToast.show({
+          message: '请您先阅读并勾选售后协议',
+          duration: 1000,
+        })
+        return false
       }
+      this.loading = true
       const res = await this.$axios.post(afterSaleApi.refundApply, {
-        orderId: '8084013204512768000',
+        orderId: this.$route.query.id,
         afterSaleExpType: this.afterTypeCode,
         afterSaleReasonNo: this.applyReasonCode,
         afterSaleProblemDetail: this.descInfo,
-        pictrueDetail: this.fileObj.file,
+        pictrueDetail: this.pictrueDetail,
         createrId: this.userInfo.id,
         createrName: this.userInfo.fullName,
         updaterId: this.userInfo.id,
         updaterName: this.userInfo.fullName,
         createrNo: this.userInfo.no,
         updaterNo: this.userInfo.no,
-        afterSaleAgreementIds: '111111111',
+        afterSaleAgreementIds: 'protocol100039',
       })
+      this.loading = false
       if (res.code === 200) {
         this.$xToast.show({
           message: '申请成功',
         })
-        this.$router.push('/my/afterSale/apply')
+        this.$router.push(`/my/afterSale/apply?id=${res.data.afterSaleId}`)
       } else {
         this.$message.error(res.message)
       }
     },
-    afterRead(file) {
-      this.file = file
-      // 此时可以自行将文件上传至服务器
-      console.log(file.file)
+    async afterRead(fileObj) {
+      this.$route.query.id = '8083611193233440768'
+      this.pictrueDetail = `${this.userInfo.id}:crisps-app:aftersale:${
+        this.$route.query.id
+      }:${String(new Date().valueOf()).substring(7, 13)}`
+      const res = await uploadAndCallBack({
+        file: fileObj.file,
+        sys_code: 'crisps-app',
+        fileuid: this.pictrueDetail,
+      })
+      if (res.code === 200) {
+        console.log('上传成功')
+      }
+    },
+    deleteImg() {
+      this.fileList.forEach((index) => {
+        this.fileList.splice(index, 1)
+      })
     },
     openPullPop(index) {
       this.pullDataList = []
@@ -221,8 +255,12 @@ export default {
     afterSaleProtocol(code) {
       this.$router.push({
         name: 'login-protocol',
-        query: { code },
+        query: { categoryCode: code },
       })
+    },
+    // 在线客服
+    concatKefuBtn() {
+      this.jumpOnlineKefu()
     },
   },
 }
@@ -232,10 +270,31 @@ export default {
 .blue {
   color: #4974f5;
 }
+::v-deep .upload-add {
+  text-align: center;
+  width: 140px;
+  height: 140px;
+  background: #ffffff;
+  border: 1px dashed #dddddd;
+  border-radius: 8px;
+}
+::v-deep .upload-add-img {
+  position: relative;
+  top: -50px;
+}
+::v-deep .upload-add-text {
+  font-size: 24px;
+  font-family: PingFang SC;
+  font-weight: 400;
+  color: #999999;
+  position: relative;
+  top: -70px;
+}
 .refund {
   min-height: 100vh;
   background: #f4f4f4;
   font-family: PingFangSC-Regular;
+  padding-bottom: 120px;
   .select-row {
     display: flex;
     align-items: center;
@@ -286,30 +345,10 @@ export default {
       }
     }
     .up-pic {
-      width: 140px;
-      height: 140px;
+      // height: 140px;
       margin-top: 28px;
-      overflow: hidden;
-      .upload-add {
-        text-align: center;
-        width: 140px;
-        height: 140px;
-        background: #ffffff;
-        border: 1px dashed #dddddd;
-        border-radius: 8px;
-      }
-      .upload-add-img {
-        position: relative;
-        top: -50px;
-      }
-      .upload-add-text {
-        font-size: 24px;
-        font-family: PingFang SC;
-        font-weight: 400;
-        color: #999999;
-        position: relative;
-        top: -70px;
-      }
+      // overflow: hidden;
+
       ::v-deep.sp-uploader__upload {
         width: 140px;
         height: 140px;
@@ -333,7 +372,7 @@ export default {
         border-radius: 8px;
       }
       ::v-deep.sp-uploader__preview {
-        margin: 0 32px 20px 0;
+        margin: 0 27px 20px 0;
       }
       ::v-deep.sp-uploader__preview-delete-icon {
         font-size: 40px;
@@ -375,6 +414,8 @@ export default {
     bottom: 32px;
     left: 0;
     width: 100%;
+    background: #f4f4f4;
+    padding-top: 20px;
     > p {
       font-family: PingFangSC-Regular;
       font-size: 24px;

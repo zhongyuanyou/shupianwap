@@ -17,9 +17,17 @@
         </sp-step>
       </sp-steps>
     </div>
+    <div v-if="!processRecordData.length && showNoDataImg" class="no-data-area">
+      <img
+        src="https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png"
+        alt=""
+        srcset=""
+      />
+      <p class="text">暂无记录</p>
+    </div>
     <!-- 操作按钮 -->
     <div class="footer-btns">
-      <button>联系客服</button>
+      <button @click="concatKefuBtn">联系客服</button>
     </div>
   </div>
 </template>
@@ -28,33 +36,46 @@
 import { Step, Steps } from '@chipspc/vant-dgg'
 import { afterSaleApi } from '@/api'
 import Header from '@/components/common/head/header'
+import imHandle from '@/mixins/imHandle'
 export default {
   components: {
     Header,
     [Step.name]: Step,
     [Steps.name]: Steps,
   },
+  mixins: [imHandle],
   data() {
     return {
       active: 1,
       page: 1,
       limit: 1000,
       processRecordData: [],
+      showNoDataImg: false,
     }
   },
   created() {
     this.getProcessRecords()
   },
   methods: {
+    concatKefuBtn() {
+      this.jumpOnlineKefu()
+    },
     async getProcessRecords() {
       const res = await this.$axios.post(afterSaleApi.record, {
         afterSaleId: this.$route.query.id,
         limit: this.limit,
         page: this.page,
+        sort: 2,
       })
       if (res.code === 200) {
         this.processRecordData = res.data.records
+        if (this.processRecordData.length === 0) {
+          this.showNoDataImg = true
+        } else {
+          this.showNoDataImg = false
+        }
       } else {
+        this.showNoDataImg = true
         this.$message.error(res.message)
       }
     },
@@ -63,6 +84,28 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.no-data-area {
+  width: 100%;
+  height: 100vh;
+  background: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  img {
+    width: 340px;
+    height: 340px;
+    margin: 20vh auto 40px auto;
+    display: block;
+  }
+  .text {
+    height: 29px;
+    font-size: 30px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #1a1a1a;
+    text-align: center;
+  }
+}
 .process-record {
   border-radius: 24px;
   padding-bottom: 148px;
@@ -109,7 +152,7 @@ export default {
         font-size: 24px;
         color: #999999;
         line-height: 34px;
-        margin: 10px;
+        margin: 10px 0;
       }
       .desc {
         font-size: 24px;

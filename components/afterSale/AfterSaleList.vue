@@ -20,7 +20,7 @@
           <ul>
             <li v-for="(child, index2) in item.skuList" :key="index2">
               <div class="img-box">
-                <img />
+                <img :src="child.filepath" />
               </div>
               <div class="info">
                 <div class="top">
@@ -37,9 +37,31 @@
                   {{ child.skuExtInfo }}
                 </div>
                 <div class="bottom">
-                  应付 {{ child.enablePayMoney }}元，实付
-                  {{ child.actualPayMoney }}元
+                  单价 {{ child.skuPriceYuan || '' }}，数量
+                  {{ child.skuNum || '' }}
                 </div>
+                <div
+                  v-if="
+                    (item.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_6' ||
+                      item.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_9') &&
+                    child.afterSaleMoneyYuan > 0
+                  "
+                  class="refund-money"
+                >
+                  退款金额 {{ item.afterSaleMoney || '' }}元
+                </div>
+              </div>
+              <div class="img-mark">
+                <img
+                  v-if="child.skuDealType === 'SKU_DEAL_TYPE_1'"
+                  src="https://cdn.shupian.cn/sp-pt/wap/images/7yo84dwgx0k0000.png"
+                  alt="取消办理"
+                />
+                <img
+                  v-else-if="child.skuDealType === 'SKU_DEAL_TYPE_2'"
+                  src="https://cdn.shupian.cn/sp-pt/wap/images/2qi17702lc00000.png"
+                  alt="继续办理"
+                />
               </div>
             </li>
           </ul>
@@ -50,15 +72,15 @@
           v-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_1'"
           class="status"
         >
-          <strong>待处理</strong>
+          <strong> 售后中</strong>
           <span>您的售后正在飞速处理中，请您耐心等待</span>
         </div>
         <div
           v-else-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_2'"
           class="status"
         >
-          <strong>商户驳回</strong>
-          <span>卖家驳回了您的申请，请您及时处理</span>
+          <strong>待处理</strong>
+          <span>商家驳回了您的申请，请您及时处理</span>
         </div>
         <div
           v-else-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_3'"
@@ -68,11 +90,27 @@
           <span>请您确认售后方案</span>
         </div>
         <div
-          v-else-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_4'"
+          v-else-if="
+            item.afterSaleStatusNo === 'AFTERSALE_STATUS_4' &&
+            (item.refundStatusNo === 'REFUND_STATUS_2' ||
+              item.refundStatusNo === 'REFUND_STATUS_4')
+          "
           class="status"
         >
-          <strong>已完成</strong>
+          <strong>售后完成</strong>
           <span>退款完成</span>
+        </div>
+        <div
+          v-if="
+            item.afterSaleStatusNo === 'AFTERSALE_STATUS_4' &&
+            (item.refundStatusNo === 'REFUND_STATUS_2' ||
+              item.refundStatusNo === 'REFUND_STATUS_3' ||
+              item.refundStatusNo === 'REFUND_STATUS_5')
+          "
+          class="status"
+        >
+          <strong>退款中</strong>
+          <span>退款中</span>
         </div>
         <div
           v-else-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_5'"
@@ -223,6 +261,7 @@ export default {
     .row-cont {
       > ul {
         li {
+          position: relative;
           display: flex;
           padding: 32px 0px;
           border-bottom: 1px solid #f4f4f4;
@@ -231,7 +270,11 @@ export default {
             height: 130px;
             background: #f5f5f5;
             border-radius: 8px;
-            overflow: hidden;
+            img {
+              width: 100%;
+              height: 100%;
+              border-radius: 8px;
+            }
           }
           > .info {
             margin-left: 25px;
@@ -285,6 +328,17 @@ export default {
               color: #222222;
               line-height: 32px;
               margin-top: 12px;
+            }
+          }
+          > .img-mark {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 140px;
+            height: 105px;
+            img {
+              width: 100%;
+              height: 100%;
             }
           }
         }

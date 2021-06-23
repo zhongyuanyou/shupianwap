@@ -47,6 +47,7 @@ import { Tab, Tabs, Icon, List, Sticky } from '@chipspc/vant-dgg'
 import { afterSaleApi } from '@/api'
 import Header from '@/components/common/head/header'
 import AfterSaleList from '@/components/afterSale/AfterSaleList'
+// import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   components: {
     Header,
@@ -101,6 +102,7 @@ export default {
           this.finished = true
         }
       } else {
+        this.showNoDataImg = true
         this.loading = false
         this.finished = true
       }

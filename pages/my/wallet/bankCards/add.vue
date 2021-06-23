@@ -19,13 +19,15 @@
           maxlength="20"
           placeholder="请输入银行卡号"
           :rules="[{ required: true, message: '请输入银行卡号' }]"
+          @blur="blur"
         />
         <sp-field
           v-model="bankName"
           name="银行名称"
           label="银行名称"
           placeholder="银行名称"
-          :rules="[{ required: true, message: '请输入银行名称' }]"
+          readonly="readonly"
+          :rules="[{ required: true, message: '请输入正确的银行卡号匹配名称' }]"
         />
         <sp-field
           v-model="accountBank"
@@ -35,12 +37,7 @@
           :rules="[{ required: true, message: '请输入开户行，系统自动搜索' }]"
         />
         <div class="submit">
-          <sp-button
-            round
-            block
-            type="info"
-            native-type="submit"
-          >
+          <sp-button round block type="info" native-type="submit">
             提交
           </sp-button>
         </div>
@@ -51,6 +48,7 @@
 
 <script>
 import { Form, Field, Button } from '@chipspc/vant-dgg'
+import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
 export default {
   components: {
@@ -64,12 +62,51 @@ export default {
       accountName: '',
       cardNum: '',
       bankName: '',
-      accountBank: '',
+      accountBank: '建行',
+      bankCode: '',
+      bankPhone: '13333333333',
+      bankIconUrl: '',
     }
   },
+  computed: {
+    userInfo() {
+      return JSON.parse(localStorage.getItem('info'))
+    },
+  },
   methods: {
-    onSubmit() {
-      this.$router.push('/my/wallet/bankCards/list')
+    async onSubmit() {
+      const res = await this.$axios.post(walletApi.add_bank_card, {
+        relationId: this.userInfo.id,
+        ownershipName: this.accountName,
+        bankCode: this.bankCode,
+        bankName: this.bankName,
+        cardNumber: this.cardNum,
+        bankPhone: this.bankPhone,
+        bankIconUrl: this.bankIconUrl,
+        cardType: '借记卡',
+        openingBankName: this.bankName,
+        openingBankCode: this.bankCode,
+        sysCode: 'crisps-app',
+        operateId: this.userInfo.id,
+        operateName: this.userInfo.fullName,
+      })
+      if (res.code === 200) {
+        this.$router.push('/my/wallet/bankCards/list')
+      }
+    },
+    async blur() {
+      const res = await this.$axios.post(walletApi.card_no, {
+        cardNumber: this.cardNum,
+      })
+      if (res.code === 200) {
+        if (res.data.code && res.data.code === 500) {
+          return false
+        } else {
+          this.bankCode = res.data.code
+          this.bankName = res.data.name
+          this.bankIconUrl = res.data.icon
+        }
+      }
     },
   },
 }

@@ -29,6 +29,7 @@
 
 <script>
 import { PasswordInput, NumberKeyboard } from '@chipspc/vant-dgg'
+import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
 export default {
   components: {
@@ -43,6 +44,11 @@ export default {
       valid: false,
     }
   },
+  computed: {
+    userInfo() {
+      return JSON.parse(localStorage.getItem('info'))
+    },
+  },
   methods: {
     onInput(key) {
       this.password = (this.password + key).slice(0, 6)
@@ -51,14 +57,25 @@ export default {
       this.password = this.password.slice(0, this.password.length - 1)
     },
     onClose() {
-      if (this.confirmPassword.length !== 6) {
+      if (this.password.length !== 6) {
         this.$xToast.show({
           message: '请输入6位提现密码',
           duration: 1000,
         })
         return false
       }
-      this.$router.push('/my/wallet/bankCards/untieSuccess')
+      this.untie()
+    },
+    async untie() {
+      const res = await this.$axios.post(walletApi.unbundle, {
+        cardInfoId: '1031626749086179918',
+        operateId: this.userInfo.id,
+        operateName: this.userInfo.fullName,
+      })
+      console.log(res)
+      if (res.code === 200) {
+        this.$router.push('/my/wallet/bankCards/untieSuccess')
+      }
     },
   },
 }

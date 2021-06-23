@@ -81,9 +81,9 @@ export default {
     }
   },
   mounted() {
-    this.timeer = setInterval(() => {
-      // this.getUserInfo()
-    }, 2000)
+    // this.timeer = setInterval(() => {
+      this.getUserInfo()
+    // }, 2000)
   },
   beforeDestroy() {
     clearInterval(this.timeer)

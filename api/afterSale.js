@@ -10,5 +10,6 @@ const afterSaleApi = {
   refundList: `${CHIPS_WAP_BASE_URL}/nk/orderSale/v1/refundList.do`, // 退款列表
   refundInfo: `${CHIPS_WAP_BASE_URL}/nk/orderSale/v1/refundInfo.do`, // 退款详情
   refundApply: `${CHIPS_WAP_BASE_URL}/nk/orderSale/v1/refund.do`, // 退款申请
+  onlineKefu: `${CHIPS_WAP_BASE_URL}/nk/orderSale/v1/onlineKefu.do`, // 在线客服
 }
 export { afterSaleApi }

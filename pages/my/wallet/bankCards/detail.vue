@@ -9,14 +9,17 @@
           "
         >
           <div class="left-logo">
-            <img />
+            <img
+              src="https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png"
+            />
           </div>
           <div class="right-info">
-            <h3>中国工商银行</h3>
-            <p>四川虎居信息科技有限公司</p>
+            <h3>{{ cardDetailInfo.bankName }}</h3>
+            <p>{{ cardDetailInfo.bankName }}</p>
             <div class="card-num">
-              <span>****</span><span>****</span><span>****</span
-              ><span>3253</span>
+              {{ cardDetailInfo.desensitizationCardNumber }}
+              <!-- <span>****</span><span>****</span><span>****</span
+              ><span>3253</span> -->
             </div>
           </div>
         </li>
@@ -29,6 +32,7 @@
 </template>
 
 <script>
+import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
 export default {
   components: {
@@ -36,38 +40,55 @@ export default {
   },
   data() {
     return {
-      bankCardStyle: [
-        {
-          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/2k0jjobfx4c0000.png',
-          bg_icon:
-            'https://cdn.shupian.cn/sp-pt/wap/images/chze1ksovcg0000.png',
-          bg_color: '#0BB3B3',
-        },
-        {
-          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/byc0c33glcw0000.png',
-          bg_icon: 'https://cdn.shupian.cn/sp-pt/wap/images/rlbycqvjsb4000.png',
-          bg_color: '#E63B47',
-        },
-        {
-          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/3p91fh7h6t60000.png',
-          bg_icon:
-            'https://cdn.shupian.cn/sp-pt/wap/images/bnivu4nkbm80000.png',
-          bg_color: '#3777E5',
-        },
-        {
-          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/aexk52ox6sw0000.png',
-          bg_icon:
-            'https://cdn.shupian.cn/sp-pt/wap/images/e5m4yxb0se00000.png',
-          bg_color: '#28A264',
-        },
-        {
-          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png',
-          bg_icon:
-            'https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png',
-          bg_color: '#3777E5',
-        },
-      ],
+      cardDetailInfo: '',
+      // bankCardStyle: [
+      //   {
+      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/2k0jjobfx4c0000.png',
+      //     bg_icon:
+      //       'https://cdn.shupian.cn/sp-pt/wap/images/chze1ksovcg0000.png',
+      //     bg_color: '#0BB3B3',
+      //   },
+      //   {
+      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/byc0c33glcw0000.png',
+      //     bg_icon: 'https://cdn.shupian.cn/sp-pt/wap/images/rlbycqvjsb4000.png',
+      //     bg_color: '#E63B47',
+      //   },
+      //   {
+      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/3p91fh7h6t60000.png',
+      //     bg_icon:
+      //       'https://cdn.shupian.cn/sp-pt/wap/images/bnivu4nkbm80000.png',
+      //     bg_color: '#3777E5',
+      //   },
+      //   {
+      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/aexk52ox6sw0000.png',
+      //     bg_icon:
+      //       'https://cdn.shupian.cn/sp-pt/wap/images/e5m4yxb0se00000.png',
+      //     bg_color: '#28A264',
+      //   },
+      //   {
+      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png',
+      //     bg_icon:
+      //       'https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png',
+      //     bg_color: '#3777E5',
+      //   },
+      // ],
     }
+  },
+  created() {
+    this.bankCardsDetail()
+  },
+  methods: {
+    async bankCardsDetail() {
+      const res = await this.$axios.post(walletApi.cardDetail, {
+        code: this.$route.query.code,
+        name: this.$route.query.name,
+        isOnlyBank: 0, // 0表示只查银行1表示查分行不传查所有
+      })
+      console.log(res)
+      if (res.code === 200) {
+        this.cardDetailInfo = res.data
+      }
+    },
   },
 }
 </script>

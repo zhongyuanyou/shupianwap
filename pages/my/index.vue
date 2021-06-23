@@ -371,7 +371,7 @@ export default {
       },
       loading: false,
       userName: '',
-      realStatus: 'NO_AUTHENTICATION',
+      realStatus: '',
       evaluateNumFlag: 'none', // 评论标识状态
       evaluateNum: 0, // 评价数量
     }
@@ -452,7 +452,7 @@ export default {
           // iconName: 'shimingrenzheng',
           name: realStatus, // 实名认证
           img: this.$ossImgSetV2(this.imgList.real),
-          url: '/my/interviewRecord',
+          url: '/contract/authentication',
         },
         {
           // iconName: 'per_ic_help',
@@ -515,6 +515,7 @@ export default {
         })
       }
     },
+
     clickServiceTabs(item) {
       if (this.token) {
         this.$router.push({ path: item.url })

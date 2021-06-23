@@ -32,15 +32,29 @@
         <!-- 处理意见 -->
         <div
           v-if="
-            afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_6' ||
+            afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_5' ||
             afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_9'
+          "
+          class="content-box mb20"
+        >
+          <div v-if="afterSaleDetail.dealMark" class="idea">
+            <h3>处理意见</h3>
+            <p>
+              {{ afterSaleDetail.dealMark }}
+            </p>
+          </div>
+        </div>
+        <!-- 用户撤销 -->
+        <div
+          v-else-if="
+            afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_10'
           "
           class="content-box"
         >
           <div class="idea">
-            <h3>处理意见</h3>
             <p>
-              {{ afterSaleDetail.dealMark }}
+              您已撤销本次售后申请，如有问题仍未解决，售后保障
+              期内，您可以重新发起售后申请
             </p>
           </div>
         </div>
@@ -50,7 +64,7 @@
             afterSaleDetail.afterSaleTotalMoney &&
             afterSaleDetail.afterSaleTotalMoney > 0
           "
-          class="content-box"
+          class="content-box mb20"
         >
           <div class="refund-box">
             <div class="title">
@@ -59,6 +73,9 @@
                 <p>退款</p>
               </div>
               <div
+                v-if="
+                  afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_4'
+                "
                 class="right"
                 @click="
                   $router.push(
@@ -139,13 +156,17 @@
           </div>
         </div> -->
         <!-- 售后明细 -->
-        <div class="content-box">
+        <!-- v-if="
+            afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_3' ||
+            afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_4'
+          " -->
+        <div class="content-box mb20">
           <div class="title-row">售后明细</div>
           <div class="row-list">
             <ul>
               <li v-for="(item, index) in afterSaleDetail.skuList" :key="index">
                 <div class="img-box">
-                  <img />
+                  <img :src="item.filepath" />
                 </div>
                 <div class="info">
                   <div class="top">
@@ -162,12 +183,24 @@
                   </div>
                   <div class="center">{{ item.skuExtInfo }}</div>
                   <div class="bottom">
-                    应付 {{ item.enablePayMoney }}元，实付
-                    {{ item.actualPayMoney }}元
+                    应付 {{ item.enablePayMoneyYuan || '' }}元，实付
+                    {{ item.actualPayMoneyYuan || '' }}元
                   </div>
                   <div class="refund-money">
-                    退款金额 {{ item.afterSaleMoney }}元
+                    退款金额 {{ item.afterSaleMoneyYuan || '' }}元
                   </div>
+                </div>
+                <div class="img-mark">
+                  <img
+                    v-if="item.skuDealType === 'SKU_DEAL_TYPE_1'"
+                    src="https://cdn.shupian.cn/sp-pt/wap/images/7yo84dwgx0k0000.png"
+                    alt="取消办理"
+                  />
+                  <img
+                    v-else-if="item.skuDealType === 'SKU_DEAL_TYPE_2'"
+                    src="https://cdn.shupian.cn/sp-pt/wap/images/2qi17702lc00000.png"
+                    alt="继续办理"
+                  />
                 </div>
               </li>
               <!-- <li>
@@ -248,8 +281,8 @@
       </div>
     </div>
     <!-- 操作按钮 -->
-    <div class="footer-btns" ref="btns">
-      <!-- <button>联系客服</button> -->
+    <div class="footer-btns">
+      <button @click="concatKefuBtn">联系客服</button>
       <button
         v-if="
           afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_5' ||
@@ -261,7 +294,6 @@
       </button>
       <button
         v-if="
-          afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_1' ||
           afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_2' ||
           afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_3'
         "
@@ -289,6 +321,7 @@ import { afterSaleApi } from '@/api'
 import Header from '@/components/common/head/header'
 import StatusBar from '@/components/afterSale/StatusBar'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import imHandle from '@/mixins/imHandle'
 export default {
   components: {
     Header,
@@ -296,6 +329,7 @@ export default {
     SpIcon: Icon,
     LoadingCenter,
   },
+  mixins: [imHandle],
   data() {
     return {
       // 双按钮弹窗
@@ -429,12 +463,12 @@ export default {
         switch (this.afterSaleDetail.afterSaleStatusNo) {
           case 'AFTERSALE_STATUS_1':
             this.statusBar = this.status[0]
-            this.statusBar.title = '待处理'
+            this.statusBar.title = '售后中'
             this.statusBar.desc = '您的售后正在飞速处理中，请耐心等待'
             break
           case 'AFTERSALE_STATUS_2':
             this.statusBar = this.status[0]
-            this.statusBar.title = '商户驳回'
+            this.statusBar.title = '待处理'
             this.statusBar.desc = '商家驳回，请您处理'
             break
           case 'AFTERSALE_STATUS_3':
@@ -443,9 +477,23 @@ export default {
             this.statusBar.desc = '请您确认售后方案'
             break
           case 'AFTERSALE_STATUS_4':
-            this.statusBar = this.status[2]
-            this.statusBar.title = '已完成'
-            this.statusBar.desc = '退款成功'
+            if (
+              this.afterSaleDetail.refundStatusNo === 'REFUND_STATUS_1' ||
+              this.afterSaleDetail.refundStatusNo === 'REFUND_STATUS_4'
+            ) {
+              this.statusBar = this.status[2]
+              this.statusBar.title = '已完成'
+              this.statusBar.desc = '退款成功'
+            } else if (
+              this.afterSaleDetail.refundStatusNo === 'REFUND_STATUS_2' ||
+              this.afterSaleDetail.refundStatusNo === 'REFUND_STATUS_3' ||
+              this.afterSaleDetail.refundStatusNo === 'REFUND_STATUS_5'
+            ) {
+              this.statusBar = this.status[0]
+              this.statusBar.title = '退款中'
+              this.statusBar.desc =
+                '退款将会在5个工作日打款到您的账户，请注意查收'
+            }
             break
           case 'AFTERSALE_STATUS_5':
             this.statusBar = this.status[1]
@@ -537,6 +585,9 @@ export default {
       oInput.remove()
       this.$xToast.success('复制成功')
     },
+    concatKefuBtn() {
+      this.jumpOnlineKefu()
+    },
   },
 }
 </script>
@@ -549,6 +600,9 @@ export default {
 .blue {
   border: 1px solid #4974f5 !important;
   color: #4974f5 !important;
+}
+.mb20 {
+  margin-bottom: 20px;
 }
 .sale-detail {
   min-height: 100vh;
@@ -616,7 +670,11 @@ export default {
                 height: 40px;
                 background: #000;
                 border-radius: 40px;
-                overflow: hidden;
+                img {
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                }
               }
               span {
                 font-size: 28px;
@@ -629,6 +687,7 @@ export default {
           > ul {
             padding: 0 40px;
             li {
+              position: relative;
               display: flex;
               padding: 32px 0px;
               border-bottom: 1px solid #f4f4f4;
@@ -638,6 +697,11 @@ export default {
                 background: #f5f5f5;
                 border-radius: 8px;
                 overflow: hidden;
+                img {
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                }
               }
               > .info {
                 margin-left: 25px;
@@ -691,6 +755,17 @@ export default {
                   color: #222222;
                   line-height: 32px;
                   margin-top: 12px;
+                }
+              }
+              > .img-mark {
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 140px;
+                height: 105px;
+                img {
+                  width: 100%;
+                  height: 100%;
                 }
               }
             }
@@ -757,7 +832,6 @@ export default {
         > .info {
           padding: 38px 40px;
           background: #fff;
-          margin-top: 20px;
           .item-row {
             display: flex;
             margin-bottom: 22px;
@@ -890,7 +964,7 @@ export default {
     }
   }
   .footer-btns {
-    padding: 24px;
+    padding: 0 24px;
     display: flex;
     // height: 128px;
     height: auto;
@@ -909,7 +983,7 @@ export default {
       font-family: PingFangSC-Regular;
       font-size: 28px;
       color: #222222;
-      margin: 0 8px;
+      margin: 24px 8px;
     }
     .pay-btn {
       background: #ec5330 !important;

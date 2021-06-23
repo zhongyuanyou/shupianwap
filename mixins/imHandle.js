@@ -7,10 +7,11 @@
 import { Toast } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import config from '@/config'
-import { userinfoApi } from '@/api'
+import { userinfoApi, afterSaleApi } from '@/api'
 export default {
   computed: {
     ...mapState({
+      userInfo: (state) => state.user,
       token: (state) => state.user.token,
       userId: (state) => state.user.userId,
       userType: (state) => state.user.userType,
@@ -34,6 +35,29 @@ export default {
           redirect: this.$route.fullPath,
         },
       })
+    },
+    // 跳转在线客服
+    async jumpOnlineKefu() {
+      const res = await this.$axios.post(afterSaleApi.onlineKefu, {
+        userCenterTag: this.userInfo.id,
+        userName: this.userInfo.fullName,
+        userNo: this.userInfo.no,
+        platform: 'COMDIC_TERMINAL_WAP',
+        port: 'STAFF_PORT_WAP',
+        entrance: 'STAFF_DETAIL_PAGE_CODE',
+        province: this.userInfo.province,
+        city: this.userInfo.city,
+        equipment: '',
+        sourceTerminal: '',
+        customerType: '1',
+      })
+      if (res.code === 200) {
+        const groupId = res.data.groupInfo.groupId
+        const token = this.$cookies.get('token', { path: '/' })
+        const userId = this.$cookies.get('userId', { path: '/' })
+        const userType = this.$cookies.get('userType', { path: '/' })
+        window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${groupId}`
+      }
     },
     // 判断是否登录
     judgeLoginMixin(needUserInfo = false, url) {

@@ -50,6 +50,7 @@
 
 <script>
 import { PasswordInput, NumberKeyboard } from '@chipspc/vant-dgg'
+import { walletApi, userinfoApi } from '@/api'
 import Header from '@/components/common/head/header'
 export default {
   components: {
@@ -66,9 +67,30 @@ export default {
       showKeyboardConfirm: true,
       validConfirm: false,
       step: 0,
+      certificateInfo: '', // 认证信息
+      newUserInfo: '',
     }
   },
+  computed: {
+    userInfo() {
+      return JSON.parse(localStorage.getItem('info'))
+    },
+  },
+  async created() {
+    await this.getUserInfo()
+    await this.getAuthInfo()
+  },
   methods: {
+    async getUserInfo() {
+      const res = await this.$axios.get(userinfoApi.info_decrypt, {
+        params: {
+          id: this.userInfo.id,
+        },
+      })
+      if (res.code === 200) {
+        this.newUserInfo = res.data
+      }
+    },
     onInput(key) {
       this.password = (this.password + key).slice(0, 6)
       // if (this.password.length === 6) {
@@ -88,7 +110,7 @@ export default {
         })
         return false
       }
-      console.log('完成时触发', this.password.length)
+      console.log('完成时触发', this.password)
       this.step = 1
     },
     onInputConfirm(key) {
@@ -115,8 +137,44 @@ export default {
         })
         return false
       }
-
-      this.$router.push('/my/settings')
+      this.openActivationMoney()
+      // this.$router.push('/my/settings')
+    },
+    // ①获取认证信息
+    async getAuthInfo() {
+      const res = await this.$axios.get(walletApi.authentication_info, {
+        params: {
+          userId: this.userInfo.id,
+          isWriting: true,
+        },
+      })
+      if (res.code === 200) {
+        this.certificateInfo = res.data
+        console.log(res.data)
+      }
+    },
+    // 开通并激活钱包
+    async openActivationMoney() {
+      const res = await this.$axios.post(walletApi.open_and_activation, {
+        mainInfoRelationId: this.userInfo.id,
+        mainPhone: this.newUserInfo.mainAccount,
+        payPassword: this.password,
+        sysCode: this.userInfo.sysCode,
+        operateId: this.userInfo.id,
+        operateName: this.userInfo.fullName,
+        mainType: '2',
+        accType: 'BANK_ACCOUNT_TYPE_2',
+        mainInfoName: '赵俊',
+        certificateInfo: {
+          cardNumber: '510824198908041613',
+          cardName: '赵俊',
+          validityType: '1',
+        },
+      })
+      if (res.code === 200) {
+        // const accountId = res.data
+        this.$router.push('/my/settings/protocol')
+      }
     },
   },
 }

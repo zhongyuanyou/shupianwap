@@ -4,23 +4,34 @@
     <div class="bank-list">
       <ul>
         <li
-          v-for="(item, index) in bankCardStyle"
+          v-for="(item, index) in cardList"
           :key="index"
-          :style="{ background: item.bg_color }"
-          @click="$router.push('/my/wallet/bankCards/detail')"
+          :style="{ background: '#3777E5' }"
+          @click="
+            $router.push(
+              `/my/wallet/bankCards/detail?code=${item.bankCode}&name=${item.bankName}`
+            )
+          "
         >
           <div class="left-logo">
-            <img :src="item.icon" />
+            <img
+              src="https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png"
+            />
           </div>
           <div class="right-info">
-            <h3>中国工商银行</h3>
-            <p>四川虎居信息科技有限公司</p>
+            <h3>{{ item.bankName }}</h3>
+            <p>{{ item.bankName }}</p>
             <div class="card-num">
-              <span>****</span><span>****</span><span>****</span
-              ><span>3253</span>
+              {{ item.desensitizationCardNumber }}
+              <!-- <span>****</span><span>****</span><span>****</span
+              ><span>3253</span> -->
             </div>
           </div>
-          <div class="bg-img"><img :src="item.bg_icon" /></div>
+          <div class="bg-img">
+            <img
+              src="https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png"
+            />
+          </div>
         </li>
         <!-- <li
           style="
@@ -50,6 +61,7 @@
 </template>
 
 <script>
+import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
 
 export default {
@@ -58,37 +70,41 @@ export default {
   },
   data() {
     return {
-      bankCardStyle: [
-        {
-          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/2k0jjobfx4c0000.png',
-          bg_icon:
-            'https://cdn.shupian.cn/sp-pt/wap/images/chze1ksovcg0000.png',
-          bg_color: '#0BB3B3',
-        },
-        {
-          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/byc0c33glcw0000.png',
-          bg_icon: 'https://cdn.shupian.cn/sp-pt/wap/images/rlbycqvjsb4000.png',
-          bg_color: '#E63B47',
-        },
-        {
-          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/3p91fh7h6t60000.png',
-          bg_icon:
-            'https://cdn.shupian.cn/sp-pt/wap/images/bnivu4nkbm80000.png',
-          bg_color: '#3777E5',
-        },
-        {
-          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/aexk52ox6sw0000.png',
-          bg_icon:
-            'https://cdn.shupian.cn/sp-pt/wap/images/e5m4yxb0se00000.png',
-          bg_color: '#28A264',
-        },
-        {
-          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png',
-          bg_icon:
-            'https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png',
-          bg_color: '#3777E5',
-        },
-      ],
+      // bankCardStyle: [
+      //   {
+      //     bankCode: 'ICBC',
+      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/2k0jjobfx4c0000.png',
+      //     bg_icon:
+      //       'https://cdn.shupian.cn/sp-pt/wap/images/chze1ksovcg0000.png',
+      //     bg_color: '#0BB3B3',
+      //   },
+      //   {
+      //     bankCode: 'ICBC',
+      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/byc0c33glcw0000.png',
+      //     bg_icon: 'https://cdn.shupian.cn/sp-pt/wap/images/rlbycqvjsb4000.png',
+      //     bg_color: '#E63B47',
+      //   },
+      //   {
+      //     bankCode: 'CCB',
+      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/3p91fh7h6t60000.png',
+      //     bg_icon:
+      //       'https://cdn.shupian.cn/sp-pt/wap/images/bnivu4nkbm80000.png',
+      //     bg_color: '#3777E5',
+      //   },
+      //   {
+      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/aexk52ox6sw0000.png',
+      //     bg_icon:
+      //       'https://cdn.shupian.cn/sp-pt/wap/images/e5m4yxb0se00000.png',
+      //     bg_color: '#28A264',
+      //   },
+      //   {
+      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png',
+      //     bg_icon:
+      //       'https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png',
+      //     bg_color: '#3777E5',
+      //   },
+      // ],
+      cardList: [],
     }
   },
   created() {
@@ -96,17 +112,14 @@ export default {
   },
   methods: {
     async bankCardsList() {
-      const res = await this.$axios.get(
-        'http://172.16.135.181:7001/service/yk/wallet/v1/card_list.do',
-        {
-          params: {
-            accountId: '1031618090432080787',
-          },
-        }
-      )
+      const res = await this.$axios.get(walletApi.cardList, {
+        params: {
+          accountId: '1031626164970629476',
+        },
+      })
       console.log(res)
       if (res.code === 200) {
-        console.log(11111111)
+        this.cardList = res.data
       }
     },
   },

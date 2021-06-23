@@ -10,14 +10,18 @@
       />
       <p>售后单申请成功</p>
       <div class="countdown">
-        预计<span class="num">{{ hour }}</span
-        ><span class="time-unit">时</span><span class="num">{{ min }}</span
+        预计<span class="num">47</span><span class="time-unit">时</span
+        ><span class="num">59</span
         ><span class="time-unit">分钟</span
         >内为您处理请您保持手机畅通，耐心等待！
       </div>
       <div class="btns">
-        <button>查看订单</button>
-        <button>返回订单</button>
+        <button
+          @click="$router.replace(`/my/afterSale/detail?id=${$route.query.id}`)"
+        >
+          查看售后
+        </button>
+        <button @click="$router.replace('/order')">返回订单</button>
       </div>
       <div class="desc">
         <p>
@@ -27,11 +31,9 @@
             color="#ccc"
             name="toast_ic_remind"
           ></sp-icon
-          ><span>售后说明</span>
+          ><span @click="afterSaleProtocol('protocol100040')">售后说明</span>
         </p>
-        <div class="content">
-          盼望着，盼望着，东风来了，春天的脚步近了。一切都像刚睡醒的样子，欣欣然张开了眼。山朗润起来了，水涨起来了，太阳的脸红起来了。小草偷偷地从土地里钻出来你
-        </div>
+        <div class="content"></div>
       </div>
     </div>
   </div>
@@ -48,13 +50,13 @@ export default {
   data() {
     return {
       // 倒计时
-      hour: '00',
-      min: '00',
+      hour: '47',
+      min: '59',
       cancelPayTime: '2021-6-9 10:30',
     }
   },
   created() {
-    this.countTime()
+    // this.countTime()
   },
   methods: {
     // 倒计时
@@ -98,6 +100,13 @@ export default {
         // 递归每秒调用countTime方法，显示动态时间效果,
         setTimeout(this.countTime, 1000)
       }
+    },
+    // 售后说明
+    afterSaleProtocol(code) {
+      this.$router.push({
+        name: 'login-protocol',
+        query: { categoryCode: code },
+      })
     },
   },
 }

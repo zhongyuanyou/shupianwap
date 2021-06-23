@@ -11,29 +11,32 @@
       <div class="title">选择付款方式</div>
       <div class="bank-list">
         <ul class="bank-ul">
-          <li class="bank-li">
+          <li
+            v-for="(item, index) in cardList"
+            :key="index"
+            class="bank-li"
+            @click="selectCard(item)"
+          >
             <div class="bank-logo">
-              <img src="" alt="" />
+              <img :src="item.bankIconUrl" alt="" />
             </div>
-            <p>工商银行储蓄卡(622****4490)</p>
+            <p>{{ item.bankName }}({{ item.desensitizationCardNumber }})</p>
             <sp-icon
+              v-if="item.id === currentId"
               class-prefix="spiconfont"
               name="gou"
               size="0.30rem"
               color="#4974F5"
             ></sp-icon>
           </li>
-          <li class="bank-li">
+          <!-- <li class="bank-li">
             <div class="bank-logo">
               <img src="" alt="" />
             </div>
             <p>工商银行储蓄卡(622****4490)</p>
-          </li>
+          </li> -->
         </ul>
-        <div
-          class="bank-add"
-          @click="$router.push('/my/wallet/bankCards/add')"
-        >
+        <div class="bank-add" @click="$router.push('/my/wallet/bankCards/add')">
           <sp-icon
             class-prefix="spiconfont"
             name="jia"
@@ -55,19 +58,44 @@
 </template>
 <script>
 import { Popup, Icon } from '@chipspc/vant-dgg'
+import { walletApi } from '@/api'
 export default {
   components: {
     [Popup.name]: Popup,
     [Icon.name]: Icon,
   },
+  props: {
+    currentId: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
       showBankPop: false,
+      cardList: [],
     }
   },
+  created() {
+    this.getCardList()
+  },
   methods: {
+    selectCard(item) {
+      this.$emit('selectCard', item)
+    },
     clickClosePop() {
       this.showBankPop = false
+    },
+    async getCardList() {
+      const res = await this.$axios.get(walletApi.cardList, {
+        params: {
+          accountId: '1031626164970629476',
+        },
+      })
+      if (res.code === 200) {
+        this.cardList = res.data
+        console.log(this.cardList)
+      }
     },
   },
 }
@@ -102,9 +130,14 @@ export default {
             font-weight: bold;
           }
           .bank-logo {
+            display: flex;
             width: 48px;
             height: 48px;
-            background: #000;
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
           }
           p {
             width: 552px;

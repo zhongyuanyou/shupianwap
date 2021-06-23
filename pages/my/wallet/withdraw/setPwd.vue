@@ -43,6 +43,7 @@ export default {
       valid: false,
     }
   },
+  
   methods: {
     onInput(key) {
       this.password = (this.password + key).slice(0, 6)
@@ -59,6 +60,7 @@ export default {
         return false
       }
       console.log('完成时触发')
+
       this.$router.push('/my/wallet/bankCards/untieSuccess')
     },
   },

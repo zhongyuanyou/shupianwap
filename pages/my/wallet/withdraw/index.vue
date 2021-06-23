@@ -2,7 +2,11 @@
   <div class="withdraw">
     <Header title="提现">
       <template #right>
-        <span class="recording">提现记录</span>
+        <span
+          class="recording"
+          @click="$router.push('/my/wallet/withdraw/list')"
+          >提现记录</span
+        >
       </template>
     </Header>
     <div class="tips">
@@ -19,7 +23,7 @@
         <div class="select-row">
           <div class="title">单项选择</div>
           <div class="select-val" @click="openSelectBankPop">
-            <span>未选择</span>
+            <span>{{ selectCardInfo.bankName || '请选择' }}</span>
             <sp-icon
               class-prefix="spiconfont"
               size="0.25rem"
@@ -28,11 +32,15 @@
             />
           </div>
         </div>
-        <div class="bank-item">
+        <div v-if="selectCardInfo" class="bank-item">
           <div class="bank-logo">
-            <img />
+            <img :src="selectCardInfo.bankIconUrl" />
           </div>
-          <p>工商银行（5623123123123123）</p>
+          <p>
+            {{ selectCardInfo.bankName }}({{
+              selectCardInfo.desensitizationCardNumber
+            }})
+          </p>
         </div>
       </div>
 
@@ -43,13 +51,10 @@
           ><sp-field v-model="amount" type="number" maxlength="5" />
         </div>
       </div>
-      <div class="amount-tips">账户余额：¥129999.99，<span>全部提现</span></div>
-      <div
-        class="withdraw-btn"
-        @click="$router.push('/my/wallet/withdraw/setPwd')"
-      >
-        提现
+      <div class="amount-tips">
+        账户余额：¥129999.99，<span @click="withdrawAll">全部提现</span>
       </div>
+      <div class="withdraw-btn" @click="withdraw">提现</div>
     </div>
     <div class="small-tips">
       <p>
@@ -64,7 +69,7 @@
       <p>2、每次提现金额不低于<span>10</span>元；</p>
       <p>3、每次最多可提现<span>10000</span>元;</p>
     </div>
-    <SelectBank ref="bank" />
+    <SelectBank ref="bank" :current-id="currentId" @selectCard="selectCard" />
   </div>
 </template>
 
@@ -80,11 +85,40 @@ export default {
     [Field.name]: Field,
   },
   data() {
-    return {}
+    return {
+      selectCardInfo: '',
+      currentId: '',
+      amount: 88,
+    }
   },
   methods: {
     openSelectBankPop() {
       this.$refs.bank.showBankPop = true
+    },
+    selectCard(data) {
+      this.selectCardInfo = data
+      this.$refs.bank.showBankPop = false
+    },
+    // 提现
+    withdraw() {
+      // if (!account) {
+      //   this.$xToast.warning('请填写提现金额')
+      //   return false
+      // } else if (account < 10) {
+      //   this.$xToast.warning('提现金额不可小于N')
+      //   return false
+      // } else if (account > 88) {
+      //   this.$xToast.warning('每次提现不可超过N元')
+      //   return false
+      // } else if (account > 88) {
+      //   this.$xToast.warning('提现金额是否大于可用余额')
+      //   return false
+      // }
+      this.$router.push('/my/wallet/withdraw/setPwd')
+    },
+    // 全部提现
+    withdrawAll() {
+      this.amount = 88
     },
   },
 }
@@ -199,7 +233,12 @@ export default {
       .bank-logo {
         width: 28px;
         height: 28px;
-        background: #000;
+        display: flex;
+        align-items: center;
+        img {
+          width: 100%;
+          height: 100%;
+        }
       }
       p {
         margin-left: 10px;

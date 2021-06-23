@@ -24,7 +24,7 @@
         ></sp-icon>
       </div>
       <div class="total" @click="$router.push('/my/wallet/bill/list')">
-        <strong>1200.12</strong
+        <strong>{{ accountBalData.totalBalance || '0.00' }}</strong
         ><sp-icon
           class-prefix="spiconfont"
           name="you"
@@ -43,7 +43,7 @@
               color="#999"
             ></sp-icon>
           </h3>
-          <p>800.00</p>
+          <p>{{ accountBalData.balance || '0.00' }}</p>
         </div>
         <div class="quota-item">
           <h3>
@@ -55,13 +55,10 @@
               color="#999"
             ></sp-icon>
           </h3>
-          <p>200.00</p>
+          <p>{{ accountBalData.frozenBalance || '0.00' }}</p>
         </div>
       </div>
-      <div
-        class="withdrawal-btn"
-        @click="$router.push('/my/wallet/withdraw/setPwd')"
-      >
+      <div class="withdrawal-btn" @click="$router.push('/my/wallet/withdraw')">
         提现
       </div>
       <div class="money-desc" @click="openBalanceDesc">
@@ -103,6 +100,7 @@
 
 <script>
 import { Icon, Dialog } from '@chipspc/vant-dgg'
+import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
 import BalanceDesc from '@/components/wallet/BalanceDesc.vue'
 export default {
@@ -113,15 +111,34 @@ export default {
     [Dialog.name]: Dialog,
   },
   data() {
-    return {}
+    return {
+      accountBalData: '',
+    }
+  },
+  computed: {
+    userInfo() {
+      return JSON.parse(localStorage.getItem('info'))
+    },
   },
   created() {
     this.getAccountInfo()
+    this.getAccountBalInfo()
   },
+
   mounted() {
     // this.openActivationDialog()
   },
   methods: {
+    async getAccountBalInfo() {
+      const res = await this.$axios.post(walletApi.account_balance_info, {
+        relationId: this.userInfo.id,
+        accType: 'BANK_ACCOUNT_TYPE_2', // 账户类型个人
+      })
+      console.log(res)
+      if (res.code === 200) {
+        this.accountBalData = res.data
+      }
+    },
     openActivationDialog() {
       Dialog.confirm({
         title: '激活钱包',
@@ -130,9 +147,17 @@ export default {
         cancelButtonText: '取消',
       })
         .then((res) => {
-          this.$router.push({
-            path: '/my/wallet/verified/auth',
-          })
+          console.log(this.userInfo)
+          debugger
+          if (this.userInfo.realStatus === 'AUTHENTICATION_SUCCESS') {
+            this.$router.push({
+              path: '/my/settings/setPwd',
+            })
+          } else {
+            this.$router.push({
+              path: '/contract/authentication',
+            })
+          }
         })
         .catch(() => {
           // on cancel
@@ -141,20 +166,21 @@ export default {
     openBalanceDesc() {
       this.$refs.balanceDesc.showBalanceDesc = true
     },
-
+    // 获取钱包信息
     async getAccountInfo() {
-      const res = await this.$axios.post(
-        'http://172.16.135.181:7001/service/yk/wallet/v1/info.do',
-        {
-          accountId: '',
-          relationId: '767584840682202065',
-        }
-      )
+      const res = await this.$axios.post(walletApi.info, {
+        accountId: '',
+        relationId: this.userInfo.id,
+      })
       console.log(res)
       if (res.code === 200) {
-        console.log(11111111)
+        const accAccountData = res.data
+        if (!accAccountData.status && accAccountData.status !== 1) {
+          this.openActivationDialog()
+        }
       }
     },
+
     more() {
       this.$xToast.show({
         message: '功能建设中...',
