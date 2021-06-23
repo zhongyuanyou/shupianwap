@@ -42,13 +42,13 @@
       </div>
 
       <div class="card_price">
-        <span
-          >总价 2480<span class="unit">元</span>，优惠 280<span class="unit"
-            >元</span
-          >
+        <span>总价 2480<span class="unit">元</span>，</span>
+        <span>优惠 280<span class="unit">元</span>，</span>
+        <span class="card_price_real">
+          <span>已付款</span>
+          <span class="bold">22222</span>
+          <span class="unit">元</span>
         </span>
-        <span>已付款 2200</span>
-        <span class="unit">元</span>
       </div>
       <div class="card_footer">
         <sp-button
@@ -144,8 +144,14 @@ export default {
     flex: 1;
   }
   .unit {
-    font-size: 20px;
-    line-height: 20px;
+    display: inline-block;
+    // font-size: 20px;
+    // line-height: 20px;
+    transform-origin: left bottom;
+    transform: scale(0.75);
+  }
+  .bold {
+    font-weight: bold;
   }
   .card {
     margin-top: 20px;
@@ -250,11 +256,19 @@ export default {
     }
     .card_price {
       text-align: right;
-      font-size: 24px;
+
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: #999999;
+      font-size: 24px;
       line-height: 24px;
+      .card_price_real {
+        color: #222222;
+        font-size: 0px;
+        span {
+          font-size: 24px;
+        }
+      }
     }
     .card_footer {
       text-align: right;
