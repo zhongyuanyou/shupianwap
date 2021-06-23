@@ -107,6 +107,7 @@ export default {
             color: #ec5330;
             font-size: 30px;
             margin-top: 16px;
+            display: none;
             span {
               font-weight: 400;
               font-size: 22px;

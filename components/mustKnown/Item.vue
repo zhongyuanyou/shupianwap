@@ -145,6 +145,7 @@ export default {
             width: 100%;
             height: 100%;
             border-radius: 50%;
+            object-fit: cover;
             vertical-align: unset;
           }
         }
@@ -172,6 +173,7 @@ export default {
 
     .content_img {
       display: block;
+      object-fit: cover;
       width: 190px;
       height: 127px;
       background: #cccccc;
