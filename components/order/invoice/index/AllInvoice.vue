@@ -1,9 +1,11 @@
 <template>
   <div class="all_invoice">
-    <div v-for="orderData of list" :key="orderData.id" class="card">
+    <div v-for="orderData of orderList" :key="orderData.id" class="card">
       <div class="card_header flex">
         <div class="card_number flex_1">订单编号：{{ orderData.orderNo }}</div>
-        <div class="card_status">已开票</div>
+        <div class="card_status" :class="orderData.merchantInvoiceStatus">
+          {{ orderData.merchantInvoiceStatusName }}
+        </div>
       </div>
       <div
         v-for="item of orderData.orderSkuEsList || orderData.orderSkuList"
@@ -23,58 +25,106 @@
             <div class="goods_info_title flex_1">
               {{ item.spuHideName || item.spuName }}
             </div>
-            <div class="goods_num goods_price">
+            <div
+              v-if="
+                checkPayType(orderData) !== 2 &&
+                checkPayType(orderData) !== 4 &&
+                !item.orderType
+              "
+              class="goods_num goods_price"
+            >
               {{ item.skuPrice }}<span class="unit">元</span>
             </div>
           </div>
 
           <div class="flex">
             <div class="goods_info_des flex_1">
-              2222222222222222222222222222222222222222222
+              {{
+                item.skuType === skuTypes[1] || item.skuType === skuTypes[3]
+                  ? item.skuDetailValues
+                  : item.skuDetailValues || getSkus(item.skuExtInfo)
+              }}
             </div>
             <div class="goods_num">x1</div>
           </div>
 
-          <div class="flex">
+          <!-- <div class="flex">
             <div class="goods_info_increment flex_1">
               <span class="goods_info_increment_label">增值服务</span>
               <span class="goods_info_increment_des">加急办理3天完成</span>
             </div>
             <div class="goods_num goods_info_increment_price">100元 x1</div>
-          </div>
+          </div> -->
         </div>
       </div>
 
-      <div class="card_price">
-        <span
-          >总价 {{ orderData.orderTotalMoney
-          }}<span class="unit">元</span>，</span
-        >
-        <span
-          >优惠 {{ orderData.orderDiscountMoney
-          }}<span class="unit">元</span>，</span
-        >
+      <!-- 定金尾款付费 -->
+      <div v-if="checkPayType(orderData) === 2" class="card_price">
+        <span>
+          总价
+          <span v-if="orderData.orderType === 0"> 面议，</span>
+          <span v-else>
+            {{ orderData.orderTotalMoney }} <span class="unit">元</span>，
+          </span>
+        </span>
+
+        <span>
+          尾款
+          <span v-if="orderData.orderType === 0"> 面议，</span>
+          <span v-else>
+            {{ orderData.lastAount }} <span class="unit">元</span>，
+          </span>
+        </span>
+
+        <span class="card_price_real">
+          <span>定金</span>
+          <span class="bold">{{ orderData.depositAmount }}</span>
+          <span class="unit">元</span>
+        </span>
+      </div>
+      <!-- 服务完结收费的意向单 -->
+      <div
+        v-else-if="checkPayType(orderData) === 4 && orderData.orderType === 0"
+        class="card_price"
+      >
+        <span> 总价：面议</span>
+      </div>
+      <!-- 其他付费方式展示效果一样 -->
+      <div v-else class="card_price">
+        <span>
+          总价
+          <span v-if="orderData.orderType === 0"> 面议，</span>
+          <span v-else>
+            {{ orderData.orderTotalMoney }}<span class="unit">元</span>，
+          </span>
+        </span>
+        <span>
+          优惠 {{ orderData.orderDiscountMoney }}<span class="unit">元</span>，
+        </span>
         <span class="card_price_real">
           <span>已付款</span>
           <span class="bold">{{ orderData.orderPayableMoney }}</span>
           <span class="unit">元</span>
         </span>
       </div>
+
       <div class="card_footer">
         <sp-button
+          v-if="orderData.merchantInvoiceStatus == 'INVOICE_STATUS_WAITE'"
           plain
           size="small"
           round
           type="default"
-          @click="toInvoiceApply"
+          @click="toInvoiceApply(orderData)"
           >申请开发票</sp-button
         >
         <sp-button
+          v-else
           plain
           size="small"
           round
           type="default"
-          @click="toInvoiceDetail"
+          @click="toInvoiceDetail(orderData)"
           >查看发票</sp-button
         >
       </div>
@@ -85,6 +135,14 @@
 <script>
 import { DropdownMenu, DropdownItem, Image, Button } from '@chipspc/vant-dgg'
 import OrderMixins from '@/mixins/order'
+
+// 支付类型CODE
+const PAYTYPECODE = {
+  1: 'PRO_PRE_PAY_POST_SERVICE', // 先付款后服务
+  2: 'PRO_PRE_DEPOSIT_POST_OTHERS', // 先定金后尾款
+  3: 'PRO_PRE_SERVICE_POST_PAY_BY_NODE', // 按服务节点付费
+  4: 'PRO_PRE_SERVICE_FINISHED_PAY', // 服务完结收费
+}
 export default {
   components: {
     [DropdownMenu.name]: DropdownMenu,
@@ -101,44 +159,53 @@ export default {
   },
   data() {
     return {
-      // list: [
-      //   {
-      //     number: 1,
-      //     status: 1,
-      //     goods: [
-      //       {
-      //         name: '1111111111111111111111111111111111111111111111111',
-      //         img: '',
-      //       },
-      //       {
-      //         name: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-      //         img: '',
-      //       },
-      //     ],
-      //   },
-      //   {
-      //     number: 2,
-      //     status: 2,
-      //     goods: [
-      //       {
-      //         name: '1111111111111111111111111111111111111111111111111',
-      //         img: '',
-      //       },
-      //       {
-      //         name: '1111111111111111111111111111111111111111111111111',
-      //         img: '',
-      //       },
-      //     ],
-      //   },
-      // ],
+      merchantInvoiceStatus: {
+        INVOICE_STATUS_WAITE: '待开票',
+        INVOICE_STATUS_PROCESS: '开票中',
+        INVOICE_STATUS_SUCCESS: '开票成功',
+        INVOICE_STATUS_FAIL: '开票失败',
+        INVOICE_STATUS_AUDIT: '审核中',
+        INVOICE_STATUS_REJECT: '已驳回',
+      },
     }
   },
-  methods: {
-    toInvoiceApply() {
-      this.$router.push('/order/invoice/invoiceApply')
+  computed: {
+    orderList() {
+      const nowData = JSON.parse(JSON.stringify(this.list))
+      console.log(nowData)
+      const order = nowData.map((item) => {
+        this.changeMoney(item)
+
+        item.merchantInvoiceStatusName =
+          this.merchantInvoiceStatus[item.merchantInvoiceStatus]
+      })
+      return nowData
     },
-    toInvoiceDetail() {
-      this.$router.push('/order/invoice/detail')
+  },
+  methods: {
+    // 判断客户单付费类型
+    checkPayType(orderData) {
+      if (!orderData.cusOrderPayType) return 0
+      for (const key in PAYTYPECODE) {
+        if (PAYTYPECODE[key] === orderData.cusOrderPayType) return Number(key)
+      }
+    },
+
+    toInvoiceApply(orderData) {
+      this.$router.push({
+        path: '/order/invoice/invoiceApply',
+        query: {
+          orderId: orderData.id,
+        },
+      })
+    },
+    toInvoiceDetail(orderData) {
+      this.$router.push({
+        path: '/order/invoice/detail',
+        query: {
+          orderId: orderData.id,
+        },
+      })
     },
   },
 }
@@ -164,6 +231,24 @@ export default {
   }
   .bold {
     font-weight: bold;
+  }
+  .INVOICE_STATUS_WAITE {
+    color: #fe8c29;
+  }
+  .INVOICE_STATUS_PROCESS {
+    color: #4974f5;
+  }
+  .INVOICE_STATUS_SUCCESS {
+    color: #00b365;
+  }
+  .INVOICE_STATUS_FAIL {
+    color: #ff3b30;
+  }
+  .INVOICE_STATUS_AUDIT {
+    color: #4974f5;
+  }
+  .INVOICE_STATUS_REJECT {
+    color: #fe8c29;
   }
   .card {
     margin-top: 20px;
@@ -209,7 +294,7 @@ export default {
         padding-bottom: 14px;
         font-size: 28px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
+        font-weight: 600;
         color: #222222;
         line-height: 28px;
         .mixin-text-oneoverflow();

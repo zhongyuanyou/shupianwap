@@ -31,7 +31,7 @@
     <div class="card">
       <div class="type_list">
         <span>发票类型</span>
-        <span>电子普通发票</span>
+        <span>{{ formData.invoiceType }}</span>
       </div>
     </div>
 
@@ -40,20 +40,20 @@
 
       <div class="invoice_info_list">
         <div>发票内容</div>
-        <div>商品明细</div>
+        <div>{{ formData.invoiceContent }}</div>
       </div>
       <div class="invoice_info_list">
         <div>抬头类型</div>
-        <div>个人</div>
+        <div>{{ formData.invoiceHeader }}</div>
       </div>
       <div class="invoice_info_list">
         <div>抬头名</div>
-        <div>哼哼哼</div>
+        <div>{{ formData.invoiceHeaderName }}</div>
       </div>
       <div class="invoice_info_list">
         <div>开票金额</div>
-        <div>
-          229.80元
+        <div v-if="formData.invoiceMoney">
+          {{ formData.invoiceMoney }}元
           <span @click="moneyTips">
             <my-icon
               name="guanyu_mian"
@@ -65,15 +65,12 @@
       </div>
       <div class="invoice_info_list">
         <div>申请时间</div>
-        <div>2020-08-25 18:58:35</div>
+        <div>{{ formData.applyTime || '-' }}</div>
       </div>
       <div class="invoice_info_list">
         <div>开票时间</div>
-        <div>-</div>
+        <div>{{ formData.invoiceTime || '-' }}</div>
       </div>
-
-      <div v-if="type == 1"></div>
-      <div v-if="type == 2"></div>
     </div>
 
     <div class="card">
@@ -148,6 +145,7 @@ import { mapState } from 'vuex'
 
 import Header from '@/components/common/head/header.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
+import { invoiceApi } from '@/api/index.js'
 
 export default {
   layout: 'keepAlive',
@@ -166,14 +164,38 @@ export default {
     return {
       opacity: 0,
       loading: false, // 加载效果状态
-      tabActive: 0,
 
-      type: 2, // 发票类型
-      show_more_input: true,
+      orderId: '', // 订单id
+
       formData: {
         status: 1,
-        username: '1111111111111111111111111111111111111111111111',
-        email: '1111111111111111111111111111111111111@qq.com',
+
+        applyUserName: '',
+        applyUserId: '', // 申请人id
+        invoiceMoney: '', // 发票金额
+        applySource: '', // 申请渠道
+        receiverEmail: '', // 收票人邮箱
+        receiverPhone: '', // 收票人电话
+        bankAccount: '', // 开户账号
+        bankOfDeposit: '', // 开户银行
+        registerTel: '', // 注册电话
+        registerAddress: '', // 注册地址
+        taxpayerIdentifNum: '', // 纳税人识别号
+
+        invoiceHeaderName: '', // 发票抬头名称
+        invoiceHeader: '', // 发票抬头类型
+        invoiceContent: '', // 发票内容（商品明细 、商品类别）
+        invoiceType: '', // 发票类型
+        invoiceStatus: '', // 发票状态
+        orderNo: '',
+        orderId: '',
+        invoiceApplyNo: '', // 申请号
+        id: '', // 发票id
+
+        applyTime: '',
+        invoiceTime: '',
+
+        remarks: '', // 备注（被驳回）
       },
 
       sendEmail: '',
@@ -190,14 +212,14 @@ export default {
   computed: {
     status() {
       const info = {
-        underRreview: {
+        INVOICE_STATUS_AUDIT: {
           icon: 'shijian',
           bk: this.$ossImgSetV2(this.imgList.primary),
           title: '审核中',
           des: '您的开票申请正在审核中',
           tips: '请耐心等待',
         },
-        reject: (info = '发票信息错误') => {
+        INVOICE_STATUS_REJECT: (info = '发票信息错误') => {
           return {
             icon: 'tixing',
             bk: this.$ossImgSetV2(this.imgList.warning),
@@ -206,14 +228,14 @@ export default {
             tips: '驳回原因：' + info,
           }
         },
-        billingInProgress: {
+        INVOICE_STATUS_PROCESS: {
           icon: 'shijian',
           bk: this.$ossImgSetV2(this.imgList.primary),
           title: '开票中',
           des: '您的发票正在开票中',
           tips: '请耐心等待',
         },
-        invoiceFailed: (info) => {
+        INVOICE_STATUS_FAIL: (info) => {
           return {
             icon: 'tixing',
             bk: this.$ossImgSetV2(this.imgList.danger),
@@ -222,7 +244,7 @@ export default {
             tips: '失败原因：' + info,
           }
         },
-        success: {
+        INVOICE_STATUS_SUCCESS: {
           icon: 'wancheng',
           bk: this.$ossImgSetV2(this.imgList.success),
           title: '已开票',
@@ -230,24 +252,46 @@ export default {
           tips: '请对本次服务进行评价，谢谢您的支持',
         },
       }
-      if (this.formData.status === 0) {
-        return info.underRreview
-      } else if (this.formData.status === 1) {
-        return info.reject('发票信息错误')
-      } else if (this.formData.status === 2) {
-        return info.billingInProgress
-      } else if (this.formData.status === 3) {
-        return info.invoiceFailed('未查询到对应的企业信息')
-      } else if (this.formData.status === 4) {
-        return info.success
+      const invoiceStatus = this.formData.invoiceStatus
+      if (
+        invoiceStatus === 'INVOICE_STATUS_REJECT' ||
+        invoiceStatus === 'INVOICE_STATUS_FAIL'
+      ) {
+        return info[invoiceStatus](this.formData.remarks || '未知错误')
       }
-      return {}
+      return info[invoiceStatus] || {}
     },
   },
   mounted() {
     // this.moneyTips()
+    this.orderId = this.$route.query.orderId
+    this.init()
   },
   methods: {
+    init() {
+      if (!this.orderId) {
+        return this.$xToast.error('没有指定订单')
+      }
+      this.loading = true
+      invoiceApi
+        .invoice_detail(
+          { axios: this.$axios },
+          {
+            orderId: this.orderId,
+            type: 1, // 是否查询订单商品信息，1查询，默认不查，根据订单id查询时有效
+          }
+        )
+        .then((res) => {
+          this.loading = false
+
+          this.formData = res.data
+        })
+        .catch((error) => {
+          this.loading = false
+          console.error(error)
+          this.$xToast.error(error.message || '请求失败，请重试')
+        })
+    },
     toPreview() {
       this.$router.push('/order/invoice/preview')
     },
@@ -327,7 +371,7 @@ export default {
     margin-top: -0.88rem;
     text-align: center;
     height: 303px;
-    background-color: #f5f5f5;
+    background-color: #999999;
     background-size: cover;
     background-repeat: no-repeat;
 

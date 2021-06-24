@@ -7,8 +7,16 @@
     <div class="card">
       <div class="title">发票类型</div>
       <div class="options">
-        <sp-button class="btn active" size="small" type="primary">
-          电子普通发票
+        <sp-button
+          v-for="(invoicetype, key) in InvoiceType"
+          :key="key"
+          class="btn"
+          :class="{ active: key === formData.invoiceType }"
+          size="small"
+          type="primary"
+          @click="formData.invoiceType = key"
+        >
+          {{ invoicetype }}
         </sp-button>
       </div>
       <div class="des">
@@ -20,41 +28,34 @@
       <div class="title">发票抬头</div>
       <div class="options">
         <sp-button
+          v-for="(invoice_header, key) in InvoiceHeader"
+          :key="key"
           class="btn"
-          :class="{ active: type === 1 }"
+          :class="{ active: key === formData.invoiceHeader }"
           size="small"
           type="primary"
-          @click="type = 1"
+          @click="formData.invoiceHeader = key"
         >
-          个人
-        </sp-button>
-        <sp-button
-          class="btn"
-          :class="{ active: type === 2 }"
-          size="small"
-          type="primary"
-          @click="type = 2"
-        >
-          单位
+          {{ invoice_header }}
         </sp-button>
       </div>
       <div class="invoice_info">
         <sp-field
-          v-if="type == 1"
-          v-model="formData.username"
+          v-if="formData.invoiceHeader === 'INVOICE_HEADER_PERSONAL'"
+          v-model="formData.invoiceHeaderName"
           required
           label="个人名称"
           placeholder="请填写“个人”或您的姓名"
         />
-        <div v-if="type == 2">
+        <div v-else-if="formData.invoiceHeader === 'INVOICE_HEADER_COMPANY'">
           <sp-field
-            v-model="formData.username"
+            v-model="formData.invoiceHeaderName"
             required
             label="单位名称"
             placeholder="请填写单位名称"
           />
           <sp-field
-            v-model="formData.username"
+            v-model="formData.taxpayerIdentifNum"
             required
             label="纳税人识别号"
             placeholder="请填写纳税人识别号"
@@ -62,7 +63,7 @@
 
           <div v-show="show_more_input" class="more_input">
             <sp-field
-              v-model="formData.username"
+              v-model="formData.registerAddress"
               label="注册地址"
               placeholder="请填写注册地址"
             />
@@ -72,12 +73,12 @@
               placeholder="请填写注册电话"
             />
             <sp-field
-              v-model="formData.username"
+              v-model="formData.bankOfDeposit"
               label="开户银行"
               placeholder="请填写开户银行"
             />
             <sp-field
-              v-model="formData.username"
+              v-model="formData.bankAccount"
               label="银行账号"
               placeholder="请填写银行账号"
             />
@@ -100,12 +101,12 @@
       <div class="title">收票人信息</div>
       <div class="form">
         <sp-field
-          v-model="formData.username"
+          v-model="formData.receiverPhone"
           label="收票人手机"
           placeholder=""
         />
         <sp-field
-          v-model="formData.email"
+          v-model="formData.receiverEmail"
           label="收票人邮箱"
           placeholder="用来接收电子发票邮件，可选填"
         />
@@ -115,9 +116,21 @@
     <div class="card">
       <div class="title">发票内容</div>
       <div class="options">
-        <sp-button class="btn active" size="small" type="primary">
-          商品明细
+        <sp-button
+          v-for="content of InvoiceContent"
+          :key="content"
+          class="btn"
+          :class="{ active: content === formData.invoiceContent }"
+          size="small"
+          type="primary"
+          @click="formData.invoiceContent = content"
+        >
+          {{ content }}
         </sp-button>
+
+        <!-- <sp-button class="btn active" size="small" type="primary">
+          商品明细
+        </sp-button> -->
       </div>
     </div>
 
@@ -129,7 +142,13 @@
       </div>
     </div>
     <div class="card">
-      <sp-button size="normal" block type="primary" disabled @click="submit">
+      <sp-button
+        size="normal"
+        block
+        type="primary"
+        :disabled="submitDisabled"
+        @click="submit"
+      >
         申请开票
       </sp-button>
     </div>
@@ -159,6 +178,14 @@ import { mapState } from 'vuex'
 import Header from '@/components/common/head/header.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 
+// 发票类型
+const InvoiceType = {
+  '027': '增值税电子专用发票',
+  '026': '增值税电子普通发票 ',
+  '007': '增值税普通发票 ',
+  '004': '增值税专用发票',
+}
+
 export default {
   layout: 'keepAlive',
   name: 'Invoice',
@@ -179,17 +206,52 @@ export default {
       tabActive: 0,
 
       type: 1, // 发票类型
+
       show_more_input: false,
-      formData: {
-        username: '',
-        email: '',
+
+      InvoiceType: {
+        '027': '增值税电子专用发票',
+        '026': '增值税电子普通发票 ',
+        '007': '增值税普通发票 ',
+        '004': '增值税专用发票',
       },
+      InvoiceHeader: {
+        INVOICE_HEADER_PERSONAL: '个人',
+        INVOICE_HEADER_COMPANY: '单位',
+      },
+      InvoiceContent: ['商品明细', '商品类别'],
+
+      formData: {
+        orderId: '', // 订单id
+        applySource: 'COMDIC_PLATFORM_CRISPS', // 申请来源  薯片 COMDIC_PLATFORM_CRISPS 案加 COMDIC_PLATFORM_QIDABAO
+        applyUserId: '', // 申请人id
+        applyUserName: '', // 申请人名称
+        invoiceType: '027', // 发票类型 InvoiceType
+        invoiceContent: '商品明细', // 发票内容（商品明细 、商品类别）
+        // 发票抬头（个人 INVOICE_HEADER_PERSONAL 、 单位 INVOICE_HEADER_COMPANY）
+        invoiceHeader: 'INVOICE_HEADER_PERSONAL',
+        invoiceHeaderName: '', // 公司名称、个人名称
+
+        receiverPhone: '', // 收票人电话
+        bankAccount: '', // 银行账号
+        bankOfDeposit: '', // 开户银行
+        receiverEmail: '', // 邮箱
+        registerAddress: '', // 注册地址
+        taxpayerIdentifNum: '', // 纳税人识别号
+      },
+
+      submitDisabled: false, // 禁用提交
     }
   },
+  mounted() {
+    this.formData.orderId = this.$route.query.orderId
+  },
   methods: {
+    apply() {},
     submit() {
       // this.$xToast.show({ message: '提交成功' })
       this.$xToast.success('提交成功')
+      console.log(this.formData)
     },
     // back() {
     //   if (this.isInApp) {
@@ -223,9 +285,10 @@ export default {
     }
 
     .options {
-      padding-bottom: 20px;
+      padding-bottom: 10px;
       .btn {
         margin-right: 32px;
+        margin-bottom: 10px;
       }
     }
     .des {

@@ -23,19 +23,6 @@
       error-text="请求失败，点击重新加载"
       @load="onLoad"
     >
-      <!-- <div v-if="tabActive === 0">
-        <orderItem
-          v-for="(item, index) in list"
-          :key="index"
-          :order-data="item"
-          :order-id="item.cusOrderId"
-          selected-order-status="ORDER_CUS_STATUS_COMPLETED"
-          :order-pro-type-no="item.orderProTypeNo"
-          @handleClickItem="handleClickOrderItem"
-        >
-        </orderItem>
-      </div> -->
-
       <AllInvoice v-if="tabActive === 0" :list="list"></AllInvoice>
       <HistoryInvoice v-else-if="tabActive === 1" :list="list"></HistoryInvoice>
       <HeadManagement v-else-if="tabActive === 2" :list="list"></HeadManagement>
@@ -82,11 +69,12 @@ import HistoryInvoiceClassify from '@/components/order/invoice/index/HistoryInvo
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 
-import OrderItem from '@/components/order/OrderItem.vue'
+// import OrderItem from '@/components/order/OrderItem.vue'
 import AllInvoice from '@/components/order/invoice/index/AllInvoice.vue'
 import HistoryInvoice from '@/components/order/invoice/index/HistoryInvoice.vue'
 import HeadManagement from '@/components/order/invoice/index/HeadManagement.vue'
 import orderApi from '@/api/order'
+import { invoiceApi } from '@/api/index.js'
 
 export default {
   layout: 'keepAlive',
@@ -114,45 +102,52 @@ export default {
       tabActive: 0,
       tabActiveIndex: 0, // 激活的tab
 
-      loading: false, // 加载效果状态
+      loading: true, // 加载效果状态
       error: false,
       finished: false,
       page: 1,
       limit: 15,
 
       list: [
-        {
-          number: 1,
-          status: 1,
-          goods: [
-            {
-              name: '1111111111111111111111111111111111111111111111111',
-              img: '',
-            },
-            {
-              name: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-              img: '',
-            },
-          ],
-        },
-        {
-          number: 2,
-          status: 2,
-          goods: [
-            {
-              name: '1111111111111111111111111111111111111111111111111',
-              img: '',
-            },
-            {
-              name: '1111111111111111111111111111111111111111111111111',
-              img: '',
-            },
-          ],
-        },
+        // {
+        //   number: 1,
+        //   status: 1,
+        //   goods: [
+        //     {
+        //       name: '1111111111111111111111111111111111111111111111111',
+        //       img: '',
+        //     },
+        //     {
+        //       name: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        //       img: '',
+        //     },
+        //   ],
+        // },
+        // {
+        //   number: 2,
+        //   status: 2,
+        //   goods: [
+        //     {
+        //       name: '1111111111111111111111111111111111111111111111111',
+        //       img: '',
+        //     },
+        //     {
+        //       name: '1111111111111111111111111111111111111111111111111',
+        //       img: '',
+        //     },
+        //   ],
+        // },
       ],
 
-      AllInvoiceSelectState: {},
-      HistoryInvoiceSelectState: {},
+      AllInvoiceSelectState: {
+        orderProType: '', // 订单类型
+        userInvoiceStatus: '', // 开票状态
+      },
+      HistoryInvoiceSelectState: {
+        invoiceType: '',
+        startCreateTime: '',
+        endCreateTime: '',
+      },
     }
   },
   mounted() {
@@ -169,19 +164,20 @@ export default {
       this.error = false
       this.loading = true
       this.list = []
+      // 如果需要清空以下两项， 那么需要销毁对应的组件
+      // this.HistoryInvoiceSelectState = {}
+      // this.AllInvoiceSelectState = {}
     },
     onLoad() {
       if (this.tabActive === 0) {
         this.getOrderList()
       } else if (this.tabActive === 1) {
-        this.getList()
+        this.getInvoiceRecords()
       } else if (this.tabActive === 2) {
-        this.getList()
+        this.getInvoiceRecords()
       }
     },
-    handleClickOrderItem(item) {
-      console.log(item)
-    },
+
     onClickWorkTab() {
       if (this.tabActiveIndex === this.tabActive) {
         return
@@ -192,37 +188,42 @@ export default {
       this.onLoad()
     },
     HistoryInvoiceSelect(tabs, timePicker) {
-      console.log('tabs', tabs, timePicker)
-
-      this.HistoryInvoiceSelectState = {}
+      this.HistoryInvoiceSelectState = {
+        invoiceType: tabs[0].value || '', // 发票类型
+        startCreateTime: timePicker.startTime, // 开始时间
+        endCreateTime: timePicker.endTime,
+      }
     },
     AllInvoiceSelect(tabs) {
-      console.log('tabs', tabs)
-      this.AllInvoiceSelectState = {}
+      this.AllInvoiceSelectState = {
+        userInvoiceStatus: tabs[0].value || '', // 开票状态
+        orderProType: tabs[1].value || '', // 订单类型
+      }
+      this.init()
+      this.onLoad()
     },
 
     getOrderList() {
       this.finished = false
+      const params = {
+        page: this.page,
+        limit: this.limit,
+        cusOrderStatusNo: 'ORDER_CUS_STATUS_COMPLETED', // 已完成订单
+        ...this.AllInvoiceSelectState,
+      }
       orderApi
-        .list(
-          { axios: this.$axios },
-          {
-            page: this.page,
-            limit: this.limit,
-            cusOrderStatusNo: 'ORDER_CUS_STATUS_COMPLETED', // 已完成订单
-          }
-        )
+        .list({ axios: this.$axios }, params)
         .then((res) => {
+          console.log('res', res)
           if (res.totalCount <= this.page * this.limit) {
             this.finished = true
           }
+          this.page++
           this.loading = false
 
           const arr = res.records
-          // for (let i = 0, l = arr.length; i < l; i++) {
-          //   this.changeMoney(arr[i])
-          // }
-          if (this.page === 1) {
+
+          if (params.page === 1) {
             this.list = arr
           } else {
             const nowData = JSON.parse(JSON.stringify(this.list))
@@ -238,54 +239,34 @@ export default {
         })
     },
 
-    getList() {
+    getInvoiceRecords() {
       const params = {
-        type: this.tabActive, //  1问题 2文章 3回答.默认问题
         limit: this.limit,
         page: this.page,
+        ...this.HistoryInvoiceSelectState,
       }
-      setTimeout(() => {
-        this.loading = false
-        this.finished = true
-        this.list = [
-          {
-            number: 1,
-            status: 1,
-            goods: [
-              {
-                name: '公司名称',
-                img: '',
-              },
-              {
-                name: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-                img: '',
-              },
-            ],
-          },
-          {
-            number: 2,
-            status: 2,
-            goods: [
-              {
-                name: '1111111111111111111111111111111111111111111111111',
-                img: '',
-              },
-            ],
-          },
-        ]
-      }, 1000)
       try {
-        // const res = await this.$axios.get(knownApi.home.collection, { params })
-        // this.loading = false
-        // if (res.code === 200) {
-        //   this.list.push(...res.data.rows)
-        //   this.page++
-        //   if (this.page > res.data.totalPage) {
-        //     this.finished = true
-        //   }
-        // } else {
-        //   this.error = true
-        // }
+        invoiceApi
+          .invoice_records({ axios: this.$axios }, params)
+          .then((res) => {
+            if (res.totalCount <= this.page * this.limit) {
+              this.finished = true
+            }
+            this.page++
+            this.loading = false
+
+            if (this.page === 1) {
+              this.list = res.records
+            } else {
+              this.list.push(...res.records)
+            }
+          })
+          .catch((error) => {
+            console.error(error)
+            this.error = true
+            this.loading = false
+            this.$xToast.error(error.message || '请求失败，请重试')
+          })
       } catch (error) {
         this.error = true
         this.loading = false
