@@ -316,7 +316,7 @@ export default {
       return [
         {
           // iconName: 'caifang_mian',
-          name: '面试记录',
+          name: '面谈记录',
           img: this.$ossImgSetV2(this.imgList.mianTanJiLu),
           url: '/my/interviewRecord',
         },
