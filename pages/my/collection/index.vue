@@ -77,8 +77,8 @@
             <div
               v-for="(item, index) in list"
               :key="index"
-              class="good-list"
-              @click="toServiceGoodsDetail(item)"
+              class="goods-list"
+              @click="GoodsListClick(item, index)"
             >
               <sp-swipe-cell :disabled="selectGoodsState">
                 <ServiceGoods
@@ -87,7 +87,11 @@
                   :type="tabIndex == 4 ? 'Service' : 'Trading'"
                 >
                   <template v-if="selectGoodsState" #left>
-                    <sp-checkbox class="good-list-checkbox" :name="item.id">
+                    <sp-checkbox
+                      ref="checkboxItems"
+                      class="goods-list-checkbox"
+                      :name="item.id"
+                    >
                       <template #icon="props">
                         <my-icon
                           :name="
@@ -231,7 +235,13 @@ export default {
         this.$refs.checkboxGroup.toggleAll(false)
       }
     },
-
+    GoodsListClick(info, index) {
+      if (this.selectGoodsState) {
+        this.$refs.checkboxItems[index].toggle()
+      } else {
+        this.toServiceGoodsDetail(info)
+      }
+    },
     toServiceGoodsDetail(info) {
       if (this.selectGoodsState) {
         return
@@ -492,10 +502,10 @@ export default {
     overflow: hidden;
   }
 
-  .good-list {
+  .goods-list {
     margin: 24px 0px 0px;
 
-    .good-list-checkbox {
+    .goods-list-checkbox {
       padding-right: 20px;
       padding-left: 5px;
       margin-left: -5px;

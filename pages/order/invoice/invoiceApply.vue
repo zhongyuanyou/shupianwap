@@ -41,20 +41,20 @@
       <div class="invoice_info">
         <sp-field
           v-if="type == 1"
-          v-model="formData.username"
+          v-model="formData.applyUserName"
           required
           label="个人名称"
           placeholder="请填写“个人”或您的姓名"
         />
         <div v-if="type == 2">
           <sp-field
-            v-model="formData.username"
+            v-model="formData.applyUserName"
             required
             label="单位名称"
             placeholder="请填写单位名称"
           />
           <sp-field
-            v-model="formData.username"
+            v-model="formData.taxpayerIdentifNum"
             required
             label="纳税人识别号"
             placeholder="请填写纳税人识别号"
@@ -62,7 +62,7 @@
 
           <div v-show="show_more_input" class="more_input">
             <sp-field
-              v-model="formData.username"
+              v-model="formData.registerAddress"
               label="注册地址"
               placeholder="请填写注册地址"
             />
@@ -72,12 +72,12 @@
               placeholder="请填写注册电话"
             />
             <sp-field
-              v-model="formData.username"
+              v-model="formData.bankOfDeposit"
               label="开户银行"
               placeholder="请填写开户银行"
             />
             <sp-field
-              v-model="formData.username"
+              v-model="formData.bankAccount"
               label="银行账号"
               placeholder="请填写银行账号"
             />
@@ -100,12 +100,12 @@
       <div class="title">收票人信息</div>
       <div class="form">
         <sp-field
-          v-model="formData.username"
+          v-model="formData.receiverPhone"
           label="收票人手机"
           placeholder=""
         />
         <sp-field
-          v-model="formData.email"
+          v-model="formData.receiverEmail"
           label="收票人邮箱"
           placeholder="用来接收电子发票邮件，可选填"
         />
@@ -159,6 +159,14 @@ import { mapState } from 'vuex'
 import Header from '@/components/common/head/header.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 
+// 发票类型
+const InvoiceType = {
+  '027': '增值税电子专用发票',
+  '026': '增值税电子普通发票 ',
+  '007': '增值税普通发票 ',
+  '004': '增值税专用发票',
+}
+
 export default {
   layout: 'keepAlive',
   name: 'Invoice',
@@ -181,12 +189,29 @@ export default {
       type: 1, // 发票类型
       show_more_input: false,
       formData: {
+        orderId: '', // 订单id
+        applySource: '', // 申请来源
+        applyUserId: '', // 申请人id
+        applyUserName: '', // 申请人名称
+        invoiceContent: '', // 发票内容（商品明细 、商品类别）
+        // 发票抬头（个人 INVOICE_HEADER_PERSONAL 、 单位 INVOICE_HEADER_COMPANY）
+        invoiceHeader: '',
+        invoiceHeaderName: '', // 公司名称、个人名称
+        invoiceType: '', // 发票类型 InvoiceType
+        receiverPhone: '', // 收票人电话
+        bankAccount: '', // 银行账号
+        bankOfDeposit: '', // 开户银行
+        receiverEmail: '', // 邮箱
+        registerAddress: '', // 注册地址
+        taxpayerIdentifNum: '', // 纳税人识别号
+
         username: '',
         email: '',
       },
     }
   },
   methods: {
+    apply() {},
     submit() {
       // this.$xToast.show({ message: '提交成功' })
       this.$xToast.success('提交成功')

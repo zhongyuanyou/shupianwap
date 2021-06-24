@@ -87,6 +87,7 @@ import AllInvoice from '@/components/order/invoice/index/AllInvoice.vue'
 import HistoryInvoice from '@/components/order/invoice/index/HistoryInvoice.vue'
 import HeadManagement from '@/components/order/invoice/index/HeadManagement.vue'
 import orderApi from '@/api/order'
+import { invoiceApi } from '@/api/index.js'
 
 export default {
   layout: 'keepAlive',
@@ -172,14 +173,16 @@ export default {
       this.error = false
       this.loading = true
       this.list = []
+      this.HistoryInvoiceSelectState = {}
+      this.AllInvoiceSelectState = {}
     },
     onLoad() {
       if (this.tabActive === 0) {
         this.getOrderList()
       } else if (this.tabActive === 1) {
-        this.getList()
+        this.getInvoiceRecords()
       } else if (this.tabActive === 2) {
-        this.getList()
+        this.getInvoiceRecords()
       }
     },
     handleClickOrderItem(item) {
@@ -197,7 +200,10 @@ export default {
     HistoryInvoiceSelect(tabs, timePicker) {
       console.log('tabs', tabs, timePicker)
 
-      this.HistoryInvoiceSelectState = {}
+      this.HistoryInvoiceSelectState = {
+        invoiceType: tabs[0].value || '', // 发票类型
+        startCreateTime: timePicker, // 开始时间
+      }
     },
     AllInvoiceSelect(tabs) {
       console.log('tabs', tabs)
@@ -245,43 +251,45 @@ export default {
         })
     },
 
-    getList() {
+    getInvoiceRecords() {
       const params = {
         type: this.tabActive, //  1问题 2文章 3回答.默认问题
         limit: this.limit,
         page: this.page,
       }
-      setTimeout(() => {
-        this.loading = false
-        this.finished = true
-        this.list = [
-          {
-            number: 1,
-            status: 1,
-            goods: [
-              {
-                name: '公司名称',
-                img: '',
-              },
-              {
-                name: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-                img: '',
-              },
-            ],
-          },
-          {
-            number: 2,
-            status: 2,
-            goods: [
-              {
-                name: '1111111111111111111111111111111111111111111111111',
-                img: '',
-              },
-            ],
-          },
-        ]
-      }, 1000)
       try {
+        invoiceApi
+          .invoice_records(
+            { axios: this.$axios },
+            {
+              page: this.page,
+              limit: this.limit,
+              ...this.HistoryInvoiceSelectState,
+            }
+          )
+          .then((res) => {
+            if (res.totalCount <= this.page * this.limit) {
+              this.finished = true
+            }
+            this.loading = false
+
+            const arr = res.records
+
+            if (this.page === 1) {
+              this.list = arr
+            } else {
+              const nowData = JSON.parse(JSON.stringify(this.list))
+              const allData = nowData.concat(arr)
+              this.list = allData
+            }
+          })
+          .catch((error) => {
+            console.error(error)
+            this.error = true
+            this.loading = false
+            this.$xToast.error(error.message || '请求失败，请重试')
+          })
+
         // const res = await this.$axios.get(knownApi.home.collection, { params })
         // this.loading = false
         // if (res.code === 200) {

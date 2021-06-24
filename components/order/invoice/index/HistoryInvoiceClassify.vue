@@ -131,11 +131,37 @@ export default {
     // },
     onConfirm() {
       const values = this.$refs.item2picker.getValues()
+      const year = values[0].value
+      const month = values[1].value
+      let startTime = ''
+      let endTime = ''
+      let title = '开票时间'
+      if (year === 0) {
+        startTime = ''
+        endTime = ''
+        title = '全部'
+      } else if (month !== 0) {
+        // 指定年月
+        startTime = `${year}-${month}-01`
+        endTime = `${year}-${month}-31`
+        title = `${year}年${month}月`
+      } else {
+        // 全年
+        startTime = `${year}-01-01`
+        endTime = `${year}-12-31`
+        title = `${year}年`
+      }
+
       this.timePicker.value = values
+      this.timePicker.title = title
 
       console.log(values)
       this.$refs.timePickerContainer.toggle()
-      this.$emit('select', this.tabs, this.timePicker.value)
+
+      this.$emit('select', this.tabs, {
+        startTime,
+        endTime,
+      })
     },
     // change1(val) {
     //   this.title1 = this.option1.find((item) => {

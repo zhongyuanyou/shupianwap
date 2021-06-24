@@ -32,6 +32,9 @@ import { afterSaleApi } from './afterSale' // 文档api
 import { shopApi } from './shop' // 店铺 收藏
 import { formApi } from './form'
 import { walletApi } from './wallet'
+import { invoiceApi } from './invoice'
+
+
 export { auth, shoppingCar, planner }
 export { category }
 export { userinfoApi }
@@ -64,3 +67,4 @@ export { afterSaleApi }
 export { shopApi }
 export { formApi }
 export { walletApi }
+export { invoiceApi }
