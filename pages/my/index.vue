@@ -709,6 +709,8 @@ export default {
       height: 96px;
       font-size: 32px;
       color: #4974f5;
+      font-family: PingFangSC-Medium;
+      font-weight: bold;
     }
   }
   ::v-deep .download-area {
