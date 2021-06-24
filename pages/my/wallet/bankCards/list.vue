@@ -2,16 +2,12 @@
   <div class="bank">
     <Header title="银行卡管理" />
     <div class="bank-list">
-      <ul>
+      <ul v-if="cardList.length > 0">
         <li
           v-for="(item, index) in cardList"
           :key="index"
           :style="{ background: '#3777E5' }"
-          @click="
-            $router.push(
-              `/my/wallet/bankCards/detail?code=${item.bankCode}&name=${item.bankName}`
-            )
-          "
+          @click="$router.push(`/my/wallet/bankCards/detail?id=${item.id}`)"
         >
           <div class="left-logo">
             <img
@@ -20,7 +16,7 @@
           </div>
           <div class="right-info">
             <h3>{{ item.bankName }}</h3>
-            <p>{{ item.bankName }}</p>
+            <p>{{ item.openingBankName }}</p>
             <div class="card-num">
               {{ item.desensitizationCardNumber }}
               <!-- <span>****</span><span>****</span><span>****</span
@@ -51,6 +47,14 @@
           </div>
         </li> -->
       </ul>
+    </div>
+    <div v-if="!cardList.length && showNoDataImg" class="no-data-area">
+      <img
+        src="https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png"
+        alt=""
+        srcset=""
+      />
+      <p class="text">您还未添加银行卡</p>
     </div>
     <div class="footer-btn">
       <button @click="$router.push('/my/wallet/bankCards/add')">
@@ -105,6 +109,7 @@ export default {
       //   },
       // ],
       cardList: [],
+      showNoDataImg: false,
     }
   },
   created() {
@@ -120,6 +125,13 @@ export default {
       console.log(res)
       if (res.code === 200) {
         this.cardList = res.data
+        if (this.cardList.length === 0) {
+          this.showNoDataImg = true
+        } else {
+          this.showNoDataImg = false
+        }
+      } else {
+        this.showNoDataImg = false
       }
     },
   },
@@ -127,6 +139,28 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.no-data-area {
+  width: 100%;
+  height: 100vh;
+  background: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  img {
+    width: 340px;
+    height: 340px;
+    margin: 20vh auto 40px auto;
+    display: block;
+  }
+  .text {
+    height: 29px;
+    font-size: 30px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #1a1a1a;
+    text-align: center;
+  }
+}
 .bank {
   min-height: 100vh;
   background: #fff;

@@ -68,13 +68,15 @@ export default {
     },
     async untie() {
       const res = await this.$axios.post(walletApi.unbundle, {
-        cardInfoId: '1031626749086179918',
+        cardInfoId: this.$route.query.id,
+        password: this.password,
         operateId: this.userInfo.id,
         operateName: this.userInfo.fullName,
       })
-      console.log(res)
       if (res.code === 200) {
         this.$router.push('/my/wallet/bankCards/untieSuccess')
+      } else {
+        this.$xToast.warning('解绑失败,请确认信息是否有误')
       }
     },
   },

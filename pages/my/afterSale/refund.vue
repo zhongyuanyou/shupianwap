@@ -207,7 +207,7 @@ export default {
       }
     },
     async afterRead(fileObj) {
-      this.$route.query.id = '8083611193233440768'
+      // this.$route.query.id = '8083611193233440768'
       this.pictrueDetail = `${this.userInfo.id}:crisps-app:aftersale:${
         this.$route.query.id
       }:${String(new Date().valueOf()).substring(7, 13)}`

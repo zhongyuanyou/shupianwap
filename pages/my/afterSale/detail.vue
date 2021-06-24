@@ -342,8 +342,9 @@ export default {
           confirmButtonText: '',
         },
         {
-          title: '您确定撤销此售后申请？',
-          message: '提交后此售后方案将会关闭，如有需要您可重新发起售后。',
+          title: '',
+          message:
+            '您将撤销本次申请，如有问题未解决，您还可以再次发起。确定撤销吗？',
           cancelButtonText: '暂不取消',
           confirmButtonText: '确定撤销',
         },
@@ -530,6 +531,17 @@ export default {
       }
     },
     openDialog(index) {
+      // 待确认状态下的撤销按钮文案提示
+      if (
+        this.afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_3' &&
+        index === 1
+      ) {
+        this.doubleBtnDialog[index].title = '您确定撤回此售后申请？'
+        this.doubleBtnDialog[index].message =
+          '提交后,此售后方案将会关闭，如有需要您可重新发起售后。'
+        this.doubleBtnDialog[index].cancelButtonText = '暂不取消'
+        this.doubleBtnDialog[index].confirmButtonText = '确认撤销'
+      }
       Dialog.confirm({
         title: this.doubleBtnDialog[index].title,
         message: this.doubleBtnDialog[index].message,

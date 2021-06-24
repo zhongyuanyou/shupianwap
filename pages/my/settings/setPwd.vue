@@ -137,7 +137,7 @@ export default {
         })
         return false
       }
-      this.openActivationMoney()
+      this.updatePwd()
       // this.$router.push('/my/settings')
     },
     // ①获取认证信息
@@ -153,26 +153,16 @@ export default {
         console.log(res.data)
       }
     },
-    // 开通并激活钱包
-    async openActivationMoney() {
-      const res = await this.$axios.post(walletApi.open_and_activation, {
-        mainInfoRelationId: this.userInfo.id,
-        mainPhone: this.newUserInfo.mainAccount,
-        payPassword: this.password,
-        sysCode: this.userInfo.sysCode,
+    // 修改密码
+    async updatePwd() {
+      const res = await this.$axios.post(walletApi.reset_password, {
+        accountId: '1031626164970629476',
+        password: this.password,
+        phone: this.newUserInfo.mainAccount,
         operateId: this.userInfo.id,
         operateName: this.userInfo.fullName,
-        mainType: '2',
-        accType: 'BANK_ACCOUNT_TYPE_2',
-        mainInfoName: '赵俊',
-        certificateInfo: {
-          cardNumber: '510824198908041613',
-          cardName: '赵俊',
-          validityType: '1',
-        },
       })
       if (res.code === 200) {
-        // const accountId = res.data
         this.$router.push('/my/settings/protocol')
       }
     },

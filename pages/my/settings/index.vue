@@ -2,13 +2,15 @@
   <div class="settings">
     <Header title="个人设置" />
     <div class="person">
-      <div class="tx"><img src="" alt="" /></div>
-      <span>张凯</span>
+      <div class="tx">
+        <img :src="$ossImgSetV2(imgList.tx)" alt="" />
+      </div>
+      <span>{{ userInfo.fullName }}</span>
     </div>
     <div class="person-info">
       <div class="item">
         <h3>手机号</h3>
-        <p>13504567650</p>
+        <p>{{ userInfo.decodePhone }}</p>
       </div>
       <div class="item" @click="$router.push('/my/settings/setPassword')">
         <h3>支付密码设置</h3>
@@ -22,9 +24,13 @@
     </div>
     <div class="auth-item">
       <h3>身份认证</h3>
-      <p>已实名认证</p>
+      <p>
+        {{
+          userInfo.realStatus === 'AUTHENTICATION_SUCCESS' ? '已认证' : '未认证'
+        }}
+      </p>
     </div>
-    <button>提交</button>
+    <!-- <button>提交</button> -->
   </div>
 </template>
 
@@ -41,9 +47,16 @@ export default {
       value: '',
       showKeyboard: true,
       valid: false,
+      imgList: {
+        tx: '2exrifx8gxes000.png',
+      },
     }
   },
-  methods: {},
+  computed: {
+    userInfo() {
+      return JSON.parse(localStorage.getItem('info'))
+    },
+  },
 }
 </script>
 
@@ -76,13 +89,14 @@ export default {
     .tx {
       width: 88px;
       height: 88px;
-      background: #000;
       border-radius: 88px;
       overflow: hidden;
+      display: flex;
+      align-items: center;
       img {
-        // width: 88px;
-        // height: 88px;
-        // object-fit: cover;
+        width: 88px;
+        height: 88px;
+        object-fit: cover;
       }
     }
 

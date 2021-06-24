@@ -3,11 +3,7 @@
     <Header title="银行卡详情" />
     <div class="bank-list">
       <ul>
-        <li
-          style="
-            background-image: linear-gradient(90deg, #14bdbb 0%, #0bb3b3 100%);
-          "
-        >
+        <li v-if="cardDetailInfo.id" style="background: #3777e5">
           <div class="left-logo">
             <img
               src="https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png"
@@ -15,18 +11,29 @@
           </div>
           <div class="right-info">
             <h3>{{ cardDetailInfo.bankName }}</h3>
-            <p>{{ cardDetailInfo.bankName }}</p>
+            <p>{{ cardDetailInfo.openingBankName }}</p>
             <div class="card-num">
               {{ cardDetailInfo.desensitizationCardNumber }}
               <!-- <span>****</span><span>****</span><span>****</span
-              ><span>3253</span> -->
+              >--><span>****</span>
             </div>
+          </div>
+          <div class="bg-img">
+            <img
+              src="https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png"
+            />
           </div>
         </li>
       </ul>
     </div>
     <div class="footer-btn">
-      <button @click="$router.push('/my/wallet/bankCards/setPwd')">解绑</button>
+      <button
+        @click="
+          $router.push(`/my/wallet/bankCards/setPwd?id=${cardDetailInfo.id}`)
+        "
+      >
+        解绑
+      </button>
     </div>
   </div>
 </template>
@@ -79,10 +86,10 @@ export default {
   },
   methods: {
     async bankCardsDetail() {
-      const res = await this.$axios.post(walletApi.cardDetail, {
-        code: this.$route.query.code,
-        name: this.$route.query.name,
-        isOnlyBank: 0, // 0表示只查银行1表示查分行不传查所有
+      const res = await this.$axios.get(walletApi.cardDetails, {
+        params: {
+          id: this.$route.query.id,
+        },
       })
       console.log(res)
       if (res.code === 200) {
@@ -111,17 +118,32 @@ export default {
         align-items: center;
         margin-top: 32px;
         border-radius: 8px;
+        position: relative;
+        .bg-img {
+          position: absolute;
+          width: 190px;
+          height: 150px;
+          right: 16px;
+          bottom: 0;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
         .left-logo {
           display: inline-block;
           width: 60px;
           height: 60px;
-          background: #000;
           overflow: hidden;
           display: flex;
+          align-items: center;
+          text-align: center;
+          border-radius: 60px;
+          justify-content: center;
+          background: #fff;
           img {
-            width: 60px;
-            height: 60px;
-            border: none;
+            width: 40px;
+            height: 40px;
           }
         }
         .right-info {
