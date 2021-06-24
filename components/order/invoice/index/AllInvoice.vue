@@ -195,7 +195,7 @@ export default {
       this.$router.push({
         path: '/order/invoice/invoiceApply',
         query: {
-          id: orderData.id || 1,
+          orderId: orderData.id,
         },
       })
     },
@@ -203,7 +203,7 @@ export default {
       this.$router.push({
         path: '/order/invoice/detail',
         query: {
-          id: orderData.id,
+          orderId: orderData.id,
         },
       })
     },

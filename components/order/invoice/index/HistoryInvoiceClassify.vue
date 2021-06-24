@@ -60,17 +60,22 @@ export default {
       tabs: [
         {
           title: '全部发票类型',
-          value: 0,
+          value: '',
           options: [
-            { text: '全部发票类型', value: 0 },
-            { text: '电子普通发票', value: 1 },
-            { text: '增值税专用电子发票', value: 2 },
+            { text: '全部发票类型', value: '' },
+            { text: '增值税电子专用发票', value: '027' },
+            { text: '增值税电子普通发票', value: '026' },
+            { text: '增值税普通发票', value: '007' },
+            { text: '增值税专用发票', value: '004' },
           ],
         },
       ],
       timePicker: {
         title: '开票时间',
-        value: 0,
+        value: {
+          startTime: '',
+          endTime: '',
+        },
       },
     }
   },
@@ -116,7 +121,7 @@ export default {
       item.title = option.text
       // console.log(item, option, index)
       this.$refs.tabs[index].toggle()
-      this.$emit('select', this.tabs, this.timePicker)
+      this.$emit('select', this.tabs, this.timePicker.value)
     },
 
     // custom1(item) {
@@ -152,16 +157,16 @@ export default {
         title = `${year}年`
       }
 
-      this.timePicker.value = values
+      this.timePicker.value = {
+        startTime,
+        endTime,
+      }
       this.timePicker.title = title
 
       console.log(values)
       this.$refs.timePickerContainer.toggle()
 
-      this.$emit('select', this.tabs, {
-        startTime,
-        endTime,
-      })
+      this.$emit('select', this.tabs, this.timePicker.value)
     },
     // change1(val) {
     //   this.title1 = this.option1.find((item) => {

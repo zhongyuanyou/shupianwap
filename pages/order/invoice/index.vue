@@ -23,19 +23,6 @@
       error-text="请求失败，点击重新加载"
       @load="onLoad"
     >
-      <!-- <div v-if="tabActive === 0">
-        <orderItem
-          v-for="(item, index) in list"
-          :key="index"
-          :order-data="item"
-          :order-id="item.cusOrderId"
-          selected-order-status="ORDER_CUS_STATUS_COMPLETED"
-          :order-pro-type-no="item.orderProTypeNo"
-          @handleClickItem="handleClickOrderItem"
-        >
-        </orderItem>
-      </div> -->
-
       <AllInvoice v-if="tabActive === 0" :list="list"></AllInvoice>
       <HistoryInvoice v-else-if="tabActive === 1" :list="list"></HistoryInvoice>
       <HeadManagement v-else-if="tabActive === 2" :list="list"></HeadManagement>
@@ -82,7 +69,7 @@ import HistoryInvoiceClassify from '@/components/order/invoice/index/HistoryInvo
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 
-import OrderItem from '@/components/order/OrderItem.vue'
+// import OrderItem from '@/components/order/OrderItem.vue'
 import AllInvoice from '@/components/order/invoice/index/AllInvoice.vue'
 import HistoryInvoice from '@/components/order/invoice/index/HistoryInvoice.vue'
 import HeadManagement from '@/components/order/invoice/index/HeadManagement.vue'
@@ -115,7 +102,7 @@ export default {
       tabActive: 0,
       tabActiveIndex: 0, // 激活的tab
 
-      loading: false, // 加载效果状态
+      loading: true, // 加载效果状态
       error: false,
       finished: false,
       page: 1,
@@ -156,7 +143,11 @@ export default {
         orderProType: '', // 订单类型
         userInvoiceStatus: '', // 开票状态
       },
-      HistoryInvoiceSelectState: {},
+      HistoryInvoiceSelectState: {
+        invoiceType: '',
+        startCreateTime: '',
+        endCreateTime: '',
+      },
     }
   },
   mounted() {
@@ -173,8 +164,9 @@ export default {
       this.error = false
       this.loading = true
       this.list = []
-      this.HistoryInvoiceSelectState = {}
-      this.AllInvoiceSelectState = {}
+      // 如果需要清空以下两项， 那么需要销毁对应的组件
+      // this.HistoryInvoiceSelectState = {}
+      // this.AllInvoiceSelectState = {}
     },
     onLoad() {
       if (this.tabActive === 0) {
@@ -185,9 +177,7 @@ export default {
         this.getInvoiceRecords()
       }
     },
-    handleClickOrderItem(item) {
-      console.log(item)
-    },
+
     onClickWorkTab() {
       if (this.tabActiveIndex === this.tabActive) {
         return
@@ -198,15 +188,13 @@ export default {
       this.onLoad()
     },
     HistoryInvoiceSelect(tabs, timePicker) {
-      console.log('tabs', tabs, timePicker)
-
       this.HistoryInvoiceSelectState = {
         invoiceType: tabs[0].value || '', // 发票类型
-        startCreateTime: timePicker, // 开始时间
+        startCreateTime: timePicker.startTime, // 开始时间
+        endCreateTime: timePicker.endTime,
       }
     },
     AllInvoiceSelect(tabs) {
-      console.log('tabs', tabs)
       this.AllInvoiceSelectState = {
         userInvoiceStatus: tabs[0].value || '', // 开票状态
         orderProType: tabs[1].value || '', // 订单类型
@@ -217,25 +205,25 @@ export default {
 
     getOrderList() {
       this.finished = false
+      const params = {
+        page: this.page,
+        limit: this.limit,
+        cusOrderStatusNo: 'ORDER_CUS_STATUS_COMPLETED', // 已完成订单
+        ...this.AllInvoiceSelectState,
+      }
       orderApi
-        .list(
-          { axios: this.$axios },
-          {
-            page: this.page,
-            limit: this.limit,
-            cusOrderStatusNo: 'ORDER_CUS_STATUS_COMPLETED', // 已完成订单
-            ...this.AllInvoiceSelectState,
-          }
-        )
+        .list({ axios: this.$axios }, params)
         .then((res) => {
+          console.log('res', res)
           if (res.totalCount <= this.page * this.limit) {
             this.finished = true
           }
+          this.page++
           this.loading = false
 
           const arr = res.records
 
-          if (this.page === 1) {
+          if (params.page === 1) {
             this.list = arr
           } else {
             const nowData = JSON.parse(JSON.stringify(this.list))
@@ -253,34 +241,24 @@ export default {
 
     getInvoiceRecords() {
       const params = {
-        type: this.tabActive, //  1问题 2文章 3回答.默认问题
         limit: this.limit,
         page: this.page,
+        ...this.HistoryInvoiceSelectState,
       }
       try {
         invoiceApi
-          .invoice_records(
-            { axios: this.$axios },
-            {
-              page: this.page,
-              limit: this.limit,
-              ...this.HistoryInvoiceSelectState,
-            }
-          )
+          .invoice_records({ axios: this.$axios }, params)
           .then((res) => {
             if (res.totalCount <= this.page * this.limit) {
               this.finished = true
             }
+            this.page++
             this.loading = false
 
-            const arr = res.records
-
             if (this.page === 1) {
-              this.list = arr
+              this.list = res.records
             } else {
-              const nowData = JSON.parse(JSON.stringify(this.list))
-              const allData = nowData.concat(arr)
-              this.list = allData
+              this.list.push(...res.records)
             }
           })
           .catch((error) => {
@@ -289,18 +267,6 @@ export default {
             this.loading = false
             this.$xToast.error(error.message || '请求失败，请重试')
           })
-
-        // const res = await this.$axios.get(knownApi.home.collection, { params })
-        // this.loading = false
-        // if (res.code === 200) {
-        //   this.list.push(...res.data.rows)
-        //   this.page++
-        //   if (this.page > res.data.totalPage) {
-        //     this.finished = true
-        //   }
-        // } else {
-        //   this.error = true
-        // }
       } catch (error) {
         this.error = true
         this.loading = false
