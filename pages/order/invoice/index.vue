@@ -121,37 +121,40 @@ export default {
       limit: 15,
 
       list: [
-        {
-          number: 1,
-          status: 1,
-          goods: [
-            {
-              name: '1111111111111111111111111111111111111111111111111',
-              img: '',
-            },
-            {
-              name: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-              img: '',
-            },
-          ],
-        },
-        {
-          number: 2,
-          status: 2,
-          goods: [
-            {
-              name: '1111111111111111111111111111111111111111111111111',
-              img: '',
-            },
-            {
-              name: '1111111111111111111111111111111111111111111111111',
-              img: '',
-            },
-          ],
-        },
+        // {
+        //   number: 1,
+        //   status: 1,
+        //   goods: [
+        //     {
+        //       name: '1111111111111111111111111111111111111111111111111',
+        //       img: '',
+        //     },
+        //     {
+        //       name: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        //       img: '',
+        //     },
+        //   ],
+        // },
+        // {
+        //   number: 2,
+        //   status: 2,
+        //   goods: [
+        //     {
+        //       name: '1111111111111111111111111111111111111111111111111',
+        //       img: '',
+        //     },
+        //     {
+        //       name: '1111111111111111111111111111111111111111111111111',
+        //       img: '',
+        //     },
+        //   ],
+        // },
       ],
 
-      AllInvoiceSelectState: {},
+      AllInvoiceSelectState: {
+        orderProType: '', // 订单类型
+        userInvoiceStatus: '', // 开票状态
+      },
       HistoryInvoiceSelectState: {},
     }
   },
@@ -198,7 +201,12 @@ export default {
     },
     AllInvoiceSelect(tabs) {
       console.log('tabs', tabs)
-      this.AllInvoiceSelectState = {}
+      this.AllInvoiceSelectState = {
+        userInvoiceStatus: tabs[0].value || '', // 开票状态
+        orderProType: tabs[1].value || '', // 订单类型
+      }
+      this.init()
+      this.onLoad()
     },
 
     getOrderList() {
@@ -210,6 +218,7 @@ export default {
             page: this.page,
             limit: this.limit,
             cusOrderStatusNo: 'ORDER_CUS_STATUS_COMPLETED', // 已完成订单
+            ...this.AllInvoiceSelectState,
           }
         )
         .then((res) => {
@@ -219,9 +228,7 @@ export default {
           this.loading = false
 
           const arr = res.records
-          // for (let i = 0, l = arr.length; i < l; i++) {
-          //   this.changeMoney(arr[i])
-          // }
+
           if (this.page === 1) {
             this.list = arr
           } else {
