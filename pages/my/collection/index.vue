@@ -547,6 +547,7 @@ export default {
 ::v-deep .sp-checkbox__icon {
   height: auto;
   line-height: normal;
+  font-size: 0;
 }
 ::v-deep.sp-hairline--surround::after {
   border-radius: 30px !important;

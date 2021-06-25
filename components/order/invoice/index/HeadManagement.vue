@@ -131,9 +131,6 @@ export default {
         border-top: 0;
       }
     }
-
-    .card_footer {
-    }
   }
 }
 </style>
