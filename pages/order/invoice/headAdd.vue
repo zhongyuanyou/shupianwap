@@ -175,9 +175,6 @@ export default {
         headType: '个人', // 抬头类型(个人/单位)
         invoiceHead: '', // 发票抬头(专票时必填)
 
-        receiverEmail: '', // 邮箱
-        registerTel: '', // 注册电话
-
         address: '', // 注册地址
         phone: '', // 收票人电话
         bankNumber: '', // 银行账号
@@ -191,6 +188,8 @@ export default {
   computed: {
     ...mapState({
       userId: (state) => state.user.userId,
+      userName: (state) => state.user.userName,
+
       token: (state) => state.user.token,
       userPhone: (state) => state.user.userPhone,
     }),
@@ -201,7 +200,6 @@ export default {
         .validate()
         .then((res) => {
           this.add()
-          this.$xToast.success('提交成功')
         })
         .catch((err) => {
           console.log(err)
@@ -219,6 +217,7 @@ export default {
         .then((res) => {
           console.log('res', res)
           this.loading = false
+          this.$xToast.success(res.message)
         })
         .catch((error) => {
           console.error(error)
@@ -243,11 +242,16 @@ export default {
 
     ::v-deep .sp-cell {
       padding: 40px 0px 40px 32px;
+
+      .sp-field__label {
+        flex: none;
+      }
     }
     .options {
       // padding-bottom: 20px;
       .btn {
         margin-right: 32px;
+        // margin-bottom: 8px;
       }
       .btn:last-child {
         margin-right: 0;

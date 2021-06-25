@@ -23,96 +23,101 @@
         电子发票与纸质发票具有相同的法律效力，可以报销、售后、维权凭证，使用电子发票，不易丢失，更方便环保。
       </div>
     </div>
+    <sp-form ref="form">
+      <div class="card">
+        <div class="title">发票抬头</div>
+        <div class="options">
+          <sp-button
+            v-for="(invoice_header, key) in InvoiceHeader"
+            :key="key"
+            class="btn"
+            :class="{ active: key === formData.invoiceHeader }"
+            size="small"
+            type="primary"
+            @click="formData.invoiceHeader = key"
+          >
+            {{ invoice_header }}
+          </sp-button>
+        </div>
 
-    <div class="card">
-      <div class="title">发票抬头</div>
-      <div class="options">
-        <sp-button
-          v-for="(invoice_header, key) in InvoiceHeader"
-          :key="key"
-          class="btn"
-          :class="{ active: key === formData.invoiceHeader }"
-          size="small"
-          type="primary"
-          @click="formData.invoiceHeader = key"
-        >
-          {{ invoice_header }}
-        </sp-button>
-      </div>
-      <div class="invoice_info">
-        <sp-field
-          v-if="formData.invoiceHeader === 'INVOICE_HEADER_PERSONAL'"
-          v-model="formData.invoiceHeaderName"
-          required
-          label="个人名称"
-          placeholder="请填写“个人”或您的姓名"
-        />
-        <div v-else-if="formData.invoiceHeader === 'INVOICE_HEADER_COMPANY'">
+        <div class="invoice_info">
           <sp-field
+            v-if="formData.invoiceHeader === 'INVOICE_HEADER_PERSONAL'"
             v-model="formData.invoiceHeaderName"
             required
-            label="单位名称"
-            placeholder="请填写单位名称"
+            label="个人名称"
+            placeholder="请填写“个人”或您的姓名"
+            :rules="[{ required: true, message: '请填写“个人”或您的姓名' }]"
           />
-          <sp-field
-            v-model="formData.taxpayerIdentifNum"
-            required
-            label="纳税人识别号"
-            placeholder="请填写纳税人识别号"
-          />
+          <div v-else-if="formData.invoiceHeader === 'INVOICE_HEADER_COMPANY'">
+            <sp-field
+              v-model="formData.invoiceHeaderName"
+              required
+              label="单位名称"
+              placeholder="请填写单位名称"
+              :rules="[{ required: true, message: '请填写单位名称' }]"
+            />
+            <sp-field
+              v-model="formData.taxpayerIdentifNum"
+              required
+              label="纳税人识别号"
+              placeholder="请填写纳税人识别号"
+            />
 
-          <div v-show="show_more_input" class="more_input">
-            <sp-field
-              v-model="formData.registerAddress"
-              label="注册地址"
-              placeholder="请填写注册地址"
-            />
-            <sp-field
-              v-model="formData.registerTel"
-              label="注册电话"
-              placeholder="请填写注册电话"
-            />
-            <sp-field
-              v-model="formData.bankOfDeposit"
-              label="开户银行"
-              placeholder="请填写开户银行"
-            />
-            <sp-field
-              v-model="formData.bankAccount"
-              label="银行账号"
-              placeholder="请填写银行账号"
-            />
-          </div>
-          <div class="more_btn">
-            <span @click="show_more_input = !show_more_input">
-              更多选填项
-              <my-icon
-                :name="show_more_input ? 'shang' : 'xia'"
-                size="0.2rem"
-                color="#222222"
-              ></my-icon>
-            </span>
+            <div v-show="show_more_input" class="more_input">
+              <sp-field
+                v-model="formData.registerAddress"
+                label="注册地址"
+                placeholder="请填写注册地址"
+              />
+              <sp-field
+                v-model="formData.registerTel"
+                label="注册电话"
+                placeholder="请填写注册电话"
+              />
+              <sp-field
+                v-model="formData.bankOfDeposit"
+                label="开户银行"
+                placeholder="请填写开户银行"
+              />
+              <sp-field
+                v-model="formData.bankAccount"
+                label="银行账号"
+                placeholder="请填写银行账号"
+              />
+            </div>
+            <div class="more_btn">
+              <span @click="show_more_input = !show_more_input">
+                更多选填项
+                <my-icon
+                  :name="show_more_input ? 'shang' : 'xia'"
+                  size="0.2rem"
+                  color="#222222"
+                ></my-icon>
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="title">收票人信息</div>
-      <div class="form">
-        <sp-field
-          v-model="formData.receiverPhone"
-          label="收票人手机"
-          placeholder=""
-        />
-        <sp-field
-          v-model="formData.receiverEmail"
-          label="收票人邮箱"
-          placeholder="用来接收电子发票邮件，可选填"
-        />
+      <div class="card">
+        <div class="title">收票人信息</div>
+        <div class="form">
+          <sp-field
+            v-model="formData.receiverPhone"
+            label="收票人手机"
+            placeholder=""
+            required
+            :rules="[{ required: true, message: '请填写手机号码' }]"
+          />
+          <sp-field
+            v-model="formData.receiverEmail"
+            label="收票人邮箱"
+            placeholder="用来接收电子发票邮件，可选填"
+          />
+        </div>
       </div>
-    </div>
-
+    </sp-form>
     <div class="card">
       <div class="title">发票内容</div>
       <div class="options">
@@ -171,20 +176,14 @@ import {
   WorkTab,
   WorkTabs,
   Button,
+  Form,
   Field,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 
 import Header from '@/components/common/head/header.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
-
-// 发票类型
-const InvoiceType = {
-  '027': '增值税电子专用发票',
-  '026': '增值税电子普通发票 ',
-  '007': '增值税普通发票 ',
-  '004': '增值税专用发票',
-}
+import { invoiceApi } from '@/api/index.js'
 
 export default {
   layout: 'keepAlive',
@@ -198,17 +197,16 @@ export default {
     [Button.name]: Button,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
+    [Form.name]: Form,
     [Field.name]: Field,
   },
+
   data() {
     return {
       loading: false, // 加载效果状态
-      tabActive: 0,
-
-      type: 1, // 发票类型
 
       show_more_input: false,
-
+      // 发票类型
       InvoiceType: {
         '027': '增值税电子专用发票',
         '026': '增值税电子普通发票 ',
@@ -224,8 +222,8 @@ export default {
       formData: {
         orderId: '', // 订单id
         applySource: 'COMDIC_PLATFORM_CRISPS', // 申请来源  薯片 COMDIC_PLATFORM_CRISPS 案加 COMDIC_PLATFORM_QIDABAO
-        applyUserId: '', // 申请人id
-        applyUserName: '', // 申请人名称
+        // applyUserId: '', // 申请人id
+        // applyUserName: '', // 申请人名称
         invoiceType: '027', // 发票类型 InvoiceType
         invoiceContent: '商品明细', // 发票内容（商品明细 、商品类别）
         // 发票抬头（个人 INVOICE_HEADER_PERSONAL 、 单位 INVOICE_HEADER_COMPANY）
@@ -248,11 +246,44 @@ export default {
     this.formData.orderId = this.$route.query.orderId
   },
   methods: {
-    apply() {},
     submit() {
-      // this.$xToast.show({ message: '提交成功' })
-      this.$xToast.success('提交成功')
+      this.$refs.form
+        .validate()
+        .then((res) => {
+          this.apply()
+        })
+        .catch((err) => {
+          console.log(err)
+          this.$xToast.error('请检查错误信息')
+        })
+
       console.log(this.formData)
+    },
+    apply() {
+      this.loading = true
+      console.log({
+        applyUserId: this.$store.state.user.userId,
+        applyUserName: this.$store.state.user.userName,
+        type: this.formData.invoiceType,
+      })
+      const params = {
+        ...this.formData,
+        applyUserId: this.$store.state.user.userId,
+        applyUserName: this.$store.state.user.userName,
+      }
+      invoiceApi
+        .apply_invoice({ axios: this.$axios }, params)
+        .then((res) => {
+          console.log('res', res)
+          this.loading = false
+          this.$xToast.success(res.message)
+        })
+        .catch((error) => {
+          console.error(error)
+
+          this.loading = false
+          this.$xToast.error(error.message || '请求失败，请重试')
+        })
     },
     // back() {
     //   if (this.isInApp) {

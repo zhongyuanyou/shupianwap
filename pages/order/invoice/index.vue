@@ -289,7 +289,7 @@ export default {
             // this.page++
             this.loading = false
 
-            this.list = res.records
+            this.list = (res && res.records) || []
             // if (this.page === 1) {
             //   this.list = res.records
             // } else {

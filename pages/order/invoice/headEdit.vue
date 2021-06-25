@@ -115,6 +115,7 @@ export default {
       loading: false, // 加载效果状态
 
       formData: {
+        id: '',
         type: '普通发票', // 发票类型(普通发票、专用发票)
         headType: '个人', // 抬头类型(个人/单位)
         invoiceHead: '', // 发票抬头(专票时必填)
@@ -132,7 +133,12 @@ export default {
       },
     }
   },
+  mounted() {
+    this.formData.id = this.$route.query.id
+    this.getInfo()
+  },
   methods: {
+    getInfo() {},
     del() {
       Dialog.confirm({
         // title: '确定删除该发票抬头？',

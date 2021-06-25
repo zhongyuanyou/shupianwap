@@ -8,7 +8,7 @@
             size="0.24rem"
             color="#CCCCCC"
             class="myIcon details_ic_time"
-          />{{ item.time }}
+          />{{ item.applyTime }}
         </div>
         <div>
           <my-icon
@@ -20,14 +20,14 @@
         </div>
       </div>
       <div class="card_label">
-        <span>电子普通发票</span>
+        <span>{{ item.invoiceTypeName }}</span>
       </div>
       <div class="card_footer">
         <div class="flex_1">
           <span class="name">{{ item.name }}</span>
         </div>
         <div class="price">
-          2.3333
+          {{ item.invoiceMoney }}
           <span class="unit">元</span>
         </div>
       </div>
@@ -48,14 +48,15 @@ export default {
         {
           number: 1,
           name: '11111111111111111111111111111111111111111111111111111111',
-          price: 22200,
-          time: '2020-20-20 13:45:78',
+          invoiceMoney: 22200,
+          invoiceTypeName: '普通电子发票',
+          applyTime: '2020-20-20 13:45:78',
         },
         {
           number: 2,
           name: '11111111111111111111111111111111111111111111111111111111',
-          price: 22200,
-          time: '2020-20-20 13:45:78',
+          invoiceMoney: 22200,
+          applyTime: '2020-20-20 13:45:78',
         },
       ],
     }
