@@ -8,7 +8,7 @@
  */
 
 const CHIPS_WAP_INSTANCE_NAME = 'crisps-app-wap-bff-api'
-const CHIPS_PC_INSTANCE_NAME = 'crisps-app-wap-bff-api'
+const CHIPS_PC_INSTANCE_NAME = 'crisps-web-bff-api'
 const CHIPS_WAP_SERVICE_PREFIX = 'service'
 
 // c端 app调用的java聚合中间层
