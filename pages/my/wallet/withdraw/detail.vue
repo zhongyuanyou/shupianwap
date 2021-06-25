@@ -1,43 +1,48 @@
 <template>
   <div class="detail">
-    <Header title="明细详情" />
+    <Header title="余额提现详情" />
     <div class="detail-info">
       <div class="count">
         <span>提现金额</span>
-        <strong>-2000.00</strong>
+        <strong>￥{{ withdrawDetails.amount }}</strong>
       </div>
       <div class="field-list">
         <div class="row">
           <div class="title">业务类型</div>
-          <div class="res">提现</div>
+          <div class="res">{{ withdrawDetails.orderTypeName || '-'}}</div>
         </div>
         <div class="row">
           <div class="title">时间</div>
-          <div class="res">提现</div>
+          <div class="res">{{ withdrawDetails.createTime || '-' }}</div>
         </div>
         <div class="row">
           <div class="title">银行卡号</div>
-          <div class="res">提现</div>
+          <div class="res">{{ withdrawDetails.cardNumber || '-' }}</div>
         </div>
         <div class="row">
           <div class="title">账户名称</div>
-          <div class="res">提现</div>
+          <div class="res">{{ withdrawDetails.accountName || '-' }}</div>
         </div>
         <div class="row">
           <div class="title">银行</div>
-          <div class="res">提现</div>
+          <div class="res">{{ withdrawDetails.bankName || '-' }}</div>
         </div>
         <div class="row">
           <div class="title">流水号</div>
-          <div class="res">提现</div>
+          <div class="res">{{ withdrawDetails.billNo || '-' }}</div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
           <div class="title">备注</div>
-          <div class="res">提现</div>
-        </div>
+          <div class="res">{{withdrawDetails.}}</div>
+        </div> -->
         <div class="row">
-          <div class="title">备注</div>
-          <div class="res">已处理（2018-4-13 14:33:45）</div>
+          <div class="title">状态</div>
+          <div class="res">
+            {{ withdrawDetails.statusName }}
+            <span v-if="withdrawDetails.successTime"
+              >({{ withdrawDetails.successTime || '-' }})</span
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -45,10 +50,29 @@
 </template>
 
 <script>
+import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
 export default {
   components: {
     Header,
+  },
+  data() {
+    return {
+      withdrawDetails: '',
+    }
+  },
+  created() {
+    this.getWithdrawDetails()
+  },
+  methods: {
+    async getWithdrawDetails() {
+      const res = await this.$axios.post(walletApi.bill_details, {
+        billId: this.$route.query.id,
+      })
+      if (res.code === 200) {
+        this.withdrawDetails = res.data
+      }
+    },
   },
 }
 </script>

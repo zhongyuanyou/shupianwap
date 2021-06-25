@@ -112,6 +112,11 @@ export default {
       showNoDataImg: false,
     }
   },
+  computed: {
+    accountInfo() {
+      return JSON.parse(localStorage.getItem('accountInfo'))
+    },
+  },
   created() {
     this.bankCardsList()
   },
@@ -119,7 +124,7 @@ export default {
     async bankCardsList() {
       const res = await this.$axios.get(walletApi.cardList, {
         params: {
-          accountId: '1031626164970629476',
+          accountId: this.accountInfo.id,
         },
       })
       console.log(res)

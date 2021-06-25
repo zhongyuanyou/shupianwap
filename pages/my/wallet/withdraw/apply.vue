@@ -14,15 +14,15 @@
       </p>
       <div class="apply-item">
         <h3>提现金额</h3>
-        <span>¥10100.00</span>
+        <span>¥{{ (withdrawInfo.amount / 100).toFix(2) }}</span>
       </div>
       <div class="apply-item">
         <h3>提现账户</h3>
-        <span>工商银行 储蓄卡（622****4490）</span>
+        <span>{{建行}} 储蓄卡（622****4490）</span>
       </div>
       <div class="apply-item">
         <h3>提现用户</h3>
-        <span>陈鹏</span>
+        <span>{{ withdrawInfo.relationName }}</span>
       </div>
       <button @click="$router.push('/my/wallet/withdraw')">返回</button>
     </div>
@@ -39,6 +39,11 @@ export default {
   },
   data() {
     return {}
+  },
+  computed: {
+    withdrawInfo() {
+      return JSON.parse(localStorage.getItem('withdrawInfo'))
+    },
   },
   methods: {},
 }

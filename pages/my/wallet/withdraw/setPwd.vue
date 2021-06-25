@@ -29,6 +29,7 @@
 
 <script>
 import { PasswordInput, NumberKeyboard } from '@chipspc/vant-dgg'
+import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
 export default {
   components: {
@@ -43,7 +44,11 @@ export default {
       valid: false,
     }
   },
-  
+  computed: {
+    withdrawInfo() {
+      return JSON.parse(localStorage.getItem('withdrawInfo'))
+    },
+  },
   methods: {
     onInput(key) {
       this.password = (this.password + key).slice(0, 6)
@@ -59,9 +64,25 @@ export default {
         })
         return false
       }
-      console.log('完成时触发')
-
-      this.$router.push('/my/wallet/bankCards/untieSuccess')
+      this.withdraw()
+    },
+    async withdraw() {
+      const res = await this.$axios.post(walletApi.withdraw, {
+        amount: this.withdrawInfo.amount * 100,
+        serviceCharge: this.withdrawInfo.serviceCharge,
+        paymentPassword: this.password,
+        bankCardId: this.withdrawInfo.bankCardId,
+        callBackUrl: this.withdrawInfo.callBackUrl,
+        relationId: this.withdrawInfo.relationId,
+        relationName: this.withdrawInfo.relationName,
+        attach: this.withdrawInfo.attach, // 回调会携带此参数
+        sysCode: this.withdrawInfo.sysCode,
+      })
+      if (res.code === 200) {
+        this.$router.push('/my/wallet/withdraw/apply')
+      } else {
+        this.$xToast.warning(res.data.error)
+      }
     },
   },
 }

@@ -76,6 +76,14 @@ export default {
       cardList: [],
     }
   },
+  computed: {
+    userInfo() {
+      return JSON.parse(localStorage.getItem('info'))
+    },
+    accountInfo() {
+      return JSON.parse(localStorage.getItem('accountInfo'))
+    },
+  },
   created() {
     this.getCardList()
   },
@@ -89,12 +97,11 @@ export default {
     async getCardList() {
       const res = await this.$axios.get(walletApi.cardList, {
         params: {
-          accountId: '1031626164970629476',
+          accountId: this.accountInfo.id,
         },
       })
       if (res.code === 200) {
         this.cardList = res.data
-        console.log(this.cardList)
       }
     },
   },

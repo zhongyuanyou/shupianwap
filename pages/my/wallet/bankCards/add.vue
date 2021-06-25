@@ -144,6 +144,9 @@ export default {
     userInfo() {
       return JSON.parse(localStorage.getItem('info'))
     },
+    accountInfo() {
+      return JSON.parse(localStorage.getItem('accountInfo'))
+    },
   },
   created() {
     this.getAccountBankInfo()
@@ -190,15 +193,11 @@ export default {
     async getAuthInfo() {
       const res = await this.$axios.get(walletApi.account_info, {
         params: {
-          accId: '1031626164970629466',
+          accId: this.accountInfo.id,
         },
       })
       if (res.code === 200) {
-        if (res.data.code && !res.data.code) {
-          return false
-        } else {
-          this.accountName = res.data.cardName
-        }
+        this.accountName = res.data.cardName
       }
     },
     async getAccountBankInfo() {
@@ -210,11 +209,7 @@ export default {
         limit: '50',
       })
       if (res.code === 200) {
-        if (res.data.code && !res.data.code) {
-          return false
-        } else {
-          this.list = res.data
-        }
+        this.list = res.data
       }
     },
     blur() {

@@ -75,6 +75,9 @@ export default {
     userInfo() {
       return JSON.parse(localStorage.getItem('info'))
     },
+    accountInfo() {
+      return JSON.parse(localStorage.getItem('accountInfo'))
+    },
   },
   async created() {
     await this.getUserInfo()
@@ -137,8 +140,11 @@ export default {
         })
         return false
       }
-      this.updatePwd()
-      // this.$router.push('/my/settings')
+      if (this.$route.query.status === '0') {
+        this.openAndActivation()
+      } else {
+        this.updatePwd()
+      }
     },
     // ①获取认证信息
     async getAuthInfo() {
@@ -150,17 +156,37 @@ export default {
       })
       if (res.code === 200) {
         this.certificateInfo = res.data
-        console.log(res.data)
       }
     },
     // 修改密码
     async updatePwd() {
       const res = await this.$axios.post(walletApi.reset_password, {
-        accountId: '1031626164970629476',
+        accountId: this.accountInfo.id,
         password: this.password,
         phone: this.newUserInfo.mainAccount,
         operateId: this.userInfo.id,
         operateName: this.userInfo.fullName,
+      })
+      if (res.code === 200) {
+        this.$router.push('/my/settings')
+      }
+    },
+    async openAndActivation() {
+      const res = await this.$axios.post(walletApi.open_and_activation, {
+        mainInfoRelationId: this.userInfo.id,
+        mainPhone: this.newUserInfo.mainAccount,
+        payPassword: this.confirmPassword,
+        sysCode: 'chips-app',
+        operateId: this.userInfo.id,
+        operateName: this.userInfo.fullName,
+        mainType: '1',
+        accType: 'BANK_ACCOUNT_TYPE_2',
+        mainInfoName: this.userInfo.fullName,
+        certificateInfo: {
+          cardNumber: this.certificateInfo.idCard,
+          cardName: this.certificateInfo.realName,
+          validityType: '1',
+        },
       })
       if (res.code === 200) {
         this.$router.push('/my/settings/protocol')

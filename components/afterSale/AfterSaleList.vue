@@ -137,7 +137,7 @@
           >
             退款详情
           </button>
-          <button @click="$router.push(`/my/afterSale/detail?id=${item.id}`)">
+          <button @click="$router.push(`/my/afterSale/detail?id=${item.id}&orderId=${item.orderId}&orderNo=${item.orderNo}`)">
             售后详情
           </button>
         </div>

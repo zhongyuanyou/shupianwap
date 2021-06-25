@@ -18,7 +18,7 @@
             <h3>提现</h3>
             <p>{{ item.createTime }}</p>
           </div>
-          <div class="right">{{ item.amount }}</div>
+          <div class="right">￥{{ item.amount }}</div>
         </li>
         <!-- <li>
           <div class="left">
@@ -42,8 +42,8 @@
 
 <script>
 import { List } from '@chipspc/vant-dgg'
-import Header from '@/components/common/head/header'
 import { walletApi } from '@/api'
+import Header from '@/components/common/head/header'
 export default {
   components: {
     Header,

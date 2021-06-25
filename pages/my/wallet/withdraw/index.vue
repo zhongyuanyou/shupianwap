@@ -48,11 +48,13 @@
         <div class="title">提现金额</div>
         <div class="amount">
           <span>￥</span
-          ><sp-field v-model="amount" type="number" maxlength="5" />
+          ><sp-field v-model="amount" type="number" maxlength="9" />
         </div>
       </div>
       <div class="amount-tips">
-        账户余额：¥129999.99，<span @click="withdrawAll">全部提现</span>
+        账户余额：¥{{ accBalanceData.balance }}，<span @click="withdrawAll"
+          >全部提现</span
+        >
       </div>
       <div class="withdraw-btn" @click="withdraw">提现</div>
     </div>
@@ -75,6 +77,7 @@
 
 <script>
 import { Icon, Field } from '@chipspc/vant-dgg'
+import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
 import SelectBank from '@/components/wallet/SelectBank.vue'
 export default {
@@ -88,10 +91,32 @@ export default {
     return {
       selectCardInfo: '',
       currentId: '',
-      amount: 88,
+      accBalanceData: '',
+      amount: '',
     }
   },
+  computed: {
+    userInfo() {
+      return JSON.parse(localStorage.getItem('info'))
+    },
+    accountInfo() {
+      return JSON.parse(localStorage.getItem('accountInfo'))
+    },
+  },
+  created() {
+    this.getAccountBalance()
+  },
   methods: {
+    async getAccountBalance() {
+      const res = await this.$axios.post(walletApi.account_balance_info, {
+        relationId: this.userInfo.id,
+        accType: 'BANK_ACCOUNT_TYPE_2', // 账户类型个人
+      })
+      console.log(res)
+      if (res.code === 200) {
+        this.accBalanceData = res.data
+      }
+    },
     openSelectBankPop() {
       this.$refs.bank.showBankPop = true
     },
@@ -101,24 +126,42 @@ export default {
     },
     // 提现
     withdraw() {
-      // if (!account) {
-      //   this.$xToast.warning('请填写提现金额')
-      //   return false
-      // } else if (account < 10) {
+      if (!this.selectCardInfo.bankName) {
+        this.$xToast.warning('请选择提现银行卡')
+        return false
+      } else if (!this.amount) {
+        this.$xToast.warning('请填写提现金额')
+        return false
+      }
+      // else if (this.amount < 10) {
       //   this.$xToast.warning('提现金额不可小于N')
       //   return false
-      // } else if (account > 88) {
+      // } else if (this.amount > 88) {
       //   this.$xToast.warning('每次提现不可超过N元')
       //   return false
-      // } else if (account > 88) {
+      // } else if (this.amount > 88) {
       //   this.$xToast.warning('提现金额是否大于可用余额')
       //   return false
       // }
+      const withdrawData = {
+        amount: this.amount,
+        serviceCharge: '0',
+        paymentPassword: '',
+        bankCardId: this.selectCardInfo.id,
+        callBackUrl: '',
+        relationId: this.userInfo.id,
+        relationName: this.userInfo.fullName,
+        attach: '', // 回调会携带此参数
+        sysCode: 'chips-app',
+        bankName: this.selectCardInfo.bankName,
+        desensitizationCardNumber:this.selectCardInfo.desensitizationCardNumber,
+      }
+      localStorage.setItem('withdrawInfo', JSON.stringify(withdrawData))
       this.$router.push('/my/wallet/withdraw/setPwd')
     },
     // 全部提现
     withdrawAll() {
-      this.amount = 88
+      this.amount = this.accBalanceData.balance
     },
   },
 }

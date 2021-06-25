@@ -7,7 +7,7 @@ const walletApi = {
   authentication_info: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/authentication_info.do`, // 获取认证详情
   open_and_activation: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/open_and_activation.do`, // 开通并激活钱包
   bill_list: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/bill_list.do`, // 账单列表
-  bill_details: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/bill_details.do`, // 账单详情
+  bill_details: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/withdraw_detail.do`, // 账单详情,提现详情
   cardList: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/card_list.do`, // 银行卡列表
   card_info: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/card_info.do`, // 开户行信息
   cardDetails: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/card_details.do`, // 银行卡详情
@@ -17,5 +17,8 @@ const walletApi = {
   unbundle: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/unbundle.do`, // 解绑银行卡
   account_info: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/account_info.do`, // 实名认证信息
   reset_password: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/reset_password.do`, // 根据电话修改密码
+  check_set_password: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/check_set_password.do`, // 检测是否设置密码
+  withdraw: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/withdraw.do`, // 余额提现
+  withdrawRecord: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/withdraw.do`, // 余额提现
 }
 export { walletApi }

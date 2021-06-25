@@ -4,6 +4,7 @@
       <Header title="我的余额">
         <template #right>
           <sp-icon
+            v-if="accAccountData.status && accAccountData.status === 1"
             class-prefix="spiconfont"
             name="shezhi"
             size="0.32rem"
@@ -24,7 +25,7 @@
         ></sp-icon>
       </div>
       <div class="total" @click="$router.push('/my/wallet/bill/list')">
-        <strong>{{ accountBalData.totalBalance || '0.00' }}</strong
+        <strong>¥{{ accountBalData.totalBalance || '0.00' }}</strong
         ><sp-icon
           class-prefix="spiconfont"
           name="you"
@@ -43,7 +44,7 @@
               color="#999"
             ></sp-icon>
           </h3>
-          <p>{{ accountBalData.balance || '0.00' }}</p>
+          <p>¥{{ accountBalData.balance || '0.00' }}</p>
         </div>
         <div class="quota-item">
           <h3>
@@ -55,12 +56,10 @@
               color="#999"
             ></sp-icon>
           </h3>
-          <p>{{ accountBalData.frozenBalance || '0.00' }}</p>
+          <p>¥{{ accountBalData.frozenBalance || '0.00' }}</p>
         </div>
       </div>
-      <div class="withdrawal-btn" @click="$router.push('/my/wallet/withdraw')">
-        提现
-      </div>
+      <div class="withdrawal-btn" @click="withdraw">提现</div>
       <div class="money-desc" @click="openBalanceDesc">
         <my-icon
           class-prefix="spiconfont"
@@ -112,16 +111,21 @@ export default {
   },
   data() {
     return {
-      accountBalData: '',
+      accountBalData: '', // 查询余额
+      accAccountData: '', // 查询激活返回的数据
+      checkPassword: '', // 检测是否设置密码
     }
   },
   computed: {
     userInfo() {
       return JSON.parse(localStorage.getItem('info'))
     },
+    accountInfo() {
+      return JSON.parse(localStorage.getItem('accountInfo'))
+    },
   },
-  created() {
-    this.getAccountInfo()
+  async created() {
+    await this.getAccountInfo()
     this.getAccountBalInfo()
   },
 
@@ -129,6 +133,7 @@ export default {
     // this.openActivationDialog()
   },
   methods: {
+    //     // 实名认证信息
     async getAccountBalInfo() {
       const res = await this.$axios.post(walletApi.account_balance_info, {
         relationId: this.userInfo.id,
@@ -139,6 +144,35 @@ export default {
         this.accountBalData = res.data
       }
     },
+    withdraw() {
+      // 没有激活就去激活
+      if (!this.accAccountData.status && this.accAccountData.status !== 1) {
+        this.openActivationDialog()
+      } else {
+        if (this.accountBalData.totalBalance < 10) {
+          this.$xToast.show({ message: '提现金额不能低于10元' })
+          return
+        }
+        this.$router.push('/my/wallet/withdraw')
+      }
+    },
+    async checkSetPassword() {
+      const res = await this.$axios.get(walletApi.check_set_password, {
+        params: {
+          accountId: this.accountInfo.id,
+        },
+      })
+      if (res.code === 200) {
+        this.checkPassword = res.data
+        if (this.checkPassword === 0) {
+          this.$router.push({
+            path: '/my/settings/setPwd?status=0',
+          })
+        } else {
+          this.$router.push('/my/settings/protocol')
+        }
+      }
+    },
     openActivationDialog() {
       Dialog.confirm({
         title: '激活钱包',
@@ -147,13 +181,20 @@ export default {
         cancelButtonText: '取消',
       })
         .then((res) => {
-          console.log(this.userInfo)
-          debugger
           if (this.userInfo.realStatus === 'AUTHENTICATION_SUCCESS') {
-            this.$router.push({
-              path: '/my/settings/setPwd',
-            })
+            // 未查询到账户信息及未激活
+            if (
+              !this.accAccountData.status &&
+              this.accAccountData.status !== 1
+            ) {
+              this.$router.push({
+                path: '/my/settings/setPwd?status=0',
+              })
+            } else {
+              this.checkSetPassword()
+            }
           } else {
+            // 未认证
             this.$router.push({
               path: '/contract/authentication',
             })
@@ -169,14 +210,21 @@ export default {
     // 获取钱包信息
     async getAccountInfo() {
       const res = await this.$axios.post(walletApi.info, {
-        accountId: '',
+        accountId: this.accountInfo.id || '',
         relationId: this.userInfo.id,
       })
       console.log(res)
       if (res.code === 200) {
-        const accAccountData = res.data
-        if (!accAccountData.status && accAccountData.status !== 1) {
+        this.accAccountData = res.data
+        if (!this.accAccountData.status && this.accAccountData.status !== 1) {
+          JSON.stringify()
           this.openActivationDialog()
+        } else {
+          // 保存账户信息
+          localStorage.setItem(
+            'accountInfo',
+            JSON.stringify(this.accAccountData)
+          )
         }
       }
     },

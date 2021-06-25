@@ -4,25 +4,32 @@
     <div class="detail-info">
       <div class="count">
         <span>出/入账数量</span>
-        <strong>-2000.00</strong>
+        <strong>￥{{ billDetails.amount }}</strong>
       </div>
       <div class="field-list">
         <div class="row">
           <div class="title">类型</div>
-          <div class="res">提现</div>
+          <div class="res">{{ billDetails.orderTypeName }}</div>
         </div>
         <div class="row">
           <div class="title">时间</div>
-          <div class="res">提现</div>
+          <div class="res">{{ billDetails.createTime }}</div>
         </div>
         <div class="row">
           <div class="title">流水号</div>
-          <div class="res">提现</div>
+          <div class="res">{{ billDetails.billNo }}</div>
         </div>
         <div class="row">
-          <div class="title">提现明细</div>
-          <div class="cash" @click="$router.push('/my/wallet/withdraw/detail')">
-            查看提现详情
+          <div class="title">{{ billDetails.orderTypeName }}明细</div>
+          <div
+            class="cash"
+            @click="
+              $router.push(
+                `/my/wallet/withdraw/detail?id=${billDetails.billId}`
+              )
+            "
+          >
+            查看{{ billDetails.orderTypeName }}详情
           </div>
           <!-- <div class="cash">查看佣金详情</div>
           <div class="cash">查看退款详情</div> -->
@@ -45,16 +52,15 @@ export default {
     }
   },
   created() {
-    this.getBillList()
+    this.getBillDetail()
   },
   methods: {
     async getBillDetail() {
       const res = await this.$axios.post(walletApi.bill_details, {
-        relationId: this.userInfo.id,
+        billId: this.$route.query.id,
       })
       if (res.code === 200) {
         this.billDetails = res.data
-      } else {
       }
     },
   },

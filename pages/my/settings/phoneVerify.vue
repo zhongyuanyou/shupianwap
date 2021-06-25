@@ -15,6 +15,7 @@
             v-model="sms"
             :clearable="true"
             center
+            maxlength="6"
             placeholder="请输入验证码"
           >
             <template #button>
@@ -157,7 +158,7 @@ export default {
           }
         )
         .then((res) => {
-          this.$router.push('/my/settings/setPwd')
+          this.$router.push('/my/settings/setPwd?status=1')
         })
         .catch((e) => {
           this.$xToast.hideLoading()
