@@ -40,7 +40,11 @@
       />
     </div>
     <sp-bottombar v-if="tabActive === 2" safe-area-inset-bottom>
-      <sp-bottombar-button type="primary" text="添加发票抬头" @click="toAdd" />
+      <sp-bottombar-button
+        type="primary"
+        text="添加发票抬头"
+        @click="headAdd"
+      />
     </sp-bottombar>
 
     <Loading-center v-show="loading" />
@@ -155,8 +159,8 @@ export default {
     this.onLoad()
   },
   methods: {
-    toAdd() {
-      this.$router.push('/order/invoice/add')
+    headAdd() {
+      this.$router.push('/order/invoice/headAdd')
     },
     init() {
       this.page = 1
@@ -174,7 +178,7 @@ export default {
       } else if (this.tabActive === 1) {
         this.getInvoiceRecords()
       } else if (this.tabActive === 2) {
-        this.getInvoiceRecords()
+        this.getInvoiceHeaderList()
       }
     },
 
@@ -260,6 +264,35 @@ export default {
             } else {
               this.list.push(...res.records)
             }
+          })
+          .catch((error) => {
+            console.error(error)
+            this.error = true
+            this.loading = false
+            this.$xToast.error(error.message || '请求失败，请重试')
+          })
+      } catch (error) {
+        this.error = true
+        this.loading = false
+      }
+    },
+    getInvoiceHeaderList() {
+      try {
+        invoiceApi
+          .invoice_header_list({ axios: this.$axios }, {})
+          .then((res) => {
+            // if (res.totalCount <= this.page * this.limit) {
+            this.finished = true
+            // }
+            // this.page++
+            this.loading = false
+
+            this.list = res.records
+            // if (this.page === 1) {
+            //   this.list = res.records
+            // } else {
+            //   this.list.push(...res.records)
+            // }
           })
           .catch((error) => {
             console.error(error)

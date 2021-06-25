@@ -1,6 +1,6 @@
 'use strict'
 
-import { CHIPS_WAP_BASE_URL, CHIPS_PC_URL } from '../config/constant'
+import { CHIPS_PC_URL } from '../config/constant'
 import { request } from '@/utils/request'
 
 const invoiceApi = {
@@ -11,8 +11,8 @@ const invoiceApi = {
   // http://yapi.dgg.cn/project/935/interface/api/108229
   /**
    * 申请发票
-   * @param {*} param0
-   * @param {*} params
+   * @param {object} param0
+   * @param {object} params
    * @returns
    */
   apply_invoice({ axios }, params) {
@@ -20,14 +20,14 @@ const invoiceApi = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/invoice/v1/apply_invoice.do',
+      url: CHIPS_PC_URL + '/yk/invoice/v1/apply_invoice.do',
     })
   },
 
   /**
    * 开票历史
-   * @param {*} param0
-   * @param {*} params
+   * @param {object} param0
+   * @param {object} params
    * @returns
    */
   invoice_records({ axios }, params) {
@@ -35,16 +35,17 @@ const invoiceApi = {
       axios,
       params,
       method: 'get',
-      url: CHIPS_WAP_BASE_URL + '/yk/invoice/v1/invoice_records.do',
+      url: CHIPS_PC_URL + '/yk/invoice/v1/invoice_records.do',
     })
   },
 
   /**
    * 发票详情
-   * @param {*} param0.axios
-   * @param {*} params
+   * @param {object} param0
+   * @param {object} params
    * @param {number} params.id 发票id
    * @param {number} params.orderId 订单id
+   * @param {number} params.type 是否查询订单商品信息，1查询，默认不查
    * @returns
    */
   invoice_detail({ axios }, params) {
@@ -52,24 +53,54 @@ const invoiceApi = {
       axios,
       params,
       method: 'get',
-      url: CHIPS_WAP_BASE_URL + '/yk/invoice/v1/invoice_detail.do',
+      url: CHIPS_PC_URL + '/yk/invoice/v1/invoice_detail.do',
+    })
+  },
+
+
+
+
+  /** ------------------发票抬头-------------------------- */
+  /**
+   * 抬头列表
+   * @param {object} param0
+   * @param {null} params
+
+   * @returns
+   */
+  invoice_header_list({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_PC_URL + '/yk/invoice/v1/invoice_header_list.do',
     })
   },
 
   /**
-   * 发票详情
-   * @param {*} param0.axios
-   * @param {*} params
-   * @param {number} params.id 发票id
-   * @param {number} params.orderId 订单id
-   * @returns
+   * 添加发票抬头
+   * @param {object} param0
+   * @param {object} params
    */
-  invoice_detail({ axios }, params) {
+  add_invoice_header({ axios }, params) {
     return request({
       axios,
       params,
-      method: 'get',
-      url: CHIPS_PC_URL + 'yk/invoice/v1/invoice_header_list.do',
+      method: 'post',
+      url: CHIPS_PC_URL + '/yk/invoice/v1/add_invoice_header.do',
+    })
+  },
+  /**
+ * 修改发票抬头
+ * @param {object} param0
+ * @param {object} params
+ */
+  update_invoice_header({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_PC_URL + '/yk/invoice/v1/update_invoice_header.do',
     })
   },
 }

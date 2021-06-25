@@ -68,7 +68,7 @@
               placeholder="请填写注册地址"
             />
             <sp-field
-              v-model="formData.username"
+              v-model="formData.registerTel"
               label="注册电话"
               placeholder="请填写注册电话"
             />
@@ -188,7 +188,7 @@ const InvoiceType = {
 
 export default {
   layout: 'keepAlive',
-  name: 'Invoice',
+  name: 'InvoiceApply',
   components: {
     LoadingCenter,
     Header,
@@ -236,6 +236,7 @@ export default {
         bankAccount: '', // 银行账号
         bankOfDeposit: '', // 开户银行
         receiverEmail: '', // 邮箱
+        registerTel: '', // 注册电话
         registerAddress: '', // 注册地址
         taxpayerIdentifNum: '', // 纳税人识别号
       },
