@@ -197,6 +197,8 @@ export default {
         startCreateTime: timePicker.startTime, // 开始时间
         endCreateTime: timePicker.endTime,
       }
+      this.init()
+      this.onLoad()
     },
     AllInvoiceSelect(tabs) {
       this.AllInvoiceSelectState = {

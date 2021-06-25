@@ -188,6 +188,13 @@ export default {
       },
     }
   },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userId,
+      token: (state) => state.user.token,
+      userPhone: (state) => state.user.userPhone,
+    }),
+  },
   methods: {
     onSubmit() {
       this.$refs.form
