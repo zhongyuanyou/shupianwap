@@ -158,6 +158,7 @@ export default {
         this.certificateInfo = res.data
       }
     },
+  
     // 修改密码
     async updatePwd() {
       const res = await this.$axios.post(walletApi.reset_password, {

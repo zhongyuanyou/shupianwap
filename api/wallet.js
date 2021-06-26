@@ -19,6 +19,6 @@ const walletApi = {
   reset_password: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/reset_password.do`, // 根据电话修改密码
   check_set_password: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/check_set_password.do`, // 检测是否设置密码
   withdraw: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/withdraw.do`, // 余额提现
-  withdrawRecord: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/withdraw.do`, // 余额提现
+  // withdrawRecord: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/withdraw.do`, // 余额提现记录
 }
 export { walletApi }

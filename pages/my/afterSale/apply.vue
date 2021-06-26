@@ -25,13 +25,13 @@
       </div>
       <div class="desc">
         <p>
-          <sp-icon
-            class-prefix="spiconfont"
-            size="0.32rem"
-            color="#ccc"
-            name="toast_ic_remind"
-          ></sp-icon
-          ><span @click="afterSaleProtocol('protocol100040')">售后说明</span>
+          <span
+            >为了保障您的权益，请您仔细阅读<span
+              class="blue"
+              @click="afterSaleProtocol('protocol100040')"
+              >《薯片平台用户售后说明》</span
+            ></span
+          >
         </p>
         <div class="content"></div>
       </div>
@@ -113,12 +113,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.blue {
+  color: #4974f5;
+}
 .apply {
   padding: 0 40px;
   padding-top: 76px;
   min-height: 100vh;
   background: #f5f5f5;
-  .apply-box {
+  > .apply-box {
     text-align: center;
     p {
       font-size: 40px;
@@ -163,17 +166,15 @@ export default {
         }
       }
     }
-    .desc {
+    > .desc {
       margin-top: 128px;
       text-align: left;
-      p {
-        span {
-          font-family: PingFangSC-Medium;
-          font-size: 30px;
-          color: #222222;
-          font-weight: bold;
-          margin-left: 8px;
-        }
+      > p {
+        font-family: PingFangSC-Regular;
+        font-size: 24px;
+        color: #999999;
+        line-height: 0.32rem;
+        text-align: center;
       }
       .content {
         font-family: PingFangSC-Regular;

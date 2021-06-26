@@ -25,7 +25,12 @@ export default {
   data() {
     return {}
   },
-  methods: {},
+  methods: {
+    // // 返回到提现页面
+    // backHandle() {
+    //   this.$router.push('/my/wallet/withdraw')
+    // },
+  },
 }
 </script>
 

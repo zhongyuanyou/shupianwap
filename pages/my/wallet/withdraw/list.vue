@@ -11,15 +11,15 @@
         <li
           v-for="(item, index) in withdrawList"
           :key="index"
-          @click="$router.push('/my/wallet/withdraw/detail')"
+          @click="$router.push(`/my/wallet/withdraw/detail?id=${item.billId}`)"
         >
           <div class="left">
             <h3>提现</h3>
-            <p>{{item.createTime}}</p>
+            <p>{{ item.createTime }}</p>
           </div>
           <div class="right">
-            <h3>￥{{item.amount}}</h3>
-            <p>{{item.statusName}}</p>
+            <h3>￥{{ item.amount }}</h3>
+            <p>{{ item.statusName }}</p>
           </div>
         </li>
       </ul>

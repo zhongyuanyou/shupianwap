@@ -24,13 +24,12 @@
           @blur="blur"
         />
         <sp-field
-          v-if="bankName"
           v-model="bankName"
           name="银行名称"
           label="银行名称"
-          placeholder="银行名称"
+          placeholder="请输入银行卡号，系统自动识别"
           readonly="readonly"
-          :rules="[{ required: true, message: '' }]"
+          :rules="[{ required: true, message: '请输入银行卡名称' }]"
         />
         <sp-field
           v-model="accountBank"
@@ -82,7 +81,7 @@
           <sp-search
             v-model="searchName"
             placeholder="请输入搜索关键词"
-            @search="onSearch"
+            @input="onSearch"
             @cancel="onCancel"
           />
         </div>
@@ -112,7 +111,15 @@
 </template>
 
 <script>
-import { Form, Field, Button, Popup, Search, Icon } from '@chipspc/vant-dgg'
+import {
+  Form,
+  Field,
+  Button,
+  Popup,
+  Search,
+  Icon,
+  Toast,
+} from '@chipspc/vant-dgg'
 import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
 export default {
@@ -169,24 +176,26 @@ export default {
         operateId: this.userInfo.id,
         operateName: this.userInfo.fullName,
       })
-      if (res.code === 200 && !res.data.code) {
+      if (res.code === 200) {
         this.$router.push('/my/wallet/bankCards/list')
       } else {
         this.$xToast.show({ message: '绑定失败，换张卡试试' })
       }
     },
     async getBankInfo() {
+      const _this = this
       const res = await this.$axios.post(walletApi.card_no, {
         cardNumber: this.cardNum,
       })
       if (res.code === 200) {
-        if (res.data.code && !res.data.code) {
-          return false
-        } else {
-          this.bankCode = res.data.code
-          this.bankName = res.data.name
-          this.bankIconUrl = res.data.icon
-        }
+        this.bankCode = res.data.code
+        this.bankName = res.data.name
+        this.bankIconUrl = res.data.icon
+      } else {
+        console.log(res, 1111111)
+        Toast('银行卡号校验失败')
+        // _this.$xToast.warn(res.data.error)
+        // this.$xToast.warn('res.data.error')
       }
     },
     // 账户名称
@@ -218,8 +227,20 @@ export default {
     openPullPop() {
       this.showPullPop = true
     },
+    throttle(func, wait) {
+      let timeout
+      return function () {
+        if (!timeout) {
+          timeout = setTimeout(() => {
+            timeout = null
+            func.call(this, arguments)
+          }, wait)
+        }
+      }
+    },
     onSearch() {
-      this.getAccountBankInfo()
+      this.throttle(this.getAccountBankInfo(), 1000)
+      // this.getAccountBankInfo()
     },
     onCancel() {
       console.log(22222)

@@ -453,6 +453,8 @@ export default {
       const res = await this.$axios.get(afterSaleApi.detail, {
         params: {
           id: this.$route.query.id,
+          orderId: this.$route.query.orderId,
+          orderNo: this.$route.query.orderNo,
           isProduct: '1',
           isAfterSaleFlow: '1',
         },

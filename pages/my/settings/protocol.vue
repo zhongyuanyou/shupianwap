@@ -4,7 +4,7 @@
       <div v-if="!hideHeader" class="top">
         <sp-top-nav-bar
           ellipsis
-          :title="'服务协议和隐私协议'"
+          :title="article.title"
           @on-click-left="onClickLeft"
         >
           <template #left>
@@ -15,17 +15,17 @@
     </header-slot>
     <div class="content">
       <sp-skeleton title :row="10" :loading="loading">
-        <div class="content-text">123123123123123123</div>
+        <div class="content-text" v-html="article.content"></div>
       </sp-skeleton>
     </div>
     <div class="submit">
       <p>
         <sp-checkbox v-model="checked"></sp-checkbox
         ><span class="blue" @click="afterSaleProtocol('protocol100039')"
-          >同意《服务协议》和《隐私政策》</span
+          >同意<a>《服务协议》</a> 和<a>《隐私政策》</a></span
         >
       </p>
-      <button @click="submit">同意协议并继续（10）</button>
+      <button @click="submit">同意协议并继续</button>
     </div>
   </div>
 </template>
@@ -61,6 +61,7 @@ export default {
       hideHeader: this.$route.query.hideHeader || false,
       categoryCode: this.$route.query.categoryCode,
       redirect: this.$route.query.redirect || '', // 登录后需要跳转的地址
+      checked: false,
     }
   },
   computed: {
@@ -111,6 +112,10 @@ export default {
       }
     },
     submit() {
+      if (!this.checked) {
+        this.$xToast.show({ message: '请阅读并知晓服务协议和隐私协议' })
+        return
+      }
       this.$router.push('/my/wallet')
     },
   },

@@ -1,6 +1,6 @@
 <template>
   <div class="apply">
-    <Header title="申请提交" />
+    <Header title="申请提交" custom-jump="true" @backHandle="backHandle"/>
     <div class="apply-box">
       <sp-icon
         class-prefix="spiconfont"
@@ -14,11 +14,11 @@
       </p>
       <div class="apply-item">
         <h3>提现金额</h3>
-        <span>¥{{ (withdrawInfo.amount / 100).toFix(2) }}</span>
+        <span>¥{{ withdrawInfo.amount }}</span>
       </div>
       <div class="apply-item">
         <h3>提现账户</h3>
-        <span>{{建行}} 储蓄卡（622****4490）</span>
+        <span>{{ withdrawInfo.bankName }} 储蓄卡(622****4490)</span>
       </div>
       <div class="apply-item">
         <h3>提现用户</h3>
@@ -38,12 +38,12 @@ export default {
     SpIcon: Icon,
   },
   data() {
-    return {}
+    return {
+      withdrawInfo: '',
+    }
   },
-  computed: {
-    withdrawInfo() {
-      return JSON.parse(localStorage.getItem('withdrawInfo'))
-    },
+  mounted() {
+    this.withdrawInfo = JSON.parse(localStorage.getItem('withdrawInfo'))
   },
   methods: {},
 }

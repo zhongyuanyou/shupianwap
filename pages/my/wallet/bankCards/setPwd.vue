@@ -1,6 +1,6 @@
 <template>
   <div class="set-pwd">
-    <Header title="密码设置" />
+    <Header title="密码设置" custom-jump="true" @backHandle="backHandle" />
     <div class="title">
       <p class="tips">请输入支付密码</p>
       <p v-show="valid" class="valid-text">密码错误请重新输入</p>
@@ -50,6 +50,10 @@ export default {
     },
   },
   methods: {
+    // 返回到提现页面
+    backHandle() {
+      this.$router.push('/my/wallet/withdraw')
+    },
     onInput(key) {
       this.password = (this.password + key).slice(0, 6)
     },

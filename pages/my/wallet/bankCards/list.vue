@@ -1,6 +1,6 @@
 <template>
   <div class="bank">
-    <Header title="银行卡管理" />
+    <Header title="银行卡管理" custom-jump="true" @backHandle="backHandle"/>
     <div class="bank-list">
       <ul v-if="cardList.length > 0">
         <li
@@ -121,6 +121,10 @@ export default {
     this.bankCardsList()
   },
   methods: {
+    // 返回到提现页面
+    backHandle() {
+      this.$router.push('/my/wallet')
+    },
     async bankCardsList() {
       const res = await this.$axios.get(walletApi.cardList, {
         params: {

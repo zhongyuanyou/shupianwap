@@ -1,6 +1,6 @@
 <template>
   <div class="withdraw">
-    <Header title="提现">
+    <Header title="提现" custom-jump="true" @backHandle="backHandle">
       <template #right>
         <span
           class="recording"
@@ -47,8 +47,14 @@
       <div class="withdraw-money">
         <div class="title">提现金额</div>
         <div class="amount">
-          <span>￥</span
-          ><sp-field v-model="amount" type="number" maxlength="9" />
+          <span>￥</span>
+          <input
+            v-model="amount"
+            type="number"
+            maxlength="9"
+            oninput="if(value.length>9)value=value.slice(0,9)"
+          />
+          <!-- <sp-field v-model="amount" type="number" maxlength="9" /> -->
         </div>
       </div>
       <div class="amount-tips">
@@ -105,8 +111,25 @@ export default {
   },
   created() {
     this.getAccountBalance()
+    this.getCardList()
   },
   methods: {
+    // 返回到提现页面
+    backHandle() {
+      this.$router.push('/my/wallet')
+    },
+    // 银行卡列表
+    async getCardList() {
+      const res = await this.$axios.get(walletApi.cardList, {
+        params: {
+          accountId: this.accountInfo.id,
+        },
+      })
+      if (res.code === 200) {
+        this.selectCardInfo = res.data[0]
+      }
+    },
+    // 账户余额查询
     async getAccountBalance() {
       const res = await this.$axios.post(walletApi.account_balance_info, {
         relationId: this.userInfo.id,
@@ -120,17 +143,25 @@ export default {
     openSelectBankPop() {
       this.$refs.bank.showBankPop = true
     },
+    // 选择银行卡
     selectCard(data) {
       this.selectCardInfo = data
       this.$refs.bank.showBankPop = false
     },
     // 提现
     withdraw() {
+      const am = /(^[1-9]{1}[0-9]*$)|(^[0-9]*\.[0-9]{2}$)/
       if (!this.selectCardInfo.bankName) {
-        this.$xToast.warning('请选择提现银行卡')
+        this.$xToast.warning('请选择到账银行卡')
         return false
       } else if (!this.amount) {
         this.$xToast.warning('请填写提现金额')
+        return false
+      } else if (Number(this.amount) > Number(this.accBalanceData.balance)) {
+        this.$xToast.warning('提现金额不能大于可用余额')
+        return false
+      } else if (!am.test(this.amount)) {
+        this.$xToast.warning('金额格式有误，小数需保留两位')
         return false
       }
       // else if (this.amount < 10) {
@@ -154,7 +185,8 @@ export default {
         attach: '', // 回调会携带此参数
         sysCode: 'chips-app',
         bankName: this.selectCardInfo.bankName,
-        desensitizationCardNumber:this.selectCardInfo.desensitizationCardNumber,
+        desensitizationCardNumber:
+          this.selectCardInfo.desensitizationCardNumber,
       }
       localStorage.setItem('withdrawInfo', JSON.stringify(withdrawData))
       this.$router.push('/my/wallet/withdraw/setPwd')
@@ -232,6 +264,12 @@ export default {
       .amount {
         display: flex;
         align-items: center;
+        input {
+          width: 100%;
+          height: 76px;
+          border: none;
+          font-size: 50px;
+        }
         span {
           font-family: PingFangSC-Medium;
           font-size: 52px;

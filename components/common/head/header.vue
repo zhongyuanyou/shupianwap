@@ -93,6 +93,11 @@ export default {
       type: Boolean,
       default: false,
     },
+    // 是否执行自定义跳转
+    customJump: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -138,10 +143,11 @@ export default {
     onLeftClick() {
       if (this.isInApp) {
         this.$appFn.dggWebGoBack((res) => {})
-      } else {
+      } else if (!this.customJump) {
         this.$router.back(-1)
+      } else {
+        this.$emit('backHandle')
       }
-      this.$emit('backHandle')
     },
     getTopMargin() {
       if (process && process.client) {

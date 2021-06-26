@@ -1,7 +1,7 @@
 <template>
   <div class="wallet">
     <div class="wallet-bg">
-      <Header title="我的余额">
+      <Header title="我的余额" custom-jump="true" @backHandle="backHandle">
         <template #right>
           <sp-icon
             v-if="accAccountData.status && accAccountData.status === 1"
@@ -19,13 +19,16 @@
         <span>总资产(元)</span
         ><sp-icon
           class-prefix="spiconfont"
-          name="xianshi"
+          :name="look"
           size="0.24rem"
           color="#555555"
+          @click="showAccountMoney"
         ></sp-icon>
       </div>
       <div class="total" @click="$router.push('/my/wallet/bill/list')">
-        <strong>¥{{ accountBalData.totalBalance || '0.00' }}</strong
+        <strong v-if="showAccountBal"
+          >¥{{ accountBalData.totalBalance || '0.00' }}</strong
+        ><strong v-else class="top9">****</strong
         ><sp-icon
           class-prefix="spiconfont"
           name="you"
@@ -44,7 +47,8 @@
               color="#999"
             ></sp-icon>
           </h3>
-          <p>¥{{ accountBalData.balance || '0.00' }}</p>
+          <p v-if="showAccountBal">¥{{ accountBalData.balance || '0.00' }}</p>
+          <p v-else>****</p>
         </div>
         <div class="quota-item">
           <h3>
@@ -56,7 +60,10 @@
               color="#999"
             ></sp-icon>
           </h3>
-          <p>¥{{ accountBalData.frozenBalance || '0.00' }}</p>
+          <p v-if="showAccountBal">
+            ¥{{ accountBalData.frozenBalance || '0.00' }}
+          </p>
+          <p v-else>****</p>
         </div>
       </div>
       <div class="withdrawal-btn" @click="withdraw">提现</div>
@@ -114,6 +121,8 @@ export default {
       accountBalData: '', // 查询余额
       accAccountData: '', // 查询激活返回的数据
       checkPassword: '', // 检测是否设置密码
+      showAccountBal: false,
+      look: 'xianshi',
     }
   },
   computed: {
@@ -130,9 +139,19 @@ export default {
   },
 
   mounted() {
+    // this.checkSetPassword()
+    // this.$router.push('/my/settings/protocol?categoryCode=protocol100041')
     // this.openActivationDialog()
   },
   methods: {
+    backHandle() {
+      this.$router.push('/my')
+    },
+    // 金额脱敏
+    showAccountMoney() {
+      this.showAccountBal = !this.showAccountBal
+      this.showAccountBal ? (this.look = 'yincang') : (this.look = 'xianshi')
+    },
     //     // 实名认证信息
     async getAccountBalInfo() {
       const res = await this.$axios.post(walletApi.account_balance_info, {
@@ -169,7 +188,7 @@ export default {
             path: '/my/settings/setPwd?status=0',
           })
         } else {
-          this.$router.push('/my/settings/protocol')
+          this.$router.push('/my/settings/protocol?categoryCode=protocol100041')
         }
       }
     },
@@ -213,7 +232,6 @@ export default {
         accountId: this.accountInfo.id || '',
         relationId: this.userInfo.id,
       })
-      console.log(res)
       if (res.code === 200) {
         this.accAccountData = res.data
         if (!this.accAccountData.status && this.accAccountData.status !== 1) {
@@ -239,6 +257,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.top9 {
+  position: relative;
+  top: 9px;
+}
 .wallet {
   height: 100%;
   background: #fff;

@@ -42,14 +42,27 @@ export default {
       password: '',
       showKeyboard: true,
       valid: false,
+      withdrawInfo: '',
     }
   },
-  computed: {
-    withdrawInfo() {
-      return JSON.parse(localStorage.getItem('withdrawInfo'))
-    },
+  beforeRouteEnter(to, from, next) {
+    if (from.name === 'my-wallet-withdraw-apply') {
+      next((vm) => {
+        vm.nextReplace()
+      })
+    } else {
+      next()
+    }
   },
+  mounted() {
+    this.withdrawInfo = JSON.parse(localStorage.getItem('withdrawInfo'))
+  },
+  created() {},
   methods: {
+    // 如果已经提交成功，返回时进入提现页面，不进入密码页面
+    nextReplace() {
+      this.$router.replace('/my/wallet/withdraw')
+    },
     onInput(key) {
       this.password = (this.password + key).slice(0, 6)
     },
