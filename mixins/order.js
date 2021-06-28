@@ -298,7 +298,7 @@ export default {
         this.orderData.payType &&
         this.orderData.payType === 'ORDER_PAY_MODE_OFFLINE'
       ) {
-        this.$xToast.error('该订单为线下支付，请联系规划师付款！')
+        this.$xToast.error('请前往线下银行网点进行支付！')
         return
       }
       if (
@@ -306,7 +306,7 @@ export default {
         this.orderData.payType === 'ORDER_PAY_MODE_SECURED'
       ) {
         this.$xToast.error(
-          '该订单为担保交易，请访问薯片PC网站或联系规划师付款！'
+          '该订单为担保交易订单，请访问薯片网站PC端进行付款！'
         )
         return
       }
@@ -315,7 +315,7 @@ export default {
         this.orderData.isSecuredTrade === 1
       ) {
         this.$xToast.error(
-          '该订单付款方式为担保交易付款，请访问薯片PC网站或联系规划师付款！'
+          '该订单为担保交易订单，请访问薯片网站PC端进行付款！'
         )
         return
       }

@@ -254,7 +254,7 @@ export default {
       border-radius: 16px;
       background: white;
       padding-bottom: 40px;
-      border-radius: 16px;
+      border-radius: 24px;
     }
   }
   .up-and-down {

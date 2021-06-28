@@ -191,7 +191,7 @@ export default {
   padding: 0 32px;
   margin-bottom: 24px;
   .news {
-    width: 329px;
+    width: 50%;
     height: 88px;
     background: #dbe4fd;
     border-radius: 12px;
@@ -221,7 +221,8 @@ export default {
     }
   }
   .see {
-    width: 329px;
+    width: 50%;
+    margin-left: 20px;
     height: 88px;
     background: #d8cffa;
     border-radius: 12px;

@@ -111,9 +111,7 @@ export default {
           意向价格: this.$refs.bargCom.price,
         }),
         // content: `yxjg:${this.$refs.bargCom.price}`, // 留言内容
-        requireCode:
-          goodsDetail.classCodeLevelList[1] ||
-          goodsDetail.classCodeLevelList[0], // 需求编码 产品编码二级分类
+        requireCode: goodsDetail.classCodeLevelList[1], // 需求编码 产品编码二级分类
       }
       this.$axios
         .post(transactionConsApi.resouse_form, formData)

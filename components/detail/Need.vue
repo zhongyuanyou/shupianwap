@@ -2,7 +2,7 @@
   <div class="need">
     <p class="need_title">猜您需要</p>
     <sp-skeleton :row="20" :loading="needLoading">
-      <div v-for="item in productData" :key="item.id" class="need_item">
+      <!-- <div v-for="item in productData" :key="item.id" class="need_item">
         <nuxt-link
           :to="{
             path: '/detail/transactionDetails',
@@ -19,7 +19,9 @@
               fit="cover"
               radius="0.04rem"
               lazy-load
-              :src="`${item.productImgArr[0]}?x-oss-process=image/resize,m_fill,w_160,h_160,limit_0`"
+              :src="`${
+                (item.productImgArr && item.productImgArr[0]) || item.goodsImg
+              }?x-oss-process=image/resize,m_fill,w_160,h_160,limit_0`"
             />
           </div>
           <div class="need_item_rt">
@@ -40,23 +42,38 @@
             <p class="money">{{ item.salesPrice || item.platformPrice }}元</p>
           </div>
         </nuxt-link>
-      </div>
+      </div> -->
+      <goods-item
+        v-for="(_item, _index) in productData"
+        :key="_index"
+        :item-data="_item"
+        :goodstype="{ type: 'jy', typeCode: _item.classCode }"
+        :is-list="true"
+        :dict-code="dictCode"
+        class="need_item"
+      />
     </sp-skeleton>
   </div>
 </template>
 
 <script>
 import { Image, Skeleton } from '@chipspc/vant-dgg'
+import goodsItem from '@/components/common/goodsItem/GoodsItem'
 export default {
   name: 'Need',
   components: {
     [Image.name]: Image,
     [Skeleton.name]: Skeleton,
+    goodsItem,
   },
   props: {
     productData: {
       type: Array,
       default: () => [],
+    },
+    dictCode: {
+      type: String,
+      default: '',
     },
   },
   data() {
@@ -88,7 +105,7 @@ export default {
 <style lang="less" scoped>
 .need {
   background-color: #fff;
-  padding: 48px 40px 0 40px;
+  padding: 48px 0 0 0;
   ::v-deep.sp-skeleton {
     margin-top: 64px;
   }
@@ -99,9 +116,12 @@ export default {
     color: #1a1a1a;
     line-height: 52px;
     margin-bottom: 24px;
+    padding-left: 40px;
   }
   &_item {
     width: 100%;
+    border-bottom: 1px solid #f4f4f4;
+    padding-bottom: 40px;
     a {
       width: 100%;
       display: flex;
@@ -109,11 +129,11 @@ export default {
       align-items: flex-start;
       flex-direction: row;
       padding: 40px 0;
-      border-bottom: 1px solid #f4f4f4;
       overflow: hidden;
     }
     &:last-child {
       border-bottom: none;
+      margin-bottom: 20px;
     }
     &_img {
       width: 160px;

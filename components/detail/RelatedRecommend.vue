@@ -31,12 +31,14 @@
             </p>
             <div class="label">
               <span
-                v-for="(labelItem, index2) in item.tag"
+                v-for="(labelItem, index2) in item.salesGoodsTags"
+                v-show="labelItem.categoryCode === 'DSJTC20210514000042'"
                 :key="index2"
                 class="label_item"
-                >{{ labelItem.tagName }}</span
+                >{{ labelItem.tagValueName }}</span
               >
             </div>
+
             <div class="desc">
               <p>{{ item.salesGoodsOperatings.slogan }}</p>
             </div>

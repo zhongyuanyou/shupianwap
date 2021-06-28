@@ -5,7 +5,9 @@
       :key="index"
       class="item-inner"
     >
-      <sp-image class="img" :src="detailItem.indexImg"></sp-image>
+      <div class="img">
+        <sp-image :src="detailItem.indexImg" class="sp-image"></sp-image>
+      </div>
       <div class="right">
         <p class="goods-name">
           <span class="name">
@@ -216,9 +218,14 @@ export default {
   .img {
     width: 130px;
     height: 130px;
-    background: rgba(0, 0, 0, 0.16);
-    border-radius: 8px;
-    overflow: hidden;
+    .sp-image {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      border-radius: 8px;
+      overflow: hidden;
+    }
   }
   .right {
     flex: 1;
