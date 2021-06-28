@@ -9,13 +9,14 @@
         @click="myOpenApp(item)"
       >
         <sp-image
+          class="image"
           width="3.72rem"
           height="6.61rem"
           fit="cover"
           :src="item.image"
         />
         <div class="content">
-          <div class="count">{{ item.custTotalCount }} 次观看</div>
+          <div class="count">{{ item.custTotalCount }}次观看</div>
           <div class="tile">{{ item.videoName }}</div>
         </div>
       </div>
@@ -149,6 +150,10 @@ export default {
       border: 1px #1a1a1a solid;
       width: 50%;
       height: 661px;
+      ::v-deep .sp-image__img {
+        border: none;
+        border-radius: 4px;
+      }
       .content {
         position: absolute;
         display: flex;
@@ -159,8 +164,7 @@ export default {
         font-weight: bold;
         color: #fff;
         width: 100%;
-        height: 200px;
-        bottom: 0;
+        bottom: 16px;
         left: 0;
         right: 0;
         .count {

@@ -64,7 +64,7 @@ export default {
       this.data.url = window.location.href
       // 本地存储数据
       sessionStorage.setItem('formData', JSON.stringify(this.data))
-      this.$router.push('/spread/myDemandCard/second')
+      this.$router.push('//myDemandCard/second')
     },
   },
 }

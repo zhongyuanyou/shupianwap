@@ -188,13 +188,14 @@ export default {
       })
     },
     async consultForm() {
+      const str1 = this.replaceStr(this.formData.content.备注)
       this.loading = true
       const userInfo = await this.getUserInfo(this.userId)
       if (!userInfo) return
       const params = {
         bizAreaCode: this.city.code,
         bizAreaName: this.city.name,
-        comment: this.formData.content.备注,
+        comment: str1,
         customerAttribute: JSON.stringify(this.formData.content),
         customerName: userInfo.fullName,
         customerPhone: userInfo.mainAccount,
@@ -318,6 +319,16 @@ export default {
       } else {
         font.style.color = '#222222'
       }
+    },
+    replaceStr(str) {
+      // https://gist.github.com/mathiasbynens/bbe7f870208abcfec860
+      // string sanitizes the given str by replacing invalid UTF-16 code unit
+      // sequences with the unicode replacement character. Returns a new string.
+      // 用 \ufffd 取代无效的增补字节的，无效的高位或者低位
+      return str.replace(
+        /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|([^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]/g,
+        ''
+      )
     },
   },
   head() {

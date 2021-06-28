@@ -40,7 +40,7 @@ export default {
       })
       sessionStorage.setItem('formData', str)
       // 下一步
-      this.$router.push({ path: '/spread/myDemandCard/second' })
+      this.$router.push({ path: '/myDemandCard/second' })
     },
   },
 }

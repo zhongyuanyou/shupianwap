@@ -241,6 +241,7 @@ export default {
           display: block;
           width: 190px;
           height: 127px;
+          object-fit: cover;
           background: #cccccc;
           border-radius: 12px;
           margin-top: 10px;
