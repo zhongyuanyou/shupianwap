@@ -69,7 +69,7 @@ const invoiceApi = {
       return request({
         axios,
         params,
-        method: 'get',
+        method: 'post',
         url: CHIPS_PC_URL + '/yk/invoice/v1/send_invoice_to_email.do',
       })
     },

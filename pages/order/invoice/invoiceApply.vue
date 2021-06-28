@@ -244,8 +244,82 @@ export default {
   },
   mounted() {
     this.formData.orderId = this.$route.query.orderId
+    this.init()
   },
   methods: {
+    init() {
+      if (!this.formData.orderId) {
+        return this.$xToast.error('没有指定订单')
+      }
+      this.loading = true
+      invoiceApi
+        .invoice_detail(
+          { axios: this.$axios },
+          {
+            orderId: this.formData.orderId,
+            type: 1, // 是否查询订单商品信息，1查询，默认不查，根据订单id查询时有效
+          }
+        )
+        .then((res) => {
+          this.loading = false
+          console.log(' res', res)
+
+          this.setFormData(res || {})
+          // {
+          //   applySource: "COMDIC_PLATFORM_CRISPS",
+          //   applyTime: "2021-06-28 14:21:24",
+          //   applyUserId: "767579755195165966",,
+          //   applyUserName: "唐代兵",
+          //   bankAccount: "",
+          //   bankOfDeposit: "",
+          //   // goods: [,…],
+          //   id: "1251978880678714646",
+          //   invoiceApplyNo: "FP210628005002",
+          //   invoiceContent: "商品明细",
+          //   invoiceHeader: "INVOICE_HEADER_PERSONAL",
+          //   invoiceHeaderName: "h1",
+          //   invoiceMoney: "2",
+          //   invoiceStatus: "INVOICE_STATUS_PROCESS",
+          //   invoiceType: "027",
+          //   isValid: 1,
+          //   orderId: "8083886946797813760",
+          //   orderNo: "D21052164188",
+          //   receiverEmail: "h@adtk.cn",
+          //   receiverPhone: "17608390654",
+          //   registerAddress: "",
+          //   registerTel: "",
+          //   signStoreId: "607997736314104054",
+          //   signStoreName: "案加测试一公司",
+          //   taxpayerIdentifNum: "",
+          // }
+        })
+        .catch((error) => {
+          this.loading = false
+          console.error(error)
+          this.$xToast.error(error.message || '请求失败，请重试')
+        })
+    },
+    setFormData(info) {
+      this.formData = {
+        // id: info.id,
+        orderId: info.orderId,
+        applySource: 'COMDIC_PLATFORM_CRISPS',
+        invoiceType: info.invoiceType,
+        invoiceContent: info.invoiceContent,
+        invoiceHeader: info.invoiceHeader,
+        invoiceHeaderName: info.invoiceHeaderName,
+        receiverPhone: info.receiverPhone,
+        bankAccount: info.bankAccount,
+        bankOfDeposit: info.bankOfDeposit,
+
+        receiverEmail: info.receiverEmail,
+        registerTel: info.registerTel,
+        registerAddress: info.registerAddress,
+        taxpayerIdentifNum: info.taxpayerIdentifNum,
+      }
+      // this.defaultHead = info.defaultHead // 默认抬头(0 非默认 1 默认 仅针对普票有效)
+    },
+
     submit() {
       this.$refs.form
         .validate()
