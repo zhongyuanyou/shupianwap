@@ -100,11 +100,7 @@
       </sp-field>
     </div>
     <sp-bottombar safe-area-inset-bottom>
-      <sp-bottombar-button
-        type="primary"
-        text="添加发票抬头"
-        @click="onSubmit"
-      />
+      <sp-bottombar-button type="primary" text="立即添加" @click="onSubmit" />
     </sp-bottombar>
 
     <Loading-center v-show="loading" />

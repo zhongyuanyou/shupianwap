@@ -192,7 +192,7 @@ export default {
         depositBank: info.depositBank, // 开户银行
         dutyParagraph: info.dutyParagraph, // 纳税人识别号
       }
-      this.defaultHead = info.defaultHead // 默认抬头(0 非默认 1 默认 仅针对普票有效)
+      // this.defaultHead = info.defaultHead // 默认抬头(0 非默认 1 默认 仅针对普票有效)
     },
     getInvoiceHeaderList(id) {
       try {
@@ -216,7 +216,7 @@ export default {
             console.error(error)
             this.error = true
             this.loading = false
-            this.$xToast.error(error.message || '请求失败，请重试')
+            this.$xToast.error((error && error.message) || '请求失败，请重试')
           })
       } catch (error) {
         this.error = true
@@ -255,13 +255,13 @@ export default {
         .then((res) => {
           console.log('res', res)
           this.loading = false
-          this.$xToast.success(res.message || '添加成功')
+          this.$xToast.success((res && res.message) || '成功')
         })
         .catch((error) => {
           console.error(error)
 
           this.loading = false
-          this.$xToast.error(error.message || '请求失败，请重试')
+          this.$xToast.error((error && error.message) || '请求失败，请重试')
         })
     },
     submit() {

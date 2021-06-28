@@ -1,6 +1,11 @@
 <template>
   <div class="history_invoice">
-    <div v-for="item of list" :key="item.id" class="card">
+    <div
+      v-for="item of list"
+      :key="item.id"
+      class="card"
+      @click="toInvoiceDetail(item)"
+    >
       <div class="card_header flex">
         <div class="card_time flex_1">
           <my-icon
@@ -20,11 +25,11 @@
         </div>
       </div>
       <div class="card_label">
-        <span>{{ item.invoiceTypeName }}</span>
+        <span>{{ InvoiceType[item.invoiceType] }}</span>
       </div>
       <div class="card_footer">
         <div class="flex_1">
-          <span class="name">{{ item.name }}</span>
+          <span class="name">{{ item.invoiceHeaderName }}</span>
         </div>
         <div class="price">
           {{ item.invoiceMoney }}
@@ -42,26 +47,32 @@ export default {
     [Image.name]: Image,
     [Button.name]: Button,
   },
+  props: {
+    list: {
+      type: Array,
+      default: () => [],
+    },
+  },
   data() {
     return {
-      list: [
-        {
-          number: 1,
-          name: '11111111111111111111111111111111111111111111111111111111',
-          invoiceMoney: 22200,
-          invoiceTypeName: '普通电子发票',
-          applyTime: '2020-20-20 13:45:78',
-        },
-        {
-          number: 2,
-          name: '11111111111111111111111111111111111111111111111111111111',
-          invoiceMoney: 22200,
-          applyTime: '2020-20-20 13:45:78',
-        },
-      ],
+      InvoiceType: {
+        '027': '增值税电子专用发票',
+        '026': '增值税电子普通发票',
+        '007': '增值税普通发票',
+        '004': '增值税专用发票',
+      },
     }
   },
-  methods: {},
+  methods: {
+    toInvoiceDetail(orderData) {
+      this.$router.push({
+        path: '/order/invoice/detail',
+        query: {
+          orderId: orderData.orderId,
+        },
+      })
+    },
+  },
 }
 </script>
 

@@ -115,7 +115,7 @@ export default {
 .invoice_head_management {
   background: #f5f5f5;
   overflow: hidden;
-  padding: 0 0 170px;
+  padding: 0 0 20px;
 
   .card {
     margin-top: 20px;
