@@ -2,7 +2,6 @@
   <span @click="sendEmail()">发送</span>
 </template>
 <script>
-import { json } from 'express'
 export default {
   data() {
     return {}
