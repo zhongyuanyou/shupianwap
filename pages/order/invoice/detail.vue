@@ -313,6 +313,26 @@ export default {
         return done()
       }
       if (this.sendEmail) {
+        invoiceApi
+          .send_invoice_to_email(
+            { axios: this.$axios },
+            {
+              email: this.sendEmail,
+              invoiceId: this.formData.id,
+            }
+          )
+          .then((res) => {
+            console.log('res', res)
+            this.loading = false
+            this.$xToast.success((res && res.message) || '成功')
+          })
+          .catch((error) => {
+            console.error(error)
+
+            this.loading = false
+            this.$xToast.error((error && error.message) || '请求失败，请重试')
+          })
+
         done()
       } else {
         this.$xToast.error('请输入邮箱地址')

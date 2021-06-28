@@ -1,32 +1,27 @@
 <template>
   <div class="invoice_head_management">
-    <div v-if="companyList.length > 0" class="card">
-      <div class="card_header">普通发票抬头-单位</div>
-      <div v-for="item of companyList" :key="item.id" class="card_content">
-        <sp-cell center title="单元格" label="描述信息">
+    <div v-for="(show_list, index) of ShowList" :key="index" class="card">
+      <div class="card_header">{{ show_list.title }}</div>
+      <div
+        v-for="item of show_list.list"
+        :key="item.id"
+        class="card_content"
+        @click="toHeadEdit(item)"
+      >
+        <sp-cell center :label="item.dutyParagraph || ''">
           <template #title>
-            <span class="custom-title">{{ item.name }}</span>
-            <sp-tag type="danger">默认</sp-tag>
+            <span class="custom-title">{{ item.invoiceHead }}</span>
+            <sp-tag
+              v-if="item.defaultHead === 1"
+              class="custom-tag"
+              type="danger"
+              >默认</sp-tag
+            >
           </template>
-          <template #right-icon>
-            <my-icon
-              name="per_ic_addeditor"
-              size="0.28rem"
-              color="#222222"
-              class="myIcon"
-            />
+          <template #label>
+            <span class="custom-label">{{ item.dutyParagraph }}</span>
           </template>
-        </sp-cell>
-      </div>
-    </div>
-    <div v-if="personalList.length > 0" class="card">
-      <div class="card_header">普通发票抬头-个人</div>
-      <div v-for="item of personalList" :key="item.id" class="card_content">
-        <sp-cell center title="单元格" label="描述信息">
-          <template #title>
-            <span class="custom-title">{{ item.name }}</span>
-            <sp-tag type="danger">默认</sp-tag>
-          </template>
+
           <template #right-icon>
             <my-icon
               name="per_ic_addeditor"
@@ -50,41 +45,69 @@ export default {
     [Cell.name]: Cell,
     [Tag.name]: Tag,
   },
+  props: {
+    list: {
+      type: Array,
+      default: () => [],
+    },
+  },
+
   data() {
     return {
-      // 个人列表
-      personalList: [
-        {
-          number: 1,
-          name: '个人名称',
-          price: 22200,
-          time: '2020-20-20 13:45:78',
-        },
-        {
-          number: 2,
-          name: '个人名称',
-          price: 22200,
-          time: '2020-20-20 13:45:78',
-        },
-      ],
-      // 公司列表
-      companyList: [
-        {
-          number: 1,
-          name: '公司名称',
-          price: 22200,
-          time: '2020-20-20 13:45:78',
-        },
-        {
-          number: 2,
-          name: '公司名称',
-          price: 22200,
-          time: '2020-20-20 13:45:78',
-        },
-      ],
+      // 发票类型
+      InvoiceType: {
+        ORDINARY: '电子普通发票',
+        SPECIAL: '增值税专用发票 ',
+      },
+      HeadType: {
+        PERSONAL: '个人',
+        COMPANY: '单位',
+      },
     }
   },
-  methods: {},
+  computed: {
+    ShowList() {
+      const ORDINARY_COMPANY = {
+        title: '电子普通发票-公司',
+        list: [],
+      }
+      const SPECIAL_COMPANY = {
+        title: '增值税专用发票',
+        list: [],
+      }
+      const ORDINARY_PERSONAL = {
+        title: '电子普通发票-个人',
+        list: [],
+      }
+
+      ORDINARY_COMPANY.list = this.list.filter((item) => {
+        return item.headType === 'COMPANY' && item.type === 'ORDINARY'
+      })
+      SPECIAL_COMPANY.list = this.list.filter((item) => {
+        return item.headType === 'COMPANY' && item.type === 'SPECIAL'
+      })
+      ORDINARY_PERSONAL.list = this.list.filter((item) => {
+        return item.headType === 'PERSONAL' && item.type === 'ORDINARY'
+      })
+      const arr = []
+
+      ORDINARY_COMPANY.list.length > 0 && arr.push(ORDINARY_COMPANY)
+      SPECIAL_COMPANY.list.length > 0 && arr.push(SPECIAL_COMPANY)
+      ORDINARY_PERSONAL.list.length > 0 && arr.push(ORDINARY_PERSONAL)
+
+      return arr
+    },
+  },
+  methods: {
+    toHeadEdit(head) {
+      this.$router.push({
+        path: '/order/invoice/headEdit',
+        query: {
+          id: head.id,
+        },
+      })
+    },
+  },
 }
 </script>
 
@@ -93,13 +116,6 @@ export default {
   background: #f5f5f5;
   overflow: hidden;
   padding: 0 0 170px;
-
-  .flex {
-    display: flex;
-  }
-  .flex_1 {
-    flex: 1;
-  }
 
   .card {
     margin-top: 20px;
@@ -120,6 +136,14 @@ export default {
         font-size: 30px;
         color: #222222;
         line-height: 30px;
+      }
+      .custom-tag {
+        font-family: PingFangSC-Regular;
+        // font-size: 20px;
+        color: #ffffff;
+        letter-spacing: 0;
+
+        // height: 28px;
       }
       ::v-deep .sp-cell {
         padding: 32px 0;
