@@ -138,6 +138,13 @@ export default {
     this.getInfo()
   },
   methods: {
+    back() {
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      this.$router.back()
+    },
     getInfo() {},
     del() {
       Dialog.confirm({
@@ -151,11 +158,13 @@ export default {
           // on cancel
         })
     },
+    edit() {},
     submit() {
       this.$refs.form
         .validate()
         .then((res) => {
-          this.$xToast.success('提交成功')
+          this.edit()
+          // this.$xToast.success('提交成功')
         })
         .catch((err) => {
           console.log(err)
@@ -181,7 +190,7 @@ export default {
     }
   }
   .submit_btns ::v-deep .sp-button__text {
-    font-weight: 500;
+    font-weight: 700;
     font-size: 30px;
     font-family: PingFangSC-Medium, PingFang SC;
   }
