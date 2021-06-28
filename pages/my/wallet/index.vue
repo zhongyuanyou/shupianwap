@@ -1,7 +1,11 @@
 <template>
   <div class="wallet">
     <div class="wallet-bg">
-      <Header title="我的余额" custom-jump="true" @backHandle="backHandle">
+      <Header
+        title="我的余额"
+        :custom-jump="customJump"
+        @backHandle="backHandle"
+      >
         <template #right>
           <sp-icon
             v-if="accAccountData.status && accAccountData.status === 1"
@@ -123,19 +127,24 @@ export default {
       checkPassword: '', // 检测是否设置密码
       showAccountBal: false,
       look: 'xianshi',
+      customJump: true,
+      userInfo: '',
+      accountInfo: '',
     }
   },
-  computed: {
-    userInfo() {
-      return JSON.parse(localStorage.getItem('info'))
-    },
-    accountInfo() {
-      return JSON.parse(localStorage.getItem('accountInfo'))
-    },
-  },
+  // computed: {
+  //   userInfo() {
+  //     return JSON.parse(localStorage.getItem('info'))
+  //   },
+  //   accountInfo() {
+  //     return JSON.parse(localStorage.getItem('accountInfo'))
+  //   },
+  // },
   async created() {
+    this.userInfo = JSON.parse(localStorage.getItem('info'))
+    this.accountInfo = JSON.parse(localStorage.getItem('accountInfo'))
     await this.getAccountInfo()
-    this.getAccountBalInfo()
+    await this.getAccountBalInfo()
   },
 
   mounted() {
@@ -178,7 +187,7 @@ export default {
     async checkSetPassword() {
       const res = await this.$axios.get(walletApi.check_set_password, {
         params: {
-          accountId: this.accountInfo.id,
+          accId: this.accountInfo.id,
         },
       })
       if (res.code === 200) {

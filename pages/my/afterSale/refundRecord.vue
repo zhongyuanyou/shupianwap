@@ -17,8 +17,8 @@
             <sp-icon
               class-prefix="spiconfont"
               size="0.82rem"
-              color="#1797EC"
-              name="pay_ic_alipay"
+              color="#4974f5"
+              name="tk_ic_qtzf"
             ></sp-icon>
           </div>
           <div class="desc">

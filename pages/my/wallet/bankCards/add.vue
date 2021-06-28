@@ -139,23 +139,19 @@ export default {
       bankName: '',
       accountBank: '',
       bankCode: '',
-      bankPhone: '13880458128',
+      bankPhone: '',
       bankIconUrl: '',
       showPullPop: false,
       activeIndex: -1,
       searchName: '',
       list: [],
+      userInfo: '',
+      accountInfo: '',
     }
   },
-  computed: {
-    userInfo() {
-      return JSON.parse(localStorage.getItem('info'))
-    },
-    accountInfo() {
-      return JSON.parse(localStorage.getItem('accountInfo'))
-    },
-  },
-  created() {
+  mounted() {
+    this.userInfo = JSON.parse(localStorage.getItem('info'))
+    this.accountInfo = JSON.parse(localStorage.getItem('accountInfo'))
     this.getAccountBankInfo()
     this.getAuthInfo()
   },
@@ -179,7 +175,7 @@ export default {
       if (res.code === 200) {
         this.$router.push('/my/wallet/bankCards/list')
       } else {
-        this.$xToast.show({ message: '绑定失败，换张卡试试' })
+        this.$xToast.error(res.data.error)
       }
     },
     async getBankInfo() {

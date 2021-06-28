@@ -74,7 +74,7 @@ export default {
         this.refundDetailData = res.data.refundDetail
         this.refundProcessData = res.data.refundProcess
       } else {
-        this.$message.error(res.message)
+        this.$router.go(-1)
       }
     },
   },

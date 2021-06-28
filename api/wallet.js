@@ -13,7 +13,7 @@ const walletApi = {
   cardDetails: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/card_details.do`, // 银行卡详情
   add_bank_card: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/bind_card.do`, // 添加银行卡
   card_no: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/card_no.do`, // 根据卡号查银行
-  account_balance_info: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/account_balance_info.do`,
+  account_balance_info: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/account_balance_info.do`, // 获取账户余额信息
   unbundle: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/unbundle.do`, // 解绑银行卡
   account_info: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/account_info.do`, // 实名认证信息
   reset_password: `${CHIPS_WAP_BASE_URL}/nk/wallet/v1/reset_password.do`, // 根据电话修改密码

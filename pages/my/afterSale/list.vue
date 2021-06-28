@@ -115,7 +115,7 @@ export default {
       }
       const newQuery = JSON.parse(JSON.stringify(this.$route.query)) // 深拷贝
       delete newQuery.id // 删除路由参数
-      this.$router.replace({ query: newQuery }) // 跳转路由
+      this.$router.push({ query: newQuery }) // 跳转路由
       this.page = 1
       this.$route.query.id = ''
       this.saleDataList = []

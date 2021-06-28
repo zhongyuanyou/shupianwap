@@ -1,6 +1,10 @@
 <template>
   <div class="set-pwd">
-    <Header title="密码设置" custom-jump="true" @backHandle="backHandle" />
+    <Header
+      title="密码设置"
+      :custom-jump="customJump"
+      @backHandle="backHandle"
+    />
     <div class="title">
       <p class="tips">请输入支付密码</p>
       <p v-show="valid" class="valid-text">密码错误请重新输入</p>
@@ -42,12 +46,17 @@ export default {
       password: '',
       showKeyboard: true,
       valid: false,
+      userInfo: '',
+      customJump: false,
     }
   },
-  computed: {
-    userInfo() {
-      return JSON.parse(localStorage.getItem('info'))
-    },
+  // computed: {
+  //   userInfo() {
+  //     return JSON.parse(localStorage.getItem('info'))
+  //   },
+  // },
+  mounted() {
+    this.userInfo = JSON.parse(localStorage.getItem('info'))
   },
   methods: {
     // 返回到提现页面

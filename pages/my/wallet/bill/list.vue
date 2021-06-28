@@ -57,12 +57,16 @@ export default {
       limit: 10,
       showNoDataImg: false,
       billList: [],
+      userInfo: '',
     }
   },
-  computed: {
-    userInfo() {
-      return JSON.parse(localStorage.getItem('info'))
-    },
+  // computed: {
+  //   userInfo() {
+  //     return JSON.parse(localStorage.getItem('info'))
+  //   },
+  // },
+  mounted() {
+    this.userInfo = JSON.parse(localStorage.getItem('info'))
   },
   methods: {
     async getBillList() {

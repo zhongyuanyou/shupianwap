@@ -1,6 +1,10 @@
 <template>
   <div class="apply">
-    <Header title="申请提交" custom-jump="true" @backHandle="backHandle"/>
+    <Header
+      title="申请提交"
+      :custom-jump="customJump"
+      @backHandle="backHandle"
+    />
     <div class="apply-box">
       <sp-icon
         class-prefix="spiconfont"
@@ -40,6 +44,7 @@ export default {
   data() {
     return {
       withdrawInfo: '',
+      customJump: false,
     }
   },
   mounted() {

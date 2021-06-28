@@ -136,14 +136,13 @@ export default {
       color: #555555;
       line-height: 60px;
       margin-top: 22px;
+      padding: 0 100px;
       span {
         color: #ff3b30;
-        margin: 0 6px;
+        font-weight: bold;
       }
       .num {
-        padding: 10px 12px;
-        border: 1px solid #ff3b30;
-        border-radius: 4px;
+       
       }
     }
     .btns {
