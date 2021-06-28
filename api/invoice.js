@@ -57,6 +57,24 @@ const invoiceApi = {
     })
   },
 
+    /**
+   * 发送发票到邮箱
+   * @param {object} param0
+   * @param {object} params
+   * @param {number} params.email 邮箱
+   * @param {number} params.invoiceId 发票id
+   * @returns
+   */
+     send_invoice_to_email({ axios }, params) {
+      return request({
+        axios,
+        params,
+        method: 'post',
+        url: CHIPS_PC_URL + '/yk/invoice/v1/send_invoice_to_email.do',
+      })
+    },
+
+
 
 
 
@@ -104,4 +122,6 @@ const invoiceApi = {
     })
   },
 }
+
+
 export { invoiceApi }

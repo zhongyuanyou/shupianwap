@@ -72,8 +72,10 @@ export default {
           value: '',
           options: [
             { text: ' 全部类型', value: '' },
-            { text: '服务订单', value: 'PRO_CLASS_TYPE_SALES' },
-            { text: '资源订单', value: 'PRO_CLASS_TYPE_TRANSACTION' },
+            { text: '服务订单', value: '1' },
+            { text: '资源订单', value: '2' },
+            // { text: '服务订单', value: 'PRO_CLASS_TYPE_SALES' },
+            // { text: '资源订单', value: 'PRO_CLASS_TYPE_TRANSACTION' },
           ],
         },
       ],

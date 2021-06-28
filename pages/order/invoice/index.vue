@@ -112,36 +112,7 @@ export default {
       page: 1,
       limit: 15,
 
-      list: [
-        // {
-        //   number: 1,
-        //   status: 1,
-        //   goods: [
-        //     {
-        //       name: '1111111111111111111111111111111111111111111111111',
-        //       img: '',
-        //     },
-        //     {
-        //       name: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-        //       img: '',
-        //     },
-        //   ],
-        // },
-        // {
-        //   number: 2,
-        //   status: 2,
-        //   goods: [
-        //     {
-        //       name: '1111111111111111111111111111111111111111111111111',
-        //       img: '',
-        //     },
-        //     {
-        //       name: '1111111111111111111111111111111111111111111111111',
-        //       img: '',
-        //     },
-        //   ],
-        // },
-      ],
+      list: [],
 
       AllInvoiceSelectState: {
         orderProType: '', // 订单类型
@@ -313,6 +284,8 @@ export default {
 
 <style lang="less" scoped>
 .invoice {
+  min-height: 100%;
+  padding-bottom: 150px;
   .empty-text ::v-deep .sp-empty__description {
     font-size: 30px;
     font-family: PingFangSC-Medium, PingFang SC;

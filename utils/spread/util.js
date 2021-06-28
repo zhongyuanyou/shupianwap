@@ -288,7 +288,7 @@ const priceHandle = (p) => {
   const price = computed.calculate(`${p} / 100`)
   let str = price
   if (price < 500000) {
-    str = '50以万下'
+    str = '50万以下'
   }
   if (price >= 500000 && price < 1000000) {
     str = '50-100万'

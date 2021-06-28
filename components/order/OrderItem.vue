@@ -65,7 +65,9 @@
         class="order-infos"
         :class="index !== 0 ? 'border-top' : ''"
       >
-        <sp-image :src="item.indexImg" alt="" class="img" srcset="" />
+        <div class="img">
+          <sp-image :src="item.indexImg" alt="" class="sp-image" srcset="" />
+        </div>
         <div class="right">
           <p class="goods-name">
             <span
@@ -347,12 +349,13 @@ export default {
     .img {
       width: 130px;
       height: 130px;
-      background: rgba(0, 0, 0, 0.16);
-      border-radius: 8px;
-      overflow: hidden;
-      img {
-        width: 100%;
-        height: 100%;
+      .sp-image {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        border-radius: 8px;
+        overflow: hidden;
       }
     }
     .right {

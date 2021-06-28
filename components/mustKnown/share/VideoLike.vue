@@ -236,6 +236,8 @@ export default {
           span:first-child {
             font: 26px @fontf-pfsc-med;
             color: #555555;
+            width: 165px;
+            .mixin-text-oneoverflow();
           }
           span:nth-child(2) {
             font: 24px @fontf-pfsc-reg;

@@ -19,12 +19,24 @@
           @click="openApp"
         />
         <div class="info-brand-tile" @click="openApp">
-          <div class="name">{{ vDetail.authorName }}</div>
+          <div
+            class="name"
+            :class="[
+              vDetail.custbriefIntroduction === '' ? 'z-nontebuttom' : '',
+            ]"
+          >
+            {{ vDetail.authorName }}
+          </div>
           <div class="desc">{{ vDetail.custbriefIntroduction }}</div>
         </div>
         <sp-button color="#4974F5" class="button" @click="openApp">
-          <my-icon name="tianjia" size="0.2rem" color="#FFFFFF" />
-          关注</sp-button
+          <my-icon
+            class="add-icon"
+            name="jiahao"
+            size="0.2rem"
+            color="#FFFFFF"
+          />
+          <span>关注</span></sp-button
         >
       </div>
       <div class="info-tile" @click="openApp">{{ vDetail.videoName }}</div>
@@ -168,6 +180,9 @@ export default {
           font: bold 32px @fontf-pfsc-med;
           color: #222222;
           margin-bottom: 16px;
+          &.z-nontebuttom {
+            margin-bottom: 0;
+          }
         }
         .desc {
           .mixin-text-oneoverflow();
@@ -203,6 +218,15 @@ export default {
     width: 144px;
     height: 64px;
     padding: 0;
+  }
+  ::v-deep .sp-button__text {
+    display: flex;
+    align-items: center;
+    font-size: 26px;
+    font-weight: bold;
+    .add-icon {
+      margin-right: 12px;
+    }
   }
 }
 </style>

@@ -10,22 +10,15 @@
             <template #input>
               <div class="options">
                 <sp-button
+                  v-for="(invoicetype, key) in InvoiceType"
+                  :key="key"
                   class="btn"
+                  :class="{ active: key === formData.type }"
                   size="small"
                   type="primary"
-                  :class="{ active: formData.type === '普通发票' }"
-                  @click="formData.type = '普通发票'"
+                  @click="formData.type = key"
                 >
-                  普通发票
-                </sp-button>
-                <sp-button
-                  class="btn"
-                  size="small"
-                  type="primary"
-                  :class="{ active: formData.type === '专用发票' }"
-                  @click="formData.type = '专用发票'"
-                >
-                  专用发票
+                  {{ invoicetype }}
                 </sp-button>
               </div>
             </template>
@@ -35,22 +28,15 @@
             <template #input>
               <div class="options">
                 <sp-button
+                  v-for="(headType, key) in HeadType"
+                  :key="key"
                   class="btn"
-                  :class="{ active: formData.headType === '个人' }"
+                  :class="{ active: key === formData.headType }"
                   size="small"
                   type="primary"
-                  @click="formData.headType = '个人'"
+                  @click="formData.headType = key"
                 >
-                  个人
-                </sp-button>
-                <sp-button
-                  class="btn"
-                  :class="{ active: formData.headType === '单位' }"
-                  size="small"
-                  type="primary"
-                  @click="formData.headType = '单位'"
-                >
-                  单位
+                  {{ headType }}
                 </sp-button>
               </div>
             </template>
@@ -64,7 +50,7 @@
               :rules="[{ required: true, message: '请填写发票抬头' }]"
             />
 
-            <div v-if="formData.headType === '单位'">
+            <div v-if="formData.headType === 'COMPANY'">
               <sp-field
                 v-model="formData.dutyParagraph"
                 required
@@ -97,14 +83,14 @@
         </sp-cell-group>
       </div>
     </div>
-    <div v-if="formData.type === '普通发票'" class="set_default">
+    <div v-if="formData.type === 'ORDINARY'" class="set_default">
       <sp-field label="设为默认" center>
         <template #input>
           <div class="placeholder">每次开票时会默认填写抬头信息</div>
         </template>
         <template #button>
           <sp-switch
-            v-model="formData.defaultHead"
+            v-model="defaultHead"
             class="switch"
             size="0.5rem"
             :active-value="1"
@@ -114,11 +100,7 @@
       </sp-field>
     </div>
     <sp-bottombar safe-area-inset-bottom>
-      <sp-bottombar-button
-        type="primary"
-        text="添加发票抬头"
-        @click="onSubmit"
-      />
+      <sp-bottombar-button type="primary" text="立即添加" @click="onSubmit" />
     </sp-bottombar>
 
     <Loading-center v-show="loading" />
@@ -170,9 +152,18 @@ export default {
     return {
       loading: false, // 加载效果状态
 
+      // 发票类型
+      InvoiceType: {
+        ORDINARY: '电子普通发票',
+        SPECIAL: '增值税专用发票 ',
+      },
+      HeadType: {
+        PERSONAL: '个人',
+        COMPANY: '单位',
+      },
       formData: {
-        type: '普通发票', // 发票类型(普通发票、专用发票)
-        headType: '个人', // 抬头类型(个人/单位)
+        type: 'ORDINARY', // 发票类型 InvoiceType
+        headType: 'PERSONAL', // 抬头类型(个人/单位)
         invoiceHead: '', // 发票抬头(专票时必填)
 
         address: '', // 注册地址
@@ -180,9 +171,8 @@ export default {
         bankNumber: '', // 银行账号
         depositBank: '', // 开户银行
         dutyParagraph: '', // 纳税人识别号
-
-        defaultHead: 0, // 默认抬头(0 非默认 1 默认 仅针对普票有效)
       },
+      defaultHead: 0, // 默认抬头(0 非默认 1 默认 仅针对普票有效)
     }
   },
   computed: {
@@ -193,6 +183,22 @@ export default {
       token: (state) => state.user.token,
       userPhone: (state) => state.user.userPhone,
     }),
+  },
+  watch: {
+    'formData.type'(type) {
+      // console.log(type)
+      if (this.formData.type === 'SPECIAL') {
+        this.formData.headType = 'COMPANY'
+        this.HeadType = {
+          COMPANY: '单位',
+        }
+      } else {
+        this.HeadType = {
+          PERSONAL: '个人',
+          COMPANY: '单位',
+        }
+      }
+    },
   },
   methods: {
     onSubmit() {
@@ -212,18 +218,23 @@ export default {
         userId: this.userId,
         ...this.formData,
       }
+      if (this.formData.type === 'ORDINARY') {
+        // 普通电子发票才能设置默认
+        params.defaultHead = this.defaultHead
+      }
+
       invoiceApi
         .add_invoice_header({ axios: this.$axios }, params)
         .then((res) => {
           console.log('res', res)
           this.loading = false
-          this.$xToast.success(res.message)
+          this.$xToast.success((res && res.message) || '添加成功')
         })
         .catch((error) => {
           console.error(error)
 
           this.loading = false
-          this.$xToast.error(error.message || '请求失败，请重试')
+          this.$xToast.error((error && error.message) || '请求失败，请重试')
         })
     },
   },
