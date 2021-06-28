@@ -133,9 +133,7 @@ export default {
         customerSex: this.userInfoData.sex || 2,
         customerAttribute: '交易商品降价提醒',
         // content: `yxjg:${this.$refs.bargCom.price}`, // 留言内容
-        requireCode:
-          goodsDetail.classCodeLevelList[1] ||
-          goodsDetail.classCodeLevelList[0], // 需求编码 产品编码二级分类
+        requireCode: goodsDetail.classCodeLevelList[1], // 需求编码 产品编码二级分类
       }
       this.$axios
         .post(transactionConsApi.resouse_form, formData)

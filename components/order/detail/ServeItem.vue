@@ -1,6 +1,8 @@
 <template>
   <div class="item-inner">
-    <sp-image class="img" :src="item.indexImg"></sp-image>
+    <div class="img">
+      <sp-image :src="item.indexImg" alt="" class="sp-image" srcset="" />
+    </div>
     <div
       class="right"
       :class="
@@ -212,9 +214,14 @@ export default {
   .img {
     width: 130px;
     height: 130px;
-    background: rgba(0, 0, 0, 0.16);
-    border-radius: 8px;
-    overflow: hidden;
+    .sp-image {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      border-radius: 8px;
+      overflow: hidden;
+    }
   }
   .right {
     flex: 1;
