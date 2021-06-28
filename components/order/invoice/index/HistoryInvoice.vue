@@ -32,7 +32,7 @@
           <span class="name">{{ item.invoiceHeaderName }}</span>
         </div>
         <div class="price">
-          {{ item.invoiceMoney }}
+          {{ changeMoney(item.invoiceMoney) }}
           <span class="unit">元</span>
         </div>
       </div>
@@ -42,6 +42,7 @@
 
 <script>
 import { Image, Button, Empty } from '@chipspc/vant-dgg'
+import changeMoney from '@/utils/changeMoney.js'
 export default {
   components: {
     [Image.name]: Image,
@@ -64,6 +65,9 @@ export default {
     }
   },
   methods: {
+    changeMoney(RMB) {
+      return RMB ? changeMoney.regFenToYuan(RMB) : ''
+    },
     toInvoiceDetail(orderData) {
       this.$router.push({
         path: '/order/invoice/detail',

@@ -302,6 +302,9 @@ export default {
           if (res && res.invoiceMoney) {
             res.invoiceMoney = changeMoney.regFenToYuan(res.invoiceMoney)
           }
+          if (res && res.receiverEmail) {
+            this.sendEmail = res.receiverEmail
+          }
           this.formData = res || {}
           // {
           //   applySource: "COMDIC_PLATFORM_CRISPS",
@@ -418,10 +421,6 @@ export default {
   ::v-deep .my-head {
     background: #fff;
   }
-
-  // .spiconfont {
-  //   color: #1a1a1a !important;
-  // }
 }
 ::v-deep .my-head {
   background: none;

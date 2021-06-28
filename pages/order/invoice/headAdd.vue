@@ -184,6 +184,22 @@ export default {
       userPhone: (state) => state.user.userPhone,
     }),
   },
+  watch: {
+    'formData.type'(type) {
+      // console.log(type)
+      if (this.formData.type === 'SPECIAL') {
+        this.formData.headType = 'COMPANY'
+        this.HeadType = {
+          COMPANY: '单位',
+        }
+      } else {
+        this.HeadType = {
+          PERSONAL: '个人',
+          COMPANY: '单位',
+        }
+      }
+    },
+  },
   methods: {
     onSubmit() {
       this.$refs.form
