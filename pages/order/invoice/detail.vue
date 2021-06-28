@@ -31,7 +31,7 @@
     <div class="card">
       <div class="type_list">
         <span>发票类型</span>
-        <span>{{ formData.invoiceType }}</span>
+        <span>{{ InvoiceType[formData.invoiceType] }}</span>
       </div>
     </div>
 
@@ -44,7 +44,13 @@
       </div>
       <div class="invoice_info_list">
         <div>抬头类型</div>
-        <div>{{ formData.invoiceHeader }}</div>
+        <div>
+          {{
+            formData.invoiceHeader == 'INVOICE_HEADER_PERSONAL'
+              ? '个人'
+              : '单位'
+          }}
+        </div>
       </div>
       <div class="invoice_info_list">
         <div>抬头名</div>
@@ -78,11 +84,11 @@
       <div class>
         <div class="invoice_info_list">
           <div>手机号码</div>
-          <div>{{ formData.username }}</div>
+          <div>{{ formData.receiverPhone }}</div>
         </div>
         <div class="invoice_info_list">
           <div>电子邮箱</div>
-          <div>{{ formData.email }}</div>
+          <div>{{ formData.receiverEmail }}</div>
         </div>
       </div>
     </div>
@@ -147,6 +153,8 @@ import Header from '@/components/common/head/header.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { invoiceApi } from '@/api/index.js'
 
+import changeMoney from '@/utils/changeMoney.js'
+
 export default {
   layout: 'keepAlive',
   name: 'Invoice',
@@ -167,6 +175,13 @@ export default {
 
       orderId: '', // 订单id
 
+      // 发票类型
+      InvoiceType: {
+        '027': '增值税电子专用发票',
+        '026': '增值税电子普通发票 ',
+        '007': '增值税普通发票 ',
+        '004': '增值税专用发票',
+      },
       formData: {
         status: 1,
 
@@ -252,7 +267,7 @@ export default {
           tips: '请对本次服务进行评价，谢谢您的支持',
         },
       }
-      const invoiceStatus = this.formData.invoiceStatus
+      const invoiceStatus = this.formData?.invoiceStatus || ''
       if (
         invoiceStatus === 'INVOICE_STATUS_REJECT' ||
         invoiceStatus === 'INVOICE_STATUS_FAIL'
@@ -283,8 +298,41 @@ export default {
         )
         .then((res) => {
           this.loading = false
-
-          this.formData = res.data
+          console.log(' res', res)
+          if (res && res.invoiceMoney) {
+            res.invoiceMoney = changeMoney.regFenToYuan(res.invoiceMoney)
+          }
+          if (res && res.receiverEmail) {
+            this.sendEmail = res.receiverEmail
+          }
+          this.formData = res || {}
+          // {
+          //   applySource: "COMDIC_PLATFORM_CRISPS",
+          //   applyTime: "2021-06-28 14:21:24",
+          //   applyUserId: "767579755195165966",,
+          //   applyUserName: "唐代兵",
+          //   bankAccount: "",
+          //   bankOfDeposit: "",
+          //   // goods: [,…],
+          //   id: "1251978880678714646",
+          //   invoiceApplyNo: "FP210628005002",
+          //   invoiceContent: "商品明细",
+          //   invoiceHeader: "INVOICE_HEADER_PERSONAL",
+          //   invoiceHeaderName: "h1",
+          //   invoiceMoney: "2",
+          //   invoiceStatus: "INVOICE_STATUS_PROCESS",
+          //   invoiceType: "027",
+          //   isValid: 1,
+          //   orderId: "8083886946797813760",
+          //   orderNo: "D21052164188",
+          //   receiverEmail: "h@adtk.cn",
+          //   receiverPhone: "17608390654",
+          //   registerAddress: "",
+          //   registerTel: "",
+          //   signStoreId: "607997736314104054",
+          //   signStoreName: "案加测试一公司",
+          //   taxpayerIdentifNum: "",
+          // }
         })
         .catch((error) => {
           this.loading = false
@@ -313,6 +361,26 @@ export default {
         return done()
       }
       if (this.sendEmail) {
+        invoiceApi
+          .send_invoice_to_email(
+            { axios: this.$axios },
+            {
+              email: this.sendEmail,
+              invoiceId: this.formData.id,
+            }
+          )
+          .then((res) => {
+            console.log('res', res)
+            this.loading = false
+            this.$xToast.success((res && res.message) || '成功')
+          })
+          .catch((error) => {
+            console.error(error)
+
+            this.loading = false
+            this.$xToast.error((error && error.message) || '请求失败，请重试')
+          })
+
         done()
       } else {
         this.$xToast.error('请输入邮箱地址')
@@ -353,10 +421,6 @@ export default {
   ::v-deep .my-head {
     background: #fff;
   }
-
-  // .spiconfont {
-  //   color: #1a1a1a !important;
-  // }
 }
 ::v-deep .my-head {
   background: none;
