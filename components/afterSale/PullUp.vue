@@ -15,6 +15,7 @@
             v-for="(item, index) in list"
             :key="index"
             class="bank-li"
+            :class="{ active: index === activeIndex }"
             @click="selectItem(item.name, item.code, index)"
           >
             <p>{{ item.name }}</p>
@@ -102,6 +103,9 @@ export default {
           justify-content: space-between;
           .spiconfont-gou {
             font-weight: bold;
+          }
+          &.active {
+            color: #4974f5;
           }
           .bank-logo {
             width: 48px;

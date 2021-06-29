@@ -1,6 +1,10 @@
 <template>
   <div class="bank">
-    <Header title="银行卡管理" custom-jump="true" @backHandle="backHandle"/>
+    <Header
+      title="银行卡管理"
+      :custom-jump="customJump"
+      @backHandle="backHandle"
+    />
     <div class="bank-list">
       <ul v-if="cardList.length > 0">
         <li
@@ -110,14 +114,17 @@ export default {
       // ],
       cardList: [],
       showNoDataImg: false,
+      accountInfo: '',
+      customJump: false,
     }
   },
-  computed: {
-    accountInfo() {
-      return JSON.parse(localStorage.getItem('accountInfo'))
-    },
-  },
-  created() {
+  // computed: {
+  //   accountInfo() {
+  //     return JSON.parse(localStorage.getItem('accountInfo'))
+  //   },
+  // },
+  mounted() {
+    this.accountInfo = JSON.parse(localStorage.getItem('accountInfo'))
     this.bankCardsList()
   },
   methods: {

@@ -186,7 +186,7 @@
                     应付 {{ item.enablePayMoneyYuan || '' }}元，实付
                     {{ item.actualPayMoneyYuan || '' }}元
                   </div>
-                  <div class="refund-money">
+                  <div v-if="item.afterSaleMoney > 0" class="refund-money">
                     退款金额 {{ item.afterSaleMoneyYuan || '' }}元
                   </div>
                 </div>
@@ -226,7 +226,10 @@
                 </div>
               </li> -->
             </ul>
-            <div class="total-refund_amount">
+            <div
+              v-if="afterSaleDetail.realRefundTotalMoney > 0"
+              class="total-refund_amount"
+            >
               <div class="title">应退款：</div>
               <div class="money">
                 {{ afterSaleDetail.realRefundTotalMoney }}<span>元</span>
@@ -286,7 +289,9 @@
       <button
         v-if="
           afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_5' ||
-          afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_6'
+          afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_6' ||
+          afterSaleDetail.afterPlatInvolvedCount <
+            afterSaleDetail.platInvolvedCount
         "
         @click="openDialog(0)"
       >
@@ -433,6 +438,8 @@ export default {
         },
       ],
       userDoTypeCode: '',
+      loading: false,
+      // userInfo: '',
     }
   },
   computed: {
@@ -440,15 +447,17 @@ export default {
       return JSON.parse(localStorage.getItem('info'))
     },
   },
-  created() {
+  // created() {
+  //   this.getAfterSaleDetails()
+  // },
+  mounted() {
     this.getAfterSaleDetails()
   },
-  mounted() {
-    console.log(this.userInfo)
-  },
+  // mounted() {
+  //   this.userInfo = JSON.parse(localStorage.getItem('info'))
+  // },
   methods: {
     async getAfterSaleDetails() {
-      console.log(afterSaleApi.detail)
       this.loading = true
       const res = await this.$axios.get(afterSaleApi.detail, {
         params: {
@@ -462,7 +471,7 @@ export default {
       this.loading = false
       if (res.code === 200) {
         this.afterSaleDetail = res.data
-        console.log(this.afterSaleDetail)
+        console.log(this.afterSaleDetail.afterSaleStatusNo)
         switch (this.afterSaleDetail.afterSaleStatusNo) {
           case 'AFTERSALE_STATUS_1':
             this.statusBar = this.status[0]
@@ -481,16 +490,20 @@ export default {
             break
           case 'AFTERSALE_STATUS_4':
             if (
-              this.afterSaleDetail.refundStatusNo === 'REFUND_STATUS_1' ||
-              this.afterSaleDetail.refundStatusNo === 'REFUND_STATUS_4'
+              this.afterSaleDetail.refundStautsNo === 'REFUND_STATUS_1' ||
+              this.afterSaleDetail.refundStautsNo === 'REFUND_STATUS_4'
             ) {
               this.statusBar = this.status[2]
               this.statusBar.title = '已完成'
-              this.statusBar.desc = '退款成功'
+              if (this.afterSaleDetail.refundStautsNo === 'REFUND_STATUS_1') {
+                this.statusBar.desc = '售后完成'
+              } else {
+                this.statusBar.desc = '退款成功'
+              }
             } else if (
-              this.afterSaleDetail.refundStatusNo === 'REFUND_STATUS_2' ||
-              this.afterSaleDetail.refundStatusNo === 'REFUND_STATUS_3' ||
-              this.afterSaleDetail.refundStatusNo === 'REFUND_STATUS_5'
+              this.afterSaleDetail.refundStautsNo === 'REFUND_STATUS_2' ||
+              this.afterSaleDetail.refundStautsNo === 'REFUND_STATUS_3' ||
+              this.afterSaleDetail.refundStautsNo === 'REFUND_STATUS_5'
             ) {
               this.statusBar = this.status[0]
               this.statusBar.title = '退款中'

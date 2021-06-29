@@ -18,6 +18,7 @@ import { mapState } from 'vuex'
 import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
+import { invoiceApi } from '@/api/index.js'
 
 export default {
   layout: 'keepAlive',
@@ -33,21 +34,40 @@ export default {
   data() {
     return {
       loading: false, // 加载效果状态
-      type: 2,
-      formData: { username: '' },
-      checked: true,
+
+      formData: {},
     }
   },
+  mounted() {
+    this.orderId = this.$route.query.orderId
+    this.init()
+  },
   methods: {
-    del() {},
-    submit() {},
-    // back() {
-    //   if (this.isInApp) {
-    //     this.$appFn.dggWebGoBack((res) => {})
-    //     return
-    //   }
-    //   this.$router.back()
-    // },
+    init() {
+      if (!this.orderId) {
+        return this.$xToast.error('没有指定订单')
+      }
+      this.loading = true
+      invoiceApi
+        .invoice_detail(
+          { axios: this.$axios },
+          {
+            orderId: this.orderId,
+            // type: 1, // 是否查询订单商品信息，1查询，默认不查，根据订单id查询时有效
+          }
+        )
+        .then((res) => {
+          this.loading = false
+          console.log(' res', res)
+
+          this.formData = res || {}
+        })
+        .catch((error) => {
+          this.loading = false
+          console.error(error)
+          this.$xToast.error(error.message || '请求失败，请重试')
+        })
+    },
   },
 }
 </script>
@@ -60,6 +80,8 @@ export default {
 
   .preview_image {
     position: absolute;
+    width: 100%;
+    text-align: center;
     top: 50%;
     transform: translateY(-50%);
   }

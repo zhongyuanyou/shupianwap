@@ -42,13 +42,14 @@
                 </div>
                 <div
                   v-if="
-                    (item.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_6' ||
-                      item.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_9') &&
-                    child.afterSaleMoneyYuan > 0
+                    item.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_6' ||
+                    item.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_9'
                   "
                   class="refund-money"
                 >
-                  退款金额 {{ item.afterSaleMoney || '' }}元
+                  <span v-if="child.afterSaleMoneyYuan > 0"
+                    >退款金额 {{ child.afterSaleMoneyYuan || '' }}元</span
+                  >
                 </div>
               </div>
               <div class="img-mark">
@@ -66,6 +67,30 @@
             </li>
           </ul>
         </div>
+
+        <!-- break
+          case 'AFTERSALE_STATUS_4':
+            if (
+              this.afterSaleDetail.refundStatusNo === 'REFUND_STATUS_1' ||
+              this.afterSaleDetail.refundStatusNo === 'REFUND_STATUS_4'
+            ) {
+              this.statusBar = this.status[2]
+              this.statusBar.title = '已完成'
+              if (this.afterSaleDetail.refundStatusNo === 'REFUND_STATUS_1') {
+                this.statusBar.desc = '售后完成'
+              } else {
+                this.statusBar.desc = '退款成功'
+              }
+            } else if (
+              this.afterSaleDetail.refundStatusNo === 'REFUND_STATUS_2' ||
+              this.afterSaleDetail.refundStatusNo === 'REFUND_STATUS_3' ||
+              this.afterSaleDetail.refundStatusNo === 'REFUND_STATUS_5'
+            ) {
+              this.statusBar = this.status[0]
+              this.statusBar.title = '退款中'
+              this.statusBar.desc =
+                '退款将会在5个工作日打款到您的账户，请注意查收'
+            } -->
 
         <!-- 售后中,待确认，退款中，已关闭 -->
         <div
@@ -90,27 +115,33 @@
           <span>请您确认售后方案</span>
         </div>
         <div
-          v-else-if="
-            item.afterSaleStatusNo === 'AFTERSALE_STATUS_4' &&
-            (item.refundStatusNo === 'REFUND_STATUS_2' ||
-              item.refundStatusNo === 'REFUND_STATUS_4')
-          "
+          v-else-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_4'"
           class="status"
         >
-          <strong>售后完成</strong>
-          <span>退款完成</span>
-        </div>
-        <div
-          v-if="
-            item.afterSaleStatusNo === 'AFTERSALE_STATUS_4' &&
-            (item.refundStatusNo === 'REFUND_STATUS_2' ||
-              item.refundStatusNo === 'REFUND_STATUS_3' ||
-              item.refundStatusNo === 'REFUND_STATUS_5')
-          "
-          class="status"
-        >
-          <strong>退款中</strong>
-          <span>退款中</span>
+          <div
+            v-if="
+              item.refundStautsNo === 'REFUND_STATUS_1' ||
+              item.refundStautsNo === 'REFUND_STATUS_4'
+            "
+          >
+            <strong>已完成</strong>
+            <span v-if="item.refundStautsNo === 'REFUND_STATUS_1'"
+              >售后完成</span
+            >
+            <span v-else-if="item.refundStautsNo === 'REFUND_STATUS_4'"
+              >退款成功</span
+            >
+          </div>
+          <div
+            v-else-if="
+              item.refundStautsNo === 'REFUND_STATUS_2' ||
+              item.refundStautsNo === 'REFUND_STATUS_3' ||
+              item.refundStautsNo === 'REFUND_STATUS_5'
+            "
+          >
+            <strong>退款中</strong>
+            <span>退款将会在5个工作日打款到您的账户，请注意查收</span>
+          </div>
         </div>
         <div
           v-else-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_5'"
@@ -133,11 +164,17 @@
         <div class="detail-btn">
           <button
             v-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_4'"
-            @click="$router.push('/my/afterSale/refundDetails')"
+            @click="$router.push(`/my/afterSale/refundDetails?id=1260895307866488074`)"
           >
             退款详情
           </button>
-          <button @click="$router.push(`/my/afterSale/detail?id=${item.id}&orderId=${item.orderId}&orderNo=${item.orderNo}`)">
+          <button
+            @click="
+              $router.push(
+                `/my/afterSale/detail?id=${item.id}&orderId=${item.orderId}&orderNo=${item.orderNo}`
+              )
+            "
+          >
             售后详情
           </button>
         </div>

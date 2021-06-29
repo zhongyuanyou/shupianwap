@@ -100,11 +100,28 @@
         <div>2、电子发票可以在订单确认后，在订单详情中查看和下载。</div>
       </div>
     </div>
-    <div class="card footer">
-      <sp-button size="normal" type="primary" plain @click="submit">
+    <div
+      v-if="
+        formData.invoiceStatus == 'INVOICE_STATUS_REJECT' ||
+        formData.invoiceStatus == 'INVOICE_STATUS_FAIL' ||
+        formData.invoiceStatus == 'INVOICE_STATUS_SUCCESS'
+      "
+      class="card footer"
+    >
+      <sp-button
+        v-if="
+          formData.invoiceStatus == 'INVOICE_STATUS_REJECT' ||
+          formData.invoiceStatus == 'INVOICE_STATUS_FAIL'
+        "
+        size="normal"
+        type="primary"
+        plain
+        @click="toInvoiceApply"
+      >
         重新申请
       </sp-button>
       <sp-button
+        v-if="formData.invoiceStatus == 'INVOICE_STATUS_SUCCESS'"
         size="normal"
         type="default"
         plain
@@ -112,7 +129,13 @@
       >
         发送邮箱
       </sp-button>
-      <sp-button size="normal" type="default" plain @click="toPreview">
+      <sp-button
+        v-if="formData.invoiceStatus == 'INVOICE_STATUS_SUCCESS'"
+        size="normal"
+        type="default"
+        plain
+        @click="toPreview"
+      >
         查看发票
       </sp-button>
     </div>
@@ -293,7 +316,7 @@ export default {
           { axios: this.$axios },
           {
             orderId: this.orderId,
-            type: 1, // 是否查询订单商品信息，1查询，默认不查，根据订单id查询时有效
+            // type: 1, // 是否查询订单商品信息，1查询，默认不查，根据订单id查询时有效
           }
         )
         .then((res) => {
@@ -341,10 +364,25 @@ export default {
         })
     },
     toPreview() {
-      this.$router.push('/order/invoice/preview')
+      this.$router.push({
+        path: '/order/invoice/preview',
+        query: {
+          orderId: this.formData.orderId,
+        },
+      })
     },
+    toInvoiceApply() {
+      this.$router.push({
+        path: '/order/invoice/invoiceApply',
+        query: {
+          orderId: this.formData.orderId,
+        },
+      })
+    },
+
     submit() {
       // this.$xToast.show({ message: '提交成功' })
+      this.$router.push('/order/invoice/invoiceApply')
       this.$xToast.success('提交成功')
     },
     moneyTips() {
@@ -366,22 +404,21 @@ export default {
             { axios: this.$axios },
             {
               email: this.sendEmail,
-              invoiceId: this.formData.id,
+              orderId: this.formData.orderId,
             }
           )
           .then((res) => {
             console.log('res', res)
             this.loading = false
             this.$xToast.success((res && res.message) || '成功')
+            done()
           })
           .catch((error) => {
             console.error(error)
-
+            done(false)
             this.loading = false
             this.$xToast.error((error && error.message) || '请求失败，请重试')
           })
-
-        done()
       } else {
         this.$xToast.error('请输入邮箱地址')
         done(false)

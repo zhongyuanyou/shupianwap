@@ -147,12 +147,16 @@ export default {
       currentIndex: '',
       activeIndex: null,
       pictrueDetail: '',
+      userInfo: '',
     }
   },
-  computed: {
-    userInfo() {
-      return JSON.parse(localStorage.getItem('info'))
-    },
+  // computed: {
+  //   userInfo() {
+  //     return JSON.parse(localStorage.getItem('info'))
+  //   },
+  // },
+  mounted() {
+    this.userInfo = JSON.parse(localStorage.getItem('info'))
   },
   methods: {
     async submit() {
@@ -203,7 +207,7 @@ export default {
         })
         this.$router.push(`/my/afterSale/apply?id=${res.data.afterSaleId}`)
       } else {
-        this.$message.error(res.message)
+        this.$xToast.error(res.data.error)
       }
     },
     async afterRead(fileObj) {

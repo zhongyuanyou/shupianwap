@@ -95,6 +95,9 @@
           <div class="order_text">
             {{ item.name }}
           </div>
+          <div v-if="index === 5 && saleDataListNum > 0" class="jb_num">
+            {{ saleDataListNum }}
+          </div>
         </div>
       </div>
     </div>
@@ -294,7 +297,7 @@
 <script>
 import { Button, Image, CenterPopup } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import { userinfoApi, evaluateApi } from '@/api'
+import { userinfoApi, evaluateApi, afterSaleApi } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 // import { GOODSLIST } from '~/config/constant'
 import { imInit } from '@/utils/im'
@@ -341,7 +344,7 @@ export default {
           type: 'daipingjia',
         },
         {
-          iconName: 'trading_ic_price',
+          iconName: 'per_ic_tksh',
           name: '退款/售后',
         },
       ],
@@ -359,7 +362,7 @@ export default {
         help: 'g956fupye1c00.png', // 帮助中心
         complain: '6v7la4yubzk0000.png', // 我要吐槽
         about: 'ea2fs9wtslk0000.png', // 关于我们
-        qianbao: 'caifang_mian',
+        qianbao: '62cvqnmjl5s0000.png', // 钱包
       },
 
       info: {
@@ -377,6 +380,7 @@ export default {
       realStatus: '',
       evaluateNumFlag: 'none', // 评论标识状态
       evaluateNum: 0, // 评价数量
+      saleDataListNum: 0, // 售后单数量
     }
   },
   computed: {
@@ -474,7 +478,7 @@ export default {
         {
           // iconName: 'per_ic_about',
           name: '我的钱包',
-          img: this.$ossImgSetV2(this.imgList.about),
+          img: this.$ossImgSetV2(this.imgList.qianbao),
           url: '/my/wallet',
         },
       ]
@@ -490,6 +494,7 @@ export default {
       }
       this.getUserInfo()
       this.getEvaluateNumApi()
+      this.getAfterSaleListNum()
       if (!this.token) {
         localStorage.removeItem('info')
       }
@@ -497,6 +502,22 @@ export default {
   },
 
   methods: {
+    // 初始化获取售后单数
+    async getAfterSaleListNum() {
+      const res = await this.$axios.post(afterSaleApi.list, {
+        page: '1',
+        limit: '10',
+        afterSaleStatusNoList: [
+          'AFTERSALE_STATUS_1',
+          'AFTERSALE_STATUS_2 ',
+          'AFTERSALE_STATUS_3',
+        ],
+        type: '3',
+      })
+      if (res.code === 200) {
+        this.saleDataListNum = res.data.totalCount
+      }
+    },
     toKnownHome(info) {
       if (this.token && this.userId) {
         this.$router.push({
@@ -801,6 +822,7 @@ export default {
         min-width: 108px;
         margin-bottom: 30px;
         padding: 0 10px;
+        position: relative;
         // flex-shrink: 0;
         // flex: 1;
         .icon {
@@ -839,6 +861,19 @@ export default {
           color: #222222;
           line-height: 24px;
           padding-top: 20px;
+        }
+        .jb_num {
+          position: absolute;
+          right: 0;
+          top: -6px;
+          width: 30px;
+          text-align: center;
+          height: 30px;
+          line-height: 32px;
+          border-radius: 30px;
+          background: red;
+          color: #fff;
+          font-size: 20px;
         }
       }
     }

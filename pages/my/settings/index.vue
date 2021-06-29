@@ -50,12 +50,16 @@ export default {
       imgList: {
         tx: '2exrifx8gxes000.png',
       },
+      userInfo: '',
     }
   },
-  computed: {
-    userInfo() {
-      return JSON.parse(localStorage.getItem('info'))
-    },
+  // computed: {
+  //   userInfo() {
+  //     return
+  //   },
+  // },
+  mounted() {
+    this.userInfo = JSON.parse(localStorage.getItem('info'))
   },
 }
 </script>

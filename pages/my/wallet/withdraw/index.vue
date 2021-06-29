@@ -1,6 +1,6 @@
 <template>
   <div class="withdraw">
-    <Header title="提现" custom-jump="true" @backHandle="backHandle">
+    <Header title="提现" :custom-jump="customJump" @backHandle="backHandle">
       <template #right>
         <span
           class="recording"
@@ -99,17 +99,22 @@ export default {
       currentId: '',
       accBalanceData: '',
       amount: '',
+      userInfo: '',
+      accountInfo: '',
+      customJump: false,
     }
   },
-  computed: {
-    userInfo() {
-      return JSON.parse(localStorage.getItem('info'))
-    },
-    accountInfo() {
-      return JSON.parse(localStorage.getItem('accountInfo'))
-    },
-  },
-  created() {
+  // computed: {
+  //   userInfo() {
+  //     return JSON.parse(localStorage.getItem('info'))
+  //   },
+  //   accountInfo() {
+  //     return JSON.parse(localStorage.getItem('accountInfo'))
+  //   },
+  // },
+  mounted() {
+    this.userInfo = JSON.parse(localStorage.getItem('info'))
+    this.accountInfo = JSON.parse(localStorage.getItem('accountInfo'))
     this.getAccountBalance()
     this.getCardList()
   },

@@ -74,15 +74,19 @@ export default {
       isSendSMS: false,
       phone: '',
       newUserInfo: '',
+      userInfo: '',
     }
   },
-  computed: {
-    userInfo() {
-      return JSON.parse(localStorage.getItem('info'))
-    },
-  },
+  // computed: {
+  //   userInfo() {
+  //     return JSON.parse(localStorage.getItem('info'))
+  //   },
+  // },
   created() {
     this.getUserInfo()
+  },
+  mounted() {
+    this.userInfo = JSON.parse(localStorage.getItem('info'))
   },
   methods: {
     async getUserInfo() {
