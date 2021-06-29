@@ -21,6 +21,7 @@
       <div class="form-title">您还有一些额外需求要告知我们？</div>
       <sp-field
         v-model="formData.content['备注']"
+        v-clear-emoij
         rows="5"
         :autofocus="true"
         type="textarea"
@@ -106,6 +107,10 @@ export default {
     }),
   },
   mounted() {
+    const val = localStorage.getItem('needContent')
+    if (val) {
+      this.formData.content.备注 = val
+    }
     // 进入页面回显数据
     const sessionStorageFormData = JSON.parse(
       sessionStorage.getItem('formData')
@@ -178,18 +183,17 @@ export default {
               resolve(res.data)
             } else {
               this.loading = false
-              this.$xToast.error('查询用户信息失败！')
             }
           })
           .catch((error) => {
             console.log('error', error)
-            this.$xToast.error('查询用户信息失败！')
           })
       })
     },
     async consultForm() {
       const str1 = this.replaceStr(this.formData.content.备注)
       this.loading = true
+      localStorage.setItem('needContent', this.formData.content.备注)
       const userInfo = await this.getUserInfo(this.userId)
       if (!userInfo) return
       const params = {
@@ -204,8 +208,8 @@ export default {
         sourceSyscode: 'crisps-app', // 来源系统
         firstSourceChannel: 'crisps-app-one-home-page', // 一级来源渠道
         secondSourceChannel: 'crisps-app-two-look-service', // 二级来源渠道
-        requireCode: localStorage.getItem('needCode'), // 需求编码
-        requireName: '工商变更', // 需求名称
+        requireCode: localStorage.getItem('needCode') || 'FL20210425163722', // 需求编码
+        requireName: localStorage.getItem('needName') || '工商变更', // 需求名称
         // "bizAreaCode": "string",
         // "bizAreaName": "string",
         // "comment": "string",
@@ -235,6 +239,7 @@ export default {
         .then((res) => {
           this.loading = false
           if (res.code === 200) {
+            localStorage.removeItem('needContent')
             this.$xToast.success('提交成功，请注意接听电话')
             sessionStorage.removeItem('formData')
             this.formData = {
