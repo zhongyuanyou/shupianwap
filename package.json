@@ -21,6 +21,7 @@
     "cookie-universal-nuxt": "^2.1.4",
     "cross-env": "^7.0.2",
     "crypto-js": "^4.0.0",
+    "emoji-regex": "^9.2.2",
     "express": "^4.17.1",
     "fingerprintjs2": "^2.1.2",
     "h5-openapp": "^1.1.0",

@@ -21,6 +21,7 @@
       <div class="form-title">您还有一些额外需求要告知我们？</div>
       <sp-field
         v-model="formData.content['备注']"
+        v-clear-emoij
         rows="5"
         :autofocus="true"
         type="textarea"
@@ -197,15 +198,15 @@ export default {
         bizAreaName: this.city.name,
         comment: str1,
         customerAttribute: JSON.stringify(this.formData.content),
-        customerName: userInfo.fullName,
+        customerName: userInfo.fullName || userInfo.nickName,
         customerPhone: userInfo.mainAccount,
         customerSex: userInfo.sex || 2,
         sourceUrl: location.href,
         sourceSyscode: 'crisps-app', // 来源系统
         firstSourceChannel: 'crisps-app-one-home-page', // 一级来源渠道
         secondSourceChannel: 'crisps-app-two-look-service', // 二级来源渠道
-        requireCode: localStorage.getItem('needCode'), // 需求编码
-        requireName: '工商变更', // 需求名称
+        requireCode: localStorage.getItem('needCode') || 'FL20210425163722', // 需求编码
+        requireName: localStorage.getItem('needName') || '工商变更', // 需求名称
         // "bizAreaCode": "string",
         // "bizAreaName": "string",
         // "comment": "string",
