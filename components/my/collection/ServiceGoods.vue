@@ -2,7 +2,11 @@
   <div class="service-goods-component">
     <div
       class="service-goods-component-item"
-      :class="{ invalid: info.status !== 'PRO_STATUS_PUT_AWAY' }"
+      :class="{
+        invalid:
+          info.status !== 'PRO_STATUS_PUT_AWAY' &&
+          info.status !== 'PRO_STATUS_LOCKED',
+      }"
     >
       <slot name="left"></slot>
       <sp-image
