@@ -236,7 +236,7 @@ export default {
       })
         .then(() => {
           // on confirm
-          this.back()
+          // this.back()
         })
         .catch(() => {
           // on cancel
