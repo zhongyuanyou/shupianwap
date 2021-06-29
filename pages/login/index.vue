@@ -204,7 +204,7 @@ export default {
       passwordFieldType: 'password', // text：明文
       sourcePlatform: this.$route.query.sourcePlatform || '', // 第三方 需要携带的参数   IM: token, userId
       loginType: this.$route.query.loginType || 'telephone', // account: 账户登录； telephone：手机快捷登录
-      redirect: this.$route.query.redirect || '/', // 登录后需要跳转的地址
+      redirect: this.$route.query.redirect || '', // 登录后需要跳转的地址
     }
   },
 
@@ -411,7 +411,11 @@ export default {
               openLink(this.redirect, query)
               return
             }
-            this.$router.replace(this.redirect)
+            if (this.redirect) {
+              this.$router.replace(this.redirect)
+            } else {
+              this.$router.back(-1)
+            }
           }, 1500)
         } else {
           // 清除用户缓存信息

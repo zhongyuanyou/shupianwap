@@ -215,7 +215,7 @@ export default {
       data.type = 'gszr'
       data.url = window.location.href
       sessionStorage.setItem('formData', JSON.stringify(data))
-      this.$router.push('//myDemandCard/second')
+      this.$router.push('/myDemandCard/second')
     },
   },
 }
