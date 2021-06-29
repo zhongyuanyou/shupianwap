@@ -57,6 +57,23 @@ const invoiceApi = {
     })
   },
 
+  /**
+   * 预览发票
+   * @param {*} param0
+   * @param {*} params
+   * @param {number} params.orderId 订单id
+   * @returns
+   */
+  preview_invoice ({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'get',
+      url: CHIPS_PC_URL + '/yk/invoice/v1/preview_invoice.do',
+    })
+  },
+
+
     /**
    * 发送发票到邮箱
    * @param {object} param0
