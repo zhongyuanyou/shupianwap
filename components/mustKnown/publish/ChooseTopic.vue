@@ -273,7 +273,7 @@ export default {
   color: #4974f5;
   background: white;
   border-top: 1px solid #f4f4f4;
-  z-index: 2;
+  z-index: 1;
   .item {
     margin-right: 10px;
   }
