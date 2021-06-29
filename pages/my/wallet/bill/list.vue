@@ -18,7 +18,7 @@
             <h3>提现</h3>
             <p>{{ item.createTime }}</p>
           </div>
-          <div class="right">￥{{ item.amount }}</div>
+          <div class="right">-￥{{ item.amount }}</div>
         </li>
         <!-- <li>
           <div class="left">

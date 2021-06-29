@@ -10,15 +10,21 @@
           placeholder="账户名称"
           readonly="readonly"
           :rules="[{ required: true, message: '' }]"
-          >用户名*</sp-field
-        >
-
+        ></sp-field>
+        <!-- <sp-field
+          v-model="cardNo"
+          name="身份证号"
+          label="身份证号"
+          placeholder="请输入身份证号"
+          :rules="[{ required: true, message: '请输入身份证号' }]"
+          ></sp-field
+        > -->
         <sp-field
           v-model="cardNum"
           type="number"
           name="银行卡号"
           label="银行卡号"
-          maxlength="20"
+          maxlength="19"
           placeholder="请输入银行卡号"
           :rules="[{ required: true, message: '请输入银行卡号' }]"
           @blur="blur"
@@ -36,7 +42,6 @@
           name="开户行"
           label="开户行"
           placeholder="请输入开户行，系统自动搜索"
-          maxlength="19"
           readonly="readonly"
           :rules="[
             {

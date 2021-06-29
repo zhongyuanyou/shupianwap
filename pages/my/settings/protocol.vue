@@ -114,9 +114,12 @@ export default {
     submit() {
       if (!this.checked) {
         this.$xToast.show({ message: '请阅读并知晓服务协议和隐私协议' })
-        return
+        return false
+      } else {
+        this.$router.push({
+          path: '/my/settings/setPwd?status=0',
+        })
       }
-      this.$router.push('/my/wallet')
     },
   },
   head() {

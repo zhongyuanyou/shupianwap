@@ -1,7 +1,11 @@
 <template>
   <div class="sale-list">
     <sp-sticky>
-      <Header title="退款/售后">
+      <Header
+        title="退款/售后"
+        :custom-jump="customJump"
+        @backHandle="backHandle"
+      >
         <template #right>
           <sp-icon
             class-prefix="spiconfont"
@@ -74,14 +78,23 @@ export default {
       ],
       queryId: '',
       showNoDataImg: false,
+      customJump: true,
     }
   },
-  created() {},
+  mounted() {
+    if (this.active === 0) {
+      this.afterSaleStatus = this.searchStatus
+    }
+    if (this.$route.query.id) {
+      this.active = 1
+      this.afterSaleStatus = []
+    }
+  },
   methods: {
+    backHandle() {
+      this.$router.push('/my')
+    },
     async getAfterSaleList() {
-      if (this.active === 0) {
-        this.afterSaleStatus = this.searchStatus
-      }
       const res = await this.$axios.post(afterSaleApi.list, {
         page: this.page,
         limit: this.limit,

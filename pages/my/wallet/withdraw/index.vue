@@ -32,7 +32,7 @@
             />
           </div>
         </div>
-        <div v-if="selectCardInfo" class="bank-item">
+        <div v-if="selectCardInfo.bankName" class="bank-item">
           <div class="bank-logo">
             <img :src="selectCardInfo.bankIconUrl" />
           </div>
@@ -95,13 +95,17 @@ export default {
   },
   data() {
     return {
-      selectCardInfo: '',
+      selectCardInfo: {
+        bankName: '',
+        bankIconUrl: '',
+        desensitizationCardNumber: '',
+      },
       currentId: '',
       accBalanceData: '',
       amount: '',
       userInfo: '',
       accountInfo: '',
-      customJump: false,
+      customJump: true,
     }
   },
   // computed: {
@@ -132,6 +136,15 @@ export default {
       })
       if (res.code === 200) {
         this.selectCardInfo = res.data[0]
+        if (!this.selectCardInfo) {
+          this.selectCardInfo = {
+            bankName: '',
+            bankIconUrl: '',
+            desensitizationCardNumber: '',
+          }
+        } else {
+          this.currentId = res.data[0].id
+        }
       }
     },
     // 账户余额查询
@@ -150,6 +163,7 @@ export default {
     },
     // 选择银行卡
     selectCard(data) {
+      this.currentId = data.id
       this.selectCardInfo = data
       this.$refs.bank.showBankPop = false
     },
@@ -166,7 +180,7 @@ export default {
         this.$xToast.warning('提现金额不能大于可用余额')
         return false
       } else if (!am.test(this.amount)) {
-        this.$xToast.warning('金额格式有误，小数需保留两位')
+        this.$xToast.warning('金额信息或格式错误')
         return false
       }
       // else if (this.amount < 10) {

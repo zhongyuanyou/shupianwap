@@ -1,6 +1,10 @@
 <template>
   <div class="settings">
-    <Header title="个人设置" />
+    <Header
+      title="个人设置"
+      :custom-jump="customJump"
+      @backHandle="backHandle"
+    />
     <div class="person">
       <div class="tx">
         <img :src="$ossImgSetV2(imgList.tx)" alt="" />
@@ -51,6 +55,7 @@ export default {
         tx: '2exrifx8gxes000.png',
       },
       userInfo: '',
+      customJump: true,
     }
   },
   // computed: {
@@ -60,6 +65,11 @@ export default {
   // },
   mounted() {
     this.userInfo = JSON.parse(localStorage.getItem('info'))
+  },
+  methods: {
+    backHandle() {
+      this.$router.push('/my/wallet')
+    },
   },
 }
 </script>
