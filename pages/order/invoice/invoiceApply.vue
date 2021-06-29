@@ -47,6 +47,7 @@
             required
             label="个人名称"
             placeholder="请填写“个人”或您的姓名"
+            maxlength="100"
             :rules="[{ required: true, message: '请填写“个人”或您的姓名' }]"
           />
           <div v-else-if="formData.invoiceHeader === 'INVOICE_HEADER_COMPANY'">
@@ -55,12 +56,14 @@
               required
               label="单位名称"
               placeholder="请填写单位名称"
+              maxlength="100"
               :rules="[{ required: true, message: '请填写单位名称' }]"
             />
             <sp-field
               v-model="formData.taxpayerIdentifNum"
               required
               label="纳税人识别号"
+              maxlength="20"
               placeholder="请填写纳税人识别号"
             />
 
@@ -68,21 +71,25 @@
               <sp-field
                 v-model="formData.registerAddress"
                 label="注册地址"
+                maxlength="120"
                 placeholder="请填写注册地址"
               />
               <sp-field
                 v-model="formData.registerTel"
                 label="注册电话"
+                maxlength="20"
                 placeholder="请填写注册电话"
               />
               <sp-field
                 v-model="formData.bankOfDeposit"
                 label="开户银行"
+                maxlength="50"
                 placeholder="请填写开户银行"
               />
               <sp-field
                 v-model="formData.bankAccount"
                 label="银行账号"
+                maxlength="50"
                 placeholder="请填写银行账号"
               />
             </div>
@@ -108,11 +115,13 @@
             label="收票人手机"
             placeholder=""
             required
+            maxlength="60"
             :rules="[{ required: true, message: '请填写手机号码' }]"
           />
           <sp-field
             v-model="formData.receiverEmail"
             label="收票人邮箱"
+            maxlength="80"
             placeholder="用来接收电子发票邮件，可选填"
           />
         </div>

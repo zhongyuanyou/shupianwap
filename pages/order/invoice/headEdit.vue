@@ -18,6 +18,7 @@
               required
               label="发票抬头"
               placeholder="请填写发票抬头"
+              maxlength="100"
               :rules="[{ required: true, message: '请填写发票抬头' }]"
             />
 
@@ -27,12 +28,14 @@
                 required
                 label="单位税号"
                 placeholder="请填写单位税号"
+                maxlength="20"
                 :rules="[{ required: true, message: '请填写单位税号' }]"
               />
               <sp-field
                 v-model="formData.address"
                 label="注册地址"
                 placeholder="选填"
+                maxlength="120"
               />
               <!-- :rules="[
                   {
@@ -43,16 +46,19 @@
               <sp-field
                 v-model="formData.phone"
                 label="注册电话"
+                maxlength="20"
                 placeholder="选填"
               />
               <sp-field
                 v-model="formData.depositBank"
                 label="开户银行"
+                maxlength="50"
                 placeholder="选填"
               />
               <sp-field
                 v-model="formData.bankNumber"
                 label="银行账号"
+                maxlength="50"
                 placeholder="选填"
               />
             </div>
