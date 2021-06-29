@@ -114,6 +114,7 @@ export default {
       switch (this.navTabs[this.activeNavTabIndex]) {
         case '公司注册': {
           localStorage.setItem('needCode', 'FL20210425163709')
+          localStorage.setItem('needName', '公司注册')
           this.$router.push({
             path: '/myDemandCard/companyRegister',
           })
@@ -121,6 +122,7 @@ export default {
         }
         case '代理记账': {
           localStorage.setItem('needCode', 'FL20210425163832')
+          localStorage.setItem('needName', '代理记账')
           this.$router.push({
             path: '/myDemandCard/agentBilling',
           })
@@ -128,6 +130,7 @@ export default {
         }
         case '公司交易': {
           localStorage.setItem('needCode', 'FL20201224136319')
+          localStorage.setItem('needName', '公司交易')
           this.$router.push({
             path: '/myDemandCard/companyTransaction',
           })
@@ -135,6 +138,7 @@ export default {
         }
         case '工商变更': {
           localStorage.setItem('needCode', 'FL20210425163722')
+          localStorage.setItem('needName', '工商变更')
           this.$router.push({
             path: '/myDemandCard/companyAlteration',
           })
@@ -142,6 +146,7 @@ export default {
         }
         case '审计业务': {
           localStorage.setItem('needCode', 'FL20210425164379')
+          localStorage.setItem('needName', '审计业务')
           this.$router.push({
             path: '/myDemandCard/auditingService',
           })
@@ -149,6 +154,7 @@ export default {
         }
         case '许可证办理': {
           localStorage.setItem('needCode', 'FL20210425163737')
+          localStorage.setItem('needName', '许可证办理')
           this.$router.push({
             path: '/myDemandCard/permitHandling',
           })
