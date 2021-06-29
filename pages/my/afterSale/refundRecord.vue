@@ -92,7 +92,6 @@ export default {
       })
       if (res.code === 200) {
         this.refundRecordData = [...this.refundRecordData, ...res.data.list]
-        debugger
         if (this.refundRecordData.length === 0) {
           this.showNoData = true
         } else {

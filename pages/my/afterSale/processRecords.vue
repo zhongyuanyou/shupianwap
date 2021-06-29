@@ -2,7 +2,7 @@
   <div class="process-record">
     <Header title="处理记录" />
     <div class="process-box">
-      <sp-steps direction="vertical" :active="processRecordData.length - 1">
+      <sp-steps direction="vertical" :active="index">
         <sp-step v-for="(item, index) in processRecordData" :key="index">
           <h3>{{ item.dealStatusName }}</h3>
           <div class="date">{{ item.dealTime }}</div>

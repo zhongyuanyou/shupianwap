@@ -29,7 +29,7 @@
           @click="showAccountMoney"
         ></sp-icon>
       </div>
-      <div class="total" @click="$router.push('/my/wallet/bill/list')">
+      <div class="total" @click="jumpBillPage">
         <strong v-if="showAccountBal"
           >¥{{ accountBalData.totalBalance || '0.00' }}</strong
         ><strong v-else class="top9">****</strong
@@ -49,6 +49,7 @@
               name="details_ic_sigh"
               size="0.24rem"
               color="#999"
+              @click="tipsPop(0)"
             ></sp-icon>
           </h3>
           <p v-if="showAccountBal">¥{{ accountBalData.balance || '0.00' }}</p>
@@ -56,12 +57,13 @@
         </div>
         <div class="quota-item">
           <h3>
-            <span>可冻结(元)</span
+            <span>已冻结(元)</span
             ><sp-icon
               class-prefix="spiconfont"
               name="details_ic_sigh"
               size="0.24rem"
               color="#999"
+              @click="tipsPop(1)"
             ></sp-icon>
           </h3>
           <p v-if="showAccountBal">
@@ -84,13 +86,13 @@
     <div class="more-features">
       <h2>更多功能</h2>
       <ul>
-        <li @click="$router.push('/my/wallet/bill/list')">
+        <li @click="jumpBillPage">
           <img
             src="https://cdn.shupian.cn/sp-pt/wap/images/cywftptrfq80000.png"
           />
           <p>账单</p>
         </li>
-        <li @click="$router.push('/my/wallet/bankCards/list')">
+        <li @click="jumpBankCardPage">
           <img
             src="https://cdn.shupian.cn/sp-pt/wap/images/1vqyes3vygdc000.png"
           />
@@ -132,34 +134,51 @@ export default {
       accountInfo: '',
     }
   },
-  // computed: {
-  //   userInfo() {
-  //     return JSON.parse(localStorage.getItem('info'))
-  //   },
-  //   accountInfo() {
-  //     return JSON.parse(localStorage.getItem('accountInfo'))
-  //   },
-  // },
-  async created() {
+  async mounted() {
     this.userInfo = JSON.parse(localStorage.getItem('info'))
     this.accountInfo = JSON.parse(localStorage.getItem('accountInfo'))
     await this.getAccountInfo()
     await this.getAccountBalInfo()
-  },
-
-  mounted() {
     // this.checkSetPassword()
     // this.$router.push('/my/settings/protocol?categoryCode=protocol100041')
     // this.openActivationDialog()
   },
   methods: {
+    jumpBillPage() {
+      // 先验证激活没有
+      if (!this.accAccountData.status && this.accAccountData.status !== 1) {
+        this.openActivationDialog()
+      } else {
+        this.$router.push('/my/wallet/bill/list')
+      }
+    },
+    jumpBankCardPage() {
+      // 先验证激活没有
+      if (!this.accAccountData.status && this.accAccountData.status !== 1) {
+        this.openActivationDialog()
+      } else {
+        this.$router.push('/my/wallet/bankCards/list')
+      }
+    },
+
+    // 金额信息友情提示
+    tipsPop(state) {
+      this.$xToast.show({
+        message: state === 0 ? '可提现总金额' : '提现中的总金额',
+      })
+    },
     backHandle() {
       this.$router.push('/my')
     },
     // 金额脱敏
     showAccountMoney() {
-      this.showAccountBal = !this.showAccountBal
-      this.showAccountBal ? (this.look = 'yincang') : (this.look = 'xianshi')
+      // 先验证激活没有
+      if (!this.accAccountData.status && this.accAccountData.status !== 1) {
+        this.openActivationDialog()
+      } else {
+        this.showAccountBal = !this.showAccountBal
+        this.showAccountBal ? (this.look = 'yincang') : (this.look = 'xianshi')
+      }
     },
     //     // 实名认证信息
     async getAccountBalInfo() {
@@ -192,7 +211,7 @@ export default {
       })
       if (res.code === 200) {
         this.checkPassword = res.data
-        if (this.checkPassword === 0) {
+        if (!this.checkPassword) {
           this.$router.push({
             path: '/my/settings/setPwd?status=0',
           })
@@ -215,11 +234,9 @@ export default {
               !this.accAccountData.status &&
               this.accAccountData.status !== 1
             ) {
-              this.$router.push({
-                path: '/my/settings/setPwd?status=0',
-              })
-            } else {
-              this.checkSetPassword()
+              this.$router.push(
+                '/my/settings/protocol?categoryCode=protocol100041'
+              )
             }
           } else {
             // 未认证
@@ -238,13 +255,12 @@ export default {
     // 获取钱包信息
     async getAccountInfo() {
       const res = await this.$axios.post(walletApi.info, {
-        accountId: this.accountInfo.id || '',
+        accountId: '',
         relationId: this.userInfo.id,
       })
       if (res.code === 200) {
         this.accAccountData = res.data
         if (!this.accAccountData.status && this.accAccountData.status !== 1) {
-          JSON.stringify()
           this.openActivationDialog()
         } else {
           // 保存账户信息

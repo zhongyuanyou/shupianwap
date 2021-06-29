@@ -32,11 +32,11 @@
       </div> -->
     </div>
     <div v-if="refundProcessData.length > 0" class="refund-process">
-      <sp-steps direction="vertical" :active="refundProcessData.length - 1">
+      <sp-steps direction="vertical" :active="index">
         <sp-step v-for="(item, index) in refundProcessData" :key="index">
-          <h3>{{ item.operationStatus }}</h3>
+          <h3>{{ item.operationStatusCodeName }}</h3>
           <!-- <p>已将500元入账至您的支付宝支付账户</p> -->
-          <div class="date">{{ item.craeteTime }}</div>
+          <div class="date">{{ item.createTime }}</div>
         </sp-step>
       </sp-steps>
     </div>
@@ -71,10 +71,14 @@ export default {
         },
       })
       if (res.code === 200) {
-        this.refundDetailData = res.data.refundDetail
-        this.refundProcessData = res.data.refundProcess
+        this.refundDetailData = res.data
+        this.refundProcessData =
+          res.data.repaReimburseOperationLogList.reverse()
       } else {
-        this.$router.go(-1)
+        this.$xToast.error(res.data.error)
+        setTimeout(() => {
+          this.$router.go(-1)
+        }, 1500)
       }
     },
   },
