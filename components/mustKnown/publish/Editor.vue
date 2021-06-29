@@ -399,4 +399,10 @@ export default {
   width: 100%;
   z-index: 2;
 }
+.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  top: auto !important;
+}
 </style>

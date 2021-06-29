@@ -555,6 +555,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.ql-align-right {
+  text-align: right;
+}
 .answer {
   background: #fff;
 }

@@ -107,6 +107,10 @@ export default {
     }),
   },
   mounted() {
+    const val = localStorage.getItem('needContent')
+    if (val) {
+      this.formData.content.备注 = val
+    }
     // 进入页面回显数据
     const sessionStorageFormData = JSON.parse(
       sessionStorage.getItem('formData')
@@ -179,18 +183,17 @@ export default {
               resolve(res.data)
             } else {
               this.loading = false
-              this.$xToast.error('查询用户信息失败！')
             }
           })
           .catch((error) => {
             console.log('error', error)
-            this.$xToast.error('查询用户信息失败！')
           })
       })
     },
     async consultForm() {
       const str1 = this.replaceStr(this.formData.content.备注)
       this.loading = true
+      localStorage.setItem('needContent', this.formData.content.备注)
       const userInfo = await this.getUserInfo(this.userId)
       if (!userInfo) return
       const params = {
@@ -198,7 +201,7 @@ export default {
         bizAreaName: this.city.name,
         comment: str1,
         customerAttribute: JSON.stringify(this.formData.content),
-        customerName: userInfo.fullName || userInfo.nickName,
+        customerName: userInfo.fullName,
         customerPhone: userInfo.mainAccount,
         customerSex: userInfo.sex || 2,
         sourceUrl: location.href,
@@ -236,6 +239,7 @@ export default {
         .then((res) => {
           this.loading = false
           if (res.code === 200) {
+            localStorage.removeItem('needContent')
             this.$xToast.success('提交成功，请注意接听电话')
             sessionStorage.removeItem('formData')
             this.formData = {

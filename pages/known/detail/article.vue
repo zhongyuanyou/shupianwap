@@ -507,7 +507,11 @@ export default {
   },
 }
 </script>
-
+<style scoped lang="css">
+.ql-align-right {
+  text-align: right;
+}
+</style>
 <style lang="less" scoped>
 .article {
   background: #fff;
