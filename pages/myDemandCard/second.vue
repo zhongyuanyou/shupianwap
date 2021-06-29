@@ -197,7 +197,7 @@ export default {
         bizAreaName: this.city.name,
         comment: str1,
         customerAttribute: JSON.stringify(this.formData.content),
-        customerName: userInfo.fullName,
+        customerName: userInfo.fullName || userInfo.nickName,
         customerPhone: userInfo.mainAccount,
         customerSex: userInfo.sex || 2,
         sourceUrl: location.href,
