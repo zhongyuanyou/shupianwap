@@ -25,7 +25,7 @@
               style="margin-right: 0.36rem"
               :name="sellingDetail.isSave ? 'shoucang_mian' : 'shoucang'"
               size="0.4rem"
-              :color="sellingDetail.isSave ? '#4e78f5' : '#fff'"
+              :color="sellingDetail.isSave ? '#ec5330' : '#fff'"
               @click.native="handleClickSave"
             />
           </div>
@@ -662,7 +662,7 @@ export default {
       //   color: #4974f5 !important;
       // }
       .icon-red {
-        color: #4e78f5 !important;
+        color: #ec5330 !important;
       }
     }
   }
