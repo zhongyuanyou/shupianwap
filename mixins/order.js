@@ -593,16 +593,16 @@ export default {
           this.showMydialog = true
           return
         }
-        if (this.checkContractIsOver(order) === 1) {
-          // 交易商品付款之前检测有无签署合同
-          this.$xToast.show({
-            message: '为满足您的合法权益，请先和卖家签署合同后再付款',
-            duration: 3000,
-            icon: 'toast_ic_remind',
-            forbidClick: true,
-          })
-          return
-        }
+        // if (this.checkContractIsOver(order) === 1) {
+        //   // 交易商品付款之前检测有无签署合同
+        //   this.$xToast.show({
+        //     message: '为满足您的合法权益，请先和卖家签署合同后再付款',
+        //     duration: 3000,
+        //     icon: 'toast_ic_remind',
+        //     forbidClick: true,
+        //   })
+        //   return
+        // }
         if (
           this.opType === 'payMoney' &&
           order.orderSkuEsList[0].skuType === 'PRO_CLASS_TYPE_TRANSACTION'
