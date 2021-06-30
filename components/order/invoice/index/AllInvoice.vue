@@ -3,7 +3,7 @@
     <div v-for="orderData of orderList" :key="orderData.id" class="card">
       <div class="card_header flex">
         <div class="card_number flex_1">订单编号：{{ orderData.orderNo }}</div>
-        <div class="card_status" :class="orderData.merchantInvoiceStatus">
+        <div class="card_status" :class="orderData.userInvoiceStatus">
           {{ orderData.merchantInvoiceStatusName }}
         </div>
       </div>
@@ -110,7 +110,7 @@
 
       <div class="card_footer">
         <sp-button
-          v-if="orderData.merchantInvoiceStatus == 'INVOICE_STATUS_WAITE'"
+          v-if="orderData.userInvoiceStatus == 'INVOICE_STATUS_WAITE'"
           plain
           size="small"
           round
@@ -177,7 +177,7 @@ export default {
         this.changeMoney(item)
 
         item.merchantInvoiceStatusName =
-          this.merchantInvoiceStatus[item.merchantInvoiceStatus]
+          this.merchantInvoiceStatus[item.userInvoiceStatus]
       })
       return nowData
     },
