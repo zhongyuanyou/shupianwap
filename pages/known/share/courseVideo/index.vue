@@ -21,7 +21,7 @@
               <span>{{ vDetail.authorTitle }}</span>
             </div>
             <div class="date">
-              {{ vDetail.custTotalViewCount }} 次播放 ·
+              {{ vDetail.custTotalViewCount }}次播放 ·
               {{ vDetail.custUpdateTime }} 发布
             </div>
           </div>
@@ -222,7 +222,7 @@ export default {
     &-desc {
       margin-bottom: 56px;
       .name {
-        font: 28px @fontf-pfsc-reg;
+        font: 28px/28px @fontf-pfsc-reg;
         margin-bottom: 20px;
         span:first-child {
           color: #222222;
@@ -253,7 +253,7 @@ export default {
     }
     .section-block {
       .section {
-        background: #f8f8f8;
+        background: #fff;
         border-radius: 12px;
         padding: 34px 32px 28px 40px;
         box-sizing: border-box;

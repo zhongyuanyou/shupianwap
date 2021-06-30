@@ -61,7 +61,7 @@ export default {
       this.showPop = false
     },
     checkOutApp() {
-      const ua = window.navigator.userAgent
+      const ua = window.navigator.userAgent.toLowerCase()
       let isBlur = false
       let url = ''
       let downLoadUrl = ''
@@ -83,7 +83,7 @@ export default {
         })
         return
       }
-      if (ua.match(/MicroMessenger/i) === 'micromessenger') {
+      if (ua.indexOf('micromessenger') !== -1) {
         // 是否微信打开
         this.$xToast.show({
           message: '微信内不支持打开外部应用，请更换为其他浏览器打开本页面。',

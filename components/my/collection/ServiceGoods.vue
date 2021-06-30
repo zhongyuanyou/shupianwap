@@ -2,7 +2,11 @@
   <div class="service-goods-component">
     <div
       class="service-goods-component-item"
-      :class="{ invalid: info.status !== 'PRO_STATUS_PUT_AWAY' }"
+      :class="{
+        invalid:
+          info.status !== 'PRO_STATUS_PUT_AWAY' &&
+          info.status !== 'PRO_STATUS_LOCKED',
+      }"
     >
       <slot name="left"></slot>
       <sp-image
@@ -43,8 +47,7 @@
               套餐
             </span>
             <span
-              v-for="(item, index) of info.salesGoodsTags"
-              v-show="item.categoryCode === 'DSJTC20210514000042' && index < 3"
+              v-for="item of getSalesGoodsTags(info.salesGoodsTags)"
               :key="item.tagValueCode"
             >
               {{ item.tagValueName }}
@@ -103,7 +106,7 @@
 import { Image } from '@chipspc/vant-dgg'
 
 export default {
-  name: 'EvaluateList',
+  name: 'ServiceGoods',
   components: {
     [Image.name]: Image,
   },
@@ -124,6 +127,15 @@ export default {
   },
 
   methods: {
+    getSalesGoodsTags(salesGoodsTags = []) {
+      const arr = []
+      salesGoodsTags.map((item) => {
+        if (item.categoryCode === 'DSJTC20210514000042' && arr.length < 3) {
+          arr.push(item)
+        }
+      })
+      return arr
+    },
     joinFieldList(list = []) {
       const arr = []
       list.map((item) => {

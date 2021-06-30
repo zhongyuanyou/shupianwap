@@ -29,5 +29,6 @@ module.exports = {
     'no-unused-vars': 0,
     'vue/comment-directive': 'off',
     'prettier/prettier': 'off',
+    'unicorn/escape-case': 'off',
   },
 }

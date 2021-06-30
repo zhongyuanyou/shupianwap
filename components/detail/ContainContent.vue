@@ -22,6 +22,15 @@
             <!-- <div class="content_desc hide">
               {{ item.goodsSubDetailsName }}
             </div> -->
+            <div class="sku-list">
+              <p
+                v-for="(item2, index2) in item.serviceItems"
+                :key="index2"
+                class="sku-item"
+              >
+                {{ item2.serviceItemName }}
+              </p>
+            </div>
             <div class="content_price">
               {{ item.settlementPrice }} <span>元</span>
             </div>
@@ -57,6 +66,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.sku-list {
+  color: #333;
+  font-size: 14px;
+  .sku-item {
+    margin-top: 16px;
+  }
+}
 .container {
   background-color: #fff;
   padding-top: 44px;
@@ -107,6 +123,7 @@ export default {
             color: #ec5330;
             font-size: 30px;
             margin-top: 16px;
+            display: none;
             span {
               font-weight: 400;
               font-size: 22px;

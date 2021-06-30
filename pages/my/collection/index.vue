@@ -73,17 +73,12 @@
       </div>
       <div v-else-if="tabIndex == 4 || tabIndex == 5">
         <client-only>
-          <sp-checkbox-group
-            ref="checkboxGroup"
-            v-model="selectDelGoods"
-            checked-color="#4E78F5"
-            icon-size="0.4rem"
-          >
+          <sp-checkbox-group ref="checkboxGroup" v-model="selectDelGoods">
             <div
               v-for="(item, index) in list"
               :key="index"
-              class="good-list"
-              @click="toServiceGoodsDetail(item)"
+              class="goods-list"
+              @click="GoodsListClick(item, index)"
             >
               <sp-swipe-cell :disabled="selectGoodsState">
                 <ServiceGoods
@@ -93,9 +88,22 @@
                 >
                   <template v-if="selectGoodsState" #left>
                     <sp-checkbox
-                      class="good-list-checkbox"
+                      ref="checkboxItems"
+                      class="goods-list-checkbox"
                       :name="item.id"
-                    ></sp-checkbox>
+                    >
+                      <template #icon="props">
+                        <my-icon
+                          :name="
+                            props.checked
+                              ? 'order_ic_success'
+                              : 'pay_ic_radio_n'
+                          "
+                          size="0.4rem"
+                          :color="props.checked ? '#4E78F5' : '#dddddd'"
+                        ></my-icon>
+                      </template>
+                    </sp-checkbox>
                   </template>
                 </ServiceGoods>
 
@@ -116,16 +124,26 @@
     </sp-list>
     <div
       v-if="(tabIndex == 4 || tabIndex == 5) && selectGoodsState"
+      class="footer-nav-relative"
+    ></div>
+    <div
+      v-if="(tabIndex == 4 || tabIndex == 5) && selectGoodsState"
       class="footer-nav"
     >
       <div class="footer_container">
         <sp-checkbox
           v-model="checkedAllState"
-          checked-color="#4E78F5"
-          icon-size="0.4rem"
+          class="checkedAllState"
           @change="checkedAllChange"
-          >全选</sp-checkbox
-        >
+          >全选
+          <template #icon="props">
+            <my-icon
+              :name="props.checked ? 'order_ic_success' : 'pay_ic_radio_n'"
+              size="0.4rem"
+              :color="props.checked ? '#4E78F5' : '#dddddd'"
+            ></my-icon>
+          </template>
+        </sp-checkbox>
 
         <div class="footer-btn">
           <sp-button plain hairline type="primary" @click="delGoodsList"
@@ -175,18 +193,18 @@ export default {
     return {
       content: '',
       tabs: [
-        // {
-        //   tile: '问题',
-        //   id: 1,
-        // },
-        // {
-        //   tile: '回答',
-        //   id: 3,
-        // },
-        // {
-        //   tile: '文章',
-        //   id: 2,
-        // },
+        {
+          tile: '问题',
+          id: 1,
+        },
+        {
+          tile: '回答',
+          id: 3,
+        },
+        {
+          tile: '文章',
+          id: 2,
+        },
         {
           tile: '服务商品',
           id: 4,
@@ -221,7 +239,13 @@ export default {
         this.$refs.checkboxGroup.toggleAll(false)
       }
     },
-
+    GoodsListClick(info, index) {
+      if (this.selectGoodsState) {
+        this.$refs.checkboxItems[index].toggle()
+      } else {
+        this.toServiceGoodsDetail(info)
+      }
+    },
     toServiceGoodsDetail(info) {
       if (this.selectGoodsState) {
         return
@@ -389,25 +413,11 @@ export default {
   padding: 0 32px;
 }
 
-.good-list {
-  margin: 24px 0px 0px;
-
-  .good-list-checkbox {
-    margin-right: 20px;
-  }
-}
-::v-deep .sp-checkbox__icon .sp-icon {
-  border: 1px solid #dddddd;
-}
-::v-deep .sp-checkbox__label {
-  font-family: PingFangSC-Medium;
-  font-size: 28px;
-  color: #222222;
-  letter-spacing: 0;
-}
 .collection_container {
   min-height: 100vh;
-  padding-bottom: 160px;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+  // padding-bottom: 160px;
   background-color: #f8f8f8;
 
   .sp-tabs {
@@ -424,6 +434,7 @@ export default {
   }
 
   .list_container {
+    // padding-bottom: 120px;
     .item {
       background: #ffffff;
       padding: 24px 32px 28px;
@@ -497,6 +508,19 @@ export default {
     -webkit-line-clamp: 3;
     overflow: hidden;
   }
+
+  .goods-list {
+    margin: 24px 0px 0px;
+
+    .goods-list-checkbox {
+      padding-right: 20px;
+      padding-left: 5px;
+      margin-left: -5px;
+    }
+  }
+}
+.footer-nav-relative {
+  height: 135px;
 }
 .footer-nav {
   position: fixed;
@@ -516,9 +540,25 @@ export default {
     justify-content: space-between;
     align-items: center;
     padding: 24px 40px;
+
+    // .checkedAllState {
+    //   height: 80px;
+    // }
+    ::v-deep .sp-checkbox__label {
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-size: 28px;
+      line-height: 40px;
+      height: 40px;
+      color: #222222;
+      letter-spacing: 0;
+    }
   }
 }
-
+::v-deep .sp-checkbox__icon {
+  height: auto;
+  line-height: normal;
+  font-size: 0;
+}
 ::v-deep.sp-hairline--surround::after {
   border-radius: 30px !important;
 }

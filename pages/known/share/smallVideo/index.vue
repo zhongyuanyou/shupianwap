@@ -16,7 +16,7 @@
         @click.native="link"
       ></my-icon>
       <div class="content">
-        <div class="name">{{ vDetail.authorName }}</div>
+        <div class="name">@{{ vDetail.authorName }}</div>
         <div class="desc">
           {{ vDetail.videoName }}
         </div>
@@ -160,12 +160,17 @@ export default {
       bottom: 0;
       left: 0;
       .name {
+        height: 56px;
+        line-height: 56px;
+        font-weight: bold;
         font-size: 40px;
         margin-bottom: 10px;
       }
       .desc {
         font-size: 32px;
         .textOverflow(2);
+        line-height: 44px;
+        font-weight: bold;
       }
     }
   }

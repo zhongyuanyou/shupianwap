@@ -21,12 +21,20 @@
         </template>
         <template #right>
           <div>
-            <my-icon
+            <!-- <my-icon
               :class="proDetail.isSave ? 'icon-red' : ''"
               style="margin-right: 0.36rem"
               name="shoucang_mian"
               size="0.4rem"
               color="#fff"
+              @click.native="handleClickSave"
+            /> -->
+            <my-icon
+              :class="proDetail.isSave ? 'icon-red' : ''"
+              style="margin-right: 0.36rem"
+              :name="proDetail.isSave ? 'shoucang_mian' : 'shoucang'"
+              size="0.4rem"
+              :color="proDetail.isSave ? '#ec5330' : '#fff'"
               @click.native="handleClickSave"
             />
           </div>
@@ -592,11 +600,11 @@ export default {
       .spiconfont {
         color: #1a1a1a !important;
       }
-      #icon-red {
-        color: #4974f5 !important;
-      }
+      // #icon-red {
+      //   color: #4974f5 !important;
+      // }
       .icon-red {
-        color: #4974f5 !important;
+        color: #ec5330 !important;
       }
     }
   }
