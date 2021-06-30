@@ -82,11 +82,10 @@ export default {
   //     return JSON.parse(localStorage.getItem('info'))
   //   },
   // },
-  created() {
-    this.getUserInfo()
-  },
+
   mounted() {
     this.userInfo = JSON.parse(localStorage.getItem('info'))
+    this.getUserInfo()
   },
   methods: {
     async getUserInfo() {
@@ -101,15 +100,6 @@ export default {
       }
     },
     getSMS() {
-      // if (!checkPhone(this.tel)) {
-      //   this.$xToast.show({
-      //     message: '请输入正确的手机号',
-      //     duration: 1500,
-      //     icon: 'toast_ic_remind',
-      //     forbidClick: true,
-      //   })
-      //   return
-      // }
       if (!this.isSendSMS) {
         this.$xToast.showLoading({ message: '发送中' })
         // 获取验证码
@@ -135,12 +125,6 @@ export default {
           })
       }
     },
-    // nextStep() {
-    //   if (!this.sms) {
-    //     this.$xToast.warning('请输入验证码')
-    //   }
-    //   this.$router.push('/my/settings/setPwd')
-    // },
     nextStep() {
       if (!checkAuthCode(this.sms)) {
         this.$xToast.hideLoading()

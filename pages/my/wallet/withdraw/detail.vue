@@ -4,12 +4,12 @@
     <div class="detail-info">
       <div class="count">
         <span>提现金额</span>
-        <strong>￥{{ withdrawDetails.amount }}</strong>
+        <strong>-￥{{ withdrawDetails.amount }}</strong>
       </div>
       <div class="field-list">
         <div class="row">
           <div class="title">业务类型</div>
-          <div class="res">{{ withdrawDetails.orderTypeName || '-'}}</div>
+          <div class="res">{{ withdrawDetails.orderTypeName || '-' }}</div>
         </div>
         <div class="row">
           <div class="title">时间</div>

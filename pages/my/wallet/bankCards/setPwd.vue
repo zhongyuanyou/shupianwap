@@ -47,7 +47,7 @@ export default {
       showKeyboard: true,
       valid: false,
       userInfo: '',
-      customJump: false,
+      customJump: true,
     }
   },
   // computed: {

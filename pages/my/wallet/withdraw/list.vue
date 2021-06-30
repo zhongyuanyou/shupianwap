@@ -18,7 +18,7 @@
             <p>{{ item.createTime }}</p>
           </div>
           <div class="right">
-            <h3>￥{{ item.amount }}</h3>
+            <h3>-￥{{ item.amount }}</h3>
             <p>{{ item.statusName }}</p>
           </div>
         </li>
@@ -96,6 +96,28 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.no-data-area {
+  width: 100%;
+  height: 100vh;
+  background: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  img {
+    width: 340px;
+    height: 340px;
+    margin: 20vh auto 40px auto;
+    display: block;
+  }
+  .text {
+    height: 29px;
+    font-size: 30px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #1a1a1a;
+    text-align: center;
+  }
+}
 .list {
   min-height: 100vh;
   background: #f8f8f8;

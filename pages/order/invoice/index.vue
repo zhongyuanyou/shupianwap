@@ -47,6 +47,7 @@
       />
     </sp-bottombar>
 
+    <div v-if="tabActive === 2" class="paddingBottom150"></div>
     <Loading-center v-show="loading" />
   </div>
 </template>
@@ -285,7 +286,10 @@ export default {
 <style lang="less" scoped>
 .invoice {
   min-height: 100%;
-  padding-bottom: 150px;
+
+  .paddingBottom150 {
+    padding-bottom: 150px;
+  }
   .empty-text ::v-deep .sp-empty__description {
     font-size: 30px;
     font-family: PingFangSC-Medium, PingFang SC;

@@ -5,7 +5,7 @@
       <sp-divider :style="{ margin: '0' }" />
     </sp-sticky>
     <div class="preview_image">
-      <sp-image width="100%" src="https://img.yzcdn.cn/vant/cat.jpeg" />
+      <sp-image width="100%" :src="formData.img" />
     </div>
 
     <Loading-center v-show="loading" />
@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       loading: false, // 加载效果状态
-
+      orderId: '',
       formData: {},
     }
   },
@@ -49,7 +49,7 @@ export default {
       }
       this.loading = true
       invoiceApi
-        .invoice_detail(
+        .preview_invoice(
           { axios: this.$axios },
           {
             orderId: this.orderId,

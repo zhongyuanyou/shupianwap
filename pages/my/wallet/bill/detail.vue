@@ -4,7 +4,7 @@
     <div class="detail-info">
       <div class="count">
         <span>出/入账数量</span>
-        <strong>￥{{ billDetails.amount }}</strong>
+        <strong>-￥{{ billDetails.amount }}</strong>
       </div>
       <div class="field-list">
         <div class="row">
@@ -21,14 +21,7 @@
         </div>
         <div class="row">
           <div class="title">{{ billDetails.orderTypeName }}明细</div>
-          <div
-            class="cash"
-            @click="
-              $router.push(
-                `/my/wallet/withdraw/detail?id=${billDetails.billId}`
-              )
-            "
-          >
+          <div class="cash" @click="jumpPage">
             查看{{ billDetails.orderTypeName }}详情
           </div>
           <!-- <div class="cash">查看佣金详情</div>
@@ -61,6 +54,20 @@ export default {
       })
       if (res.code === 200) {
         this.billDetails = res.data
+      }
+    },
+    jumpPage() {
+      switch (this.billDetails.orderTypeName) {
+        case '提现':
+          this.$router.push(
+            `/my/wallet/withdraw/detail?id=${this.billDetails.billId}`
+          )
+          break
+        case '佣金':
+          break
+        case '退款':
+          this.$router.push(`/order/detail?id=${this.billDetails.billId}`)
+          break
       }
     },
   },

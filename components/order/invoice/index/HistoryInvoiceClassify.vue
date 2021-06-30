@@ -34,6 +34,7 @@
           ref="item2picker"
           :show-toolbar="false"
           :columns="timePickerColumns"
+          @change="pickerOnChange"
         >
           <template #columns-bottom>
             <sp-button class="btn" plain block type="primary" @click="onConfirm"
@@ -97,18 +98,18 @@ export default {
           defaultIndex: 0,
           values: [
             { text: '全年', value: '00' },
-            { text: '01月', value: '01' },
-            { text: '02月', value: '02' },
-            { text: '03月', value: '03' },
-            { text: '04月', value: '04' },
-            { text: '05月', value: '05' },
-            { text: '06月', value: '06' },
-            { text: '07月', value: '07' },
-            { text: '08月', value: '08' },
-            { text: '09月', value: '09' },
-            { text: '10月', value: '10' },
-            { text: '11月', value: '11' },
-            { text: '12月', value: '12' },
+            // { text: '01月', value: '01' },
+            // { text: '02月', value: '02' },
+            // { text: '03月', value: '03' },
+            // { text: '04月', value: '04' },
+            // { text: '05月', value: '05' },
+            // { text: '06月', value: '06' },
+            // { text: '07月', value: '07' },
+            // { text: '08月', value: '08' },
+            // { text: '09月', value: '09' },
+            // { text: '10月', value: '10' },
+            // { text: '11月', value: '11' },
+            // { text: '12月', value: '12' },
           ],
         },
       ]
@@ -124,21 +125,33 @@ export default {
       this.$emit('select', this.tabs, this.timePicker.value)
     },
 
-    // custom1(item) {
-    //   this.title1 = item.text
-    //   this.value1 = item.value
-    //   this.$refs.item1.toggle()
-    // },
-    // custom2(item) {
-    //   this.title2 = item.text
-    //   this.value2 = item.value
-    //   this.$refs.timePickerContainer.toggle()
-    // },
     getMonthDays(year, month) {
       const thisDate = new Date(year, month, 0) // 当天数为0 js自动处理为上一月的最后一天
       return thisDate.getDate()
     },
+    pickerOnChange(picker, value, index) {
+      console.log(value)
 
+      if (value[0].value === 0) {
+        picker.setColumnValues(1, [{ text: '全年', value: '00' }])
+      } else {
+        picker.setColumnValues(1, [
+          { text: '全年', value: '00' },
+          { text: '01月', value: '01' },
+          { text: '02月', value: '02' },
+          { text: '03月', value: '03' },
+          { text: '04月', value: '04' },
+          { text: '05月', value: '05' },
+          { text: '06月', value: '06' },
+          { text: '07月', value: '07' },
+          { text: '08月', value: '08' },
+          { text: '09月', value: '09' },
+          { text: '10月', value: '10' },
+          { text: '11月', value: '11' },
+          { text: '12月', value: '12' },
+        ])
+      }
+    },
     onConfirm() {
       const values = this.$refs.item2picker.getValues()
       const year = values[0].value

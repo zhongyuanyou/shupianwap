@@ -69,19 +69,15 @@ export default {
       step: 0,
       certificateInfo: '', // 认证信息
       newUserInfo: '',
+      userInfo: '',
+      accountInfo: '',
     }
   },
-  computed: {
-    userInfo() {
-      return JSON.parse(localStorage.getItem('info'))
-    },
-    accountInfo() {
-      return JSON.parse(localStorage.getItem('accountInfo'))
-    },
-  },
-  async created() {
-    await this.getUserInfo()
-    await this.getAuthInfo()
+  mounted() {
+    this.userInfo = JSON.parse(localStorage.getItem('info'))
+    this.accountInfo = JSON.parse(localStorage.getItem('accountInfo'))
+    this.getUserInfo()
+    this.getAuthInfo()
   },
   methods: {
     async getUserInfo() {
@@ -158,7 +154,7 @@ export default {
         this.certificateInfo = res.data
       }
     },
-  
+
     // 修改密码
     async updatePwd() {
       const res = await this.$axios.post(walletApi.reset_password, {
@@ -169,7 +165,10 @@ export default {
         operateName: this.userInfo.fullName,
       })
       if (res.code === 200) {
-        this.$router.push('/my/settings')
+        this.$xToast.show({ message: '设置成功' })
+        setTimeout(() => {
+          this.$router.push('/my/settings')
+        }, 1500)
       }
     },
     async openAndActivation() {
@@ -190,7 +189,15 @@ export default {
         },
       })
       if (res.code === 200) {
-        this.$router.push('/my/settings/protocol')
+        this.$xToast.show({ message: '您的账户余额开通成功' })
+        setTimeout(() => {
+          this.$router.push('/my/wallet')
+        }, 1500)
+      } else {
+        this.$xToast.error(res.data.error)
+        setTimeout(() => {
+          this.$router.push('/my/wallet')
+        }, 1500)
       }
     },
   },

@@ -58,7 +58,7 @@
         alt=""
         srcset=""
       />
-      <p class="text">您还未添加银行卡</p>
+      <p class="text">您还未绑定银行卡</p>
     </div>
     <div class="footer-btn">
       <button @click="$router.push('/my/wallet/bankCards/add')">
