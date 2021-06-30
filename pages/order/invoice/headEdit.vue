@@ -199,8 +199,8 @@ export default {
         depositBank: info.depositBank, // 开户银行
         dutyParagraph: info.dutyParagraph, // 纳税人识别号
       }
-      this.oldFormData = { ...this.formData }
-      // this.defaultHead = info.defaultHead // 默认抬头(0 非默认 1 默认 仅针对普票有效)
+      this.oldFormData = { ...this.formData, defaultHead: info.defaultHead }
+      this.defaultHead = info.defaultHead // 默认抬头(0 非默认 1 默认 仅针对普票有效)
     },
     getInvoiceHeaderList(id) {
       try {
@@ -271,6 +271,7 @@ export default {
       this.loading = true
       const params = {
         id: this.formData.id,
+        invoiceHead: this.formData.invoiceHead,
       }
       for (const key in this.formData) {
         if (Object.hasOwnProperty.call(this.formData, key)) {
@@ -282,9 +283,12 @@ export default {
       }
 
       console.log(this.oldFormData, this.formData)
-      if (this.formData.type === 'ORDINARY') {
+      if (
+        this.formData.type === 'ORDINARY' &&
+        this.oldFormData.defaultHead !== this.defaultHead
+      ) {
         // 普通电子发票才能设置默认
-        // params.defaultHead = this.defaultHead
+        params.defaultHead = this.defaultHead
       }
       // if (this.formData.phone && this.formData.phone.indexOf('*') !== -1) {
       //   // 手机号为*时不修改
