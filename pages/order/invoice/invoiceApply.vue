@@ -312,7 +312,7 @@ export default {
         .catch((error) => {
           this.loading = false
           console.error(error)
-          this.$xToast.error(error.message || '请求失败，请重试')
+          // this.$xToast.error(error.message || '请求失败，请重试')
         })
     },
     setFormData(info) {
@@ -419,7 +419,7 @@ export default {
         .then((res) => {
           console.log('res', res)
           this.loading = false
-          this.$xToast.success(res.message)
+          this.$xToast.success('请求成功')
         })
         .catch((error) => {
           console.error(error)
