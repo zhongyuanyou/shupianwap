@@ -5,7 +5,7 @@
       <div class="desc-name">薯片APP</div>
       <div class="desc-desc">企业服务大平台</div>
     </div>
-    <sp-button class="button" @click="openApp">立刻打开</sp-button>
+    <sp-button class="button" @click="checkOutApp">立刻打开</sp-button>
     <sp-center-popup
       v-model="showPop"
       button-type="confirm"

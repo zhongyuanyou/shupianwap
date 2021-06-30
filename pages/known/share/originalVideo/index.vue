@@ -16,9 +16,9 @@
           round
           fit="cover"
           :src="vDetail.custavatar"
-          @click="openApp"
+          @click="confirm"
         />
-        <div class="info-brand-tile" @click="openApp">
+        <div class="info-brand-tile" @click="confirm">
           <div
             class="name"
             :class="[
@@ -29,7 +29,7 @@
           </div>
           <div class="desc">{{ vDetail.custbriefIntroduction }}</div>
         </div>
-        <sp-button color="#4974F5" class="button" @click="openApp">
+        <sp-button color="#4974F5" class="button" @click="confirm">
           <my-icon
             class="add-icon"
             name="jiahao"
@@ -39,7 +39,7 @@
           <span>关注</span></sp-button
         >
       </div>
-      <div class="info-tile" @click="openApp">{{ vDetail.videoName }}</div>
+      <div class="info-tile" @click="confirm">{{ vDetail.videoName }}</div>
       <div class="info-desc">
         {{ vDetail.custTotalViewCount }}次播放 · 发布于{{
           vDetail.custUpdateTime
@@ -84,7 +84,6 @@ export default {
       vDetail: {},
       // videojs options
       playerOptions: {
-        muted: true,
         poster: '',
       },
       vType: 'original',

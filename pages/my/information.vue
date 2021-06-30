@@ -14,11 +14,12 @@
             :file-id="info.fileId"
             is-add-watermark
             class="uploader"
+            :deletable="false"
             :list-url="listUrl"
             :delete-url="deleteUrl"
             :call-back-url="callBackIUrl"
             @onSuccess="success"
-          />
+          ></spMobileUpload>
           <div class="cell">
             <p class="title">头像</p>
             <div class="right_icon">
@@ -30,11 +31,11 @@
                 class="avatar"
                 :src="info.url ? info.url : avatars"
               />
-
               <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
             </div>
           </div>
         </div>
+
         <div class="cell" @click="handleClick(2)">
           <p class="title">昵称</p>
           <div class="right_icon">
@@ -486,16 +487,32 @@ export default {
           right: 0;
           top: 0;
           bottom: 0;
-          opacity: 0;
+          // opacity: 0;
           overflow: hidden;
         }
-        ::v-deep .sp-uploader__upload {
+        ::v-deep .van-uploader__preview {
+          display: none;
+        }
+        ::v-deep .van-uploader {
+          position: absolute;
           width: 100%;
-          height: 120px;
+          height: 100%;
+        }
+        ::v-deep .van-uploader__wrapper {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+        }
+        ::v-deep .van-uploader__upload {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          opacity: 0;
         }
         ::v-deep .sp-uploader__input {
+          position: absolute;
           width: 100%;
-          height: 120px;
+          height: 100%;
         }
         .uploader {
           position: absolute;
@@ -503,7 +520,8 @@ export default {
           right: 0;
           bottom: 2px;
           z-index: 10;
-          opacity: 0;
+          height: 100%;
+          // opacity: 0;
           overflow: hidden;
         }
       }

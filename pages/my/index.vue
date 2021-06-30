@@ -20,12 +20,12 @@
           <span class="nickName">{{
             userId ? nickName || '' : '登录/注册'
           }}</span>
-          <img
+          <!-- <img
             v-if="userId"
             class="icon-plus"
             :src="$ossImgSetV2(imgList.plus)"
             alt=""
-          />
+          /> -->
         </span>
         <div v-if="userId" class="right" @click="toKnownHome">
           <span class="home">个人主页</span>

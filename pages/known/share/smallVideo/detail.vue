@@ -22,7 +22,6 @@ export default {
       vLikeList: [],
       playerOptions: {
         autoplay: true,
-        muted: true,
         width: '100vw',
         height: '100vh',
         controlBar: {

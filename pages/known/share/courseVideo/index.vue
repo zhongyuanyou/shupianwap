@@ -12,10 +12,10 @@
     <sp-tabs>
       <sp-tab title="简介">
         <div class="introduction">
-          <div class="introduction-tile" @click="openApp">
+          <div class="introduction-tile" @click="confirm">
             {{ vDetail.courseName }}
           </div>
-          <div class="introduction-desc" @click="openApp">
+          <div class="introduction-desc" @click="confirm">
             <div class="name">
               <span>{{ vDetail.authorName }}</span>
               <span>{{ vDetail.authorTitle }}</span>
@@ -82,7 +82,6 @@ export default {
     return {
       // videojs options
       playerOptions: {
-        muted: true,
         poster: '',
       },
       vId: '',
@@ -179,7 +178,7 @@ export default {
 
       const iosPathFinally = this.prefixPath + JSON.stringify(tempIos)
       const androdPathFinally = this.prefixPath + JSON.stringify(tempAndrod)
-      this.openApp(iosPathFinally, androdPathFinally)
+      this.confirm(iosPathFinally, androdPathFinally)
     },
   },
 }
