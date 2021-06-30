@@ -138,7 +138,22 @@ const invoiceApi = {
       url: CHIPS_PC_URL + '/yk/invoice/v1/update_invoice_header.do',
     })
   },
+    /**
+ * 删除发票抬头
+ * @param {object} param0
+ * @param {object} params
+ * @param {array} params.ids 抬头id
+ */
+  dlt_invoice_header({ axios }, params) {
+      return request({
+        axios,
+        params,
+        method: 'post',
+        url: CHIPS_PC_URL + '/yk/invoice/v1/dlt_invoice_header.do',
+      })
+    },
 }
+
 
 
 export { invoiceApi }

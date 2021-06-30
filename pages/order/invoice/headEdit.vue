@@ -149,6 +149,7 @@ export default {
         COMPANY: '单位',
       },
       id: '',
+      oldFormData: {},
       formData: {
         id: '',
         type: 'ORDINARY', // 发票类型 InvoiceType
@@ -198,6 +199,7 @@ export default {
         depositBank: info.depositBank, // 开户银行
         dutyParagraph: info.dutyParagraph, // 纳税人识别号
       }
+      this.oldFormData = { ...this.formData }
       // this.defaultHead = info.defaultHead // 默认抬头(0 非默认 1 默认 仅针对普票有效)
     },
     getInvoiceHeaderList(id) {
@@ -230,13 +232,35 @@ export default {
       }
     },
     del() {
+      if (!this.formData.id) {
+        return Toast.fail('没有指定抬头')
+      }
+
       Dialog.confirm({
         // title: '确定删除该发票抬头？',
         message: '确定删除该发票抬头？',
       })
         .then(() => {
-          // on confirm
-          // this.back()
+          this.loading = true
+          invoiceApi
+            .dlt_invoice_header(
+              { axios: this.$axios },
+              {
+                ids: [this.formData.id],
+              }
+            )
+            .then((res) => {
+              console.log('res', res)
+              this.loading = false
+              this.$xToast.success((res && res.message) || '成功')
+              this.back()
+            })
+            .catch((error) => {
+              console.error(error)
+
+              this.loading = false
+              this.$xToast.error((error && error.message) || '请求失败，请重试')
+            })
         })
         .catch(() => {
           // on cancel
@@ -246,16 +270,27 @@ export default {
       // this.back()
       this.loading = true
       const params = {
-        ...this.formData,
+        id: this.formData.id,
       }
+      for (const key in this.formData) {
+        if (Object.hasOwnProperty.call(this.formData, key)) {
+          const element = this.formData[key]
+          if (this.formData[key] !== this.oldFormData[key]) {
+            params[key] = this.formData[key]
+          }
+        }
+      }
+
+      console.log(this.oldFormData, this.formData)
       if (this.formData.type === 'ORDINARY') {
         // 普通电子发票才能设置默认
-        params.defaultHead = this.defaultHead
+        // params.defaultHead = this.defaultHead
       }
-      if (this.formData.phone && this.formData.phone.indexOf('*') !== -1) {
-        // 手机号为*时不修改
-        delete params.phone
-      }
+      // if (this.formData.phone && this.formData.phone.indexOf('*') !== -1) {
+      //   // 手机号为*时不修改
+      //   delete params.phone
+      // }
+
       invoiceApi
         .update_invoice_header({ axios: this.$axios }, params)
         .then((res) => {
