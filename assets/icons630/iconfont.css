@@ -1,9 +1,9 @@
 @font-face {
   font-family: "spiconfont"; /* Project id 2213614 */
-  src: url('iconfont.woff2?t=1623378204300') format('woff2'),
-       url('iconfont.woff?t=1623378204300') format('woff'),
-       url('iconfont.ttf?t=1623378204300') format('truetype'),
-       url('iconfont.svg?t=1623378204300#spiconfont') format('svg');
+  src: url('iconfont.woff2?t=1625033536120') format('woff2'),
+       url('iconfont.woff?t=1625033536120') format('woff'),
+       url('iconfont.ttf?t=1625033536120') format('truetype'),
+       url('iconfont.svg?t=1625033536120#spiconfont') format('svg');
 }
 
 .spiconfont {
@@ -12,6 +12,50 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.spiconfont-tk_ic_qtzf:before {
+  content: "\e6ad";
+}
+
+.spiconfont-fx_ic_bc:before {
+  content: "\e1247";
+}
+
+.spiconfont-shanghu:before {
+  content: "\e1246";
+}
+
+.spiconfont-xiaodian:before {
+  content: "\e1245";
+}
+
+.spiconfont-duoxuan_heng:before {
+  content: "\e1244";
+}
+
+.spiconfont-share_ic_schb:before {
+  content: "\e1243";
+}
+
+.spiconfont-sh_ic_jxbl:before {
+  content: "\e1242";
+}
+
+.spiconfont-sh_ic_qxbl:before {
+  content: "\e1241";
+}
+
+.spiconfont-sc_ic_sx:before {
+  content: "\e1240";
+}
+
+.spiconfont-shangchuan_tupian_shibai:before {
+  content: "\e1239";
+}
+
+.spiconfont-shangchuan_tupian:before {
+  content: "\e1238";
 }
 
 .spiconfont-per_ic_tksh:before {
@@ -588,6 +632,10 @@
 
 .spiconfont-shipinyulan:before {
   content: "\e6ac";
+}
+
+.spiconfont-fabu-copy:before {
+  content: "\e1248";
 }
 
 .spiconfont-bianji:before {
