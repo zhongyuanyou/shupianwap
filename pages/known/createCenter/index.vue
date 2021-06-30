@@ -138,12 +138,16 @@ export default {
     this.imgsrc = this.$ossImgSetV2(utils.getEmptyImgConfig('calendar'))
     this.active = this.$route.query.active === '3' ? 3 : 0
     if (this.isInApp) {
-      if (this.userInfo) {
+      if (this.userInfo.userId && this.userInfo.token) {
         this.onLoad()
       } else {
         this.$appFn.dggGetUserInfo((res) => {
-          if (res.code === 200 && res.data.userId && res.data.token) {
-            this.$store.dispatch('user/setUser', res.data)
+          if (res.code === 200) {
+            // 兼容启大顺参数返回
+            this.$store.dispatch(
+              'user/setUser',
+              typeof res.data === 'string' ? JSON.parse(res.data) : res.data
+            )
             this.onLoad()
           }
         })
