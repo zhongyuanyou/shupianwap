@@ -286,6 +286,8 @@ export default {
 <style lang="less" scoped>
 .invoice {
   min-height: 100%;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
 
   .paddingBottom150 {
     padding-bottom: 150px;

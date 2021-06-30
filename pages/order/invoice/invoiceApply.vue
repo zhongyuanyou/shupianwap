@@ -47,6 +47,7 @@
             required
             label="个人名称"
             placeholder="请填写“个人”或您的姓名"
+            maxlength="100"
             :rules="[{ required: true, message: '请填写“个人”或您的姓名' }]"
           />
           <div v-else-if="formData.invoiceHeader === 'INVOICE_HEADER_COMPANY'">
@@ -55,12 +56,14 @@
               required
               label="单位名称"
               placeholder="请填写单位名称"
+              maxlength="100"
               :rules="[{ required: true, message: '请填写单位名称' }]"
             />
             <sp-field
               v-model="formData.taxpayerIdentifNum"
               required
               label="纳税人识别号"
+              maxlength="20"
               placeholder="请填写纳税人识别号"
             />
 
@@ -68,21 +71,25 @@
               <sp-field
                 v-model="formData.registerAddress"
                 label="注册地址"
+                maxlength="120"
                 placeholder="请填写注册地址"
               />
               <sp-field
                 v-model="formData.registerTel"
                 label="注册电话"
+                maxlength="20"
                 placeholder="请填写注册电话"
               />
               <sp-field
                 v-model="formData.bankOfDeposit"
                 label="开户银行"
+                maxlength="50"
                 placeholder="请填写开户银行"
               />
               <sp-field
                 v-model="formData.bankAccount"
                 label="银行账号"
+                maxlength="50"
                 placeholder="请填写银行账号"
               />
             </div>
@@ -108,11 +115,13 @@
             label="收票人手机"
             placeholder=""
             required
+            maxlength="60"
             :rules="[{ required: true, message: '请填写手机号码' }]"
           />
           <sp-field
             v-model="formData.receiverEmail"
             label="收票人邮箱"
+            maxlength="80"
             placeholder="用来接收电子发票邮件，可选填"
           />
         </div>
@@ -219,6 +228,7 @@ export default {
       },
       InvoiceContent: ['商品明细', '商品类别'],
 
+      orderId: '',
       formData: {
         orderId: '', // 订单id
         applySource: 'COMDIC_PLATFORM_CRISPS', // 申请来源  薯片 COMDIC_PLATFORM_CRISPS 案加 COMDIC_PLATFORM_QIDABAO
@@ -243,8 +253,10 @@ export default {
     }
   },
   mounted() {
+    this.orderId = this.$route.query.orderId
     this.formData.orderId = this.$route.query.orderId
     this.init()
+    // this.getDefaultInvoiceHeader()
   },
   methods: {
     init() {
@@ -264,7 +276,11 @@ export default {
           this.loading = false
           console.log(' res', res)
 
-          this.setFormData(res || {})
+          if (res && res.orderId) {
+            this.setFormData(res || {})
+          } else {
+            this.getDefaultInvoiceHeader()
+          }
           // {
           //   applySource: "COMDIC_PLATFORM_CRISPS",
           //   applyTime: "2021-06-28 14:21:24",
@@ -304,22 +320,75 @@ export default {
         // id: info.id,
         orderId: info.orderId,
         applySource: 'COMDIC_PLATFORM_CRISPS',
-        invoiceType: info.invoiceType,
-        invoiceContent: info.invoiceContent,
-        invoiceHeader: info.invoiceHeader,
+        invoiceType: info.invoiceType || '027',
+        invoiceContent: info.invoiceContent || '商品明细',
+        invoiceHeader: info.invoiceHeader || 'INVOICE_HEADER_PERSONAL',
         invoiceHeaderName: info.invoiceHeaderName,
         receiverPhone: info.receiverPhone,
+        receiverEmail: info.receiverEmail,
+
         bankAccount: info.bankAccount,
         bankOfDeposit: info.bankOfDeposit,
 
-        receiverEmail: info.receiverEmail,
         registerTel: info.registerTel,
         registerAddress: info.registerAddress,
         taxpayerIdentifNum: info.taxpayerIdentifNum,
       }
-      // this.defaultHead = info.defaultHead // 默认抬头(0 非默认 1 默认 仅针对普票有效)
     },
+    /** 获取默认抬头 */
+    getDefaultInvoiceHeader() {
+      try {
+        // let headType = ''
+        // if (invoiceHeader === 'INVOICE_HEADER_PERSONAL') {
+        //   headType = 'PERSONAL'
+        // } else if (invoiceHeader === 'INVOICE_HEADER_COMPANY') {
+        //   headType = 'COMPANY'
+        // } else {
+        //   return
+        // }
 
+        invoiceApi
+          .invoice_header_list({ axios: this.$axios }, {})
+          .then((res) => {
+            const list = (res && res.records) || []
+            const head = list.find((item) => {
+              return item.defaultHead === 1
+              // return item.headType === headType
+            })
+            if (head) {
+              return this.setDefaultFormDataWithHead(head)
+            }
+          })
+          .catch((error) => {
+            console.error(error)
+            this.$xToast.error((error && error.message) || '请求失败，请重试')
+          })
+      } catch (error) {}
+    },
+    // 用默认抬头填充数据
+    setDefaultFormDataWithHead(info) {
+      this.formData = {
+        orderId: this.orderId,
+        applySource: 'COMDIC_PLATFORM_CRISPS',
+        invoiceType: '027',
+        invoiceContent: '商品明细',
+        invoiceHeader:
+          info.headType === 'COMPANY'
+            ? 'INVOICE_HEADER_COMPANY'
+            : 'INVOICE_HEADER_PERSONAL',
+
+        invoiceHeaderName: info.invoiceHead,
+        receiverPhone: '',
+        receiverEmail: '',
+
+        bankAccount: info.bankNumber,
+        bankOfDeposit: info.depositBank,
+
+        registerTel: info.phone,
+        registerAddress: info.address,
+        taxpayerIdentifNum: info.dutyParagraph,
+      }
+    },
     submit() {
       this.$refs.form
         .validate()

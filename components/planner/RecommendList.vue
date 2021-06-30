@@ -61,6 +61,14 @@
               </div>
               <div v-if="item.tags" class="tags">
                 <div
+                  v-if="
+                    item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
+                  "
+                  class="tags__item desc-label-tc"
+                >
+                  套餐
+                </div>
+                <div
                   v-for="tItem in tagsFilter(item.tags)"
                   :key="tItem.id"
                   class="tags__item"
@@ -228,8 +236,7 @@ export default {
             break
           case 'COMDIC_PLATFORM_CRISPS': // 薯片
             iOSRouter = {
-              path:
-                'CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation',
+              path: 'CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation',
               parameter: {
                 routerPath: 'cpsc/goods/details/service',
                 parameter: { productId },
@@ -246,8 +253,7 @@ export default {
           case 'crisps-qds-app': // 企大顺
             iOSRouter = {
               type: 'Flutter', // 只有企大顺有
-              path:
-                'CPSPlanner:CPSPlanner/CPSFlutterRouterViewController///push/animation',
+              path: 'CPSPlanner:CPSPlanner/CPSFlutterRouterViewController///push/animation',
               parameter: {
                 routerPath: 'cpsplanner/product/service_product_detail',
                 parameter: { productId },
@@ -509,5 +515,10 @@ export default {
       }
     }
   }
+}
+.desc-label-tc {
+  background: #fc4e41 !important;
+  color: white !important;
+  font-weight: 700 !important;
 }
 </style>

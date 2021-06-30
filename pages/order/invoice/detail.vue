@@ -380,11 +380,6 @@ export default {
       })
     },
 
-    submit() {
-      // this.$xToast.show({ message: '提交成功' })
-      this.$router.push('/order/invoice/invoiceApply')
-      this.$xToast.success('提交成功')
-    },
     moneyTips() {
       // 待审核弹窗
       Dialog.alert({

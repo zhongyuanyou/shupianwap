@@ -20,12 +20,12 @@
           <span class="nickName">{{
             userId ? nickName || '' : '登录/注册'
           }}</span>
-          <img
+          <!-- <img
             v-if="userId"
             class="icon-plus"
             :src="$ossImgSetV2(imgList.plus)"
             alt=""
-          />
+          /> -->
         </span>
         <div v-if="userId" class="right" @click="toKnownHome">
           <span class="home">个人主页</span>
@@ -334,10 +334,10 @@ export default {
           iconName: 'per_ic_complete',
           name: '已完成',
         },
-        {
-          iconName: 'per_ic_cancel',
-          name: '已取消',
-        },
+        // {
+        //   iconName: 'per_ic_cancel',
+        //   name: '已取消',
+        // },
         {
           iconName: 'daipingjia',
           name: '待评价',
@@ -349,13 +349,15 @@ export default {
         },
       ],
       imgList: {
-        tx: '2exrifx8gxes000.png',
-        edit: '72tvzeql0iw0000.png',
-        plus: '895bdylh5rg000.png',
+        tx: '2exrifx8gxes000.png', // 头像
+        edit: '72tvzeql0iw0000.png', // 编辑
+        plus: '895bdylh5rg000.png', //
 
+        shop: 'f04le88sqm80000.png', // 购物车
+        yuYue: '7jk7c04dsa00000.png', // 预约
         contract: '2ghw6duy8l0k000.png', // 合同
         collection: 'axvqykli9yg0000.png', // 收藏
-        coupon: '1gw9pvueyc68000.png', // 优惠券
+        coupon: 'fucmezszllc000.png', // 优惠券
 
         mianTanJiLu: '714jp73eal40000.png', // 面谈记录
         real: 'f9q1kjsywx40000.png', // 实名认证
@@ -363,6 +365,8 @@ export default {
         complain: '6v7la4yubzk0000.png', // 我要吐槽
         about: 'ea2fs9wtslk0000.png', // 关于我们
         qianbao: '62cvqnmjl5s0000.png', // 钱包
+
+        invoice: 'dx2el9toue00000.png', // 发票中心
       },
 
       info: {
@@ -422,19 +426,17 @@ export default {
           img: this.$ossImgSetV2(this.imgList.coupon),
           url: '/my/coupon',
         },
-        {},
-        {},
       ]
     },
     ServiceTabs() {
       const realStatus =
         this.info.realStatus === 'NO_AUTHENTICATION'
-          ? '未实名认证'
+          ? '未实名'
           : this.info.realStatus === 'AUTHENTICATION_SUCCESS'
-          ? '已实名认证'
+          ? '已实名'
           : this.info.realStatus === 'AUTHENTICATION_ING'
           ? '认证中'
-          : '未实名认证'
+          : '未实名'
       let realUrl = ''
       if (
         this.info.realStatus === 'NO_AUTHENTICATION' ||
@@ -445,6 +447,12 @@ export default {
       }
 
       return [
+        {
+          // iconName: 'caifang_mian',
+          name: '发票中心',
+          img: this.$ossImgSetV2(this.imgList.invoice),
+          url: '/order/invoice',
+        },
         {
           // iconName: 'caifang_mian',
           name: '面谈记录',
@@ -550,7 +558,7 @@ export default {
     },
     clickTab(index) {
       // 进入待评价页面
-      if (index === 5) {
+      if (index === 4) {
         if (this.token) {
           this.$router.push({ path: '/my/evaluate' })
         } else {
@@ -563,7 +571,7 @@ export default {
         }
         return
       }
-      if (index === 6) {
+      if (index === 5) {
         if (this.token) {
           this.$router.push({ path: '/my/afterSale/list' })
         } else {
@@ -812,11 +820,16 @@ export default {
     }
     &_type {
       padding-top: 52px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
+
+      // display: flex;
+      // align-items: center;
+      // justify-content: space-between;
+      // flex-wrap: wrap;
       &_list {
+        display: inline-block;
+        width: 20%;
+        min-width: 120px;
+
         cursor: pointer;
         text-align: center;
         min-width: 108px;
@@ -836,7 +849,7 @@ export default {
           &_daipingjia {
             position: absolute;
             font: 24px @fontf-pfsc-med;
-            left: 41px;
+            // left: 41px;
             top: -18px;
             background: #ec5330;
             border-radius: 16px;
@@ -859,8 +872,10 @@ export default {
           font-family: PingFang-SC-Bold, PingFang-SC;
           font-weight: bold;
           color: #222222;
-          line-height: 24px;
+          line-height: 26px;
           padding-top: 20px;
+
+          .mixin-text-oneoverflow();
         }
         .jb_num {
           position: absolute;

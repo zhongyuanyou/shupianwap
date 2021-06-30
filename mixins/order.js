@@ -305,18 +305,14 @@ export default {
         this.orderData.payType &&
         this.orderData.payType === 'ORDER_PAY_MODE_SECURED'
       ) {
-        this.$xToast.error(
-          '该订单为担保交易订单，请访问薯片网站PC端进行付款！'
-        )
+        this.$xToast.error('该订单为担保交易订单，请访问薯片网站PC端进行付款！')
         return
       }
       if (
         this.orderData.isSecuredTrade &&
         this.orderData.isSecuredTrade === 1
       ) {
-        this.$xToast.error(
-          '该订单为担保交易订单，请访问薯片网站PC端进行付款！'
-        )
+        this.$xToast.error('该订单为担保交易订单，请访问薯片网站PC端进行付款！')
         return
       }
       if (this.fromPage === 'orderList' || this.fromPage === 'orderDetail') {
@@ -643,12 +639,12 @@ export default {
       ) {
         return 3
       }
-      if (
-        orderData.afterSaleStatus &&
-        orderData.afterSaleStatus === 'AFTER_SALE_STATUS_4'
-      ) {
-        return 4
-      }
+      // if (
+      //   orderData.afterSaleStatus &&
+      //   orderData.afterSaleStatus === 'AFTER_SALE_STATUS_4'
+      // ) {
+      //   return 4
+      // }
       if (
         orderData.afterSaleStatus &&
         orderData.afterSaleStatus === 'AFTER_SALE_STATUS_5'
@@ -689,16 +685,16 @@ export default {
           this.showMydialog = true
           return
         }
-        if (this.checkContractIsOver(order) === 1) {
-          // 交易商品付款之前检测有无签署合同
-          this.$xToast.show({
-            message: '为满足您的合法权益，请先和卖家签署合同后再付款',
-            duration: 3000,
-            icon: 'toast_ic_remind',
-            forbidClick: true,
-          })
-          return
-        }
+        // if (this.checkContractIsOver(order) === 1) {
+        //   // 交易商品付款之前检测有无签署合同
+        //   this.$xToast.show({
+        //     message: '为满足您的合法权益，请先和卖家签署合同后再付款',
+        //     duration: 3000,
+        //     icon: 'toast_ic_remind',
+        //     forbidClick: true,
+        //   })
+        //   return
+        // }
         if (
           this.opType === 'payMoney' &&
           order.orderSkuEsList[0].skuType === 'PRO_CLASS_TYPE_TRANSACTION'
@@ -766,6 +762,7 @@ export default {
     },
     // 同意协议
     confirmAggret(order) {
+      this.loading = true
       if (!this.addOrderXy.id || !this.tranXy.id) {
         this.$xToast.error('获取协议失败，请刷新重试')
         return
@@ -780,9 +777,13 @@ export default {
           }
         )
         .then((res) => {
-          this.$xToast.success('操作成功')
-          if (this.fromPage === 'orderList') this.getOrderList()
-          else this.getDetail()
+          if (this.fromPage === 'orderList') {
+            this.getOrderList()
+            this.$xToast.success('操作成功')
+          } else {
+            this.getDetail()
+            this.$xToast.success('操作成功')
+          }
         })
         .catch((error) => {
           console.error(error)
@@ -1292,9 +1293,12 @@ export default {
       }
       const billStatusCode =
         orderData.userInvoiceStatus || orderData.merchantInvoiceStatus
+      if (!billStatusCode) {
+        return 0
+      }
       for (const key in billStatusCodesObj) {
         if (billStatusCodesObj[key].match(billStatusCode)) {
-          return key
+          return Number(key)
         }
       }
     },

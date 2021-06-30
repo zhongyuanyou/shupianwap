@@ -158,6 +158,7 @@
               </div>
             </div>
           </div>
+          <div v-if="index + 1 !== searchList.length" class="line"></div>
         </div>
       </sp-list>
     </div>
@@ -194,6 +195,7 @@
               </div>
             </div>
           </div>
+          <div v-if="index + 1 !== searchList.length" class="line"></div>
         </div>
       </sp-list>
     </div>
@@ -711,9 +713,10 @@ export default {
     }
   }
   > .videolist {
+    background: #fff;
     .list {
       .item {
-        padding: 28px 40px;
+        padding: 28px 32px;
         display: flex;
         align-items: center;
         .lf_img {
@@ -769,6 +772,11 @@ export default {
             }
           }
         }
+      }
+      .line {
+        margin: 0 32px;
+        height: 1px;
+        background: #f5f5f5;
       }
     }
   }
