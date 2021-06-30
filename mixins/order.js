@@ -643,12 +643,12 @@ export default {
       ) {
         return 3
       }
-      if (
-        orderData.afterSaleStatus &&
-        orderData.afterSaleStatus === 'AFTER_SALE_STATUS_4'
-      ) {
-        return 4
-      }
+      // if (
+      //   orderData.afterSaleStatus &&
+      //   orderData.afterSaleStatus === 'AFTER_SALE_STATUS_4'
+      // ) {
+      //   return 4
+      // }
       if (
         orderData.afterSaleStatus &&
         orderData.afterSaleStatus === 'AFTER_SALE_STATUS_5'
