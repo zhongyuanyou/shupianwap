@@ -23,6 +23,9 @@
               {{ item.goodsSubDetailsName }}
             </div> -->
             <div class="sku-list">
+              <p class="sku-item">{{ item.goodsSubDetailsName }}</p>
+            </div>
+            <!-- <div class="sku-list">
               <p
                 v-for="(item2, index2) in item.serviceItems"
                 :key="index2"
@@ -30,7 +33,7 @@
               >
                 {{ item2.serviceItemName }}
               </p>
-            </div>
+            </div> -->
             <div class="content_price">
               {{ item.settlementPrice }} <span>元</span>
             </div>
