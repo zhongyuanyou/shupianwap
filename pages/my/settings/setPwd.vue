@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { PasswordInput, NumberKeyboard } from '@chipspc/vant-dgg'
+import { PasswordInput, NumberKeyboard, Dialog } from '@chipspc/vant-dgg'
 import { walletApi, userinfoApi } from '@/api'
 import Header from '@/components/common/head/header'
 export default {
@@ -57,6 +57,7 @@ export default {
     Header,
     [PasswordInput.name]: PasswordInput,
     [NumberKeyboard.name]: NumberKeyboard,
+    [Dialog.name]: Dialog,
   },
   data() {
     return {
@@ -194,10 +195,14 @@ export default {
           this.$router.push('/my/wallet')
         }, 1500)
       } else {
-        this.$xToast.error(res.data.error)
-        setTimeout(() => {
+        Dialog.alert({
+          title: '提示',
+          message: '激活失败，请重试',
+          cancelButtonText: '',
+          confirmButtonText: '重试',
+        }).then(() => {
           this.$router.push('/my/wallet')
-        }, 1500)
+        })
       }
     },
   },
