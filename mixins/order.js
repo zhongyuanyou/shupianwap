@@ -305,18 +305,14 @@ export default {
         this.orderData.payType &&
         this.orderData.payType === 'ORDER_PAY_MODE_SECURED'
       ) {
-        this.$xToast.error(
-          '该订单为担保交易订单，请访问薯片网站PC端进行付款！'
-        )
+        this.$xToast.error('该订单为担保交易订单，请访问薯片网站PC端进行付款！')
         return
       }
       if (
         this.orderData.isSecuredTrade &&
         this.orderData.isSecuredTrade === 1
       ) {
-        this.$xToast.error(
-          '该订单为担保交易订单，请访问薯片网站PC端进行付款！'
-        )
+        this.$xToast.error('该订单为担保交易订单，请访问薯片网站PC端进行付款！')
         return
       }
       if (this.fromPage === 'orderList' || this.fromPage === 'orderDetail') {
@@ -643,12 +639,12 @@ export default {
       ) {
         return 3
       }
-      if (
-        orderData.afterSaleStatus &&
-        orderData.afterSaleStatus === 'AFTER_SALE_STATUS_4'
-      ) {
-        return 4
-      }
+      // if (
+      //   orderData.afterSaleStatus &&
+      //   orderData.afterSaleStatus === 'AFTER_SALE_STATUS_4'
+      // ) {
+      //   return 4
+      // }
       if (
         orderData.afterSaleStatus &&
         orderData.afterSaleStatus === 'AFTER_SALE_STATUS_5'
@@ -1292,9 +1288,12 @@ export default {
       }
       const billStatusCode =
         orderData.userInvoiceStatus || orderData.merchantInvoiceStatus
+      if (!billStatusCode) {
+        return 0
+      }
       for (const key in billStatusCodesObj) {
         if (billStatusCodesObj[key].match(billStatusCode)) {
-          return key
+          return Number(key)
         }
       }
     },

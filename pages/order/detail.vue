@@ -219,9 +219,22 @@
       </p> -->
         <p class="order-item">
           <span class="label">发票类型</span>
-          <span class="text">普通电子发票</span>
-          <span v-if="checkBillStatus() === 1" class="btn">申请开票</span>
-          <span v-if="checkBillStatus() === 3" class="btn">查看发票</span>
+          <span class="text">电子普通发票</span>
+          <span class="tx-icon" @click="openInvoiceModal()">
+            <my-icon name="tixing_mian1" size="0.32rem"></my-icon>
+          </span>
+          <span
+            v-if="checkBillStatus() === 1 && cusOrderStatusType === 3"
+            class="btn-invoice btn"
+            @click="toInvoice()"
+            >申请开票</span
+          >
+          <span
+            v-if="checkBillStatus() === 3 && cusOrderStatusType === 3"
+            class="btn-invoice btn"
+            @click="toInvoice()"
+            >查看发票</span
+          >
         </p>
         <p class="order-item last-p">
           <span class="label">备注</span>
@@ -371,6 +384,7 @@
       @cancleOrder="cancleOrder"
       @getBatchList="getBatchList"
     />
+    <InvoiceToast ref="InvoiceToast" />
   </div>
 </template>
 
@@ -388,6 +402,7 @@ import orderUtils from '@/utils/order'
 import orderApi from '@/api/order'
 import OrderMixins from '@/mixins/order'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import InvoiceToast from '@/components/order/detail/InvoiceModal'
 export default {
   components: {
     [Button.name]: Button,
@@ -400,6 +415,7 @@ export default {
     CancelOrder,
     PayModal,
     LoadingCenter,
+    InvoiceToast,
   },
   mixins: [OrderMixins],
   data() {
@@ -450,6 +466,9 @@ export default {
     this.tranXy = await this.getProtocol('protocol100033')
   },
   methods: {
+    openInvoiceModal() {
+      this.$refs.InvoiceToast.showPop = true
+    },
     scollChange() {
       const scrollTop = this.$refs.scrollView.scrollTop
       if (scrollTop >= 80) {
@@ -528,6 +547,7 @@ export default {
           this.$refs.cancleOrderModel.setCancelName(
             this.orderData.orderSplitAndCusVo.cusOrderCancelReason
           )
+          console.log('checkBillStatus', this.checkBillStatus())
         })
         .catch((err) => {
           this.loading = false
@@ -711,6 +731,9 @@ export default {
       color: #222222;
       font-size: 22px;
     }
+    .btn-invoice {
+      float: right;
+    }
   }
   .last-p {
     margin-bottom: 0;
@@ -871,5 +894,8 @@ export default {
   span {
     color: #4f90f6;
   }
+}
+.tx-icon {
+  margin-left: 10px;
 }
 </style>
