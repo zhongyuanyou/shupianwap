@@ -124,6 +124,10 @@
     </sp-list>
     <div
       v-if="(tabIndex == 4 || tabIndex == 5) && selectGoodsState"
+      class="footer-nav-relative"
+    ></div>
+    <div
+      v-if="(tabIndex == 4 || tabIndex == 5) && selectGoodsState"
       class="footer-nav"
     >
       <div class="footer_container">
@@ -411,7 +415,9 @@ export default {
 
 .collection_container {
   min-height: 100vh;
-  padding-bottom: 160px;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+  // padding-bottom: 160px;
   background-color: #f8f8f8;
 
   .sp-tabs {
@@ -428,6 +434,7 @@ export default {
   }
 
   .list_container {
+    // padding-bottom: 120px;
     .item {
       background: #ffffff;
       padding: 24px 32px 28px;
@@ -511,6 +518,9 @@ export default {
       margin-left: -5px;
     }
   }
+}
+.footer-nav-relative {
+  height: 135px;
 }
 .footer-nav {
   position: fixed;
