@@ -502,6 +502,7 @@ export default {
           this.$refs.cancleOrderModel.setCancelName(
             this.orderData.orderSplitAndCusVo.cusOrderCancelReason
           )
+          this.$forceUpdate()
         })
         .catch((err) => {
           this.loading = false

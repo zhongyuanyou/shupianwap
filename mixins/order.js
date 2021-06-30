@@ -295,15 +295,14 @@ export default {
         this.orderData.payType &&
         this.orderData.payType === 'ORDER_PAY_MODE_SECURED'
       ) {
-        this.$xToast.error(
-          '该订单为担保交易订单，请访问薯片网站PC端进行付款！'
-        )
+        this.$xToast.error('该订单为担保交易订单，请访问薯片网站PC端进行付款！')
         return
       }
-      if (this.orderData.isSecuredTrade && this.orderData.isSecuredTrade === 1) {
-        this.$xToast.error(
-          '该订单为担保交易订单，请访问薯片网站PC端进行付款！'
-        )
+      if (
+        this.orderData.isSecuredTrade &&
+        this.orderData.isSecuredTrade === 1
+      ) {
+        this.$xToast.error('该订单为担保交易订单，请访问薯片网站PC端进行付款！')
         return
       }
       if (this.fromPage === 'orderList' || this.fromPage === 'orderDetail') {
@@ -670,6 +669,7 @@ export default {
     },
     // 同意协议
     confirmAggret(order) {
+      this.loading = true
       if (!this.addOrderXy.id || !this.tranXy.id) {
         this.$xToast.error('获取协议失败，请刷新重试')
         return
@@ -684,9 +684,13 @@ export default {
           }
         )
         .then((res) => {
-          this.$xToast.success('操作成功')
-          if (this.fromPage === 'orderList') this.getOrderList()
-          else this.getDetail()
+          if (this.fromPage === 'orderList') {
+            this.getOrderList()
+            this.$xToast.success('操作成功')
+          } else {
+            this.getDetail()
+            this.$xToast.success('操作成功')
+          }
         })
         .catch((error) => {
           console.error(error)
