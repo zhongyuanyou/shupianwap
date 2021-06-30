@@ -24,7 +24,7 @@
             </div> -->
             <div class="sku-list">
               <p
-                v-for="(item2, index2) in serviceItems"
+                v-for="(item2, index2) in item.serviceItems"
                 :key="index2"
                 class="sku-item"
               >
@@ -66,6 +66,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.sku-list {
+  color: #333;
+  font-size: 14px;
+  .sku-item {
+    margin-top: 16px;
+  }
+}
 .container {
   background-color: #fff;
   padding-top: 44px;
@@ -82,14 +89,6 @@ export default {
       font-size: 40px;
       font-weight: bold;
       color: #1a1a1a;
-    }
-    .sku-list {
-      font-weight: bold;
-      color: #999;
-      font-size: 28px;
-      .sku-item {
-        margin-top: 16px;
-      }
     }
   }
   &_list {

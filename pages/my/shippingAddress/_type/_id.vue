@@ -147,6 +147,7 @@ export default {
   },
   data() {
     return {
+      isChangeCity: false,
       btnLoading: false,
       fixHeadStyle: null,
       ruleForm: {
@@ -238,6 +239,7 @@ export default {
       }
     },
     select(data) {
+      this.isChangeCity = true
       // 选择地址
       this.areaTxt = ''
       this.areaList = data
@@ -340,9 +342,14 @@ export default {
       this.ruleForm.defaultAddress = this.ruleForm.defaultAddress ? 1 : 0
       const params = {
         ...this.ruleForm,
-        addressProvince: this.areaList.length ? this.areaList[0].name : '',
-        addressCity: this.areaList.length > 1 ? this.areaList[1].name : '',
+        addressProvince: this.areaList.length ? this.areaList[0].code : '',
+        addressCity: this.areaList.length > 1 ? this.areaList[1].code : '',
         addressArea: '',
+      }
+      if (!this.isChangeCity) {
+        delete params.addressProvince
+        delete params.addressCity
+        delete params.addressArea
       }
       try {
         const res = await this.$axios.post(userinfoApi.updateAddress, params)
@@ -368,10 +375,14 @@ export default {
       this.ruleForm.defaultAddress = this.ruleForm.defaultAddress ? 1 : 0
       const params = {
         ...this.ruleForm,
-        addressProvince: this.areaList.length ? this.areaList[0].name : '',
-        addressCity: this.areaList.length > 1 ? this.areaList[1].name : '',
+        addressProvince: this.areaList.length ? this.areaList[0].code : '',
+        addressCity: this.areaList.length > 1 ? this.areaList[1].code : '',
         addressArea: '',
         userId: this.userId,
+      }
+      if (!this.isChangeCity) {
+        delete params.addressProvince
+        delete params.addressCity
       }
       try {
         const res = await this.$axios.post(userinfoApi.updateAddress, params)
