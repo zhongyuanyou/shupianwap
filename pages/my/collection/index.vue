@@ -189,18 +189,18 @@ export default {
     return {
       content: '',
       tabs: [
-        // {
-        //   tile: '问题',
-        //   id: 1,
-        // },
-        // {
-        //   tile: '回答',
-        //   id: 3,
-        // },
-        // {
-        //   tile: '文章',
-        //   id: 2,
-        // },
+        {
+          tile: '问题',
+          id: 1,
+        },
+        {
+          tile: '回答',
+          id: 3,
+        },
+        {
+          tile: '文章',
+          id: 2,
+        },
         {
           tile: '服务商品',
           id: 4,
