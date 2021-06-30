@@ -36,7 +36,9 @@
         <Button plain type="primary" size="large" @click="onLeftClick"
           >我再想想</Button
         >
-        <Button type="primary" size="large" @click="sign()">确认签署</Button>
+        <Button type="primary" size="large" @click="decryptionPhone()"
+          >确认签署</Button
+        >
         <sp-dialog v-model="timeshow" :show-confirm-button="false">
           <div class="dialog">
             <div class="head">温馨提示</div>
@@ -148,7 +150,24 @@ export default {
         this.$router.back(-1)
       }
     },
-    sign() {
+    decryptionPhone() {
+      if (this.contract.contactWay.length > 11) {
+        this.loading = true
+        contractApi
+          .decryptionPhone(
+            { axios: this.axios },
+            {
+              phoneList: [this.contract.contactWay]
+            }
+          )
+          .then((res) => {
+            this.sign(res[0])
+          })
+      } else {
+        this.sign(this.contract.contactWay)
+      }
+    },
+    sign(phone) {
       this.loading = true
       if (
         this.$cookies.get('realStatus', { path: '/' }) ===
@@ -160,9 +179,9 @@ export default {
             { axios: this.axios },
             {
               contractId: this.contract.contractId,
-              phone: this.contract.contactWay,
+              phone,
               signerName: this.contract.signerName,
-              contactWay: this.contract.contactWay,
+              contactWay: phone,
               businessId: this.$store.state.user.userId,
             }
           )

@@ -139,6 +139,15 @@ export default {
     this.getorder()
   },
   methods: {
+    encryptionPhone() {
+      this.loading = true
+      contractApi
+        .encryptionPhone({ axios: this.axios }, { phone: this.phone })
+        .then((res) => {
+          this.phone = res
+          this.applycontart()
+        })
+    },
     getorder() {
       orderApi
         .getDetailByOrderId(
@@ -179,7 +188,6 @@ export default {
       }
     },
     applycontart() {
-      this.loading = true
       contractApi
         .applycontart(
           { axios: this.axios },
@@ -223,7 +231,7 @@ export default {
       const _this = this
       if (this.partyName && this.userName && this.phone) {
         if (/^1[3456789]\d{9}$/.test(this.phone)) {
-          _this.applycontart()
+          _this.encryptionPhone()
         }
       }
     },
