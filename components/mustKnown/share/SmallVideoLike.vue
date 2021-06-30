@@ -125,7 +125,7 @@ export default {
       const tempAndrod = deepCopy({}, this.androdPath)
       tempAndrod.parameter.id = item.id
       const androdPathFinally = this.prefixPath + JSON.stringify(tempAndrod)
-      this.openApp(iosPathFinally, androdPathFinally)
+      this.confirm(iosPathFinally, androdPathFinally)
     },
   },
 }
