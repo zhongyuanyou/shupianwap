@@ -22,15 +22,16 @@ export default {
   // },
   methods: {
     jumpImMixin() {
+      const userInfo = this.$store.state.user
       // 跳转到IM
-      if (this.token && this.userId) {
+      if (userInfo.token && userInfo.userId) {
         // if (this.isApplets) {
         //   uni.switchTab({
         //     url: '/pages/message/index',
         //   })
         //   return
         // }
-        window.location.href = `${config.imBaseUrl}/index?token=${this.userInfo.token}&userId=${this.userInfo.userId}&userType=${this.userInfo.userType}`
+        window.location.href = `${config.imBaseUrl}/index?token=${userInfo.token}&userId=${userInfo.userId}&userType=${userInfo.userType}`
       } else {
         // if (this.isApplets) {
         //   let url = this.$route.path.split('')

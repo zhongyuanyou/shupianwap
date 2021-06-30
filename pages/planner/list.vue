@@ -380,8 +380,11 @@ export default {
       this.catogyActiveIndex = index
       this.search.categoryCodeName = this.categoryList[index].name
       this.search.categoryCodes = this.categoryList[index].code
-      this.pageOption.page = 1
-      this.pageOption.limit = 10
+      // this.pageOption.page = 1
+      // this.pageOption.limit = 10
+
+      this.pageOption = DEFAULT_PAGE
+
       this.search.keywords = ''
       this.isChooseCategory = true
       if (index === 0) {
@@ -426,7 +429,7 @@ export default {
           categoryCodes: [code],
           categoryState: 1, // 分类层级
           limit: 10,
-          start: this.pageOption.page || 1,
+          start: this.pageOption.page,
         })
         .then((res) => {
           if (this.refreshing) {
@@ -434,12 +437,13 @@ export default {
             this.refreshing = false
           }
           if (res) {
+            // this.pageOption.page++
             this.loading = false
-            this.finished = true
+            this.finished = false
             this.error = false
             const { limit, currentPage = 1, totalCount = 0, records = [] } = res
             this.pageOption = { limit, totalCount, page: currentPage }
-            this.list.push(...records)
+            this.pageOption.page = currentPage + 1
             // 第一页面请求提示
             if (currentPage === 1) {
               this.$xToast.show({
@@ -450,7 +454,8 @@ export default {
               })
               this.list = records
             } else {
-              this.list = this.list.concat(currentPage)
+              this.list.push(...records)
+              // this.list = this.list.concat(currentPage)
             }
           }
         })
@@ -513,6 +518,7 @@ export default {
             this.loading = false
           })
       } else {
+        console.log('currentPage', currentPage)
         this.getListByCode(this.search.categoryCodes, currentPage)
       }
     },
@@ -520,6 +526,7 @@ export default {
       this.finished = false
       this.loading = true
       this.error = false
+      this.pageOption = DEFAULT_PAGE
       this.onLoad()
     },
     handleSearchFocus() {
