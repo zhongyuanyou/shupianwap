@@ -103,7 +103,7 @@
                         selectList[1].name &&
                         cItem.name.indexOf(selectList[1].name) > -1))
                   "
-                  name="success"
+                  name="shezhi_mian"
                   color="#4974F5"
                   size="0.3rem"
                 />

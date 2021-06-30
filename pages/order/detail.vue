@@ -217,10 +217,12 @@
         <span class="label">合同</span>
         <span class="text">{{ orderData.contractName || '暂无' }}</span>
       </p> -->
-        <!-- <p class="order-item">
-        <span class="label">发票</span>
-        <span class="text">暂无</span>
-      </p> -->
+        <p class="order-item">
+          <span class="label">发票类型</span>
+          <span class="text">普通电子发票</span>
+          <span v-if="checkBillStatus() === 1" class="btn">申请开票</span>
+          <span v-if="checkBillStatus() === 3" class="btn">查看发票</span>
+        </p>
         <p class="order-item last-p">
           <span class="label">备注</span>
           <span class="text">{{
@@ -244,6 +246,30 @@
       <!-- 当订单状态为已取消时隐藏顶部按钮区域 -->
       <div v-if="cusOrderStatusType !== 4" class="btn-area">
         <div class="inner">
+          <sp-button
+            v-if="checkAfterSaleStatus() === 1 || checkAfterSaleStatus() === 4"
+            class="btn-look"
+            @click="handleClickItem(7)"
+            >退款/售后</sp-button
+          >
+          <sp-button
+            v-if="checkAfterSaleStatus() === 2"
+            class="btn-look"
+            @click="handleClickItem(7)"
+            >售后中</sp-button
+          >
+          <!-- <sp-button
+            v-if="checkAfterSaleStatus() === 3"
+            class="btn-look"
+            @click="handleClickItem(7)"
+            >已售后</sp-button
+          > -->
+          <sp-button
+            v-if="checkAfterSaleStatus() === 4"
+            class="btn-look"
+            @click="handleClickItem(7)"
+            >部分售后</sp-button
+          >
           <!--   v-if="
             orderData.orderSplitAndCusVo[0].cusOrderPayStatusNo ===
             orderStatusCode[1]
@@ -543,6 +569,16 @@ export default {
           this.opType = 'confirmComplete'
           this.confirmOrder()
           break
+        case 7:
+          // 退款 售后
+          this.opType = 'afterSale'
+          this.toAfterSale()
+          break
+        case 8:
+          // 发票
+          this.opType = 'invoice'
+          this.toInvoice()
+          break
       }
     },
     navToUrl(type) {
@@ -791,17 +827,30 @@ export default {
     float: right;
     width: auto;
     margin-right: 40px;
+    float: right;
+    margin-bottom: 30px;
+    height: auto;
+    margin-top: 10px;
+    overflow: hidden;
     .sp-button {
-      display: inline-block;
-      height: 80px;
-      margin-right: -10px;
-      border-radius: 8px;
-      background: #ffffff;
-      border: 1px solid #cdcdcd;
+      font-size: 26px;
+      height: 64px;
+      padding: 0 20px;
+      color: #999999;
+      line-height: 1;
+      margin: 0;
+      float: left;
+      margin-left: 14px;
+      float: left;
+      display: block;
       font-size: 28px;
       font-family: PingFang SC;
       font-weight: 400;
       color: #999999;
+      margin-left: 10px;
+    }
+    .sp-button:first-child {
+      margin-left: 0;
     }
     .btn-look {
       color: #222222;

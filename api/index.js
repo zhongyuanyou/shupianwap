@@ -28,8 +28,12 @@ import knownQuestionArticleApi from './knownQuestionArticle' // 必懂文章集�
 import { activityApi } from './activity' // 活动专题api
 import { evaluateApi } from './evaluate' // 评价api
 import { documentApi } from './document' // 文档api
+import { afterSaleApi } from './afterSale' // 文档api
 import { shopApi } from './shop' // 店铺 收藏
 import { formApi } from './form'
+import { walletApi } from './wallet'
+import { invoiceApi } from './invoice'
+
 
 export { auth, shoppingCar, planner }
 export { category }
@@ -59,5 +63,8 @@ export { knownQuestionArticleApi }
 export { activityApi }
 export { evaluateApi }
 export { documentApi }
+export { afterSaleApi }
 export { shopApi }
 export { formApi }
+export { walletApi }
+export { invoiceApi }

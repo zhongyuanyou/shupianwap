@@ -6,6 +6,7 @@ const BASE = require('./config/index.js')
 const NODE_ENV = process.env.NODE_ENV
 const baseUrl = BASE.baseURL
 console.log('baseUrl', baseUrl)
+const ossUrl = BASE.ossUrl
 const bablePlugin = [
   [
     'import',
@@ -167,6 +168,16 @@ module.exports = {
       // 如果不想将所有接口都指向/api目录，就需要进行如下配置
       pathRewrite: {
         '^/api': '/', // 把 /api 替换成 /
+      },
+    },
+    '/ossapi': {
+      target: ossUrl, // 只代理了client的请求,没有代理Server端
+      secure: false,
+      changeOrigin: true, // 表示是否跨域
+      logLevel: 'debug',
+      // 如果不想将所有接口都指向/api目录，就需要进行如下配置
+      pathRewrite: {
+        '^/ossapi': '/', // 把 /ossapi 替换成 /
       },
     },
     '/gdmap': {

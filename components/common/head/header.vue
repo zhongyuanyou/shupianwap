@@ -27,7 +27,7 @@
               class="back-icon"
               name="nav_ic_back"
               size="0.4rem"
-              color="#1A1A1A"
+              :color="backIconColor"
               @click.native="onLeftClick"
             ></my-icon>
           </slot>
@@ -72,6 +72,10 @@ export default {
       type: Boolean,
       default: () => true,
     },
+    backIconColor: {
+      type: String,
+      default: () => '#1A1A1A',
+    },
     // 自定义类名
     headClass: {
       type: String,
@@ -86,6 +90,11 @@ export default {
     },
     // 隐藏shadow
     hideShadow: {
+      type: Boolean,
+      default: false,
+    },
+    // 是否执行自定义跳转
+    customJump: {
       type: Boolean,
       default: false,
     },
@@ -134,10 +143,11 @@ export default {
     onLeftClick() {
       if (this.isInApp) {
         this.$appFn.dggWebGoBack((res) => {})
-      } else {
+      } else if (!this.customJump) {
         this.$router.back(-1)
+      } else {
+        this.$emit('backHandle')
       }
-      this.$emit('backHandle')
     },
     getTopMargin() {
       if (process && process.client) {

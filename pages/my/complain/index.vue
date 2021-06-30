@@ -294,7 +294,9 @@ export default {
       const formData = new FormData()
       formData.append('uploadatalog', 'sp-pt/wap/images')
       formData.append('file', file.file)
+      console.log(file, file.file)
       this.loading = true
+      console.log(ossApi.add)
       try {
         this.$axios.post(ossApi.add, formData).then((res) => {
           this.loading = false
