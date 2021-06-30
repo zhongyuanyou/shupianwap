@@ -520,7 +520,7 @@ export default {
   }
 }
 .footer-nav-relative {
-  height: 130px;
+  height: 135px;
 }
 .footer-nav {
   position: fixed;
