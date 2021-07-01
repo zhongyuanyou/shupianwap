@@ -198,6 +198,7 @@ export default {
     background-size: 100%;
   }
   > .listbox {
+    width: 100%;
     border-radius: 24px 24px 0px 0px;
     background: #fff;
     padding: 40px 20px;

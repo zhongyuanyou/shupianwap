@@ -128,7 +128,7 @@ export default {
         bizAreaName: this.city.name || '成都市',
         customerPhone:
           this.$refs.priceFrom.phone || this.userInfoData.mainAccount,
-        customerName: this.userInfoData.fullName || '游客',
+        customerName: this.token ? this.userInfoData.fullName : '游客',
         sourceUrl: location.href,
         customerSex: this.userInfoData.sex || 2,
         customerAttribute: '交易商品降价提醒',

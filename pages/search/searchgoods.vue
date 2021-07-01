@@ -18,7 +18,7 @@
         data-im_type="售前"
         data-commodity_type="交易商品"
         class="info"
-        @click="jumpImMixin"
+        @click="jumpImMixin()"
       >
         <my-icon name="nav_ic_msg" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
@@ -39,7 +39,7 @@
         data-im_type="售前"
         :data-commodity_type="reqType === 'serve' ? '服务商品' : '交易商品'"
         class="info"
-        @click="jumpImMixin"
+        @click="jumpImMixin()"
       >
         <my-icon name="nav_ic_msg" size="0.40rem" color="#1a1a1a" />
       </div>

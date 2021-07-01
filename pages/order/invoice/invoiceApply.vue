@@ -228,6 +228,7 @@ export default {
       },
       InvoiceContent: ['商品明细', '商品类别'],
 
+      orderId: '',
       formData: {
         orderId: '', // 订单id
         applySource: 'COMDIC_PLATFORM_CRISPS', // 申请来源  薯片 COMDIC_PLATFORM_CRISPS 案加 COMDIC_PLATFORM_QIDABAO
@@ -252,8 +253,10 @@ export default {
     }
   },
   mounted() {
+    this.orderId = this.$route.query.orderId
     this.formData.orderId = this.$route.query.orderId
     this.init()
+    // this.getDefaultInvoiceHeader()
   },
   methods: {
     init() {
@@ -273,7 +276,11 @@ export default {
           this.loading = false
           console.log(' res', res)
 
-          this.setFormData(res || {})
+          if (res && res.orderId) {
+            this.setFormData(res || {})
+          } else {
+            this.getDefaultInvoiceHeader()
+          }
           // {
           //   applySource: "COMDIC_PLATFORM_CRISPS",
           //   applyTime: "2021-06-28 14:21:24",
@@ -305,7 +312,7 @@ export default {
         .catch((error) => {
           this.loading = false
           console.error(error)
-          this.$xToast.error(error.message || '请求失败，请重试')
+          // this.$xToast.error(error.message || '请求失败，请重试')
         })
     },
     setFormData(info) {
@@ -313,22 +320,75 @@ export default {
         // id: info.id,
         orderId: info.orderId,
         applySource: 'COMDIC_PLATFORM_CRISPS',
-        invoiceType: info.invoiceType,
-        invoiceContent: info.invoiceContent,
-        invoiceHeader: info.invoiceHeader,
+        invoiceType: info.invoiceType || '027',
+        invoiceContent: info.invoiceContent || '商品明细',
+        invoiceHeader: info.invoiceHeader || 'INVOICE_HEADER_PERSONAL',
         invoiceHeaderName: info.invoiceHeaderName,
         receiverPhone: info.receiverPhone,
+        receiverEmail: info.receiverEmail,
+
         bankAccount: info.bankAccount,
         bankOfDeposit: info.bankOfDeposit,
 
-        receiverEmail: info.receiverEmail,
         registerTel: info.registerTel,
         registerAddress: info.registerAddress,
         taxpayerIdentifNum: info.taxpayerIdentifNum,
       }
-      // this.defaultHead = info.defaultHead // 默认抬头(0 非默认 1 默认 仅针对普票有效)
     },
+    /** 获取默认抬头 */
+    getDefaultInvoiceHeader() {
+      try {
+        // let headType = ''
+        // if (invoiceHeader === 'INVOICE_HEADER_PERSONAL') {
+        //   headType = 'PERSONAL'
+        // } else if (invoiceHeader === 'INVOICE_HEADER_COMPANY') {
+        //   headType = 'COMPANY'
+        // } else {
+        //   return
+        // }
 
+        invoiceApi
+          .invoice_header_list({ axios: this.$axios }, {})
+          .then((res) => {
+            const list = (res && res.records) || []
+            const head = list.find((item) => {
+              return item.defaultHead === 1
+              // return item.headType === headType
+            })
+            if (head) {
+              return this.setDefaultFormDataWithHead(head)
+            }
+          })
+          .catch((error) => {
+            console.error(error)
+            this.$xToast.error((error && error.message) || '请求失败，请重试')
+          })
+      } catch (error) {}
+    },
+    // 用默认抬头填充数据
+    setDefaultFormDataWithHead(info) {
+      this.formData = {
+        orderId: this.orderId,
+        applySource: 'COMDIC_PLATFORM_CRISPS',
+        invoiceType: '027',
+        invoiceContent: '商品明细',
+        invoiceHeader:
+          info.headType === 'COMPANY'
+            ? 'INVOICE_HEADER_COMPANY'
+            : 'INVOICE_HEADER_PERSONAL',
+
+        invoiceHeaderName: info.invoiceHead,
+        receiverPhone: '',
+        receiverEmail: '',
+
+        bankAccount: info.bankNumber,
+        bankOfDeposit: info.depositBank,
+
+        registerTel: info.phone,
+        registerAddress: info.address,
+        taxpayerIdentifNum: info.dutyParagraph,
+      }
+    },
     submit() {
       this.$refs.form
         .validate()
@@ -359,7 +419,7 @@ export default {
         .then((res) => {
           console.log('res', res)
           this.loading = false
-          this.$xToast.success(res.message)
+          this.$xToast.success('请求成功')
         })
         .catch((error) => {
           console.error(error)
