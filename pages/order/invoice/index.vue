@@ -253,7 +253,7 @@ export default {
     getInvoiceHeaderList() {
       try {
         invoiceApi
-          .invoice_header_list({ axios: this.$axios }, {})
+          .invoice_header_list({ axios: this.$axios })
           .then((res) => {
             // if (res.totalCount <= this.page * this.limit) {
             this.finished = true

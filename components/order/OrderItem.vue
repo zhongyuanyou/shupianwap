@@ -196,19 +196,19 @@
           @click="handleClickItem(7)"
           >售后中</sp-button
         >
-        <!-- <sp-button
+        <sp-button
           v-if="checkAfterSaleStatus() === 3"
           class="btn-look"
           @click="handleClickItem(7)"
           >已售后</sp-button
-        > -->
-        <sp-button
+        >
+        <!-- <sp-button
           v-if="checkAfterSaleStatus() === 4"
           type="primary"
           class="btn-look"
           @click="handleClickItem(7)"
           >部分售后</sp-button
-        >
+        > -->
         <!-- 未支付订单可取消订单 根据订单状态判断-->
         <sp-button v-if="isShowCanCelBtn()" @click="handleClickItem(1)"
           >取消订单</sp-button

@@ -217,9 +217,9 @@ export default {
       show_more_input: false,
       // 发票类型
       InvoiceType: {
-        '027': '增值税电子专用发票',
-        '026': '增值税电子普通发票 ',
-        '007': '增值税普通发票 ',
+        // '026': '增值税电子专用发票',
+        '026': '电子普通发票 ',
+        // '007': '增值税普通发票 ',
         '004': '增值税专用发票',
       },
       InvoiceHeader: {
@@ -234,7 +234,7 @@ export default {
         applySource: 'COMDIC_PLATFORM_CRISPS', // 申请来源  薯片 COMDIC_PLATFORM_CRISPS 案加 COMDIC_PLATFORM_QIDABAO
         // applyUserId: '', // 申请人id
         // applyUserName: '', // 申请人名称
-        invoiceType: '027', // 发票类型 InvoiceType
+        invoiceType: '026', // 发票类型 InvoiceType
         invoiceContent: '商品明细', // 发票内容（商品明细 、商品类别）
         // 发票抬头（个人 INVOICE_HEADER_PERSONAL 、 单位 INVOICE_HEADER_COMPANY）
         invoiceHeader: 'INVOICE_HEADER_PERSONAL',
@@ -296,7 +296,7 @@ export default {
           //   invoiceHeaderName: "h1",
           //   invoiceMoney: "2",
           //   invoiceStatus: "INVOICE_STATUS_PROCESS",
-          //   invoiceType: "027",
+          //   invoiceType: "026",
           //   isValid: 1,
           //   orderId: "8083886946797813760",
           //   orderNo: "D21052164188",
@@ -312,7 +312,7 @@ export default {
         .catch((error) => {
           this.loading = false
           console.error(error)
-          this.$xToast.error(error.message || '请求失败，请重试')
+          // this.$xToast.error(error.message || '请求失败，请重试')
         })
     },
     setFormData(info) {
@@ -320,7 +320,7 @@ export default {
         // id: info.id,
         orderId: info.orderId,
         applySource: 'COMDIC_PLATFORM_CRISPS',
-        invoiceType: info.invoiceType || '027',
+        invoiceType: info.invoiceType || '026',
         invoiceContent: info.invoiceContent || '商品明细',
         invoiceHeader: info.invoiceHeader || 'INVOICE_HEADER_PERSONAL',
         invoiceHeaderName: info.invoiceHeaderName,
@@ -370,7 +370,7 @@ export default {
       this.formData = {
         orderId: this.orderId,
         applySource: 'COMDIC_PLATFORM_CRISPS',
-        invoiceType: '027',
+        invoiceType: '026',
         invoiceContent: '商品明细',
         invoiceHeader:
           info.headType === 'COMPANY'
@@ -419,7 +419,7 @@ export default {
         .then((res) => {
           console.log('res', res)
           this.loading = false
-          this.$xToast.success(res.message)
+          this.$xToast.success('请求成功')
         })
         .catch((error) => {
           console.error(error)

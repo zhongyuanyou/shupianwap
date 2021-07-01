@@ -89,7 +89,7 @@ export default {
       if (res.code === 200) {
         this.$router.push('/my/wallet/bankCards/untieSuccess')
       } else {
-        this.$xToast.warning('解绑失败,请确认信息是否有误')
+        this.$xToast.warning(res.data.error)
       }
     },
   },
