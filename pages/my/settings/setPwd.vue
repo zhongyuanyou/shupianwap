@@ -138,6 +138,7 @@ export default {
         return false
       }
       if (this.$route.query.status === '0') {
+        console.log(this.$route.query.status)
         this.openAndActivation()
       } else {
         this.updatePwd()

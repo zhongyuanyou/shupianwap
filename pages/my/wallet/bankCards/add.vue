@@ -119,14 +119,7 @@
 </template>
 
 <script>
-import {
-  Form,
-  Field,
-  Button,
-  Popup,
-  Search,
-  Icon,
-} from '@chipspc/vant-dgg'
+import { Form, Field, Button, Popup, Search, Icon } from '@chipspc/vant-dgg'
 import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
@@ -213,7 +206,7 @@ export default {
         },
       })
       if (res.code === 200) {
-        this.accountName = res.data.cardName
+        this.accountName = res.data.createrName
       }
     },
     async getAccountBankInfo() {
@@ -363,7 +356,7 @@ export default {
     text-align: right;
   }
   ::v-deep.sp-field__label {
-    width: 7em;
+    width: 8.4em;
     span {
       position: relative;
       &:after {
