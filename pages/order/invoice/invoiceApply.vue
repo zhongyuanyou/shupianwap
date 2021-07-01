@@ -131,17 +131,16 @@
       <div class="title">发票内容</div>
       <div class="options">
         <sp-button
-          v-for="content of InvoiceContent"
+          v-for="(content, key) in InvoiceContent"
           :key="content"
           class="btn"
-          :class="{ active: content === formData.invoiceContent }"
+          :class="{ active: key === formData.invoiceContent }"
           size="small"
           type="primary"
-          @click="formData.invoiceContent = content"
+          @click="formData.invoiceContent = key"
         >
           {{ content }}
         </sp-button>
-
         <!-- <sp-button class="btn active" size="small" type="primary">
           商品明细
         </sp-button> -->
