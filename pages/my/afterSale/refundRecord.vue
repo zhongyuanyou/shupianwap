@@ -13,14 +13,14 @@
           :key="index"
           @click="$router.push(`/my/afterSale/refundDetails?id=${item.id}`)"
         >
-          <div class="pic">
+          <!-- <div class="pic">
             <sp-icon
               class-prefix="spiconfont"
               size="0.82rem"
               color="#4974f5"
               name="tk_ic_qtzf"
             ></sp-icon>
-          </div>
+          </div> -->
           <div class="desc">
             <h3>{{ item.passTypeCodeName }}</h3>
             <p>{{ item.reimburseCompleteTime }}</p>
@@ -60,13 +60,13 @@
 </template>
 
 <script>
-import { Icon, List } from '@chipspc/vant-dgg'
+import { List } from '@chipspc/vant-dgg'
 import { afterSaleApi } from '@/api'
 import Header from '@/components/common/head/header'
 export default {
   components: {
     Header,
-    SpIcon: Icon,
+    // SpIcon: Icon,
     [List.name]: List,
   },
   data() {

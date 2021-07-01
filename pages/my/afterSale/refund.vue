@@ -44,9 +44,9 @@
         <sp-uploader
           v-model="fileList"
           :max-count="9"
-          :max-size="20 * 1024 * 1024"
           :after-read="afterRead"
           :before-delete="deleteImg"
+          multiple
         >
           <template>
             <div class="upload-add">
@@ -120,7 +120,7 @@ export default {
       pullDataList: [],
       checked: false,
       afterSaleType: [
-        { name: '我要退款', code: 'AFTER_SALE_CENTER_REFUND' },
+        { name: '我要退款', code: 'AFTER_SALE_TYPE_1' },
         // { name: '我要换业务', code: 'AFTER_SALE_CENTER_BUSINESS_CHANGE' },
       ],
       applyReason: [
@@ -138,7 +138,7 @@ export default {
         { name: '业务办理出错', code: 'AFTER_SALE_REASON_12' },
       ],
       afterTypeText: '我要退款',
-      afterTypeCode: 'AFTER_SALE_CENTER_REFUND',
+      afterTypeCode: 'AFTER_SALE_TYPE_1',
       applyReasonText: '',
       applyReasonCode: '',
       activeTypeIndex: -1,
@@ -146,18 +146,20 @@ export default {
       title: '',
       currentIndex: '',
       activeIndex: null,
-      pictrueDetail: '',
-      userInfo: '',
+      pictrueDetail: [],
+      // userInfo: '',
+      fileId: '',
+      singleImageUpload: [],
     }
   },
-  // computed: {
-  //   userInfo() {
-  //     return JSON.parse(localStorage.getItem('info'))
-  //   },
-  // },
-  mounted() {
-    this.userInfo = JSON.parse(localStorage.getItem('info'))
+  computed: {
+    userInfo() {
+      return JSON.parse(localStorage.getItem('info'))
+    },
   },
+  // mounted() {
+  //   this.userInfo = JSON.parse(localStorage.getItem('info'))
+  // },
   methods: {
     async submit() {
       if (this.afterTypeText === '') {
@@ -187,11 +189,11 @@ export default {
       }
       this.loading = true
       const res = await this.$axios.post(afterSaleApi.refundApply, {
-        orderId: this.$route.query.id,
+        orderId: this.$route.query.orderId,
         afterSaleExpType: this.afterTypeCode,
         afterSaleReasonNo: this.applyReasonCode,
         afterSaleProblemDetail: this.descInfo,
-        pictrueDetail: this.pictrueDetail,
+        pictrueDetail: JSON.stringify(this.pictrueDetail),
         createrId: this.userInfo.id,
         createrName: this.userInfo.fullName,
         updaterId: this.userInfo.id,
@@ -210,19 +212,45 @@ export default {
         this.$xToast.error(res.data.error)
       }
     },
-    async afterRead(fileObj) {
-      // this.$route.query.id = '8083611193233440768'
-      this.pictrueDetail = `${this.userInfo.id}:crisps-app:aftersale:${
-        this.$route.query.id
-      }:${String(new Date().valueOf()).substring(7, 13)}`
-      const res = await uploadAndCallBack({
-        file: fileObj.file,
-        sys_code: 'crisps-app',
-        fileuid: this.pictrueDetail,
-      })
-      if (res.code === 200) {
-        console.log('上传成功')
+    uploadImg(item) {
+      this.fileId = `${this.userInfo.id}:crisps-app:aftersale:${
+        this.$route.query.orderId
+      }:${String(Math.random()).substring(2, 8)}`
+      this.pictrueDetail.push(this.fileId)
+      // const res = await uploadAndCallBack({
+      //   file: item.file,
+      //   sys_code: 'crisps-app',
+      //   fileuid: this.fileId,
+      // })
+      // if (res.code === 200) {
+      //   // this.pictrueDetail += this.pictrueDetail
+      //   console.log('上传成功')
+      // }
+    },
+    afterRead(fileObj) {
+      // 多张上传
+      if (fileObj.length) {
+        fileObj.forEach((item) => {
+          this.uploadImg(item)
+        })
+      } else {
+        // 单张上传
+        this.uploadImg(fileObj)
       }
+
+      // this.fileId = `${this.userInfo.id}:crisps-app:aftersale:${
+      //   this.$route.query.orderId
+      // }:${String(new Date().valueOf()).substring(7, 13)}`
+      // const res = await uploadAndCallBack({
+      //   file: fileObj.file,
+      //   sys_code: 'crisps-app',
+      //   fileuid: this.fileId,
+      // })
+      // if (res.code === 200) {
+      //   // this.pictrueDetail += this.pictrueDetail
+      //   console.log(this.fileList)
+      //   console.log('上传成功')
+      // }
     },
     deleteImg() {
       this.fileList.forEach((index) => {
