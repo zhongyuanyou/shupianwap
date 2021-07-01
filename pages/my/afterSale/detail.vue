@@ -299,6 +299,7 @@
       </button>
       <button
         v-if="
+          afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_1' ||
           afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_2' ||
           afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_3'
         "
@@ -439,18 +440,19 @@ export default {
       ],
       userDoTypeCode: '',
       loading: false,
-      // userInfo: '',
+      userInfo: '',
     }
   },
-  computed: {
-    userInfo() {
-      return JSON.parse(localStorage.getItem('info'))
-    },
-  },
+  // computed: {
+  //   userInfo() {
+  //     return JSON.parse(localStorage.getItem('info'))
+  //   },
+  // },
   // created() {
   //   this.getAfterSaleDetails()
   // },
   mounted() {
+    this.userInfo = JSON.parse(localStorage.getItem('info'))
     this.getAfterSaleDetails()
   },
   // mounted() {
@@ -516,6 +518,8 @@ export default {
             this.statusBar.title = '售后关闭'
             break
         }
+      } else {
+        this.$xToast.error(res.data.error)
       }
     },
     async updateAfterSaleStatus(btnIndex) {
@@ -525,7 +529,7 @@ export default {
         updaterCode: this.userInfo.no,
         afterSaleId: this.afterSaleDetail.id,
         userDoType: this.userDoTypeCode,
-        afterSaleAgreementIds: '1111111111111',
+        afterSaleAgreementIds: '',
       })
       if (res.code === 200) {
         switch (btnIndex) {

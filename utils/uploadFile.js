@@ -1,5 +1,5 @@
 /* eslint-disable */
-const uploadUrl = 'https://cdn.shupian.cn/'
+const uploadUrl = 'https://cdn.shupian.cn'
 const env = {
   development: 'd',
   release: 't',
@@ -72,7 +72,9 @@ export function uploadAndCallBack({ file, sys_code, ext = '', fileuid = '' }) {
     formData.append('OSSAccessKeyId', OSSAccessKeyId)
     formData.append('signature', signature)
     formData.append('file', file)
-    const uploadResult = await axios.post(uploadUrl, formData)
+    console.log(formData, 1111111111)
+    const uploadResult = await axios.post('/cdnapi', formData)
+    console.log(uploadResult)
     if (uploadResult.status === 204) {
       const callBackResult = await axios.post(ossApi.paasCallBack, callbackBody)
       if (callBackResult.data.code === 200) {
@@ -81,5 +83,13 @@ export function uploadAndCallBack({ file, sys_code, ext = '', fileuid = '' }) {
         reject(callBackResult.data)
       }
     }
+    // if (uploadResult.status === 204) {
+    //   const callBackResult = await axios.post(ossApi.paasCallBack, callbackBody)
+    //   if (callBackResult.data.code === 200) {
+    //     allResolve(callBackResult.data)
+    //   } else {
+    //     reject(callBackResult.data)
+    //   }
+    // }
   })
 }

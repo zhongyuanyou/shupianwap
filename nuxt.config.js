@@ -180,6 +180,16 @@ module.exports = {
         '^/ossapi': '/', // 把 /ossapi 替换成 /
       },
     },
+    '/cdnapi': {
+      target: 'https://cdn.shupian.cn', // 只代理了client的请求,没有代理Server端
+      secure: false,
+      changeOrigin: true, // 表示是否跨域
+      logLevel: 'debug',
+      // 如果不想将所有接口都指向/api目录，就需要进行如下配置
+      pathRewrite: {
+        '^/cdnapi': '/', // 把 /ossapi 替换成 /
+      },
+    },
     '/gdmap': {
       target: 'https://restapi.amap.com', // 高德地图代理
       secure: false,
