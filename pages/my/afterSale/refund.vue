@@ -157,9 +157,12 @@ export default {
       return JSON.parse(localStorage.getItem('info'))
     },
   },
-  // mounted() {
-  //   this.userInfo = JSON.parse(localStorage.getItem('info'))
-  // },
+  mounted() {
+    this.fileId = `${this.userInfo.id}:crisps-app:aftersale:${
+      this.$route.query.orderId
+    }:${String(Math.random()).substring(2, 8)}`
+    this.userInfo = JSON.parse(localStorage.getItem('info'))
+  },
   methods: {
     async submit() {
       if (this.afterTypeText === '') {
@@ -193,7 +196,7 @@ export default {
         afterSaleExpType: this.afterTypeCode,
         afterSaleReasonNo: this.applyReasonCode,
         afterSaleProblemDetail: this.descInfo,
-        pictrueDetail: JSON.stringify(this.pictrueDetail),
+        pictrueDetail: this.fileId,
         createrId: this.userInfo.id,
         createrName: this.userInfo.fullName,
         updaterId: this.userInfo.id,
@@ -212,20 +215,15 @@ export default {
         this.$xToast.error(res.data.error)
       }
     },
-    uploadImg(item) {
-      this.fileId = `${this.userInfo.id}:crisps-app:aftersale:${
-        this.$route.query.orderId
-      }:${String(Math.random()).substring(2, 8)}`
-      this.pictrueDetail.push(this.fileId)
-      // const res = await uploadAndCallBack({
-      //   file: item.file,
-      //   sys_code: 'crisps-app',
-      //   fileuid: this.fileId,
-      // })
-      // if (res.code === 200) {
-      //   // this.pictrueDetail += this.pictrueDetail
-      //   console.log('上传成功')
-      // }
+    async uploadImg(item) {
+      const res = await uploadAndCallBack({
+        file: item.file,
+        sys_code: 'crisps-app',
+        fileuid: this.fileId,
+      })
+      if (res.code === 200) {
+        console.log('上传成功')
+      }
     },
     afterRead(fileObj) {
       // 多张上传
