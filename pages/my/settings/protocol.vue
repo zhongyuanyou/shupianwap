@@ -31,11 +31,11 @@
         >
       </p>
       <button
-        :style="{ background: isDisabledBtn ? '#999' : '#4974f5' }"
-        :disabled="isDisabledBtn"
+        :style="{ background: !checked ? '#ddd' : '#4974f5' }"
+        :disabled="!checked"
         @click="submit"
       >
-        同意协议并继续<span v-show="isDisabledBtn">（{{ times }}s）</span>
+        同意协议并继续
       </button>
     </div>
   </div>
@@ -89,15 +89,7 @@ export default {
       this.getProtocol(this.categoryCode)
     }
   },
-  mounted() {
-    this.timer = setInterval(() => {
-      if (this.times === 1) {
-        this.isDisabledBtn = false
-        clearInterval(this.timer)
-      }
-      this.times--
-    }, 1000)
-  },
+  mounted() {},
   methods: {
     onClickLeft() {
       if (this.redirect) {
@@ -114,7 +106,7 @@ export default {
 
     async getProtocol(categoryCode) {
       if (!categoryCode) {
-        this.$xToast.warn('请传入需要获取的协议!')
+        this.$xToast.warning('请传入需要获取的协议!')
         return
       }
       const params = {
