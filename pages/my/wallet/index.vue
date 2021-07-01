@@ -196,10 +196,10 @@ export default {
       if (!this.accAccountData.status && this.accAccountData.status !== 1) {
         this.openActivationDialog()
       } else {
-        if (this.accountBalData.totalBalance < 10) {
-          this.$xToast.show({ message: '提现金额不能低于10元' })
-          return
-        }
+        // if (this.accountBalData.totalBalance < 10) {
+        //   this.$xToast.show({ message: '提现金额不能低于10元' })
+        //   return
+        // }
         this.$router.push('/my/wallet/withdraw')
       }
     },

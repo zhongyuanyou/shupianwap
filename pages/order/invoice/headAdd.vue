@@ -62,27 +62,31 @@
               />
               <sp-field
                 v-model="formData.address"
+                :required="formData.type === 'SPECIAL'"
                 label="注册地址"
-                placeholder="选填"
+                :placeholder="formData.type === 'SPECIAL' ? '必填' : '选填'"
                 maxlength="120"
               />
               <sp-field
                 v-model="formData.phone"
+                :required="formData.type === 'SPECIAL'"
                 label="注册电话"
                 maxlength="20"
-                placeholder="选填"
+                :placeholder="formData.type === 'SPECIAL' ? '必填' : '选填'"
               />
               <sp-field
                 v-model="formData.depositBank"
+                :required="formData.type === 'SPECIAL'"
                 label="开户银行"
                 maxlength="50"
-                placeholder="选填"
+                :placeholder="formData.type === 'SPECIAL' ? '必填' : '选填'"
               />
               <sp-field
                 v-model="formData.bankNumber"
+                :required="formData.type === 'SPECIAL'"
                 label="银行账号"
                 maxlength="50"
-                placeholder="选填"
+                :placeholder="formData.type === 'SPECIAL' ? '必填' : '选填'"
               />
             </div>
           </sp-form>
@@ -235,6 +239,8 @@ export default {
           console.log('res', res)
           this.loading = false
           this.$xToast.success((res && res.message) || '添加成功')
+
+          this.back()
         })
         .catch((error) => {
           console.error(error)
@@ -242,6 +248,9 @@ export default {
           this.loading = false
           this.$xToast.error((error && error.message) || '请求失败，请重试')
         })
+    },
+    back() {
+      this.$router.back(-1)
     },
   },
 }

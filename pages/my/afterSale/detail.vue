@@ -273,10 +273,14 @@
                 <p>
                   {{ afterSaleDetail.afterSaleProblemDetail }}
                 </p>
-                <!--  <ul>
-                  <li><img /></li>
-                  <li><img /></li>
-                </ul> -->
+                <ul>
+                  <li
+                    v-for="(item, index) in afterSaleDetail.fileImages"
+                    :key="index"
+                  >
+                    <img :src="item.filepath" />
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -529,7 +533,7 @@ export default {
         updaterCode: this.userInfo.no,
         afterSaleId: this.afterSaleDetail.id,
         userDoType: this.userDoTypeCode,
-        afterSaleAgreementIds: '',
+        afterSaleAgreementIds: 'protocol100039',
       })
       if (res.code === 200) {
         switch (btnIndex) {
@@ -879,7 +883,6 @@ export default {
             .copy {
               width: 72px;
               height: 32px;
-              background: #f5f5f5;
               border-radius: 16px;
               margin-left: 16px;
               font-size: 22px;
@@ -900,11 +903,16 @@ export default {
                 li {
                   width: 140px;
                   height: 140px;
-                  background: #f5f5f5;
+                  background: #fff;
                   border-radius: 4px;
                   overflow: hidden;
                   margin-right: 16px;
                   margin-bottom: 16px;
+                  img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                  }
                 }
               }
             }
