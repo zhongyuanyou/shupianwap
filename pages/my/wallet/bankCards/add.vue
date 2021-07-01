@@ -206,7 +206,7 @@ export default {
         },
       })
       if (res.code === 200) {
-        this.accountName = res.data.cardName
+        this.accountName = res.data.createrName
       }
     },
     async getAccountBankInfo() {
