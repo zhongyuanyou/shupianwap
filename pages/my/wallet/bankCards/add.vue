@@ -41,12 +41,12 @@
           v-model="accountBank"
           name="开户行"
           label="开户行"
-          placeholder="请输入开户行，系统自动搜索"
+          placeholder="选择开户行，系统自动搜索"
           readonly="readonly"
           :rules="[
             {
               required: true,
-              message: '请输入开户行，系统自动搜索',
+              message: '输入开户行，系统自动搜索',
             },
           ]"
           @click="openPullPop"
@@ -152,6 +152,7 @@ export default {
       list: [],
       userInfo: '',
       accountInfo: '',
+      openingBankCode: '',
     }
   },
   mounted() {
@@ -171,8 +172,8 @@ export default {
         bankPhone: this.bankPhone,
         bankIconUrl: this.bankIconUrl,
         cardType: '借记卡',
-        openingBankName: this.bankName,
-        openingBankCode: this.bankCode,
+        openingBankName: this.accountBank,
+        openingBankCode: this.openingBankCode,
         sysCode: 'crisps-app',
         operateId: this.userInfo.id,
         operateName: this.userInfo.fullName,
@@ -247,8 +248,10 @@ export default {
       console.log(22222)
     },
     selectItem(item) {
+      debugger
       this.accountBank = item.name
       this.activeIndex = item.id
+      this.openingBankCode = item.bankCode
       this.showPullPop = false
     },
   },

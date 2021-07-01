@@ -659,7 +659,7 @@ export default {
       if (statusNum === 1 || statusNum === 4) {
         // 未售后和部分售后跳转至申请页面
         this.$router.push({
-          path: '/my/afterSale/apply',
+          path: '/my/afterSale/refund',
           query: {
             orderId: orderData.id,
           },
@@ -670,7 +670,8 @@ export default {
           path: '/my/afterSale/detail',
           query: {
             orderId: orderData.id,
-            id: orderData.afterSaleId || orderData.id,
+            orderNo: orderData.orderNo,
+            id: orderData.afterSaleId || '',
           },
         })
       }

@@ -4,7 +4,11 @@
     <div class="detail-info">
       <div class="count">
         <span>出/入账数量</span>
-        <strong>-￥{{ billDetails.amount }}</strong>
+        <strong
+          >{{ billDetails.orderType === 'BANK_ORDER_TYPE_3' ? '-' : '+' }}￥{{
+            billDetails.amount
+          }}</strong
+        >
       </div>
       <div class="field-list">
         <div class="row">
@@ -42,6 +46,7 @@ export default {
   data() {
     return {
       billDetails: '',
+      loading: false,
     }
   },
   created() {
@@ -49,9 +54,11 @@ export default {
   },
   methods: {
     async getBillDetail() {
+      this.loading = true
       const res = await this.$axios.post(walletApi.bill_details, {
         billId: this.$route.query.id,
       })
+      this.loading = false
       if (res.code === 200) {
         this.billDetails = res.data
       }
