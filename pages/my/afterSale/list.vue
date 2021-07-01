@@ -43,6 +43,9 @@
       />
       <p class="text">暂无售后单</p>
     </div>
+    <!--S loding-->
+    <LoadingCenter v-show="loading" />
+    <!--E loding-->
   </div>
 </template>
 
@@ -51,7 +54,7 @@ import { Tab, Tabs, Icon, List, Sticky } from '@chipspc/vant-dgg'
 import { afterSaleApi } from '@/api'
 import Header from '@/components/common/head/header'
 import AfterSaleList from '@/components/afterSale/AfterSaleList'
-// import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   components: {
     Header,
@@ -61,12 +64,12 @@ export default {
     [Tabs.name]: Tabs,
     [Sticky.name]: Sticky,
     SpIcon: Icon,
+    LoadingCenter,
   },
   data() {
     return {
       active: 0,
       saleDataList: [],
-      loading: false,
       finished: false,
       page: 1,
       limit: 10,
@@ -79,6 +82,7 @@ export default {
       queryId: '',
       showNoDataImg: false,
       customJump: true,
+      loading: false,
     }
   },
   mounted() {
@@ -95,6 +99,7 @@ export default {
       this.$router.push('/my')
     },
     async getAfterSaleList() {
+      this.loading = true
       const res = await this.$axios.post(afterSaleApi.list, {
         page: this.page,
         limit: this.limit,
@@ -102,6 +107,7 @@ export default {
         type: '3',
         code: this.$route.query.id || '',
       })
+      this.loading = false
       if (res.code === 200) {
         this.saleDataList = [...this.saleDataList, ...res.data.records]
         if (this.saleDataList.length === 0) {
