@@ -131,17 +131,16 @@
       <div class="title">发票内容</div>
       <div class="options">
         <sp-button
-          v-for="content of InvoiceContent"
+          v-for="(content, key) in InvoiceContent"
           :key="content"
           class="btn"
-          :class="{ active: content === formData.invoiceContent }"
+          :class="{ active: key === formData.invoiceContent }"
           size="small"
           type="primary"
-          @click="formData.invoiceContent = content"
+          @click="formData.invoiceContent = key"
         >
           {{ content }}
         </sp-button>
-
         <!-- <sp-button class="btn active" size="small" type="primary">
           商品明细
         </sp-button> -->
@@ -217,25 +216,28 @@ export default {
       show_more_input: false,
       // 发票类型
       InvoiceType: {
-        '027': '增值税电子专用发票',
-        '026': '增值税电子普通发票 ',
-        '007': '增值税普通发票 ',
+        // '026': '增值税电子专用发票',
+        '026': '电子普通发票 ',
+        // '007': '增值税普通发票 ',
         '004': '增值税专用发票',
       },
       InvoiceHeader: {
         INVOICE_HEADER_PERSONAL: '个人',
         INVOICE_HEADER_COMPANY: '单位',
       },
-      InvoiceContent: ['商品明细', '商品类别'],
+      InvoiceContent: {
+        GOODS_DETAILS: '商品明细 ',
+        GOODS_CATEGORY: '商品类别',
+      },
 
       orderId: '',
       formData: {
         orderId: '', // 订单id
-        applySource: 'COMDIC_PLATFORM_CRISPS', // 申请来源  薯片 COMDIC_PLATFORM_CRISPS 案加 COMDIC_PLATFORM_QIDABAO
+        applySource: 'INVOICE_APPLY_SOURCE_CUSTOMER', // 申请来源  薯片 INVOICE_APPLY_SOURCE_CUSTOMER 案加 COMDIC_PLATFORM_QIDABAO
         // applyUserId: '', // 申请人id
         // applyUserName: '', // 申请人名称
-        invoiceType: '027', // 发票类型 InvoiceType
-        invoiceContent: '商品明细', // 发票内容（商品明细 、商品类别）
+        invoiceType: '026', // 发票类型 InvoiceType
+        invoiceContent: 'GOODS_DETAILS', // 发票内容（商品明细 、商品类别）
         // 发票抬头（个人 INVOICE_HEADER_PERSONAL 、 单位 INVOICE_HEADER_COMPANY）
         invoiceHeader: 'INVOICE_HEADER_PERSONAL',
         invoiceHeaderName: '', // 公司名称、个人名称
@@ -282,7 +284,7 @@ export default {
             this.getDefaultInvoiceHeader()
           }
           // {
-          //   applySource: "COMDIC_PLATFORM_CRISPS",
+          //   applySource: "INVOICE_APPLY_SOURCE_CUSTOMER",
           //   applyTime: "2021-06-28 14:21:24",
           //   applyUserId: "767579755195165966",,
           //   applyUserName: "唐代兵",
@@ -296,7 +298,7 @@ export default {
           //   invoiceHeaderName: "h1",
           //   invoiceMoney: "2",
           //   invoiceStatus: "INVOICE_STATUS_PROCESS",
-          //   invoiceType: "027",
+          //   invoiceType: "026",
           //   isValid: 1,
           //   orderId: "8083886946797813760",
           //   orderNo: "D21052164188",
@@ -319,9 +321,9 @@ export default {
       this.formData = {
         // id: info.id,
         orderId: info.orderId,
-        applySource: 'COMDIC_PLATFORM_CRISPS',
-        invoiceType: info.invoiceType || '027',
-        invoiceContent: info.invoiceContent || '商品明细',
+        applySource: 'INVOICE_APPLY_SOURCE_CUSTOMER',
+        invoiceType: info.invoiceType || '026',
+        invoiceContent: info.invoiceContent || 'GOODS_DETAILS',
         invoiceHeader: info.invoiceHeader || 'INVOICE_HEADER_PERSONAL',
         invoiceHeaderName: info.invoiceHeaderName,
         receiverPhone: info.receiverPhone,
@@ -369,9 +371,9 @@ export default {
     setDefaultFormDataWithHead(info) {
       this.formData = {
         orderId: this.orderId,
-        applySource: 'COMDIC_PLATFORM_CRISPS',
-        invoiceType: '027',
-        invoiceContent: '商品明细',
+        applySource: 'INVOICE_APPLY_SOURCE_CUSTOMER',
+        invoiceType: '026',
+        invoiceContent: 'GOODS_DETAILS',
         invoiceHeader:
           info.headType === 'COMPANY'
             ? 'INVOICE_HEADER_COMPANY'
