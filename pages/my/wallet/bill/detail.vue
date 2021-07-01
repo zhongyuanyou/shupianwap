@@ -23,7 +23,7 @@
           <div class="title">流水号</div>
           <div class="res">{{ billDetails.billNo }}</div>
         </div>
-        <div class="row">
+        <div v-if="billDetails.orderTypeName === '提现'" class="row">
           <div class="title">{{ billDetails.orderTypeName }}明细</div>
           <div class="cash" @click="jumpPage">
             查看{{ billDetails.orderTypeName }}详情
@@ -33,15 +33,20 @@
         </div>
       </div>
     </div>
+    <!--S loding-->
+    <LoadingCenter v-show="loading" />
+    <!--E loding-->
   </div>
 </template>
 
 <script>
 import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   components: {
     Header,
+    LoadingCenter,
   },
   data() {
     return {
@@ -64,17 +69,18 @@ export default {
       }
     },
     jumpPage() {
-      switch (this.billDetails.orderTypeName) {
+      debugger
+      switch (this.billDetails.orderType) {
         case '提现':
           this.$router.push(
             `/my/wallet/withdraw/detail?id=${this.billDetails.billId}`
           )
           break
-        case '佣金':
-          break
-        case '退款':
-          this.$router.push(`/order/detail?id=${this.billDetails.billId}`)
-          break
+        // case '佣金':
+        //   break
+        // case 'BANK_ORDER_TYPE_14':
+        //   this.$router.push(`/order/detail?id=${this.billDetails.billId}`)
+        //   break
       }
     },
   },

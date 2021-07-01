@@ -112,6 +112,9 @@
         </div>
       </sp-popup>
     </div>
+    <!--S loding-->
+    <LoadingCenter v-show="loading" title="绑定中..." />
+    <!--E loding-->
   </div>
 </template>
 
@@ -123,10 +126,10 @@ import {
   Popup,
   Search,
   Icon,
-  Toast,
 } from '@chipspc/vant-dgg'
 import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   components: {
     Header,
@@ -136,6 +139,7 @@ export default {
     [Popup.name]: Popup,
     [Search.name]: Search,
     [Icon.name]: Icon,
+    LoadingCenter,
   },
   data() {
     return {
@@ -153,6 +157,7 @@ export default {
       userInfo: '',
       accountInfo: '',
       openingBankCode: '',
+      loading: false,
     }
   },
   mounted() {
@@ -163,6 +168,7 @@ export default {
   },
   methods: {
     async onSubmit() {
+      this.loading = true
       const res = await this.$axios.post(walletApi.add_bank_card, {
         relationId: this.userInfo.id,
         ownershipName: this.accountName,
@@ -178,10 +184,12 @@ export default {
         operateId: this.userInfo.id,
         operateName: this.userInfo.fullName,
       })
+      this.loading = false
       if (res.code === 200) {
+        this.$xToast.show({ message: '绑定成功' })
         this.$router.push('/my/wallet/bankCards/list')
       } else {
-        this.$xToast.error(res.data.error)
+        this.$xToast.error('绑卡失败,请您确认信息是否有误')
       }
     },
     async getBankInfo() {
@@ -194,10 +202,7 @@ export default {
         this.bankName = res.data.name
         this.bankIconUrl = res.data.icon
       } else {
-        console.log(res, 1111111)
-        Toast('银行卡号校验失败')
-        // _this.$xToast.warn(res.data.error)
-        // this.$xToast.warn('res.data.error')
+        this.$xToast.error(res.data.error)
       }
     },
     // 账户名称
@@ -248,7 +253,6 @@ export default {
       console.log(22222)
     },
     selectItem(item) {
-      debugger
       this.accountBank = item.name
       this.activeIndex = item.id
       this.openingBankCode = item.bankCode

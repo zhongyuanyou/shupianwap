@@ -18,7 +18,15 @@
         </div>
         <div class="row-cont">
           <ul>
-            <li v-for="(child, index2) in item.skuList" :key="index2">
+            <li
+              v-for="(child, index2) in item.skuList"
+              :key="index2"
+              @click="
+                $router.push(
+                  `/my/afterSale/detail?id=${item.id}&orderId=${item.orderId}&orderNo=${item.orderNo}`
+                )
+              "
+            >
               <div class="img-box">
                 <img :src="child.filepath" />
               </div>
