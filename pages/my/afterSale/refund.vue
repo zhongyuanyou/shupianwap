@@ -74,7 +74,7 @@
       <p>
         <sp-checkbox v-model="checked"></sp-checkbox>我已阅读过并知晓<span
           class="blue"
-          @click="afterSaleProtocol('protocol100039')"
+          @click="afterSaleProtocol('shupianaftersale')"
           >《薯片平台用户售后协议》</span
         >
       </p>
@@ -161,7 +161,6 @@ export default {
     this.fileId = `${this.userInfo.id}:crisps-app:aftersale:${
       this.$route.query.orderId
     }:${String(Math.random()).substring(2, 8)}`
-    this.userInfo = JSON.parse(localStorage.getItem('info'))
   },
   methods: {
     async submit() {
@@ -203,7 +202,7 @@ export default {
         updaterName: this.userInfo.fullName,
         createrNo: this.userInfo.no,
         updaterNo: this.userInfo.no,
-        afterSaleAgreementIds: 'protocol100039',
+        afterSaleAgreementIds: 'shupianaftersale',
       })
       this.loading = false
       if (res.code === 200) {

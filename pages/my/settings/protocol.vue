@@ -21,11 +21,22 @@
     <div class="submit">
       <p>
         <sp-checkbox v-model="checked"></sp-checkbox
-        ><span class="blue" @click="afterSaleProtocol('protocol100039')"
-          >同意<a>《服务协议》</a> 和<a>《隐私政策》</a></span
+        ><span
+          >同意<a class="blue" @click="afterSaleProtocol('protocol100122')"
+            >《服务协议》</a
+          >
+          和<a class="blue" @click="afterSaleProtocol('protocol100121')"
+            >《隐私政策》</a
+          ></span
         >
       </p>
-      <button @click="submit">同意协议并继续</button>
+      <button
+        :style="{ background: isDisabledBtn ? '#999' : '#4974f5' }"
+        :disabled="isDisabledBtn"
+        @click="submit"
+      >
+        同意协议并继续<span v-show="isDisabledBtn">（{{ times }}s）</span>
+      </button>
     </div>
   </div>
 </template>
@@ -62,6 +73,9 @@ export default {
       categoryCode: this.$route.query.categoryCode,
       redirect: this.$route.query.redirect || '', // 登录后需要跳转的地址
       checked: false,
+      times: 10,
+      timer: null,
+      isDisabledBtn: true,
     }
   },
   computed: {
@@ -74,6 +88,15 @@ export default {
       console.log(this.$route.query.categoryCode)
       this.getProtocol(this.categoryCode)
     }
+  },
+  mounted() {
+    this.timer = setInterval(() => {
+      if (this.times === 1) {
+        this.isDisabledBtn = false
+        clearInterval(this.timer)
+      }
+      this.times--
+    }, 1000)
   },
   methods: {
     onClickLeft() {
@@ -121,7 +144,16 @@ export default {
         })
       }
     },
+    afterSaleProtocol(code) {
+      this.$router.push({
+        path: '/login/protocol',
+        query: {
+          categoryCode: code,
+        },
+      })
+    },
   },
+
   head() {
     return {
       title:
