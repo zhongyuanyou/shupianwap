@@ -527,6 +527,7 @@ export default {
       }
     },
     async updateAfterSaleStatus(btnIndex) {
+      this.loading = true
       const res = await this.$axios.post(afterSaleApi.operation, {
         updaterId: this.userInfo.id,
         updaterName: this.userInfo.fullName,
@@ -535,6 +536,7 @@ export default {
         userDoType: this.userDoTypeCode,
         afterSaleAgreementIds: 'protocol100039',
       })
+      this.loading = false
       if (res.code === 200) {
         switch (btnIndex) {
           case 0:
@@ -708,7 +710,6 @@ export default {
                 img {
                   width: 100%;
                   height: 100%;
-                  object-fit: cover;
                 }
               }
               span {
