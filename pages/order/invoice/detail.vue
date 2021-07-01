@@ -40,7 +40,7 @@
 
       <div class="invoice_info_list">
         <div>发票内容</div>
-        <div>{{ formData.invoiceContent }}</div>
+        <div>{{ InvoiceContent[formData.invoiceContent] }}</div>
       </div>
       <div class="invoice_info_list">
         <div>抬头类型</div>
@@ -205,6 +205,10 @@ export default {
         '007': '增值税普通发票 ',
         '004': '增值税专用发票',
       },
+      InvoiceContent: {
+        GOODS_DETAILS: '商品明细 ',
+        GOODS_CATEGORY: '商品类别',
+      },
       formData: {
         status: 1,
 
@@ -330,7 +334,7 @@ export default {
           }
           this.formData = res || {}
           // {
-          //   applySource: "COMDIC_PLATFORM_CRISPS",
+          //   applySource: "INVOICE_APPLY_SOURCE_CUSTOMER",
           //   applyTime: "2021-06-28 14:21:24",
           //   applyUserId: "767579755195165966",,
           //   applyUserName: "唐代兵",

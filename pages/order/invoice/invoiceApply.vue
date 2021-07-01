@@ -226,16 +226,19 @@ export default {
         INVOICE_HEADER_PERSONAL: '个人',
         INVOICE_HEADER_COMPANY: '单位',
       },
-      InvoiceContent: ['商品明细', '商品类别'],
+      InvoiceContent: {
+        GOODS_DETAILS: '商品明细 ',
+        GOODS_CATEGORY: '商品类别',
+      },
 
       orderId: '',
       formData: {
         orderId: '', // 订单id
-        applySource: 'COMDIC_PLATFORM_CRISPS', // 申请来源  薯片 COMDIC_PLATFORM_CRISPS 案加 COMDIC_PLATFORM_QIDABAO
+        applySource: 'INVOICE_APPLY_SOURCE_CUSTOMER', // 申请来源  薯片 INVOICE_APPLY_SOURCE_CUSTOMER 案加 COMDIC_PLATFORM_QIDABAO
         // applyUserId: '', // 申请人id
         // applyUserName: '', // 申请人名称
         invoiceType: '026', // 发票类型 InvoiceType
-        invoiceContent: '商品明细', // 发票内容（商品明细 、商品类别）
+        invoiceContent: 'GOODS_DETAILS', // 发票内容（商品明细 、商品类别）
         // 发票抬头（个人 INVOICE_HEADER_PERSONAL 、 单位 INVOICE_HEADER_COMPANY）
         invoiceHeader: 'INVOICE_HEADER_PERSONAL',
         invoiceHeaderName: '', // 公司名称、个人名称
@@ -282,7 +285,7 @@ export default {
             this.getDefaultInvoiceHeader()
           }
           // {
-          //   applySource: "COMDIC_PLATFORM_CRISPS",
+          //   applySource: "INVOICE_APPLY_SOURCE_CUSTOMER",
           //   applyTime: "2021-06-28 14:21:24",
           //   applyUserId: "767579755195165966",,
           //   applyUserName: "唐代兵",
@@ -319,9 +322,9 @@ export default {
       this.formData = {
         // id: info.id,
         orderId: info.orderId,
-        applySource: 'COMDIC_PLATFORM_CRISPS',
+        applySource: 'INVOICE_APPLY_SOURCE_CUSTOMER',
         invoiceType: info.invoiceType || '026',
-        invoiceContent: info.invoiceContent || '商品明细',
+        invoiceContent: info.invoiceContent || 'GOODS_DETAILS',
         invoiceHeader: info.invoiceHeader || 'INVOICE_HEADER_PERSONAL',
         invoiceHeaderName: info.invoiceHeaderName,
         receiverPhone: info.receiverPhone,
@@ -369,9 +372,9 @@ export default {
     setDefaultFormDataWithHead(info) {
       this.formData = {
         orderId: this.orderId,
-        applySource: 'COMDIC_PLATFORM_CRISPS',
+        applySource: 'INVOICE_APPLY_SOURCE_CUSTOMER',
         invoiceType: '026',
-        invoiceContent: '商品明细',
+        invoiceContent: 'GOODS_DETAILS',
         invoiceHeader:
           info.headType === 'COMPANY'
             ? 'INVOICE_HEADER_COMPANY'
