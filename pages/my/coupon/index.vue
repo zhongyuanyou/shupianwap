@@ -1,119 +1,148 @@
 <template>
-  <div class="coupon-page">
-    <!-- header头部 start -->
-    <Header title="我的优惠券" @click="$router.push({ path: '/my' })" />
-    <!-- header头部 end -->
-    <!-- tabs切换 start -->
-    <sp-tabs v-model="couponType" @click="changeTab">
-      <!-- :title="item.title+'('+`${}`+')'" -->
-      <sp-tab :title="'未使用' + '(' + `${notUsedCount}` + ')'"></sp-tab>
-      <sp-tab :title="'已使用' + '(' + `${usedCount}` + ')'"></sp-tab>
-      <sp-tab :title="'已失效' + '(' + `${invalidCount}` + ')'"></sp-tab>
-    </sp-tabs>
-    <!-- tabs切换 end -->
-    <!-- 优惠券列表 start -->
-    <div
-      class="coupon_list"
-      :class="responseData.length === 0 ? 'not_coupon_data' : ''"
-    >
-      <div
-        v-for="(item, index) in responseData"
-        :key="index"
-        :class="couponType === 0 ? 'notUse' : 'haveUse'"
-        class="coupon_item"
-      >
-        <div class="item-lf">
-          <div class="coupon_price">
-            {{ item.marketingCouponVO.reducePrice }}
-          </div>
-          <div class="can_use">
-            满{{ item.marketingCouponVO.fullPrice }}元可用
-          </div>
-        </div>
-        <div class="item-rt">
-          <!-- 气泡组件 start -->
-          <!-- <Popover
-            :ref="'myPop' + index"
-            :text="item.remark"
-            @closepop="closeBox"
-          /> -->
-          <!-- 气泡组件 end-->
-          <!-- 右侧显示 start-->
-          <div
-            class="sign"
-            :class="
-              couponType === 1
-                ? 'have_use_icon'
-                : couponType === 0
-                ? ''
-                : 'lose'
-            "
-          ></div>
-          <div class="title" @click="goDetailPage(item)">
-            {{ item.marketingCouponVO.couponName }}
-          </div>
-          <div ref="textpro" class="content">
-            {{
-              item.marketingCouponVO.useType === 1
-                ? '全品类通用'
-                : item.marketingCouponVO.useType === 2
-                ? '限定部分类别产品使用'
-                : '置顶产品使用'
-            }}
-          </div>
-          <div
-            class="date"
-            :class="item.marketingCouponVO.showColorTime ? 'expiredate' : ''"
-          >
-            {{ item.marketingCouponVO.serviceLife }}
-          </div>
-          <!-- 右侧显示 end-->
-        </div>
-      </div>
-      <div v-show="responseData.length === 0" class="not_coupon">
-        <img :src="imgAddress" alt="" />
-        <span>暂无优惠券</span>
-      </div>
+  <div class="invoice">
+    <sp-sticky>
+      <Header class="my-header" title="我的优惠券"></Header>
+      <client-only>
+        <sp-work-tabs v-model="tabActive" @click="onClickTab">
+          <sp-work-tab title="券包"></sp-work-tab>
+          <sp-work-tab title="卡包"></sp-work-tab>
+        </sp-work-tabs>
+      </client-only>
+    </sp-sticky>
+    <div v-for="(item, index) of list" :key="index">
+      <Card v-if="tabActive === 0" :item="item"></Card>
     </div>
 
-    <!-- 优惠券列表 end -->
-    <!-- 515上线客服跳转客服 现在暂时留着-->
-    <p v-if="couponType == 2" class="coupon_tip">
-      当优惠券超出使用时间范围时，该优惠券即会失效。失效超过180天
-      的优惠券会被系统自动清除，若有疑惑，请<span>联系客服</span>
-    </p>
-    <LoadingCenter v-show="loading" />
+    <!-- <sp-list
+      v-if="list.length > 0"
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      :error.sync="error"
+      error-text="请求失败，点击重新加载"
+      @load="onLoad"
+    >
+      <div v-if="tabActive === 0" :list="list"></div>
+    </sp-list> -->
+
+    <div v-if="list.length == 0 && loading == false">
+      <sp-empty
+        class="empty-text"
+        :description="
+          tabActive === 0 || tabActive === 1 ? '暂无活动卡' : '暂无活动卡'
+        "
+        :image="imgAddress"
+      />
+    </div>
+
+    <div class="rules_and_invalid">
+      <span class="" @click="TipsShow = true">
+        通用规则
+        <my-icon
+          name="order_ic_listnext"
+          size="0.18rem"
+          color="#999999"
+          class="back"
+        />
+      </span>
+      <span class="invalid">
+        查看已失效优惠券
+        <my-icon
+          name="order_ic_listnext"
+          size="0.18rem"
+          color="#999999"
+          class="back"
+        />
+      </span>
+    </div>
+
+    <div class="paddingBottom150"></div>
+
+    <sp-bottombar safe-area-inset-bottom>
+      <sp-bottombar-button type="default" text="领券" class="del_btn" />
+      <sp-bottombar-button type="primary" text="购卡" />
+    </sp-bottombar>
+
+    <Loading-center v-show="loading" />
+
+    <sp-dialog v-model="TipsShow" :show-confirm-button="false">
+      <div class="dialog">
+        <div class="head">温馨提示</div>
+        <div class="body">
+          一般用作重要通知或帮助提示，具体 形态可由UI根据实际需求进行设计。
+        </div>
+        <div class="btn act" @click="timeshowFn()">我知道了</div>
+      </div>
+    </sp-dialog>
   </div>
 </template>
-
 <script>
-import { Button, RadioGroup, Radio, Cell, Tab, Tabs } from '@chipspc/vant-dgg'
-// import Popover from '~/components/common/popover/popover_old.vue'
-import Header from '@/components/common/head/header'
-import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import {
+  Button,
+  Toast,
+  TopNavBar,
+  Uploader,
+  Bottombar,
+  Sticky,
+  BottombarButton,
+  WorkTab,
+  WorkTabs,
+  Empty,
+  List,
+  Dialog,
+} from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
+
+import Header from '@/components/common/head/header.vue'
+import AllInvoiceClassify from '@/components/order/invoice/index/AllInvoiceClassify.vue'
+import HistoryInvoiceClassify from '@/components/order/invoice/index/HistoryInvoiceClassify.vue'
+
+import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
+import Card from '@/components/my/coupon/Card.vue'
+
+import orderApi from '@/api/order'
 import { coupon } from '@/api/index'
+
 export default {
+  layout: 'keepAlive',
+  name: 'Invoice',
   components: {
-    [Button.name]: Button,
-    [RadioGroup.name]: RadioGroup,
-    [Radio.name]: Radio,
-    [Cell.name]: Cell,
-    [Tab.name]: Tab,
-    [Tabs.name]: Tabs,
-    Header,
-    // Popover,
     LoadingCenter,
+    Header,
+    [WorkTab.name]: WorkTab,
+    [WorkTabs.name]: WorkTabs,
+    [Sticky.name]: Sticky,
+    [Empty.name]: Empty,
+    [Bottombar.name]: Bottombar,
+    [BottombarButton.name]: BottombarButton,
+    [Dialog.Component.name]: Dialog.Component,
+    [List.name]: List,
+
+    Card,
   },
   data() {
     return {
       imgAddress: 'https://cdn.shupian.cn/sp-pt/wap/1d02v37qg6gw000.png',
-      loading: false,
-      usedCount: 0, // 已使用
-      notUsedCount: 0, // 未使用
-      invalidCount: 0, // 已过期
-      showColorTime: true, // 是否显示红色
-      nowTimeStamp: 0, // 时间戳
-      responseData: [], // 请求成功返回数据
+
+      tabActive: 0,
+      tabActiveIndex: 0, // 激活的tab
+
+      pagination: {
+        loading: true, // 加载效果状态
+        error: false,
+        finished: false,
+        page: 1,
+        limit: 15,
+      },
+      loading: true, // 加载效果状态
+      error: false,
+      finished: false,
+      page: 1,
+      limit: 15,
+
+      TipsShow: false,
+      list: [],
+
       // 请求数据格式
       formData: {
         orderByWhere: 'log_receive_time=desc;',
@@ -121,269 +150,190 @@ export default {
         userId: this.$store.state.user.userId,
         limit: '100',
         page: '1',
-      }, // 请求数据
-      indexNum: 0,
-      couponType: 0, // 优惠券类型 未使用 已使用 已失效
-      isShow: false, // 控制显示气泡
-      // tabs栏
-      tabs: [
-        {
-          name: 0,
-          title: '未使用',
-        },
-        {
-          name: 1,
-          title: '已使用',
-        },
-        {
-          name: 2,
-          title: '已失效',
-        },
-      ],
+      },
     }
   },
   mounted() {
-    this.nowTimeStamp = new Date().getTime()
-    this.items = this.itemsData
-    this.getInitData()
+    this.init()
+    this.onLoad()
   },
   methods: {
+    headAdd() {
+      this.$router.push('/order/invoice/headAdd')
+    },
+    init() {
+      this.page = 1
+      this.finished = false
+      this.error = false
+      this.loading = true
+      this.list = []
+    },
+    onClickTab() {
+      if (this.tabActiveIndex === this.tabActive) {
+        return
+      }
+      this.tabActiveIndex = this.tabActive
+      this.init()
+      this.onLoad()
+    },
+    onLoad() {
+      if (this.tabActive === 0) {
+        this.getInitData()
+      } else if (this.tabActive === 1) {
+        this.getOrderList()
+      }
+    },
     getInitData() {
+      this.finished = false
+      const params = {
+        orderByWhere: 'log_receive_time=desc;',
+        findType: 2,
+        userId: this.$store.state.user.userId,
+        limit: '100',
+        page: this.page,
+      }
       coupon
-        .getCouponList({ axios: this.$axios }, this.formData)
+        .getCouponList({ axios: this.$axios }, params)
         .then((result) => {
-          this.responseData = result.marketingCouponLogList
-          for (let i = 0, length = this.responseData.length; i < length; i++) {
-            let useTime = this.responseData[i].marketingCouponVO.serviceLife
+          this.loading = false
+
+          const responseData = result.marketingCouponLogList || []
+
+          for (let i = 0, length = responseData.length; i < length; i++) {
+            let useTime = responseData[i].marketingCouponVO.serviceLife
             useTime = useTime.slice(11)
             console.log('useTime', useTime)
             const thisTime = useTime.split('.').join('-')
             const time = new Date(thisTime).getTime()
             if (time - this.nowTimeStamp < 172800000) {
-              this.responseData[
-                i
-              ].marketingCouponVO.showColorTime = this.showColorTime
+              responseData[i].marketingCouponVO.showColorTime =
+                this.showColorTime
             }
           }
-          this.usedCount = result.usedCount
-          this.notUsedCount = result.notUsedCount
-          this.invalidCount = result.invalidCount
-          this.loading = false
-        })
-        .catch((e) => {
-          if (e.code !== 200) {
-            this.loading = false
-            this.responseData = []
-            console.log(e)
+          if (params.page === 1) {
+            this.list = responseData
+          } else {
+            this.list.concat(responseData)
+            // const allData = this.list.concat(responseData)
+            // this.list = allData
           }
         })
-    },
-    changeTab(name, title) {
-      // this.$refs['myPop' + this.indexNum][0].isShow = false
-      const type = this.couponType
-      this.loading = true
-      if (type === 0) {
-        this.formData.findType = 2
-        this.formData.orderByWhere = 'log_receive_time=desc;'
-        this.getInitData()
-      } else if (type === 1) {
-        this.formData.findType = 3
-        this.formData.orderByWhere = 'log_use_time=desc;'
-        coupon
-          .getCouponList({ axios: this.$axios }, this.formData)
-          .then((result) => {
-            this.responseData = result.marketingCouponLogList
-            this.loading = false
-          })
-          .catch((e) => {
-            if (e.code !== 200) {
-              this.loading = false
-              this.responseData = []
-              console.log(e)
-            }
-          })
-      } else if (type === 2) {
-        this.formData.orderByWhere = 'effectEnd=desc;'
-        this.formData.findType = 4
-        coupon
-          .getCouponList({ axios: this.$axios }, this.formData)
-          .then((result) => {
-            this.loading = false
-            this.responseData = result.marketingCouponLogList
-            this.loading = false
-          })
-          .catch((e) => {
-            if (e.code !== 200) {
-              this.loading = false
-              this.responseData = []
-              console.log(e)
-            }
-          })
-      }
+        .catch((e) => {})
     },
 
-    // 进入详情
-    goDetailPage(item) {
-      if (item.useType === 1) {
-        // 全服务品类列表
-        // this.$router.push({ path: '/' })
-      } else if (item.useType === 2) {
-        // 分类列表
-        // this.$router.push({ path: '/' })
-      } else {
-        // 商品列表
-        // this.$router.push({ path: '/' })
-      }
+    getOrderList() {
+      this.loading = false
     },
   },
 }
 </script>
 
 <style lang="less" scoped>
-.lose {
-  background-image: url('https://cdn.shupian.cn/sp-pt/wap/8a099vjhmbc0000.png');
-}
-.have_use_icon {
-  background-image: url('https://cdn.shupian.cn/sp-pt/wap/29a165hg8w4k000.png');
-}
-.haveUse {
-  background-image: url('https://cdn.shupian.cn/sp-pt/wap/2ozhssqe5py0000.png');
-}
-.notUse {
-  background-image: url('https://cdn.shupian.cn/sp-pt/wap/g4kbai7wgrk0000.png');
-}
-.not_coupon_data {
-  background: #f5f5f5 !important;
-}
-.coupon-page {
-  height: 100%;
-  .coupon_list {
-    width: 100%;
-    padding: 12px 40px 12px 40px;
-    background: #f5f5f5;
+.invoice {
+  min-height: 100%;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+
+  background-color: #f5f5f5;
+
+  .paddingBottom150 {
+    padding-bottom: 150px;
+  }
+  .empty-text ::v-deep .sp-empty__description {
+    font-size: 30px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 600;
+    color: #222222;
+    line-height: 30px;
+  }
+
+  .coupon-page {
     height: 100%;
-    .coupon_item {
-      width: 670px;
-      height: 212px;
-      // background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
-      background-size: 100% 100%;
-      margin: 24px 0;
-      display: flex;
-      position: relative;
-      .item-lf {
-        width: 201px;
-        height: 212px;
-        .coupon_price {
-          //   height: 67px;
-          font-size: 72px;
-          font-family: Bebas;
-          font-weight: 400;
-          color: #ffffff;
-          text-align: center;
-          padding-top: 27px;
-        }
-        .can_use {
-          font-size: 24px;
-          font-family: PingFang SC;
-          font-weight: 400;
-          color: #ffffff;
-          text-align: center;
-          padding-top: 23px;
-        }
-      }
-      .item-rt {
-        padding-left: 24px;
-        height: auto;
-        flex: 1;
-        .title {
-          font-size: 32px;
-          font-family: PingFang SC;
-          font-weight: bold;
-          color: #222222;
-          line-height: 32px;
-          margin: 36px 0 23px 0;
-          word-break: break-all;
-          display: -webkit-box;
-          -webkit-line-clamp: 1;
-          -webkit-box-orient: vertical;
-          word-break: break-all;
-          overflow: hidden;
-        }
-        .content {
-          width: 404px;
-          font-size: 24px;
-          font-family: PingFang SC;
-          font-weight: 400;
-          color: #555555;
-          line-height: 32px;
-          margin-bottom: 13px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          word-break: break-all;
-        }
-        .date {
-          font-size: 20px;
-          font-family: PingFang SC;
-          font-weight: 400;
-          color: #999999;
-        }
-        .expiredate {
-          font-size: 20px;
-          font-family: PingFang SC;
-          font-weight: 400;
-          color: #f1524e;
-        }
-        .sign {
-          position: absolute;
-          width: 90px;
-          height: 84px;
-          // background-image: url('https://cdn.shupian.cn/sp-pt/wap/dcdo6nc5o6g0000.png');
-          background-size: 100% 100%;
-          right: 0px;
-          top: 0px;
-        }
-      }
-    }
-    .not_coupon {
-      width: 340px;
-      height: 340px;
-      margin: 176px auto;
-      text-align: center;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-      span {
-        font-size: 30px;
-        font-family: PingFang SC;
-        font-weight: bold;
-        color: #1a1a1a;
-      }
+    .coupon_list {
+      width: 100%;
+      padding: 12px 40px 12px 40px;
+      background: #f5f5f5;
+      height: 100%;
     }
   }
-  .coupon_tip {
-    width: 661px;
-    font-size: 22px;
-    font-family: PingFang SC;
-    font-weight: 400;
+
+  .not_coupon_data {
+    background: #f5f5f5 !important;
+  }
+  .rules_and_invalid {
+    font-family: PingFangSC-Regular;
+    font-weight: bold;
+    font-size: 24px;
     color: #999999;
-    margin: 0 auto;
-    margin-top: 24px;
-    span {
+    letter-spacing: 0;
+
+    text-align: center;
+
+    .invalid {
+      margin-left: 64px;
+    }
+    .back {
+      margin-right: 18px;
+      font-weight: 500;
+    }
+  }
+  .dialog {
+    padding: 48px 0 0 0;
+    > .head {
+      padding: 0 40px;
+      font-size: 36px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #1a1a1a;
+      text-align: center;
+    }
+    > .body {
+      padding: 0 40px;
+      margin-top: 32px;
+      font-size: 28px;
+      font-weight: 400;
+      color: #222222;
+      line-height: 38px;
+    }
+    > .btn {
+      border-top: 1px solid #f4f4f4;
+      margin-top: 48px;
+      height: 96px;
+      text-align: center;
+      font-size: 32px;
+      font-weight: 400;
+      color: #999999;
+      line-height: 96px;
+    }
+    > .act {
       color: #4974f5;
     }
   }
-}
-::v-deep .sp-tabs__line {
-  width: 64px;
-}
-::v-deep .sp-tab--active {
-  font-size: 28px;
-  font-family: PingFang SC;
-  font-weight: bold;
-  color: #4974f5;
+  // .footer-nav {
+  //   position: fixed;
+  //   left: 50%;
+  //   transform: translateX(-50%);
+  //   bottom: 0;
+  //   z-index: 999;
+  //   width: 100%;
+  //   background: #ffffff;
+  //   padding-bottom: constant(safe-area-inset-bottom);
+  //   padding-bottom: env(safe-area-inset-bottom);
+  //   max-width: 1000px;
+  // }
+
+  // ::v-deep .sp-tabs__line {
+  //   width: 64px;
+  // }
+  // ::v-deep .sp-work-tabs__wrap {
+  //   font-family: PingFang SC;
+  //   font-size: 28px;
+  // }
+  // ::v-deep .sp-tab--active {
+  //   font-size: 28px;
+  //   font-family: PingFang SC;
+  //   font-weight: bold;
+  //   color: #4974f5;
+  // }
 }
 </style>
