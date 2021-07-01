@@ -239,6 +239,8 @@ export default {
           console.log('res', res)
           this.loading = false
           this.$xToast.success((res && res.message) || '添加成功')
+
+          this.back()
         })
         .catch((error) => {
           console.error(error)
@@ -246,6 +248,9 @@ export default {
           this.loading = false
           this.$xToast.error((error && error.message) || '请求失败，请重试')
         })
+    },
+    back() {
+      this.$router.back(-1)
     },
   },
 }

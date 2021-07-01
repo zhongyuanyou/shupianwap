@@ -350,7 +350,7 @@ export default {
         // }
 
         invoiceApi
-          .invoice_header_list({ axios: this.$axios }, {})
+          .invoice_header_list({ axios: this.$axios })
           .then((res) => {
             const list = (res && res.records) || []
             const head = list.find((item) => {
@@ -422,6 +422,7 @@ export default {
           console.log('res', res)
           this.loading = false
           this.$xToast.success('请求成功')
+          this.back()
         })
         .catch((error) => {
           console.error(error)
@@ -430,13 +431,9 @@ export default {
           this.$xToast.error(error.message || '请求失败，请重试')
         })
     },
-    // back() {
-    //   if (this.isInApp) {
-    //     this.$appFn.dggWebGoBack((res) => {})
-    //     return
-    //   }
-    //   this.$router.back()
-    // },
+    back() {
+      this.$router.back(-1)
+    },
   },
 }
 </script>
