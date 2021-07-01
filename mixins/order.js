@@ -616,14 +616,14 @@ export default {
       }
       // afterSaleStatus 售后状态
       // AFTER_SALE_STATUS_0：不可售后;
-      // AFTER_SALE_STATUS_1：可售后;
+      // AFTER_SALE_STATUS_1：可售后; 不用
       // AFTER_SALE_STATUS_2：售后中;
       // AFTER_SALE_STATUS_3:售后完成 ;
       // AFTER_SALE_STATUS_4：部分售后;
       // AFTER_SALE_STATUS_5：已锁定;
       if (
-        orderData.afterSaleStatus &&
-        orderData.afterSaleStatus === 'AFTER_SALE_STATUS_1'
+        orderData.afterSaleSwitch &&
+        orderData.afterSaleSwitch === 'AFTERSAL_ON'
       ) {
         return 1
       }
