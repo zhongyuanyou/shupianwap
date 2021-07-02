@@ -7,7 +7,7 @@
         <div class="coupon_price">
           {{ item.marketingCouponVO.reducePrice }}
         </div>
-        <div class="can_use">
+        <div v-if="item.marketingCouponVO.fullPrice" class="can_use">
           满{{ item.marketingCouponVO.fullPrice }}元可用
         </div>
       </div>
@@ -19,6 +19,7 @@
           "
         ></div>
         <div class="title" @click="goDetailPage(item)">
+          <span class="coupon_type_name">折扣卡</span>
           {{ item.marketingCouponVO.couponName }}
         </div>
         <div ref="textpro" class="content">
@@ -32,11 +33,11 @@
         <div class="date-container">
           <span
             class="date"
-            :class="item.marketingCouponVO.showColorTime ? 'expiredate' : ''"
+            :class="item.marketingCouponVO.showColorTime ? 'warn' : ''"
           >
             {{ item.marketingCouponVO.serviceLife }}
           </span>
-          <span class="expiredate">剩余5次</span>
+          <span class="surplus warn">剩余5次</span>
         </div>
 
         <!-- 右侧显示 end-->
@@ -130,9 +131,15 @@ export default {
   margin: 24px 0;
   display: flex;
   position: relative;
+
   .item-lf {
     width: 201px;
     height: 212px;
+    display: flex;
+    // align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
     .coupon_price {
       //   height: 67px;
       font-size: 72px;
@@ -140,7 +147,7 @@ export default {
       font-weight: 400;
       color: #ffffff;
       text-align: center;
-      padding-top: 27px;
+      // padding-top: 27px;
     }
     .can_use {
       font-size: 24px;
@@ -155,6 +162,7 @@ export default {
     padding-left: 24px;
     height: auto;
     flex: 1;
+
     .title {
       font-size: 32px;
       font-family: PingFang SC;
@@ -168,6 +176,16 @@ export default {
       -webkit-box-orient: vertical;
       word-break: break-all;
       overflow: hidden;
+
+      .coupon_type_name {
+        background-image: linear-gradient(90deg, #fa6d5a 0%, #fa5741 100%);
+        border-radius: 4px;
+        padding: 1px 6px;
+
+        font-family: PingFangSC-Medium;
+        font-size: 20px;
+        color: #ffffff;
+      }
     }
     .content {
       width: 404px;
@@ -204,11 +222,17 @@ export default {
         font-weight: 400;
         color: #999999;
       }
-      .expiredate {
+      .warn {
         font-size: 20px;
         font-family: PingFang SC;
         font-weight: 400;
         color: #f1524e;
+      }
+      .surplus {
+        margin-right: 30px;
+        background: #fff3e9;
+        border-radius: 4px;
+        padding: 0 6px;
       }
     }
   }

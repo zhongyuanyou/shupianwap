@@ -37,7 +37,7 @@
 
     <div class="paddingBottom150"></div>
 
-    <div class="footer-nav">
+    <!-- <div class="footer-nav">
       <div class="rules_and_invalid">
         <span class="" @click="TipsShow = true">
           通用规则
@@ -58,12 +58,13 @@
           />
         </span>
       </div>
-    </div>
-    <sp-bottombar safe-area-inset-bottom>
-      <sp-bottombar-button type="default" text="领券" class="del_btn" />
-      <sp-bottombar-button type="primary" text="购卡" />
-    </sp-bottombar>
 
+      <sp-bottombar safe-area-inset-bottom>
+        <sp-bottombar-button type="default" text="领券" class="del_btn" />
+        <sp-bottombar-button type="primary" text="购卡" />
+      </sp-bottombar>
+    </div> -->
+    <FooterNav>1111</FooterNav>
     <Loading-center v-show="loading" />
 
     <sp-dialog v-model="TipsShow" :show-confirm-button="false">
@@ -100,8 +101,8 @@ import HistoryInvoiceClassify from '@/components/order/invoice/index/HistoryInvo
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import Card from '@/components/my/coupon/Card.vue'
+import FooterNav from '~/components/my/coupon/FooterNav.vue'
 
-import orderApi from '@/api/order'
 import { coupon } from '@/api/index'
 
 export default {
@@ -120,6 +121,7 @@ export default {
     [List.name]: List,
 
     Card,
+    FooterNav,
   },
   data() {
     return {
@@ -312,18 +314,18 @@ export default {
       color: #4974f5;
     }
   }
-  .footer-nav {
-    position: fixed;
-    left: 0;
-    // transform: translateX(-50%);
-    bottom: 0;
-    z-index: 999;
-    width: 100%;
-    background: #ffffff;
-    padding-bottom: constant(safe-area-inset-bottom);
-    padding-bottom: env(safe-area-inset-bottom);
-    max-width: 1000px;
-  }
+  // .footer-nav {
+  //   position: fixed;
+  //   left: 0;
+  //   // transform: translateX(-50%);
+  //   bottom: 0;
+  //   z-index: 999;
+  //   width: 100%;
+  //   background: #ffffff;
+  //   padding-bottom: constant(safe-area-inset-bottom);
+  //   padding-bottom: env(safe-area-inset-bottom);
+  //   margin-bottom: 134px;
+  // }
 
   // ::v-deep .sp-tabs__line {
   //   width: 64px;
