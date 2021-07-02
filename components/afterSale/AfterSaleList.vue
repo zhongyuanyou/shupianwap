@@ -172,7 +172,11 @@
         <div class="detail-btn">
           <button
             v-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_4'"
-            @click="$router.push(`/my/afterSale/refundDetails?id=${item.id}`)"
+            @click="
+              $router.push(
+                `/my/afterSale/refundDetails?id=${item.refundSheetId}`
+              )
+            "
           >
             退款详情
           </button>

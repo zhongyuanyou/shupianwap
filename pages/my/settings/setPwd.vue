@@ -191,7 +191,7 @@ export default {
         },
       })
       if (res.code === 200) {
-        this.$xToast.show({ message: '您的账户余额开通成功' })
+        this.$xToast.success('您的账户余额开通成功')
         setTimeout(() => {
           this.$router.push('/my/wallet')
         }, 1500)

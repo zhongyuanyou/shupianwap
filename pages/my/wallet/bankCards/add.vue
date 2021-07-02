@@ -33,7 +33,7 @@
           v-model="bankName"
           name="银行名称"
           label="银行名称"
-          placeholder="请输入银行卡号，系统自动识别"
+          placeholder="输入银行卡号，系统自动识别"
           readonly="readonly"
           :rules="[{ required: true, message: '请输入银行卡名称' }]"
         />
@@ -182,7 +182,7 @@ export default {
         this.$xToast.show({ message: '绑定成功' })
         this.$router.push('/my/wallet/bankCards/list')
       } else {
-        this.$xToast.error('绑卡失败,请您确认信息是否有误')
+        this.$xToast.error(res.data.error || '绑卡失败,请您确认信息是否有误')
       }
     },
     async getBankInfo() {

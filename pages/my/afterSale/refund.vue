@@ -164,19 +164,19 @@ export default {
   },
   methods: {
     async submit() {
-      if (this.afterTypeText === '') {
+      if (!this.afterTypeText) {
         this.$xToast.show({
           message: '请选择售后类型',
           duration: 1000,
         })
         return false
-      } else if (this.applyReasonText === '') {
+      } else if (!this.applyReasonText) {
         this.$xToast.show({
           message: '请选择申请原因',
           duration: 1000,
         })
         return false
-      } else if (this.descInfo === '') {
+      } else if (!this.descInfo) {
         this.$xToast.show({
           message: '请描述您遇到的问题～',
           duration: 1000,
@@ -206,10 +206,10 @@ export default {
       })
       this.loading = false
       if (res.code === 200) {
-        this.$xToast.show({
-          message: '申请成功',
-        })
-        this.$router.push(`/my/afterSale/apply?id=${res.data.afterSaleId}`)
+        this.$xToast.success('售后申请成功')
+        setTimeout(() => {
+          this.$router.push(`/my/afterSale/apply?id=${res.data.afterSaleId}`)
+        }, 1500)
       } else {
         this.$xToast.error(res.data.error)
       }
@@ -234,20 +234,6 @@ export default {
         // 单张上传
         this.uploadImg(fileObj)
       }
-
-      // this.fileId = `${this.userInfo.id}:crisps-app:aftersale:${
-      //   this.$route.query.orderId
-      // }:${String(new Date().valueOf()).substring(7, 13)}`
-      // const res = await uploadAndCallBack({
-      //   file: fileObj.file,
-      //   sys_code: 'crisps-app',
-      //   fileuid: this.fileId,
-      // })
-      // if (res.code === 200) {
-      //   // this.pictrueDetail += this.pictrueDetail
-      //   console.log(this.fileList)
-      //   console.log('上传成功')
-      // }
     },
     deleteImg() {
       this.fileList.forEach((index) => {
