@@ -34,7 +34,7 @@ export default {
     // 直接调用打开方法,不加dialog
     confirm(iosLink = '', androdLink = '') {
       // 优化传链接的2种方式,一种直接通过方法调用,一种通过组件
-      if (iosLink !== '') {
+      if (iosLink !== '' && typeof iosLink === 'string') {
         this.myIosLink = iosLink
       }
       if (androdLink !== '') {
@@ -46,7 +46,7 @@ export default {
     openApp(iosLink = '', androdLink = '') {
       this.showPop = true
       // 优化传链接的2种方式,一种直接通过方法调用,一种通过组件
-      if (iosLink !== '') {
+      if (iosLink !== '' && typeof iosLink === 'string') {
         this.myIosLink = iosLink
       }
       if (androdLink !== '') {

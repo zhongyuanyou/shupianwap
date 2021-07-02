@@ -95,6 +95,7 @@ export default {
         this.btnLoading = false
         return
       }
+
       const goodsDetail = this.$store.state.tcProductDetail.detailData
       const formData = {
         sourceSyscode: 'crisps-app',
@@ -105,7 +106,7 @@ export default {
         customerPhone:
           this.$refs.bargCom.phone || this.userInfoData.mainAccount,
         sourceUrl: location.href,
-        customerName: this.userInfoData.fullName || '游客',
+        customerName: this.token ? this.userInfoData.fullName : '游客',
         customerSex: this.userInfoData.sex || 2,
         customerAttribute: JSON.stringify({
           意向价格: this.$refs.bargCom.price,

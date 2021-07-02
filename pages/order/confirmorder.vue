@@ -489,7 +489,7 @@ export default {
             code: 'ORDER_DISCOUNT_DISCOUNT',
             value: this.$refs.conpon.checkarr.marketingCouponVO.id,
             couponUseCode: this.$refs.conpon.checkarr.couponUseCode,
-            no: this.$refs.conpon.checkarr.couponCode,
+            no: this.$refs.conpon.checkarr.marketingCouponVO.id,
           }
           this.Orderform.discount.push(arr)
         }
