@@ -161,6 +161,19 @@
             :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
             @click="popupfn()"
           />
+          <Cell
+            title="活动卡"
+            :value="
+              coupon
+                ? coupon
+                : datalist.length > 0
+                ? datalist.length + '个优惠券'
+                : '无可用'
+            "
+            is-link
+            :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
+            @click="popupfn()"
+          />
         </CellGroup>
         <p class="money">
           合计：
@@ -238,6 +251,7 @@ import Popup from '@/components/PlaceOrder/Popup'
 import Contract from '@/components/PlaceOrder/contract'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import { productDetailsApi, auth, shopCart } from '@/api'
+import cardApi from '@/api/card'
 import { coupon, order } from '@/api/index'
 export default {
   name: 'PlaceOrder',
@@ -294,6 +308,7 @@ export default {
       loading: false,
       skeletonloading: true,
       editShow: false,
+      productList: [],
     }
   },
   mounted() {
@@ -306,6 +321,15 @@ export default {
     this.getProtocol('protocol100008')
   },
   methods: {
+    getCardList(condition) {
+      const params = {
+        productList: this.productList,
+        condition,
+      }
+      this.$axios.post(cardApi.goodsCardList, params).then((res) => {
+        console.log('res', res)
+      })
+    },
     onLeftClick() {
       this.$router.back()
     },
@@ -373,6 +397,13 @@ export default {
           this.price = this.order.salesPrice
           this.getInitData(5)
           this.getInitData(6)
+          this.productList = new Array(1).fill({
+            categoryCode: data.classCodeLevel.split(',')[0],
+            productId: data.id,
+            productPrice: data.salesPrice,
+          })
+          console.log('productList', this.productList)
+          this.getCardList(1)
         } else {
           this.$xToast.show('服务器异常,请然后再试')
           setTimeout(function () {
