@@ -33,9 +33,9 @@
           v-model="bankName"
           name="银行名称"
           label="银行名称"
-          placeholder="请输入银行卡号，系统自动识别"
+          placeholder="输入银行卡号，系统自动识别"
           readonly="readonly"
-          :rules="[{ required: true, message: '请输入银行卡名称' }]"
+          :rules="[{ required: true, message: '输入正确的银行卡号可识别名称' }]"
         />
         <sp-field
           v-model="accountBank"
@@ -113,7 +113,7 @@
       </sp-popup>
     </div>
     <!--S loding-->
-    <LoadingCenter v-show="loading" title="绑定中..." />
+    <LoadingCenter v-show="loading" :title="loadingTitle" />
     <!--E loding-->
   </div>
 </template>
@@ -151,6 +151,7 @@ export default {
       accountInfo: '',
       openingBankCode: '',
       loading: false,
+      loadingTitle: '绑定中,请稍后...',
     }
   },
   mounted() {
@@ -182,20 +183,25 @@ export default {
         this.$xToast.show({ message: '绑定成功' })
         this.$router.push('/my/wallet/bankCards/list')
       } else {
-        this.$xToast.error('绑卡失败,请您确认信息是否有误')
+        this.$xToast.error(res.data.error || '绑卡失败,请您确认信息是否有误')
       }
     },
     async getBankInfo() {
-      const _this = this
+      this.loadingTitle = '识别中...'
+      this.loading = true
       const res = await this.$axios.post(walletApi.card_no, {
         cardNumber: this.cardNum,
       })
+      this.loading = false
       if (res.code === 200) {
         this.bankCode = res.data.code
         this.bankName = res.data.name
         this.bankIconUrl = res.data.icon
       } else {
-        this.$xToast.error(res.data.error)
+        this.bankCode = ''
+        this.bankName = ''
+        this.bankIconUrl = ''
+        this.$xToast.error('请输入有效的银行卡号')
       }
     },
     // 账户名称
@@ -212,7 +218,7 @@ export default {
     async getAccountBankInfo() {
       const res = await this.$axios.post(walletApi.card_info, {
         name: this.searchName,
-        code: '',
+        code: this.bankCode,
         isOnlyBank: '',
         parentCode: '',
         limit: '50',
@@ -224,7 +230,12 @@ export default {
     blur() {
       this.getBankInfo()
     },
-    openPullPop() {
+    async openPullPop() {
+      if (!this.bankCode) {
+        this.$xToast.warning('请先输入银行卡号')
+        return false
+      }
+      await this.getAccountBankInfo()
       this.showPullPop = true
     },
     throttle(func, wait) {
