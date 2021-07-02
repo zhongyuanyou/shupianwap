@@ -1,16 +1,10 @@
 <template>
   <div class="invoice" :style="{ paddingBottom: FooterNavHeight + 'px' }">
     <sp-sticky>
-      <Header class="my-header" title="我的优惠券"></Header>
-      <client-only>
-        <sp-work-tabs v-model="tabActive" @click="onClickTab">
-          <sp-work-tab title="券包"></sp-work-tab>
-          <sp-work-tab title="卡包"></sp-work-tab>
-        </sp-work-tabs>
-      </client-only>
+      <Header class="my-header" title="失效卡"></Header>
     </sp-sticky>
     <div v-for="(item, index) of list" :key="index" class="coupon_list">
-      <Card :item="item.marketingCouponVO || {}" :coupon-type="0"></Card>
+      <Card :item="item.marketingCouponVO || {}"></Card>
     </div>
 
     <!-- <sp-list
@@ -28,56 +22,12 @@
     <div v-if="list.length == 0 && loading == false">
       <sp-empty
         class="empty-text"
-        :description="tabActive === 0 ? '暂无优惠券' : '暂无活动卡'"
+        :description="tabActive === 0 ? '暂无优惠券卡' : '暂无活动卡'"
         :image="imgAddress"
       />
     </div>
 
-    <FooterNav
-      ref="FooterNav"
-      :list="tabBarData"
-      @handelClick="handelFooterClick"
-    >
-      <div class="rules_and_invalid">
-        <span class="" @click="TipsShow = true">
-          通用规则
-          <my-icon
-            name="order_ic_listnext"
-            size="0.18rem"
-            color="#999999"
-            class="back"
-          />
-        </span>
-        <span class="invalid" @click="toInvalid">
-          {{ tabActive === 0 ? '查看已失效优惠券' : '查看已失效活动卡' }}
-          <my-icon
-            name="order_ic_listnext"
-            size="0.18rem"
-            color="#999999"
-            class="back"
-          />
-        </span>
-      </div>
-    </FooterNav>
     <Loading-center v-show="loading" />
-
-    <sp-dialog v-model="TipsShow" :show-confirm-button="false">
-      <div class="dialog">
-        <div class="head">温馨提示</div>
-        <div class="body">
-          请您务必审慎阅读、充分理解<a
-            class="protocol_name"
-            @click="handleProtocol('protocol100122')"
-            >《薯片用户服务协议》</a
-          >和<a class="protocol_name" @click="handleProtocol('protocol100121')"
-            >《薯片隐私协议》</a
-          >和《权限使用规则》各条款，包括但不限于: 各条款，包括但不限于: <br />
-          为了向您提供即时通讯、内容分享等服务，我们需要收集您的设备信息、操作日志等个人信息。你可以在“设置中查看、变更、删除个人信息并管理您的授权。”
-          如果您不同意本协议的修改，请立即停止访问或使用本网站或取消已经获得的服务；如果您选择继续访问或使用本网站，则视为您已接受本协议。修改
-        </div>
-        <div class="btn" @click="TipsShow = false">我知道了</div>
-      </div>
-    </sp-dialog>
   </div>
 </template>
 <script>
@@ -121,7 +71,6 @@ export default {
     [List.name]: List,
 
     Card,
-    FooterNav,
   },
   data() {
     return {
@@ -139,32 +88,16 @@ export default {
       TipsShow: false,
       list: [],
 
-      tabBarData: [
-        {
-          name: '领券',
-          iconName: 'lingquan',
-          path: '/my/coupon/act-card',
-        },
-        {
-          name: '购卡',
-          iconName: 'gouka',
-          path: '/my/coupon/act-card',
-        },
-      ],
       FooterNavHeight: 150,
     }
   },
   mounted() {
     this.init()
     this.onLoad()
-
-    this.FooterNavHeight = this.$refs.FooterNav.$el.offsetHeight
   },
   methods: {
-    toActCard() {
-      this.$router.push({
-        path: '/my/coupon/act-card',
-      })
+    headAdd() {
+      this.$router.push('/order/invoice/headAdd')
     },
     init() {
       this.page = 1
@@ -179,17 +112,6 @@ export default {
         query: { categoryCode },
       })
     },
-    toInvalid() {
-      if (this.tabActive === 0) {
-        this.$router.push({
-          path: '/my/coupon/invalid-coupon',
-        })
-      } else {
-        this.$router.push({
-          path: '/my/coupon/invalid-card',
-        })
-      }
-    },
     onClickTab() {
       if (this.tabActiveIndex === this.tabActive) {
         return
@@ -197,9 +119,6 @@ export default {
       this.tabActiveIndex = this.tabActive
       this.init()
       this.onLoad()
-    },
-    handelFooterClick(item, index) {
-      console.log(item, index)
     },
     onLoad() {
       if (this.tabActive === 0) {
@@ -211,40 +130,23 @@ export default {
     getInitData() {
       this.finished = false
       const params = {
-        orderByWhere: 'log_receive_time=desc;',
-        findType: 2,
+        orderByWhere: 'effectEnd=desc;',
+        findType: 4,
         userId: this.$store.state.user.userId,
         limit: '100',
         page: this.page,
       }
+
       coupon
         .getCouponList({ axios: this.$axios }, params)
         .then((result) => {
+          this.list = result.marketingCouponLogList
           this.loading = false
-
-          const responseData = result.marketingCouponLogList || []
-
-          for (let i = 0, length = responseData.length; i < length; i++) {
-            let useTime = responseData[i].marketingCouponVO.serviceLife
-            useTime = useTime.slice(11)
-            console.log('useTime', useTime)
-            const thisTime = useTime.split('.').join('-')
-            const time = new Date(thisTime).getTime()
-            if (time - this.nowTimeStamp < 172800000) {
-              responseData[i].marketingCouponVO.showColorTime =
-                this.showColorTime
-            }
-          }
-          if (params.page === 1) {
-            this.list = responseData
-          } else {
-            this.list.concat(responseData)
-            // const allData = this.list.concat(responseData)
-            // this.list = allData
-          }
         })
         .catch((e) => {
           this.loading = false
+          this.list = []
+          console.log(e)
         })
     },
 
@@ -270,10 +172,6 @@ export default {
     color: #222222;
     line-height: 30px;
   }
-
-  // .coupon_list {
-  //   padding: 0px 40px;
-  // }
 
   .rules_and_invalid {
     font-family: PingFangSC-Regular;
@@ -315,11 +213,6 @@ export default {
       color: #555555;
       letter-spacing: 0;
       line-height: 42px;
-
-      .protocol_name {
-        text-decoration: underline;
-        color: #658af6;
-      }
     }
     > .btn {
       border-top: 1px solid #f4f4f4;
@@ -336,6 +229,11 @@ export default {
       color: white;
       margin: 50px 40px 40px;
     }
+  }
+
+  .protocol_name {
+    text-decoration: underline;
+    color: #658af6;
   }
 
   ::v-deep .sp-work-tab__text {

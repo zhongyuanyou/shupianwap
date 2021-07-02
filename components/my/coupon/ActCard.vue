@@ -5,10 +5,10 @@
     <div :class="couponType === 0 ? 'notUse' : 'haveUse'" class="coupon_item">
       <div class="item-lf">
         <div class="coupon_price">
-          {{ item.reducePrice }}
+          {{ item.rebatePrice }}
         </div>
-        <div v-if="item.fullPrice" class="can_use">
-          满{{ item.fullPrice }}元可用
+        <div v-if="item.rebatePrice" class="can_use">
+          {{ (item.leftStock / item.stock) * 100 }}
         </div>
       </div>
       <div class="item-rt">
@@ -19,8 +19,10 @@
           "
         ></div>
         <div class="title" @click="goDetailPage(item)">
-          <span class="coupon_type_name">折扣卡</span>
-          {{ item.couponName }}
+          <span class="coupon_type_name">
+            {{ item.type == 1 ? '折扣卡' : '满减' }}
+          </span>
+          {{ item.cardName }}
         </div>
         <div ref="textpro" class="content">
           {{ getuseTypeName(item.useType) }}
@@ -32,9 +34,16 @@
         </div>
         <div class="date-container">
           <span class="date" :class="item.showColorTime ? 'warn' : ''">
-            {{ item.serviceLife }}
+            <span v-if="item.validateType == 1">
+              {{ item.validateDate }}天
+            </span>
+            <span v-if="item.validateType == 2">
+              {{ formatTime(item.validateDateStart) }}-{{
+                formatTime(item.validateDateEnd)
+              }}
+            </span>
           </span>
-          <span class="surplus warn">剩余5次</span>
+          <span class="surplus warn">剩余{{ item.availableTimes }}次</span>
         </div>
 
         <!-- 右侧显示 end-->
@@ -63,6 +72,12 @@ export default {
   },
 
   methods: {
+    formatTime(time) {
+      if (time) {
+        return time.split(' ')[0]
+      }
+      return ''
+    },
     getuseTypeName(useType) {
       let useTypeName = ''
       switch (useType) {

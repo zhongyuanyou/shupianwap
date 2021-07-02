@@ -1,6 +1,6 @@
 'use strict'
 import { request } from '@/utils/request'
-import { CHIPS_WAP_BASE_URL } from '@/config/constant'
+import { CHIPS_WAP_BASE_URL ,CHIPS_PC_URL} from '@/config/constant'
 // const CHIPS_WAP_BASE_URL = 'http://172.16.132.255:7001/service'
 const coupon = {
   getCouponList({ axios }, params) {
@@ -57,5 +57,35 @@ const coupon = {
       url: CHIPS_WAP_BASE_URL + '/nk/coupon/v2/find_page.do',
     })
   },
+
+
+
+
+
+
+
+
+
+// ------------- 以下是活动卡
+/**
+ *
+ * @param {*} param0
+ * @param {object} params
+ * @param {number} params.type 活动卡优惠类型 1：折扣 2：满减
+ * @param {number} params.page
+ * @param {number} params.limit
+ * @returns
+ */
+  // 分页查询活动卡
+  act_card_list({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'get',
+      url: CHIPS_PC_URL + '/nk/marking/act_card_list.do',
+    })
+  },
+
 }
+
 export default coupon

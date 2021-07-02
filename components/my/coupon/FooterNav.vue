@@ -1,11 +1,12 @@
 <template>
   <footer class="footer-nav">
+    <slot></slot>
     <ul class="footer-nav-ul">
       <li
-        v-for="(item, index) in tabBarData"
+        v-for="(item, index) in list"
         :key="index"
         class="footer-nav-ul-li"
-        @click="pageJump(item, index)"
+        @click="ClickItem(item, index)"
       >
         <span class="item">
           <my-icon
@@ -28,41 +29,34 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'FooterNav',
+  props: {
+    list: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
+  },
   data() {
     return {
       unreadNum: 0,
       active: 'home',
       DefaultColor: '#222222',
       ActiveColor: '#4974F5',
-      tabBarData: [
-        {
-          name: '领券',
-          iconName: 'lingquan',
-          path: '/',
-        },
-        {
-          name: '购卡',
-          iconName: 'gouka',
-          path: '/found',
-        },
-      ],
     }
   },
 
-  // watch: {
-  //   $route(to, from) {
-  //     const path = this.$route.path
-  //     this.active = path
-  //   },
-  //   userInfo(val) {
-  //     if (!val.token) {
-  //       this.unreadNum = 0
-  //     }
-  //   },
-  // },
-
   mounted() {},
-  methods: {},
+  methods: {
+    ClickItem(item, index) {
+      if (item.path) {
+        return this.$router.push({
+          path: item.path,
+        })
+      }
+      this.$emit('handelClick', item, index)
+    },
+  },
 }
 </script>
 <style lang="less" scoped>
@@ -79,7 +73,7 @@ export default {
 
   > .footer-nav-ul {
     width: 100%;
-    height: 100%;
+    // height: 100%;
     display: flex;
     align-items: center;
     > .footer-nav-ul-li {
@@ -107,9 +101,17 @@ export default {
         }
       }
     }
-    > .footer-nav-ul-li::after {
+    > .footer-nav-ul-li .item::after {
+      position: absolute;
+      left: 0;
+
       content: '';
-      height: '';
+      height: 100%;
+      width: 1px;
+      background-color: #f4f4f4;
+    }
+    > .footer-nav-ul-li:nth-child(1) .item::after {
+      width: 0;
     }
   }
 }

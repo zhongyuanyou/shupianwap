@@ -2,15 +2,13 @@
   <div class="invoice" :style="{ paddingBottom: FooterNavHeight + 'px' }">
     <sp-sticky>
       <Header class="my-header" title="我的优惠券"></Header>
-      <client-only>
-        <sp-work-tabs v-model="tabActive" @click="onClickTab">
-          <sp-work-tab title="券包"></sp-work-tab>
-          <sp-work-tab title="卡包"></sp-work-tab>
-        </sp-work-tabs>
-      </client-only>
     </sp-sticky>
+    <div v-if="banner" class="banner">
+      <span class="card_des">活动卡介绍</span>
+      <img :src="$ossImgSetV2(banner)" alt="" />
+    </div>
     <div v-for="(item, index) of list" :key="index" class="coupon_list">
-      <Card :item="item.marketingCouponVO || {}" :coupon-type="0"></Card>
+      <ActCard :item="item" :coupon-type="0"></ActCard>
     </div>
 
     <!-- <sp-list
@@ -33,32 +31,6 @@
       />
     </div>
 
-    <FooterNav
-      ref="FooterNav"
-      :list="tabBarData"
-      @handelClick="handelFooterClick"
-    >
-      <div class="rules_and_invalid">
-        <span class="" @click="TipsShow = true">
-          通用规则
-          <my-icon
-            name="order_ic_listnext"
-            size="0.18rem"
-            color="#999999"
-            class="back"
-          />
-        </span>
-        <span class="invalid" @click="toInvalid">
-          {{ tabActive === 0 ? '查看已失效优惠券' : '查看已失效活动卡' }}
-          <my-icon
-            name="order_ic_listnext"
-            size="0.18rem"
-            color="#999999"
-            class="back"
-          />
-        </span>
-      </div>
-    </FooterNav>
     <Loading-center v-show="loading" />
 
     <sp-dialog v-model="TipsShow" :show-confirm-button="false">
@@ -100,7 +72,7 @@ import { mapState } from 'vuex'
 import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
-import Card from '@/components/my/coupon/Card.vue'
+import ActCard from '@/components/my/coupon/ActCard.vue'
 import FooterNav from '~/components/my/coupon/FooterNav.vue'
 
 import { coupon } from '@/api/index'
@@ -120,11 +92,11 @@ export default {
     [Dialog.Component.name]: Dialog.Component,
     [List.name]: List,
 
-    Card,
-    FooterNav,
+    ActCard,
   },
   data() {
     return {
+      banner: '3a9u8adm49q0000.png',
       imgAddress: 'https://cdn.shupian.cn/sp-pt/wap/1d02v37qg6gw000.png',
 
       tabActive: 0,
@@ -139,33 +111,14 @@ export default {
       TipsShow: false,
       list: [],
 
-      tabBarData: [
-        {
-          name: '领券',
-          iconName: 'lingquan',
-          path: '/my/coupon/act-card',
-        },
-        {
-          name: '购卡',
-          iconName: 'gouka',
-          path: '/my/coupon/act-card',
-        },
-      ],
       FooterNavHeight: 150,
     }
   },
   mounted() {
     this.init()
     this.onLoad()
-
-    this.FooterNavHeight = this.$refs.FooterNav.$el.offsetHeight
   },
   methods: {
-    toActCard() {
-      this.$router.push({
-        path: '/my/coupon/act-card',
-      })
-    },
     init() {
       this.page = 1
       this.finished = false
@@ -179,17 +132,7 @@ export default {
         query: { categoryCode },
       })
     },
-    toInvalid() {
-      if (this.tabActive === 0) {
-        this.$router.push({
-          path: '/my/coupon/invalid-coupon',
-        })
-      } else {
-        this.$router.push({
-          path: '/my/coupon/invalid-card',
-        })
-      }
-    },
+
     onClickTab() {
       if (this.tabActiveIndex === this.tabActive) {
         return
@@ -197,9 +140,6 @@ export default {
       this.tabActiveIndex = this.tabActive
       this.init()
       this.onLoad()
-    },
-    handelFooterClick(item, index) {
-      console.log(item, index)
     },
     onLoad() {
       if (this.tabActive === 0) {
@@ -211,36 +151,23 @@ export default {
     getInitData() {
       this.finished = false
       const params = {
-        orderByWhere: 'log_receive_time=desc;',
-        findType: 2,
         userId: this.$store.state.user.userId,
         limit: '100',
         page: this.page,
       }
       coupon
-        .getCouponList({ axios: this.$axios }, params)
-        .then((result) => {
+        .act_card_list({ axios: this.$axios }, params)
+        .then((res) => {
           this.loading = false
+          this.page++
 
-          const responseData = result.marketingCouponLogList || []
+          const responseData = res.rows || []
+          responseData.map((item) => {})
 
-          for (let i = 0, length = responseData.length; i < length; i++) {
-            let useTime = responseData[i].marketingCouponVO.serviceLife
-            useTime = useTime.slice(11)
-            console.log('useTime', useTime)
-            const thisTime = useTime.split('.').join('-')
-            const time = new Date(thisTime).getTime()
-            if (time - this.nowTimeStamp < 172800000) {
-              responseData[i].marketingCouponVO.showColorTime =
-                this.showColorTime
-            }
-          }
           if (params.page === 1) {
             this.list = responseData
           } else {
             this.list.concat(responseData)
-            // const allData = this.list.concat(responseData)
-            // this.list = allData
           }
         })
         .catch((e) => {
@@ -258,6 +185,9 @@ export default {
 <style lang="less" scoped>
 .invoice {
   min-height: 100%;
+
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
 
@@ -271,77 +201,26 @@ export default {
     line-height: 30px;
   }
 
-  // .coupon_list {
-  //   padding: 0px 40px;
-  // }
-
-  .rules_and_invalid {
-    font-family: PingFangSC-Regular;
-    font-weight: bold;
-    font-size: 24px;
-    color: #999999;
-    background: #f5f5f5;
-    padding: 32px 0;
-    letter-spacing: 0;
-
-    text-align: center;
-
-    .invalid {
-      margin-left: 64px;
+  .banner {
+    position: relative;
+    img {
+      width: 100%;
     }
-    .back {
-      margin-right: 18px;
-      font-weight: 500;
-    }
-  }
-  .dialog {
-    padding: 48px 0 0 0;
-    > .head {
-      padding: 0 40px;
-      font-size: 36px;
-      font-family: PingFang SC;
-      font-weight: bold;
-      color: #1a1a1a;
-      text-align: center;
-    }
-    > .body {
-      padding: 0 40px;
-      margin-top: 32px;
-
-      font-weight: 400;
+    .card_des {
+      position: absolute;
+      right: 0;
+      top: 32px;
+      border-radius: 22px 0 0 22px;
 
       font-family: PingFangSC-Regular;
-      font-size: 28px;
-      color: #555555;
+      font-size: 24px;
+      color: #ffffff;
       letter-spacing: 0;
-      line-height: 42px;
-
-      .protocol_name {
-        text-decoration: underline;
-        color: #658af6;
-      }
-    }
-    > .btn {
-      border-top: 1px solid #f4f4f4;
-
-      height: 96px;
       text-align: center;
-      font-size: 32px;
-      font-weight: 400;
+      padding: 10px 10px 10px 12px;
 
-      line-height: 96px;
-
-      background: #4974f5;
-      border-radius: 8px;
-      color: white;
-      margin: 50px 40px 40px;
+      background: rgba(255, 255, 255, 0.3);
     }
-  }
-
-  ::v-deep .sp-work-tab__text {
-    font-family: PingFang SC;
-    font-size: 28px;
-    font-weight: bold;
   }
 }
 </style>
