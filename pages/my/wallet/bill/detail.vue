@@ -71,7 +71,7 @@ export default {
     jumpPage() {
       debugger
       switch (this.billDetails.orderType) {
-        case '提现':
+        case 'BANK_ORDER_TYPE_3':
           this.$router.push(
             `/my/wallet/withdraw/detail?id=${this.billDetails.billId}`
           )
