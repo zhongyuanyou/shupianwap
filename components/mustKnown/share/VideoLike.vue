@@ -180,7 +180,7 @@ export default {
 
       const iosPathFinally = this.prefixPath + JSON.stringify(tempIos)
       const androdPathFinally = this.prefixPath + JSON.stringify(tempAndrod)
-      this.openApp(iosPathFinally, androdPathFinally)
+      this.confirm(iosPathFinally, androdPathFinally)
     },
   },
 }

@@ -547,7 +547,7 @@ export default {
           this.$refs.cancleOrderModel.setCancelName(
             this.orderData.orderSplitAndCusVo.cusOrderCancelReason
           )
-          console.log('checkBillStatus', this.checkBillStatus())
+          this.$forceUpdate()
         })
         .catch((err) => {
           this.loading = false

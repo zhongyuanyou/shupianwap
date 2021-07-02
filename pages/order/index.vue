@@ -269,6 +269,7 @@ export default {
             this.list = allData
           }
           this.loadingList = false
+          this.$forceUpdate()
         })
         .catch((error) => {
           console.error(error)
