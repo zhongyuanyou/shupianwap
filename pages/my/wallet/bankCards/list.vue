@@ -120,7 +120,7 @@ export default {
       cardList: [],
       showNoDataImg: false,
       accountInfo: '',
-      customJump: false,
+      customJump: true,
       loading: false,
     }
   },
