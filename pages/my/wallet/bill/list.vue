@@ -1,7 +1,6 @@
 <template>
   <div class="bill">
     <Header title="账单" />
-
     <sp-list
       v-model="loading"
       :finished="finished"
@@ -37,6 +36,9 @@
       />
       <p class="text">暂无账单记录</p>
     </div>
+    <!--S loding-->
+    <LoadingCenter v-show="loading" />
+    <!--E loding-->
   </div>
 </template>
 
@@ -44,10 +46,13 @@
 import { List } from '@chipspc/vant-dgg'
 import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
+
 export default {
   components: {
     Header,
     [List.name]: List,
+    LoadingCenter,
   },
   data() {
     return {
@@ -70,12 +75,14 @@ export default {
   },
   methods: {
     async getBillList() {
+      this.loading = true
       const res = await this.$axios.post(walletApi.bill_list, {
         relationId: this.userInfo.id,
         accType: 'BANK_ACCOUNT_TYPE_2',
         start: this.page,
         limit: this.limit,
       })
+      this.loading = false
       if (res.code === 200) {
         this.billList = [...this.billList, ...res.data.list]
         if (this.billList.length === 0) {

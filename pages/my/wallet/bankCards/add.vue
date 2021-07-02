@@ -35,7 +35,7 @@
           label="银行名称"
           placeholder="输入银行卡号，系统自动识别"
           readonly="readonly"
-          :rules="[{ required: true, message: '请输入银行卡名称' }]"
+          :rules="[{ required: true, message: '输入正确的银行卡号可识别名称' }]"
         />
         <sp-field
           v-model="accountBank"
@@ -113,7 +113,7 @@
       </sp-popup>
     </div>
     <!--S loding-->
-    <LoadingCenter v-show="loading" title="绑定中..." />
+    <LoadingCenter v-show="loading" :title="loadingTitle" />
     <!--E loding-->
   </div>
 </template>
@@ -151,6 +151,7 @@ export default {
       accountInfo: '',
       openingBankCode: '',
       loading: false,
+      loadingTitle: '绑定中,请稍后...',
     }
   },
   mounted() {
@@ -186,16 +187,21 @@ export default {
       }
     },
     async getBankInfo() {
-      const _this = this
+      this.loadingTitle = '识别中...'
+      this.loading = true
       const res = await this.$axios.post(walletApi.card_no, {
         cardNumber: this.cardNum,
       })
+      this.loading = false
       if (res.code === 200) {
         this.bankCode = res.data.code
         this.bankName = res.data.name
         this.bankIconUrl = res.data.icon
       } else {
-        this.$xToast.error(res.data.error)
+        this.bankCode = ''
+        this.bankName = ''
+        this.bankIconUrl = ''
+        this.$xToast.error('请输入有效的银行卡号')
       }
     },
     // 账户名称
