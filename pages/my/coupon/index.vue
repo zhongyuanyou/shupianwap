@@ -35,29 +35,30 @@
       />
     </div>
 
-    <div class="rules_and_invalid">
-      <span class="" @click="TipsShow = true">
-        通用规则
-        <my-icon
-          name="order_ic_listnext"
-          size="0.18rem"
-          color="#999999"
-          class="back"
-        />
-      </span>
-      <span class="invalid">
-        查看已失效优惠券
-        <my-icon
-          name="order_ic_listnext"
-          size="0.18rem"
-          color="#999999"
-          class="back"
-        />
-      </span>
-    </div>
-
     <div class="paddingBottom150"></div>
 
+    <div class="footer-nav">
+      <div class="rules_and_invalid">
+        <span class="" @click="TipsShow = true">
+          通用规则
+          <my-icon
+            name="order_ic_listnext"
+            size="0.18rem"
+            color="#999999"
+            class="back"
+          />
+        </span>
+        <span class="invalid">
+          查看已失效优惠券
+          <my-icon
+            name="order_ic_listnext"
+            size="0.18rem"
+            color="#999999"
+            class="back"
+          />
+        </span>
+      </div>
+    </div>
     <sp-bottombar safe-area-inset-bottom>
       <sp-bottombar-button type="default" text="领券" class="del_btn" />
       <sp-bottombar-button type="primary" text="购卡" />
@@ -218,7 +219,9 @@ export default {
             // this.list = allData
           }
         })
-        .catch((e) => {})
+        .catch((e) => {
+          this.loading = false
+        })
     },
 
     getOrderList() {
@@ -309,18 +312,18 @@ export default {
       color: #4974f5;
     }
   }
-  // .footer-nav {
-  //   position: fixed;
-  //   left: 50%;
-  //   transform: translateX(-50%);
-  //   bottom: 0;
-  //   z-index: 999;
-  //   width: 100%;
-  //   background: #ffffff;
-  //   padding-bottom: constant(safe-area-inset-bottom);
-  //   padding-bottom: env(safe-area-inset-bottom);
-  //   max-width: 1000px;
-  // }
+  .footer-nav {
+    position: fixed;
+    left: 0;
+    // transform: translateX(-50%);
+    bottom: 0;
+    z-index: 999;
+    width: 100%;
+    background: #ffffff;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+    max-width: 1000px;
+  }
 
   // ::v-deep .sp-tabs__line {
   //   width: 64px;

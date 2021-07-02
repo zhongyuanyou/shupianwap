@@ -22,20 +22,23 @@
           {{ item.marketingCouponVO.couponName }}
         </div>
         <div ref="textpro" class="content">
-          {{
-            item.marketingCouponVO.useType === 1
+          {{ getuseTypeName(item.marketingCouponVO.useType) }}
+          <!-- item.marketingCouponVO.useType === 1
               ? '全品类通用'
               : item.marketingCouponVO.useType === 2
               ? '限定部分类别产品使用'
-              : '置顶产品使用'
-          }}
+              : '置顶产品使用' -->
         </div>
-        <div
-          class="date"
-          :class="item.marketingCouponVO.showColorTime ? 'expiredate' : ''"
-        >
-          {{ item.marketingCouponVO.serviceLife }}
+        <div class="date-container">
+          <span
+            class="date"
+            :class="item.marketingCouponVO.showColorTime ? 'expiredate' : ''"
+          >
+            {{ item.marketingCouponVO.serviceLife }}
+          </span>
+          <span class="expiredate">剩余5次</span>
         </div>
+
         <!-- 右侧显示 end-->
       </div>
     </div>
@@ -56,7 +59,31 @@ export default {
       couponType: 0, // 优惠券类型 未使用 已使用 已失效
     }
   },
+  // computed: {
+  //   newItem(){
+  //     const newItem =JSON.parse(JSON.stringify(this.item))
+
+  //     if(newItem.marketingCouponVO&&newItem.marketingCouponVO.useType){
+
+  //     }
+  //     return this.item
+  //   },
+  // },
   methods: {
+    getuseTypeName(useType) {
+      let useTypeName = ''
+      switch (useType) {
+        case 1:
+          useTypeName = '全品类通用'
+          break
+        case 2:
+          useTypeName = '限定部分类别产品使用'
+          break
+        default:
+          useTypeName = '置顶产品使用'
+      }
+      return useTypeName
+    },
     // 进入详情
     goDetailPage(item) {
       if (item.useType === 1) {
@@ -75,15 +102,19 @@ export default {
 </script>
 
 <style lang="less" scoped>
+// 已过期的图标
 .lose {
   background-image: url('https://cdn.shupian.cn/sp-pt/wap/8a099vjhmbc0000.png');
 }
+// 已使用的图标
 .have_use_icon {
   background-image: url('https://cdn.shupian.cn/sp-pt/wap/29a165hg8w4k000.png');
 }
+// 已使用的背景
 .haveUse {
   background-image: url('https://cdn.shupian.cn/sp-pt/wap/2ozhssqe5py0000.png');
 }
+// 未使用的背景
 .notUse {
   background-image: url('https://cdn.shupian.cn/sp-pt/wap/g4kbai7wgrk0000.png');
 }
@@ -153,18 +184,7 @@ export default {
       -webkit-box-orient: vertical;
       word-break: break-all;
     }
-    .date {
-      font-size: 20px;
-      font-family: PingFang SC;
-      font-weight: 400;
-      color: #999999;
-    }
-    .expiredate {
-      font-size: 20px;
-      font-family: PingFang SC;
-      font-weight: 400;
-      color: #f1524e;
-    }
+
     .sign {
       position: absolute;
       width: 90px;
@@ -173,6 +193,23 @@ export default {
       background-size: 100% 100%;
       right: 0px;
       top: 0px;
+    }
+    .date-container {
+      display: flex;
+      font-size: 0;
+      .date {
+        flex: 1;
+        font-size: 20px;
+        font-family: PingFang SC;
+        font-weight: 400;
+        color: #999999;
+      }
+      .expiredate {
+        font-size: 20px;
+        font-family: PingFang SC;
+        font-weight: 400;
+        color: #f1524e;
+      }
     }
   }
 }
