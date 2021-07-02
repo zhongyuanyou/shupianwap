@@ -218,7 +218,7 @@ export default {
     async getAccountBankInfo() {
       const res = await this.$axios.post(walletApi.card_info, {
         name: this.searchName,
-        code: '',
+        code: this.bankCode,
         isOnlyBank: '',
         parentCode: '',
         limit: '50',
@@ -230,7 +230,12 @@ export default {
     blur() {
       this.getBankInfo()
     },
-    openPullPop() {
+    async openPullPop() {
+      if (!this.bankCode) {
+        this.$xToast.warning('请先输入银行卡号')
+        return false
+      }
+      await this.getAccountBankInfo()
       this.showPullPop = true
     },
     throttle(func, wait) {
