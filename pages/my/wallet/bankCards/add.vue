@@ -33,20 +33,20 @@
           v-model="bankName"
           name="银行名称"
           label="银行名称"
-          placeholder="请输入银行卡号，系统自动识别"
+          placeholder="输入银行卡号，系统自动识别"
           readonly="readonly"
-          :rules="[{ required: true, message: '请输入银行卡名称' }]"
+          :rules="[{ required: true, message: '输入正确的银行卡号可识别名称' }]"
         />
         <sp-field
           v-model="accountBank"
           name="开户行"
           label="开户行"
-          placeholder="请输入开户行，系统自动搜索"
+          placeholder="选择开户行，系统自动搜索"
           readonly="readonly"
           :rules="[
             {
               required: true,
-              message: '请输入开户行，系统自动搜索',
+              message: '输入开户行，系统自动搜索',
             },
           ]"
           @click="openPullPop"
@@ -112,21 +112,17 @@
         </div>
       </sp-popup>
     </div>
+    <!--S loding-->
+    <LoadingCenter v-show="loading" :title="loadingTitle" />
+    <!--E loding-->
   </div>
 </template>
 
 <script>
-import {
-  Form,
-  Field,
-  Button,
-  Popup,
-  Search,
-  Icon,
-  Toast,
-} from '@chipspc/vant-dgg'
+import { Form, Field, Button, Popup, Search, Icon } from '@chipspc/vant-dgg'
 import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   components: {
     Header,
@@ -136,6 +132,7 @@ export default {
     [Popup.name]: Popup,
     [Search.name]: Search,
     [Icon.name]: Icon,
+    LoadingCenter,
   },
   data() {
     return {
@@ -152,6 +149,9 @@ export default {
       list: [],
       userInfo: '',
       accountInfo: '',
+      openingBankCode: '',
+      loading: false,
+      loadingTitle: '绑定中,请稍后...',
     }
   },
   mounted() {
@@ -162,6 +162,7 @@ export default {
   },
   methods: {
     async onSubmit() {
+      this.loading = true
       const res = await this.$axios.post(walletApi.add_bank_card, {
         relationId: this.userInfo.id,
         ownershipName: this.accountName,
@@ -171,32 +172,36 @@ export default {
         bankPhone: this.bankPhone,
         bankIconUrl: this.bankIconUrl,
         cardType: '借记卡',
-        openingBankName: this.bankName,
-        openingBankCode: this.bankCode,
+        openingBankName: this.accountBank,
+        openingBankCode: this.openingBankCode,
         sysCode: 'crisps-app',
         operateId: this.userInfo.id,
         operateName: this.userInfo.fullName,
       })
+      this.loading = false
       if (res.code === 200) {
+        this.$xToast.show({ message: '绑定成功' })
         this.$router.push('/my/wallet/bankCards/list')
       } else {
-        this.$xToast.error(res.data.error)
+        this.$xToast.error(res.data.error || '绑卡失败,请您确认信息是否有误')
       }
     },
     async getBankInfo() {
-      const _this = this
+      this.loadingTitle = '识别中...'
+      this.loading = true
       const res = await this.$axios.post(walletApi.card_no, {
         cardNumber: this.cardNum,
       })
+      this.loading = false
       if (res.code === 200) {
         this.bankCode = res.data.code
         this.bankName = res.data.name
         this.bankIconUrl = res.data.icon
       } else {
-        console.log(res, 1111111)
-        Toast('银行卡号校验失败')
-        // _this.$xToast.warn(res.data.error)
-        // this.$xToast.warn('res.data.error')
+        this.bankCode = ''
+        this.bankName = ''
+        this.bankIconUrl = ''
+        this.$xToast.error('请输入有效的银行卡号')
       }
     },
     // 账户名称
@@ -207,13 +212,13 @@ export default {
         },
       })
       if (res.code === 200) {
-        this.accountName = res.data.cardName
+        this.accountName = res.data.createrName
       }
     },
     async getAccountBankInfo() {
       const res = await this.$axios.post(walletApi.card_info, {
         name: this.searchName,
-        code: '',
+        code: this.bankCode,
         isOnlyBank: '',
         parentCode: '',
         limit: '50',
@@ -225,7 +230,12 @@ export default {
     blur() {
       this.getBankInfo()
     },
-    openPullPop() {
+    async openPullPop() {
+      if (!this.bankCode) {
+        this.$xToast.warning('请先输入银行卡号')
+        return false
+      }
+      await this.getAccountBankInfo()
       this.showPullPop = true
     },
     throttle(func, wait) {
@@ -249,6 +259,7 @@ export default {
     selectItem(item) {
       this.accountBank = item.name
       this.activeIndex = item.id
+      this.openingBankCode = item.bankCode
       this.showPullPop = false
     },
   },
@@ -356,7 +367,7 @@ export default {
     text-align: right;
   }
   ::v-deep.sp-field__label {
-    width: 7em;
+    width: 8.4em;
     span {
       position: relative;
       &:after {

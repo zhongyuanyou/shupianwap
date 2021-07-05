@@ -21,11 +21,22 @@
     <div class="submit">
       <p>
         <sp-checkbox v-model="checked"></sp-checkbox
-        ><span class="blue" @click="afterSaleProtocol('protocol100039')"
-          >同意<a>《服务协议》</a> 和<a>《隐私政策》</a></span
+        ><span
+          >同意<a class="blue" @click="afterSaleProtocol('protocol100122')"
+            >《服务协议》</a
+          >
+          和<a class="blue" @click="afterSaleProtocol('protocol100121')"
+            >《隐私政策》</a
+          ></span
         >
       </p>
-      <button @click="submit">同意协议并继续</button>
+      <button
+        :style="{ background: !checked ? '#ddd' : '#4974f5' }"
+        :disabled="!checked"
+        @click="submit"
+      >
+        同意协议并继续
+      </button>
     </div>
   </div>
 </template>
@@ -62,6 +73,9 @@ export default {
       categoryCode: this.$route.query.categoryCode,
       redirect: this.$route.query.redirect || '', // 登录后需要跳转的地址
       checked: false,
+      times: 10,
+      timer: null,
+      isDisabledBtn: true,
     }
   },
   computed: {
@@ -75,6 +89,7 @@ export default {
       this.getProtocol(this.categoryCode)
     }
   },
+  mounted() {},
   methods: {
     onClickLeft() {
       if (this.redirect) {
@@ -91,7 +106,7 @@ export default {
 
     async getProtocol(categoryCode) {
       if (!categoryCode) {
-        this.$xToast.warn('请传入需要获取的协议!')
+        this.$xToast.warning('请传入需要获取的协议!')
         return
       }
       const params = {
@@ -121,7 +136,16 @@ export default {
         })
       }
     },
+    afterSaleProtocol(code) {
+      this.$router.push({
+        path: '/login/protocol',
+        query: {
+          categoryCode: code,
+        },
+      })
+    },
   },
+
   head() {
     return {
       title:

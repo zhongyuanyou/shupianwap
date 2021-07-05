@@ -108,7 +108,7 @@
         </span>
       </div>
 
-      <div class="card_footer">
+      <div v-if="orderData.userInvoiceStatus" class="card_footer">
         <sp-button
           v-if="orderData.userInvoiceStatus == 'INVOICE_STATUS_WAITE'"
           plain

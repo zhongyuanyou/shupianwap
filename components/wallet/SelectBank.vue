@@ -74,17 +74,20 @@ export default {
     return {
       showBankPop: false,
       cardList: [],
+      accountInfo: '',
     }
   },
-  computed: {
-    userInfo() {
-      return JSON.parse(localStorage.getItem('info'))
-    },
-    accountInfo() {
-      return JSON.parse(localStorage.getItem('accountInfo'))
-    },
-  },
-  created() {
+  // computed: {
+  //   userInfo() {
+  //     return JSON.parse(localStorage.getItem('info'))
+  //   },
+  //   accountInfo() {
+  //     return JSON.parse(localStorage.getItem('accountInfo'))
+  //   },
+  // },
+  mounted() {
+    // this.userInfo = JSON.parse(localStorage.getItem('info'))
+    this.accountInfo = JSON.parse(localStorage.getItem('accountInfo'))
     this.getCardList()
   },
   methods: {

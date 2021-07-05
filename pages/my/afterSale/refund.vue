@@ -44,9 +44,9 @@
         <sp-uploader
           v-model="fileList"
           :max-count="9"
-          :max-size="20 * 1024 * 1024"
           :after-read="afterRead"
           :before-delete="deleteImg"
+          multiple
         >
           <template>
             <div class="upload-add">
@@ -74,7 +74,7 @@
       <p>
         <sp-checkbox v-model="checked"></sp-checkbox>我已阅读过并知晓<span
           class="blue"
-          @click="afterSaleProtocol('protocol100039')"
+          @click="afterSaleProtocol('shupianaftersale')"
           >《薯片平台用户售后协议》</span
         >
       </p>
@@ -120,7 +120,7 @@ export default {
       pullDataList: [],
       checked: false,
       afterSaleType: [
-        { name: '我要退款', code: 'AFTER_SALE_CENTER_REFUND' },
+        { name: '我要退款', code: 'AFTER_SALE_TYPE_1' },
         // { name: '我要换业务', code: 'AFTER_SALE_CENTER_BUSINESS_CHANGE' },
       ],
       applyReason: [
@@ -138,7 +138,7 @@ export default {
         { name: '业务办理出错', code: 'AFTER_SALE_REASON_12' },
       ],
       afterTypeText: '我要退款',
-      afterTypeCode: 'AFTER_SALE_CENTER_REFUND',
+      afterTypeCode: 'AFTER_SALE_TYPE_1',
       applyReasonText: '',
       applyReasonCode: '',
       activeTypeIndex: -1,
@@ -146,33 +146,37 @@ export default {
       title: '',
       currentIndex: '',
       activeIndex: null,
-      pictrueDetail: '',
-      userInfo: '',
+      pictrueDetail: [],
+      // userInfo: '',
+      fileId: '',
+      singleImageUpload: [],
     }
   },
-  // computed: {
-  //   userInfo() {
-  //     return JSON.parse(localStorage.getItem('info'))
-  //   },
-  // },
+  computed: {
+    userInfo() {
+      return JSON.parse(localStorage.getItem('info'))
+    },
+  },
   mounted() {
-    this.userInfo = JSON.parse(localStorage.getItem('info'))
+    this.fileId = `${this.userInfo.id}:crisps-app:aftersale:${
+      this.$route.query.orderId
+    }:${String(Math.random()).substring(2, 8)}`
   },
   methods: {
     async submit() {
-      if (this.afterTypeText === '') {
+      if (!this.afterTypeText) {
         this.$xToast.show({
           message: '请选择售后类型',
           duration: 1000,
         })
         return false
-      } else if (this.applyReasonText === '') {
+      } else if (!this.applyReasonText) {
         this.$xToast.show({
           message: '请选择申请原因',
           duration: 1000,
         })
         return false
-      } else if (this.descInfo === '') {
+      } else if (!this.descInfo) {
         this.$xToast.show({
           message: '请描述您遇到的问题～',
           duration: 1000,
@@ -187,41 +191,48 @@ export default {
       }
       this.loading = true
       const res = await this.$axios.post(afterSaleApi.refundApply, {
-        orderId: this.$route.query.id,
+        orderId: this.$route.query.orderId,
         afterSaleExpType: this.afterTypeCode,
         afterSaleReasonNo: this.applyReasonCode,
         afterSaleProblemDetail: this.descInfo,
-        pictrueDetail: this.pictrueDetail,
+        pictrueDetail: this.fileId,
         createrId: this.userInfo.id,
         createrName: this.userInfo.fullName,
         updaterId: this.userInfo.id,
         updaterName: this.userInfo.fullName,
         createrNo: this.userInfo.no,
         updaterNo: this.userInfo.no,
-        afterSaleAgreementIds: 'protocol100039',
+        afterSaleAgreementIds: 'shupianaftersale',
       })
       this.loading = false
       if (res.code === 200) {
-        this.$xToast.show({
-          message: '申请成功',
-        })
-        this.$router.push(`/my/afterSale/apply?id=${res.data.afterSaleId}`)
+        this.$xToast.success('售后申请成功')
+        setTimeout(() => {
+          this.$router.push(`/my/afterSale/apply?id=${res.data.afterSaleId}`)
+        }, 1500)
       } else {
         this.$xToast.error(res.data.error)
       }
     },
-    async afterRead(fileObj) {
-      // this.$route.query.id = '8083611193233440768'
-      this.pictrueDetail = `${this.userInfo.id}:crisps-app:aftersale:${
-        this.$route.query.id
-      }:${String(new Date().valueOf()).substring(7, 13)}`
+    async uploadImg(item) {
       const res = await uploadAndCallBack({
-        file: fileObj.file,
+        file: item.file,
         sys_code: 'crisps-app',
-        fileuid: this.pictrueDetail,
+        fileuid: this.fileId,
       })
       if (res.code === 200) {
         console.log('上传成功')
+      }
+    },
+    afterRead(fileObj) {
+      // 多张上传
+      if (fileObj.length) {
+        fileObj.forEach((item) => {
+          this.uploadImg(item)
+        })
+      } else {
+        // 单张上传
+        this.uploadImg(fileObj)
       }
     },
     deleteImg() {

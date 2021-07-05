@@ -3,14 +3,14 @@
     <Header title="退款详情" />
     <div class="status-bar">
       <div class="status-bar_box">
-        <div class="icon-box">
+        <!-- <div class="icon-box">
           <sp-icon
             class-prefix="spiconfont"
             size="0.46rem"
             color="#00B365"
             name="commodity_ic_ttime"
           ></sp-icon>
-        </div>
+        </div> -->
         <div class="desc">
           <h3>{{ refundDetailData.reimburseStatusCodeName }}</h3>
           <p>{{ refundDetailData.reimburseCompleteTime }}</p>
@@ -44,13 +44,13 @@
 </template>
 
 <script>
-import { Icon, Step, Steps } from '@chipspc/vant-dgg'
+import { Step, Steps } from '@chipspc/vant-dgg'
 import { afterSaleApi } from '@/api'
 import Header from '@/components/common/head/header'
 export default {
   components: {
     Header,
-    SpIcon: Icon,
+    // SpIcon: Icon,
     [Step.name]: Step,
     [Steps.name]: Steps,
   },

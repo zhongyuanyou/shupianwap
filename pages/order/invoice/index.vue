@@ -1,19 +1,27 @@
 <template>
   <div class="invoice">
-    <sp-sticky>
-      <Header class="my-header" title="发票中心"></Header>
-      <client-only>
-        <sp-work-tabs v-model="tabActive" @click="onClickWorkTab">
-          <sp-work-tab title="全部发票">
-            <AllInvoiceClassify @select="AllInvoiceSelect" />
-          </sp-work-tab>
-          <sp-work-tab title="开票历史">
-            <HistoryInvoiceClassify @select="HistoryInvoiceSelect" />
-          </sp-work-tab>
-          <sp-work-tab title="抬头管理"></sp-work-tab>
-        </sp-work-tabs>
-      </client-only>
-    </sp-sticky>
+    <div
+      class="invoice-header"
+      :style="{ height: isInApp ? '200px' : '150px' }"
+    >
+      <div
+        class="invoice-header-warpper"
+        :style="{ height: isInApp ? '200px' : '150px' }"
+      >
+        <Header class="my-header" title="发票中心"></Header>
+        <client-only>
+          <sp-work-tabs v-model="tabActive" @click="onClickWorkTab">
+            <sp-work-tab title="全部发票">
+              <AllInvoiceClassify @select="AllInvoiceSelect" />
+            </sp-work-tab>
+            <sp-work-tab title="开票历史">
+              <HistoryInvoiceClassify @select="HistoryInvoiceSelect" />
+            </sp-work-tab>
+            <sp-work-tab title="抬头管理"></sp-work-tab>
+          </sp-work-tabs>
+        </client-only>
+      </div>
+    </div>
     <sp-list
       v-if="list.length > 0"
       v-model="loading"
@@ -125,6 +133,11 @@ export default {
         endCreateTime: '',
       },
     }
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp, // 是否app中
+    }),
   },
   mounted() {
     this.init()
@@ -253,7 +266,7 @@ export default {
     getInvoiceHeaderList() {
       try {
         invoiceApi
-          .invoice_header_list({ axios: this.$axios }, {})
+          .invoice_header_list({ axios: this.$axios })
           .then((res) => {
             // if (res.totalCount <= this.page * this.limit) {
             this.finished = true
@@ -288,7 +301,17 @@ export default {
   min-height: 100%;
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
-
+  margin-bottom: 200px;
+  &-header {
+    &-warpper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #ffffff;
+      z-index: 999;
+    }
+  }
   .paddingBottom150 {
     padding-bottom: 150px;
   }

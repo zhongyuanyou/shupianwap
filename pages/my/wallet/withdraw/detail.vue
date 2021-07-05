@@ -3,33 +3,37 @@
     <Header title="余额提现详情" />
     <div class="detail-info">
       <div class="count">
-        <span>提现金额</span>
-        <strong>-￥{{ withdrawDetails.amount }}</strong>
+        <span>{{ withdrawDetails.orderTypeName }}金额</span>
+        <strong
+          >{{
+            withdrawDetails.orderType === 'BANK_ORDER_TYPE_3' ? '-' : '+'
+          }}￥{{ withdrawDetails.amount }}</strong
+        >
       </div>
       <div class="field-list">
         <div class="row">
           <div class="title">业务类型</div>
-          <div class="res">{{ withdrawDetails.orderTypeName || '-' }}</div>
+          <div class="res">{{ withdrawDetails.orderTypeName }}</div>
         </div>
         <div class="row">
           <div class="title">时间</div>
-          <div class="res">{{ withdrawDetails.createTime || '-' }}</div>
+          <div class="res">{{ withdrawDetails.createTime }}</div>
         </div>
-        <div class="row">
+        <div v-if="withdrawDetails.cardNumber" class="row">
           <div class="title">银行卡号</div>
-          <div class="res">{{ withdrawDetails.cardNumber || '-' }}</div>
+          <div class="res">{{ withdrawDetails.cardNumber }}</div>
         </div>
-        <div class="row">
+        <div v-if="withdrawDetails.accountName" class="row">
           <div class="title">账户名称</div>
-          <div class="res">{{ withdrawDetails.accountName || '-' }}</div>
+          <div class="res">{{ withdrawDetails.accountName }}</div>
         </div>
-        <div class="row">
+        <div v-if="withdrawDetails.bankName" class="row">
           <div class="title">银行</div>
-          <div class="res">{{ withdrawDetails.bankName || '-' }}</div>
+          <div class="res">{{ withdrawDetails.bankName }}</div>
         </div>
         <div class="row">
           <div class="title">流水号</div>
-          <div class="res">{{ withdrawDetails.billNo || '-' }}</div>
+          <div class="res">{{ withdrawDetails.billNo }}</div>
         </div>
         <!-- <div class="row">
           <div class="title">备注</div>
@@ -40,7 +44,7 @@
           <div class="res">
             {{ withdrawDetails.statusName }}
             <span v-if="withdrawDetails.successTime"
-              >({{ withdrawDetails.successTime || '-' }})</span
+              >({{ withdrawDetails.successTime }})</span
             >
           </div>
         </div>

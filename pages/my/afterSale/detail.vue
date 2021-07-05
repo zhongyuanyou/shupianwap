@@ -273,10 +273,14 @@
                 <p>
                   {{ afterSaleDetail.afterSaleProblemDetail }}
                 </p>
-                <!--  <ul>
-                  <li><img /></li>
-                  <li><img /></li>
-                </ul> -->
+                <ul>
+                  <li
+                    v-for="(item, index) in afterSaleDetail.fileImages"
+                    :key="index"
+                  >
+                    <img :src="item.filepath" />
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -288,8 +292,8 @@
       <button @click="concatKefuBtn">联系客服</button>
       <button
         v-if="
-          afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_5' ||
-          afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_6' ||
+          (afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_5' ||
+            afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_6') &&
           afterSaleDetail.afterPlatInvolvedCount <
             afterSaleDetail.platInvolvedCount
         "
@@ -299,6 +303,7 @@
       </button>
       <button
         v-if="
+          afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_1' ||
           afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_2' ||
           afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_3'
         "
@@ -439,18 +444,19 @@ export default {
       ],
       userDoTypeCode: '',
       loading: false,
-      // userInfo: '',
+      userInfo: '',
     }
   },
-  computed: {
-    userInfo() {
-      return JSON.parse(localStorage.getItem('info'))
-    },
-  },
+  // computed: {
+  //   userInfo() {
+  //     return JSON.parse(localStorage.getItem('info'))
+  //   },
+  // },
   // created() {
   //   this.getAfterSaleDetails()
   // },
   mounted() {
+    this.userInfo = JSON.parse(localStorage.getItem('info'))
     this.getAfterSaleDetails()
   },
   // mounted() {
@@ -516,17 +522,21 @@ export default {
             this.statusBar.title = '售后关闭'
             break
         }
+      } else {
+        this.$xToast.error(res.data.error)
       }
     },
     async updateAfterSaleStatus(btnIndex) {
+      this.loading = true
       const res = await this.$axios.post(afterSaleApi.operation, {
         updaterId: this.userInfo.id,
         updaterName: this.userInfo.fullName,
         updaterCode: this.userInfo.no,
         afterSaleId: this.afterSaleDetail.id,
         userDoType: this.userDoTypeCode,
-        afterSaleAgreementIds: '1111111111111',
+        afterSaleAgreementIds: 'protocol100039',
       })
+      this.loading = false
       if (res.code === 200) {
         switch (btnIndex) {
           case 0:
@@ -700,7 +710,6 @@ export default {
                 img {
                   width: 100%;
                   height: 100%;
-                  object-fit: cover;
                 }
               }
               span {
@@ -875,7 +884,6 @@ export default {
             .copy {
               width: 72px;
               height: 32px;
-              background: #f5f5f5;
               border-radius: 16px;
               margin-left: 16px;
               font-size: 22px;
@@ -896,11 +904,16 @@ export default {
                 li {
                   width: 140px;
                   height: 140px;
-                  background: #f5f5f5;
+                  background: #fff;
                   border-radius: 4px;
                   overflow: hidden;
                   margin-right: 16px;
                   margin-bottom: 16px;
+                  img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                  }
                 }
               }
             }

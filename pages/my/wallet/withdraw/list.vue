@@ -14,7 +14,7 @@
           @click="$router.push(`/my/wallet/withdraw/detail?id=${item.billId}`)"
         >
           <div class="left">
-            <h3>提现</h3>
+            <h3>{{ item.orderTypeName }}</h3>
             <p>{{ item.createTime }}</p>
           </div>
           <div class="right">

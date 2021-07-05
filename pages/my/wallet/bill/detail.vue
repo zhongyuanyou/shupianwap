@@ -4,7 +4,11 @@
     <div class="detail-info">
       <div class="count">
         <span>出/入账数量</span>
-        <strong>-￥{{ billDetails.amount }}</strong>
+        <strong
+          >{{ billDetails.orderType === 'BANK_ORDER_TYPE_3' ? '-' : '+' }}￥{{
+            billDetails.amount
+          }}</strong
+        >
       </div>
       <div class="field-list">
         <div class="row">
@@ -19,7 +23,7 @@
           <div class="title">流水号</div>
           <div class="res">{{ billDetails.billNo }}</div>
         </div>
-        <div class="row">
+        <div v-if="billDetails.orderTypeName === '提现'" class="row">
           <div class="title">{{ billDetails.orderTypeName }}明细</div>
           <div class="cash" @click="jumpPage">
             查看{{ billDetails.orderTypeName }}详情
@@ -29,19 +33,25 @@
         </div>
       </div>
     </div>
+    <!--S loding-->
+    <LoadingCenter v-show="loading" />
+    <!--E loding-->
   </div>
 </template>
 
 <script>
 import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   components: {
     Header,
+    LoadingCenter,
   },
   data() {
     return {
       billDetails: '',
+      loading: false,
     }
   },
   created() {
@@ -49,25 +59,28 @@ export default {
   },
   methods: {
     async getBillDetail() {
+      this.loading = true
       const res = await this.$axios.post(walletApi.bill_details, {
         billId: this.$route.query.id,
       })
+      this.loading = false
       if (res.code === 200) {
         this.billDetails = res.data
       }
     },
     jumpPage() {
-      switch (this.billDetails.orderTypeName) {
-        case '提现':
+      debugger
+      switch (this.billDetails.orderType) {
+        case 'BANK_ORDER_TYPE_3':
           this.$router.push(
             `/my/wallet/withdraw/detail?id=${this.billDetails.billId}`
           )
           break
-        case '佣金':
-          break
-        case '退款':
-          this.$router.push(`/order/detail?id=${this.billDetails.billId}`)
-          break
+        // case '佣金':
+        //   break
+        // case 'BANK_ORDER_TYPE_14':
+        //   this.$router.push(`/order/detail?id=${this.billDetails.billId}`)
+        //   break
       }
     },
   },

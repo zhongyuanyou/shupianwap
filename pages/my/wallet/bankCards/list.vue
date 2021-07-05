@@ -65,16 +65,21 @@
         添加收款账户
       </button>
     </div>
+    <!--S loding-->
+    <LoadingCenter v-show="loading" />
+    <!--E loding-->
   </div>
 </template>
 
 <script>
 import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
 export default {
   components: {
     Header,
+    LoadingCenter,
   },
   data() {
     return {
@@ -115,7 +120,8 @@ export default {
       cardList: [],
       showNoDataImg: false,
       accountInfo: '',
-      customJump: false,
+      customJump: true,
+      loading: false,
     }
   },
   // computed: {
@@ -133,12 +139,13 @@ export default {
       this.$router.push('/my/wallet')
     },
     async bankCardsList() {
+      this.loading = true
       const res = await this.$axios.get(walletApi.cardList, {
         params: {
           accountId: this.accountInfo.id,
         },
       })
-      console.log(res)
+      this.loading = false
       if (res.code === 200) {
         this.cardList = res.data
         if (this.cardList.length === 0) {

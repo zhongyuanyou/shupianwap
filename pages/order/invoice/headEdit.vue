@@ -205,7 +205,7 @@ export default {
     getInvoiceHeaderList(id) {
       try {
         invoiceApi
-          .invoice_header_list({ axios: this.$axios }, {})
+          .invoice_header_list({ axios: this.$axios })
           .then((res) => {
             this.finished = true
 
