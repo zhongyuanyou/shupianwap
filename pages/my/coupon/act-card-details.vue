@@ -75,7 +75,7 @@ import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import ActCard from '@/components/my/coupon/ActCard.vue'
 import FooterNav from '~/components/my/coupon/FooterNav.vue'
 
-import { coupon } from '@/api/index'
+import { actCard } from '@/api/index'
 
 export default {
   layout: 'keepAlive',
@@ -146,7 +146,7 @@ export default {
         page: this.page,
         id: this.$route.query.id,
       }
-      coupon
+      actCard
         .act_card_list({ axios: this.$axios }, params)
         .then((res) => {
           this.loading = false
