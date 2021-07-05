@@ -245,12 +245,12 @@ export default {
     this.isShare = this.$route.query.isShare
     this.shareId = this.$route.query.shareId
     if (this.shareId) {
-      this.androdLink = `cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":1,"isLogin":"0","secondLink":"/known/detail/article","id":${articleDetails.id}}}`
+      this.androdLink = `cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":1,"isLogin":"0","secondLink":"/known/detail/article","id":${this.articleDetails.id}}}`
     }
     if (this.articleDetails.userId) {
       this.getPlanerInfo(this.articleDetails.userId)
     }
-
+    console.log('androdLink', this.androdLink)
     window.addEventListener('scroll', this.handleScroll)
   },
   destroyed() {
