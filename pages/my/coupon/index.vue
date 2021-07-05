@@ -101,9 +101,10 @@ import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import Card from '@/components/my/coupon/Card.vue'
+
 import FooterNav from '~/components/my/coupon/FooterNav.vue'
 
-import { coupon } from '@/api/index'
+import { actCard, coupon } from '@/api/index'
 
 export default {
   layout: 'keepAlive',
@@ -250,6 +251,19 @@ export default {
 
     getOrderList() {
       this.loading = false
+      const params = {
+        condition: 1, // 排序 1 时间倒叙 2时间正序 默认1
+        limit: 10,
+        page: this.page,
+      }
+      actCard
+        .user_act_card_list({ axios: this.$axios }, params)
+        .then((result) => {
+          this.loading = false
+        })
+        .catch((e) => {
+          this.loading = false
+        })
     },
   },
 }

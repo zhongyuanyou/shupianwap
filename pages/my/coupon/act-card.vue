@@ -139,8 +139,9 @@ export default {
     getInitData() {
       this.finished = false
       const params = {
-        userId: this.$store.state.user.userId,
-        limit: '100',
+        // userId: this.$store.state.user.userId,
+        // type：1,// 活动卡优惠类型 1：折扣 2：满减
+        limit: 15,
         page: this.page,
       }
       actCard
