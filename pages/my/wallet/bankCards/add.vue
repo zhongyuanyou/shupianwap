@@ -219,8 +219,7 @@ export default {
       const res = await this.$axios.post(walletApi.card_info, {
         name: this.searchName,
         code: this.bankCode,
-        isOnlyBank: '',
-        parentCode: '',
+        isOnlyBank: '1',
         limit: '50',
       })
       if (res.code === 200) {
