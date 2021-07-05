@@ -422,17 +422,28 @@ export default {
           console.log('res', res)
           this.loading = false
           this.$xToast.success('请求成功')
-          this.back()
+          setTimeout(() => {
+            this.back()
+          }, 1000)
         })
         .catch((error) => {
           console.error(error)
 
           this.loading = false
+          // setTimeout(() => {
+          //   this.back()
+          // }, 1000)
           this.$xToast.error(error.message || '请求失败，请重试')
         })
     },
     back() {
-      this.$router.back(-1)
+      this.$router.replace({
+        path: '/order/invoice',
+        query: {
+          tabActive: 1,
+        },
+      })
+      // this.$router.back(-1)
     },
   },
 }
