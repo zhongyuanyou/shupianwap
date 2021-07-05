@@ -261,18 +261,20 @@ export default {
   background: #f5f5f5;
   padding: 0 0 170px;
   min-height: 100vh;
+  ::v-deep .sp-cell {
+    padding: 40px 0px 40px 32px;
+
+    .sp-field__label {
+      flex: none;
+      width: 4.5em;
+    }
+  }
+
   .card {
     background: #fff;
     margin-bottom: 20px;
     padding: 0 40px;
 
-    ::v-deep .sp-cell {
-      padding: 40px 0px 40px 32px;
-
-      .sp-field__label {
-        flex: none;
-      }
-    }
     .options {
       // padding-bottom: 20px;
       .btn {
