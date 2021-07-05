@@ -179,10 +179,6 @@ export default {
       return true
     },
     back() {
-      if (this.isInApp) {
-        this.$appFn.dggWebGoBack((res) => {})
-        return
-      }
       this.$router.back()
     },
     setFormData(info) {
@@ -301,6 +297,7 @@ export default {
           console.log('res', res)
           this.loading = false
           this.$xToast.success((res && res.message) || '成功')
+          this.back()
         })
         .catch((error) => {
           console.error(error)
