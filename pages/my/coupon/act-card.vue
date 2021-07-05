@@ -1,7 +1,7 @@
 <template>
   <div class="invoice" :style="{ paddingBottom: FooterNavHeight + 'px' }">
     <sp-sticky>
-      <Header class="my-header" title="我的优惠券"></Header>
+      <Header class="my-header" title="活动卡专区"></Header>
     </sp-sticky>
     <div v-if="banner" class="banner">
       <span class="card_des">活动卡介绍</span>
