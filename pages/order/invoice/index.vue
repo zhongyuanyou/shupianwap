@@ -140,6 +140,10 @@ export default {
     }),
   },
   mounted() {
+    this.tabActive = parseInt(this.$route.query.tabActive || 0)
+    this.tabActiveIndex = this.tabActive
+
+    console.log(1)
     this.init()
     this.onLoad()
   },
@@ -173,6 +177,11 @@ export default {
       }
 
       this.tabActiveIndex = this.tabActive
+      this.$router.replace({
+        query: {
+          tabActive: this.tabActive,
+        },
+      })
       this.init()
       this.onLoad()
     },
