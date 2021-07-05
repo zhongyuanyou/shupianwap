@@ -1,13 +1,8 @@
 <template>
   <div class="invoice">
-    <div
-      class="invoice-header"
-      :style="{ height: isInApp ? '200px' : '150px' }"
-    >
-      <div
-        class="invoice-header-warpper"
-        :style="{ height: isInApp ? '200px' : '150px' }"
-      >
+    <div class="invoice-header" :style="{ height: HeaderHeight + 'px' }">
+      <div class="invoice-header-warpper">
+        <!--    :style="{ height: isInApp ? '200px' : '150px' }" -->
         <Header class="my-header" title="发票中心"></Header>
         <client-only>
           <sp-work-tabs v-model="tabActive" @click="onClickWorkTab">
@@ -138,8 +133,22 @@ export default {
     ...mapState({
       isInApp: (state) => state.app.isInApp, // 是否app中
     }),
+    HeaderHeight() {
+      let height = 200
+      if (!this.isInApp) {
+        height -= 50
+      }
+      if (this.tabActive === 2) {
+        height -= 50
+      }
+      return height
+    },
   },
   mounted() {
+    this.tabActive = parseInt(this.$route.query.tabActive || 0)
+    this.tabActiveIndex = this.tabActive
+
+    console.log(1)
     this.init()
     this.onLoad()
   },
@@ -173,6 +182,11 @@ export default {
       }
 
       this.tabActiveIndex = this.tabActive
+      this.$router.replace({
+        query: {
+          tabActive: this.tabActive,
+        },
+      })
       this.init()
       this.onLoad()
     },
