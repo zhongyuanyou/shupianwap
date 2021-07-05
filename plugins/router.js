@@ -161,6 +161,7 @@ export default ({ app, store }) => {
             userId,
             userType,
             deviceId,
+            operUserType: userType,
           })
           store.commit('im/SET_IM_SDK', initImSdk)
         }
