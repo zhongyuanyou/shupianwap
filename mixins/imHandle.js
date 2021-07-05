@@ -56,7 +56,7 @@ export default {
         const token = this.$cookies.get('token', { path: '/' })
         const userId = this.$cookies.get('userId', { path: '/' })
         const userType = this.$cookies.get('userType', { path: '/' })
-        window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${groupId}`
+        window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${groupId}`
       }
     },
     // 判断是否登录
@@ -145,7 +145,7 @@ export default {
               this.userType ||
               this.$cookies.get('userType', { path: '/' }) ||
               'VISITOR'
-            window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}`
+            window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}&operUserType=${userType}`
           } else if (res.code === 5223) {
             this.clearUserInfoAndJumpLoging()
           } else {
@@ -262,9 +262,9 @@ export default {
                   const userId = this.userType ? this.userId : myInfo.imUserId
                   const userType = this.userType || 'VISITOR'
                   if (this.isApplets) {
-                    window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}&requireCode=${sessionParams.requireCode}&requireName=${sessionParams.requireName}&isApplets=true`
+                    window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}&requireCode=${sessionParams.requireCode}&requireName=${sessionParams.requireName}&isApplets=true`
                   } else {
-                    window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}&requireCode=${sessionParams.requireCode}&requireName=${sessionParams.requireName}`
+                    window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}&requireCode=${sessionParams.requireCode}&requireName=${sessionParams.requireName}`
                   }
                 }, 2000)
                 // window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
@@ -312,9 +312,9 @@ export default {
             const userId = this.userType ? this.userId : myInfo.imUserId
             const userType = this.userType || 'VISITOR'
             if (this.isApplets) {
-              window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}&isApplets=true`
+              window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}&isApplets=true`
             } else {
-              window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}`
+              window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}`
             }
           } else if (res.code === 5223) {
             console.log('发送消息', res)

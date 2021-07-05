@@ -178,10 +178,10 @@ export default {
         mainInfoRelationId: this.userInfo.id,
         mainPhone: this.newUserInfo.mainAccount,
         payPassword: this.confirmPassword,
-        sysCode: 'chips-app',
+        sysCode: 'spc-wap',
         operateId: this.userInfo.id,
         operateName: this.userInfo.fullName,
-        mainType: '1',
+        mainType: '2',
         accType: 'BANK_ACCOUNT_TYPE_2',
         mainInfoName: this.userInfo.fullName,
         certificateInfo: {

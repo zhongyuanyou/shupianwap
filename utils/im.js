@@ -30,6 +30,7 @@ export function imInit(data = {}) {
     token: data.token,
     userId: data.userId,
     userTypeFlag: data.userType,
+    operUserType: data.operUserType,
     sysCode: config.imsysCode,
     secret: config.imsecret,
     appKey: config.imappKey,
