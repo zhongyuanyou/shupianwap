@@ -292,8 +292,9 @@
       <button @click="concatKefuBtn">联系客服</button>
       <button
         v-if="
-          (afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_5' ||
-            afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_6') &&
+          (afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_5' ||
+            afterSaleDetail.afterSaleSubStatusNo ===
+              'AFTERSALE_STATUS_TAG_6') &&
           afterSaleDetail.afterPlatInvolvedCount <
             afterSaleDetail.platInvolvedCount
         "
