@@ -239,15 +239,14 @@ export default {
   created() {},
 
   mounted() {
-    console.log('this.articleDetails', this.articleDetails)
-    console.log('goodsList', this.articleDetails.goodsList)
-    console.log('relatedArticles', this.articleDetails.relatedArticles)
-
     if (this.$route.query.status === 'release') {
       this.releaseFlag = true
     }
     this.isShare = this.$route.query.isShare
     this.shareId = this.$route.query.shareId
+    if (this.shareId) {
+      this.androdLink = `cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":1,"isLogin":"0","secondLink":"/known/detail/article","id":${articleDetails.id}}}`
+    }
     if (this.articleDetails.userId) {
       this.getPlanerInfo(this.articleDetails.userId)
     }
