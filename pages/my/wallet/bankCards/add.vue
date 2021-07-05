@@ -162,6 +162,7 @@ export default {
   },
   methods: {
     async onSubmit() {
+      this.loadingTitle = '绑定中,请稍后...'
       this.loading = true
       const res = await this.$axios.post(walletApi.add_bank_card, {
         relationId: this.userInfo.id,
@@ -183,7 +184,7 @@ export default {
         this.$xToast.show({ message: '绑定成功' })
         this.$router.push('/my/wallet/bankCards/list')
       } else {
-        this.$xToast.error(res.data.error || '绑卡失败,请您确认信息是否有误')
+        this.$xToast.error(res.data.error)
       }
     },
     async getBankInfo() {
