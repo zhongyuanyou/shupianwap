@@ -10,7 +10,7 @@
         <div v-if="item.fullPrice" class="can_use">
           满{{ item.fullPrice }}元可用
         </div>
-        <div v-if="item.stock" class="coupon_progress">
+        <div v-if="item.stock && showProgress" class="coupon_progress">
           <sp-progress
             class="sp-progress"
             :percentage="50"
@@ -57,8 +57,8 @@
               </span>
             </div>
           </div>
-          <div class="item-rt-content-right">
-            <button>xxxx元抢</button>
+          <div v-if="showBuybutton" class="item-rt-content-right">
+            <button @click="buy">xxxx元抢</button>
           </div>
         </div>
 
@@ -81,7 +81,15 @@ export default {
         return {}
       },
     },
-    // 优惠券类型 未使用 已使用 已失效
+    showProgress: {
+      type: Boolean,
+      default: true,
+    },
+    showBuybutton: {
+      type: Boolean,
+      default: true,
+    },
+    // 优惠券类型 0未使用 1已使用 2已失效
     couponType: {
       type: Number,
       default: 0,
@@ -112,18 +120,8 @@ export default {
       }
       return useTypeName
     },
-    // 进入详情
-    goDetailPage(item) {
-      if (item.useType === 1) {
-        // 全服务品类列表
-        // this.$router.push({ path: '/' })
-      } else if (item.useType === 2) {
-        // 分类列表
-        // this.$router.push({ path: '/' })
-      } else {
-        // 商品列表
-        // this.$router.push({ path: '/' })
-      }
+    buy(item) {
+      this.$emit('clickBuy', item)
     },
   },
 }
@@ -140,11 +138,11 @@ export default {
 }
 // 已使用的背景
 .haveUse {
-  background-image: url('https://cdn.shupian.cn/sp-pt/wap/2ozhssqe5py0000.png');
+  background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/5cx1r4tc3js0000.png');
 }
 // 未使用的背景
 .notUse {
-  background-image: url('https://cdn.shupian.cn/sp-pt/wap/g4kbai7wgrk0000.png');
+  background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/15vv9a0bvb1c000.png');
 }
 .not_coupon_data {
   background: #f5f5f5 !important;
@@ -155,7 +153,7 @@ export default {
   height: 212px;
   // background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
   background-size: 100% 100%;
-  margin: 24px 40px 0;
+
   // padding: 0 40px;
   display: flex;
   position: relative;
@@ -188,7 +186,7 @@ export default {
     .coupon_progress {
       display: flex;
       align-items: center;
-      padding-left: 22px;
+      padding-left: 12px;
       .sp-progress {
         // width: 98px;
         flex: 1;
@@ -259,7 +257,7 @@ export default {
       .item-rt-content-right {
         button {
           height: 54px;
-          margin-right: 40px;
+          margin-right: 30px;
           background: #ec5330;
 
           border-radius: 27px;

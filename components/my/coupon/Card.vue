@@ -105,11 +105,11 @@ export default {
 }
 // 已使用的背景
 .haveUse {
-  background-image: url('https://cdn.shupian.cn/sp-pt/wap/2ozhssqe5py0000.png');
+  background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/5cx1r4tc3js0000.png');
 }
 // 未使用的背景
 .notUse {
-  background-image: url('https://cdn.shupian.cn/sp-pt/wap/g4kbai7wgrk0000.png');
+  background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/15vv9a0bvb1c000.png');
 }
 .not_coupon_data {
   background: #f5f5f5 !important;
@@ -120,7 +120,7 @@ export default {
   height: 212px;
   // background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
   background-size: 100% 100%;
-  margin: 24px 40px 0;
+
   // padding: 0 40px;
   display: flex;
   position: relative;

@@ -1,14 +1,14 @@
 <template>
-  <div class="invoice" :style="{ paddingBottom: FooterNavHeight + 'px' }">
+  <div class="invoice">
     <sp-sticky>
       <Header class="my-header" title="活动卡专区"></Header>
     </sp-sticky>
     <div v-if="banner" class="banner">
-      <span class="card_des">活动卡介绍</span>
+      <span class="card_des" @click="TipsShow = true">活动卡介绍</span>
       <img :src="$ossImgSetV2(banner)" alt="" />
     </div>
     <div v-for="(item, index) of list" :key="index" class="coupon_list">
-      <ActCard :item="item" :coupon-type="0"></ActCard>
+      <ActCard :item="item" :coupon-type="0" @clickBuy="clickBuy"></ActCard>
     </div>
 
     <!-- <sp-list
@@ -26,7 +26,7 @@
     <div v-if="list.length == 0 && loading == false">
       <sp-empty
         class="empty-text"
-        :description="tabActive === 0 ? '暂无优惠券' : '暂无活动卡'"
+        description="目前没有可购买的活动卡哦~"
         :image="imgAddress"
       />
     </div>
@@ -45,7 +45,7 @@
             >《薯片隐私协议》</a
           >和《权限使用规则》各条款，包括但不限于: 各条款，包括但不限于: <br />
           为了向您提供即时通讯、内容分享等服务，我们需要收集您的设备信息、操作日志等个人信息。你可以在“设置中查看、变更、删除个人信息并管理您的授权。”
-          如果您不同意本协议的修改，请立即停止访问或使用本网站或取消已经获得的服务；如果您选择继续访问或使用本网站，则视为您已接受本协议。修改
+          如果您不同意本协议的修改，请立即停止访问或使用本网站或取消已经获得的服务；如果您选择继续访问或使用本网站，则视为您已接受本协议。
         </div>
         <div class="btn" @click="TipsShow = false">我知道了</div>
       </div>
@@ -111,7 +111,7 @@ export default {
       TipsShow: false,
       list: [],
 
-      FooterNavHeight: 150,
+      // FooterNavHeight: 32,
     }
   },
   mounted() {
@@ -133,20 +133,8 @@ export default {
       })
     },
 
-    onClickTab() {
-      if (this.tabActiveIndex === this.tabActive) {
-        return
-      }
-      this.tabActiveIndex = this.tabActive
-      this.init()
-      this.onLoad()
-    },
     onLoad() {
-      if (this.tabActive === 0) {
-        this.getInitData()
-      } else if (this.tabActive === 1) {
-        this.getOrderList()
-      }
+      this.getInitData()
     },
     getInitData() {
       this.finished = false
@@ -174,9 +162,11 @@ export default {
           this.loading = false
         })
     },
-
-    getOrderList() {
-      this.loading = false
+    clickBuy(item) {
+      this.$router.push({
+        path: '/my/coupon/act-card-details',
+        query: { id: item.id },
+      })
     },
   },
 }
@@ -220,6 +210,52 @@ export default {
       padding: 10px 10px 10px 12px;
 
       background: rgba(255, 255, 255, 0.3);
+    }
+  }
+  .coupon_list {
+    margin: 24px 40px 0;
+  }
+  .dialog {
+    padding: 48px 0 0 0;
+    > .head {
+      padding: 0 40px;
+      font-size: 36px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #1a1a1a;
+      text-align: center;
+    }
+    > .body {
+      padding: 0 40px;
+      margin-top: 32px;
+
+      font-weight: 400;
+
+      font-family: PingFangSC-Regular;
+      font-size: 28px;
+      color: #555555;
+      letter-spacing: 0;
+      line-height: 42px;
+
+      .protocol_name {
+        text-decoration: underline;
+        color: #658af6;
+      }
+    }
+    > .btn {
+      border-top: 1px solid #f4f4f4;
+
+      height: 96px;
+      text-align: center;
+      font-size: 32px;
+      font-weight: 400;
+
+      line-height: 96px;
+
+      background: #4974f5;
+      border-radius: 8px;
+      color: white;
+      margin: 50px 40px 40px;
     }
   }
 }
