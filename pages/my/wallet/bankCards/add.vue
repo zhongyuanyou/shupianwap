@@ -174,7 +174,7 @@ export default {
         cardType: '借记卡',
         openingBankName: this.accountBank,
         openingBankCode: this.openingBankCode,
-        sysCode: 'crisps-app',
+        sysCode: 'spc-wap',
         operateId: this.userInfo.id,
         operateName: this.userInfo.fullName,
       })
