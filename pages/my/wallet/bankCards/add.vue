@@ -205,6 +205,18 @@ export default {
         this.$xToast.error('请输入有效的银行卡号')
       }
     },
+    // ①获取认证信息
+    // async getAuthInfo() {
+    //   const res = await this.$axios.get(walletApi.authentication_info, {
+    //     params: {
+    //       userId: this.userInfo.id,
+    //       isWriting: true,
+    //     },
+    //   })
+    //   if (res.code === 200) {
+    //     this.certificateInfo = res.data
+    //   }
+    // },
     // 账户名称
     async getAuthInfo() {
       const res = await this.$axios.get(walletApi.account_info, {
@@ -218,7 +230,7 @@ export default {
     },
     async getAccountBankInfo() {
       const res = await this.$axios.post(walletApi.card_info, {
-        name: this.searchName,
+        name: this.searchName || this.bankName,
         code: this.bankCode,
         isOnlyBank: '1',
         limit: '50',
