@@ -39,6 +39,21 @@ const invoiceApi = {
     })
   },
 
+/**
+ * 查询商户申请发票配置
+   * @param {object} param0
+   * @param {object} params
+   * @param {object} params.mchId	商户id 订单列表的 signerSubjectUserId ，发票详情的 signStoreId
+ * @returns
+ */
+  apply_invoice_types({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'get',
+      url: CHIPS_PC_URL + '/yk/invoice/v1/apply_invoice_types.do',
+    })
+  },
   /**
    * 发票详情
    * @param {object} param0

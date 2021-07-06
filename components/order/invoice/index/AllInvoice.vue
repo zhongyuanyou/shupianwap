@@ -196,6 +196,7 @@ export default {
         path: '/order/invoice/invoiceApply',
         query: {
           orderId: orderData.id,
+          mchId: orderData.orderSplitSubjectId,
         },
       })
     },
