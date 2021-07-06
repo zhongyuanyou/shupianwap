@@ -216,10 +216,10 @@ export default {
       show_more_input: false,
       // 发票类型
       InvoiceType: {
-        // '026': '增值税电子专用发票',
-        '026': '电子普通发票 ',
+        // '027': '增值税电子专用发票',
+        // '026': '电子普通发票 ',
         // '007': '增值税普通发票 ',
-        '004': '增值税专用发票',
+        // '004': '增值税专用发票',
       },
       InvoiceHeader: {
         INVOICE_HEADER_PERSONAL: '个人',
@@ -230,13 +230,16 @@ export default {
         GOODS_CATEGORY: '商品类别',
       },
 
+      mchId: '', // 商户id
+      id: '', // 发票id
       orderId: '',
+
       formData: {
         orderId: '', // 订单id
         applySource: 'INVOICE_APPLY_SOURCE_CUSTOMER', // 申请来源  薯片 INVOICE_APPLY_SOURCE_CUSTOMER 案加 COMDIC_PLATFORM_QIDABAO
         // applyUserId: '', // 申请人id
         // applyUserName: '', // 申请人名称
-        invoiceType: '026', // 发票类型 InvoiceType
+        invoiceType: '', // 发票类型 InvoiceType
         invoiceContent: 'GOODS_DETAILS', // 发票内容（商品明细 、商品类别）
         // 发票抬头（个人 INVOICE_HEADER_PERSONAL 、 单位 INVOICE_HEADER_COMPANY）
         invoiceHeader: 'INVOICE_HEADER_PERSONAL',
@@ -255,8 +258,10 @@ export default {
     }
   },
   mounted() {
+    this.id = this.$route.query.id
     this.orderId = this.$route.query.orderId
     this.formData.orderId = this.$route.query.orderId
+    this.mchId = this.$route.query.mchId
     this.init()
     // this.getDefaultInvoiceHeader()
   },
@@ -283,6 +288,7 @@ export default {
           } else {
             this.getDefaultInvoiceHeader()
           }
+          this.getConfig()
           // {
           //   applySource: "INVOICE_APPLY_SOURCE_CUSTOMER",
           //   applyTime: "2021-06-28 14:21:24",
@@ -313,16 +319,19 @@ export default {
         })
         .catch((error) => {
           this.loading = false
+          this.getConfig()
           console.error(error)
           // this.$xToast.error(error.message || '请求失败，请重试')
         })
     },
+
     setFormData(info) {
-      this.formData = {
+      this.mchId = info.signStoreId
+      this.formData = Object.assign({}, this.formData, {
         // id: info.id,
         orderId: info.orderId,
         applySource: 'INVOICE_APPLY_SOURCE_CUSTOMER',
-        invoiceType: info.invoiceType || '026',
+        invoiceType: info.invoiceType,
         invoiceContent: info.invoiceContent || 'GOODS_DETAILS',
         invoiceHeader: info.invoiceHeader || 'INVOICE_HEADER_PERSONAL',
         invoiceHeaderName: info.invoiceHeaderName,
@@ -335,20 +344,40 @@ export default {
         registerTel: info.registerTel,
         registerAddress: info.registerAddress,
         taxpayerIdentifNum: info.taxpayerIdentifNum,
+      })
+    },
+    getConfig() {
+      if (!this.mchId) {
+        return this.$xToast.error('未获取到商户信息')
       }
+      invoiceApi
+        .apply_invoice_types(
+          { axios: this.$axios },
+          {
+            mchId: this.mchId,
+          }
+        )
+        .then((res) => {
+          console.log(res)
+          const arr = res.applyInvoiceType.split(',')
+          const info = {}
+          arr.map((item, index) => {
+            info[item] = res.applyInvoiceTypeNames[index]
+
+            if (!this.formData.invoiceType && res.defaultInvoiceType) {
+              this.formData.invoiceType = res.defaultInvoiceType
+            }
+          })
+
+          this.InvoiceType = info
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     /** 获取默认抬头 */
     getDefaultInvoiceHeader() {
       try {
-        // let headType = ''
-        // if (invoiceHeader === 'INVOICE_HEADER_PERSONAL') {
-        //   headType = 'PERSONAL'
-        // } else if (invoiceHeader === 'INVOICE_HEADER_COMPANY') {
-        //   headType = 'COMPANY'
-        // } else {
-        //   return
-        // }
-
         invoiceApi
           .invoice_header_list({ axios: this.$axios })
           .then((res) => {
@@ -369,10 +398,10 @@ export default {
     },
     // 用默认抬头填充数据
     setDefaultFormDataWithHead(info) {
-      this.formData = {
+      this.formData = Object.assign({}, this.formData, {
         orderId: this.orderId,
         applySource: 'INVOICE_APPLY_SOURCE_CUSTOMER',
-        invoiceType: '026',
+        // invoiceType: '026',
         invoiceContent: 'GOODS_DETAILS',
         invoiceHeader:
           info.headType === 'COMPANY'
@@ -389,9 +418,15 @@ export default {
         registerTel: info.phone,
         registerAddress: info.address,
         taxpayerIdentifNum: info.dutyParagraph,
-      }
+      })
     },
     submit() {
+      if (!this.formData.invoiceType) {
+        return this.$xToast.error('请选择发票类型')
+      }
+      if (!this.formData.invoiceHeader) {
+        return this.$xToast.error('请选择发票抬头')
+      }
       this.$refs.form
         .validate()
         .then((res) => {

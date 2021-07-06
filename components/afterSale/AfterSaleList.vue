@@ -32,7 +32,7 @@
               </div>
               <div class="info">
                 <div class="top">
-                  <span v-if="item.isActualRefundable === 1" class="mark red">
+                  <span v-if="child.isActualRefundable === 1" class="mark red">
                     退</span
                   >
                   <!-- <span v-else class="mark blue"> 换</span> -->
