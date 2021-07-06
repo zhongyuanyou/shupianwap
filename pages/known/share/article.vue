@@ -203,8 +203,6 @@ export default {
   },
   data() {
     return {
-      iosLink: 'cpsccustomer://',
-      androdLink: 'cpsccustomer://',
       isShare: false,
       popupShow: false,
       articleList: [],
@@ -215,8 +213,29 @@ export default {
 
       releaseFlag: false, // 是否发布的新文章
       shareId: '', // 分享id
-
       planerInfo: {},
+      prefixPath: 'cpsccustomer://',
+      iosPath: {
+        path: 'CPSCustomer:CPSCustomer/CPSCSharePlaceholderViewController///push/animation',
+        parameter: {
+          selectedIndex: 0,
+          type: '2',
+          cid: '',
+        },
+      },
+      iosPathFinally: '',
+      androdPath: {
+        path: '/main/android/main',
+        parameter: {
+          selectedIndex: 1,
+          isLogin: '0',
+          secondLink: '/known/detail/article',
+          id: '',
+        },
+      },
+      androdFinally: '',
+      iosLink: 'cpsccustomer://',
+      androdLink: 'cpsccustomer://',
     }
   },
   computed: {
@@ -244,10 +263,14 @@ export default {
     }
     this.isShare = this.$route.query.isShare
     this.shareId = this.$route.query.shareId
-    if (this.shareId) {
-      this.iosLink = `cpsccustomer://{"path":"CPSCustomer:CPSCustomer/CPSCSharePlaceholderViewController///push/animation","parameter":{"selectedIndex":0,"type":2,"cid":${this.articleDetails.id}}}`
-      this.androdLink = `cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":1,"isLogin":"0","secondLink":"/known/detail/article","id":${this.articleDetails.id}}}`
-    }
+    this.iosPath.parameter.cid = this.articleDetails.id
+    this.iosLink = this.prefixPath + JSON.stringify(this.iosPath)
+    this.androdPath.parameter.id = this.articleDetails.id
+    this.androdLink = this.prefixPath + JSON.stringify(this.androdPath)
+    // if (this.shareId) {
+    //   this.iosLink = `cpsccustomer://{"path":"CPSCustomer:CPSCustomer/CPSCSharePlaceholderViewController///push/animation","parameter":{"selectedIndex":0,"type":2,"cid":${this.articleDetails.id}}}`
+    //   this.androdLink = `cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":1,"isLogin":"0","secondLink":"/known/detail/article","id":${this.articleDetails.id}}}`
+    // }
     if (this.articleDetails.userId) {
       this.getPlanerInfo(this.articleDetails.userId)
     }
