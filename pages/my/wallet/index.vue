@@ -11,7 +11,7 @@
             v-if="accAccountData.status && accAccountData.status === 1"
             class-prefix="spiconfont"
             name="shezhi"
-            size="0.32rem"
+            size="0.4rem"
             color="#fff"
             @click="$router.push('/my/settings')"
           ></sp-icon>
@@ -46,7 +46,7 @@
             <span>可提现(元)</span
             ><sp-icon
               class-prefix="spiconfont"
-              name="details_ic_sigh"
+              name="toast_ic_remind"
               size="0.24rem"
               color="#999"
               @click="tipsPop(0)"
@@ -60,7 +60,7 @@
             <span>已冻结(元)</span
             ><sp-icon
               class-prefix="spiconfont"
-              name="details_ic_sigh"
+              name="toast_ic_remind"
               size="0.24rem"
               color="#999"
               @click="tipsPop(1)"
@@ -128,7 +128,7 @@ export default {
       accAccountData: '', // 查询激活返回的数据
       checkPassword: '', // 检测是否设置密码
       showAccountBal: false,
-      look: 'xianshi',
+      look: 'yincang',
       customJump: true,
       userInfo: '',
       accountInfo: '',
@@ -177,7 +177,7 @@ export default {
         this.openActivationDialog()
       } else {
         this.showAccountBal = !this.showAccountBal
-        this.showAccountBal ? (this.look = 'yincang') : (this.look = 'xianshi')
+        this.showAccountBal ? (this.look = 'xianshi') : (this.look = 'yincang')
       }
     },
     //     // 实名认证信息
@@ -288,7 +288,7 @@ export default {
 }
 .wallet {
   height: 100%;
-  background: #fff;
+  background: #f8f8f8;
   ::v-deep .sp-dialog__message--has-title {
     color: #222 !important;
     font-size: 28px;
@@ -392,14 +392,17 @@ export default {
     }
   }
   .more-features {
-    margin-top: 20px;
     padding: 0 60px;
+    background: #fff;
+    padding-bottom: 46px;
+    margin: 0 20px;
+    margin-top: 20px;
+    border-radius: 24px;
     h2 {
       font-family: PingFangSC-Medium;
       font-size: 36px;
       color: #1a1a1a;
-      line-height: 36px;
-      line-height: 130px;
+      padding: 40px 0;
     }
     ul {
       display: flex;

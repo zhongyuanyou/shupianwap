@@ -1,6 +1,6 @@
 <template>
   <div class="set-pwd">
-    <Header title="密码设置" />
+    <Header title="支付密码验证" />
     <div class="title">
       <p class="tips">请输入支付密码</p>
       <p v-show="valid" class="valid-text">密码错误请重新输入</p>

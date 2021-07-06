@@ -9,7 +9,7 @@
         >
       </template>
     </Header>
-    <div class="tips">
+    <div v-if="!selectCardInfo.bankName" class="tips">
       <sp-icon
         class-prefix="spiconfont"
         size="0.30rem"
@@ -21,7 +21,7 @@
     <div class="withdraw-form">
       <div class="select">
         <div class="select-row">
-          <div class="title">单项选择</div>
+          <div class="title">选择账户/银行卡</div>
           <div class="select-val" @click="openSelectBankPop">
             <span>{{ selectCardInfo.bankName || '请选择' }}</span>
             <sp-icon
@@ -212,7 +212,7 @@ export default {
     },
     // 全部提现
     withdrawAll() {
-      if(this.accBalanceData.balance<=0){
+      if (this.accBalanceData.balance <= 0) {
         this.$xToast.warning('账户余额不足')
         return false
       }
@@ -238,6 +238,7 @@ export default {
     height: 112px;
     background: #fff3e9;
     padding: 17px 30px;
+    align-items: flex-start;
     i {
       position: relative;
       top: 8px;
@@ -254,6 +255,7 @@ export default {
     padding: 0 40px;
     padding-bottom: 40px;
     background: #fff;
+    border-top: 1px solid #f4f4f4;
     .amount-tips {
       font-family: PingFangSC-Regular;
       font-size: 24px;
