@@ -75,7 +75,7 @@ import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import ActCard from '@/components/my/coupon/ActCard.vue'
 import FooterNav from '~/components/my/coupon/FooterNav.vue'
 
-import { coupon } from '@/api/index'
+import { actCard } from '@/api/index'
 
 export default {
   layout: 'keepAlive',
@@ -141,22 +141,19 @@ export default {
     getInitData() {
       this.finished = false
       const params = {
-        userId: this.$store.state.user.userId,
-        limit: '100',
-        page: this.page,
         id: this.$route.query.id,
       }
-      coupon
-        .act_card_list({ axios: this.$axios }, params)
+      actCard
+        .act_card_detail_one({ axios: this.$axios }, params)
         .then((res) => {
           this.loading = false
           this.page++
 
-          const responseData = res.rows || []
-          responseData.map((item) => {})
+          const records = res.records || []
+          records.map((item) => {})
 
-          if (responseData && responseData[0]) {
-            this.list = [responseData[0]]
+          if (records && records.length === 1) {
+            this.list = records
           }
         })
         .catch((e) => {

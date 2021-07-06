@@ -62,30 +62,6 @@ const coupon = {
 
 
 
-
-
-
-
-// ------------- 以下是活动卡
-/**
- *
- * @param {*} param0
- * @param {object} params
- * @param {number} params.type 活动卡优惠类型 1：折扣 2：满减
- * @param {number} params.page
- * @param {number} params.limit
- * @returns
- */
-  // 分页查询活动卡
-  act_card_list({ axios }, params) {
-    return request({
-      axios,
-      params,
-      method: 'get',
-      url: CHIPS_PC_URL + '/nk/marking/act_card_list.do',
-    })
-  },
-
 }
 
 export default coupon

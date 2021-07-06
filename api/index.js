@@ -33,7 +33,8 @@ import { shopApi } from './shop' // 店铺 收藏
 import { formApi } from './form'
 import { walletApi } from './wallet'
 import { invoiceApi } from './invoice'
-
+import actCard from './actCard.js' // 活动卡
+export { actCard }
 export { auth, shoppingCar, planner }
 export { category }
 export { userinfoApi }
