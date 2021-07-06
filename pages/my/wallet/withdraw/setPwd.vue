@@ -70,6 +70,7 @@ export default {
       this.password = this.password.slice(0, this.password.length - 1)
     },
     onClose() {
+      this.valid = false
       if (this.password.length !== 6) {
         this.$xToast.show({
           message: '请输入6位提现密码',
@@ -94,7 +95,7 @@ export default {
       if (res.code === 200) {
         this.$router.push('/my/wallet/withdraw/apply')
       } else {
-        this.$xToast.warning(res.data.error)
+        this.valid = true
       }
     },
   },

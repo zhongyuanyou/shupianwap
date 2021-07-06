@@ -10,6 +10,7 @@
             readonly
             :clearable="true"
             placeholder="请输入手机号码"
+            label="手机号"
           />
           <sp-field
             v-model="sms"
@@ -17,6 +18,7 @@
             center
             maxlength="6"
             placeholder="请输入验证码"
+            label="验证码"
           >
             <template #button>
               <span :class="{ no_get: isSendSMS }" @click="getSMS">{{
@@ -163,6 +165,19 @@ export default {
 </script>
 
 <style lang="less" scoped>
+::v-deep .sp-field__label {
+  width: 4.2em;
+  color: #222222;
+  font-size: 32px;
+}
+::v-deep .sp-field__button {
+  color: #222222;
+  font-size: 32px;
+}
+::v-deep .sp-field__control {
+  color: #222222;
+  font-size: 32px;
+}
 .no_get {
   font-size: 28px;
   font-family: PingFang SC;
