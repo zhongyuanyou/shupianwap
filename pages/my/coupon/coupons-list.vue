@@ -1,14 +1,18 @@
 <template>
   <div class="invoice">
     <sp-sticky>
-      <Header class="my-header" title="活动卡专区"></Header>
+      <Header class="my-header" title="领券中心"></Header>
     </sp-sticky>
     <div v-if="banner" class="banner">
-      <span class="card_des" @click="TipsShow = true">活动卡介绍</span>
+      <!-- <span class="card_des" @click="TipsShow = true">活动卡介绍</span> -->
       <img :src="$ossImgSetV2(banner)" alt="" />
     </div>
     <div v-for="(item, index) of list" :key="index" class="coupon_list">
-      <ActCard :item="item" :coupon-type="0" @clickBuy="clickBuy"></ActCard>
+      <GetCardItem
+        :item="item"
+        :coupon-type="0"
+        @clickBuy="clickBuy"
+      ></GetCardItem>
     </div>
 
     <!-- <sp-list
@@ -26,7 +30,7 @@
     <div v-if="list.length == 0 && loading == false">
       <sp-empty
         class="empty-text"
-        description="目前没有可购买的活动卡哦~"
+        description="目前没有优惠券可领哦~"
         :image="imgAddress"
       />
     </div>
@@ -72,10 +76,9 @@ import { mapState } from 'vuex'
 import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
-import ActCard from '@/components/my/coupon/ActCard.vue'
-import FooterNav from '~/components/my/coupon/FooterNav.vue'
+import GetCardItem from '@/components/my/coupon/GetCardItem.vue'
 
-import { actCard, coupon } from '@/api/index'
+import { coupon } from '@/api/index'
 
 export default {
   layout: 'keepAlive',
@@ -92,7 +95,7 @@ export default {
     [Dialog.Component.name]: Dialog.Component,
     [List.name]: List,
 
-    ActCard,
+    GetCardItem,
   },
   data() {
     return {
@@ -139,20 +142,30 @@ export default {
     getInitData() {
       this.finished = false
       const params = {
-        // userId: this.$store.state.user.userId,
-        // type：1,// 活动卡优惠类型 1：折扣 2：满减
-        limit: 15,
+        orderByWhere: 'log_receive_time=desc;',
+        findType: 2,
+        userId: this.$store.state.user.userId,
+        limit: '100',
         page: this.page,
       }
-      actCard
-        .act_card_list({ axios: this.$axios }, params)
-        .then((res) => {
+      coupon
+        .findPage({ axios: this.$axios }, params)
+        .then((result) => {
           this.loading = false
-          this.page++
 
-          const responseData = res.rows || []
-          responseData.map((item) => {})
+          const responseData = result.marketingCouponLogList || []
 
+          for (let i = 0, length = responseData.length; i < length; i++) {
+            let useTime = responseData[i].marketingCouponVO.serviceLife
+            useTime = useTime.slice(11)
+            console.log('useTime', useTime)
+            const thisTime = useTime.split('.').join('-')
+            const time = new Date(thisTime).getTime()
+            if (time - this.nowTimeStamp < 172800000) {
+              responseData[i].marketingCouponVO.showColorTime =
+                this.showColorTime
+            }
+          }
           if (params.page === 1) {
             this.list = responseData
           } else {

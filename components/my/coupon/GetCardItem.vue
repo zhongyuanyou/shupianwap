@@ -5,7 +5,7 @@
     <div :class="couponType === 0 ? 'notUse' : 'haveUse'" class="coupon_item">
       <div class="item-lf">
         <div class="coupon_price">
-          {{ item.rebatePrice }}
+          {{ item.reducePrice }}
         </div>
         <div v-if="item.fullPrice" class="can_use">
           满{{ item.fullPrice }}元可用
@@ -31,9 +31,9 @@
         ></div>
         <div class="title" @click="goDetailPage(item)">
           <span class="coupon_type_name">
-            {{ item.type == 1 ? '折扣卡' : '满减' }}
+            {{ item.type == 1 ? '折扣券' : '满减券' }}
           </span>
-          {{ item.cardName }}
+          {{ item.couponName }}
         </div>
         <div class="item-rt-content">
           <div class="item-rt-content-left">
@@ -58,7 +58,11 @@
             </div>
           </div>
           <div v-if="showBuybutton" class="item-rt-content-right">
-            <button @click="buy">xxxx元抢</button>
+            <button @click="buy">
+              <span v-if="item.couponStatus == 1">已领完</span>
+              <span v-else-if="item.couponStatus == 2">已领取</span>
+              <span v-else-if="item.couponStatus == 0">立即领取</span>
+            </button>
           </div>
         </div>
 

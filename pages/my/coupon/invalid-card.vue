@@ -4,7 +4,7 @@
       <Header class="my-header" title="失效卡"></Header>
     </sp-sticky>
     <div v-for="(item, index) of list" :key="index" class="coupon_list">
-      <Card :item="item.marketingCouponVO || {}"></Card>
+      <Card :item="item.marketingCouponVO || {}" :coupon-type="2"></Card>
     </div>
 
     <!-- <sp-list
@@ -172,7 +172,9 @@ export default {
     color: #222222;
     line-height: 30px;
   }
-
+  .coupon_list {
+    margin: 24px 40px 0;
+  }
   .rules_and_invalid {
     font-family: PingFangSC-Regular;
     font-weight: bold;

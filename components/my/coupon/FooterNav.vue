@@ -1,26 +1,28 @@
 <template>
   <footer class="footer-nav">
-    <slot></slot>
-    <ul class="footer-nav-ul">
-      <li
-        v-for="(item, index) in list"
-        :key="index"
-        class="footer-nav-ul-li"
-        @click="ClickItem(item, index)"
-      >
-        <span class="item">
-          <my-icon
-            class="my-icon"
-            :name="item.iconName"
-            size="0.32rem"
-            color="#222222"
-          ></my-icon>
-          <span class="name" :style="{ color: '#222222' }">
-            {{ item.name }}
+    <slot name="header"></slot>
+    <slot>
+      <ul class="footer-nav-ul">
+        <li
+          v-for="(item, index) of list"
+          :key="index"
+          class="footer-nav-ul-li"
+          @click="ClickItem(item, index)"
+        >
+          <span class="item">
+            <my-icon
+              class="my-icon"
+              :name="item.iconName"
+              size="0.32rem"
+              color="#222222"
+            ></my-icon>
+            <span class="name" :style="{ color: '#222222' }">
+              {{ item.name }}
+            </span>
           </span>
-        </span>
-      </li>
-    </ul>
+        </li>
+      </ul>
+    </slot>
   </footer>
 </template>
 
