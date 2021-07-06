@@ -170,15 +170,10 @@
                 </div>
                 <div class="info">
                   <div class="top">
-                    <span
-                      v-if="
-                        afterSaleDetail.afterSaleFactType ===
-                        'AFTER_SALE_TYPE_1'
-                      "
-                      class="mark red"
+                    <span v-if="item.isActualRefundable === 1" class="mark red"
                       >退</span
                     >
-                    <span v-else class="mark blue">换</span>
+                    <!-- <span v-else class="mark blue">换</span> -->
                     <span class="title">{{ item.spuName }}</span>
                   </div>
                   <div class="center">{{ item.skuExtInfo }}</div>

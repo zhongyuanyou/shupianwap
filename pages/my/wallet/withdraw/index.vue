@@ -177,7 +177,7 @@ export default {
         this.$xToast.warning('请填写提现金额')
         return false
       } else if (Number(this.amount) > Number(this.accBalanceData.balance)) {
-        this.$xToast.warning('提现金额不能大于可用余额')
+        this.$xToast.warning('账户余额不足')
         return false
       } else if (!am.test(this.amount)) {
         this.$xToast.warning('金额信息或格式错误')
@@ -212,6 +212,10 @@ export default {
     },
     // 全部提现
     withdrawAll() {
+      if(this.accBalanceData.balance<=0){
+        this.$xToast.warning('账户余额不足')
+        return false
+      }
       this.amount = this.accBalanceData.balance
     },
   },
