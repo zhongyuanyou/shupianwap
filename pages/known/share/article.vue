@@ -245,6 +245,7 @@ export default {
     this.isShare = this.$route.query.isShare
     this.shareId = this.$route.query.shareId
     if (this.shareId) {
+      this.iosLink = `cpsccustomer://{"path":"CPSCustomer:CPSCustomer/CPSCSharePlaceholderViewController///push/animation","parameter":{"selectedIndex":0,"type":2,"cid":${this.articleDetails.id}}}`
       this.androdLink = `cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":1,"isLogin":"0","secondLink":"/known/detail/article","id":${this.articleDetails.id}}}`
     }
     if (this.articleDetails.userId) {
