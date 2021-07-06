@@ -373,7 +373,7 @@ export default {
     },
     toPreview() {
       this.$router.push({
-        path: '/order/invoice/preview',
+        path: '/order/invoice/preview-list',
         query: {
           orderId: this.formData.orderId,
         },

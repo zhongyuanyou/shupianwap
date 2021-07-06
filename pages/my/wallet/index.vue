@@ -107,6 +107,9 @@
       </ul>
     </div>
     <BalanceDesc ref="balanceDesc" />
+    <!--S loding-->
+    <LoadingCenter v-show="loading" />
+    <!--E loding-->
   </div>
 </template>
 
@@ -115,12 +118,14 @@ import { Icon, Dialog } from '@chipspc/vant-dgg'
 import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
 import BalanceDesc from '@/components/wallet/BalanceDesc.vue'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   components: {
     Header,
     SpIcon: Icon,
     BalanceDesc,
     [Dialog.name]: Dialog,
+    LoadingCenter,
   },
   data() {
     return {
@@ -132,6 +137,7 @@ export default {
       customJump: true,
       userInfo: '',
       accountInfo: '',
+      loading: false,
     }
   },
   async mounted() {
@@ -254,10 +260,12 @@ export default {
     },
     // 获取钱包信息
     async getAccountInfo() {
+      this.loading = true
       const res = await this.$axios.post(walletApi.info, {
         accountId: '',
         relationId: this.userInfo.id,
       })
+      this.loading = false
       if (res.code === 200) {
         this.accAccountData = res.data
         if (!this.accAccountData.status && this.accAccountData.status !== 1) {

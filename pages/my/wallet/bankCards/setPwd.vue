@@ -66,6 +66,7 @@ export default {
       this.password = this.password.slice(0, this.password.length - 1)
     },
     onClose() {
+      this.valid = false
       if (this.password.length !== 6) {
         this.$xToast.show({
           message: '请输入6位提现密码',
