@@ -8,7 +8,8 @@
       ></Header>
       <div class="price">4200.55<span class="unit">元</span></div>
       <div class="time">
-        支付剩余时间：<span>23</span> : <span>59</span> : <span>59</span>
+        支付剩余时间：<span>{{ TimeInfo.hh }}</span> :
+        <span>{{ TimeInfo.mm }}</span> : <span>{{ TimeInfo.ss }}</span>
       </div>
     </div>
     <main class="main">
@@ -24,11 +25,70 @@
 </template>
 <script>
 import Header from '@/components/common/head/header.vue'
+import { secondToTime } from '@/utils/common'
 export default {
   layout: 'keepAlive',
   name: 'Invoice',
   components: {
     Header,
+  },
+  data() {
+    return {
+      timeer: null, // 定时器
+
+      endTime: Date.now() + 2222222222,
+
+      TimeInfo: {
+        hh: '00',
+        mm: '00',
+        ss: '00',
+      },
+    }
+  },
+  mounted() {
+    this.start()
+  },
+  destroyed() {
+    clearInterval(this.timeer)
+  },
+  methods: {
+    /**
+     * info 00:00:00
+     */
+    setTime(info) {
+      console.log(info)
+      const timeArr = info.split(':')
+      if (timeArr && timeArr.length === 3) {
+        this.TimeInfo = {
+          hh: timeArr[0],
+          mm: timeArr[1],
+          ss: timeArr[2],
+        }
+      } else {
+        this.TimeInfo = {
+          hh: '00',
+          mm: '00',
+          ss: '00',
+        }
+      }
+    },
+    start() {
+      let second = 0
+      this.timeer = setInterval(() => {
+        second = parseInt((this.endTime - Date.now()) / 1000)
+        if (second > 0) {
+          const time = secondToTime(second)
+
+          this.setTime(time)
+        } else {
+          this.end()
+        }
+      }, 1000)
+    },
+    end() {
+      this.setTime('00:00:00')
+      clearInterval(this.timeer)
+    },
   },
 }
 </script>
