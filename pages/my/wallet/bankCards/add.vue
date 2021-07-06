@@ -279,6 +279,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+::v-deep .sp-field__control {
+  color: #222;
+}
 .content {
   ::v-deep .sp-search {
     padding: 20px;

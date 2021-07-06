@@ -1,10 +1,6 @@
 <template>
   <div class="set-pwd">
-    <Header
-      title="密码设置"
-      :custom-jump="customJump"
-      @backHandle="backHandle"
-    />
+    <Header title="支付密码验证" :custom-jump="customJump" />
     <div class="title">
       <p class="tips">请输入支付密码</p>
       <p v-show="valid" class="valid-text">密码错误请重新输入</p>
@@ -47,7 +43,7 @@ export default {
       showKeyboard: true,
       valid: false,
       userInfo: '',
-      customJump: true,
+      customJump: false,
     }
   },
   // computed: {
@@ -59,10 +55,10 @@ export default {
     this.userInfo = JSON.parse(localStorage.getItem('info'))
   },
   methods: {
-    // 返回到提现页面
-    backHandle() {
-      this.$router.push('/my/wallet/withdraw')
-    },
+    // // 返回到提现页面
+    // backHandle() {
+    //   this.$router.push('/my/wallet/withdraw')
+    // },
     onInput(key) {
       this.password = (this.password + key).slice(0, 6)
     },
@@ -89,7 +85,8 @@ export default {
       if (res.code === 200) {
         this.$router.push('/my/wallet/bankCards/untieSuccess')
       } else {
-        this.$xToast.warning(res.data.error)
+        this.valid = true
+        // this.$xToast.warning(res.data.error)
       }
     },
   },

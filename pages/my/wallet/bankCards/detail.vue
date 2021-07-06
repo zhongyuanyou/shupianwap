@@ -166,6 +166,7 @@ export default {
             margin-top: 25px;
             display: flex;
             align-items: center;
+            font-weight: bold;
             span {
               margin-right: 24px;
               position: relative;
