@@ -25,7 +25,9 @@
         {{ status.title }}
       </div>
       <div class="status_des">{{ status.des }}</div>
-      <div class="status_tips">{{ status.tips }}</div>
+      <div class="status_tips">
+        {{ status.tips }}
+      </div>
     </div>
 
     <div class="card">
@@ -196,6 +198,7 @@ export default {
       opacity: 0,
       loading: false, // 加载效果状态
 
+      id: '', // 发票id
       orderId: '', // 订单id
 
       // 发票类型
@@ -306,23 +309,24 @@ export default {
   },
   mounted() {
     // this.moneyTips()
+    this.id = this.$route.query.id
     this.orderId = this.$route.query.orderId
     this.init()
   },
   methods: {
     init() {
-      if (!this.orderId) {
+      if (!this.id && !this.orderId) {
         return this.$xToast.error('没有指定订单')
       }
       this.loading = true
+      const params = {}
+      if (this.id) {
+        params.id = this.id
+      } else {
+        params.orderId = this.orderId
+      }
       invoiceApi
-        .invoice_detail(
-          { axios: this.$axios },
-          {
-            orderId: this.orderId,
-            // type: 1, // 是否查询订单商品信息，1查询，默认不查，根据订单id查询时有效
-          }
-        )
+        .invoice_detail({ axios: this.$axios }, params)
         .then((res) => {
           this.loading = false
           console.log(' res', res)
@@ -470,7 +474,7 @@ export default {
   .status_container {
     margin-top: -0.88rem;
     text-align: center;
-    height: 303px;
+    // height: 303px;
     background-color: #999999;
     background-size: cover;
     background-repeat: no-repeat;
@@ -497,6 +501,9 @@ export default {
       font-weight: 400;
       color: #ffffff;
       line-height: 24px;
+      padding: 0 40px 60px;
+      word-break: break-all;
+      // padding-bottom: 60px;
     }
   }
   .card {

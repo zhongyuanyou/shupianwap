@@ -217,7 +217,7 @@
         <span class="label">合同</span>
         <span class="text">{{ orderData.contractName || '暂无' }}</span>
       </p> -->
-        <p class="order-item">
+        <!-- <p class="order-item">
           <span class="label">发票类型</span>
           <span class="text">电子普通发票</span>
           <span class="tx-icon" @click="openInvoiceModal()">
@@ -235,7 +235,7 @@
             @click="toInvoice()"
             >查看发票</span
           >
-        </p>
+        </p> -->
         <p class="order-item last-p">
           <span class="label">备注</span>
           <span class="text">{{
@@ -259,7 +259,7 @@
       <!-- 当订单状态为已取消时隐藏顶部按钮区域 -->
       <div v-if="cusOrderStatusType !== 4" class="btn-area">
         <div class="inner">
-          <sp-button
+          <!-- <sp-button
             v-if="checkBillStatus() === 1"
             class="btn-look"
             @click="handleClickItem(8)"
@@ -270,7 +270,7 @@
             class="btn-look"
             @click="handleClickItem(8)"
             >查看发票</sp-button
-          >
+          > -->
           <sp-button
             v-if="checkAfterSaleStatus() === 1 || checkAfterSaleStatus() === 4"
             class="btn-look"

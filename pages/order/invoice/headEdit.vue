@@ -34,32 +34,55 @@
               <sp-field
                 v-model="formData.address"
                 label="注册地址"
-                placeholder="选填"
                 maxlength="120"
-              />
-              <!-- :rules="[
+                :required="formData.type === 'SPECIAL'"
+                :placeholder="formData.type === 'SPECIAL' ? '必填' : '选填'"
+                :rules="[
                   {
-                    validator: validatorPhone,
-                    message: '请填写注册电话',
+                    required: formData.type === 'SPECIAL',
+                    message: '请填写注册地址',
                   },
-                ]" -->
+                ]"
+              />
+
               <sp-field
                 v-model="formData.phone"
                 label="注册电话"
                 maxlength="20"
-                placeholder="选填"
+                :required="formData.type === 'SPECIAL'"
+                :rules="[
+                  {
+                    required: formData.type === 'SPECIAL',
+                    message: '请填写注册电话',
+                  },
+                ]"
+                :placeholder="formData.type === 'SPECIAL' ? '必填' : '选填'"
               />
               <sp-field
                 v-model="formData.depositBank"
                 label="开户银行"
                 maxlength="50"
-                placeholder="选填"
+                :required="formData.type === 'SPECIAL'"
+                :placeholder="formData.type === 'SPECIAL' ? '必填' : '选填'"
+                :rules="[
+                  {
+                    required: formData.type === 'SPECIAL',
+                    message: '请填写开户银行',
+                  },
+                ]"
               />
               <sp-field
                 v-model="formData.bankNumber"
                 label="银行账号"
                 maxlength="50"
-                placeholder="选填"
+                :required="formData.type === 'SPECIAL'"
+                :placeholder="formData.type === 'SPECIAL' ? '必填' : '选填'"
+                :rules="[
+                  {
+                    required: formData.type === 'SPECIAL',
+                    message: '银行账号',
+                  },
+                ]"
               />
             </div>
           </sp-form>
