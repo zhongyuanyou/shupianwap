@@ -74,16 +74,27 @@
               }"
             >
               <div class="vouchers_item_left">
-                <div class="amount">{{ item.reducePrice }}</div>
-                <div class="conditions">
-                  <span v-if="item.fullPrice > 0"
-                    >满{{ item.fullPrice }}元可用</span
-                  >
-                  <span v-else>无门槛</span>
+                <div v-if="item.couponType === 1">
+                  <div class="coupon_price">{{ item.reducePrice }}</div>
+                  <div v-if="item.useType === 1" class="can_use">无门槛</div>
+                  <div v-else class="can_use">满{{ item.fullPrice }}元可用</div>
+                </div>
+                <div v-else>
+                  <div class="coupon_discount">
+                    {{ getDiscount(item.discount) }}
+                    <span>折</span>
+                  </div>
                 </div>
               </div>
               <div class="vouchers_item_right">
-                <div class="vouchers_title">{{ item.couponName }}</div>
+                <div class="vouchers_title">
+                  <span
+                    class="types"
+                    :class="item.couponStatus === 1 ? 'no-coupon' : 'type-name'"
+                    >{{ item.couponType === 1 ? '满减券' : '折扣券' }}</span
+                  >
+                  {{ item.couponName }}
+                </div>
                 <div class="vouchers_desc">
                   {{
                     item.useType == 1
@@ -98,6 +109,13 @@
                 </div>
                 <div
                   class="vouchers_bt"
+                  :class="
+                    item.couponStatus === 1
+                      ? 'no-coupon'
+                      : item.couponStatus === 2
+                      ? 'no-use'
+                      : ''
+                  "
                   @click="getCoupons(item.id, item.couponStatus)"
                 >
                   {{
@@ -257,8 +275,6 @@ export default {
       const list = []
       const couponList =
         this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList
-
-      console.log('couponList', couponList)
       try {
         for (let i = 0; i < couponList.length; i++) {
           const matchServiceLife = couponList[i].serviceLife.match('-')
@@ -278,8 +294,14 @@ export default {
       } catch (error) {
         console.log(error)
       }
-
-      return list
+      const list2 = JSON.parse(JSON.stringify(list))
+      // 根据优惠金额对优惠券排序
+      const sortcouponList = this.rangeDiscountPrice(
+        list2,
+        this.$store.state.sellingGoodsDetail.sellingGoodsData.salesPrice ||
+          this.$store.state.sellingGoodsDetail.sellingGoodsData.price
+      )
+      return sortcouponList
     },
     //  服务商品的SKU集合
     goodsSubDetailsName() {
@@ -304,6 +326,14 @@ export default {
     }
   },
   methods: {
+    getDiscount(count) {
+      let num
+      if (Number(count) > 10) {
+        num = Number(count) / 100
+        num = num.toFixed('1')
+      }
+      return num
+    },
     // 获取商品图片
     getSellingImg() {
       // 获取商品图片集合
@@ -328,38 +358,69 @@ export default {
       const couponList = sellingGoodsData.couponList.filter(
         (item) => item.couponStatus === 0 || item.couponStatus === 2
       )
+      console.log('sellingGoodsData', sellingGoodsData)
       if (couponList.length < 1) {
         this.vouchers = null
       } else {
+        const list2 = JSON.parse(JSON.stringify(couponList))
         // 根据优惠金额对优惠券排序
-        const sortcouponList = xier(couponList)
+        const sortcouponList = this.rangeDiscountPrice(
+          list2,
+          sellingGoodsData.salesPrice || sellingGoodsData.price
+        )
+        console.log('排序后的优惠券2', sortcouponList)
         //  取最大优惠金额
         const salesPrice =
-          sellingGoodsData.salesPrice -
-          sortcouponList[sortcouponList.length - 1]
+          sellingGoodsData.salesPrice - sortcouponList[0].reducePrice
         const salesPriceRes = salesPrice >= 0 ? salesPrice : 0
+        console.log('优惠后预估', salesPrice)
         this.couponPreferentialLine = salesPriceRes.toFixed(2)
         //  组装优惠券提示信息
-        const info1 = sortcouponList[sortcouponList.length - 1]
-        const info2 = sortcouponList[sortcouponList.length - 2]
+        const info1 = sortcouponList[0]
+        const info2 = sortcouponList[1]
+        console.log('info1', info1)
         let vouchers1 = ''
-        if (info1.fullPrice === 0) {
-          vouchers1 = `无门槛`
+        if (info1.couponType === 1) {
+          if (info1.fullPrice === 0) {
+            vouchers1 = `无门槛减${info1.reducePrice}`
+          } else {
+            vouchers1 = `满${info1.fullPrice}减${info1.reducePrice}元`
+          }
         } else {
-          vouchers1 = `满${info1.fullPrice}减${info1.reducePrice}`
+          vouchers1 = (Number(info1.discount) / 100).toFixed('1') + '折'
         }
-
         if (!info2) {
           this.vouchers = vouchers1
           return
         }
-        if (info2.fullPrice === 0) {
-          vouchers1 = `无门槛`
-          this.vouchers = `${vouchers1}，无门槛`
+        let vouchers2 = ''
+        if (info2.couponType === 1) {
+          if (info2.fullPrice === 0) {
+            vouchers2 = `无门槛减${info2.reducePrice}元`
+          } else {
+            vouchers2 = `满${info2.fullPrice}减${info2.reducePrice}元元`
+          }
         } else {
-          this.vouchers = `${vouchers1}, 满${info2.fullPrice}减${info2.reducePrice}`
+          vouchers2 = (Number(info2.discount) / 100).toFixed('1') + '折'
         }
+        this.vouchers = vouchers1 + ', ' + vouchers2
       }
+    },
+    // 对优惠金额进行排序
+    rangeDiscountPrice(arr, price) {
+      console.log('商品价格', price)
+      arr.forEach((element) => {
+        if (element.couponType === 2) {
+          element.reducePrice = (
+            (1 - Number(element.discount) / 1000) *
+            price
+          ).toFixed('2')
+        }
+      })
+      arr.sort((a, b) => {
+        return b.reducePrice - a.reducePrice
+      })
+      return arr
     },
     // 领取优惠券
     async getCoupons(id, status) {
@@ -476,12 +537,12 @@ export default {
           text-align: center;
           margin-right: 9px;
         }
-        // .hide {
-        //   width: 432px;
-        //   overflow: hidden;
-        //   text-overflow: ellipsis;
-        //   white-space: nowrap;
-        // }
+        .hide {
+          width: 432px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
         .not_vouchers {
           color: #cccccc;
         }
@@ -539,12 +600,6 @@ export default {
         font-size: 0;
         padding-bottom: 32px;
         border-bottom: 1px solid #f4f4f4;
-        &_title {
-          color: #222222;
-          font-size: 28px;
-          font-weight: bold;
-          margin: 32px 0 30px;
-        }
         &_value {
           display: inline-block;
           padding: 0 27px;
@@ -696,14 +751,49 @@ export default {
           background-image: url('https://cdn.shupian.cn/sp-pt/wap/f5p8bx9q4oo0000.png?x-oss-process=image/resize,m_fill,w_670,h_212,limit_0');
           background-repeat: no-repeat;
           background-size: 100% 100%;
-          &_left {
+          .vouchers_item_left {
             width: 200px;
             padding-top: 30px;
             text-align: center;
-            .amount {
-              font-size: 72px;
-              color: #ffffff;
+            .coupon_price {
+              //   height: 67px;
+              font-size: 62px;
               font-family: Bebas;
+              font-weight: 400;
+              color: #ffffff;
+              text-align: center;
+              padding-top: 27px;
+              overflow: hidden;
+              position: relative;
+              // text-overflow: ellipsis;
+              // white-space: nowrap;
+            }
+            .can_use {
+              font-size: 24px;
+              font-family: PingFang SC;
+              font-weight: 400;
+              color: #ffffff;
+              text-align: center;
+            }
+            .coupon_discount {
+              font-size: 72px;
+              font-family: Bebas;
+              font-weight: 400;
+              color: #ffffff;
+              text-align: center;
+              padding-top: 44px;
+              position: relative;
+              padding-right: 20px;
+              margin-bottom: 10px;
+              span {
+                position: absolute;
+                font-size: 28px;
+                bottom: 0;
+              }
+            }
+            .amount {
+              font-size: 62px;
+              color: #ffffff;
               margin-bottom: 20px;
             }
             .conditions {
@@ -713,7 +803,7 @@ export default {
               padding-right: 10px;
             }
           }
-          &_right {
+          .vouchers_item_right {
             /*flex: 1;*/
             position: relative;
             padding-left: 24px;
@@ -721,13 +811,29 @@ export default {
             width: 462px;
             padding-right: 32px;
             .vouchers_title {
-              color: #222222;
               font-size: 32px;
               font-weight: bold;
-              margin-bottom: 18px;
+              color: #222222;
+              line-height: 40px;
+              margin: 0 0 12px 0;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
+              .types {
+                border-radius: 4px;
+                padding: 2px;
+                font-size: 20px;
+                color: #ffffff;
+                background-image: linear-gradient(
+                  90deg,
+                  #fa6d5a 0%,
+                  #fa5741 100%
+                );
+              }
+              .no-coupon {
+                background: #cccccc;
+                color: #ffffff;
+              }
             }
             .vouchers_desc {
               color: #555555;
@@ -743,7 +849,7 @@ export default {
             }
             .vouchers_bt {
               position: absolute;
-              top: 79px;
+              top: 84px;
               right: 32px;
               width: 140px;
               height: 54px;
@@ -754,6 +860,16 @@ export default {
               border-radius: 27px;
               background-color: #ec5330;
               color: #ffffff;
+            }
+            .no-coupon {
+              background: #cccccc;
+              color: #ffffff;
+            }
+            .no-use {
+              background: #fdedea;
+              border: 1px solid #ec5330;
+              border-radius: 27px;
+              color: #ec5330;
             }
           }
         }

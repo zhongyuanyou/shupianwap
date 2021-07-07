@@ -161,7 +161,7 @@
             :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
             @click="popupfn()"
           />
-          <Cell
+          <!-- <Cell
             title="活动卡"
             :value="
               coupon
@@ -173,7 +173,7 @@
             is-link
             :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
             @click="popupfn()"
-          />
+          /> -->
         </CellGroup>
         <p class="money">
           合计：
@@ -309,6 +309,8 @@ export default {
       skeletonloading: true,
       editShow: false,
       productList: [],
+      fullConpon: [], // 满减券
+      disCountCoupon: [], // 折扣券
     }
   },
   mounted() {
@@ -538,8 +540,20 @@ export default {
           })
       }
     },
-    sortData(a, b) {
-      return b.marketingCouponVO.reducePrice - a.marketingCouponVO.reducePrice
+    // sortData(a, b) {
+    //   return b.marketingCouponVO.reducePrice - a.marketingCouponVO.reducePrice
+    // },
+    // 对优惠金额进行排序
+    getDisPrice(arr, price) {
+      arr.forEach((element) => {
+        if (element.marketingCouponVO.couponType === 2) {
+          element.marketingCouponVO.reducePrice = (
+            (1 - Number(element.marketingCouponVO.discount) / 1000) *
+            price
+          ).toFixed('2')
+        }
+      })
+      return arr
     },
     getInitData(index) {
       const arr = this.order.list.map((x) => {
@@ -570,7 +584,7 @@ export default {
             actionId: arr,
             orderPrice: price,
             orderByWhere: 'createTime=desc',
-            limit: 10,
+            limit: 50,
             page: 1,
             commodityList: list,
           }
@@ -578,14 +592,25 @@ export default {
         .then((result) => {
           if (index === 5) {
             this.datalist = result.marketingCouponLogList
-            this.datalist = this.datalist.sort(this.sortData)
-            if (this.datalist.length > 0) {
+            const sortList1 = this.getDisPrice(
+              result.marketingCouponLogList,
+              this.order.salesPrice || this.order.skuTotalPrice
+            )
+            const sortList = sortList1.sort((a, b) => {
+              return (
+                b.marketingCouponVO.reducePrice -
+                a.marketingCouponVO.reducePrice
+              )
+            })
+            if (sortList.length > 0) {
+              this.datalist = sortList
               this.conpon = this.datalist[0]
               this.$refs.conpon.radio = 0
               this.$refs.conpon.checkarr = this.datalist[0]
               this.$refs.conpon.num =
                 this.$refs.conpon.checkarr.marketingCouponVO.reducePrice
               this.$refs.conpon.sum()
+              console.log('datalist', this.datalist)
             } else {
               this.skeletonloading = false
             }

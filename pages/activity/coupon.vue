@@ -474,7 +474,20 @@ export default {
           bottom: 0;
         }
       }
-      .coupon_remain {
+      .coupon_price {
+        //   height: 67px;
+        font-size: 62px;
+        font-family: Bebas;
+        font-weight: 400;
+        color: #ffffff;
+        text-align: center;
+        padding-top: 27px;
+        overflow: hidden;
+        position: relative;
+        // text-overflow: ellipsis;
+        // white-space: nowrap;
+      }
+            .coupon_remain {
         padding: 0 12px;
         font-size: 24px;
         display: flex;
@@ -508,19 +521,6 @@ export default {
         .no-num {
           color: #ffffff;
         }
-      }
-      .coupon_price {
-        //   height: 67px;
-        font-size: 62px;
-        font-family: Bebas;
-        font-weight: 400;
-        color: #ffffff;
-        text-align: center;
-        padding-top: 27px;
-        overflow: hidden;
-        position: relative;
-        // text-overflow: ellipsis;
-        // white-space: nowrap;
       }
       .can_use {
         font-size: 24px;

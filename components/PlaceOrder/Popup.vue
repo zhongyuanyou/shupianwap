@@ -42,12 +42,30 @@
                 @click="checkitem(item, index)"
               >
                 <div class="left">
-                  <h1>{{ item.marketingCouponVO.reducePrice }}</h1>
-                  <p>满{{ item.marketingCouponVO.fullPrice }}元可用</p>
+                  <div v-if="item.marketingCouponVO.couponType === 1">
+                    <div class="coupon_price">
+                      {{ item.marketingCouponVO.reducePrice }}
+                    </div>
+                    <div v-if="item.useType === 1" class="can_use">无门槛</div>
+                    <div v-else class="can_use">
+                      满{{ item.marketingCouponVO.fullPrice }}元可用
+                    </div>
+                  </div>
+                  <div v-else>
+                    <div class="coupon_discount">
+                      {{ getDiscount(item.marketingCouponVO.discount) }}
+                      <span>折</span>
+                    </div>
+                  </div>
                 </div>
                 <div class="right">
                   <div class="data">
-                    <h1>{{ item.marketingCouponVO.couponName }}</h1>
+                    <h1 class="title">
+                      <span class="type-name">{{
+                        item.marketingCouponVO.typeName
+                      }}</span>
+                      {{ item.marketingCouponVO.couponName }}
+                    </h1>
                     <p v-if="item.marketingCouponVO.useType === 1">
                       全品类通用
                     </p>
@@ -86,12 +104,30 @@
             <div v-for="(item, index) in nolist" :key="index" class="nolist">
               <div class="top">
                 <div class="left">
-                  <h1>{{ item.marketingCouponVO.reducePrice }}</h1>
-                  <p>满{{ item.marketingCouponVO.fullPrice }}元可用</p>
+                  <div v-if="item.marketingCouponVO.couponType === 1">
+                    <div class="coupon_price">
+                      {{ item.marketingCouponVO.reducePrice }}
+                    </div>
+                    <div v-if="item.useType === 1" class="can_use">无门槛</div>
+                    <div v-else class="can_use">
+                      满{{ item.marketingCouponVO.fullPrice }}元可用
+                    </div>
+                  </div>
+                  <div v-else>
+                    <div class="coupon_discount">
+                      {{ getDiscount(item.marketingCouponVO.discount) }}
+                      <span>折</span>
+                    </div>
+                  </div>
                 </div>
                 <div class="right">
                   <div class="data">
-                    <h1>{{ item.marketingCouponVO.couponName }}</h1>
+                    <h1 class="title">
+                      <span class="type-name">{{
+                        item.marketingCouponVO.typeName
+                      }}</span>
+                      {{ item.marketingCouponVO.couponName }}
+                    </h1>
                     <p v-if="item.marketingCouponVO.useType === 1">
                       全品类通用
                     </p>
@@ -196,6 +232,14 @@ export default {
   },
   mounted() {},
   methods: {
+    getDiscount(count) {
+      let disNum
+      if (Number(count) > 10) {
+        disNum = Number(count) / 100
+        disNum = disNum.toFixed('1')
+      }
+      return disNum
+    },
     sum() {
       order
         .getcalculation(
@@ -233,6 +277,7 @@ export default {
         })
     },
     checkitem(item, index) {
+      console.log('item', item)
       if (this.radio === index) {
         this.checkarr = ''
         this.radio = -1
@@ -355,19 +400,47 @@ export default {
           color: #fff;
           padding-top: 20px;
           box-sizing: border-box;
-          > h1 {
+          .coupon_discount {
             font-size: 72px;
             font-family: Bebas;
             font-weight: 400;
+            color: #ffffff;
             text-align: center;
-            padding: 0 10px;
+            padding-top: 44px;
+            position: relative;
+            padding-right: 20px;
+            margin-bottom: 10px;
+            span {
+              position: absolute;
+              font-size: 28px;
+              bottom: 0;
+            }
+          }
+          .coupon_price {
+            //   height: 67px;
+            font-size: 62px;
+            font-family: Bebas;
+            font-weight: 400;
+            color: #ffffff;
+            text-align: center;
+            padding-top: 27px;
+            overflow: hidden;
+            position: relative;
+            // text-overflow: ellipsis;
+            // white-space: nowrap;
+          }
+          .can_use {
+            font-size: 24px;
+            font-family: PingFang SC;
+            font-weight: 400;
+            color: #ffffff;
+            text-align: center;
           }
           > p {
             font-size: 24px;
             font-family: PingFang SC;
             font-weight: 400;
             text-align: center;
-            padding: 0 10px;
             margin-top: 15px;
           }
         }
@@ -378,9 +451,27 @@ export default {
           margin-left: 24px;
           > .data {
             width: 335px;
-            > h1 {
+            .title {
               font-size: 32px;
               color: #222222;
+              line-height: 40px;
+              margin: 30px 0 12px 0;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              span {
+                border-radius: 4px;
+                padding: 2px;
+                font-size: 20px;
+              }
+              .type-name {
+                color: #ffffff;
+                background-image: linear-gradient(
+                  90deg,
+                  #fa6d5a 0%,
+                  #fa5741 100%
+                );
+              }
             }
             > p {
               font-size: 24px;
@@ -456,12 +547,41 @@ export default {
             color: #fff;
             padding-top: 20px;
             box-sizing: border-box;
-            > h1 {
+            .coupon_discount {
               font-size: 72px;
               font-family: Bebas;
               font-weight: 400;
+              color: #ffffff;
               text-align: center;
-              padding: 0 10px;
+              padding-top: 44px;
+              position: relative;
+              padding-right: 20px;
+              margin-bottom: 10px;
+              span {
+                position: absolute;
+                font-size: 28px;
+                bottom: 0;
+              }
+            }
+            .coupon_price {
+              //   height: 67px;
+              font-size: 62px;
+              font-family: Bebas;
+              font-weight: 400;
+              color: #ffffff;
+              text-align: center;
+              padding-top: 27px;
+              overflow: hidden;
+              position: relative;
+              // text-overflow: ellipsis;
+              // white-space: nowrap;
+            }
+            .can_use {
+              font-size: 24px;
+              font-family: PingFang SC;
+              font-weight: 400;
+              color: #ffffff;
+              text-align: center;
             }
             > p {
               font-size: 24px;
@@ -481,9 +601,23 @@ export default {
             margin-left: 24px;
             > .data {
               width: 335px;
-              > h1 {
+              .title {
                 font-size: 32px;
                 color: #222222;
+                line-height: 40px;
+                margin: 30px 0 12px 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                span {
+                  border-radius: 4px;
+                  padding: 2px;
+                  font-size: 20px;
+                }
+                .type-name {
+                  background: #cccccc;
+                  color: #ffffff;
+                }
               }
               > p {
                 font-size: 24px;
