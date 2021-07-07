@@ -1,6 +1,6 @@
 'use strict'
 import { request } from '@/utils/request'
-import { CHIPS_WAP_BASE_URL } from '@/config/constant'
+import { CHIPS_WAP_BASE_URL ,CHIPS_PC_URL} from '@/config/constant'
 // const CHIPS_WAP_BASE_URL = 'http://172.16.132.255:7001/service'
 const coupon = {
   getCouponList({ axios }, params) {
@@ -57,5 +57,11 @@ const coupon = {
       url: CHIPS_WAP_BASE_URL + '/nk/coupon/v2/find_page.do',
     })
   },
+
+
+
+
+
 }
+
 export default coupon

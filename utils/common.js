@@ -168,11 +168,12 @@ export const numChangeW = (num, suffix = 'w') => {
  * 将秒转化为 '00 : 21 : 44' 这种形式返回
  */
 export const secondToTime = (second) => {
+  console.log(second);
   const num = Number(second)
   const hour =
     Math.floor(num / 3600) < 10
       ? '0' + Math.floor(num / 3600)
-      : Math.floor(num / 3600) < 10
+      : Math.floor(num / 3600)
   const minute =
     Math.floor((num - hour * 3600) / 60) < 10
       ? '0' + Math.floor((num - hour * 3600) / 60)

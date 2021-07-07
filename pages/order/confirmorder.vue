@@ -161,6 +161,19 @@
             :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
             @click="popupfn()"
           />
+          <!-- <Cell
+            title="活动卡"
+            :value="
+              coupon
+                ? coupon
+                : datalist.length > 0
+                ? datalist.length + '个优惠券'
+                : '无可用'
+            "
+            is-link
+            :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
+            @click="popupfn()"
+          /> -->
         </CellGroup>
         <p class="money">
           合计：
@@ -238,6 +251,7 @@ import Popup from '@/components/PlaceOrder/Popup'
 import Contract from '@/components/PlaceOrder/contract'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import { productDetailsApi, auth, shopCart } from '@/api'
+import cardApi from '@/api/card'
 import { coupon, order } from '@/api/index'
 export default {
   name: 'PlaceOrder',
@@ -294,6 +308,9 @@ export default {
       loading: false,
       skeletonloading: true,
       editShow: false,
+      productList: [],
+      fullConpon: [], // 满减券
+      disCountCoupon: [], // 折扣券
     }
   },
   mounted() {
@@ -306,6 +323,15 @@ export default {
     this.getProtocol('protocol100008')
   },
   methods: {
+    getCardList(condition) {
+      const params = {
+        productList: this.productList,
+        condition,
+      }
+      this.$axios.post(cardApi.goodsCardList, params).then((res) => {
+        console.log('res', res)
+      })
+    },
     onLeftClick() {
       this.$router.back()
     },
@@ -373,6 +399,13 @@ export default {
           this.price = this.order.salesPrice
           this.getInitData(5)
           this.getInitData(6)
+          this.productList = new Array(1).fill({
+            categoryCode: data.classCodeLevel.split(',')[0],
+            productId: data.id,
+            productPrice: data.salesPrice,
+          })
+          console.log('productList', this.productList)
+          this.getCardList(1)
         } else {
           this.$xToast.show('服务器异常,请然后再试')
           setTimeout(function () {
@@ -507,8 +540,20 @@ export default {
           })
       }
     },
-    sortData(a, b) {
-      return b.marketingCouponVO.reducePrice - a.marketingCouponVO.reducePrice
+    // sortData(a, b) {
+    //   return b.marketingCouponVO.reducePrice - a.marketingCouponVO.reducePrice
+    // },
+    // 对优惠金额进行排序
+    getDisPrice(arr, price) {
+      arr.forEach((element) => {
+        if (element.marketingCouponVO.couponType === 2) {
+          element.marketingCouponVO.reducePrice = (
+            (1 - Number(element.marketingCouponVO.discount) / 1000) *
+            price
+          ).toFixed('2')
+        }
+      })
+      return arr
     },
     getInitData(index) {
       const arr = this.order.list.map((x) => {
@@ -539,7 +584,7 @@ export default {
             actionId: arr,
             orderPrice: price,
             orderByWhere: 'createTime=desc',
-            limit: 10,
+            limit: 50,
             page: 1,
             commodityList: list,
           }
@@ -547,14 +592,25 @@ export default {
         .then((result) => {
           if (index === 5) {
             this.datalist = result.marketingCouponLogList
-            this.datalist = this.datalist.sort(this.sortData)
-            if (this.datalist.length > 0) {
+            const sortList1 = this.getDisPrice(
+              result.marketingCouponLogList,
+              this.order.salesPrice || this.order.skuTotalPrice
+            )
+            const sortList = sortList1.sort((a, b) => {
+              return (
+                b.marketingCouponVO.reducePrice -
+                a.marketingCouponVO.reducePrice
+              )
+            })
+            if (sortList.length > 0) {
+              this.datalist = sortList
               this.conpon = this.datalist[0]
               this.$refs.conpon.radio = 0
               this.$refs.conpon.checkarr = this.datalist[0]
               this.$refs.conpon.num =
                 this.$refs.conpon.checkarr.marketingCouponVO.reducePrice
               this.$refs.conpon.sum()
+              console.log('datalist', this.datalist)
             } else {
               this.skeletonloading = false
             }
