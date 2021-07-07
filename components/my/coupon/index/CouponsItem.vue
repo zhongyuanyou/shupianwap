@@ -5,10 +5,14 @@
     <div :class="couponType === 0 ? 'notUse' : 'haveUse'" class="coupon_item">
       <div class="item-lf">
         <div class="coupon_price">
-          <span v-if="item.couponType === 1">{{ item.discount || 10 }}折</span>
+          <span v-if="item.couponType === 1">
+            {{ item.discount }}
+            <span class="coupon_price_unit">折</span>
+          </span>
           <span v-else-if="item.couponType === 2">{{ item.reducePrice }}</span>
         </div>
-        <div v-if="item.fullPrice" class="can_use">
+        <div v-if="item.fullPrice == 0" class="can_use">无门槛</div>
+        <div v-else-if="item.fullPrice" class="can_use">
           满{{ item.fullPrice }}元可用
         </div>
       </div>
@@ -20,9 +24,21 @@
           "
         ></div>
         <div class="title" @click="goDetailPage(item)">
-          <span class="coupon_type_name">
-            {{ item.couponType === 1 ? '满减券' : '折扣券' }}
+          <span
+            v-if="item.couponType == 1"
+            class="coupon_type_name"
+            :class="{ invalid: couponType != 0 }"
+          >
+            满减券
           </span>
+          <span
+            v-else-if="item.couponType == 2"
+            class="coupon_type_name"
+            :class="{ invalid: couponType != 0 }"
+          >
+            折扣券
+          </span>
+
           {{ item.couponName }}
         </div>
         <div ref="textpro" class="content">
@@ -37,7 +53,7 @@
           <span class="date" :class="item.showColorTime ? 'warn' : ''">
             {{ item.serviceLife }}
           </span>
-          <span class="surplus warn">剩余5次</span>
+          <!-- <span class="surplus warn">剩余5次</span> -->
         </div>
 
         <!-- 右侧显示 end-->
@@ -55,7 +71,7 @@ export default {
         return {}
       },
     },
-    // 优惠券类型 未使用 已使用 已失效
+    // 优惠券类型 0未使用 1已使用 2已失效
     couponType: {
       type: Number,
       default: 0,
@@ -144,6 +160,9 @@ export default {
       color: #ffffff;
       text-align: center;
       // padding-top: 27px;
+      .coupon_price_unit {
+        font-size: 36px;
+      }
     }
     .can_use {
       font-size: 24px;
@@ -177,10 +196,15 @@ export default {
         background-image: linear-gradient(90deg, #fa6d5a 0%, #fa5741 100%);
         border-radius: 4px;
         padding: 1px 6px;
+        margin-right: 5px;
 
         font-family: PingFangSC-Medium;
         font-size: 20px;
         color: #ffffff;
+      }
+      .coupon_type_name.invalid {
+        background-image: none;
+        background: #bbbbbb;
       }
     }
     .content {

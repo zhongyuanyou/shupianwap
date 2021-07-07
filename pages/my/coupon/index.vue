@@ -21,7 +21,10 @@
     >
       <div v-if="tabActive === 0">
         <div v-for="(item, index) of list" :key="index" class="coupon_list">
-          <Card :item="item.marketingCouponVO || {}" :coupon-type="0"></Card>
+          <CouponsItem
+            :item="item.marketingCouponVO || {}"
+            :coupon-type="0"
+          ></CouponsItem>
         </div>
       </div>
       <div v-else>
@@ -106,7 +109,7 @@ import { mapState } from 'vuex'
 import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
-import Card from '~/components/my/coupon/index/Card.vue'
+import CouponsItem from '~/components/my/coupon/index/CouponsItem.vue'
 import ActCardItem from '~/components/my/coupon/index/ActCardItem.vue'
 import FooterNav from '~/components/my/coupon/FooterNav.vue'
 
@@ -127,7 +130,7 @@ export default {
     [Dialog.Component.name]: Dialog.Component,
     [List.name]: List,
     ActCardItem,
-    Card,
+    CouponsItem,
     FooterNav,
   },
   data() {
@@ -269,6 +272,32 @@ export default {
           }
 
           if (params.page === 1) {
+            //   for (let i = 0, length = this.responseData.length; i < length; i++) {
+            //   let useTime = this.responseData[i].marketingCouponVO.serviceLife
+            //   useTime = useTime.slice(11)
+            //   console.log('useTime', useTime)
+            //   const thisTime = useTime.split('.').join('-')
+            //   const time = new Date(thisTime).getTime()
+            //   if (time - this.nowTimeStamp < 172800000) {
+            //     this.responseData[i].marketingCouponVO.showColorTime =
+            //       this.showColorTime
+            //   }
+            // }
+            try {
+              res.rows.map((item) => {
+                // let useTime = item.marketingCouponVO.serviceLife
+                // useTime = useTime.slice(11)
+                // console.log('useTime', useTime)
+                // const thisTime = useTime.split('.').join('-')
+                const time = new Date(item.receiveEndDate).getTime()
+                if (time - this.nowTimeStamp < 172800000) {
+                  item.marketingCouponVO.showColorTime = this.showColorTime
+                }
+              })
+            } catch (error) {
+              console.log('计算时间出错了')
+            }
+
             this.list = res.rows
           } else {
             this.list.concat(res.rows)
@@ -309,8 +338,9 @@ export default {
           //   },
           // }
         })
-        .catch((e) => {
+        .catch((err) => {
           this.loading = false
+          this.$xToast.error(err.message || '请求失败')
         })
     },
   },

@@ -4,9 +4,16 @@
     <!-- :key="index" -->
     <div :class="couponType === 0 ? 'notUse' : 'haveUse'" class="coupon_item">
       <div class="item-lf">
-        <div class="coupon_price">{{ item.reducePrice }}</div>
-        <div v-if="item.fullPrice" class="can_use">
-          满{{ item.fullPrice }}元可用
+        <div class="coupon_price">
+          <span v-if="item.cardType === 1">
+            {{ item.discount }}
+            <span class="coupon_price_unit">折</span>
+          </span>
+          <span v-else-if="item.cardType === 2">{{ item.rebatePrice }}</span>
+        </div>
+        <div v-if="item.rebateNeedPrice == 0" class="can_use">无门槛</div>
+        <div v-else-if="item.rebateNeedPrice" class="can_use">
+          满{{ item.rebateNeedPrice }}元可用
         </div>
       </div>
       <div class="item-rt">
@@ -17,22 +24,37 @@
           "
         ></div>
         <div class="title" @click="goDetailPage(item)">
-          <span class="coupon_type_name">折扣卡</span>
-          {{ item.couponName }}
+          <span
+            v-if="item.couponType == 1"
+            class="coupon_type_name"
+            :class="{ invalid: couponType != 0 }"
+          >
+            满减卡
+          </span>
+          <span
+            v-else-if="item.couponType == 2"
+            class="coupon_type_name"
+            :class="{ invalid: couponType != 0 }"
+          >
+            折扣卡
+          </span>
+          {{ item.cardName }}
         </div>
         <div ref="textpro" class="content">
-          {{ getuseTypeName(item.useType) }}
+          {{ getuseTypeName(item.userLimit) }}
           <!-- item.useType === 1
               ? '全品类通用'
               : item.useType === 2
               ? '限定部分类别产品使用'
-              : '置顶产品使用' -->
+              : '指定产品使用' -->
         </div>
         <div class="date-container">
           <span class="date" :class="item.showColorTime ? 'warn' : ''">
-            {{ item.serviceLife }}
+            {{ formatTime(item.validateDateStart) }}-{{
+              formatTime(item.validateDateEnd)
+            }}
           </span>
-          <span class="surplus warn">剩余5次</span>
+          <span class="surplus warn">剩余{{ item.availableTimes }}次</span>
         </div>
 
         <!-- 右侧显示 end-->
@@ -61,6 +83,12 @@ export default {
   },
 
   methods: {
+    formatTime(time) {
+      if (time) {
+        return time.split(' ')[0]
+      }
+      return ''
+    },
     getuseTypeName(useType) {
       let useTypeName = ''
       switch (useType) {
@@ -70,7 +98,7 @@ export default {
         case 2:
           useTypeName = '限定部分类别产品使用'
           break
-        default:
+        case 3:
           useTypeName = '置顶产品使用'
       }
       return useTypeName
@@ -139,6 +167,9 @@ export default {
       color: #ffffff;
       text-align: center;
       // padding-top: 27px;
+      .coupon_price_unit {
+        font-size: 36px;
+      }
     }
     .can_use {
       font-size: 24px;
@@ -172,14 +203,20 @@ export default {
         background-image: linear-gradient(90deg, #fa6d5a 0%, #fa5741 100%);
         border-radius: 4px;
         padding: 1px 6px;
+        margin-right: 5px;
 
         font-family: PingFangSC-Medium;
         font-size: 20px;
         color: #ffffff;
       }
+      .coupon_type_name.invalid {
+        background-image: none;
+        background: #bbbbbb;
+      }
     }
     .content {
       width: 404px;
+      min-height: 32px;
       font-size: 24px;
       font-family: PingFang SC;
       font-weight: 400;
@@ -206,6 +243,7 @@ export default {
     .date-container {
       display: flex;
       font-size: 0;
+      align-items: flex-start;
       .date {
         flex: 1;
         font-size: 20px;
@@ -228,14 +266,4 @@ export default {
     }
   }
 }
-
-// ::v-deep .sp-tabs__line {
-//   width: 64px;
-// }
-// ::v-deep .sp-tab--active {
-//   font-size: 28px;
-//   font-family: PingFang SC;
-//   font-weight: bold;
-//   color: #4974f5;
-// }
 </style>

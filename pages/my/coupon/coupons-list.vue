@@ -8,11 +8,11 @@
       <img :src="$ossImgSetV2(banner)" alt="" />
     </div>
     <div v-for="(item, index) of list" :key="index" class="coupon_list">
-      <GetCardItem
+      <GetCouponsItem
         :item="item"
         :coupon-type="0"
         @clickBuy="clickBuy"
-      ></GetCardItem>
+      ></GetCouponsItem>
     </div>
 
     <!-- <sp-list
@@ -76,7 +76,7 @@ import { mapState } from 'vuex'
 import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
-import GetCardItem from '@/components/my/coupon/GetCardItem.vue'
+import GetCouponsItem from '~/components/my/coupon/couponsList/GetCouponsItem.vue'
 
 import { coupon } from '@/api/index'
 
@@ -95,7 +95,7 @@ export default {
     [Dialog.Component.name]: Dialog.Component,
     [List.name]: List,
 
-    GetCardItem,
+    GetCouponsItem,
   },
   data() {
     return {

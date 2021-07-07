@@ -46,14 +46,17 @@
 
             <div class="date-container">
               <span class="date" :class="item.showColorTime ? 'warn' : ''">
-                <span v-if="item.validateType == 1">
-                  {{ item.validateDate }}天
+                {{ formatTime(item.validateDateStart) }}-{{
+                  formatTime(item.validateDateEnd)
+                }}
+                <!-- <span v-if="item.validateType == 1">
+                  自领取之日起{{ item.validateDate }}天
                 </span>
                 <span v-if="item.validateType == 2">
                   {{ formatTime(item.validateDateStart) }}-{{
                     formatTime(item.validateDateEnd)
                   }}
-                </span>
+                </span> -->
               </span>
             </div>
           </div>

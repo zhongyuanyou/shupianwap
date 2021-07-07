@@ -154,9 +154,13 @@ export default {
       }
       return useTypeName
     },
-    toActCard() {
+    toPay(OrderId) {
       this.$router.push({
-        path: '/my/coupon/act-card',
+        path: '/pay/payType',
+        query: {
+          cusOrderId: OrderId,
+          fromPage: 'orderList',
+        },
       })
     },
 
@@ -261,6 +265,8 @@ export default {
           this.loading = false
 
           console.log(res)
+          this.toPay(res.cusOrderId)
+
           // cusOrderId: "8100943425602125824"
           // cusOrderNo: "C21070765168"
         })
