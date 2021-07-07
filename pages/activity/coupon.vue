@@ -25,7 +25,12 @@
         </sp-swipe-item>
       </sp-swipe>
     </div>
-    <div v-if="responseData.length > 0">
+    <div
+      v-show="responseData.length > 0"
+      ref="scrollView"
+      class="page-list"
+      @scroll="scollChange"
+    >
       <div class="coupon_list">
         <div
           v-for="(item, index) in responseData"
@@ -36,15 +41,45 @@
             :class="item.couponStatus === 1 ? 'haveUse' : 'notUse'"
             class="item-lf"
           >
-            <div class="coupon_price">{{ item.reducePrice }}</div>
-            <div v-if="item.useType === 1" class="can_use">无门槛</div>
-            <div v-else class="can_use">满{{ item.fullPrice }}元可用</div>
+            <div v-if="item.couponType === 1">
+              <div class="coupon_price">{{ item.reducePrice }}</div>
+              <div v-if="item.useType === 1" class="can_use">无门槛</div>
+              <div v-else class="can_use">满{{ item.fullPrice }}元可用</div>
+            </div>
+            <div v-else>
+              <div class="coupon_discount">
+                {{ getDiscount(item.discount) }}
+                <span>折</span>
+              </div>
+            </div>
+            <div
+              v-if="item.couponStatus !== 1 && item.countSum !== -1"
+              class="coupon_remain"
+            >
+              <div class="remain_bar">
+                <div
+                  class="bar_inner"
+                  :style="{ width: getRemainPercent(item) + '%' }"
+                ></div>
+              </div>
+              <div class="remain_num">剩余{{ getRemainPercent(item) }}%</div>
+            </div>
+            <div
+              v-if="item.couponStatus !== 1 && item.countSum === -1"
+              class="coupon_remain"
+            >
+              <span class="no-num">不限量</span>
+            </div>
           </div>
           <div class="item-rt">
             <!-- 气泡组件 start -->
             <Popover @closepop="closeBox" />
             <!-- 气泡组件 end-->
             <div class="title" @click="goDetailPage(item)">
+              <span
+                :class="item.couponStatus === 1 ? 'no-coupon' : 'type-name'"
+                >{{ item.typeName }}</span
+              >
               {{ item.couponName }}
             </div>
             <div ref="textpro" class="content" @click="popOver(index)">
@@ -122,9 +157,11 @@ export default {
       indexNum: 0,
       couponType: 0, // 优惠券类型 未使用 已使用 已失效
       isShow: false, // 控制显示气泡
-      advertCode: 'ad100043',
+      advertCode: 'ad100501',
       productAdvertData: [],
       isNoData: false,
+      page: 1,
+      loadingMore: false,
     }
   },
   computed: {
@@ -140,6 +177,21 @@ export default {
     this.getAdvertisingData()
   },
   methods: {
+    getRemainPercent(data) {
+      if (data.countSum > 0 && data.countSur > 0) {
+        return Math.ceil((Number(data.countSur) * 100) / Number(data.countSum))
+      } else {
+        return 0
+      }
+    },
+    getDiscount(count) {
+      let num
+      if (Number(count) > 10) {
+        num = Number(count) / 100
+        num = num.toFixed('1')
+      }
+      return num
+    },
     uPGoBack() {
       if (this.isInApp) {
         this.$appFn.dggWebGoBack((res) => {
@@ -162,7 +214,23 @@ export default {
       }
       this.$router.back(-1)
     },
+    scollChange() {
+      const scrollTop = this.$refs.scrollView.scrollTop
+      const scrollHeight = this.$refs.scrollView.scrollHeight
+      const windowHeight = window.innerHeight
+      // 提前100px拉取下页数据
+      if (scrollTop + windowHeight > scrollHeight) {
+        if (!this.loadingMore) {
+          this.loadingMore = true
+          this.page++
+          this.getInitCouponData()
+        }
+      }
+    },
     operation_coupon(item) {
+      if (item.countSur === 0) {
+        Toast('该优惠券已领完，请领取其他优惠券！')
+      }
       if (item.couponStatus === 0) {
         this.setCouponStatus(item)
       } else {
@@ -181,8 +249,8 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.responseData = []
             Toast('领取成功')
+            this.page = 1
             this.getInitCouponData()
             this.loading = false
           } else {
@@ -211,7 +279,9 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.productAdvertData = res.data.sortMaterialList[0].materialList
+            this.productAdvertData = res.data.sortMaterialList
+              ? res.data.sortMaterialList[0].materialList
+              : []
           } else {
             Toast.fail({
               duration: 2000,
@@ -226,8 +296,8 @@ export default {
       const params = {
         orderByWhere: 'createTime=desc;',
         findType: 1,
-        limit: '10',
-        page: '1',
+        limit: 20,
+        page: this.page,
       }
       this.userId ? (params.userId = this.userId) : (params.userId = '')
       this.loading = true
@@ -235,15 +305,19 @@ export default {
         .findPage({ axios: this.$axios }, params)
         .then((result) => {
           this.loading = false
-          this.responseData = result
+          if (this.page === 1) {
+            this.responseData = result
+          } else {
+            const oldList = JSON.parse(JSON.stringify(this.responseData))
+            this.responseData = oldList.concat(result)
+          }
           this.isNoData = false
-          if (this.responseData.length === 0) {
+          if (this.responseData.length === 0 && this.page === 1) {
             this.isNoData = true
           }
           for (let i = 0, length = this.responseData.length; i < length; i++) {
             let useTime = this.responseData[i].serviceLife
             useTime = useTime.slice(11)
-            console.log('useTime', useTime)
             const thisTime = useTime.split('.').join('-')
             const time = new Date(thisTime).getTime()
             if (time - this.nowTimeStamp < 172800000) {
@@ -253,7 +327,6 @@ export default {
           this.usedCount = result.usedCount
           this.notUsedCount = result.notUsedCount
           this.invalidCount = result.invalidCount
-          console.log('this.responseData', this.responseData)
           this.loading = false
         })
         .catch((e) => {
@@ -358,26 +431,79 @@ export default {
   padding: 12px 40px 20px 40px;
   height: auto;
   .coupon_item {
+    position: relative;
     min-height: 212px;
     box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
     // background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
     background-size: 100% 100%;
     margin: 24px 0;
-    display: flex;
     position: relative;
     overflow: hidden;
     .item-lf {
       width: 201px;
       height: 212px;
+      float: left;
+      .coupon_discount {
+        font-size: 72px;
+        font-family: Bebas;
+        font-weight: 400;
+        color: #ffffff;
+        text-align: center;
+        padding-top: 44px;
+        position: relative;
+        padding-right: 20px;
+        margin-bottom: 10px;
+        span {
+          position: absolute;
+          font-size: 28px;
+          bottom: 0;
+        }
+      }
+      .coupon_remain {
+        padding: 0 12px;
+        font-size: 24px;
+        display: flex;
+        width: 100%;
+        justify-content: space-around;
+        .remain_bar {
+          width: 66px;
+          height: 8px;
+          border-radius: 4px;
+          background: #ff9467;
+          margin-top: 12px;
+          position: relative;
+          overflow: hidden;
+          .bar_inner {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 100%;
+            border-radius: 4px;
+            background: #fff166;
+          }
+        }
+        .remain_num {
+          float: right;
+          opacity: 0.8;
+          font-size: 24px;
+          color: #fffcd6;
+          letter-spacing: 0;
+          transform: scale(0.8);
+        }
+        .no-num {
+          color: #ffffff;
+        }
+      }
       .coupon_price {
         //   height: 67px;
-        font-size: 72px;
+        font-size: 62px;
         font-family: Bebas;
         font-weight: 400;
         color: #ffffff;
         text-align: center;
         padding-top: 27px;
         overflow: hidden;
+        position: relative;
         // text-overflow: ellipsis;
         // white-space: nowrap;
       }
@@ -387,24 +513,37 @@ export default {
         font-weight: 400;
         color: #ffffff;
         text-align: center;
-        padding-top: 15px;
       }
     }
     .item-rt {
       padding-left: 24px;
       height: auto;
-      width: 290px;
       box-sizing: border-box;
+      width: auto;
+      padding-left: 230px;
       .title {
         font-size: 32px;
         font-family: PingFang SC;
         font-weight: bold;
         color: #222222;
         line-height: 40px;
-        margin: 30px 0 24px 0;
+        margin: 30px 0 12px 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        span {
+          border-radius: 4px;
+          padding: 2px;
+          font-size: 20px;
+        }
+        .type-name {
+          color: #ffffff;
+          background-image: linear-gradient(90deg, #fa6d5a 0%, #fa5741 100%);
+        }
+        .no-coupon {
+          background: #cccccc;
+          color: #ffffff;
+        }
       }
       .content {
         width: 404px;
@@ -455,18 +594,17 @@ export default {
       }
     }
     .item-btn {
+      width: 150px;
+      height: 54px;
       font-size: 24px;
-      min-width: 150px;
-      margin-left: auto;
-      text-align: right;
-      align-items: center;
-      display: flex;
-      font-size: 24px;
-      margin-right: 32px;
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      margin-top: -10px;
       button {
         display: block;
-        width: 150px;
-        height: 54px;
+        width: 100%;
+        height: 100%;
         font-size: 0.24rem;
         &.my-coupon {
           background: #ec5330;
@@ -508,5 +646,9 @@ export default {
   font-family: PingFang SC;
   font-weight: bold;
   color: #4974f5;
+}
+.page-list {
+  height: calc(100vh - 120px);
+  overflow-y: scroll;
 }
 </style>
