@@ -6,7 +6,7 @@
       <div class="item-lf">
         <div class="coupon_price">
           <span v-if="item.cardType === 1">
-            {{ item.discount }}
+            {{ getDiscount(item.discount) }}
             <span class="coupon_price_unit">折</span>
           </span>
           <span v-else-if="item.cardType === 2">{{ item.rebatePrice }}</span>
@@ -24,19 +24,8 @@
           "
         ></div>
         <div class="title" @click="goDetailPage(item)">
-          <span
-            v-if="item.couponType == 1"
-            class="coupon_type_name"
-            :class="{ invalid: couponType != 0 }"
-          >
-            满减卡
-          </span>
-          <span
-            v-else-if="item.couponType == 2"
-            class="coupon_type_name"
-            :class="{ invalid: couponType != 0 }"
-          >
-            折扣卡
+          <span class="coupon_type_name" :class="{ invalid: couponType != 0 }">
+            {{ item.cardType == 2 ? '满减卡' : '折扣卡' }}
           </span>
           {{ item.cardName }}
         </div>
@@ -54,7 +43,9 @@
               formatTime(item.validateDateEnd)
             }}
           </span>
-          <span class="surplus warn">剩余{{ item.availableTimes }}次</span>
+          <span class="surplus" :class="{ warn: couponType === 0 }">
+            剩余{{ item.availableTimes }}次
+          </span>
         </div>
 
         <!-- 右侧显示 end-->
@@ -89,6 +80,14 @@ export default {
       }
       return ''
     },
+    getDiscount(count) {
+      let num
+      if (Number(count) > 10) {
+        num = Number(count) / 100
+        num = num.toFixed('1')
+      }
+      return num || count
+    },
     getuseTypeName(useType) {
       let useTypeName = ''
       switch (useType) {
@@ -99,7 +98,7 @@ export default {
           useTypeName = '限定部分类别产品使用'
           break
         case 3:
-          useTypeName = '置顶产品使用'
+          useTypeName = '指定产品使用'
       }
       return useTypeName
     },
@@ -251,17 +250,23 @@ export default {
         font-weight: 400;
         color: #999999;
       }
+
+      .surplus {
+        margin-right: 30px;
+
+        border-radius: 4px;
+        padding: 0 6px;
+        font-size: 20px;
+        font-family: PingFang SC;
+        font-weight: 400;
+        color: #999999;
+      }
       .warn {
         font-size: 20px;
         font-family: PingFang SC;
         font-weight: 400;
         color: #f1524e;
-      }
-      .surplus {
-        margin-right: 30px;
         background: #fff3e9;
-        border-radius: 4px;
-        padding: 0 6px;
       }
     }
   }

@@ -6,7 +6,7 @@
       <div class="item-lf">
         <div class="coupon_price">
           <span v-if="item.couponType === 1">
-            {{ item.discount }}
+            {{ getDiscount(item.discount) }}
             <span class="coupon_price_unit">折</span>
           </span>
           <span v-else-if="item.couponType === 2">{{ item.reducePrice }}</span>
@@ -92,9 +92,17 @@ export default {
           useTypeName = '限定部分类别产品使用'
           break
         default:
-          useTypeName = '置顶产品使用'
+          useTypeName = '指定产品使用'
       }
       return useTypeName
+    },
+    getDiscount(count) {
+      let num
+      if (Number(count) > 10) {
+        num = Number(count) / 100
+        num = num.toFixed('1')
+      }
+      return num || count
     },
     // 进入详情
     goDetailPage(item) {

@@ -3,7 +3,7 @@
     <sp-sticky>
       <Header class="my-header" title="购买确认"></Header>
     </sp-sticky>
-    <div class="details">
+    <div v-show="cardInfo.id" class="details">
       <div class="coupon_list">
         <ActCard
           :item="cardInfo"
@@ -50,7 +50,12 @@
       </div>
     </div>
 
-    <sp-bottombar ref="FooterNav" safe-area-inset-bottom class="submit_btns">
+    <sp-bottombar
+      v-show="cardInfo.id"
+      ref="FooterNav"
+      safe-area-inset-bottom
+      class="submit_btns"
+    >
       <sp-bottombar-button type="primary" text="" @click="submit">
         <span class="text">立即购买：</span>
         <span class="price">{{ cardInfo.price }}</span>
@@ -270,7 +275,8 @@ export default {
           // cusOrderId: "8100943425602125824"
           // cusOrderNo: "C21070765168"
         })
-        .catch((e) => {
+        .catch((err) => {
+          this.$xToast.error(err.message || '操作失败')
           this.loading = false
         })
     },

@@ -5,7 +5,7 @@
     <div :class="couponType === 0 ? 'notUse' : 'haveUse'" class="coupon_item">
       <div class="item-lf">
         <div class="coupon_price">
-          {{ item.type == 1 ? item.discount : item.rebatePrice }}
+          {{ item.type == 1 ? getDiscount(item.discount) : item.rebatePrice }}
           <span v-if="item.type == 1" class="coupon_price_unit">折</span>
         </div>
         <div v-if="item.rebateNeedPrice" class="can_use">
@@ -14,7 +14,7 @@
         <div v-if="item.stock && showProgress" class="coupon_progress">
           <sp-progress
             class="sp-progress"
-            :percentage="50"
+            :percentage="parseInt((item.leftStock / item.stock) * 100)"
             :show-pivot="false"
             stroke-width="0.08rem"
             color="#ffffff"
@@ -107,6 +107,14 @@ export default {
       }
       return ''
     },
+    getDiscount(count) {
+      let num
+      if (Number(count) > 10) {
+        num = Number(count) / 100
+        num = num.toFixed('1')
+      }
+      return num || count
+    },
     getuseTypeName(useType) {
       let useTypeName = ''
       switch (useType) {
@@ -117,7 +125,7 @@ export default {
           useTypeName = '限定部分类别产品使用'
           break
         default:
-          useTypeName = '置顶产品使用'
+          useTypeName = '指定产品使用'
       }
       return useTypeName
     },

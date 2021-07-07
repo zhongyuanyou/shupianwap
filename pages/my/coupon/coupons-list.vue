@@ -172,8 +172,9 @@ export default {
             this.list.concat(responseData)
           }
         })
-        .catch((e) => {
+        .catch((err) => {
           this.loading = false
+          this.$xToast.error(err.message || '操作失败')
         })
     },
     clickBuy(item) {

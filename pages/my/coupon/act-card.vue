@@ -3,9 +3,19 @@
     <sp-sticky>
       <Header class="my-header" title="活动卡专区"></Header>
     </sp-sticky>
-    <div v-if="banner" class="banner">
+    <div v-if="productAdvertData.length > 0" class="banner">
       <span class="card_des" @click="TipsShow = true">活动卡介绍</span>
-      <img :src="$ossImgSetV2(banner)" alt="" />
+      <!-- <img :src="$ossImgSetV2(banner)" alt="" /> -->
+      <sp-swipe :autoplay="3000">
+        <sp-swipe-item v-for="(item, index) in productAdvertData" :key="index">
+          <a :href="item.materialLink" style="display: block; height: 100%">
+            <sp-image
+              fit="cover"
+              :src="item.materialUrl"
+              style="width: 100%; height: 100%"
+          /></a>
+        </sp-swipe-item>
+      </sp-swipe>
     </div>
 
     <sp-list
@@ -65,6 +75,9 @@ import {
   Empty,
   List,
   Dialog,
+  Swipe,
+  SwipeItem,
+  Image,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 
@@ -74,7 +87,7 @@ import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import ActCard from '@/components/my/coupon/ActCard.vue'
 import FooterNav from '~/components/my/coupon/FooterNav.vue'
 
-import { actCard, coupon } from '@/api/index'
+import { actCard, coupon, activityApi } from '@/api/index'
 
 export default {
   layout: 'keepAlive',
@@ -90,7 +103,9 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [Dialog.Component.name]: Dialog.Component,
     [List.name]: List,
-
+    [Swipe.name]: Swipe,
+    [SwipeItem.name]: SwipeItem,
+    [Image.name]: Image,
     ActCard,
   },
   data() {
@@ -110,12 +125,15 @@ export default {
       TipsShow: false,
       list: [],
 
+      advertCode: 'ad100501',
+      productAdvertData: [],
       // FooterNavHeight: 32,
     }
   },
   mounted() {
     this.init()
     this.onLoad()
+    this.getAdvertisingData()
   },
   methods: {
     init() {
@@ -162,8 +180,26 @@ export default {
             this.list.concat(responseData)
           }
         })
-        .catch((e) => {
+        .catch((err) => {
           this.loading = false
+          this.$xToast.error(err.message || '操作失败')
+        })
+    },
+    getAdvertisingData() {
+      this.$axios
+        .get(activityApi.activityAdvertising, {
+          params: {
+            locationCode: this.advertCode,
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.productAdvertData = res.data.sortMaterialList
+              ? res.data.sortMaterialList[0].materialList
+              : []
+          } else {
+            this.$xToast.error('服务异常，请刷新重试！')
+          }
         })
     },
     clickBuy(item) {
@@ -214,6 +250,31 @@ export default {
       padding: 10px 10px 10px 12px;
 
       background: rgba(255, 255, 255, 0.3);
+    }
+    ::v-deep .sp-swipe {
+      width: 100%;
+      height: 300px;
+      /*background-color: #999;*/
+      overflow: hidden;
+      position: relative;
+      margin-top: -88px;
+      ::v-deep .sp-swipe-item {
+        height: 300px;
+        a {
+          width: 100%;
+          height: 100%;
+        }
+      }
+      // ::v-deep .sp-image {
+      //   height: 300px;
+      //   width: 100%;
+      //   > img {
+      //     width: 100%;
+      //     height: 100%;
+      //     display: block;
+      //     object-fit: fill !important;
+      //   }
+      // }
     }
   }
   .coupon_list {
