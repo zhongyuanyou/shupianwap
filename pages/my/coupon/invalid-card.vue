@@ -4,7 +4,10 @@
       <Header class="my-header" title="失效卡"></Header>
     </sp-sticky>
     <div v-for="(item, index) of list" :key="index" class="coupon_list">
-      <Card :item="item.marketingCouponVO || {}" :coupon-type="2"></Card>
+      <ActCardItem
+        :item="item.marketingCouponVO || {}"
+        :coupon-type="2"
+      ></ActCardItem>
     </div>
 
     <!-- <sp-list
@@ -50,7 +53,7 @@ import { mapState } from 'vuex'
 import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
-import Card from '@/components/my/coupon/Card.vue'
+import ActCardItem from '~/components/my/coupon/index/ActCardItem.vue'
 import FooterNav from '~/components/my/coupon/FooterNav.vue'
 
 import { coupon } from '@/api/index'
@@ -70,7 +73,7 @@ export default {
     [Dialog.Component.name]: Dialog.Component,
     [List.name]: List,
 
-    Card,
+    ActCardItem,
   },
   data() {
     return {

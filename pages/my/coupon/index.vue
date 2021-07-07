@@ -9,11 +9,8 @@
         </sp-work-tabs>
       </client-only>
     </sp-sticky>
-    <div v-for="(item, index) of list" :key="index" class="coupon_list">
-      <Card :item="item.marketingCouponVO || {}" :coupon-type="0"></Card>
-    </div>
 
-    <!-- <sp-list
+    <sp-list
       v-if="list.length > 0"
       v-model="loading"
       :finished="finished"
@@ -22,8 +19,20 @@
       error-text="请求失败，点击重新加载"
       @load="onLoad"
     >
-      <div v-if="tabActive === 0" :list="list"></div>
-    </sp-list> -->
+      <div v-if="tabActive === 0">
+        <div v-for="(item, index) of list" :key="index" class="coupon_list">
+          <CouponsItem
+            :item="item.marketingCouponVO || {}"
+            :coupon-type="0"
+          ></CouponsItem>
+        </div>
+      </div>
+      <div v-else>
+        <div v-for="(item, index) of list" :key="index" class="coupon_list">
+          <ActCardItem :item="item || {}" :coupon-type="0"></ActCardItem>
+        </div>
+      </div>
+    </sp-list>
 
     <div v-if="list.length == 0 && loading == false">
       <sp-empty
@@ -100,8 +109,8 @@ import { mapState } from 'vuex'
 import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
-import Card from '@/components/my/coupon/Card.vue'
-
+import CouponsItem from '~/components/my/coupon/index/CouponsItem.vue'
+import ActCardItem from '~/components/my/coupon/index/ActCardItem.vue'
 import FooterNav from '~/components/my/coupon/FooterNav.vue'
 
 import { actCard, coupon } from '@/api/index'
@@ -120,8 +129,8 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [Dialog.Component.name]: Dialog.Component,
     [List.name]: List,
-
-    Card,
+    ActCardItem,
+    CouponsItem,
     FooterNav,
   },
   data() {
@@ -144,7 +153,8 @@ export default {
         {
           name: '领券',
           iconName: 'lingquan',
-          path: '/my/coupon/coupons-list',
+          // path: '/my/coupon/coupons-list',
+          path: '/activity/coupon',
         },
         {
           name: '购卡',
@@ -206,7 +216,7 @@ export default {
       if (this.tabActive === 0) {
         this.getInitData()
       } else if (this.tabActive === 1) {
-        this.getOrderList()
+        this.getCardList()
       }
     },
     getInitData() {
@@ -222,6 +232,7 @@ export default {
         .getCouponList({ axios: this.$axios }, params)
         .then((result) => {
           this.loading = false
+          this.finished = true
 
           const responseData = result.marketingCouponLogList || []
 
@@ -236,20 +247,15 @@ export default {
                 this.showColorTime
             }
           }
-          if (params.page === 1) {
-            this.list = responseData
-          } else {
-            this.list.concat(responseData)
-            // const allData = this.list.concat(responseData)
-            // this.list = allData
-          }
+
+          this.list = responseData
         })
         .catch((e) => {
           this.loading = false
         })
     },
 
-    getOrderList() {
+    getCardList() {
       this.loading = false
       const params = {
         condition: 1, // 排序 1 时间倒叙 2时间正序 默认1
@@ -258,11 +264,83 @@ export default {
       }
       actCard
         .user_act_card_list({ axios: this.$axios }, params)
-        .then((result) => {
+        .then((res) => {
           this.loading = false
+
+          if (this.page > res.totalPage || !res.totalPage) {
+            this.finished = true
+          }
+
+          if (params.page === 1) {
+            //   for (let i = 0, length = this.responseData.length; i < length; i++) {
+            //   let useTime = this.responseData[i].marketingCouponVO.serviceLife
+            //   useTime = useTime.slice(11)
+            //   console.log('useTime', useTime)
+            //   const thisTime = useTime.split('.').join('-')
+            //   const time = new Date(thisTime).getTime()
+            //   if (time - this.nowTimeStamp < 172800000) {
+            //     this.responseData[i].marketingCouponVO.showColorTime =
+            //       this.showColorTime
+            //   }
+            // }
+            try {
+              res.rows.map((item) => {
+                // let useTime = item.marketingCouponVO.serviceLife
+                // useTime = useTime.slice(11)
+                // console.log('useTime', useTime)
+                // const thisTime = useTime.split('.').join('-')
+                const time = new Date(item.receiveEndDate).getTime()
+                if (time - this.nowTimeStamp < 172800000) {
+                  item.marketingCouponVO.showColorTime = this.showColorTime
+                }
+              })
+            } catch (error) {
+              console.log('计算时间出错了')
+            }
+
+            this.list = res.rows
+          } else {
+            this.list.concat(res.rows)
+          }
+          // var a = {
+          //   code: 200,
+          //   message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',
+          //   data: {
+          //     currentPage: 1,
+          //     rows: [
+          //       {
+          //         id: '8100943424855670784',
+          //         cardName: '满减/通用【1】',
+          //         userId: '1118747036651670219',
+          //         cardId: '8095504656283664384',
+          //         cardType: 1,
+          //         discount: 0,
+          //         rebateNeedPrice: '100.00',
+          //         rebatePrice: '50.00',
+          //         validateDate: 12,
+          //         validateDateStart: '2021-07-07 10:40:34',
+          //         validateDateEnd: '2021-07-19 10:40:34',
+          //         explain: '',
+          //         availableTimes: 12,
+          //         allAvailableTimes: 12,
+          //         purchasingDate: '2021-07-07 10:40:34',
+          //         originalPrice: '0.00',
+          //         purchasePrice: '0.00',
+          //         validateType: 1,
+          //         expireType: 0,
+          //         userLimit: 0,
+          //         cardCode: '',
+          //       },
+          //     ],
+          //     totalPage: 1,
+          //     pageSize: 10,
+          //     total: 1,
+          //   },
+          // }
         })
-        .catch((e) => {
+        .catch((err) => {
           this.loading = false
+          this.$xToast.error(err.message || '请求失败')
         })
     },
   },

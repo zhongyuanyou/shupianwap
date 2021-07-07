@@ -7,11 +7,8 @@
       <span class="card_des" @click="TipsShow = true">活动卡介绍</span>
       <img :src="$ossImgSetV2(banner)" alt="" />
     </div>
-    <div v-for="(item, index) of list" :key="index" class="coupon_list">
-      <ActCard :item="item" :coupon-type="0" @clickBuy="clickBuy"></ActCard>
-    </div>
 
-    <!-- <sp-list
+    <sp-list
       v-if="list.length > 0"
       v-model="loading"
       :finished="finished"
@@ -20,8 +17,10 @@
       error-text="请求失败，点击重新加载"
       @load="onLoad"
     >
-      <div v-if="tabActive === 0" :list="list"></div>
-    </sp-list> -->
+      <div v-for="(item, index) of list" :key="index" class="coupon_list">
+        <ActCard :item="item" :coupon-type="0" @clickBuy="clickBuy"></ActCard>
+      </div>
+    </sp-list>
 
     <div v-if="list.length == 0 && loading == false">
       <sp-empty
@@ -137,6 +136,7 @@ export default {
       this.getInitData()
     },
     getInitData() {
+      this.loading = true
       this.finished = false
       const params = {
         // userId: this.$store.state.user.userId,
@@ -151,7 +151,10 @@ export default {
           this.page++
 
           const responseData = res.rows || []
-          responseData.map((item) => {})
+          // responseData.map((item) => {})
+          if (this.page > res.totalPage || !res.totalPage) {
+            this.finished = true
+          }
 
           if (params.page === 1) {
             this.list = responseData

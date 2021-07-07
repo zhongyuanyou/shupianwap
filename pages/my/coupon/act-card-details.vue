@@ -4,38 +4,47 @@
       <Header class="my-header" title="购买确认"></Header>
     </sp-sticky>
     <div class="details">
-      <div v-for="(item, index) of list" :key="index" class="coupon_list">
+      <div class="coupon_list">
         <ActCard
-          :item="item"
+          :item="cardInfo"
           :show-buybutton="false"
           :show-progress="false"
           :coupon-type="0"
         ></ActCard>
       </div>
       <div class="details_content">
-        <div class="price">49999元</div>
+        <div class="price">{{ cardInfo.price }}元</div>
 
         <div class="list">
           <div class="list_name">活动卡</div>
-          <div class="list_des">这是活动卡名称活动卡名称</div>
+          <div class="list_des">{{ cardInfo.cardName }}</div>
         </div>
         <div class="list">
           <div class="list_name">可使用次数</div>
-          <div class="list_des">5次</div>
+          <div class="list_des">{{ cardInfo.availableTimes }}次</div>
         </div>
         <div class="list">
           <div class="list_name">有效期限</div>
-          <div class="list_des">2020.09.01-2020.09.31</div>
+          <div class="list_des">
+            <span v-if="cardInfo.validateType == 1">
+              {{ cardInfo.validateDate }}天
+            </span>
+            <span v-if="cardInfo.validateType == 2">
+              {{ formatTime(cardInfo.validateDateStart) }}-{{
+                formatTime(cardInfo.validateDateEnd)
+              }}
+            </span>
+          </div>
         </div>
 
         <div class="list">
           <div class="list_name">使用限制</div>
-          <div class="list_des">部分产品分类使用</div>
+          <div class="list_des">{{ getuseTypeName(cardInfo.useType) }}</div>
         </div>
         <div class="list">
           <div class="list_name">其他说明</div>
           <div class="list_des">
-            这是其他说明文字这是其他说明文字这是其他说明文字这是其他说明文字
+            {{ cardInfo.remark }}
           </div>
         </div>
       </div>
@@ -44,7 +53,7 @@
     <sp-bottombar ref="FooterNav" safe-area-inset-bottom class="submit_btns">
       <sp-bottombar-button type="primary" text="" @click="submit">
         <span class="text">立即购买：</span>
-        <span class="price">4200.55</span>
+        <span class="price">{{ cardInfo.price }}</span>
         <span class="unit">元</span>
       </sp-bottombar-button>
     </sp-bottombar>
@@ -73,7 +82,6 @@ import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import ActCard from '@/components/my/coupon/ActCard.vue'
-import FooterNav from '~/components/my/coupon/FooterNav.vue'
 
 import { actCard } from '@/api/index'
 
@@ -99,20 +107,25 @@ export default {
     return {
       imgAddress: 'https://cdn.shupian.cn/sp-pt/wap/1d02v37qg6gw000.png',
 
-      tabActive: 0,
-      tabActiveIndex: 0, // 激活的tab
-
       loading: true, // 加载效果状态
-      error: false,
-      finished: false,
+
       page: 1,
       limit: 15,
 
       TipsShow: false,
-      list: [],
+
+      cardInfo: {},
 
       FooterNavHeight: 150,
     }
+  },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userId,
+      userInfo: (state) => state.user, // 登录的用户信息
+      isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
+    }),
   },
   mounted() {
     this.init()
@@ -121,16 +134,39 @@ export default {
     this.FooterNavHeight = this.$refs.FooterNav.$el.offsetHeight
   },
   methods: {
-    toActCard() {
+    formatTime(time) {
+      if (time) {
+        return time.split(' ')[0]
+      }
+      return ''
+    },
+    getuseTypeName(useType) {
+      let useTypeName = ''
+      switch (useType) {
+        case 1:
+          useTypeName = '全品类通用'
+          break
+        case 2:
+          useTypeName = '限定部分类别产品使用'
+          break
+        default:
+          useTypeName = '置顶产品使用'
+      }
+      return useTypeName
+    },
+    toPay(OrderId) {
       this.$router.push({
-        path: '/my/coupon/act-card',
+        path: '/pay/payType',
+        query: {
+          cusOrderId: OrderId,
+          fromPage: 'orderList',
+        },
       })
     },
-    submit() {},
+
     init() {
       this.page = 1
-      this.finished = false
-      this.error = false
+
       this.loading = true
       this.list = []
     },
@@ -143,18 +179,96 @@ export default {
       const params = {
         id: this.$route.query.id,
       }
+      // this.cardInfo = {
+      //   id: '8095504656283664384',
+      //   cardName: '满减/通用【1】',
+      //   price: '12.00',
+      //   stock: 5000,
+      //   imgUrl: '',
+      //   type: 1,
+      //   rebateNeedPrice: 100,
+      //   rebatePrice: 50,
+      //   availableTimes: 12,
+      //   validateType: 1,
+      //   validateDate: 12,
+      //   useLimit: 1,
+      //   remark: '满减/通用',
+      //   cardCode: 'HDK-MJ-000004',
+      //   merchant: {
+      //     id: '607997736314102922',
+      //     name: '薯片科技',
+      //     mchNo: 'MBU2025022',
+      //     mchClass: 'MERCHANT_M',
+      //   },
+      //   createId: '767998085009799913',
+      // }
+      // this.loading = false
       actCard
         .act_card_detail_one({ axios: this.$axios }, params)
         .then((res) => {
           this.loading = false
-          this.page++
+          this.cardInfo = res
+        })
+        .catch((e) => {
+          this.loading = false
+          console.log(e)
+          this.$xToast.error('获取详情失败')
+        })
+    },
+    submit() {
+      this.add_order()
+    },
+    add_order() {
+      const params = {
+        needSplitProDataParams: [
+          {
+            skuType: 'PRO_CLASS_TYPE_VIRTUAL', //
+            spuId: '8095504656283664384', // 产品id
+            spuCode: 'CRISPS-C-MARKETING-CARD', // 产品编号
+            spuName: this.cardInfo.cardName, // 产品名称
+            skuId: this.cardInfo.id, // 商品id
+            skuCode: 'HDK-MJ-000004',
+            skuCount: 1,
+            skuSettlePrice: parseFloat(this.cardInfo.price) * 100,
+            skuPayableTotalVirtualMoney: 0,
+            skuDetailInfo: JSON.stringify({
+              sku: {
+                goodsName: this.cardInfo.cardName,
+                remark: this.cardInfo.remark,
+              },
+              tradeMark: {},
+            }),
+            classifyOneNo: 'ACTIVITY_CARD',
+            classifyOneName: '活动卡',
 
-          const records = res.records || []
-          records.map((item) => {})
+            orderSplitSubjectId: this.cardInfo.merchant.id, // 拆单主体id
+            orderSplitSubjectNo: this.cardInfo.merchant.mchNo,
+            orderSplitSubjectName: this.cardInfo.merchant.name,
+            orderSplitSubjectSource: this.cardInfo.merchant.mchClass,
+          },
+        ],
 
-          if (records && records.length === 1) {
-            this.list = records
-          }
+        cusOrderModeNo: 'ORDER_CUS_MODE_ADMIN',
+        userSubjectUserId: this.userId, // 用户商户用户id(当用户是规划师必传)
+        cusOrderTerminalNo: 'COMDIC_TERMINAL_WAP', // 下单终端编号(
+        cusOrderPayType: 'PRO_PRE_PAY_POST_SERVICE', // 付款类型：先付款后服务
+        payType: 'ORDER_PAY_MODE_ONLINE', // 支付类型：线上支付：
+        cusReceivingInformation: JSON.stringify({
+          personName: this.userInfo.nickName,
+          personPhone: '收货人联系方式',
+          personAddr: '-',
+        }),
+      }
+      actCard
+        .add_order({ axios: this.$axios }, params)
+        .then((res) => {
+          this.loading = false
+
+          console.log(res)
+          this.toPay(res.cusOrderId)
+
+          // cusOrderId: "8100943425602125824"
+          // cusOrderNo: "C21070765168"
         })
         .catch((e) => {
           this.loading = false
@@ -173,7 +287,8 @@ export default {
   background-color: #f5f5f5;
 
   .details {
-    margin: 40px;
+    margin: 40px auto;
+    width: 670px;
 
     .details_content {
       background: white;

@@ -266,21 +266,6 @@ export default {
         .catch((err) => {
           console.log(err)
         })
-      // coupon
-      //   .receiveCoupon({ axios: this.$axios }, { couponId: item.id })
-      //   .then((result) => {
-      //     if (result.code === 200) {
-      //       this.responseData = []
-      //       this.getInitCouponData()
-      //       this.loading = false
-      //     }
-      //   })
-      //   .catch((e) => {
-      //     if (e.code !== 200) {
-      //       this.responseData = []
-      //       console.log(e)
-      //     }
-      //   })
     },
     onChange(index) {
       this.current = index

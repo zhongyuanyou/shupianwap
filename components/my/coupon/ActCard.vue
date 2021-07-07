@@ -5,10 +5,11 @@
     <div :class="couponType === 0 ? 'notUse' : 'haveUse'" class="coupon_item">
       <div class="item-lf">
         <div class="coupon_price">
-          {{ item.rebatePrice }}
+          {{ item.type == 1 ? item.discount : item.rebatePrice }}
+          <span v-if="item.type == 1" class="coupon_price_unit">折</span>
         </div>
-        <div v-if="item.fullPrice" class="can_use">
-          满{{ item.fullPrice }}元可用
+        <div v-if="item.rebateNeedPrice" class="can_use">
+          满{{ item.rebateNeedPrice }}元可用
         </div>
         <div v-if="item.stock && showProgress" class="coupon_progress">
           <sp-progress
@@ -47,7 +48,7 @@
             <div class="date-container">
               <span class="date" :class="item.showColorTime ? 'warn' : ''">
                 <span v-if="item.validateType == 1">
-                  {{ item.validateDate }}天
+                  自购买之日起{{ item.validateDate }}天
                 </span>
                 <span v-if="item.validateType == 2">
                   {{ formatTime(item.validateDateStart) }}-{{
@@ -58,7 +59,7 @@
             </div>
           </div>
           <div v-if="showBuybutton" class="item-rt-content-right">
-            <button @click="buy">xxxx元抢</button>
+            <button @click="buy(item)">{{ item.price }}元抢</button>
           </div>
         </div>
 
@@ -174,6 +175,9 @@ export default {
       color: #ffffff;
       text-align: center;
       // padding-top: 27px;
+      .coupon_price_unit {
+        font-size: 36px;
+      }
     }
     .can_use {
       font-size: 24px;
