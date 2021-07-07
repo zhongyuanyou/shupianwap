@@ -441,6 +441,11 @@ export default {
       userDoTypeCode: '',
       loading: false,
       userInfo: '',
+      afterSaleStatusNoList: [
+        'AFTERSALE_STATUS_1',
+        'AFTERSALE_STATUS_2',
+        'AFTERSALE_STATUS_3',
+      ],
     }
   },
   // computed: {
@@ -468,6 +473,9 @@ export default {
           orderNo: this.$route.query.orderNo,
           isProduct: '1',
           isAfterSaleFlow: '1',
+          afterSaleStatusNoList: !this.$route.query.id
+            ? JSON.stringify(this.afterSaleStatusNoList)
+            : '',
         },
       })
       this.loading = false
@@ -519,7 +527,7 @@ export default {
             break
         }
       } else {
-        this.$xToast.error(res.data.error)
+        this.$xToast.warning(res.data.error)
       }
     },
     async updateAfterSaleStatus(btnIndex) {
