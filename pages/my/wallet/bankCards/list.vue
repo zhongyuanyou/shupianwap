@@ -10,13 +10,11 @@
         <li
           v-for="(item, index) in cardList"
           :key="index"
-          :style="{ background: '#3777E5' }"
+          :style="{ background: item.bankCardInfo.bg_color }"
           @click="$router.push(`/my/wallet/bankCards/detail?id=${item.id}`)"
         >
           <div class="left-logo">
-            <img
-              src="https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png"
-            />
+            <img :src="item.bankCardInfo.icon" />
           </div>
           <div class="right-info">
             <h3>{{ item.bankName }}</h3>
@@ -28,28 +26,9 @@
             </div>
           </div>
           <div class="bg-img">
-            <img
-              src="https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png"
-            />
+            <img :src="item.bankCardInfo.bg_icon" />
           </div>
         </li>
-        <!-- <li
-          style="
-            background-image: linear-gradient(90deg, #14bdbb 0%, #0bb3b3 100%);
-          "
-        >
-          <div class="left-logo">
-            <img />
-          </div>
-          <div class="right-info">
-            <h3>中国工商银行</h3>
-            <p>四川虎居信息科技有限公司</p>
-            <div class="card-num">
-              <span>****</span><span>****</span><span>****</span
-              ><span>3253</span>
-            </div>
-          </div>
-        </li> -->
       </ul>
     </div>
     <div v-if="!cardList.length && showNoDataImg" class="no-data-area">
@@ -83,40 +62,42 @@ export default {
   },
   data() {
     return {
-      // bankCardStyle: [
-      //   {
-      //     bankCode: 'ICBC',
-      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/2k0jjobfx4c0000.png',
-      //     bg_icon:
-      //       'https://cdn.shupian.cn/sp-pt/wap/images/chze1ksovcg0000.png',
-      //     bg_color: '#0BB3B3',
-      //   },
-      //   {
-      //     bankCode: 'ICBC',
-      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/byc0c33glcw0000.png',
-      //     bg_icon: 'https://cdn.shupian.cn/sp-pt/wap/images/rlbycqvjsb4000.png',
-      //     bg_color: '#E63B47',
-      //   },
-      //   {
-      //     bankCode: 'CCB',
-      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/3p91fh7h6t60000.png',
-      //     bg_icon:
-      //       'https://cdn.shupian.cn/sp-pt/wap/images/bnivu4nkbm80000.png',
-      //     bg_color: '#3777E5',
-      //   },
-      //   {
-      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/aexk52ox6sw0000.png',
-      //     bg_icon:
-      //       'https://cdn.shupian.cn/sp-pt/wap/images/e5m4yxb0se00000.png',
-      //     bg_color: '#28A264',
-      //   },
-      //   {
-      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png',
-      //     bg_icon:
-      //       'https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png',
-      //     bg_color: '#3777E5',
-      //   },
-      // ],
+      bankCardData: [
+        {
+          bankCode: 'ABC',
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/2k0jjobfx4c0000.png',
+          bg_icon:
+            'https://cdn.shupian.cn/sp-pt/wap/images/chze1ksovcg0000.png',
+          bg_color: '#0BB3B3',
+        },
+        {
+          bankCode: 'ICBC',
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/byc0c33glcw0000.png',
+          bg_icon: 'https://cdn.shupian.cn/sp-pt/wap/images/rlbycqvjsb4000.png',
+          bg_color: '#E63B47',
+        },
+        {
+          bankCode: 'CCB',
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/3p91fh7h6t60000.png',
+          bg_icon:
+            'https://cdn.shupian.cn/sp-pt/wap/images/bnivu4nkbm80000.png',
+          bg_color: '#3777E5',
+        },
+        {
+          bankCode: 'PSBC',
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/aexk52ox6sw0000.png',
+          bg_icon:
+            'https://cdn.shupian.cn/sp-pt/wap/images/e5m4yxb0se00000.png',
+          bg_color: '#28A264',
+        },
+        {
+          bankCode: '',
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png',
+          bg_icon:
+            'https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png',
+          bg_color: '#3777E5',
+        },
+      ],
       cardList: [],
       showNoDataImg: false,
       accountInfo: '',
@@ -148,6 +129,15 @@ export default {
       this.loading = false
       if (res.code === 200) {
         this.cardList = res.data
+        if (this.cardList.length) {
+          this.cardList.forEach((item) => {
+            this.bankCardData.forEach((child) => {
+              if (item.bankCode === child.bankCode) {
+                item.bankCardInfo = child
+              }
+            })
+          })
+        }
         if (this.cardList.length === 0) {
           this.showNoDataImg = true
         } else {
