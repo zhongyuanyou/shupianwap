@@ -75,7 +75,12 @@
             >
               <div class="vouchers_item_left">
                 <div class="amount">{{ item.reducePrice }}</div>
-                <div class="conditions">满{{ item.fullPrice }}元可用</div>
+                <div class="conditions">
+                  <span v-if="item.fullPrice > 0"
+                    >满{{ item.fullPrice }}元可用</span
+                  >
+                  <span v-else>无门槛</span>
+                </div>
               </div>
               <div class="vouchers_item_right">
                 <div class="vouchers_title">{{ item.couponName }}</div>
@@ -337,12 +342,23 @@ export default {
         //  组装优惠券提示信息
         const info1 = sortcouponList[sortcouponList.length - 1]
         const info2 = sortcouponList[sortcouponList.length - 2]
-        const vouchers1 = `满${info1.fullPrice}减${info1.reducePrice}`
+        let vouchers1 = ''
+        if (info1.fullPrice === 0) {
+          vouchers1 = `无门槛`
+        } else {
+          vouchers1 = `满${info1.fullPrice}减${info1.reducePrice}`
+        }
+
         if (!info2) {
           this.vouchers = vouchers1
           return
         }
-        this.vouchers = `${vouchers1}, 满${info2.fullPrice}减${info2.reducePrice}`
+        if (info2.fullPrice === 0) {
+          vouchers1 = `无门槛`
+          this.vouchers = `${vouchers1}，无门槛`
+        } else {
+          this.vouchers = `${vouchers1}, 满${info2.fullPrice}减${info2.reducePrice}`
+        }
       }
     },
     // 领取优惠券

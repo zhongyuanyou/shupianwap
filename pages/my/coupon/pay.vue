@@ -8,27 +8,151 @@
       ></Header>
       <div class="price">4200.55<span class="unit">元</span></div>
       <div class="time">
-        支付剩余时间：<span>23</span> : <span>59</span> : <span>59</span>
+        支付剩余时间：<span>{{ TimeInfo.hh }}</span> :
+        <span>{{ TimeInfo.mm }}</span> : <span>{{ TimeInfo.ss }}</span>
       </div>
     </div>
     <main class="main">
-      <my-icon
-        name="pay_ic_alipay"
-        size="0.5rem"
-        color="rgba(23, 151, 236, 1)"
-      ></my-icon>
-      <div>支付宝</div>
-      <div>微信</div>
+      <sp-radio-group v-model="radio">
+        <sp-cell-group>
+          <sp-cell
+            v-for="item of typeList"
+            :key="item.code"
+            size="large"
+            title="支付宝"
+            clickable
+            @click="radio = item.code"
+          >
+            <template #icon>
+              <my-icon
+                class="myicon"
+                :name="item.icon"
+                size="0.48rem"
+                :color="item.color"
+              ></my-icon>
+            </template>
+
+            <template #right-icon>
+              <sp-radio :name="item.code" />
+            </template>
+          </sp-cell>
+        </sp-cell-group>
+      </sp-radio-group>
     </main>
+    <sp-bottombar ref="FooterNav" safe-area-inset-bottom class="submit_btns">
+      <sp-bottombar-button type="primary" text="" @click="submit">
+        <span class="text">立即购买：</span>
+        <span class="price">4200.55</span>
+        <span class="unit">元</span>
+      </sp-bottombar-button>
+    </sp-bottombar>
   </div>
 </template>
 <script>
+import {
+  Cell,
+  CellGroup,
+  RadioGroup,
+  Radio,
+  Bottombar,
+  BottombarButton,
+} from '@chipspc/vant-dgg'
+
 import Header from '@/components/common/head/header.vue'
+import { secondToTime } from '@/utils/common'
 export default {
   layout: 'keepAlive',
-  name: 'Invoice',
+  name: 'Pay',
   components: {
     Header,
+    [CellGroup.name]: CellGroup,
+    [Cell.name]: Cell,
+    [RadioGroup.name]: RadioGroup,
+    [Radio.name]: Radio,
+
+    [Bottombar.name]: Bottombar,
+    [BottombarButton.name]: BottombarButton,
+  },
+  data() {
+    return {
+      timeer: null, // 定时器
+
+      endTime: Date.now() + 2222222222,
+
+      TimeInfo: {
+        hh: '00',
+        mm: '00',
+        ss: '00',
+      },
+      typeList: [
+        {
+          code: 'CRISPS_C_ZFFS_ALI',
+          name: '支付宝支付',
+          icon: 'pay_ic_alipay',
+          color: 'rgba(23, 151, 236, 1)',
+        },
+        {
+          code: 'CRISPS_C_ZFFS_WECHAT',
+          name: '微信支付',
+          icon: 'pay_ic_wechat',
+          color: 'rgba(41, 175, 18, 1)',
+        },
+        // {
+        //   code: 'CRISPS_C_ZFFS_CARD',
+        //   name: '银行卡支付',
+        //   icon: 'pay_ic_bank',
+        //   color: 'rgba(255, 133, 60, 1)',
+        // },
+      ],
+
+      radio: '',
+    }
+  },
+  mounted() {
+    this.start()
+  },
+  destroyed() {
+    clearInterval(this.timeer)
+  },
+  methods: {
+    submit() {},
+    /**
+     * info 00:00:00
+     */
+    setTime(info) {
+      console.log(info)
+      const timeArr = info.split(':')
+      if (timeArr && timeArr.length === 3) {
+        this.TimeInfo = {
+          hh: timeArr[0],
+          mm: timeArr[1],
+          ss: timeArr[2],
+        }
+      } else {
+        this.TimeInfo = {
+          hh: '00',
+          mm: '00',
+          ss: '00',
+        }
+      }
+    },
+    start() {
+      let second = 0
+      this.timeer = setInterval(() => {
+        second = parseInt((this.endTime - Date.now()) / 1000)
+        if (second > 0) {
+          const time = secondToTime(second)
+
+          this.setTime(time)
+        } else {
+          this.end()
+        }
+      }, 1000)
+    },
+    end() {
+      this.setTime('00:00:00')
+      clearInterval(this.timeer)
+    },
   },
 }
 </script>
@@ -82,7 +206,15 @@ export default {
 }
 .main {
   background: #ffffff;
-  border-radius: 24px;
-  border-radius: 24px;
+  border-radius: 24px 24px 0px 0px;
+  margin-top: -24px;
+  padding-top: 24px;
+  overflow: hidden;
+  .myicon {
+    margin-right: 30px;
+  }
+  ::v-deep .sp-cell {
+    padding: 36px 40px;
+  }
 }
 </style>

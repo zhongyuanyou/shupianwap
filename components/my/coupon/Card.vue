@@ -4,9 +4,7 @@
     <!-- :key="index" -->
     <div :class="couponType === 0 ? 'notUse' : 'haveUse'" class="coupon_item">
       <div class="item-lf">
-        <div class="coupon_price">
-          {{ item.reducePrice }}
-        </div>
+        <div class="coupon_price">{{ item.reducePrice }}</div>
         <div v-if="item.fullPrice" class="can_use">
           满{{ item.fullPrice }}元可用
         </div>
