@@ -78,6 +78,9 @@
       <p>3、每次最多可提现<span>10000</span>元;</p>
     </div>
     <SelectBank ref="bank" :current-id="currentId" @selectCard="selectCard" />
+    <!--S loding-->
+    <LoadingCenter v-show="loading" />
+    <!--E loding-->
   </div>
 </template>
 
@@ -86,12 +89,14 @@ import { Icon, Field } from '@chipspc/vant-dgg'
 import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
 import SelectBank from '@/components/wallet/SelectBank.vue'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   components: {
     Header,
     SelectBank,
     [Icon.name]: Icon,
     [Field.name]: Field,
+    LoadingCenter,
   },
   data() {
     return {
@@ -106,16 +111,9 @@ export default {
       userInfo: '',
       accountInfo: '',
       customJump: true,
+      loading: false,
     }
   },
-  // computed: {
-  //   userInfo() {
-  //     return JSON.parse(localStorage.getItem('info'))
-  //   },
-  //   accountInfo() {
-  //     return JSON.parse(localStorage.getItem('accountInfo'))
-  //   },
-  // },
   mounted() {
     this.userInfo = JSON.parse(localStorage.getItem('info'))
     this.accountInfo = JSON.parse(localStorage.getItem('accountInfo'))
@@ -129,11 +127,13 @@ export default {
     },
     // 银行卡列表
     async getCardList() {
+      this.loading = true
       const res = await this.$axios.get(walletApi.cardList, {
         params: {
           accountId: this.accountInfo.id,
         },
       })
+      this.loading = false
       if (res.code === 200) {
         this.selectCardInfo = res.data[0]
         if (!this.selectCardInfo) {
