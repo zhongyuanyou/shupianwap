@@ -50,7 +50,7 @@ import { mapState } from 'vuex'
 import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
-import Card from '@/components/my/coupon/Card.vue'
+import Card from '~/components/my/coupon/index/Card.vue'
 import FooterNav from '~/components/my/coupon/FooterNav.vue'
 
 import { coupon } from '@/api/index'

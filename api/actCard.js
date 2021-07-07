@@ -19,7 +19,7 @@ const actCard = {
       axios,
       params,
       method: 'get',
-      url: CHIPS_PC_URL + '/nk/marking/act_card_list.do',
+      url: CHIPS_PC_URL + '/nk/marking/v1/act_card_list.do',
     })
   },
   /**
@@ -35,7 +35,7 @@ const actCard = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_PC_URL + '/nk/marking/goods_card_list.do',
+      url: CHIPS_PC_URL + '/nk/marking/v1/goods_card_list.do',
     })
   },
 
@@ -51,7 +51,7 @@ const actCard = {
       axios,
       params,
       method: 'get',
-      url: CHIPS_PC_URL + '/nk/marking/user_card_detail_one.do',
+      url: CHIPS_PC_URL + '/yk/marking/v1/user_card_detail_one.do',
     })
   },
 
@@ -67,7 +67,7 @@ const actCard = {
       axios,
       params,
       method: 'get',
-      url: CHIPS_PC_URL + '/nk/marking/act_card_detail_one.do',
+      url: CHIPS_PC_URL + '/nk/marking/v1/act_card_detail_one.do',
     })
   },
 
@@ -87,7 +87,7 @@ const actCard = {
       axios,
       params,
       method: 'get',
-      url: CHIPS_PC_URL + '/nk/marking/user_act_card_list.do',
+      url: CHIPS_PC_URL + '/yk/marking/v1/user_act_card_list.do',
     })
   },
 
@@ -102,7 +102,7 @@ const actCard = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_PC_URL + '/nk/marking/user_act_card_list.do',
+      url: CHIPS_PC_URL + '/yk/marking/v1/add_order.do',
     })
   },
 }
