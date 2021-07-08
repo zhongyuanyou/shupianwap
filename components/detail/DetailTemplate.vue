@@ -484,11 +484,14 @@ export default {
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
             sceneId: 'app-cpxqye-01', // 场景ID
             user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-            platform: 'app', // 平台（app,m,pc）
+            platform: 'm', // 平台（app,m,pc）
             productId: this.proDetail.id, // 产品id
             formatIdOne:
               this.proDetail.classCodeLevel.split(',')[0] ||
               this.proDetail.classCodeLevel.split(',')[1],
+            firstTypeCode: this.proDetail.classCodeLevel
+              ? this.proDetail.classCodeLevel.split(',')[0]
+              : null,
           },
         })
         .then((res) => {
@@ -518,8 +521,11 @@ export default {
           productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
           sceneId: 'app-cpxqye-02', // 场景ID
           user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-          platform: 'app', // 平台（app,m,pc）
+          platform: 'm', // 平台（app,m,pc）
           productId: this.proDetail.id, // 产品id
+          firstTypeCode: this.proDetail.classCodeLevel
+            ? this.proDetail.classCodeLevel.split(',')[0]
+            : null,
         },
       })
       if (plannerRes.code === 200) {
