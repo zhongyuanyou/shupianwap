@@ -271,7 +271,7 @@ export default {
           couponId: item.id,
         })
         .then((res) => {
-          if (res.code === 200) {
+          if (res && res.code === 200) {
             Toast('领取成功')
             this.page = 1
             this.getInitCouponData()
