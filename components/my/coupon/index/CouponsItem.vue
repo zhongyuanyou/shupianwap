@@ -17,12 +17,7 @@
         </div>
       </div>
       <div class="item-rt">
-        <div
-          class="sign"
-          :class="
-            couponType === 1 ? 'have_use_icon' : couponType === 0 ? '' : 'lose'
-          "
-        ></div>
+        <div class="sign" :class="getStatusClassName()"></div>
         <div class="title" @click="goDetailPage(item)">
           <span
             class="coupon_type_name"
@@ -62,8 +57,14 @@ export default {
         return {}
       },
     },
-    // 优惠券类型 0未使用 1已使用 2已失效
+    // 优惠券类型 0正常 2已失效
     couponType: {
+      type: Number,
+      default: 0,
+    },
+    // 1.未使用 2.已使用,
+    // 没有已失效状态
+    logType: {
       type: Number,
       default: 0,
     },
@@ -73,6 +74,18 @@ export default {
   },
 
   methods: {
+    // 获取状态对应的类名
+    getStatusClassName() {
+      if (this.couponType === 2) {
+        if (this.logType === 2) {
+          // 已使用
+          return 'have_use_icon'
+        } else {
+          // 未使用，但过期了
+          return 'lose'
+        }
+      }
+    },
     getuseTypeName(useType) {
       let useTypeName = ''
       switch (useType) {

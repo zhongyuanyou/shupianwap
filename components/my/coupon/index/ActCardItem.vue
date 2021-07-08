@@ -17,12 +17,7 @@
         </div>
       </div>
       <div class="item-rt">
-        <div
-          class="sign"
-          :class="
-            couponType === 1 ? 'have_use_icon' : couponType === 0 ? '' : 'lose'
-          "
-        ></div>
+        <div class="sign" :class="getStatusClassName()"></div>
         <div class="title" @click="goDetailPage(item)">
           <span class="coupon_type_name" :class="{ invalid: couponType != 0 }">
             {{ item.cardType == 2 ? '满减卡' : '折扣卡' }}
@@ -63,7 +58,7 @@ export default {
         return {}
       },
     },
-    // 优惠券类型 未使用 已使用 已失效
+    // 优惠券类型 0未使用 2已失效
     couponType: {
       type: Number,
       default: 0,
@@ -79,6 +74,18 @@ export default {
         return time.split(' ')[0]
       }
       return ''
+    },
+    // 获取状态对应的类名
+    getStatusClassName() {
+      if (this.couponType === 2) {
+        if (this.item.availableTimes === 0) {
+          // 已使用
+          return 'have_use_icon'
+        } else {
+          // 未使用，但过期了
+          return 'lose'
+        }
+      }
     },
     getDiscount(count) {
       let num
