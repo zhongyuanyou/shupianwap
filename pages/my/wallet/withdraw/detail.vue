@@ -4,11 +4,7 @@
     <div class="detail-info">
       <div class="count">
         <span>{{ withdrawDetails.orderTypeName }}金额</span>
-        <strong
-          >{{
-            withdrawDetails.orderType === 'BANK_ORDER_TYPE_3' ? '-' : '+'
-          }}￥{{ withdrawDetails.amount }}</strong
-        >
+        <strong>￥{{ withdrawDetails.amount }}</strong>
       </div>
       <div class="field-list">
         <div class="row">
@@ -42,7 +38,12 @@
         <div class="row">
           <div class="title">状态</div>
           <div class="res">
-            {{ withdrawDetails.statusName }}
+            <span v-if="withdrawDetails.status === 'SYS_TRADE_ORDER_STATUS_2'"
+              >已处理</span
+            >
+            <span v-if="withdrawDetails.status === 'SYS_TRADE_ORDER_STATUS_1'"
+              >提现中</span
+            >
             <span v-if="withdrawDetails.successTime"
               >({{ withdrawDetails.successTime }})</span
             >
