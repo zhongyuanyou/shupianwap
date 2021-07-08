@@ -187,6 +187,8 @@ export default {
               typeof res.data === 'string' ? JSON.parse(res.data) : res.data
             )
             this.getInitCouponData()
+          } else {
+            this.getInitCouponData()
           }
         })
       }
@@ -256,9 +258,13 @@ export default {
         Toast('无法领取')
       }
     },
-    setCouponStatus(item) {
-      // const isLogin = await this.$isLogin()
-      // if (!isLogin) return
+    async setCouponStatus(item) {
+      const isLogin = await this.$isLogin()
+      if (isLogin === 'app_login_success') {
+        this.getInitCouponData()
+        return
+      }
+      if (!isLogin) return
       this.loading = true
       this.$axios
         .post(`${CHIPS_WAP_BASE_URL}/yk/coupon/v2/receive_coupon.do`, {
@@ -275,7 +281,7 @@ export default {
             this.loading = false
             Toast.fail({
               duration: 2000,
-              message: res.message,
+              message: res.message || '领取失败',
               forbidClick: true,
               className: 'my-toast-style',
             })
@@ -283,6 +289,12 @@ export default {
         })
         .catch((err) => {
           console.log(err)
+          Toast.fail({
+            duration: 2000,
+            message: err.message || err || '领取失败',
+            forbidClick: true,
+            className: 'my-toast-style',
+          })
         })
     },
     onChange(index) {
