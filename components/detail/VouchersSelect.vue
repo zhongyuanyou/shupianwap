@@ -76,7 +76,7 @@
               <div class="vouchers_item_left">
                 <div v-if="item.couponType === 1">
                   <div class="coupon_price">{{ item.reducePrice }}</div>
-                  <div v-if="item.useType === 1" class="can_use">无门槛</div>
+                  <div v-if="item.fullPrice == 0" class="can_use">无门槛</div>
                   <div v-else class="can_use">满{{ item.fullPrice }}元可用</div>
                 </div>
                 <div v-else>
@@ -408,7 +408,6 @@ export default {
     },
     // 对优惠金额进行排序
     rangeDiscountPrice(arr, price) {
-      console.log('商品价格', price)
       arr.forEach((element) => {
         if (element.couponType === 2) {
           element.reducePrice = (
