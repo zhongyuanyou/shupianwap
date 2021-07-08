@@ -39,15 +39,14 @@
         />
         <sp-field
           v-model="accountBank"
-          type="textarea"
           name="开户行"
           label="开户行"
-          placeholder="选择开户行，系统自动搜索"
+          placeholder="请输入开户行，系统自动搜索"
           readonly="readonly"
           :rules="[
             {
               required: true,
-              message: '输入开户行，系统自动搜索',
+              message: '请输入开户行，系统自动搜索',
             },
           ]"
           @click="openPullPop"
@@ -183,7 +182,7 @@ export default {
         this.$xToast.show({ message: '绑定成功' })
         this.$router.push('/my/wallet/bankCards/list')
       } else {
-        this.$xToast.error(res.data.error)
+        this.$xToast.warning(res.data.error)
       }
     },
     async getBankInfo() {
@@ -381,7 +380,7 @@ export default {
     text-align: right;
   }
   ::v-deep.sp-field__label {
-    width: 8.4em;
+    width: 4.8em;
     span {
       position: relative;
       &:after {

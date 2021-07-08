@@ -151,7 +151,7 @@
       <div class="title">发票须知</div>
       <div class="tips">
         <div>1、发票金额为实际支付金额，不包含优惠券等；</div>
-        <div>2、电子发票可以在订单确认后，在订单详情中查看和下载。</div>
+        <div>2、电子发票开具成功后可在发票中心查看和下载；</div>
       </div>
     </div>
     <div class="card">
@@ -192,6 +192,12 @@ import { mapState } from 'vuex'
 import Header from '@/components/common/head/header.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { invoiceApi } from '@/api/index.js'
+const InvoiceType = {
+  '027': '增值税电子专用发票',
+  '026': '电子普通发票 ',
+  '007': '增值税普通发票 ',
+  '004': '增值税专用发票',
+}
 
 export default {
   layout: 'keepAlive',
@@ -361,18 +367,28 @@ export default {
           console.log(res)
           const arr = res.applyInvoiceType.split(',')
           const info = {}
-          arr.map((item, index) => {
-            info[item] = res.applyInvoiceTypeNames[index]
-
-            if (!this.formData.invoiceType && res.defaultInvoiceType) {
-              this.formData.invoiceType = res.defaultInvoiceType
+          arr.map((item) => {
+            if (InvoiceType[item]) {
+              info[item] = InvoiceType[item]
             }
           })
 
+          // arr.map((item, index) => {
+          //   info[item] = res.applyInvoiceTypeNames[index]
+          // })
           this.InvoiceType = info
+
+          if (
+            !this.formData.invoiceType &&
+            res.defaultInvoiceType &&
+            this.InvoiceType[res.defaultInvoiceType]
+          ) {
+            this.formData.invoiceType = res.defaultInvoiceType
+          }
         })
         .catch((err) => {
           console.log(err)
+          this.$xToast.error('商户信息错误')
         })
     },
     /** 获取默认抬头 */
