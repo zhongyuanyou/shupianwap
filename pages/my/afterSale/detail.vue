@@ -440,24 +440,25 @@ export default {
       ],
       userDoTypeCode: '',
       loading: false,
-      userInfo: '',
+      // userInfo: '',
       afterSaleStatusNoList: [
         'AFTERSALE_STATUS_1',
         'AFTERSALE_STATUS_2',
         'AFTERSALE_STATUS_3',
       ],
+      afterSaleId: '',
     }
   },
-  // computed: {
-  //   userInfo() {
-  //     return JSON.parse(localStorage.getItem('info'))
-  //   },
-  // },
+  computed: {
+    userInfo() {
+      return JSON.parse(localStorage.getItem('info'))
+    },
+  },
   // created() {
   //   this.getAfterSaleDetails()
   // },
   mounted() {
-    this.userInfo = JSON.parse(localStorage.getItem('info'))
+    // this.userInfo = JSON.parse(localStorage.getItem('info'))
     this.getAfterSaleDetails()
   },
   // mounted() {
@@ -466,21 +467,37 @@ export default {
   methods: {
     async getAfterSaleDetails() {
       this.loading = true
-      const res = await this.$axios.get(afterSaleApi.detail, {
-        params: {
-          id: this.$route.query.id,
-          orderId: this.$route.query.orderId,
-          orderNo: this.$route.query.orderNo,
-          isProduct: '1',
-          isAfterSaleFlow: '1',
-          afterSaleStatusNoList: !this.$route.query.id
-            ? JSON.stringify(this.afterSaleStatusNoList)
-            : '',
-        },
-      })
+      const params = {
+        id: '',
+        orderId: this.$route.query.orderId,
+        orderNo: this.$route.query.orderNo,
+        isProduct: '1',
+        isAfterSaleFlow: '1',
+        afterSaleStatusNoList: !this.$route.query.id
+          ? JSON.stringify(this.afterSaleStatusNoList)
+          : '[]',
+      }
+      if (!this.$route.query.id && localStorage.getItem('afterSaleId')) {
+        params.id = localStorage.getItem('afterSaleId')
+      } else {
+        params.id = this.$route.query.id
+      }
+      // if (localStorage.getItem('afterSaleId')) {
+      //   params.id = localStorage.getItem('afterSaleId')
+      // } else {
+      //   params.id = this.$route.query.id
+      // }
+      const res = await this.$axios.get(afterSaleApi.detail, { params })
       this.loading = false
       if (res.code === 200) {
         this.afterSaleDetail = res.data
+        // 如果售后id不存在，要存起来
+        // if (!this.$route.query.id) {
+        //   localStorage.setItem('afterSaleId', this.afterSaleDetail.id)
+        // } else {
+        //   localStorage.removeItem('afterSaleId')
+        // }
+        // this.afterSaleId = this.afterSaleDetail.id
         console.log(this.afterSaleDetail.afterSaleStatusNo)
         switch (this.afterSaleDetail.afterSaleStatusNo) {
           case 'AFTERSALE_STATUS_1':
@@ -495,7 +512,7 @@ export default {
             break
           case 'AFTERSALE_STATUS_3':
             this.statusBar = this.status[0]
-            this.statusBar.title = '待确认'
+            this.statusBar.title = '请您确认'
             this.statusBar.desc = '请您确认售后方案'
             break
           case 'AFTERSALE_STATUS_4':
@@ -538,7 +555,7 @@ export default {
         updaterCode: this.userInfo.no,
         afterSaleId: this.afterSaleDetail.id,
         userDoType: this.userDoTypeCode,
-        afterSaleAgreementIds: 'protocol100039',
+        afterSaleAgreementIds: 'protocol100040',
       })
       this.loading = false
       if (res.code === 200) {
@@ -555,6 +572,14 @@ export default {
           case 2:
             this.alertDialog(3)
             break
+        }
+        // this.$router.push(
+        //   `/my/afterSale/detail?orderId=${this.$route.query.orderId}&orderNo=${this.$route.query.orderNo}&id=${this.afterSaleId}`
+        // )
+        if (!this.$route.query.id) {
+          localStorage.setItem('afterSaleId', this.afterSaleDetail.id)
+        } else {
+          localStorage.removeItem('afterSaleId')
         }
         this.getAfterSaleDetails()
       }
@@ -629,6 +654,9 @@ export default {
     concatKefuBtn() {
       this.jumpOnlineKefu()
     },
+  },
+  destroyed() {
+    localStorage.removeItem('afterSaleId')
   },
 }
 </script>
@@ -879,6 +907,7 @@ export default {
             h3 {
               font-size: 26px;
               color: #222222;
+              font-weight: bold;
             }
             > p {
               margin-left: 40px;
@@ -962,6 +991,7 @@ export default {
                 border-radius: 4px;
                 font-size: 24px;
                 color: #ec5330;
+                text-align: center;
               }
               > p {
                 font-size: 32px;
@@ -979,7 +1009,7 @@ export default {
             display: flex;
             height: 138px;
             padding: 28px 40px;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
             .left {
               h3 {
@@ -1019,7 +1049,8 @@ export default {
     z-index: 9;
     width: 100%;
     button {
-      width: 159px;
+      display: block;
+      width: 158px;
       height: 80px;
       background: #ffffff;
       border: 1px solid #dddddd;
