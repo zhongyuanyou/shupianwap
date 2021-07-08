@@ -7,6 +7,7 @@
       <CouponsItem
         :item="item.marketingCouponVO || {}"
         :coupon-type="2"
+        :log-type="item.logType"
       ></CouponsItem>
     </div>
 
