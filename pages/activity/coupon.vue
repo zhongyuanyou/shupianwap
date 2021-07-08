@@ -177,9 +177,11 @@ export default {
     // this.getInitCouponData()
     if (this.isInApp) {
       if (this.userInfo.userId && this.userInfo.token) {
+        console.log('无token')
         this.getInitCouponData()
       } else {
         this.$appFn.dggGetUserInfo((res) => {
+          console.log('调用app获取信息', res)
           if (res.code === 200) {
             // 兼容启大顺参数返回
             this.$store.dispatch(
