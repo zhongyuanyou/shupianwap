@@ -329,7 +329,7 @@ export default {
         condition,
       }
       this.$axios.post(cardApi.goodsCardList, params).then((res) => {
-        console.log('res', res)
+        console.log('活动卡列表', res)
       })
     },
     onLeftClick() {
