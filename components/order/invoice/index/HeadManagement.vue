@@ -68,7 +68,7 @@ export default {
   computed: {
     ShowList() {
       const ORDINARY_COMPANY = {
-        title: '电子普通发票-公司',
+        title: '电子普通发票-单位',
         list: [],
       }
       const SPECIAL_COMPANY = {
