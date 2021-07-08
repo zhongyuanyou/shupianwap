@@ -3,7 +3,7 @@
     <sp-sticky>
       <Header class="my-header" title="活动卡专区"></Header>
     </sp-sticky>
-    <div v-if="productAdvertData.length > 0" class="banner">
+    <div class="banner">
       <span class="card_des" @click="TipsShow = true">活动卡介绍</span>
       <!-- <img :src="$ossImgSetV2(banner)" alt="" /> -->
       <sp-swipe :autoplay="3000">
@@ -238,6 +238,7 @@ export default {
     }
     .card_des {
       position: absolute;
+      z-index: 1;
       right: 0;
       top: 32px;
       border-radius: 22px 0 0 22px;
@@ -257,7 +258,7 @@ export default {
       /*background-color: #999;*/
       overflow: hidden;
       position: relative;
-      margin-top: -88px;
+
       ::v-deep .sp-swipe-item {
         height: 300px;
         a {

@@ -25,19 +25,10 @@
         ></div>
         <div class="title" @click="goDetailPage(item)">
           <span
-            v-if="item.couponType == 1"
             class="coupon_type_name"
             :class="{ invalid: couponType != 0 }"
+            >{{ item.couponType == 1 ? '满减券' : '折扣券' }}</span
           >
-            满减券
-          </span>
-          <span
-            v-else-if="item.couponType == 2"
-            class="coupon_type_name"
-            :class="{ invalid: couponType != 0 }"
-          >
-            折扣券
-          </span>
 
           {{ item.couponName }}
         </div>
