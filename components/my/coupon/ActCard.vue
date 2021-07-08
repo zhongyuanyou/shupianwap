@@ -31,10 +31,10 @@
           "
         ></div>
         <div class="title" @click="goDetailPage(item)">
-          <span class="coupon_type_name">
-            {{ item.type == 1 ? '折扣卡' : '满减' }}
-          </span>
-          {{ item.cardName }}
+          <span class="coupon_type_name">{{
+            item.type == 1 ? '折扣卡' : '满减'
+          }}</span>
+          <span>{{ item.cardName }}</span>
         </div>
         <div class="item-rt-content">
           <div class="item-rt-content-left">

@@ -5,11 +5,11 @@
     <div :class="couponType === 0 ? 'notUse' : 'haveUse'" class="coupon_item">
       <div class="item-lf">
         <div class="coupon_price">
-          <span v-if="item.couponType === 1">
+          <span v-if="item.couponType === 2">
             {{ getDiscount(item.discount) }}
             <span class="coupon_price_unit">折</span>
           </span>
-          <span v-else-if="item.couponType === 2">{{ item.reducePrice }}</span>
+          <span v-else-if="item.couponType === 1">{{ item.reducePrice }}</span>
         </div>
         <div v-if="item.fullPrice == 0" class="can_use">无门槛</div>
         <div v-else-if="item.fullPrice" class="can_use">
@@ -25,19 +25,10 @@
         ></div>
         <div class="title" @click="goDetailPage(item)">
           <span
-            v-if="item.couponType == 1"
             class="coupon_type_name"
             :class="{ invalid: couponType != 0 }"
+            >{{ item.couponType == 1 ? '满减券' : '折扣券' }}</span
           >
-            满减券
-          </span>
-          <span
-            v-else-if="item.couponType == 2"
-            class="coupon_type_name"
-            :class="{ invalid: couponType != 0 }"
-          >
-            折扣券
-          </span>
 
           {{ item.couponName }}
         </div>
@@ -209,6 +200,7 @@ export default {
         font-family: PingFangSC-Medium;
         font-size: 20px;
         color: #ffffff;
+        text-align: center;
       }
       .coupon_type_name.invalid {
         background-image: none;
