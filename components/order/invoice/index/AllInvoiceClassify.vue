@@ -118,7 +118,7 @@ export default {
     margin: 0 -12px;
     & > div {
       display: inline-block;
-      min-width: 150px;
+      min-width: 140px;
       // min-width: 20%;
       text-align: center;
       background: #f8f8f8;
