@@ -54,6 +54,7 @@ export default function ({ $axios, redirect, app, store }) {
         config.headers['X-Auth-Token'] = token
         config.headers['X-Req-UserId'] = userId
       }
+      console.log('aixos的token', token)
       let userNo = app.$cookies.get('userNo', {
         path: '/',
       })
@@ -62,7 +63,9 @@ export default function ({ $axios, redirect, app, store }) {
       }
       // 获取用户信息
       if (userNo) {
-        config.headers['X-Req-UserNo'] = userNo
+        config.headers['X-Req-UserNo'] = app.$cookies.get('userNo', {
+          path: '/',
+        })
         // config.headers['X-Req-UserName'] = app.$cookies.get('userName', {
         //   path: '/',
         // })
