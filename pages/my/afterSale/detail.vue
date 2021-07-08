@@ -461,6 +461,9 @@ export default {
     // this.userInfo = JSON.parse(localStorage.getItem('info'))
     this.getAfterSaleDetails()
   },
+  destroyed() {
+    localStorage.removeItem('afterSaleId')
+  },
   // mounted() {
   //   this.userInfo = JSON.parse(localStorage.getItem('info'))
   // },
@@ -654,9 +657,6 @@ export default {
     concatKefuBtn() {
       this.jumpOnlineKefu()
     },
-  },
-  destroyed() {
-    localStorage.removeItem('afterSaleId')
   },
 }
 </script>
