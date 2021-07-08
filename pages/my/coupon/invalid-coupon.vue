@@ -1,7 +1,7 @@
 <template>
   <div class="invoice" :style="{ paddingBottom: FooterNavHeight + 'px' }">
     <sp-sticky>
-      <Header class="my-header" title="失效卡"></Header>
+      <Header class="my-header" title="失效券"></Header>
     </sp-sticky>
     <div v-for="(item, index) of list" :key="index" class="coupon_list">
       <CouponsItem

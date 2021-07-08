@@ -3,14 +3,8 @@
     <sp-sticky>
       <Header class="my-header" title="失效卡"></Header>
     </sp-sticky>
-    <div v-for="(item, index) of list" :key="index" class="coupon_list">
-      <ActCardItem
-        :item="item.marketingCouponVO || {}"
-        :coupon-type="2"
-      ></ActCardItem>
-    </div>
 
-    <!-- <sp-list
+    <sp-list
       v-if="list.length > 0"
       v-model="loading"
       :finished="finished"
@@ -19,8 +13,10 @@
       error-text="请求失败，点击重新加载"
       @load="onLoad"
     >
-      <div v-if="tabActive === 0" :list="list"></div>
-    </sp-list> -->
+      <div v-for="(item, index) of list" :key="index" class="coupon_list">
+        <ActCardItem :item="item || {}" :coupon-type="2"></ActCardItem>
+      </div>
+    </sp-list>
 
     <div v-if="list.length == 0 && loading == false">
       <sp-empty
@@ -56,7 +52,7 @@ import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import ActCardItem from '~/components/my/coupon/index/ActCardItem.vue'
 import FooterNav from '~/components/my/coupon/FooterNav.vue'
 
-import { coupon } from '@/api/index'
+import { coupon, actCard } from '@/api/index'
 
 export default {
   layout: 'keepAlive',
@@ -133,23 +129,38 @@ export default {
     getInitData() {
       this.finished = false
       const params = {
-        orderByWhere: 'effectEnd=desc;',
-        findType: 4,
-        userId: this.$store.state.user.userId,
-        limit: '100',
+        condition: 2, //
+        limit: 10,
         page: this.page,
       }
+      actCard
+        .user_act_card_list({ axios: this.$axios }, params)
+        .then((res) => {
+          this.loading = false
+          this.page++
+          if (this.page > res.totalPage || !res.totalPage) {
+            this.finished = true
+          }
+          if (params.page === 1) {
+            try {
+              res.rows.map((item) => {
+                const time = new Date(item.receiveEndDate).getTime()
+                if (time - this.nowTimeStamp < 172800000) {
+                  item.marketingCouponVO.showColorTime = this.showColorTime
+                }
+              })
+            } catch (error) {
+              console.log('计算时间出错了')
+            }
 
-      coupon
-        .getCouponList({ axios: this.$axios }, params)
-        .then((result) => {
-          this.list = result.marketingCouponLogList
-          this.loading = false
+            this.list = res.rows
+          } else {
+            this.list.concat(res.rows)
+          }
         })
-        .catch((e) => {
+        .catch((err) => {
           this.loading = false
-          this.list = []
-          console.log(e)
+          this.$xToast.error(err.message || '请求失败')
         })
     },
 

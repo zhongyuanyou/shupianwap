@@ -250,15 +250,16 @@ export default {
 
           this.list = responseData
         })
-        .catch((e) => {
+        .catch((err) => {
           this.loading = false
+          this.$xToast.error(err.message || '请求失败')
         })
     },
 
     getCardList() {
       this.loading = false
       const params = {
-        condition: 1, // 排序 1 时间倒叙 2时间正序 默认1
+        condition: 1, //
         limit: 10,
         page: this.page,
       }
@@ -266,29 +267,14 @@ export default {
         .user_act_card_list({ axios: this.$axios }, params)
         .then((res) => {
           this.loading = false
-
+          this.page++
           if (this.page > res.totalPage || !res.totalPage) {
             this.finished = true
           }
 
           if (params.page === 1) {
-            //   for (let i = 0, length = this.responseData.length; i < length; i++) {
-            //   let useTime = this.responseData[i].marketingCouponVO.serviceLife
-            //   useTime = useTime.slice(11)
-            //   console.log('useTime', useTime)
-            //   const thisTime = useTime.split('.').join('-')
-            //   const time = new Date(thisTime).getTime()
-            //   if (time - this.nowTimeStamp < 172800000) {
-            //     this.responseData[i].marketingCouponVO.showColorTime =
-            //       this.showColorTime
-            //   }
-            // }
             try {
               res.rows.map((item) => {
-                // let useTime = item.marketingCouponVO.serviceLife
-                // useTime = useTime.slice(11)
-                // console.log('useTime', useTime)
-                // const thisTime = useTime.split('.').join('-')
                 const time = new Date(item.receiveEndDate).getTime()
                 if (time - this.nowTimeStamp < 172800000) {
                   item.marketingCouponVO.showColorTime = this.showColorTime
@@ -302,41 +288,6 @@ export default {
           } else {
             this.list.concat(res.rows)
           }
-          // var a = {
-          //   code: 200,
-          //   message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',
-          //   data: {
-          //     currentPage: 1,
-          //     rows: [
-          //       {
-          //         id: '8100943424855670784',
-          //         cardName: '满减/通用【1】',
-          //         userId: '1118747036651670219',
-          //         cardId: '8095504656283664384',
-          //         cardType: 1,
-          //         discount: 0,
-          //         rebateNeedPrice: '100.00',
-          //         rebatePrice: '50.00',
-          //         validateDate: 12,
-          //         validateDateStart: '2021-07-07 10:40:34',
-          //         validateDateEnd: '2021-07-19 10:40:34',
-          //         explain: '',
-          //         availableTimes: 12,
-          //         allAvailableTimes: 12,
-          //         purchasingDate: '2021-07-07 10:40:34',
-          //         originalPrice: '0.00',
-          //         purchasePrice: '0.00',
-          //         validateType: 1,
-          //         expireType: 0,
-          //         userLimit: 0,
-          //         cardCode: '',
-          //       },
-          //     ],
-          //     totalPage: 1,
-          //     pageSize: 10,
-          //     total: 1,
-          //   },
-          // }
         })
         .catch((err) => {
           this.loading = false

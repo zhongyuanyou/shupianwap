@@ -43,7 +43,7 @@
           >
             <div v-if="item.couponType === 1">
               <div class="coupon_price">{{ item.reducePrice }}</div>
-              <div v-if="item.useType === 1" class="can_use">无门槛</div>
+              <div v-if="item.fullPrice == 0" class="can_use">无门槛</div>
               <div v-else class="can_use">满{{ item.fullPrice }}元可用</div>
             </div>
             <div v-else>
@@ -266,6 +266,21 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+      // coupon
+      //   .receiveCoupon({ axios: this.$axios }, { couponId: item.id })
+      //   .then((result) => {
+      //     if (result.code === 200) {
+      //       this.responseData = []
+      //       this.getInitCouponData()
+      //       this.loading = false
+      //     }
+      //   })
+      //   .catch((e) => {
+      //     if (e.code !== 200) {
+      //       this.responseData = []
+      //       console.log(e)
+      //     }
+      //   })
     },
     onChange(index) {
       this.current = index
@@ -472,13 +487,12 @@ export default {
         // text-overflow: ellipsis;
         // white-space: nowrap;
       }
-            .coupon_remain {
-        padding: 0 12px;
+      .coupon_remain {
         font-size: 24px;
-        display: flex;
+        height: 30px;
         width: 100%;
-        justify-content: space-around;
         .remain_bar {
+          margin-left: 20px;
           width: 66px;
           height: 8px;
           border-radius: 4px;
@@ -486,6 +500,7 @@ export default {
           margin-top: 12px;
           position: relative;
           overflow: hidden;
+          float: left;
           .bar_inner {
             position: absolute;
             left: 0;
@@ -496,15 +511,19 @@ export default {
           }
         }
         .remain_num {
-          float: right;
+          float: left;
           opacity: 0.8;
           font-size: 24px;
           color: #fffcd6;
           letter-spacing: 0;
           transform: scale(0.8);
+          transform-origin: 12px 50%;
         }
         .no-num {
+          text-align: center;
           color: #ffffff;
+          width: 100%;
+          display: inline-block;
         }
       }
       .can_use {

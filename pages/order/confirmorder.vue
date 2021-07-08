@@ -492,8 +492,9 @@ export default {
             value: this.$refs.conpon.checkarr.marketingCouponVO.id,
             couponUseCode: this.$refs.conpon.checkarr.couponUseCode,
             no: this.$refs.conpon.checkarr.marketingCouponVO.id,
+            couponName: this.$refs.conpon.checkarr.marketingCouponVO.couponName,
           }
-          this.Orderform.discount.push(arr)
+          this.Orderform.discount = new Array(1).fill(arr)
         }
         this.Orderform.cusOrderPayType = cusOrderPayType
         this.Orderform.isFromCart = isFromCart
@@ -610,7 +611,6 @@ export default {
               this.$refs.conpon.num =
                 this.$refs.conpon.checkarr.marketingCouponVO.reducePrice
               this.$refs.conpon.sum()
-              console.log('datalist', this.datalist)
             } else {
               this.skeletonloading = false
             }
