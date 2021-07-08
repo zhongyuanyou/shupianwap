@@ -246,10 +246,10 @@ import {
   Skeleton,
   // CheckboxGroup,
 } from '@chipspc/vant-dgg'
-import Head from '@/components/common/head/header'
-import Popup from '@/components/PlaceOrder/Popup'
-import Contract from '@/components/PlaceOrder/contract'
-import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import Head from '@/components/common/head/header.vue'
+import Popup from '@/components/PlaceOrder/Popup.vue'
+import Contract from '@/components/PlaceOrder/contract.vue'
+import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { productDetailsApi, auth, shopCart } from '@/api'
 import cardApi from '@/api/card'
 import { coupon, order } from '@/api/index'
