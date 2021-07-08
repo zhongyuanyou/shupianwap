@@ -314,20 +314,32 @@ export default {
   background: #f5f5f5;
   padding: 0 0 170px;
   min-height: 100vh;
-  ::v-deep .sp-cell {
-    padding: 40px 0px 40px 32px;
 
-    .sp-field__label {
-      flex: none;
-      width: 4.5em;
-    }
+  & ::v-deep .sp-cell {
+    padding: 40px 0px 40px 32px;
+    display: flex;
+    align-items: center;
   }
 
   .card {
     background: #fff;
-    margin-bottom: 20px;
+    margin-top: 20px;
+    // margin-bottom: 20px;
     padding: 0 40px;
 
+    ::v-deep .sp-field__label {
+      font-family: PingFangSC-Regular;
+      font-size: 30px;
+      color: #222222;
+      line-height: 30px;
+      flex: none !important;
+      width: 4.5em;
+    }
+    ::v-deep .sp-field__control {
+      font-family: PingFangSC-Regular;
+      font-size: 30px;
+      color: #222222;
+    }
     .options {
       // padding-bottom: 20px;
       .btn {
