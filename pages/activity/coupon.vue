@@ -186,7 +186,7 @@ export default {
     },
     getDiscount(count) {
       let num
-      if (Number(count) > 10) {
+      if (Number(count) > 1) {
         num = Number(count) / 100
         num = num.toFixed('1')
       }
