@@ -8,7 +8,7 @@
       close-icon-position="top-left"
       :style="{ width: '100%', height: '60%' }"
     >
-      <div class="title">选择付款方式</div>
+      <div class="title">选择收款账户</div>
       <div class="bank-list">
         <ul class="bank-ul">
           <li
