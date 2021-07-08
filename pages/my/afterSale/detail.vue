@@ -348,7 +348,7 @@ export default {
           confirmButtonText: '',
         },
         {
-          title: '',
+          title: '您确定撤回此售后申请？',
           message:
             '您将撤销本次申请，如有问题未解决，您还可以再次发起。确定撤销吗？',
           cancelButtonText: '暂不取消',
@@ -789,6 +789,7 @@ export default {
                     width: 30px;
                     height: 30px;
                     line-height: 30px;
+                    text-align: center;
                   }
                   .title {
                     font-size: 28px;
@@ -828,7 +829,7 @@ export default {
               > .img-mark {
                 position: absolute;
                 right: 0;
-                top: 0;
+                top: 18px;
                 width: 140px;
                 height: 105px;
                 img {
@@ -1003,6 +1004,7 @@ export default {
             .right {
               color: #4974f5;
               font-size: 28px;
+              font-weight: bold;
             }
           }
           .amount {
@@ -1050,7 +1052,6 @@ export default {
     width: 100%;
     button {
       display: block;
-      width: 158px;
       height: 80px;
       background: #ffffff;
       border: 1px solid #dddddd;
@@ -1059,6 +1060,8 @@ export default {
       font-size: 28px;
       color: #222222;
       margin: 24px 8px;
+      word-break: keep-all;
+      text-align: center;
     }
     .pay-btn {
       background: #ec5330 !important;
