@@ -368,21 +368,18 @@ export default {
           list2,
           sellingGoodsData.salesPrice || sellingGoodsData.price
         )
-        console.log('排序后的优惠券2', sortcouponList)
         //  取最大优惠金额
         const salesPrice =
           sellingGoodsData.salesPrice - sortcouponList[0].reducePrice
         const salesPriceRes = salesPrice >= 0 ? salesPrice : 0
-        console.log('优惠后预估', salesPrice)
         this.couponPreferentialLine = salesPriceRes.toFixed(2)
         //  组装优惠券提示信息
         const info1 = sortcouponList[0]
         const info2 = sortcouponList[1]
-        console.log('info1', info1)
         let vouchers1 = ''
         if (info1.couponType === 1) {
           if (info1.fullPrice === 0) {
-            vouchers1 = `无门槛减${info1.reducePrice}`
+            vouchers1 = `无门槛减${info1.reducePrice}元`
           } else {
             vouchers1 = `满${info1.fullPrice}减${info1.reducePrice}元`
           }
@@ -398,7 +395,7 @@ export default {
           if (info2.fullPrice === 0) {
             vouchers2 = `无门槛减${info2.reducePrice}元`
           } else {
-            vouchers2 = `满${info2.fullPrice}减${info2.reducePrice}元元`
+            vouchers2 = `满${info2.fullPrice}减${info2.reducePrice}元`
           }
         } else {
           vouchers2 = (Number(info2.discount) / 100).toFixed('1') + '折'
