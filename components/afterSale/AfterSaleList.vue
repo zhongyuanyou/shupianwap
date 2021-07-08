@@ -376,7 +376,7 @@ export default {
           > .img-mark {
             position: absolute;
             right: 0;
-            top: 0;
+            top: 18px;
             width: 140px;
             height: 105px;
             img {
@@ -409,8 +409,6 @@ export default {
       justify-content: flex-end;
       align-content: center;
       button {
-        display: block;
-        width: 152px;
         height: 64px;
         background: #ffffff;
         border: 1px solid #dddddd;
@@ -420,6 +418,8 @@ export default {
         text-align: center;
         margin-top: 32px;
         margin-left: 20px;
+        padding: 0 20px;
+        word-break: break-all;
       }
     }
   }
