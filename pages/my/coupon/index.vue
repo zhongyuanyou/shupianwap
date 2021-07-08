@@ -24,6 +24,7 @@
           <CouponsItem
             :item="item.marketingCouponVO || {}"
             :coupon-type="0"
+            :log-type="item.logType"
           ></CouponsItem>
         </div>
       </div>
