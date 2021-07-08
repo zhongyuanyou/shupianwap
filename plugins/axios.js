@@ -26,9 +26,12 @@ export default function ({ $axios, redirect, app, store }) {
       config.headers.platformCode = BASE.platformCode // 平台code
       config.headers.terminalCode = BASE.terminalCode // 终端code
       const data = config.method === 'post' ? config.data : config.params
-      const token = app.$cookies.get('token', {
+      let token = app.$cookies.get('token', {
         path: '/',
       })
+      if (!token) {
+        token = store.state.user.token
+      }
       // // 签名
       const signData = gatewaySign.handleSign({
         method: config.method,
@@ -42,20 +45,24 @@ export default function ({ $axios, redirect, app, store }) {
       // config.headers.sysCode = 'crisps-app-wap-bff-api'
       // 获取token
       if (token) {
-        config.headers['X-Auth-Token'] = token
-        config.headers['X-Req-UserId'] = app.$cookies.get('userId', {
+        let userId = app.$cookies.get('userId', {
           path: '/',
         })
+        if (!userId) {
+          userId = store.state.user.userId
+        }
+        config.headers['X-Auth-Token'] = token
+        config.headers['X-Req-UserId'] = userId
+      }
+      let userNo = app.$cookies.get('userNo', {
+        path: '/',
+      })
+      if (!userNo) {
+        userNo = store.state.user.userNo
       }
       // 获取用户信息
-      if (
-        app.$cookies.get('userNo', {
-          path: '/',
-        })
-      ) {
-        config.headers['X-Req-UserNo'] = app.$cookies.get('userNo', {
-          path: '/',
-        })
+      if (userNo) {
+        config.headers['X-Req-UserNo'] = userNo
         // config.headers['X-Req-UserName'] = app.$cookies.get('userName', {
         //   path: '/',
         // })
@@ -97,6 +104,8 @@ export default function ({ $axios, redirect, app, store }) {
           } else {
             redirect('/login')
           }
+        } else {
+          return result
         }
       } else {
         return result
