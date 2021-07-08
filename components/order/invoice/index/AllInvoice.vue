@@ -45,7 +45,7 @@
                   : item.skuDetailValues || getSkus(item.skuExtInfo)
               }}
             </div>
-            <div class="goods_num">x1</div>
+            <div class="goods_num">×{{ item.skuCount }}</div>
           </div>
 
           <!-- <div class="flex">
