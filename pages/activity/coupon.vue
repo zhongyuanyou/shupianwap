@@ -160,7 +160,8 @@ export default {
       productAdvertData: [],
       isNoData: false,
       page: 1,
-      loadingMore: false,
+      limit: 20,
+      nomore: false,
     }
   },
   computed: {
@@ -172,28 +173,26 @@ export default {
     }),
   },
   mounted() {
-    console.log('isInApp', this.isInApp)
     this.getAdvertisingData()
-    this.getInitCouponData()
-    // if (this.isInApp) {
-    //   if (this.userInfo.userId && this.userInfo.token) {
-    //     this.getInitCouponData()
-    //   } else {
-    //     this.$appFn.dggGetUserInfo((res) => {
-    //       console.log('获取APP用户信息', res)
-    //       if (res.code === 200) {
-    //         // 兼容启大顺参数返回
-    //         this.$store.dispatch(
-    //           'user/setUser',
-    //           typeof res.data === 'string' ? JSON.parse(res.data) : res.data
-    //         )
-    //         this.getInitCouponData()
-    //       }
-    //     })
-    //   }
-    // } else {
-    //   this.getInitCouponData()
-    // }
+    // this.getInitCouponData()
+    if (this.isInApp) {
+      if (this.userInfo.userId && this.userInfo.token) {
+        this.getInitCouponData()
+      } else {
+        this.$appFn.dggGetUserInfo((res) => {
+          if (res.code === 200) {
+            // 兼容启大顺参数返回
+            this.$store.dispatch(
+              'user/setUser',
+              typeof res.data === 'string' ? JSON.parse(res.data) : res.data
+            )
+            this.getInitCouponData()
+          }
+        })
+      }
+    } else {
+      this.getInitCouponData()
+    }
   },
   methods: {
     getRemainPercent(data) {
@@ -238,9 +237,10 @@ export default {
       const scrollHeight = this.$refs.scrollView.scrollHeight
       const windowHeight = window.innerHeight
       // 提前100px拉取下页数据
-      if (scrollTop + windowHeight > scrollHeight) {
-        if (!this.loadingMore) {
-          this.loadingMore = true
+      if (scrollTop + windowHeight > scrollHeight - 100) {
+        if (!this.nomore && !this.loading) {
+          this.nomore = true
+          this.loading = true
           this.page++
           this.getInitCouponData()
         }
@@ -256,9 +256,9 @@ export default {
         Toast('无法领取')
       }
     },
-    async setCouponStatus(item) {
-      const isLogin = await this.$isLogin()
-      if (!isLogin) return
+    setCouponStatus(item) {
+      // const isLogin = await this.$isLogin()
+      // if (!isLogin) return
       this.loading = true
       this.$axios
         .post(`${CHIPS_WAP_BASE_URL}/yk/coupon/v2/receive_coupon.do`, {
@@ -269,7 +269,8 @@ export default {
             Toast('领取成功')
             this.page = 1
             this.getInitCouponData()
-            this.loading = false
+            this.loading = true
+            this.nomore = false
           } else {
             this.loading = false
             Toast.fail({
@@ -313,7 +314,7 @@ export default {
       const params = {
         orderByWhere: 'createTime=desc;',
         findType: 1,
-        limit: 30,
+        limit: this.limit,
         page: this.page,
       }
       this.userId ? (params.userId = this.userId) : (params.userId = '')
@@ -347,6 +348,12 @@ export default {
           // this.invalidCount = result.invalidCount
           this.responseData = dataArr
           this.loading = false
+          if (result.length < this.limit) {
+            this.nomore = true
+          } else {
+            this.nomore = false
+          }
+          console.log('nomore', this.nomore)
         })
         .catch((e) => {
           if (e.code !== 200) {
@@ -540,7 +547,7 @@ export default {
       }
     }
     .item-rt {
-      padding-left: 24px;
+      padding: 30px 0 0 24px;
       height: auto;
       box-sizing: border-box;
       width: auto;
@@ -552,11 +559,11 @@ export default {
         font-weight: bold;
         color: #222222;
         line-height: 40px;
-        margin: 30px 0 12px 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         padding-left: 84px;
+        padding-bottom: 12px;
         position: relative;
         span {
           position: absolute;
