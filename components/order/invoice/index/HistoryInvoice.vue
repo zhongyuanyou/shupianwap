@@ -72,7 +72,8 @@ export default {
       this.$router.push({
         path: '/order/invoice/detail',
         query: {
-          orderId: orderData.orderId,
+          // orderId: orderData.orderId,
+          id: orderData.id,
         },
       })
     },

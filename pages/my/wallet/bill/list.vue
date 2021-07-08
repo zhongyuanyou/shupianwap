@@ -14,10 +14,13 @@
           @click="$router.push(`/my/wallet/bill/detail?id=${item.billId}`)"
         >
           <div class="left">
-            <h3>提现</h3>
+            <h3>{{ item.orderTypeName }}</h3>
             <p>{{ item.createTime }}</p>
           </div>
-          <div class="right">-￥{{ item.amount }}</div>
+          <div class="right">
+            <span v-if="item.orderTypeName === '提现'">-</span
+            ><span v-else>+</span>￥{{ item.amount }}
+          </div>
         </li>
         <!-- <li>
           <div class="left">

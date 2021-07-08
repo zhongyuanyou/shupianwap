@@ -28,7 +28,7 @@ export default {
   },
   data() {
     return {
-      showBalanceDesc:false
+      showBalanceDesc: false,
     }
   },
   methods: {
@@ -63,7 +63,7 @@ export default {
   }
   .confirm-btn {
     height: 96px;
-    margin: 0 40px;
+    margin: 40px;
     line-height: 96px;
     background: #4974f5;
     border-radius: 8px;
@@ -71,7 +71,6 @@ export default {
     font-size: 32px;
     color: #ffffff;
     text-align: center;
-    margin-top: 38px;
   }
 }
 </style>

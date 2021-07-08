@@ -3,11 +3,12 @@
     <Header title="银行卡详情" />
     <div class="bank-list">
       <ul>
-        <li v-if="cardDetailInfo.id" style="background: #3777e5">
+        <li
+          v-if="cardDetailInfo.id"
+          :style="{ background: cardDetailInfo.bankCardInfo.bg_color }"
+        >
           <div class="left-logo">
-            <img
-              src="https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png"
-            />
+            <img :src="cardDetailInfo.bankCardInfo.icon" />
           </div>
           <div class="right-info">
             <h3>{{ cardDetailInfo.bankName }}</h3>
@@ -19,9 +20,7 @@
             </div>
           </div>
           <div class="bg-img">
-            <img
-              src="https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png"
-            />
+            <img :src="cardDetailInfo.bankCardInfo.bg_icon" />
           </div>
         </li>
       </ul>
@@ -48,37 +47,42 @@ export default {
   data() {
     return {
       cardDetailInfo: '',
-      // bankCardStyle: [
-      //   {
-      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/2k0jjobfx4c0000.png',
-      //     bg_icon:
-      //       'https://cdn.shupian.cn/sp-pt/wap/images/chze1ksovcg0000.png',
-      //     bg_color: '#0BB3B3',
-      //   },
-      //   {
-      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/byc0c33glcw0000.png',
-      //     bg_icon: 'https://cdn.shupian.cn/sp-pt/wap/images/rlbycqvjsb4000.png',
-      //     bg_color: '#E63B47',
-      //   },
-      //   {
-      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/3p91fh7h6t60000.png',
-      //     bg_icon:
-      //       'https://cdn.shupian.cn/sp-pt/wap/images/bnivu4nkbm80000.png',
-      //     bg_color: '#3777E5',
-      //   },
-      //   {
-      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/aexk52ox6sw0000.png',
-      //     bg_icon:
-      //       'https://cdn.shupian.cn/sp-pt/wap/images/e5m4yxb0se00000.png',
-      //     bg_color: '#28A264',
-      //   },
-      //   {
-      //     icon: 'https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png',
-      //     bg_icon:
-      //       'https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png',
-      //     bg_color: '#3777E5',
-      //   },
-      // ],
+      bankCardData: [
+        {
+          bankCode: 'ABC',
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/2k0jjobfx4c0000.png',
+          bg_icon:
+            'https://cdn.shupian.cn/sp-pt/wap/images/chze1ksovcg0000.png',
+          bg_color: '#0BB3B3',
+        },
+        {
+          bankCode: 'ICBC',
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/byc0c33glcw0000.png',
+          bg_icon: 'https://cdn.shupian.cn/sp-pt/wap/images/rlbycqvjsb4000.png',
+          bg_color: '#E63B47',
+        },
+        {
+          bankCode: 'CCB',
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/3p91fh7h6t60000.png',
+          bg_icon:
+            'https://cdn.shupian.cn/sp-pt/wap/images/bnivu4nkbm80000.png',
+          bg_color: '#3777E5',
+        },
+        {
+          bankCode: 'PSBC',
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/aexk52ox6sw0000.png',
+          bg_icon:
+            'https://cdn.shupian.cn/sp-pt/wap/images/e5m4yxb0se00000.png',
+          bg_color: '#28A264',
+        },
+        {
+          bankCode: '',
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png',
+          bg_icon:
+            'https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png',
+          bg_color: '#3777E5',
+        },
+      ],
     }
   },
   created() {
@@ -94,6 +98,11 @@ export default {
       console.log(res)
       if (res.code === 200) {
         this.cardDetailInfo = res.data
+        this.bankCardData.forEach((child) => {
+          if (this.cardDetailInfo.bankCode === child.bankCode) {
+            this.cardDetailInfo.bankCardInfo = child
+          }
+        })
       }
     },
   },
@@ -166,6 +175,7 @@ export default {
             margin-top: 25px;
             display: flex;
             align-items: center;
+            font-weight: bold;
             span {
               margin-right: 24px;
               position: relative;

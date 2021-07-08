@@ -154,6 +154,8 @@ export default {
       })
       if (res.code === 200) {
         this.certificateInfo = res.data
+      }else{
+        
       }
     },
 

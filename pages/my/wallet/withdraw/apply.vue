@@ -44,13 +44,17 @@ export default {
   data() {
     return {
       withdrawInfo: '',
-      customJump: false,
+      customJump: true,
     }
   },
   mounted() {
     this.withdrawInfo = JSON.parse(localStorage.getItem('withdrawInfo'))
   },
-  methods: {},
+  methods: {
+    backHandle() {
+      this.$router.push('/my/wallet/withdraw')
+    },
+  },
 }
 </script>
 

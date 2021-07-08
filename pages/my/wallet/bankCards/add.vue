@@ -39,6 +39,7 @@
         />
         <sp-field
           v-model="accountBank"
+          type="textarea"
           name="开户行"
           label="开户行"
           placeholder="选择开户行，系统自动搜索"
@@ -51,7 +52,7 @@
           ]"
           @click="openPullPop"
         />
-        <sp-field
+        <!-- <sp-field
           v-model="bankPhone"
           type="tel"
           name="银行预留手机号"
@@ -59,7 +60,7 @@
           placeholder="请输入银行预留手机号"
           maxlength="11"
           :rules="[{ required: true, message: '请输入银行预留手机号' }]"
-        ></sp-field>
+        ></sp-field> -->
         <div class="submit">
           <sp-button round block type="info" native-type="submit">
             提交
@@ -141,7 +142,6 @@ export default {
       bankName: '',
       accountBank: '',
       bankCode: '',
-      bankPhone: '',
       bankIconUrl: '',
       showPullPop: false,
       activeIndex: -1,
@@ -170,7 +170,6 @@ export default {
         bankCode: this.bankCode,
         bankName: this.bankName,
         cardNumber: this.cardNum,
-        bankPhone: this.bankPhone,
         bankIconUrl: this.bankIconUrl,
         cardType: '借记卡',
         openingBankName: this.accountBank,
@@ -205,6 +204,18 @@ export default {
         this.$xToast.error('请输入有效的银行卡号')
       }
     },
+    // ①获取认证信息
+    // async getAuthInfo() {
+    //   const res = await this.$axios.get(walletApi.authentication_info, {
+    //     params: {
+    //       userId: this.userInfo.id,
+    //       isWriting: true,
+    //     },
+    //   })
+    //   if (res.code === 200) {
+    //     this.certificateInfo = res.data
+    //   }
+    // },
     // 账户名称
     async getAuthInfo() {
       const res = await this.$axios.get(walletApi.account_info, {
@@ -218,7 +229,7 @@ export default {
     },
     async getAccountBankInfo() {
       const res = await this.$axios.post(walletApi.card_info, {
-        name: this.searchName,
+        name: this.searchName || this.bankName,
         code: this.bankCode,
         isOnlyBank: '1',
         limit: '50',
@@ -267,6 +278,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+::v-deep .sp-field__control {
+  color: #222;
+}
 .content {
   ::v-deep .sp-search {
     padding: 20px;
@@ -357,7 +371,7 @@ export default {
 .form {
   padding: 0 20px;
   ::v-deep .sp-cell {
-    height: 112px;
+    height: auto;
     align-items: center;
   }
   ::v-deep.sp-field__body input {

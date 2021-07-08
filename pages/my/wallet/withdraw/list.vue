@@ -18,7 +18,10 @@
             <p>{{ item.createTime }}</p>
           </div>
           <div class="right">
-            <h3>-￥{{ item.amount }}</h3>
+            <h3>
+              <span v-if="item.orderTypeName === '提现'">-</span
+              ><span v-else>+</span>￥{{ item.amount }}
+            </h3>
             <p>{{ item.statusName }}</p>
           </div>
         </li>

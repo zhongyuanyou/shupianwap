@@ -9,7 +9,7 @@
         >
       </template>
     </Header>
-    <div class="tips">
+    <div v-if="!selectCardInfo.bankName" class="tips">
       <sp-icon
         class-prefix="spiconfont"
         size="0.30rem"
@@ -21,7 +21,7 @@
     <div class="withdraw-form">
       <div class="select">
         <div class="select-row">
-          <div class="title">单项选择</div>
+          <div class="title">选择账户/银行卡</div>
           <div class="select-val" @click="openSelectBankPop">
             <span>{{ selectCardInfo.bankName || '请选择' }}</span>
             <sp-icon
@@ -78,6 +78,9 @@
       <p>3、每次最多可提现<span>10000</span>元;</p>
     </div>
     <SelectBank ref="bank" :current-id="currentId" @selectCard="selectCard" />
+    <!--S loding-->
+    <LoadingCenter v-show="loading" />
+    <!--E loding-->
   </div>
 </template>
 
@@ -86,12 +89,14 @@ import { Icon, Field } from '@chipspc/vant-dgg'
 import { walletApi } from '@/api'
 import Header from '@/components/common/head/header'
 import SelectBank from '@/components/wallet/SelectBank.vue'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   components: {
     Header,
     SelectBank,
     [Icon.name]: Icon,
     [Field.name]: Field,
+    LoadingCenter,
   },
   data() {
     return {
@@ -106,16 +111,9 @@ export default {
       userInfo: '',
       accountInfo: '',
       customJump: true,
+      loading: false,
     }
   },
-  // computed: {
-  //   userInfo() {
-  //     return JSON.parse(localStorage.getItem('info'))
-  //   },
-  //   accountInfo() {
-  //     return JSON.parse(localStorage.getItem('accountInfo'))
-  //   },
-  // },
   mounted() {
     this.userInfo = JSON.parse(localStorage.getItem('info'))
     this.accountInfo = JSON.parse(localStorage.getItem('accountInfo'))
@@ -129,11 +127,13 @@ export default {
     },
     // 银行卡列表
     async getCardList() {
+      this.loading = true
       const res = await this.$axios.get(walletApi.cardList, {
         params: {
           accountId: this.accountInfo.id,
         },
       })
+      this.loading = false
       if (res.code === 200) {
         this.selectCardInfo = res.data[0]
         if (!this.selectCardInfo) {
@@ -177,7 +177,7 @@ export default {
         this.$xToast.warning('请填写提现金额')
         return false
       } else if (Number(this.amount) > Number(this.accBalanceData.balance)) {
-        this.$xToast.warning('提现金额不能大于可用余额')
+        this.$xToast.warning('账户余额不足')
         return false
       } else if (!am.test(this.amount)) {
         this.$xToast.warning('金额信息或格式错误')
@@ -212,6 +212,10 @@ export default {
     },
     // 全部提现
     withdrawAll() {
+      if (this.accBalanceData.balance <= 0) {
+        this.$xToast.warning('账户余额不足')
+        return false
+      }
       this.amount = this.accBalanceData.balance
     },
   },
@@ -234,6 +238,7 @@ export default {
     height: 112px;
     background: #fff3e9;
     padding: 17px 30px;
+    align-items: flex-start;
     i {
       position: relative;
       top: 8px;
@@ -250,6 +255,7 @@ export default {
     padding: 0 40px;
     padding-bottom: 40px;
     background: #fff;
+    border-top: 1px solid #f4f4f4;
     .amount-tips {
       font-family: PingFangSC-Regular;
       font-size: 24px;

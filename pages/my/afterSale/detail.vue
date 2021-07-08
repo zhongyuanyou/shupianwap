@@ -170,15 +170,10 @@
                 </div>
                 <div class="info">
                   <div class="top">
-                    <span
-                      v-if="
-                        afterSaleDetail.afterSaleFactType ===
-                        'AFTER_SALE_TYPE_1'
-                      "
-                      class="mark red"
+                    <span v-if="item.isActualRefundable === 1" class="mark red"
                       >退</span
                     >
-                    <span v-else class="mark blue">换</span>
+                    <!-- <span v-else class="mark blue">换</span> -->
                     <span class="title">{{ item.spuName }}</span>
                   </div>
                   <div class="center">{{ item.skuExtInfo }}</div>
@@ -446,6 +441,11 @@ export default {
       userDoTypeCode: '',
       loading: false,
       userInfo: '',
+      afterSaleStatusNoList: [
+        'AFTERSALE_STATUS_1',
+        'AFTERSALE_STATUS_2',
+        'AFTERSALE_STATUS_3',
+      ],
     }
   },
   // computed: {
@@ -473,6 +473,9 @@ export default {
           orderNo: this.$route.query.orderNo,
           isProduct: '1',
           isAfterSaleFlow: '1',
+          afterSaleStatusNoList: !this.$route.query.id
+            ? JSON.stringify(this.afterSaleStatusNoList)
+            : '',
         },
       })
       this.loading = false
@@ -524,7 +527,7 @@ export default {
             break
         }
       } else {
-        this.$xToast.error(res.data.error)
+        this.$xToast.warning(res.data.error)
       }
     },
     async updateAfterSaleStatus(btnIndex) {
