@@ -78,6 +78,8 @@
         resultLoading ? '正在查询支付结果' : '加载中'
       }}</sp-loading>
     </div>
+
+    <div v-html="resultFormData"></div>
     <!-- E 下载app弹框 -->
   </div>
 </template>
@@ -111,6 +113,7 @@ export default {
     Checkbox,
     DownloadApp,
   },
+
   data() {
     return {
       closeAppOpen: true,
@@ -131,14 +134,28 @@ export default {
         payCusId: '',
         batchIds: [],
       },
+
+      resultFormData: '',
+      // 请求数据
+      // getPayParamsFormData: {
+      //   cusOrderId: '',
+      //   payPlatform: 'CRISPS_C_ZFFS_ALI',
+      //   payTerminal: 'COMDIC_TERMINAL_WAP', // 支付终端 当前为wap
+      //   sourcePlatform: 'COMDIC_PLATFORM_CRISPS', // 操作系统来源
+      //   // userId: this.$cookies.get('userId', { path: '/' }), // 用户ID
+      //   // userName: this.$cookies.get('userName'), // 用户姓名
+      //   userCode: this.$store.state.user.userId,
+      //   orderAgreementIds: '',
+      // },
       // 请求数据
       getPayParamsFormData: {
         cusOrderId: '',
-        payPlatform: 'CRISPS_C_ZFFS_ALI',
+        payPlatform: 'CRISPS_C_ZFFS_ALI_4_0',
         payTerminal: 'COMDIC_TERMINAL_WAP', // 支付终端 当前为wap
         sourcePlatform: 'COMDIC_PLATFORM_CRISPS', // 操作系统来源
         // userId: this.$cookies.get('userId', { path: '/' }), // 用户ID
         // userName: this.$cookies.get('userName'), // 用户姓名
+        userCode: this.$store.state.user.userId,
         orderAgreementIds: '',
       },
       orderData: {},
@@ -314,9 +331,9 @@ export default {
       this.getPayParamsFormData.payPlatform = item.code
     },
     startPay() {
-      this.showMydialog = true
+      // this.showMydialog = true
       // this.$router.replace('/pay/payResult')
-      // this.getPayParams()
+      this.getPayParams()
     },
     // 查询订单应付金额
     enablePayMoney() {
@@ -394,19 +411,25 @@ export default {
         pay
           .getPayParams(this.getPayParamsFormData)
           .then((result) => {
-            if (result.code === '0') {
-              const payUrl = result.payParam
-              // window.location.href = payUrl
-              this.payCallBackData.serialNumber = result.guaguaPayPartyNo
-              localStorage.setItem(
-                'serialNumber',
-                this.payCallBackData.serialNumber
-              )
-              localStorage.setItem('startTime', new Date().getTime())
-              window.location.href = payUrl
-            } else {
-              this.$xToast.error('支付发起失败，请稍后重试。')
-            }
+            console.log(result)
+            this.resultFormData = result.formData
+
+            this.$nextTick(() => {
+              document.forms[0].submit()
+            })
+            // if (result.code === '0') {
+            //   const payUrl = result.payParam
+            //   // window.location.href = payUrl
+            //   this.payCallBackData.serialNumber = result.guaguaPayPartyNo
+            //   localStorage.setItem(
+            //     'serialNumber',
+            //     this.payCallBackData.serialNumber
+            //   )
+            //   localStorage.setItem('startTime', new Date().getTime())
+            //   window.location.href = payUrl
+            // } else {
+            //   this.$xToast.error('支付发起失败，请稍后重试。')
+            // }
           })
           .catch((e) => {
             if (e.code !== 200) {

@@ -235,7 +235,7 @@ export default {
             skuCode: 'HDK-MJ-000004',
             skuCount: 1,
             skuSettlePrice: parseFloat(this.cardInfo.price) * 100,
-            skuPayableTotalVirtualMoney: 0,
+            skuVirtualPrice: 0,
             skuDetailInfo: JSON.stringify({
               sku: {
                 goodsName: this.cardInfo.cardName,
@@ -246,10 +246,15 @@ export default {
             classifyOneNo: 'ACTIVITY_CARD',
             classifyOneName: '活动卡',
 
-            orderSplitSubjectId: this.cardInfo.merchant.id, // 拆单主体id
-            orderSplitSubjectNo: this.cardInfo.merchant.mchNo,
-            orderSplitSubjectName: this.cardInfo.merchant.name,
-            orderSplitSubjectSource: this.cardInfo.merchant.mchClass,
+            // orderSplitSubjectId: this.cardInfo.merchant.id, // 拆单主体id
+            // orderSplitSubjectNo: this.cardInfo.merchant.mchNo,
+            // orderSplitSubjectName: this.cardInfo.merchant.name,
+            // orderSplitSubjectSource: this.cardInfo.merchant.mchClass,
+
+            orderSplitSubjectId: '607997736314102922', // 拆单主体id
+            orderSplitSubjectNo: 'MBU2025022',
+            orderSplitSubjectName: '薯片科技',
+            orderSplitSubjectSource: 'MERCHANT_M',
           },
         ],
 
