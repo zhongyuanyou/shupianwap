@@ -32,8 +32,8 @@
           <span class="name">{{ item.invoiceHeaderName }}</span>
         </div>
         <div class="price">
-          {{ changeMoney(item.invoiceMoney) }}
-          <span class="unit">元</span>
+          <span>{{ changeMoney(item.invoiceMoney) }}</span
+          ><span class="unit">元</span>
         </div>
       </div>
     </div>
@@ -95,12 +95,12 @@ export default {
 
   .card {
     margin-top: 20px;
-    padding: 32px 40px;
+    padding: 40px 40px;
     background: #ffffff;
     font-size: 0;
     min-width: 0;
     .card_header {
-      padding: 0 0 42px;
+      padding: 0 0 32px;
       .card_time {
         font-size: 24px;
         font-family: PingFangSC-Regular, PingFang SC;
@@ -123,6 +123,7 @@ export default {
         color: #4974f5;
         line-height: 22px;
         background: #f2f5ff;
+        border-radius: 4px;
       }
     }
 
@@ -138,10 +139,11 @@ export default {
         display: inline-block;
         width: 100%;
         font-size: 32px;
+        line-height: 36px;
+        margin-top: -2px;
         font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;
         color: #222222;
-        line-height: 32px;
 
         .mixin-text-oneoverflow();
       }

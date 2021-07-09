@@ -170,7 +170,7 @@ export default {
     // 金额信息友情提示
     tipsPop(state) {
       this.$xToast.show({
-        message: state === 0 ? '可提现总金额' : '提现中的总金额',
+        message: state === 0 ? '可以提现的总金额' : '提现中的总金额',
       })
     },
     backHandle() {

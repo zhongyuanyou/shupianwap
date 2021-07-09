@@ -11,6 +11,7 @@
               <div class="options">
                 <sp-button
                   v-for="(invoicetype, key) in InvoiceType"
+                  v-show="key != 'SPECIAL' || HAVE_SPECIAL == false"
                   :key="key"
                   class="btn"
                   :class="{ active: key === formData.type }"
@@ -24,7 +25,7 @@
             </template>
           </sp-field>
 
-          <sp-field label="发票类型">
+          <sp-field label="抬头类型">
             <template #input>
               <div class="options">
                 <sp-button
@@ -184,7 +185,7 @@ export default {
   },
   data() {
     return {
-      loading: false, // 加载效果状态
+      loading: true, // 加载效果状态
 
       // 发票类型
       InvoiceType: {
@@ -207,6 +208,8 @@ export default {
         dutyParagraph: '', // 纳税人识别号
       },
       defaultHead: 0, // 默认抬头(0 非默认 1 默认 仅针对普票有效)
+
+      HAVE_SPECIAL: true, // 是否已存在增值税专用发票，用以限制只能存在一个
     }
   },
   computed: {
@@ -234,7 +237,33 @@ export default {
       }
     },
   },
+  mounted() {
+    this.getInvoiceHeaderList()
+  },
   methods: {
+    getInvoiceHeaderList() {
+      this.loading = true
+      invoiceApi
+        .invoice_header_list({ axios: this.$axios })
+        .then((res) => {
+          this.loading = false
+
+          const list = (res && res.records) || []
+          const SPECIAL = list.find((item) => {
+            return item.type === 'SPECIAL'
+          })
+          if (!SPECIAL) {
+            this.HAVE_SPECIAL = false
+          }
+        })
+        .catch((error) => {
+          console.error(error)
+          this.error = true
+          this.loading = false
+          this.$xToast.error((error && error.message) || '请求失败，请重试')
+        })
+    },
+
     onSubmit() {
       this.$refs.form
         .validate()
@@ -285,20 +314,32 @@ export default {
   background: #f5f5f5;
   padding: 0 0 170px;
   min-height: 100vh;
-  ::v-deep .sp-cell {
-    padding: 40px 0px 40px 32px;
 
-    .sp-field__label {
-      flex: none;
-      width: 4.5em;
-    }
+  & ::v-deep .sp-cell {
+    padding: 40px 0px 40px 32px;
+    display: flex;
+    align-items: center;
   }
 
   .card {
     background: #fff;
-    margin-bottom: 20px;
+    margin-top: 20px;
+    // margin-bottom: 20px;
     padding: 0 40px;
 
+    ::v-deep .sp-field__label {
+      font-family: PingFangSC-Regular;
+      font-size: 30px;
+      color: #222222;
+      line-height: 30px;
+      flex: none !important;
+      width: 4.5em;
+    }
+    ::v-deep .sp-field__control {
+      font-family: PingFangSC-Regular;
+      font-size: 30px;
+      color: #222222;
+    }
     .options {
       // padding-bottom: 20px;
       .btn {
