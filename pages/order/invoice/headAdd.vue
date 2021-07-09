@@ -315,10 +315,24 @@ export default {
   padding: 0 0 170px;
   min-height: 100vh;
 
-  & ::v-deep .sp-cell {
+  ::v-deep .sp-cell {
     padding: 40px 0px 40px 32px;
     display: flex;
     align-items: center;
+  }
+
+  ::v-deep .sp-field__label {
+    font-family: PingFangSC-Regular;
+    font-size: 30px;
+    color: #222222;
+    line-height: 30px;
+    flex: none !important;
+    width: 4.5em;
+  }
+  ::v-deep .sp-field__control {
+    font-family: PingFangSC-Regular;
+    font-size: 30px;
+    color: #222222;
   }
 
   .card {
@@ -327,19 +341,6 @@ export default {
     // margin-bottom: 20px;
     padding: 0 40px;
 
-    ::v-deep .sp-field__label {
-      font-family: PingFangSC-Regular;
-      font-size: 30px;
-      color: #222222;
-      line-height: 30px;
-      flex: none !important;
-      width: 4.5em;
-    }
-    ::v-deep .sp-field__control {
-      font-family: PingFangSC-Regular;
-      font-size: 30px;
-      color: #222222;
-    }
     .options {
       // padding-bottom: 20px;
       .btn {
