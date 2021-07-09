@@ -5,8 +5,8 @@
     <div :class="couponType === 0 ? 'notUse' : 'haveUse'" class="coupon_item">
       <div class="item-lf">
         <div class="coupon_price">
-          {{ item.type == 1 ? getDiscount(item.discount) : item.rebatePrice }}
-          <span v-if="item.type == 1" class="coupon_price_unit">折</span>
+          {{ item.type == 2 ? getDiscount(item.discount) : item.rebatePrice }}
+          <span v-if="item.type == 2" class="coupon_price_unit">折</span>
         </div>
         <div v-if="item.rebateNeedPrice" class="can_use">
           满{{ item.rebateNeedPrice }}元可用
@@ -32,7 +32,7 @@
         ></div>
         <div class="title" @click="goDetailPage(item)">
           <span class="coupon_type_name">{{
-            item.type == 1 ? '折扣卡' : '满减'
+            item.type == 2 ? '折扣卡' : '满减'
           }}</span>
           <span>{{ item.cardName }}</span>
         </div>
@@ -40,7 +40,7 @@
           <div class="item-rt-content-left">
             <div ref="textpro" class="content">
               {{ getuseTypeName(item.useType) }}
-              <!-- item.useType === 1? '全品类通用': item.useType === 2? '限定部分类别产品使用': '置顶产品使用' -->
+              <!-- item.useType === 1? '全品类通用': item.useType === 2? '限定部分类别产品使用': '指定产品使用' -->
             </div>
 
             <div class="surplus warn">可使用{{ item.availableTimes }}次</div>
@@ -124,7 +124,7 @@ export default {
         case 2:
           useTypeName = '限定部分类别产品使用'
           break
-        default:
+        case 3:
           useTypeName = '指定产品使用'
       }
       return useTypeName

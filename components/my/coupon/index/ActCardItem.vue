@@ -5,11 +5,11 @@
     <div :class="couponType === 0 ? 'notUse' : 'haveUse'" class="coupon_item">
       <div class="item-lf">
         <div class="coupon_price">
-          <span v-if="item.cardType === 1">
+          <span v-if="item.cardType === 2">
             {{ getDiscount(item.discount) }}
             <span class="coupon_price_unit">折</span>
           </span>
-          <span v-else-if="item.cardType === 2">{{ item.rebatePrice }}</span>
+          <span v-else-if="item.cardType === 1">{{ item.rebatePrice }}</span>
         </div>
         <div v-if="item.rebateNeedPrice == 0" class="can_use">无门槛</div>
         <div v-else-if="item.rebateNeedPrice" class="can_use">
@@ -20,7 +20,7 @@
         <div class="sign" :class="getStatusClassName()"></div>
         <div class="title" @click="goDetailPage(item)">
           <span class="coupon_type_name" :class="{ invalid: couponType != 0 }">
-            {{ item.cardType == 2 ? '满减卡' : '折扣卡' }}
+            {{ item.cardType == 1 ? '满减卡' : '折扣卡' }}
           </span>
           {{ item.cardName }}
         </div>
@@ -250,12 +250,25 @@ export default {
       display: flex;
       font-size: 0;
       align-items: flex-start;
+
       .date {
         flex: 1;
-        font-size: 20px;
+        font-size: 24px;
         font-family: PingFang SC;
         font-weight: 400;
         color: #999999;
+        overflow: hidden;
+
+        display: inline-block;
+        transform-origin: left center;
+        transform: scale(0.83);
+        white-space: nowrap;
+        // span {
+        //   white-space: nowrap;
+        //   display: inline-block;
+        //   transform-origin: left center;
+        //   transform: scale(0.83);
+        // }
       }
 
       .surplus {
@@ -263,10 +276,14 @@ export default {
 
         border-radius: 4px;
         padding: 0 6px;
-        font-size: 20px;
+        font-size: 24px;
         font-family: PingFang SC;
         font-weight: 400;
         color: #999999;
+
+        display: inline-block;
+        transform-origin: right center;
+        transform: scale(0.83);
       }
       .warn {
         font-size: 20px;
