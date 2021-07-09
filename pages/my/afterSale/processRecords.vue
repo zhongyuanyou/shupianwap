@@ -212,7 +212,6 @@ export default {
     z-index: 9;
     width: 100%;
     button {
-      width: 159px;
       height: 80px;
       background: #ffffff;
       border: 1px solid #dddddd;
@@ -221,6 +220,8 @@ export default {
       font-size: 28px;
       color: #222222;
       margin: 0 8px;
+      padding: 0 10px;
+      word-break: break-all;
     }
   }
 }

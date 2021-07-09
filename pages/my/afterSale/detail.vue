@@ -714,6 +714,7 @@ export default {
               display: flex;
               align-items: center;
               .mark {
+                display: block;
                 width: 32px;
                 height: 32px;
                 background: #ffffff;
@@ -739,7 +740,11 @@ export default {
                 height: 40px;
                 background: #000;
                 border-radius: 40px;
+                position: relative;
                 img {
+                  position: absolute;
+                  left: 0;
+                  top: 0;
                   width: 100%;
                   height: 100%;
                 }
