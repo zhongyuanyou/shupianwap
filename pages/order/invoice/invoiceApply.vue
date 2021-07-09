@@ -160,6 +160,7 @@
     </div>
     <div class="card">
       <sp-button
+        class="submit"
         size="normal"
         block
         type="primary"
@@ -285,10 +286,12 @@ export default {
       ) {
         this.formData.invoiceHeader = 'INVOICE_HEADER_COMPANY'
       }
+      this.formData.invoiceHeaderName = ''
       this.getDefaultInvoiceHeader()
     },
     click_invoice_header(key) {
       this.formData.invoiceHeader = key
+      this.formData.invoiceHeaderName = ''
       this.getDefaultInvoiceHeader()
     },
     init() {
@@ -316,7 +319,9 @@ export default {
         })
         .catch((error) => {
           this.loading = false
+          this.getDefaultInvoiceHeader()
           this.getConfig()
+
           console.error(error)
           // this.$xToast.error(error.message || '请求失败，请重试')
         })
@@ -397,14 +402,21 @@ export default {
                 this.formData.invoiceType === '004' ||
                 this.formData.invoiceType === '027'
               ) {
+                // 专用发票
                 invoiceType = 'SPECIAL'
               } else {
+                // 普通发票
                 invoiceType = 'ORDINARY'
               }
               if (this.formData.invoiceHeader === 'INVOICE_HEADER_PERSONAL') {
                 invoiceHeader = 'PERSONAL'
               } else {
                 invoiceHeader = 'COMPANY'
+              }
+              if (invoiceType === 'SPECIAL') {
+                return (
+                  item.headType === invoiceHeader && item.type === invoiceType
+                )
               }
 
               return (
@@ -434,22 +446,22 @@ export default {
         orderId: this.orderId,
         applySource: 'INVOICE_APPLY_SOURCE_CUSTOMER',
         // invoiceType: '026',
-        invoiceContent: 'GOODS_DETAILS',
+        // invoiceContent: 'GOODS_DETAILS',
         invoiceHeader:
           info.headType === 'COMPANY'
             ? 'INVOICE_HEADER_COMPANY'
             : 'INVOICE_HEADER_PERSONAL',
 
-        invoiceHeaderName: info.invoiceHead,
-        receiverPhone: '',
-        receiverEmail: '',
+        invoiceHeaderName: info.invoiceHead || '',
+        // receiverPhone: '',
+        // receiverEmail: '',
 
-        bankAccount: info.bankNumber,
-        bankOfDeposit: info.depositBank,
+        bankAccount: info.bankNumber || '',
+        bankOfDeposit: info.depositBank || '',
 
-        registerTel: phone,
-        registerAddress: info.address,
-        taxpayerIdentifNum: info.dutyParagraph,
+        registerTel: phone || '',
+        registerAddress: info.address || '',
+        taxpayerIdentifNum: info.dutyParagraph || '',
       })
     },
     // 解密电话
@@ -549,6 +561,18 @@ export default {
   min-height: 100vh;
   font-size: 0;
 
+  ::v-deep .sp-field__label {
+    flex: none !important;
+    // width: 4.5em;
+    font-family: PingFangSC-Regular;
+    font-size: 30px;
+    color: #222222;
+  }
+  ::v-deep .sp-field__control {
+    font-family: PingFangSC-Regular;
+    font-size: 30px;
+    color: #222222;
+  }
   .card {
     background: #fff;
     margin-bottom: 20px;
@@ -557,7 +581,7 @@ export default {
     .title {
       font-size: 32px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
+      font-weight: bold;
       color: #000000;
       line-height: 32px;
       padding-bottom: 40px;
@@ -603,6 +627,14 @@ export default {
         }
       }
     }
+
+    .submit {
+      font-weight: bold;
+      font-family: PingFangSC-Medium;
+      font-size: 32px;
+      color: #ffffff;
+      text-align: center;
+    }
   }
   .options .btn::v-deep.sp-button--primary {
     min-width: 152px;
@@ -614,7 +646,7 @@ export default {
 
     font-size: 26px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: bold;
     line-height: 26px;
   }
   .options .btn.active::v-deep.sp-button--primary {
