@@ -235,15 +235,15 @@
     ></Popup>
 
     <Popup
-      ref="conpon"
+      ref="cardPopup"
       :show="card.show"
       :height="75"
       title="活动卡"
       help="使用说明"
       :tablist="card.tablist"
       calculation="已选中推荐优惠券，可抵扣"
-      :datalist="datalist"
-      :nolist="nolist"
+      :datalist="card.datalist"
+      :nolist="card.nolist"
       @close="closeCard"
     ></Popup>
   </div>
@@ -265,7 +265,7 @@ import Contract from '@/components/PlaceOrder/contract.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { productDetailsApi, auth, shopCart } from '@/api'
 import cardApi from '@/api/card'
-import { coupon, order } from '@/api/index'
+import { coupon, order, actCard } from '@/api/index'
 export default {
   name: 'PlaceOrder',
   components: {
@@ -300,7 +300,9 @@ export default {
           { name: '可用活动卡', num: '12', is: true },
           { name: '不可用活动卡' },
         ],
-        datalist: [],
+        selectData: '',
+        datalist: [], // 支持的列表
+        nolist: [], // 不支持的列表
       },
       datalist: [],
       nolist: [],
@@ -423,6 +425,9 @@ export default {
           this.price = this.order.salesPrice
           this.getInitData(5)
           this.getInitData(6)
+
+          this.getCardData()
+
           this.productList = new Array(1).fill({
             categoryCode: data.classCodeLevel.split(',')[0],
             productId: data.id,
@@ -654,7 +659,33 @@ export default {
         })
     },
 
-    getCardData() {},
+    getCardData() {
+      const productList = []
+      for (let i = 0; i < this.order.list.length; i++) {
+        const item = {
+          categoryCode: this.order.list[i].classCode,
+          productId: this.order.list[i].id,
+          productPrice: this.order.list[i].salesPrice,
+        }
+        productList.push(item)
+      }
+      actCard
+        .goods_card_list({
+          condition: 1, // 查询条件 1 查询可用 2查询不可用
+          productList,
+        })
+        .then((res) => {
+          this.card.datalist = res.records
+        })
+      actCard
+        .goods_card_list({
+          condition: 2, // 查询条件 1 查询可用 2查询不可用
+          productList,
+        })
+        .then((res) => {
+          this.card.nolist = res.records
+        })
+    },
     contractback() {
       this.editShow = false
     },
@@ -668,13 +699,14 @@ export default {
     popupfn() {
       this.popupshow = true
     },
-    cardFn() {
-      this.cardShow = true
-    },
+
     close(data) {
       this.popupshow = data
       this.$refs.conpon.checkarr = ''
       this.$refs.conpon.radio = null
+    },
+    cardFn() {
+      this.card.show = true
     },
     closeCard(data) {
       this.card.show = data
