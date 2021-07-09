@@ -25,12 +25,7 @@
         </sp-swipe-item>
       </sp-swipe>
     </div>
-    <div
-      v-show="responseData.length > 0"
-      ref="scrollView"
-      class="page-list"
-      @scroll="scollChange"
-    >
+    <div ref="scrollView" class="page-list" @scroll="scollChange">
       <div class="coupon_list">
         <div
           v-for="(item, index) in responseData"
@@ -73,12 +68,16 @@
           </div>
           <div class="item-rt">
             <!-- 气泡组件 start -->
-            <Popover @closepop="closeBox" />
+            <Popover
+              :ref="'myPop' + index"
+              :text="item.remark"
+              @closepop="closeBox"
+            />
             <!-- 气泡组件 end-->
-            <div class="title" @click="goDetailPage(item)">
+            <div class="title">
               <span
                 :class="item.couponStatus === 1 ? 'no-coupon' : 'type-name'"
-                >{{ item.typeName }}</span
+                >{{ item.couponType === 1 ? '满减券' : '折扣券' }}</span
               >
               {{ item.couponName }}
             </div>
@@ -161,7 +160,8 @@ export default {
       productAdvertData: [],
       isNoData: false,
       page: 1,
-      loadingMore: false,
+      limit: 20,
+      nomore: false,
     }
   },
   computed: {
@@ -173,8 +173,30 @@ export default {
     }),
   },
   mounted() {
-    this.getInitCouponData()
     this.getAdvertisingData()
+    // this.getInitCouponData()
+    if (this.isInApp) {
+      if (this.userInfo.userId && this.userInfo.token) {
+        console.log('无token')
+        this.getInitCouponData()
+      } else {
+        this.$appFn.dggGetUserInfo((res) => {
+          console.log('调用app获取信息', res)
+          if (res.code === 200) {
+            // 兼容启大顺参数返回
+            this.$store.dispatch(
+              'user/setUser',
+              typeof res.data === 'string' ? JSON.parse(res.data) : res.data
+            )
+            this.getInitCouponData()
+          } else {
+            this.getInitCouponData()
+          }
+        })
+      }
+    } else {
+      this.getInitCouponData()
+    }
   },
   methods: {
     getRemainPercent(data) {
@@ -219,9 +241,10 @@ export default {
       const scrollHeight = this.$refs.scrollView.scrollHeight
       const windowHeight = window.innerHeight
       // 提前100px拉取下页数据
-      if (scrollTop + windowHeight > scrollHeight) {
-        if (!this.loadingMore) {
-          this.loadingMore = true
+      if (scrollTop + windowHeight > scrollHeight - 100) {
+        if (!this.nomore && !this.loading) {
+          this.nomore = true
+          this.loading = true
           this.page++
           this.getInitCouponData()
         }
@@ -238,26 +261,29 @@ export default {
       }
     },
     async setCouponStatus(item) {
-      const result = await this.$isLogin()
-      if (result === 'app_login_success') {
+      const isLogin = await this.$isLogin()
+      if (isLogin === 'app_login_success') {
+        this.getInitCouponData()
         return
       }
+      if (!isLogin) return
       this.loading = true
       this.$axios
         .post(`${CHIPS_WAP_BASE_URL}/yk/coupon/v2/receive_coupon.do`, {
           couponId: item.id,
         })
         .then((res) => {
-          if (res.code === 200) {
+          if (res && res.code === 200) {
             Toast('领取成功')
             this.page = 1
             this.getInitCouponData()
-            this.loading = false
+            this.loading = true
+            this.nomore = false
           } else {
             this.loading = false
             Toast.fail({
               duration: 2000,
-              message: res.message,
+              message: res.message || '领取失败',
               forbidClick: true,
               className: 'my-toast-style',
             })
@@ -265,22 +291,13 @@ export default {
         })
         .catch((err) => {
           console.log(err)
+          Toast.fail({
+            duration: 2000,
+            message: err.message || err || '领取失败',
+            forbidClick: true,
+            className: 'my-toast-style',
+          })
         })
-      // coupon
-      //   .receiveCoupon({ axios: this.$axios }, { couponId: item.id })
-      //   .then((result) => {
-      //     if (result.code === 200) {
-      //       this.responseData = []
-      //       this.getInitCouponData()
-      //       this.loading = false
-      //     }
-      //   })
-      //   .catch((e) => {
-      //     if (e.code !== 200) {
-      //       this.responseData = []
-      //       console.log(e)
-      //     }
-      //   })
     },
     onChange(index) {
       this.current = index
@@ -311,7 +328,7 @@ export default {
       const params = {
         orderByWhere: 'createTime=desc;',
         findType: 1,
-        limit: 20,
+        limit: this.limit,
         page: this.page,
       }
       this.userId ? (params.userId = this.userId) : (params.userId = '')
@@ -320,39 +337,49 @@ export default {
         .findPage({ axios: this.$axios }, params)
         .then((result) => {
           this.loading = false
-          if (this.page === 1) {
-            this.responseData = result
-          } else {
-            const oldList = JSON.parse(JSON.stringify(this.responseData))
-            this.responseData = oldList.concat(result)
-          }
           this.isNoData = false
-          if (this.responseData.length === 0 && this.page === 1) {
+          if (result.length === 0 && this.page === 1) {
             this.isNoData = true
           }
-          for (let i = 0, length = this.responseData.length; i < length; i++) {
-            let useTime = this.responseData[i].serviceLife
+          for (let i = 0, length = result.length; i < length; i++) {
+            let useTime = result[i].serviceLife
             useTime = useTime.slice(11)
             const thisTime = useTime.split('.').join('-')
             const time = new Date(thisTime).getTime()
             if (time - this.nowTimeStamp < 172800000) {
-              this.responseData[i].showColorTime = this.showColorTime
+              result[i].showColorTime = this.showColorTime
             }
           }
-          this.usedCount = result.usedCount
-          this.notUsedCount = result.notUsedCount
-          this.invalidCount = result.invalidCount
+          let dataArr = []
+          if (this.page === 1) {
+            dataArr = result
+          } else {
+            const oldList = JSON.parse(JSON.stringify(this.responseData))
+            dataArr = oldList.concat(result)
+          }
+          // this.usedCount = result.usedCount
+          // this.notUsedCount = result.notUsedCount
+          // this.invalidCount = result.invalidCount
+          this.responseData = dataArr
           this.loading = false
+          if (result.length < this.limit) {
+            this.nomore = true
+          } else {
+            this.nomore = false
+          }
+          console.log('nomore', this.nomore)
         })
         .catch((e) => {
           if (e.code !== 200) {
-            this.responseData = []
             console.log(e)
           }
         })
     },
     popOver(index) {
-      console.log(index)
+      const l = this.responseData.length
+      for (let i = 0; i < l; i++) {
+        this.$refs['myPop' + i][0].isShow = false
+      }
       // if(index)
       this.$refs['myPop' + index][0].isShow = true
       this.$refs['myPop' + index][0].indexData = index
@@ -453,7 +480,6 @@ export default {
     background-size: 100% 100%;
     margin: 24px 0;
     position: relative;
-    overflow: hidden;
     .item-lf {
       width: 201px;
       height: 212px;
@@ -535,25 +561,32 @@ export default {
       }
     }
     .item-rt {
-      padding-left: 24px;
+      padding: 30px 0 0 24px;
       height: auto;
       box-sizing: border-box;
       width: auto;
       padding-left: 230px;
+      position: relative;
       .title {
         font-size: 32px;
         font-family: PingFang SC;
         font-weight: bold;
         color: #222222;
         line-height: 40px;
-        margin: 30px 0 12px 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        padding-left: 84px;
+        padding-bottom: 12px;
+        position: relative;
         span {
+          position: absolute;
           border-radius: 4px;
-          padding: 2px;
-          font-size: 20px;
+          font-size: 24px;
+          left: 0;
+          top: 2px;
+          line-height: 24px;
+          padding: 4px;
         }
         .type-name {
           color: #ffffff;
