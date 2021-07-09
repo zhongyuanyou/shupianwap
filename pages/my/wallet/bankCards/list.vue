@@ -10,11 +10,11 @@
         <li
           v-for="(item, index) in cardList"
           :key="index"
-          :style="{ background: item.bankCardInfo.bg_color }"
+          :style="{ background: item.bg_color }"
           @click="$router.push(`/my/wallet/bankCards/detail?id=${item.id}`)"
         >
           <div class="left-logo">
-            <img :src="item.bankCardInfo.icon" />
+            <img :src="item.icon" />
           </div>
           <div class="right-info">
             <h3>{{ item.bankName }}</h3>
@@ -26,7 +26,7 @@
             </div>
           </div>
           <div class="bg-img">
-            <img :src="item.bankCardInfo.bg_icon" />
+            <img :src="item.bg_icon" />
           </div>
         </li>
       </ul>
@@ -90,13 +90,6 @@ export default {
             'https://cdn.shupian.cn/sp-pt/wap/images/e5m4yxb0se00000.png',
           bg_color: '#28A264',
         },
-        {
-          bankCode: '',
-          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png',
-          bg_icon:
-            'https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png',
-          bg_color: '#3777E5',
-        },
       ],
       cardList: [],
       showNoDataImg: false,
@@ -131,9 +124,16 @@ export default {
         this.cardList = res.data
         if (this.cardList.length) {
           this.cardList.forEach((item) => {
+            item.icon =
+              'https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png'
+            item.bg_icon =
+              'https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png'
+            item.bg_color = '#3777E5'
             this.bankCardData.forEach((child) => {
               if (item.bankCode === child.bankCode) {
-                item.bankCardInfo = child
+                item.icon = child.icon
+                item.bg_icon = child.bg_icon
+                item.bg_color = child.bg_color
               }
             })
           })

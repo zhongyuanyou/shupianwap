@@ -5,10 +5,10 @@
       <ul>
         <li
           v-if="cardDetailInfo.id"
-          :style="{ background: cardDetailInfo.bankCardInfo.bg_color }"
+          :style="{ background: cardDetailInfo.bg_color }"
         >
           <div class="left-logo">
-            <img :src="cardDetailInfo.bankCardInfo.icon" />
+            <img :src="cardDetailInfo.icon" />
           </div>
           <div class="right-info">
             <h3>{{ cardDetailInfo.bankName }}</h3>
@@ -20,7 +20,7 @@
             </div>
           </div>
           <div class="bg-img">
-            <img :src="cardDetailInfo.bankCardInfo.bg_icon" />
+            <img :src="cardDetailInfo.bg_icon" />
           </div>
         </li>
       </ul>
@@ -75,13 +75,6 @@ export default {
             'https://cdn.shupian.cn/sp-pt/wap/images/e5m4yxb0se00000.png',
           bg_color: '#28A264',
         },
-        {
-          bankCode: '',
-          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png',
-          bg_icon:
-            'https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png',
-          bg_color: '#3777E5',
-        },
       ],
     }
   },
@@ -98,9 +91,16 @@ export default {
       console.log(res)
       if (res.code === 200) {
         this.cardDetailInfo = res.data
+        this.cardDetailInfo.icon =
+          'https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png'
+        this.cardDetailInfo.bg_icon =
+          'https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png'
+        this.cardDetailInfo.bg_color = '#3777E5'
         this.bankCardData.forEach((child) => {
           if (this.cardDetailInfo.bankCode === child.bankCode) {
-            this.cardDetailInfo.bankCardInfo = child
+            this.cardDetailInfo.icon = child.icon
+            this.cardDetailInfo.bg_icon = child.bg_icon
+            this.cardDetailInfo.bg_color = child.bg_color
           }
         })
       }

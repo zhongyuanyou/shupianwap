@@ -1,7 +1,7 @@
 <template>
   <div class="invoice">
     <div class="invoice-header" :style="{ height: HeaderHeight + 'px' }">
-      <div class="invoice-header-warpper">
+      <div ref="invoiceHeaderWarpper" class="invoice-header-warpper">
         <!--    :style="{ height: isInApp ? '200px' : '150px' }" -->
         <Header class="my-header" title="发票中心"></Header>
         <client-only>
@@ -127,32 +127,43 @@ export default {
         startCreateTime: '',
         endCreateTime: '',
       },
+
+      HeaderHeight: '',
     }
   },
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp, // 是否app中
     }),
-    HeaderHeight() {
-      let height = 200
-      if (!this.isInApp) {
-        height -= 50
-      }
-      if (this.tabActive === 2) {
-        height -= 50
-      }
-      return height
-    },
+    // HeaderHeight() {
+    //   let height = 200
+    //   if (!this.isInApp) {
+    //     height -= 50
+    //   }
+    //   if (this.tabActive === 2) {
+    //     height -= 50
+    //   }
+
+    //   console.log(h)
+    //   return height
+    // },
   },
   mounted() {
     this.tabActive = parseInt(this.$route.query.tabActive || 0)
     this.tabActiveIndex = this.tabActive
 
-    console.log(1)
     this.init()
     this.onLoad()
+
+    this.getHeaderHeight()
   },
   methods: {
+    getHeaderHeight() {
+      this.$nextTick(() => {
+        this.HeaderHeight = this.$refs.invoiceHeaderWarpper.offsetHeight
+        console.log(this.HeaderHeight)
+      })
+    },
     headAdd() {
       this.$router.push('/order/invoice/headAdd')
     },
@@ -189,6 +200,7 @@ export default {
       })
       this.init()
       this.onLoad()
+      this.getHeaderHeight()
     },
     HistoryInvoiceSelect(tabs, timePicker) {
       this.HistoryInvoiceSelectState = {
@@ -315,7 +327,22 @@ export default {
   min-height: 100%;
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
-  margin-bottom: 200px;
+
+  background: #f5f5f5;
+
+  ::v-deep .sp-work-tab {
+    font-family: PingFangSC-Regular;
+    font-size: 30px;
+    color: #999999;
+    text-align: center;
+  }
+  ::v-deep .sp-work-tab--active {
+    color: #222222;
+  }
+
+  .sp-work-tabs__line {
+    background-color: #4974f5;
+  }
   &-header {
     &-warpper {
       position: fixed;
@@ -324,6 +351,7 @@ export default {
       width: 100%;
       background-color: #ffffff;
       z-index: 999;
+      border-bottom: 1px solid #f5f5f5;
     }
   }
   .paddingBottom150 {
