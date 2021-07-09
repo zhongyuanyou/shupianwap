@@ -100,6 +100,7 @@ export default {
   height: 16px !important;
   border: none !important;
   background: #ddd !important;
+  border-radius: 16px !important;
 }
 ::v-deep .sp-step__line {
   border-left: 1px dashed #ddd !important ;
@@ -126,6 +127,9 @@ export default {
     color: #1a1a1a;
     text-align: center;
   }
+}
+::v-deep .step__circle-container {
+  left: -16px !important;
 }
 .process-record {
   border-radius: 24px;
@@ -208,7 +212,6 @@ export default {
     z-index: 9;
     width: 100%;
     button {
-      width: 159px;
       height: 80px;
       background: #ffffff;
       border: 1px solid #dddddd;
@@ -217,6 +220,8 @@ export default {
       font-size: 28px;
       color: #222222;
       margin: 0 8px;
+      padding: 0 10px;
+      word-break: break-all;
     }
   }
 }
