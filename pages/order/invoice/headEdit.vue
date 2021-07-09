@@ -1,5 +1,5 @@
 <template>
-  <div class="invoice_add">
+  <div class="invoice_edit">
     <sp-sticky>
       <Header class="my-header" title="编辑发票抬头"></Header>
     </sp-sticky>
@@ -7,6 +7,7 @@
       <div class="invoice_info">
         <sp-cell-group>
           <sp-cell
+            class="head_type"
             :title="`${InvoiceType[formData.type]}-${
               HeadType[formData.headType]
             }`"
@@ -346,17 +347,37 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.invoice_add {
+.invoice_edit {
   background: #f5f5f5;
   padding: 0 0 170px;
   min-height: 100vh;
   .card {
     background: #fff;
+    margin-top: 20px;
     margin-bottom: 20px;
     padding: 0 40px;
 
+    .head_type {
+      font-family: PingFangSC-Medium;
+      font-size: 30px;
+      font-weight: bold;
+      color: #222222;
+      line-height: 30px;
+    }
     ::v-deep .sp-cell {
       padding: 40px 0px 40px 32px;
+    }
+    ::v-deep .sp-field__label {
+      font-family: PingFangSC-Regular;
+      font-size: 30px;
+      color: #222222;
+      line-height: 30px;
+      flex: none !important;
+    }
+    ::v-deep .sp-field__control {
+      font-family: PingFangSC-Regular;
+      font-size: 30px;
+      color: #222222;
     }
   }
   .submit_btns ::v-deep .sp-button__text {
