@@ -4,7 +4,7 @@
     <div class="detail-info">
       <div class="count">
         <span>{{ withdrawDetails.orderTypeName }}金额</span>
-        <strong>￥{{ withdrawDetails.amount }}</strong>
+        <strong>{{ withdrawDetails.amount }}</strong>
       </div>
       <div class="field-list">
         <div class="row">

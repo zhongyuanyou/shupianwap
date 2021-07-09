@@ -795,6 +795,8 @@ export default {
                     height: 30px;
                     line-height: 30px;
                     text-align: center;
+                    position: relative;
+                    top: -1px;
                   }
                   .title {
                     font-size: 28px;
@@ -1035,6 +1037,7 @@ export default {
             .right {
               color: #ff3b30;
               font-size: 36px;
+              font-weight: bold;
               span {
                 font-size: 24px !important;
               }

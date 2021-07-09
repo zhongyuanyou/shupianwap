@@ -35,7 +35,7 @@
           label="银行名称"
           placeholder="输入银行卡号，系统自动识别"
           readonly="readonly"
-          :rules="[{ required: true, message: '输入正确的银行卡号可识别名称' }]"
+          :rules="[{ required: true }]"
         />
         <sp-field
           v-model="accountBank"
@@ -46,7 +46,6 @@
           :rules="[
             {
               required: true,
-              message: '请输入开户行，系统自动搜索',
             },
           ]"
           @click="openPullPop"
@@ -277,6 +276,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+::v-deep .sp-field__body {
+  ::-webkit-input-placeholder {
+    font-weight: normal !important;
+  }
+}
 ::v-deep .sp-field__control {
   color: #222;
 }
@@ -367,20 +371,24 @@ export default {
     }
   }
 }
+
 .form {
   padding: 0 20px;
   ::v-deep .sp-cell {
-    height: auto;
+    min-height: 112px;
     align-items: center;
   }
   ::v-deep.sp-field__body input {
     text-align: right;
+    font-weight: bold;
+    font-size: 32px;
   }
   ::v-deep.sp-field__error-message {
     text-align: right;
   }
   ::v-deep.sp-field__label {
     width: 4.8em;
+    font-size: 32px;
     span {
       position: relative;
       &:after {

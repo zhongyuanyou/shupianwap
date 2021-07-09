@@ -30,8 +30,9 @@
         ></sp-icon>
       </div>
       <div class="total" @click="jumpBillPage">
-        <strong v-if="showAccountBal"
-          >¥{{ accountBalData.totalBalance || '0.00' }}</strong
+        <strong v-if="showAccountBal">{{
+          accountBalData.totalBalance || '0.00'
+        }}</strong
         ><strong v-else class="top9">****</strong
         ><sp-icon
           v-if="showAccountBal"
@@ -53,7 +54,7 @@
               @click="tipsPop(0)"
             ></sp-icon>
           </h3>
-          <p v-if="showAccountBal">¥{{ accountBalData.balance || '0.00' }}</p>
+          <p v-if="showAccountBal">{{ accountBalData.balance || '0.00' }}</p>
           <p v-else>****</p>
         </div>
         <div class="quota-item">
@@ -68,7 +69,7 @@
             ></sp-icon>
           </h3>
           <p v-if="showAccountBal">
-            ¥{{ accountBalData.frozenBalance || '0.00' }}
+            {{ accountBalData.frozenBalance || '0.00' }}
           </p>
           <p v-else>****</p>
         </div>
@@ -365,6 +366,7 @@ export default {
           color: #999;
           font-size: 24px;
           line-height: 32px;
+          font-weight: normal;
           span {
             margin-right: 8px;
           }

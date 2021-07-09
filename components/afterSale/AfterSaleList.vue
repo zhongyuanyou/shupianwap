@@ -342,6 +342,8 @@ export default {
                 height: 30px;
                 line-height: 30px;
                 display: block;
+                position: relative;
+                top: -1px;
               }
               .title {
                 font-size: 28px;
@@ -398,6 +400,7 @@ export default {
       display: flex;
       color: #222222;
       background: #f8f8f8;
+      align-items: center;
       strong {
         font-weight: bold;
         font-size: 24px;
