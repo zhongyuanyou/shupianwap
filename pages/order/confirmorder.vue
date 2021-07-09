@@ -161,7 +161,7 @@
             :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
             @click="popupfn()"
           />
-          <!-- <Cell
+          <Cell
             title="活动卡"
             :value="
               coupon
@@ -172,8 +172,8 @@
             "
             is-link
             :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
-            @click="popupfn()"
-          /> -->
+            @click="cardFn()"
+          />
         </CellGroup>
         <p class="money">
           合计：
@@ -233,6 +233,19 @@
       :nolist="nolist"
       @close="close"
     ></Popup>
+
+    <Popup
+      ref="conpon"
+      :show="cardShow"
+      :height="75"
+      title="活动卡"
+      help="使用说明"
+      :tablist="tablist"
+      calculation="已选中推荐优惠券，可抵扣"
+      :datalist="datalist"
+      :nolist="nolist"
+      @close="closeCard"
+    ></Popup>
   </div>
 </template>
 
@@ -268,6 +281,8 @@ export default {
   },
   data() {
     return {
+      cardShow: false,
+
       popupshow: false,
       allboxHeight: '100vh',
       money: '1232',
@@ -639,10 +654,18 @@ export default {
     popupfn() {
       this.popupshow = true
     },
+    cardFn() {
+      this.cardShow = true
+    },
     close(data) {
       this.popupshow = data
       this.$refs.conpon.checkarr = ''
       this.$refs.conpon.radio = null
+    },
+    closeCard(data) {
+      this.cardShow = data
+      // this.$refs.conpon.checkarr = ''
+      // this.$refs.conpon.radio = null
     },
   },
 }
