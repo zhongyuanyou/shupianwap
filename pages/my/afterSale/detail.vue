@@ -284,8 +284,8 @@
     </div>
     <!-- 操作按钮 -->
     <div class="footer-btns">
-      <button @click="concatKefuBtn">联系客服</button>
-      <button
+      <div @click="concatKefuBtn">联系客服</div>
+      <div
         v-if="
           (afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_5' ||
             afterSaleDetail.afterSaleSubStatusNo ===
@@ -296,8 +296,8 @@
         @click="openDialog(0)"
       >
         平台介入
-      </button>
-      <button
+      </div>
+      <div
         v-if="
           afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_1' ||
           afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_2' ||
@@ -306,13 +306,13 @@
         @click="openDialog(1)"
       >
         撤销
-      </button>
-      <button
+      </div>
+      <div
         v-if="afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_3'"
         @click="openDialog(2)"
       >
         确认方案
-      </button>
+      </div>
       <!-- <button class="pay-btn">去支付</button> -->
     </div>
     <!--S loding-->
@@ -348,7 +348,7 @@ export default {
           confirmButtonText: '',
         },
         {
-          title: '',
+          title: '您确定撤回此售后申请？',
           message:
             '您将撤销本次申请，如有问题未解决，您还可以再次发起。确定撤销吗？',
           cancelButtonText: '暂不取消',
@@ -440,25 +440,29 @@ export default {
       ],
       userDoTypeCode: '',
       loading: false,
-      userInfo: '',
+      // userInfo: '',
       afterSaleStatusNoList: [
         'AFTERSALE_STATUS_1',
         'AFTERSALE_STATUS_2',
         'AFTERSALE_STATUS_3',
       ],
+      afterSaleId: '',
     }
   },
-  // computed: {
-  //   userInfo() {
-  //     return JSON.parse(localStorage.getItem('info'))
-  //   },
-  // },
+  computed: {
+    userInfo() {
+      return JSON.parse(localStorage.getItem('info'))
+    },
+  },
   // created() {
   //   this.getAfterSaleDetails()
   // },
   mounted() {
-    this.userInfo = JSON.parse(localStorage.getItem('info'))
+    // this.userInfo = JSON.parse(localStorage.getItem('info'))
     this.getAfterSaleDetails()
+  },
+  destroyed() {
+    localStorage.removeItem('afterSaleId')
   },
   // mounted() {
   //   this.userInfo = JSON.parse(localStorage.getItem('info'))
@@ -466,21 +470,37 @@ export default {
   methods: {
     async getAfterSaleDetails() {
       this.loading = true
-      const res = await this.$axios.get(afterSaleApi.detail, {
-        params: {
-          id: this.$route.query.id,
-          orderId: this.$route.query.orderId,
-          orderNo: this.$route.query.orderNo,
-          isProduct: '1',
-          isAfterSaleFlow: '1',
-          afterSaleStatusNoList: !this.$route.query.id
-            ? JSON.stringify(this.afterSaleStatusNoList)
-            : '',
-        },
-      })
+      const params = {
+        id: '',
+        orderId: this.$route.query.orderId,
+        orderNo: this.$route.query.orderNo,
+        isProduct: '1',
+        isAfterSaleFlow: '1',
+        afterSaleStatusNoList: !this.$route.query.id
+          ? JSON.stringify(this.afterSaleStatusNoList)
+          : '[]',
+      }
+      if (!this.$route.query.id && localStorage.getItem('afterSaleId')) {
+        params.id = localStorage.getItem('afterSaleId')
+      } else {
+        params.id = this.$route.query.id
+      }
+      // if (localStorage.getItem('afterSaleId')) {
+      //   params.id = localStorage.getItem('afterSaleId')
+      // } else {
+      //   params.id = this.$route.query.id
+      // }
+      const res = await this.$axios.get(afterSaleApi.detail, { params })
       this.loading = false
       if (res.code === 200) {
         this.afterSaleDetail = res.data
+        // 如果售后id不存在，要存起来
+        // if (!this.$route.query.id) {
+        //   localStorage.setItem('afterSaleId', this.afterSaleDetail.id)
+        // } else {
+        //   localStorage.removeItem('afterSaleId')
+        // }
+        // this.afterSaleId = this.afterSaleDetail.id
         console.log(this.afterSaleDetail.afterSaleStatusNo)
         switch (this.afterSaleDetail.afterSaleStatusNo) {
           case 'AFTERSALE_STATUS_1':
@@ -495,7 +515,7 @@ export default {
             break
           case 'AFTERSALE_STATUS_3':
             this.statusBar = this.status[0]
-            this.statusBar.title = '待确认'
+            this.statusBar.title = '请您确认'
             this.statusBar.desc = '请您确认售后方案'
             break
           case 'AFTERSALE_STATUS_4':
@@ -538,7 +558,7 @@ export default {
         updaterCode: this.userInfo.no,
         afterSaleId: this.afterSaleDetail.id,
         userDoType: this.userDoTypeCode,
-        afterSaleAgreementIds: 'protocol100039',
+        afterSaleAgreementIds: 'protocol100040',
       })
       this.loading = false
       if (res.code === 200) {
@@ -555,6 +575,14 @@ export default {
           case 2:
             this.alertDialog(3)
             break
+        }
+        // this.$router.push(
+        //   `/my/afterSale/detail?orderId=${this.$route.query.orderId}&orderNo=${this.$route.query.orderNo}&id=${this.afterSaleId}`
+        // )
+        if (!this.$route.query.id) {
+          localStorage.setItem('afterSaleId', this.afterSaleDetail.id)
+        } else {
+          localStorage.removeItem('afterSaleId')
         }
         this.getAfterSaleDetails()
       }
@@ -761,6 +789,7 @@ export default {
                     width: 30px;
                     height: 30px;
                     line-height: 30px;
+                    text-align: center;
                   }
                   .title {
                     font-size: 28px;
@@ -800,7 +829,7 @@ export default {
               > .img-mark {
                 position: absolute;
                 right: 0;
-                top: 0;
+                top: 18px;
                 width: 140px;
                 height: 105px;
                 img {
@@ -879,6 +908,7 @@ export default {
             h3 {
               font-size: 26px;
               color: #222222;
+              font-weight: bold;
             }
             > p {
               margin-left: 40px;
@@ -962,6 +992,7 @@ export default {
                 border-radius: 4px;
                 font-size: 24px;
                 color: #ec5330;
+                text-align: center;
               }
               > p {
                 font-size: 32px;
@@ -973,13 +1004,14 @@ export default {
             .right {
               color: #4974f5;
               font-size: 28px;
+              font-weight: bold;
             }
           }
           .amount {
             display: flex;
             height: 138px;
             padding: 28px 40px;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
             .left {
               h3 {
@@ -1018,9 +1050,11 @@ export default {
     bottom: 0;
     z-index: 9;
     width: 100%;
-    button {
-      width: 159px;
+    > div {
+      display: block;
+      width: 154px;
       height: 80px;
+      line-height: 80px;
       background: #ffffff;
       border: 1px solid #dddddd;
       border-radius: 8px;
@@ -1028,6 +1062,8 @@ export default {
       font-size: 28px;
       color: #222222;
       margin: 24px 8px;
+      word-break: keep-all;
+      text-align: center;
     }
     .pay-btn {
       background: #ec5330 !important;

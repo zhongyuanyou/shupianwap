@@ -22,7 +22,15 @@
               <span v-if="item.orderTypeName === '提现'">-</span
               ><span v-else>+</span>￥{{ item.amount }}
             </h3>
-            <p>{{ item.statusName }}</p>
+            <p>
+              <span v-if="item.status === 'SYS_TRADE_ORDER_STATUS_2'"
+                >已处理</span
+              >
+              <span v-else-if="item.status === 'SYS_TRADE_ORDER_STATUS_1'"
+                >提现中</span
+              >
+              <span v-else>提现失败</span>
+            </p>
           </div>
         </li>
       </ul>

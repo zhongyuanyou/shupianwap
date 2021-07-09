@@ -84,6 +84,28 @@ export default {
 </script>
 
 <style lang="less" scoped>
+::v-deep .sp-step__title--active {
+  h3 {
+    color: #4974f5 !important;
+    font-weight: bold !important;
+  }
+}
+::v-deep .sp-icon-checked {
+  width: 16px !important;
+  height: 16px !important;
+  border: none !important;
+}
+::v-deep .sp-step__circle {
+  width: 16px !important;
+  height: 16px !important;
+  border: none !important;
+  background: #ddd !important;
+  border-radius: 16px !important;
+}
+::v-deep .sp-step__line {
+  border-left: 1px dashed #ddd !important ;
+  background: none !important;
+}
 .no-data-area {
   width: 100%;
   height: 100vh;
@@ -105,6 +127,9 @@ export default {
     color: #1a1a1a;
     text-align: center;
   }
+}
+::v-deep .step__circle-container {
+  left: -16px !important;
 }
 .process-record {
   border-radius: 24px;

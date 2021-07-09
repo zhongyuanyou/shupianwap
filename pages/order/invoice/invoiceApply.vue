@@ -14,7 +14,7 @@
           :class="{ active: key === formData.invoiceType }"
           size="small"
           type="primary"
-          @click="formData.invoiceType = key"
+          @click="click_invoicetype(key)"
         >
           {{ invoicetype }}
         </sp-button>
@@ -29,12 +29,16 @@
         <div class="options">
           <sp-button
             v-for="(invoice_header, key) in InvoiceHeader"
+            v-show="
+              key == 'INVOICE_HEADER_COMPANY' ||
+              (formData.invoiceType != '004' && formData.invoiceType != '027')
+            "
             :key="key"
             class="btn"
             :class="{ active: key === formData.invoiceHeader }"
             size="small"
             type="primary"
-            @click="formData.invoiceHeader = key"
+            @click="click_invoice_header(key)"
           >
             {{ invoice_header }}
           </sp-button>
@@ -151,7 +155,7 @@
       <div class="title">发票须知</div>
       <div class="tips">
         <div>1、发票金额为实际支付金额，不包含优惠券等；</div>
-        <div>2、电子发票可以在订单确认后，在订单详情中查看和下载。</div>
+        <div>2、电子发票开具成功后可在发票中心查看和下载；</div>
       </div>
     </div>
     <div class="card">
@@ -192,6 +196,13 @@ import { mapState } from 'vuex'
 import Header from '@/components/common/head/header.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { invoiceApi } from '@/api/index.js'
+import contractApi from '@/api/contract'
+const InvoiceType = {
+  '027': '增值税电子专用发票',
+  '026': '电子普通发票',
+  '007': '增值税普通发票 ',
+  '004': '增值税专用发票',
+}
 
 export default {
   layout: 'keepAlive',
@@ -266,6 +277,20 @@ export default {
     // this.getDefaultInvoiceHeader()
   },
   methods: {
+    click_invoicetype(key) {
+      this.formData.invoiceType = key
+      if (
+        this.formData.invoiceType === '004' ||
+        this.formData.invoiceType === '027'
+      ) {
+        this.formData.invoiceHeader = 'INVOICE_HEADER_COMPANY'
+      }
+      this.getDefaultInvoiceHeader()
+    },
+    click_invoice_header(key) {
+      this.formData.invoiceHeader = key
+      this.getDefaultInvoiceHeader()
+    },
     init() {
       if (!this.formData.orderId) {
         return this.$xToast.error('没有指定订单')
@@ -280,7 +305,6 @@ export default {
           }
         )
         .then((res) => {
-          this.loading = false
           console.log(' res', res)
 
           if (res && res.orderId) {
@@ -289,33 +313,6 @@ export default {
             this.getDefaultInvoiceHeader()
           }
           this.getConfig()
-          // {
-          //   applySource: "INVOICE_APPLY_SOURCE_CUSTOMER",
-          //   applyTime: "2021-06-28 14:21:24",
-          //   applyUserId: "767579755195165966",,
-          //   applyUserName: "唐代兵",
-          //   bankAccount: "",
-          //   bankOfDeposit: "",
-          //   // goods: [,…],
-          //   id: "1251978880678714646",
-          //   invoiceApplyNo: "FP210628005002",
-          //   invoiceContent: "商品明细",
-          //   invoiceHeader: "INVOICE_HEADER_PERSONAL",
-          //   invoiceHeaderName: "h1",
-          //   invoiceMoney: "2",
-          //   invoiceStatus: "INVOICE_STATUS_PROCESS",
-          //   invoiceType: "026",
-          //   isValid: 1,
-          //   orderId: "8083886946797813760",
-          //   orderNo: "D21052164188",
-          //   receiverEmail: "h@adtk.cn",
-          //   receiverPhone: "17608390654",
-          //   registerAddress: "",
-          //   registerTel: "",
-          //   signStoreId: "607997736314104054",
-          //   signStoreName: "案加测试一公司",
-          //   taxpayerIdentifNum: "",
-          // }
         })
         .catch((error) => {
           this.loading = false
@@ -358,21 +355,32 @@ export default {
           }
         )
         .then((res) => {
-          console.log(res)
           const arr = res.applyInvoiceType.split(',')
           const info = {}
-          arr.map((item, index) => {
-            info[item] = res.applyInvoiceTypeNames[index]
-
-            if (!this.formData.invoiceType && res.defaultInvoiceType) {
-              this.formData.invoiceType = res.defaultInvoiceType
+          arr.map((item) => {
+            if (InvoiceType[item]) {
+              info[item] = InvoiceType[item]
             }
           })
 
+          // arr.map((item, index) => {
+          //   info[item] = res.applyInvoiceTypeNames[index]
+          // })
           this.InvoiceType = info
+
+          if (
+            !this.formData.invoiceType &&
+            res.defaultInvoiceType &&
+            this.InvoiceType[res.defaultInvoiceType]
+          ) {
+            this.formData.invoiceType = res.defaultInvoiceType
+          }
+          this.loading = false
         })
         .catch((err) => {
           console.log(err)
+          this.loading = false
+          this.$xToast.error('商户信息错误')
         })
     },
     /** 获取默认抬头 */
@@ -383,11 +391,32 @@ export default {
           .then((res) => {
             const list = (res && res.records) || []
             const head = list.find((item) => {
-              return item.defaultHead === 1
-              // return item.headType === headType
+              let invoiceType = ''
+              let invoiceHeader = ''
+              if (
+                this.formData.invoiceType === '004' ||
+                this.formData.invoiceType === '027'
+              ) {
+                invoiceType = 'SPECIAL'
+              } else {
+                invoiceType = 'ORDINARY'
+              }
+              if (this.formData.invoiceHeader === 'INVOICE_HEADER_PERSONAL') {
+                invoiceHeader = 'PERSONAL'
+              } else {
+                invoiceHeader = 'COMPANY'
+              }
+
+              return (
+                item.headType === invoiceHeader &&
+                item.type === invoiceType &&
+                item.defaultHead === 1
+              )
             })
             if (head) {
               return this.setDefaultFormDataWithHead(head)
+            } else {
+              console.log('没有对应的head')
             }
           })
           .catch((error) => {
@@ -397,7 +426,10 @@ export default {
       } catch (error) {}
     },
     // 用默认抬头填充数据
-    setDefaultFormDataWithHead(info) {
+    async setDefaultFormDataWithHead(info) {
+      console.log(info)
+      const phone = await this.decryptionPhone(info.phoneFull)
+
       this.formData = Object.assign({}, this.formData, {
         orderId: this.orderId,
         applySource: 'INVOICE_APPLY_SOURCE_CUSTOMER',
@@ -415,11 +447,38 @@ export default {
         bankAccount: info.bankNumber,
         bankOfDeposit: info.depositBank,
 
-        registerTel: info.phone,
+        registerTel: phone,
         registerAddress: info.address,
         taxpayerIdentifNum: info.dutyParagraph,
       })
     },
+    // 解密电话
+    decryptionPhone(contactWay) {
+      return new Promise((resolve, reject) => {
+        if (!contactWay) {
+          console.log('没有电话')
+          return resolve('')
+        }
+        contractApi
+          .decryptionPhone(
+            { axios: this.axios },
+            {
+              phoneList: [contactWay],
+            }
+          )
+          .then((res) => {
+            console.log(res)
+            if (res && res.length > 0) {
+              return resolve(res[0])
+            }
+            resolve('')
+          })
+          .catch(() => {
+            resolve('')
+          })
+      })
+    },
+
     submit() {
       if (!this.formData.invoiceType) {
         return this.$xToast.error('请选择发票类型')
