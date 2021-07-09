@@ -340,7 +340,7 @@ export default {
     color: #222222;
   }
 
-  .sp-work-tabs__line {
+  ::v-deep .sp-work-tabs__line {
     background-color: #4974f5;
   }
   &-header {

@@ -39,7 +39,7 @@
         <div class="item-rt-content">
           <div class="item-rt-content-left">
             <div ref="textpro" class="content">
-              {{ getuseTypeName(item.useType) }}
+              {{ getuseTypeName(item.useLimit) }}
               <!-- item.useType === 1? '全品类通用': item.useType === 2? '限定部分类别产品使用': '指定产品使用' -->
             </div>
 
@@ -307,6 +307,10 @@ export default {
           font-family: PingFang SC;
           font-weight: 400;
           color: #999999;
+
+          transform-origin: left center;
+          transform: scale(0.83);
+          white-space: nowrap;
         }
       }
       .warn {

@@ -19,9 +19,11 @@
       <div class="item-rt">
         <div class="sign" :class="getStatusClassName()"></div>
         <div class="title" @click="goDetailPage(item)">
-          <span class="coupon_type_name" :class="{ invalid: couponType != 0 }">
-            {{ item.cardType == 1 ? '满减卡' : '折扣卡' }}
-          </span>
+          <span
+            class="coupon_type_name"
+            :class="{ invalid: couponType != 0 }"
+            >{{ item.cardType == 1 ? '满减卡' : '折扣卡' }}</span
+          >
           {{ item.cardName }}
         </div>
         <div ref="textpro" class="content">
@@ -259,7 +261,6 @@ export default {
         color: #999999;
         overflow: hidden;
 
-        display: inline-block;
         transform-origin: left center;
         transform: scale(0.83);
         white-space: nowrap;
