@@ -34,6 +34,7 @@
           >¥{{ accountBalData.totalBalance || '0.00' }}</strong
         ><strong v-else class="top9">****</strong
         ><sp-icon
+          v-if="showAccountBal"
           class-prefix="spiconfont"
           name="you"
           size="0.24rem"
