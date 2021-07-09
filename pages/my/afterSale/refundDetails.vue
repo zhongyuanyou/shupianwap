@@ -92,10 +92,14 @@ export default {
     font-weight: bold !important;
   }
 }
+::v-deep .step__circle-container {
+  left: -16px !important;
+}
 ::v-deep .sp-icon-checked {
   width: 16px !important;
   height: 16px !important;
   border: none !important;
+  border-radius: 16px !important;
 }
 ::v-deep .sp-step__circle {
   width: 16px !important;

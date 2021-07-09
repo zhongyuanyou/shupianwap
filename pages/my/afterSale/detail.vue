@@ -284,8 +284,8 @@
     </div>
     <!-- 操作按钮 -->
     <div class="footer-btns">
-      <button @click="concatKefuBtn">联系客服</button>
-      <button
+      <div @click="concatKefuBtn">联系客服</div>
+      <div
         v-if="
           (afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_5' ||
             afterSaleDetail.afterSaleSubStatusNo ===
@@ -296,8 +296,8 @@
         @click="openDialog(0)"
       >
         平台介入
-      </button>
-      <button
+      </div>
+      <div
         v-if="
           afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_1' ||
           afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_2' ||
@@ -306,13 +306,13 @@
         @click="openDialog(1)"
       >
         撤销
-      </button>
-      <button
+      </div>
+      <div
         v-if="afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_3'"
         @click="openDialog(2)"
       >
         确认方案
-      </button>
+      </div>
       <!-- <button class="pay-btn">去支付</button> -->
     </div>
     <!--S loding-->
@@ -1050,9 +1050,11 @@ export default {
     bottom: 0;
     z-index: 9;
     width: 100%;
-    button {
+    > div {
       display: block;
+      width: 154px;
       height: 80px;
+      line-height: 80px;
       background: #ffffff;
       border: 1px solid #dddddd;
       border-radius: 8px;
