@@ -23,7 +23,7 @@
         <div class="select-row">
           <div class="title">选择账户/银行卡</div>
           <div class="select-val" @click="openSelectBankPop">
-            <span>{{ selectCardInfo.bankName || '去选择' }}</span>
+            <span>去选择</span>
             <sp-icon
               class-prefix="spiconfont"
               size="0.25rem"

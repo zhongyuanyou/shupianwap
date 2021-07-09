@@ -100,6 +100,7 @@ export default {
   height: 16px !important;
   border: none !important;
   background: #ddd !important;
+  border-radius: 16px !important;
 }
 ::v-deep .sp-step__line {
   border-left: 1px dashed #ddd !important ;
@@ -126,6 +127,9 @@ export default {
     color: #1a1a1a;
     text-align: center;
   }
+}
+::v-deep .step__circle-container {
+  left: -16px !important;
 }
 .process-record {
   border-radius: 24px;
