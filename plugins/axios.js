@@ -2,7 +2,7 @@ import qs from 'qs'
 import gatewaySign from '@fe/gateway-sign'
 import { saveAxiosInstance } from '@/utils/request'
 import xToast from '@/components/common/spToast'
-const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
+// const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
 const BASE = require('~/config/index.js')
 export default function ({ $axios, redirect, app, store }) {
   $axios.defaults.withCredentials = false
@@ -26,11 +26,13 @@ export default function ({ $axios, redirect, app, store }) {
       config.headers.platformCode = BASE.platformCode // 平台code
       config.headers.terminalCode = BASE.terminalCode // 终端code
       const data = config.method === 'post' ? config.data : config.params
-      let token = app.$cookies.get('token', {
-        path: '/',
-      })
+      let token = store.state.user.token
+      console.log('aixos来自store的token', token)
       if (!token) {
-        token = store.state.user.token
+        token = app.$cookies.get('token', {
+          path: '/',
+        })
+        console.log('aixos来自cookie的token', token)
       }
       // // 签名
       const signData = gatewaySign.handleSign({
@@ -45,24 +47,26 @@ export default function ({ $axios, redirect, app, store }) {
       // config.headers.sysCode = 'crisps-app-wap-bff-api'
       // 获取token
       if (token) {
-        let userId = app.$cookies.get('userId', {
-          path: '/',
-        })
+        let userId = store.state.user.userId
         if (!userId) {
-          userId = store.state.user.userId
+          userId = app.$cookies.get('userId', {
+            path: '/',
+          })
         }
         config.headers['X-Auth-Token'] = token
         config.headers['X-Req-UserId'] = userId
       }
-      let userNo = app.$cookies.get('userNo', {
-        path: '/',
-      })
+      let userNo = store.state.user.userNo
       if (!userNo) {
-        userNo = store.state.user.userNo
+        userNo = app.$cookies.get('userNo', {
+          path: '/',
+        })
       }
       // 获取用户信息
       if (userNo) {
-        config.headers['X-Req-UserNo'] = userNo
+        config.headers['X-Req-UserNo'] = app.$cookies.get('userNo', {
+          path: '/',
+        })
         // config.headers['X-Req-UserName'] = app.$cookies.get('userName', {
         //   path: '/',
         // })
@@ -93,7 +97,7 @@ export default function ({ $axios, redirect, app, store }) {
       // 网关会对带有yk地址的请求做token有效性验证，若失效，网关直接抛出5223，wap里面跳转到 我的
       if (code === 5223) {
         // 清空登录信息
-        store.commit('user/CLEAR_USER')
+        store.dispatch('user/clearUser')
         if (!store.state.app.isInApp) {
           if (process && process.client) {
             xToast.error('登录失效，请重新登录')
