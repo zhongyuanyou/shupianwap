@@ -236,11 +236,11 @@
 
     <Popup
       ref="conpon"
-      :show="cardShow"
+      :show="card.show"
       :height="75"
       title="活动卡"
       help="使用说明"
-      :tablist="tablist"
+      :tablist="card.tablist"
       calculation="已选中推荐优惠券，可抵扣"
       :datalist="datalist"
       :nolist="nolist"
@@ -281,8 +281,6 @@ export default {
   },
   data() {
     return {
-      cardShow: false,
-
       popupshow: false,
       allboxHeight: '100vh',
       money: '1232',
@@ -295,6 +293,15 @@ export default {
         { name: '可用优惠券', num: '12', is: true },
         { name: '不可用优惠券' },
       ],
+
+      card: {
+        show: false,
+        tablist: [
+          { name: '可用活动卡', num: '12', is: true },
+          { name: '不可用活动卡' },
+        ],
+        datalist: [],
+      },
       datalist: [],
       nolist: [],
       contaract: '',
@@ -350,12 +357,14 @@ export default {
     onLeftClick() {
       this.$router.back()
     },
+    // 打开《薯片平台用户交易下单协议》
     goagr() {
       this.$router.push({
         name: 'login-protocol',
         query: { categoryCode: 'protocol100008' },
       })
     },
+    // 购物车结算
     getcart() {
       const that = this
       shopCart
@@ -455,6 +464,8 @@ export default {
         return Promise.reject(error)
       }
     },
+
+    // 提交订单
     placeOrder() {
       if (!this.radio) {
         Toast({
@@ -571,6 +582,7 @@ export default {
       })
       return arr
     },
+    //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
       const arr = this.order.list.map((x) => {
         return x.id
@@ -641,6 +653,8 @@ export default {
           }
         })
     },
+
+    getCardData() {},
     contractback() {
       this.editShow = false
     },
@@ -663,7 +677,7 @@ export default {
       this.$refs.conpon.radio = null
     },
     closeCard(data) {
-      this.cardShow = data
+      this.card.show = data
       // this.$refs.conpon.checkarr = ''
       // this.$refs.conpon.radio = null
     },
