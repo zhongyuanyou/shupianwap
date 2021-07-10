@@ -19,7 +19,7 @@
           </div>
           <div class="right">
             <span v-if="item.orderTypeName === '提现'">-</span
-            ><span v-else>+</span>￥{{ item.amount }}
+            ><span v-else>+</span>{{ item.amount }}
           </div>
         </li>
         <!-- <li>

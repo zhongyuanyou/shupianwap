@@ -161,6 +161,7 @@ export default {
         font-size: 26px;
         margin-right: 20px;
         word-break: keep-all;
+        padding: 0 28px;
         &:first-child {
           border: 1px solid #dddddd;
           color: #555555;

@@ -9,7 +9,7 @@
         >
       </template>
     </Header>
-    <div v-if="!selectCardInfo.bankName" class="tips">
+    <div class="tips">
       <sp-icon
         class-prefix="spiconfont"
         size="0.30rem"
@@ -241,7 +241,7 @@ export default {
     align-items: flex-start;
     i {
       position: relative;
-      top: 8px;
+      top: 5px;
     }
     p {
       font-family: PingFangSC-Regular;
@@ -293,7 +293,8 @@ export default {
           width: 100%;
           height: 76px;
           border: none;
-          font-size: 50px;
+          font-size: 82px;
+          font-weight: bold;
         }
         span {
           font-family: PingFangSC-Medium;

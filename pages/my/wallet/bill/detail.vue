@@ -5,7 +5,7 @@
       <div class="count">
         <span>出/入账数量</span>
         <strong
-          >{{ billDetails.orderType === 'BANK_ORDER_TYPE_3' ? '-' : '+' }}￥{{
+          >{{ billDetails.orderType === 'BANK_ORDER_TYPE_3' ? '-' : '+' }}{{
             billDetails.amount
           }}</strong
         >

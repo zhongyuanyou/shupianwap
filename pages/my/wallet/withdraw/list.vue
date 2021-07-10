@@ -20,16 +20,18 @@
           <div class="right">
             <h3>
               <span v-if="item.orderTypeName === '提现'">-</span
-              ><span v-else>+</span>￥{{ item.amount }}
+              ><span v-else>+</span>{{ item.amount }}
             </h3>
             <p>
-              <span v-if="item.status === 'SYS_TRADE_ORDER_STATUS_2'"
+              <span
+                v-if="item.status === 'SYS_TRADE_ORDER_STATUS_2'"
+                class="gray"
                 >已处理</span
               >
               <span v-else-if="item.status === 'SYS_TRADE_ORDER_STATUS_1'"
                 >提现中</span
               >
-              <span v-else>提现失败</span>
+              <span v-else class="gray">提现失败</span>
             </p>
           </div>
         </li>
@@ -81,6 +83,7 @@ export default {
       const res = await this.$axios.post(walletApi.bill_list, {
         relationId: this.userInfo.id,
         accType: 'BANK_ACCOUNT_TYPE_2',
+        orderType: 'BANK_ORDER_TYPE_3',
         start: this.page,
         limit: this.limit,
       })
@@ -107,6 +110,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.gray {
+  color: #999;
+}
 .no-data-area {
   width: 100%;
   height: 100vh;
