@@ -88,6 +88,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@font-face {
+  font-family: TTFont;
+  src: url('@/assets/fonts/bebas/bebas.TTF');
+  font-weight: bold;
+}
 .bill-detail {
   min-height: 100vh;
   background: #f8f8f8;
@@ -111,6 +116,7 @@ export default {
         font-size: 40px;
         color: #1a1a1a;
         text-align: right;
+        font-family: TTFont;
       }
     }
     .field-list {

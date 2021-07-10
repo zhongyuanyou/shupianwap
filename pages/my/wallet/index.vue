@@ -296,6 +296,11 @@ export default {
   position: relative;
   top: 9px;
 }
+@font-face {
+  font-family: TTFont;
+  src: url('@/assets/fonts/bebas/bebas.TTF');
+  font-weight: bold;
+}
 .wallet {
   height: 100%;
   background: #f8f8f8;
@@ -353,6 +358,7 @@ export default {
       strong {
         font-size: 64px;
         margin-right: 12px;
+        font-family: TTFont;
       }
     }
     .quota-infor {
