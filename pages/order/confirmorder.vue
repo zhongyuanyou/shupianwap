@@ -684,7 +684,7 @@ export default {
           productList: this.productList,
         })
         .then((res) => {
-          this.card.datalist = res
+          this.card.datalist = res || []
         })
       actCard
         .goods_card_list({
@@ -692,7 +692,7 @@ export default {
           productList: this.productList,
         })
         .then((res) => {
-          this.card.nolist = res
+          this.card.nolist = res || []
         })
     },
     contractback() {
