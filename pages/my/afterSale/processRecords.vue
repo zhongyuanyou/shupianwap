@@ -84,12 +84,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-::v-deep .sp-step__title--active {
-  h3 {
-    color: #4974f5 !important;
-    font-weight: bold !important;
-  }
-}
 ::v-deep .sp-icon-checked {
   width: 16px !important;
   height: 16px !important;
@@ -150,7 +144,7 @@ export default {
     ::v-deep.sp-icon-checked {
       width: 24px;
       height: 24px;
-      background-color: #4974f5;
+      background-color: #ddd;
       border-radius: 24px;
       border: 6px solid #d0dcff;
       &::before {
@@ -212,7 +206,6 @@ export default {
     z-index: 9;
     width: 100%;
     button {
-      width: 159px;
       height: 80px;
       background: #ffffff;
       border: 1px solid #dddddd;
@@ -221,6 +214,8 @@ export default {
       font-size: 28px;
       color: #222222;
       margin: 0 8px;
+      padding: 0 10px;
+      word-break: break-all;
     }
   }
 }

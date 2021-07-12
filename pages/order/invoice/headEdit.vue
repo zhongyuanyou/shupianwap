@@ -141,6 +141,7 @@ import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { invoiceApi } from '@/api/index.js'
+import contractApi from '@/api/contract'
 
 export default {
   layout: 'keepAlive',
@@ -205,7 +206,8 @@ export default {
     back() {
       this.$router.back()
     },
-    setFormData(info) {
+    async setFormData(info) {
+      const phone = await this.decryptionPhone(info.phoneFull)
       this.formData = {
         id: info.id,
         userId: info.userId,
@@ -214,7 +216,7 @@ export default {
         invoiceHead: info.invoiceHead, // 发票抬头(专票时必填)
 
         address: info.address, // 注册地址
-        phone: info.phone, // 收票人电话
+        phone, // 收票人电话
         bankNumber: info.bankNumber, // 银行账号
         depositBank: info.depositBank, // 开户银行
         dutyParagraph: info.dutyParagraph, // 纳税人识别号
@@ -222,6 +224,28 @@ export default {
       this.oldFormData = { ...this.formData, defaultHead: info.defaultHead }
       this.defaultHead = info.defaultHead // 默认抬头(0 非默认 1 默认 仅针对普票有效)
     },
+    // 解密电话
+    decryptionPhone(phone) {
+      return new Promise((resolve, reject) => {
+        if (!phone) {
+          console.log('没有电话')
+          return resolve('')
+        }
+        contractApi
+          .decryptionPhone({ axios: this.axios }, { phoneList: [phone] })
+          .then((res) => {
+            console.log(res)
+            if (res && res.length > 0) {
+              return resolve(res[0])
+            }
+            resolve('')
+          })
+          .catch(() => {
+            resolve('')
+          })
+      })
+    },
+
     getInvoiceHeaderList(id) {
       try {
         invoiceApi
@@ -351,6 +375,21 @@ export default {
   background: #f5f5f5;
   padding: 0 0 170px;
   min-height: 100vh;
+
+  ::v-deep .sp-cell {
+    padding: 40px 0px 40px 32px;
+  }
+  ::v-deep .sp-field__label {
+    font-family: PingFangSC-Regular;
+    font-size: 30px;
+    color: #222222;
+    flex: none !important;
+  }
+  ::v-deep .sp-field__control {
+    font-family: PingFangSC-Regular;
+    font-size: 30px;
+    color: #222222;
+  }
   .card {
     background: #fff;
     margin-top: 20px;
@@ -363,21 +402,6 @@ export default {
       font-weight: bold;
       color: #222222;
       line-height: 30px;
-    }
-    ::v-deep .sp-cell {
-      padding: 40px 0px 40px 32px;
-    }
-    ::v-deep .sp-field__label {
-      font-family: PingFangSC-Regular;
-      font-size: 30px;
-      color: #222222;
-      line-height: 30px;
-      flex: none !important;
-    }
-    ::v-deep .sp-field__control {
-      font-family: PingFangSC-Regular;
-      font-size: 30px;
-      color: #222222;
     }
   }
   .submit_btns ::v-deep .sp-button__text {

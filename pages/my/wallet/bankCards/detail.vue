@@ -8,7 +8,7 @@
           :style="{ background: cardDetailInfo.bg_color }"
         >
           <div class="left-logo">
-            <img :src="cardDetailInfo.icon" />
+            <img :src="cardDetailInfo.bankIconUrl" />
           </div>
           <div class="right-info">
             <h3>{{ cardDetailInfo.bankName }}</h3>
@@ -18,9 +18,6 @@
               <!-- <span>****</span><span>****</span><span>****</span
               >--><span>****</span>
             </div>
-          </div>
-          <div class="bg-img">
-            <img :src="cardDetailInfo.bg_icon" />
           </div>
         </li>
       </ul>
@@ -91,18 +88,16 @@ export default {
       console.log(res)
       if (res.code === 200) {
         this.cardDetailInfo = res.data
-        this.cardDetailInfo.icon =
-          'https://cdn.shupian.cn/sp-pt/wap/images/dn89dmn1ulc0000.png'
         this.cardDetailInfo.bg_icon =
           'https://cdn.shupian.cn/sp-pt/wap/images/3y7sfofboeq0000.png'
         this.cardDetailInfo.bg_color = '#3777E5'
-        this.bankCardData.forEach((child) => {
-          if (this.cardDetailInfo.bankCode === child.bankCode) {
-            this.cardDetailInfo.icon = child.icon
-            this.cardDetailInfo.bg_icon = child.bg_icon
-            this.cardDetailInfo.bg_color = child.bg_color
-          }
-        })
+        // this.bankCardData.forEach((child) => {
+        //   if (this.cardDetailInfo.bankCode === child.bankCode) {
+        //     this.cardDetailInfo.icon = child.icon
+        //     this.cardDetailInfo.bg_icon = child.bg_icon
+        //     this.cardDetailInfo.bg_color = child.bg_color
+        //   }
+        // })
       }
     },
   },
@@ -124,7 +119,7 @@ export default {
       li {
         display: flex;
         padding: 44px 32px;
-        align-items: center;
+        align-items: flex-start;
         margin-top: 32px;
         border-radius: 8px;
         position: relative;

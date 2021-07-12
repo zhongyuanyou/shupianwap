@@ -166,16 +166,51 @@ export default {
       FooterNavHeight: 150,
     }
   },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userId,
+      userInfo: (state) => state.user, // 登录的用户信息
+      isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
+    }),
+  },
   mounted() {
     this.tabActive = parseInt(this.$route.query.tabActive || 0)
     this.tabActiveIndex = this.tabActive
 
-    this.init()
-    this.onLoad()
-
     this.FooterNavHeight = this.$refs.FooterNav.$el.offsetHeight
+    this.initData()
   },
   methods: {
+    initData() {
+      if (this.isInApp) {
+        if (this.userInfo.userId && this.userInfo.token) {
+          this.init()
+          this.onLoad()
+        } else {
+          const that = this
+          that.$appFn.dggGetUserInfo(async function (res) {
+            console.log('调用app获取信息', res)
+            if (res && res.code === 200) {
+              // 兼容启大顺参数返回
+              that.$store.dispatch(
+                'user/setUser',
+                typeof res.data === 'string' ? JSON.parse(res.data) : res.data
+              )
+              that.init()
+              that.onLoad()
+            } else {
+              const isLogin = await that.$isLogin()
+              that.init()
+              that.onLoad()
+            }
+          })
+        }
+      } else {
+        this.init()
+        this.onLoad()
+      }
+    },
     toActCard() {
       this.$router.push({
         path: '/my/coupon/act-card',
