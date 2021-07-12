@@ -11,5 +11,6 @@ const afterSaleApi = {
   refundInfo: `${CHIPS_PC_URL}/nk/orderSale/v1/refundInfo.do`, // 退款详情
   refundApply: `${CHIPS_PC_URL}/nk/orderSale/v1/refund.do`, // 退款申请
   onlineKefu: `${CHIPS_PC_URL}/nk/orderSale/v1/onlineKefu.do`, // 在线客服
+  saleingNum: `${CHIPS_PC_URL}/nk/orderSale/v1/saleing_num.do`,// 数字气泡
 }
 export { afterSaleApi }

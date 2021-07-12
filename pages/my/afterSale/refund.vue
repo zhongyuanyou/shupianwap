@@ -47,8 +47,8 @@
           :after-read="afterRead"
           :before-delete="deleteImg"
           :max-size="5 * 1024 * 1024"
-          @oversize="onOversize"
           multiple
+          @oversize="onOversize"
         >
           <template>
             <div class="upload-add">
@@ -97,6 +97,7 @@
 
 <script>
 import { Icon, Field, Uploader, Checkbox } from '@chipspc/vant-dgg'
+import { mapMutations } from 'vuex'
 import { afterSaleApi } from '@/api'
 import Header from '@/components/common/head/header'
 import PullUp from '@/components/afterSale/PullUp'
@@ -104,6 +105,8 @@ import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import { uploadAndCallBack } from '@/utils/uploadFile'
 import imHandle from '@/mixins/imHandle'
 export default {
+  layout: 'keepAlive',
+  name: 'Refund',
   components: {
     Header,
     PullUp,
@@ -163,8 +166,33 @@ export default {
     this.fileId = `${this.userInfo.id}:crisps-app:aftersale:${
       this.$route.query.orderId
     }:${String(Math.random()).substring(2, 8)}`
+    // this.SET_KEEP_ALIVE({ type: 'add', name: 'refund' })
+  },
+  // beforeRouteLeave(to, from, next) {
+  //   if (
+  //     [
+  //     ].includes(to.name)
+  //   ) {
+  //     this.SET_KEEP_ALIVE({ type: 'add', name: 'KnownIndex' })
+  //   } else {
+  //     this.SET_KEEP_ALIVE({ type: 'remove', name: 'KnownIndex' })
+  //   }
+  //   next()
+  // },
+  beforeRouteLeave(to, from, next) {
+    console.log(from, 111111)
+    if (['login-protocol'].includes(to.name)) {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'Refund' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'Refund' })
+    }
+    console.log(this.$store.state.keepAlive)
+    next()
   },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     async submit() {
       if (!this.afterTypeText) {
         this.$xToast.show({
@@ -228,7 +256,7 @@ export default {
     },
     // 限制图片大小
     onOversize() {
-      this.$xToast.warning('文件不能超过5M')
+      this.$xToast.warning('图片不能超过5M')
     },
     afterRead(fileObj) {
       // 多张上传

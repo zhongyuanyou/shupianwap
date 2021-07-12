@@ -512,19 +512,13 @@ export default {
   methods: {
     // 初始化获取售后单数
     async getAfterSaleListNum() {
-      const res = await this.$axios.post(afterSaleApi.list, {
-        userId: this.userId,
-        page: '1',
-        limit: '10',
-        afterSaleStatusNoList: [
-          'AFTERSALE_STATUS_1',
-          'AFTERSALE_STATUS_2 ',
-          'AFTERSALE_STATUS_3',
-        ],
-        type: '3',
+      const res = await this.$axios.get(afterSaleApi.saleingNum, {
+        params: {
+          userId: this.userId,
+        },
       })
       if (res.code === 200) {
-        this.saleDataListNum = res.data.totalCount
+        this.saleDataListNum = res.data
       }
     },
     toKnownHome(info) {
