@@ -27,7 +27,7 @@
           {{ item.cardName }}
         </div>
         <div ref="textpro" class="content">
-          {{ getuseTypeName(item.userLimit) }}
+          {{ getuseTypeName(item.useLimit) }}
           <!-- item.useType === 1
               ? '全品类通用'
               : item.useType === 2

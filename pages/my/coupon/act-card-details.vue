@@ -39,7 +39,7 @@
 
         <div class="list">
           <div class="list_name">使用限制</div>
-          <div class="list_des">{{ getuseTypeName(cardInfo.useType) }}</div>
+          <div class="list_des">{{ getuseTypeName(cardInfo.useLimit) }}</div>
         </div>
         <div class="list">
           <div class="list_name">其他说明</div>
@@ -263,11 +263,11 @@ export default {
         cusOrderTerminalNo: 'COMDIC_TERMINAL_WAP', // 下单终端编号(
         cusOrderPayType: 'PRO_PRE_PAY_POST_SERVICE', // 付款类型：先付款后服务
         payType: 'ORDER_PAY_MODE_ONLINE', // 支付类型：线上支付：
-        cusReceivingInformation: JSON.stringify({
-          personName: this.userInfo.nickName,
-          personPhone: '收货人联系方式',
-          personAddr: '-',
-        }),
+        // cusReceivingInformation: JSON.stringify({
+        //   personName: this.userInfo.nickName,
+        //   personPhone: '收货人联系方式',
+        //   personAddr: '-',
+        // }),
       }
       actCard
         .add_order({ axios: this.$axios }, params)

@@ -205,35 +205,35 @@ export default {
     }
     const startTime = localStorage.getItem('startTime')
     // 暂时隐藏付款功能
-    // if (
-    //   localStorage.getItem('cusOrderId') &&
-    //   localStorage.getItem('serialNumber')
-    // ) {
-    //   if (startTime) {
-    //     const nowTime = this.getNowTime()
-    //     console.log('startTime', startTime)
-    //     console.log('nowTime', nowTime)
-    //     console.log('diff', nowTime - startTime)
-    //     if (nowTime - startTime < 3 * 60 * 1000) {
-    //       this.resultLoading = true
-    //       payResultTimer = setInterval(() => {
-    //         this.number++
-    //         this.getPayResult()
-    //       }, 2000)
-    //     } else {
-    //       this.clearLocalStorage()
-    //       // this.$router.replace({
-    //       //   path: '/pay/payResult',
-    //       //   query: {
-    //       //     payStatus: 2,
-    //       //     orderId: this.$route.query.orderId,
-    //       //     cusOrderId: this.formData.cusOrderId,
-    //       //     batchIds: this.$route.query.batchIds,
-    //       //   },
-    //       // })
-    //     }
-    //   }
-    // }
+    if (
+      localStorage.getItem('cusOrderId') &&
+      localStorage.getItem('serialNumber')
+    ) {
+      if (startTime) {
+        const nowTime = this.getNowTime()
+        console.log('startTime', startTime)
+        console.log('nowTime', nowTime)
+        console.log('diff', nowTime - startTime)
+        if (nowTime - startTime < 3 * 60 * 1000) {
+          this.resultLoading = true
+          payResultTimer = setInterval(() => {
+            this.number++
+            this.getPayResult()
+          }, 2000)
+        } else {
+          this.clearLocalStorage()
+          // this.$router.replace({
+          //   path: '/pay/payResult',
+          //   query: {
+          //     payStatus: 2,
+          //     orderId: this.$route.query.orderId,
+          //     cusOrderId: this.formData.cusOrderId,
+          //     batchIds: this.$route.query.batchIds,
+          //   },
+          // })
+        }
+      }
+    }
   },
 
   methods: {
@@ -413,6 +413,9 @@ export default {
           .then((result) => {
             console.log(result)
             this.resultFormData = result.formData
+            this.payCallBackData.serialNumber = result.billNo
+            localStorage.setItem('serialNumber', result.billNo)
+            localStorage.setItem('startTime', new Date().getTime())
 
             this.$nextTick(() => {
               document.forms[0].submit()

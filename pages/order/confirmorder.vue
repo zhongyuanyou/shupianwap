@@ -54,8 +54,8 @@
                 v-for="(listitem, listindex) in item.saleGoodsSubs"
                 :key="listindex"
               >
-                <p class="name">{{ listitem.goodsSubName }}</p>
-                <p class="data">{{ listitem.goodsSubDetailsName }}</p>
+                <p class="name">{{ listitem.goodsSubName || '-' }}</p>
+                <p class="data">{{ listitem.goodsSubDetailsName || '-' }}</p>
                 <p class="price">
                   {{ `x1` }}
                 </p>
@@ -140,40 +140,48 @@
         <CellGroup>
           <Cell
             title="商品及服务总数"
-            :value="order.num || order.goodsTotal + '件'"
+            :value="order.num || order.goodsTotal || 0 + '件'"
             value-class="black"
           />
           <Cell
             title="商品金额"
-            :value="order.salesPrice || order.skuTotalPrice + '元'"
+            :value="order.salesPrice || order.skuTotalPrice || 0 + '元'"
             value-class="black"
           />
           <Cell
             title="优惠券"
             :value="
-              coupon
-                ? coupon
-                : datalist.length > 0
-                ? datalist.length + '个优惠券'
+              couponInfo.couponPrice
+                ? couponInfo.couponPrice
+                : couponInfo.datalist.length > 0
+                ? couponInfo.datalist.length + '个优惠券'
                 : '无可用'
             "
             is-link
-            :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
-            @click="popupfn()"
+            :value-class="
+              couponInfo.couponPrice
+                ? 'red'
+                : couponInfo.datalist.length > 0
+                ? 'black'
+                : ''
+            "
+            @click="openPopupfn()"
           />
-          <!-- <Cell
+          <Cell
             title="活动卡"
             :value="
-              coupon
-                ? coupon
-                : datalist.length > 0
-                ? datalist.length + '个优惠券'
+              card.cardPrice
+                ? card.cardPrice
+                : card.datalist.length > 0
+                ? card.datalist.length + '个优惠券'
                 : '无可用'
             "
             is-link
-            :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
-            @click="popupfn()"
-          /> -->
+            :value-class="
+              card.cardPrice ? 'red' : card.datalist.length > 0 ? 'black' : ''
+            "
+            @click="openCardFn()"
+          />
         </CellGroup>
         <p class="money">
           合计：
@@ -223,16 +231,31 @@
     <LoadingCenter v-show="loading" />
     <Popup
       ref="conpon"
-      :show="popupshow"
+      :show="couponInfo.popupshow"
       :height="75"
       title="优惠"
       help="使用说明"
-      :tablist="tablist"
+      :tablist="couponInfo.tablist"
       calculation="已选中推荐优惠券，可抵扣"
-      :datalist="datalist"
-      :nolist="nolist"
+      :datalist="couponInfo.datalist"
+      :nolist="couponInfo.nolist"
+      @change="conponChange"
       @close="close"
     ></Popup>
+
+    <CardPopup
+      ref="cardPopup"
+      :show="card.show"
+      :height="75"
+      title="活动卡"
+      help="使用说明"
+      :tablist="card.tablist"
+      calculation="已选中推荐优惠券，可抵扣"
+      :datalist="card.datalist"
+      :nolist="card.nolist"
+      @change="cardChange"
+      @close="closeCard"
+    ></CardPopup>
   </div>
 </template>
 
@@ -248,11 +271,12 @@ import {
 } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header.vue'
 import Popup from '@/components/PlaceOrder/Popup.vue'
+import CardPopup from '@/components/PlaceOrder/CardPopup.vue'
 import Contract from '@/components/PlaceOrder/contract.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { productDetailsApi, auth, shopCart } from '@/api'
 import cardApi from '@/api/card'
-import { coupon, order } from '@/api/index'
+import { coupon, order, actCard } from '@/api/index'
 export default {
   name: 'PlaceOrder',
   components: {
@@ -262,26 +286,44 @@ export default {
     CellGroup,
     Checkbox,
     Popup,
+    CardPopup,
     [Skeleton.name]: Skeleton,
     LoadingCenter,
     Contract,
   },
   data() {
     return {
-      popupshow: false,
-      allboxHeight: '100vh',
       money: '1232',
-      radio: '',
-      coupon: '',
+
+      radio: '', // 选中协议
+
       message: '',
       order: '',
-      num: 0,
-      tablist: [
-        { name: '可用优惠券', num: '12', is: true },
-        { name: '不可用优惠券' },
-      ],
-      datalist: [],
-      nolist: [],
+      // num: 0,
+
+      couponInfo: {
+        popupshow: false,
+
+        coupon: '', // 选择的优惠券对象
+
+        tablist: [
+          { name: '可用优惠券', num: '12', is: true },
+          { name: '不可用优惠券' },
+        ],
+        datalist: [],
+        nolist: [],
+      },
+      card: {
+        show: false,
+        tablist: [
+          { name: '可用活动卡', num: '12', is: true },
+          { name: '不可用活动卡' },
+        ],
+        cardPrice: '', // 选择的card对象立减金额
+        datalist: [], // 支持的列表
+        nolist: [], // 不支持的列表
+      },
+
       contaract: '',
       productId: this.$route.query.productId,
       formData: {
@@ -309,8 +351,6 @@ export default {
       skeletonloading: true,
       editShow: false,
       productList: [],
-      fullConpon: [], // 满减券
-      disCountCoupon: [], // 折扣券
     }
   },
   mounted() {
@@ -323,24 +363,17 @@ export default {
     this.getProtocol('protocol100008')
   },
   methods: {
-    getCardList(condition) {
-      const params = {
-        productList: this.productList,
-        condition,
-      }
-      this.$axios.post(cardApi.goodsCardList, params).then((res) => {
-        console.log('活动卡列表', res)
-      })
-    },
     onLeftClick() {
       this.$router.back()
     },
+    // 打开《薯片平台用户交易下单协议》
     goagr() {
       this.$router.push({
         name: 'login-protocol',
         query: { categoryCode: 'protocol100008' },
       })
     },
+    // 购物车结算
     getcart() {
       const that = this
       shopCart
@@ -368,6 +401,7 @@ export default {
     },
     async asyncData() {
       const that = this
+      this.skeletonloading = false
       try {
         const { code, message, data } = await this.$axios.post(
           productDetailsApi.sellingGoodsDetail,
@@ -399,13 +433,16 @@ export default {
           this.price = this.order.salesPrice
           this.getInitData(5)
           this.getInitData(6)
+
           this.productList = new Array(1).fill({
             categoryCode: data.classCodeLevel.split(',')[0],
             productId: data.id,
             productPrice: data.salesPrice,
           })
+
+          this.getCardList()
+
           console.log('productList', this.productList)
-          this.getCardList(1)
         } else {
           this.$xToast.show('服务器异常,请然后再试')
           setTimeout(function () {
@@ -440,6 +477,8 @@ export default {
         return Promise.reject(error)
       }
     },
+
+    // 提交订单
     placeOrder() {
       if (!this.radio) {
         Toast({
@@ -478,12 +517,13 @@ export default {
           isFromCart = true
           this.Orderform.cartIds = this.$route.query.cartIdsStr
           cusOrderPayType = this.order.list[0].refConfig.payType
-          // cusOrderPayType = cusOrderPayType.toString()
         } else {
           cusOrderPayType = this.order.refConfig.payType
           isFromCart = false
         }
+
         if (
+          this.conpon &&
           this.$refs.conpon.checkarr &&
           this.$refs.conpon.checkarr.marketingCouponVO.id
         ) {
@@ -493,6 +533,19 @@ export default {
             couponUseCode: this.$refs.conpon.checkarr.couponUseCode,
             no: this.$refs.conpon.checkarr.marketingCouponVO.id,
             couponName: this.$refs.conpon.checkarr.marketingCouponVO.couponName,
+          }
+          this.Orderform.discount = new Array(1).fill(arr)
+        } else if (
+          this.card.cardPrice &&
+          this.$refs.cardPopup.checkarr &&
+          this.$refs.cardPopup.checkarr.cardId
+        ) {
+          const arr = {
+            code: 'ORDER_DISCOUNT_DISCOUNT',
+            value: this.$refs.cardPopup.checkarr.cardId,
+            couponUseCode: this.$refs.cardPopup.checkarr.couponUseCode,
+            no: this.$refs.cardPopup.checkarr.cardId,
+            couponName: this.$refs.cardPopup.checkarr.cardName,
           }
           this.Orderform.discount = new Array(1).fill(arr)
         }
@@ -541,9 +594,7 @@ export default {
           })
       }
     },
-    // sortData(a, b) {
-    //   return b.marketingCouponVO.reducePrice - a.marketingCouponVO.reducePrice
-    // },
+
     // 对优惠金额进行排序
     getDisPrice(arr, price) {
       arr.forEach((element) => {
@@ -556,6 +607,7 @@ export default {
       })
       return arr
     },
+    //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
       const arr = this.order.list.map((x) => {
         return x.id
@@ -592,7 +644,7 @@ export default {
         )
         .then((result) => {
           if (index === 5) {
-            this.datalist = result.marketingCouponLogList
+            this.couponInfo.datalist = result.marketingCouponLogList
             const sortList1 = this.getDisPrice(
               result.marketingCouponLogList,
               this.order.salesPrice || this.order.skuTotalPrice
@@ -603,27 +655,44 @@ export default {
                 a.marketingCouponVO.reducePrice
               )
             })
-            if (sortList.length > 0) {
-              this.datalist = sortList
-              this.conpon = this.datalist[0]
-              this.$refs.conpon.radio = 0
-              this.$refs.conpon.checkarr = this.datalist[0]
-              this.$refs.conpon.num =
-                this.$refs.conpon.checkarr.marketingCouponVO.reducePrice
-              this.$refs.conpon.sum()
-            } else {
-              this.skeletonloading = false
-            }
+            this.couponInfo.datalist = sortList
+            // if (sortList.length > 0) {
+            //   this.datalist = sortList
+            //   this.conpon = this.datalist[0]
+            //   this.$refs.conpon.radio = 0
+            //   this.$refs.conpon.checkarr = this.datalist[0]
+            //   this.$refs.conpon.num =
+            //     this.$refs.conpon.checkarr.marketingCouponVO.reducePrice
+            //   this.$refs.conpon.sum()
+            // } else {
+            // }
           } else {
-            this.nolist = result.marketingCouponLogList
-            this.skeletonloading = false
+            this.couponInfo.nolist = result.marketingCouponLogList
           }
         })
         .catch((e) => {
           if (e.code !== 200) {
             this.$xToast.show(e)
-            this.skeletonloading = false
           }
+        })
+    },
+
+    getCardList() {
+      actCard
+        .goods_card_list({
+          condition: 1, // 查询条件 1 查询可用 2查询不可用
+          productList: this.productList,
+        })
+        .then((res) => {
+          this.card.datalist = res
+        })
+      actCard
+        .goods_card_list({
+          condition: 2, // 查询条件 1 查询可用 2查询不可用
+          productList: this.productList,
+        })
+        .then((res) => {
+          this.card.nolist = res
         })
     },
     contractback() {
@@ -636,13 +705,28 @@ export default {
     gocontractedit() {
       this.editShow = true
     },
-    popupfn() {
-      this.popupshow = true
+
+    conponChange(price, num) {
+      this.price = price
+      this.couponInfo.couponPrice = num
+      this.card.cardPrice = ''
+    },
+    cardChange(price, num) {
+      this.price = price
+      this.couponInfo.couponPrice = ''
+      this.card.cardPrice = num
+    },
+    openPopupfn() {
+      this.couponInfo.popupshow = true
+    },
+    openCardFn() {
+      this.card.show = true
     },
     close(data) {
-      this.popupshow = data
-      this.$refs.conpon.checkarr = ''
-      this.$refs.conpon.radio = null
+      this.couponInfo.popupshow = false
+    },
+    closeCard() {
+      this.card.show = false
     },
   },
 }
