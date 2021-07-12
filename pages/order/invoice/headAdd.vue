@@ -317,15 +317,12 @@ export default {
 
   ::v-deep .sp-cell {
     padding: 40px 0px 40px 32px;
-    display: flex;
-    align-items: center;
   }
 
   ::v-deep .sp-field__label {
     font-family: PingFangSC-Regular;
     font-size: 30px;
     color: #222222;
-    line-height: 30px;
     flex: none !important;
     width: 4.5em;
   }
@@ -343,6 +340,7 @@ export default {
 
     .options {
       // padding-bottom: 20px;
+      margin-top: -8px;
       .btn {
         margin-right: 32px;
         // margin-bottom: 8px;
