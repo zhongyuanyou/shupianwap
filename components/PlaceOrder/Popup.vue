@@ -252,13 +252,16 @@ export default {
 
   mounted() {},
   methods: {
-    getDiscount(count) {
-      let disNum
+     getDiscount(count) {
+      let num
       if (Number(count) > 10) {
-        disNum = Number(count) / 100
-        disNum = disNum.toFixed('1')
+        num = Number(count) / 100
+        num = num.toFixed('1')
+      } else {
+        num = Number(count) / 100
+        num = num.toFixed('2')
       }
-      return disNum
+      return num
     },
     sum() {
       order

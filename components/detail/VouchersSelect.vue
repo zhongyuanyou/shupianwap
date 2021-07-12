@@ -331,6 +331,9 @@ export default {
       if (Number(count) > 10) {
         num = Number(count) / 100
         num = num.toFixed('1')
+      } else {
+        num = Number(count) / 100
+        num = num.toFixed('2')
       }
       return num
     },
