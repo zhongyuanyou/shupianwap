@@ -221,7 +221,7 @@ export default {
         relationId: this.userInfo.id,
         relationName: this.userInfo.fullName,
         attach: '', // 回调会携带此参数
-        sysCode: 'chips-app',
+        sysCode: 'spc-wap',
         bankName: this.selectCardInfo.bankName,
         desensitizationCardNumber:
           this.selectCardInfo.desensitizationCardNumber,
