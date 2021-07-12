@@ -186,7 +186,7 @@ export default {
         })
         .catch((err) => {
           console.log('err', err)
-          this.$xToast.error('委托失败')
+          this.$xToast.error(err.message || '委托失败')
           this.visible = true
         })
     },
