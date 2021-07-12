@@ -411,6 +411,7 @@ export default {
   }
   .set_default {
     padding: 0 40px;
+    margin-top: 20px;
     background: #fff;
     .placeholder {
       font-size: 22px;
