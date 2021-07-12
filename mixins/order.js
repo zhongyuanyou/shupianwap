@@ -595,7 +595,7 @@ export default {
     // 判断订单售后状态 是否展示售后按钮 展示何种售后按钮 0不售后 1退款售后 可售后 2 售后中 3售后完成 4 部分锁定 5已锁定
     checkAfterSaleStatus(orderData) {
       orderData = orderData || this.orderData || this.orderDetail
-
+      console.log('orderData.afterSaleStatus', orderData.afterSaleStatus)
       // 1.意向单、担保交易订单不展示售后按钮，
       if (
         orderData.orderType === 0 ||
@@ -611,14 +611,15 @@ export default {
       const orderStatusNum = this.checkOrderStatus(
         orderData.orderStatusNo || ''
       )
-      if (orderStatusNum !== 2) {
+
+      if (orderStatusNum === 1) {
         return 0
       }
       // afterSaleStatus 售后状态
       // AFTER_SALE_STATUS_0：不可售后;
       // AFTER_SALE_STATUS_1：可售后; 不用
       // AFTER_SALE_STATUS_2：售后中;
-      // AFTER_SALE_STATUS_3:售后完成 ;
+      // AFTER_SALE_STATUS_3: 售后完成 ;
       // AFTER_SALE_STATUS_4：部分售后;
       // AFTER_SALE_STATUS_5：已锁定;
       if (
