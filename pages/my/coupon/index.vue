@@ -177,37 +177,40 @@ export default {
   mounted() {
     this.tabActive = parseInt(this.$route.query.tabActive || 0)
     this.tabActiveIndex = this.tabActive
-    if (this.isInApp) {
-      if (this.userInfo.userId && this.userInfo.token) {
-        console.log('无token')
-        this.init()
-        this.onLoad()
-      } else {
-        this.$appFn.dggGetUserInfo(async function (res) {
-          console.log('调用app获取信息', res)
-          if (res && res.code === 200) {
-            // 兼容启大顺参数返回
-            this.$store.dispatch(
-              'user/setUser',
-              typeof res.data === 'string' ? JSON.parse(res.data) : res.data
-            )
-            this.init()
-            this.onLoad()
-          } else {
-            const isLogin = await this.$isLogin()
-            this.init()
-            this.onLoad()
-          }
-        })
-      }
-    } else {
-      this.init()
-      this.onLoad()
-    }
 
     this.FooterNavHeight = this.$refs.FooterNav.$el.offsetHeight
+    this.initData()
   },
   methods: {
+    initData() {
+      if (this.isInApp) {
+        if (this.userInfo.userId && this.userInfo.token) {
+          this.init()
+          this.onLoad()
+        } else {
+          const that = this
+          that.$appFn.dggGetUserInfo(async function (res) {
+            console.log('调用app获取信息', res)
+            if (res && res.code === 200) {
+              // 兼容启大顺参数返回
+              that.$store.dispatch(
+                'user/setUser',
+                typeof res.data === 'string' ? JSON.parse(res.data) : res.data
+              )
+              that.init()
+              that.onLoad()
+            } else {
+              const isLogin = await that.$isLogin()
+              that.init()
+              that.onLoad()
+            }
+          })
+        }
+      } else {
+        this.init()
+        this.onLoad()
+      }
+    },
     toActCard() {
       this.$router.push({
         path: '/my/coupon/act-card',
