@@ -167,6 +167,9 @@ export default {
     }
   },
   mounted() {
+    this.tabActive = parseInt(this.$route.query.tabActive || 0)
+    this.tabActiveIndex = this.tabActive
+
     this.init()
     this.onLoad()
 
@@ -207,6 +210,11 @@ export default {
         return
       }
       this.tabActiveIndex = this.tabActive
+      this.$router.replace({
+        query: {
+          tabActive: this.tabActive,
+        },
+      })
       this.init()
       this.onLoad()
     },
@@ -307,6 +315,19 @@ export default {
 
   background-color: #f5f5f5;
 
+  ::v-deep .sp-work-tab {
+    font-family: PingFangSC-Regular;
+    font-size: 30px;
+    color: #999999;
+    text-align: center;
+  }
+  ::v-deep .sp-work-tab--active {
+    color: #222222;
+  }
+
+  ::v-deep .sp-work-tabs__line {
+    background-color: #4974f5;
+  }
   .empty-text ::v-deep .sp-empty__description {
     font-size: 30px;
     font-family: PingFangSC-Medium, PingFang SC;

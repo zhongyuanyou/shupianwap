@@ -19,7 +19,7 @@
           </div>
           <div class="right">
             <span v-if="item.orderTypeName === '提现'">-</span
-            ><span v-else>+</span>￥{{ item.amount }}
+            ><span v-else>+</span>{{ item.amount }}
           </div>
         </li>
         <!-- <li>
@@ -109,6 +109,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@font-face {
+  font-family: TTFont;
+  src: url('@/assets/fonts/bebas/bebas.TTF');
+  font-weight: bold;
+}
 .no-data-area {
   width: 100%;
   height: 100vh;
@@ -156,7 +161,7 @@ export default {
         }
       }
       .right {
-        font-family: Bebas;
+        font-family: TTFont;
         color: #1a1a1a;
         font-weight: bold;
         font-size: 40px;

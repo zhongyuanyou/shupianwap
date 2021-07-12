@@ -287,9 +287,8 @@
       <div @click="concatKefuBtn">联系客服</div>
       <div
         v-if="
-          (afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_5' ||
-            afterSaleDetail.afterSaleSubStatusNo ===
-              'AFTERSALE_STATUS_TAG_6') &&
+          (afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_2' ||
+            afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_3') &&
           afterSaleDetail.afterPlatInvolvedCount <
             afterSaleDetail.platInvolvedCount
         "
@@ -795,6 +794,8 @@ export default {
                     height: 30px;
                     line-height: 30px;
                     text-align: center;
+                    position: relative;
+                    top: -1px;
                   }
                   .title {
                     font-size: 28px;
@@ -1035,6 +1036,7 @@ export default {
             .right {
               color: #ff3b30;
               font-size: 36px;
+              font-weight: bold;
               span {
                 font-size: 24px !important;
               }

@@ -39,7 +39,7 @@ export default {
   padding: 0 40px;
   padding-top: 74px;
   min-height: 100vh;
-  background: #f5f5f5;
+  background: #fff;
   .untie-box {
     text-align: center;
     p {

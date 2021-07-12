@@ -154,8 +154,8 @@ export default {
         case 2:
           useTypeName = '限定部分类别产品使用'
           break
-        default:
-          useTypeName = '置顶产品使用'
+        case 3:
+          useTypeName = '指定产品使用'
       }
       return useTypeName
     },
@@ -246,15 +246,15 @@ export default {
             classifyOneNo: 'ACTIVITY_CARD',
             classifyOneName: '活动卡',
 
-            // orderSplitSubjectId: this.cardInfo.merchant.id, // 拆单主体id
-            // orderSplitSubjectNo: this.cardInfo.merchant.mchNo,
-            // orderSplitSubjectName: this.cardInfo.merchant.name,
-            // orderSplitSubjectSource: this.cardInfo.merchant.mchClass,
+            orderSplitSubjectId: this.cardInfo.merchant.id, // 拆单主体id
+            orderSplitSubjectNo: this.cardInfo.merchant.mchNo,
+            orderSplitSubjectName: this.cardInfo.merchant.name,
+            orderSplitSubjectSource: this.cardInfo.merchant.mchClass,
 
-            orderSplitSubjectId: '607997736314102922', // 拆单主体id
-            orderSplitSubjectNo: 'MBU2025022',
-            orderSplitSubjectName: '薯片科技',
-            orderSplitSubjectSource: 'MERCHANT_M',
+            // orderSplitSubjectId: '607997736314102922', // 拆单主体id
+            // orderSplitSubjectNo: 'MBU2025022',
+            // orderSplitSubjectName: '薯片科技',
+            // orderSplitSubjectSource: 'MERCHANT_M',
           },
         ],
 
