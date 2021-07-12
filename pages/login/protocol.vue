@@ -28,6 +28,7 @@ import { auth } from '@/api'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
   name: 'Protocol',
+  layout: 'keepAlive',
   components: {
     [TopNavBar.name]: TopNavBar,
     [NavSearch.name]: NavSearch,
