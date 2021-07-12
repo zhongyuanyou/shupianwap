@@ -287,9 +287,8 @@
       <div @click="concatKefuBtn">联系客服</div>
       <div
         v-if="
-          (afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_5' ||
-            afterSaleDetail.afterSaleSubStatusNo ===
-              'AFTERSALE_STATUS_TAG_6') &&
+          (afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_2' ||
+            afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_3') &&
           afterSaleDetail.afterPlatInvolvedCount <
             afterSaleDetail.platInvolvedCount
         "

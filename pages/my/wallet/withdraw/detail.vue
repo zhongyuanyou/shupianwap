@@ -86,6 +86,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@font-face {
+  font-family: TTFont;
+  src: url('@/assets/fonts/bebas/bebas.TTF');
+  font-weight: bold;
+}
 .detail {
   min-height: 100vh;
   background: #f8f8f8;
@@ -105,7 +110,7 @@ export default {
         color: #222222;
       }
       strong {
-        font-family: Bebas;
+        font-family: TTFont;
         font-size: 40px;
         color: #1a1a1a;
         text-align: right;
