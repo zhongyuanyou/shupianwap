@@ -164,7 +164,7 @@ export default {
         path: '/pay/payType',
         query: {
           cusOrderId: OrderId,
-          fromPage: 'orderList',
+          fromPage: 'act_card',
         },
       })
     },

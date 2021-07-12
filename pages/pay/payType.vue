@@ -199,12 +199,18 @@ export default {
       this.formData.batchIds = this.$route.query.batchIds
       this.getPayParamsFormData.cusOrderId = this.$route.query.cusOrderId
       this.payCallBackData.cusOrderId = this.$route.query.cusOrderId // cusOrderId获取
+
+      localStorage.setItem(
+        'cusOrderIdType:' + this.formData.cusOrderId,
+        this.$route.query.fromPage // 'act_card'活动卡,'orderList'订单
+      )
       this.enablePayMoney()
     } else {
       this.goBack()
     }
     const startTime = localStorage.getItem('startTime')
     // 暂时隐藏付款功能
+
     if (
       localStorage.getItem('cusOrderId') &&
       localStorage.getItem('serialNumber')
@@ -360,10 +366,13 @@ export default {
     getPayResult() {
       this.payCallBackData.cusOrderId = localStorage.getItem('cusOrderId')
       this.payCallBackData.serialNumber = localStorage.getItem('serialNumber')
+      if (!this.payCallBackData.serialNumber) {
+        return console.log('没有订单')
+      }
       pay
         .getPayResult(this.payCallBackData)
         .then((result) => {
-          if (result.data === 1) {
+          if (result === 1 || result === '1') {
             this.resultLoading = false
             this.$router.replace({
               path: '/pay/payResult',
@@ -379,17 +388,17 @@ export default {
           } else if (this.number > 5) {
             this.resultLoading = false
             clearInterval(payResultTimer)
-            this.clearLocalStorage()
-            this.$router.replace({
-              path: '/pay/payResult',
-              query: {
-                payStatus: 2,
-                orderId: this.$route.query.orderId,
-                cusOrderId: this.formData.cusOrderId,
-                batchIds: this.$route.query.batchIds,
-                payMoney: this.responseData.currentPayMoney,
-              },
-            })
+            // this.clearLocalStorage()
+            // this.$router.replace({
+            //   path: '/pay/payResult',
+            //   query: {
+            //     payStatus: 2,
+            //     orderId: this.$route.query.orderId,
+            //     cusOrderId: this.formData.cusOrderId,
+            //     batchIds: this.$route.query.batchIds,
+            //     payMoney: this.responseData.currentPayMoney,
+            //   },
+            // })
           }
         })
         .catch((e) => {
