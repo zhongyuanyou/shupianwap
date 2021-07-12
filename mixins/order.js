@@ -779,8 +779,10 @@ export default {
         )
         .then((res) => {
           if (this.fromPage === 'orderList') {
-            this.getOrderList()
-            this.$xToast.success('操作成功')
+            setTimeout(() => {
+              this.getOrderList()
+              this.$xToast.success('操作成功')
+            }, 1000)
           } else {
             this.getDetail()
             this.$xToast.success('操作成功')

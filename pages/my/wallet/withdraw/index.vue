@@ -9,7 +9,7 @@
         >
       </template>
     </Header>
-    <div v-if="!selectCardInfo.bankName" class="tips">
+    <div class="tips">
       <sp-icon
         class-prefix="spiconfont"
         size="0.30rem"
@@ -53,6 +53,7 @@
             type="number"
             maxlength="9"
             oninput="if(value.length>9)value=value.slice(0,9)"
+            @keyup="clearNoNum"
           />
           <!-- <sp-field v-model="amount" type="number" maxlength="9" /> -->
         </div>
@@ -120,7 +121,25 @@ export default {
     this.getAccountBalance()
     this.getCardList()
   },
+  // watch: {
+  //   amount(newV, oldV) {
+  //     // console.log(typeof newV.substring(0, 2))
+  //     if (newV.substring(0, 2) === '00') {
+  //       newV = oldV
+  //       console.log(newV)
+  //       return false
+  //       // value = value.substring(0, 1)
+  //     }
+  //   },
+  // },
   methods: {
+    clearNoNum(e) {
+      this.amount = e.target.value.replace(/[^\d.]/g, '')
+      this.amount = e.target.value.replace(/\.{2,}/g, '.')
+      this.amount = e.target.value.replace(/^\./g, '')
+      // 小数点后面保留2位
+      this.amount = e.target.value.replace(/^(\/-)*(\d+)\.(\d\d).*$/, '$1$2.$3')
+    },
     // 返回到提现页面
     backHandle() {
       this.$router.push('/my/wallet')
@@ -202,7 +221,7 @@ export default {
         relationId: this.userInfo.id,
         relationName: this.userInfo.fullName,
         attach: '', // 回调会携带此参数
-        sysCode: 'chips-app',
+        sysCode: 'spc-wap',
         bankName: this.selectCardInfo.bankName,
         desensitizationCardNumber:
           this.selectCardInfo.desensitizationCardNumber,
@@ -223,6 +242,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@font-face {
+  font-family: TTFont;
+  src: url('@/assets/fonts/bebas/bebas.TTF');
+  font-weight: bold;
+}
 .withdraw {
   min-height: 100vh;
   background: #f4f4f4;
@@ -241,7 +265,7 @@ export default {
     align-items: flex-start;
     i {
       position: relative;
-      top: 8px;
+      top: 5px;
     }
     p {
       font-family: PingFangSC-Regular;
@@ -291,9 +315,10 @@ export default {
         align-items: center;
         input {
           width: 100%;
-          height: 76px;
           border: none;
-          font-size: 50px;
+          font-size: 82px;
+          font-weight: bold;
+          font-family: TTFont;
         }
         span {
           font-family: PingFangSC-Medium;

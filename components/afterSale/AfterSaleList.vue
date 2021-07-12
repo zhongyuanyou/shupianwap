@@ -313,7 +313,11 @@ export default {
             height: 130px;
             background: #f5f5f5;
             border-radius: 8px;
+            position: relative;
             img {
+              position: absolute;
+              left: 0;
+              top: 0;
               width: 100%;
               height: 100%;
               border-radius: 8px;
@@ -337,6 +341,9 @@ export default {
                 width: 30px;
                 height: 30px;
                 line-height: 30px;
+                display: block;
+                position: relative;
+                top: -1px;
               }
               .title {
                 font-size: 28px;
@@ -393,6 +400,7 @@ export default {
       display: flex;
       color: #222222;
       background: #f8f8f8;
+      align-items: center;
       strong {
         font-weight: bold;
         font-size: 24px;
