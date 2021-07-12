@@ -39,7 +39,7 @@
 
         <div class="list">
           <div class="list_name">使用限制</div>
-          <div class="list_des">{{ getuseTypeName(cardInfo.useType) }}</div>
+          <div class="list_des">{{ getuseTypeName(cardInfo.useLimit) }}</div>
         </div>
         <div class="list">
           <div class="list_name">其他说明</div>

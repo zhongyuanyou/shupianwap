@@ -35,7 +35,7 @@ const actCard = {
 
       params,
       method: 'post',
-      url: CHIPS_PC_URL + '/nk/marking/v1/goods_card_list.do',
+      url: CHIPS_PC_URL + '/yk/marking/v1/goods_card_list.do',
     })
   },
 

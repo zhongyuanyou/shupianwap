@@ -234,7 +234,7 @@
       @close="close"
     ></Popup>
 
-    <Popup
+    <CardPopup
       ref="cardPopup"
       :show="card.show"
       :height="75"
@@ -245,7 +245,7 @@
       :datalist="card.datalist"
       :nolist="card.nolist"
       @close="closeCard"
-    ></Popup>
+    ></CardPopup>
   </div>
 </template>
 
@@ -261,6 +261,7 @@ import {
 } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header.vue'
 import Popup from '@/components/PlaceOrder/Popup.vue'
+import CardPopup from '@/components/PlaceOrder/CardPopup.vue'
 import Contract from '@/components/PlaceOrder/contract.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { productDetailsApi, auth, shopCart } from '@/api'
@@ -275,6 +276,7 @@ export default {
     CellGroup,
     Checkbox,
     Popup,
+    CardPopup,
     [Skeleton.name]: Skeleton,
     LoadingCenter,
     Contract,
@@ -347,15 +349,6 @@ export default {
     this.getProtocol('protocol100008')
   },
   methods: {
-    getCardList(condition) {
-      const params = {
-        productList: this.productList,
-        condition,
-      }
-      this.$axios.post(cardApi.goodsCardList, params).then((res) => {
-        console.log('活动卡列表', res)
-      })
-    },
     onLeftClick() {
       this.$router.back()
     },
@@ -426,15 +419,15 @@ export default {
           this.getInitData(5)
           this.getInitData(6)
 
-          this.getCardData()
-
           this.productList = new Array(1).fill({
             categoryCode: data.classCodeLevel.split(',')[0],
             productId: data.id,
             productPrice: data.salesPrice,
           })
+
+          this.getCardList()
+
           console.log('productList', this.productList)
-          this.getCardList(1)
         } else {
           this.$xToast.show('服务器异常,请然后再试')
           setTimeout(function () {
@@ -509,7 +502,6 @@ export default {
           isFromCart = true
           this.Orderform.cartIds = this.$route.query.cartIdsStr
           cusOrderPayType = this.order.list[0].refConfig.payType
-          // cusOrderPayType = cusOrderPayType.toString()
         } else {
           cusOrderPayType = this.order.refConfig.payType
           isFromCart = false
@@ -572,9 +564,7 @@ export default {
           })
       }
     },
-    // sortData(a, b) {
-    //   return b.marketingCouponVO.reducePrice - a.marketingCouponVO.reducePrice
-    // },
+
     // 对优惠金额进行排序
     getDisPrice(arr, price) {
       arr.forEach((element) => {
@@ -659,31 +649,22 @@ export default {
         })
     },
 
-    getCardData() {
-      const productList = []
-      for (let i = 0; i < this.order.list.length; i++) {
-        const item = {
-          categoryCode: this.order.list[i].classCode,
-          productId: this.order.list[i].id,
-          productPrice: this.order.list[i].salesPrice,
-        }
-        productList.push(item)
-      }
+    getCardList() {
       actCard
         .goods_card_list({
           condition: 1, // 查询条件 1 查询可用 2查询不可用
-          productList,
+          productList: this.productList,
         })
         .then((res) => {
-          this.card.datalist = res.records
+          this.card.datalist = res
         })
       actCard
         .goods_card_list({
           condition: 2, // 查询条件 1 查询可用 2查询不可用
-          productList,
+          productList: this.productList,
         })
         .then((res) => {
-          this.card.nolist = res.records
+          this.card.nolist = res
         })
     },
     contractback() {
