@@ -370,6 +370,7 @@ export default {
     }
   }
   .set_default {
+    margin-top: 20px;
     padding: 0 40px;
     background: #fff;
     .placeholder {
