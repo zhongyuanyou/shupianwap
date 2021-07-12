@@ -166,12 +166,44 @@ export default {
       FooterNavHeight: 150,
     }
   },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userId,
+      userInfo: (state) => state.user, // 登录的用户信息
+      isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
+    }),
+  },
   mounted() {
     this.tabActive = parseInt(this.$route.query.tabActive || 0)
     this.tabActiveIndex = this.tabActive
-
-    this.init()
-    this.onLoad()
+    if (this.isInApp) {
+      if (this.userInfo.userId && this.userInfo.token) {
+        console.log('无token')
+        this.init()
+        this.onLoad()
+      } else {
+        this.$appFn.dggGetUserInfo(async function (res) {
+          console.log('调用app获取信息', res)
+          if (res && res.code === 200) {
+            // 兼容启大顺参数返回
+            this.$store.dispatch(
+              'user/setUser',
+              typeof res.data === 'string' ? JSON.parse(res.data) : res.data
+            )
+            this.init()
+            this.onLoad()
+          } else {
+            const isLogin = await this.$isLogin()
+            this.init()
+            this.onLoad()
+          }
+        })
+      }
+    } else {
+      this.init()
+      this.onLoad()
+    }
 
     this.FooterNavHeight = this.$refs.FooterNav.$el.offsetHeight
   },
