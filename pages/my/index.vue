@@ -95,7 +95,7 @@
           <div class="order_text">
             {{ item.name }}
           </div>
-          <div v-if="index === 5 && saleDataListNum > 0" class="jb_num">
+          <div v-if="index === 4 && saleDataListNum > 0" class="jb_num">
             {{ saleDataListNum }}
           </div>
         </div>
@@ -513,6 +513,7 @@ export default {
     // 初始化获取售后单数
     async getAfterSaleListNum() {
       const res = await this.$axios.post(afterSaleApi.list, {
+        userId: this.userId,
         page: '1',
         limit: '10',
         afterSaleStatusNoList: [
