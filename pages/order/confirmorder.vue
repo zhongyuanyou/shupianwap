@@ -54,8 +54,8 @@
                 v-for="(listitem, listindex) in item.saleGoodsSubs"
                 :key="listindex"
               >
-                <p class="name">{{ listitem.goodsSubName }}</p>
-                <p class="data">{{ listitem.goodsSubDetailsName }}</p>
+                <p class="name">{{ listitem.goodsSubName || '-' }}</p>
+                <p class="data">{{ listitem.goodsSubDetailsName || '-' }}</p>
                 <p class="price">
                   {{ `x1` }}
                 </p>
@@ -140,39 +140,47 @@
         <CellGroup>
           <Cell
             title="商品及服务总数"
-            :value="order.num || order.goodsTotal + '件'"
+            :value="order.num || order.goodsTotal || 0 + '件'"
             value-class="black"
           />
           <Cell
             title="商品金额"
-            :value="order.salesPrice || order.skuTotalPrice + '元'"
+            :value="order.salesPrice || order.skuTotalPrice || 0 + '元'"
             value-class="black"
           />
           <Cell
             title="优惠券"
             :value="
-              coupon
-                ? coupon
-                : datalist.length > 0
-                ? datalist.length + '个优惠券'
+              couponInfo.couponPrice
+                ? couponInfo.couponPrice
+                : couponInfo.datalist.length > 0
+                ? couponInfo.datalist.length + '个优惠券'
                 : '无可用'
             "
             is-link
-            :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
-            @click="popupfn()"
+            :value-class="
+              couponInfo.couponPrice
+                ? 'red'
+                : couponInfo.datalist.length > 0
+                ? 'black'
+                : ''
+            "
+            @click="openPopupfn()"
           />
           <Cell
             title="活动卡"
             :value="
-              coupon
-                ? coupon
-                : datalist.length > 0
-                ? datalist.length + '个优惠券'
+              card.cardPrice
+                ? card.cardPrice
+                : card.datalist.length > 0
+                ? card.datalist.length + '个优惠券'
                 : '无可用'
             "
             is-link
-            :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
-            @click="cardFn()"
+            :value-class="
+              card.cardPrice ? 'red' : card.datalist.length > 0 ? 'black' : ''
+            "
+            @click="openCardFn()"
           />
         </CellGroup>
         <p class="money">
@@ -223,14 +231,15 @@
     <LoadingCenter v-show="loading" />
     <Popup
       ref="conpon"
-      :show="popupshow"
+      :show="couponInfo.popupshow"
       :height="75"
       title="优惠"
       help="使用说明"
-      :tablist="tablist"
+      :tablist="couponInfo.tablist"
       calculation="已选中推荐优惠券，可抵扣"
-      :datalist="datalist"
-      :nolist="nolist"
+      :datalist="couponInfo.datalist"
+      :nolist="couponInfo.nolist"
+      @change="conponChange"
       @close="close"
     ></Popup>
 
@@ -244,6 +253,7 @@
       calculation="已选中推荐优惠券，可抵扣"
       :datalist="card.datalist"
       :nolist="card.nolist"
+      @change="cardChange"
       @close="closeCard"
     ></CardPopup>
   </div>
@@ -283,31 +293,37 @@ export default {
   },
   data() {
     return {
-      popupshow: false,
-      allboxHeight: '100vh',
       money: '1232',
-      radio: '',
-      coupon: '',
+
+      radio: '', // 选中协议
+
       message: '',
       order: '',
-      num: 0,
-      tablist: [
-        { name: '可用优惠券', num: '12', is: true },
-        { name: '不可用优惠券' },
-      ],
+      // num: 0,
 
+      couponInfo: {
+        popupshow: false,
+
+        coupon: '', // 选择的优惠券对象
+
+        tablist: [
+          { name: '可用优惠券', num: '12', is: true },
+          { name: '不可用优惠券' },
+        ],
+        datalist: [],
+        nolist: [],
+      },
       card: {
         show: false,
         tablist: [
           { name: '可用活动卡', num: '12', is: true },
           { name: '不可用活动卡' },
         ],
-        selectData: '',
+        cardPrice: '', // 选择的card对象立减金额
         datalist: [], // 支持的列表
         nolist: [], // 不支持的列表
       },
-      datalist: [],
-      nolist: [],
+
       contaract: '',
       productId: this.$route.query.productId,
       formData: {
@@ -335,8 +351,6 @@ export default {
       skeletonloading: true,
       editShow: false,
       productList: [],
-      fullConpon: [], // 满减券
-      disCountCoupon: [], // 折扣券
     }
   },
   mounted() {
@@ -387,6 +401,7 @@ export default {
     },
     async asyncData() {
       const that = this
+      this.skeletonloading = false
       try {
         const { code, message, data } = await this.$axios.post(
           productDetailsApi.sellingGoodsDetail,
@@ -506,7 +521,9 @@ export default {
           cusOrderPayType = this.order.refConfig.payType
           isFromCart = false
         }
+
         if (
+          this.conpon &&
           this.$refs.conpon.checkarr &&
           this.$refs.conpon.checkarr.marketingCouponVO.id
         ) {
@@ -516,6 +533,19 @@ export default {
             couponUseCode: this.$refs.conpon.checkarr.couponUseCode,
             no: this.$refs.conpon.checkarr.marketingCouponVO.id,
             couponName: this.$refs.conpon.checkarr.marketingCouponVO.couponName,
+          }
+          this.Orderform.discount = new Array(1).fill(arr)
+        } else if (
+          this.card.cardPrice &&
+          this.$refs.cardPopup.checkarr &&
+          this.$refs.cardPopup.checkarr.cardId
+        ) {
+          const arr = {
+            code: 'ORDER_DISCOUNT_DISCOUNT',
+            value: this.$refs.cardPopup.checkarr.cardId,
+            couponUseCode: this.$refs.cardPopup.checkarr.couponUseCode,
+            no: this.$refs.cardPopup.checkarr.cardId,
+            couponName: this.$refs.cardPopup.checkarr.cardName,
           }
           this.Orderform.discount = new Array(1).fill(arr)
         }
@@ -614,7 +644,7 @@ export default {
         )
         .then((result) => {
           if (index === 5) {
-            this.datalist = result.marketingCouponLogList
+            this.couponInfo.datalist = result.marketingCouponLogList
             const sortList1 = this.getDisPrice(
               result.marketingCouponLogList,
               this.order.salesPrice || this.order.skuTotalPrice
@@ -625,26 +655,24 @@ export default {
                 a.marketingCouponVO.reducePrice
               )
             })
-            if (sortList.length > 0) {
-              this.datalist = sortList
-              this.conpon = this.datalist[0]
-              this.$refs.conpon.radio = 0
-              this.$refs.conpon.checkarr = this.datalist[0]
-              this.$refs.conpon.num =
-                this.$refs.conpon.checkarr.marketingCouponVO.reducePrice
-              this.$refs.conpon.sum()
-            } else {
-              this.skeletonloading = false
-            }
+            this.couponInfo.datalist = sortList
+            // if (sortList.length > 0) {
+            //   this.datalist = sortList
+            //   this.conpon = this.datalist[0]
+            //   this.$refs.conpon.radio = 0
+            //   this.$refs.conpon.checkarr = this.datalist[0]
+            //   this.$refs.conpon.num =
+            //     this.$refs.conpon.checkarr.marketingCouponVO.reducePrice
+            //   this.$refs.conpon.sum()
+            // } else {
+            // }
           } else {
-            this.nolist = result.marketingCouponLogList
-            this.skeletonloading = false
+            this.couponInfo.nolist = result.marketingCouponLogList
           }
         })
         .catch((e) => {
           if (e.code !== 200) {
             this.$xToast.show(e)
-            this.skeletonloading = false
           }
         })
     },
@@ -677,22 +705,28 @@ export default {
     gocontractedit() {
       this.editShow = true
     },
-    popupfn() {
-      this.popupshow = true
-    },
 
-    close(data) {
-      this.popupshow = data
-      this.$refs.conpon.checkarr = ''
-      this.$refs.conpon.radio = null
+    conponChange(price, num) {
+      this.price = price
+      this.couponInfo.couponPrice = num
+      this.card.cardPrice = ''
     },
-    cardFn() {
+    cardChange(price, num) {
+      this.price = price
+      this.couponInfo.couponPrice = ''
+      this.card.cardPrice = num
+    },
+    openPopupfn() {
+      this.couponInfo.popupshow = true
+    },
+    openCardFn() {
       this.card.show = true
     },
-    closeCard(data) {
-      this.card.show = data
-      // this.$refs.conpon.checkarr = ''
-      // this.$refs.conpon.radio = null
+    close(data) {
+      this.couponInfo.popupshow = false
+    },
+    closeCard() {
+      this.card.show = false
     },
   },
 }

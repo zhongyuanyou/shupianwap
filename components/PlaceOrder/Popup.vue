@@ -227,9 +227,30 @@ export default {
       tabAct: 0,
       checkarr: '',
       radio: null,
-      num: 0,
+      // num: 0,
     }
   },
+  computed: {
+    num() {
+      if (this.checkarr.marketingCouponVO) {
+        if (this.checkarr.marketingCouponVO.couponType === 1) {
+          return this.checkarr.marketingCouponVO.reducePrice
+        } else {
+          const price =
+            this.$route.query.type === 'shopcar'
+              ? this.$parent.order.skuTotalPrice
+              : this.$parent.order.salesPrice
+
+          return (
+            ((10 - this.checkarr.marketingCouponVO.discount / 100) / 10) *
+            price
+          ).toFixed('2')
+        }
+      }
+      return 0
+    },
+  },
+
   mounted() {},
   methods: {
     getDiscount(count) {
@@ -249,25 +270,15 @@ export default {
               this.$route.query.type === 'shopcar'
                 ? this.$parent.order.skuTotalPrice
                 : this.$parent.order.salesPrice,
-            culation: this.checkarr
-              ? this.checkarr.marketingCouponVO
-                ? this.checkarr.marketingCouponVO.reducePrice
-                : 0
-              : 0,
+            culation: this.num,
           }
         )
         .then((result) => {
-          this.$parent.price = result
-          this.$parent.popupshow = false
-          this.$parent.coupon = this.checkarr
-            ? this.checkarr.marketingCouponVO
-              ? `-${this.checkarr.marketingCouponVO.reducePrice}`
-              : ''
-            : ''
-          this.$parent.skeletonloading = false
+          this.$emit('change', result, -this.num, this.checkarr)
+
+          this.close()
         })
         .catch((e) => {
-          this.$parent.skeletonloading = false
           Toast({
             message: e.data.error,
             iconPrefix: 'sp-iconfont',
@@ -281,11 +292,9 @@ export default {
       if (this.radio === index) {
         this.checkarr = ''
         this.radio = -1
-        this.num = 0
       } else {
         this.checkarr = item
         this.radio = index
-        this.num = this.checkarr.marketingCouponVO.reducePrice
       }
     },
     close(data) {
