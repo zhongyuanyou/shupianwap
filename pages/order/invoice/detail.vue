@@ -110,9 +110,9 @@
       "
       class="card footer"
     >
-      <sp-button size="normal" type="primary" plain @click="toInvoiceApply">
+      <!-- <sp-button size="normal" type="primary" plain @click="toInvoiceApply">
         重新申请
-      </sp-button>
+      </sp-button> -->
       <sp-button
         v-if="
           formData.invoiceStatus == 'INVOICE_STATUS_REJECT' ||
