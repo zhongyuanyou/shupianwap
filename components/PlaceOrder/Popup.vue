@@ -254,15 +254,7 @@ export default {
   mounted() {},
   methods: {
      getDiscount(count) {
-      let num
-      if (Number(count) > 10) {
-        num = Number(count) / 100
-        num = num.toFixed('1')
-      } else {
-        num = Number(count) / 100
-        num = num.toFixed('2')
-      }
-      return num
+      return Number(count) / 100
     },
     sum() {
       order

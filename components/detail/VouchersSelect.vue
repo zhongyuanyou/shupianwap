@@ -327,15 +327,7 @@ export default {
   },
   methods: {
     getDiscount(count) {
-      let num
-      if (Number(count) > 10) {
-        num = Number(count) / 100
-        num = num.toFixed('1')
-      } else {
-        num = Number(count) / 100
-        num = num.toFixed('2')
-      }
-      return num
+      return Number(count) / 100
     },
     // 获取商品图片
     getSellingImg() {
@@ -375,7 +367,7 @@ export default {
         const salesPrice =
           sellingGoodsData.salesPrice - sortcouponList[0].reducePrice
         const salesPriceRes = salesPrice >= 0 ? salesPrice : 0
-        this.couponPreferentialLine = salesPriceRes.toFixed(2)
+        this.couponPreferentialLine = salesPriceRes.toFixed('2')
         //  组装优惠券提示信息
         const info1 = sortcouponList[0]
         const info2 = sortcouponList[1]
@@ -387,7 +379,7 @@ export default {
             vouchers1 = `满${info1.fullPrice}减${info1.reducePrice}元`
           }
         } else {
-          vouchers1 = (Number(info1.discount) / 100).toFixed('1') + '折'
+          vouchers1 = Number(info1.discount) / 100 + '折'
         }
         if (!info2) {
           this.vouchers = vouchers1
@@ -401,7 +393,7 @@ export default {
             vouchers2 = `满${info2.fullPrice}减${info2.reducePrice}元`
           }
         } else {
-          vouchers2 = (Number(info2.discount) / 100).toFixed('1') + '折'
+          vouchers2 = Number(info2.discount) / 100 + '折'
         }
         this.vouchers = vouchers1 + ', ' + vouchers2
       }
