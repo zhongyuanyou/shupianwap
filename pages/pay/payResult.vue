@@ -4,11 +4,11 @@
       <Header class="my-header"></Header>
     </div>
     <main class="main">
-      <div class="loading" v-if="payStatus === 0">
+      <div v-if="payStatus === 0" class="loading">
         <p class="title">查询中</p>
         <p class="toast">正在查询本次付款信息，请稍后</p>
       </div>
-      <div class="loading" v-if="payStatus === 3">
+      <div v-if="payStatus === 3" class="loading">
         <p class="title">没有订单</p>
         <p class="toast">当前没有订单支付</p>
       </div>
@@ -138,6 +138,7 @@ export default {
       } else {
         this.payStatus = 3
         console.log('没有订单信息')
+        this.$xToast.error('没有订单信息')
       }
     },
     // 获取回调信息
