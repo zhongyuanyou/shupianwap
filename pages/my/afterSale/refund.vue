@@ -55,7 +55,7 @@
               <my-icon
                 class="upload-add-img"
                 name="upload_ic_img"
-                size="0.56rem"
+                size="0.44rem"
                 color="#999"
               ></my-icon>
               <p class="upload-add-text">上传凭证</p>
@@ -322,12 +322,14 @@ export default {
 ::v-deep .upload-add {
   text-align: center;
   width: 140px;
-  height: 140px;
+  // height: 140px;
   background: #ffffff;
   border: 1px dashed #dddddd;
   border-radius: 8px;
   display: flex;
   flex-flow: column;
+  padding-top:6px;
+  padding-bottom: 8px;
 }
 ::v-deep .upload-add-img {
   position: relative;
@@ -341,7 +343,7 @@ export default {
 }
 .refund {
   min-height: 100vh;
-  background: #fff;
+  background: #f8f8f8;
   font-family: PingFangSC-Regular;
   padding-bottom: 200px;
   .select-row {
@@ -373,7 +375,7 @@ export default {
     }
   }
   .desc-box {
-    padding: 40px;
+    padding: 36px;
     background: #fff;
     .textarea {
       position: relative;
@@ -395,6 +397,7 @@ export default {
     }
     .up-pic {
       // height: 140px;
+      display: flex;
       margin-top: 28px;
       // overflow: hidden;
 
@@ -461,11 +464,13 @@ export default {
     padding: 0 40px;
     position: fixed;
     left: 0;
+    height: 188px;
     width: 100%;
     background: #fff;
-    padding-top: 20px;
-    padding-bottom: 32px;
+    padding-top: 24px;
+    padding-bottom: 24px;
     bottom: 0;
+    box-sizing: border-box;
     > p {
       font-family: PingFangSC-Regular;
       font-size: 24px;
