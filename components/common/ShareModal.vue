@@ -99,6 +99,9 @@ export default {
   mounted() {
     this.plannerId = this.$route.query.plannerId || this.$route.query.homeUserId
     this.partnerId = this.$route.query.partnerId
+    console.log('plannerId', this.plannerId)
+    console.log('partnerId', this.partnerId)
+    console.log('this.$route.query.plannerId', this.$route.query.plannerId)
     if (this.$route.query.isShare && this.plannerId) {
       this.getPlanerInfo(this.plannerId)
     }
@@ -108,21 +111,27 @@ export default {
   },
   methods: {
     getPlanerInfo(id) {
-      planner.detail({ id }).then((res) => {
-        const obj = {
-          mchUserId: res.id,
-          portrait: res.img,
-          userName: res.name,
-          postName: res.zwName,
-          type: res.mchClass,
-        }
-        this.planerInfo = {
-          ...obj,
-          ...res,
-        }
-        this.$forceUpdate()
-        this.visible = true
-      })
+      planner
+        .detail({ id })
+        .then((res) => {
+          console.log('获取规划师信息', res)
+          const obj = {
+            mchUserId: res.id,
+            portrait: res.img,
+            userName: res.name,
+            postName: res.zwName,
+            type: res.mchClass,
+          }
+          this.planerInfo = {
+            ...obj,
+            ...res,
+          }
+          this.$forceUpdate()
+          this.visible = true
+        })
+        .catch((err) => {
+          console.log('获取规划师信息err', err)
+        })
     },
     showFullScreen() {
       // 显示全屏
