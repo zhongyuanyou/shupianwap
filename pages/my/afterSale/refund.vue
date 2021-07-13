@@ -46,7 +46,9 @@
           :max-count="9"
           :after-read="afterRead"
           :before-delete="deleteImg"
+          :max-size="5 * 1024 * 1024"
           multiple
+          @oversize="onOversize"
         >
           <template>
             <div class="upload-add">
@@ -95,6 +97,7 @@
 
 <script>
 import { Icon, Field, Uploader, Checkbox } from '@chipspc/vant-dgg'
+import { mapMutations } from 'vuex'
 import { afterSaleApi } from '@/api'
 import Header from '@/components/common/head/header'
 import PullUp from '@/components/afterSale/PullUp'
@@ -102,6 +105,8 @@ import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import { uploadAndCallBack } from '@/utils/uploadFile'
 import imHandle from '@/mixins/imHandle'
 export default {
+  layout: 'keepAlive',
+  name: 'Refund',
   components: {
     Header,
     PullUp,
@@ -161,8 +166,33 @@ export default {
     this.fileId = `${this.userInfo.id}:crisps-app:aftersale:${
       this.$route.query.orderId
     }:${String(Math.random()).substring(2, 8)}`
+    // this.SET_KEEP_ALIVE({ type: 'add', name: 'refund' })
+  },
+  // beforeRouteLeave(to, from, next) {
+  //   if (
+  //     [
+  //     ].includes(to.name)
+  //   ) {
+  //     this.SET_KEEP_ALIVE({ type: 'add', name: 'KnownIndex' })
+  //   } else {
+  //     this.SET_KEEP_ALIVE({ type: 'remove', name: 'KnownIndex' })
+  //   }
+  //   next()
+  // },
+  beforeRouteLeave(to, from, next) {
+    console.log(from, 111111)
+    if (['login-protocol'].includes(to.name)) {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'Refund' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'Refund' })
+    }
+    console.log(this.$store.state.keepAlive)
+    next()
   },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     async submit() {
       if (!this.afterTypeText) {
         this.$xToast.show({
@@ -223,6 +253,10 @@ export default {
       if (res.code === 200) {
         console.log('上传成功')
       }
+    },
+    // 限制图片大小
+    onOversize() {
+      this.$xToast.warning('图片不能超过5M')
     },
     afterRead(fileObj) {
       // 多张上传
@@ -307,9 +341,9 @@ export default {
 }
 .refund {
   min-height: 100vh;
-  background: #f4f4f4;
+  background: #fff;
   font-family: PingFangSC-Regular;
-  padding-bottom: 120px;
+  padding-bottom: 200px;
   .select-row {
     display: flex;
     align-items: center;
@@ -341,13 +375,13 @@ export default {
   .desc-box {
     padding: 40px;
     background: #fff;
-    margin-top: 20px;
     .textarea {
       position: relative;
       border-radius: 12px;
       ::v-deep .sp-cell {
         background: #f8f8f8;
         border-radius: 12px;
+        padding-bottom: 44px;
       }
       .num {
         position: absolute;
@@ -417,7 +451,7 @@ export default {
     font-size: 24px;
     color: #999999;
     line-height: 32px;
-    margin-top: 40px;
+    margin: 40px 0;
     text-align: center;
     span {
       color: #4974f5;
@@ -426,11 +460,12 @@ export default {
   .submit {
     padding: 0 40px;
     position: fixed;
-    bottom: 32px;
     left: 0;
     width: 100%;
-    background: #f4f4f4;
+    background: #fff;
     padding-top: 20px;
+    padding-bottom: 32px;
+    bottom: 0;
     > p {
       font-family: PingFangSC-Regular;
       font-size: 24px;

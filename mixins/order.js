@@ -595,7 +595,6 @@ export default {
     // 判断订单售后状态 是否展示售后按钮 展示何种售后按钮 0不售后 1退款售后 可售后 2 售后中 3售后完成 4 部分锁定 5已锁定
     checkAfterSaleStatus(orderData) {
       orderData = orderData || this.orderData || this.orderDetail
-
       // 1.意向单、担保交易订单不展示售后按钮，
       if (
         orderData.orderType === 0 ||
@@ -611,14 +610,15 @@ export default {
       const orderStatusNum = this.checkOrderStatus(
         orderData.orderStatusNo || ''
       )
-      if (orderStatusNum !== 2) {
+
+      if (orderStatusNum === 1) {
         return 0
       }
       // afterSaleStatus 售后状态
       // AFTER_SALE_STATUS_0：不可售后;
       // AFTER_SALE_STATUS_1：可售后; 不用
       // AFTER_SALE_STATUS_2：售后中;
-      // AFTER_SALE_STATUS_3:售后完成 ;
+      // AFTER_SALE_STATUS_3: 售后完成 ;
       // AFTER_SALE_STATUS_4：部分售后;
       // AFTER_SALE_STATUS_5：已锁定;
       if (
@@ -639,12 +639,12 @@ export default {
       ) {
         return 3
       }
-      // if (
-      //   orderData.afterSaleStatus &&
-      //   orderData.afterSaleStatus === 'AFTER_SALE_STATUS_4'
-      // ) {
-      //   return 4
-      // }
+      if (
+        orderData.afterSaleStatus &&
+        orderData.afterSaleStatus === 'AFTER_SALE_STATUS_4'
+      ) {
+        return 4
+      }
       if (
         orderData.afterSaleStatus &&
         orderData.afterSaleStatus === 'AFTER_SALE_STATUS_5'
@@ -1125,6 +1125,20 @@ export default {
           },
         })
       } else {
+        const afterSaleStatu = this.checkAfterSaleStatus()
+        if (
+          afterSaleStatu === 2 ||
+          afterSaleStatu === 4 ||
+          afterSaleStatu === 5
+        ) {
+          this.$xToast.show({
+            message: '抱歉，您的订单不可申请合同',
+            duration: 3000,
+            icon: 'toast_ic_remind',
+            forbidClick: true,
+          })
+          return
+        }
         this.$router.push({
           path: '/contract/edit',
           query: {
