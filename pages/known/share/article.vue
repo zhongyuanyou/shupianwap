@@ -1,5 +1,6 @@
 <template>
-  <div class="article">
+  <section>
+    <ShareModal />
     <HeaderSlot>
       <div v-if="!showHead" class="flex">
         <div class="nav-back">
@@ -129,8 +130,7 @@
         <div class="cancel" @click="popupShow = false">取消</div>
       </div>
     </sp-popup>
-    <ShareModal />
-  </div>
+  </section>
 </template>
 
 <script>
@@ -302,7 +302,7 @@ export default {
           ...obj,
           ...res,
         }
-        console.log('planerInfo', this.planerInfo)
+        this.console.log('planerInfo', this.planerInfo)
       })
     },
     goUser(id, usertype) {
