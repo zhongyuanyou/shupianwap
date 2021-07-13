@@ -42,7 +42,7 @@
 
       <div class="invoice_info_list">
         <div>发票内容</div>
-        <div>{{ InvoiceContent[formData.invoiceContent] }}</div>
+        <div>{{ InvoiceContent[formData.invoiceContent] || '-' }}</div>
       </div>
       <div class="invoice_info_list">
         <div>抬头类型</div>
@@ -56,12 +56,12 @@
       </div>
       <div class="invoice_info_list">
         <div>抬头名</div>
-        <div>{{ formData.invoiceHeaderName }}</div>
+        <div>{{ formData.invoiceHeaderName || '-' }}</div>
       </div>
       <div class="invoice_info_list">
         <div>开票金额</div>
         <div v-if="formData.invoiceMoney">
-          {{ formData.invoiceMoney }}元
+          {{ formData.invoiceMoney || '-' }}元
           <span @click="moneyTips">
             <my-icon
               name="guanyu_mian"
@@ -86,11 +86,11 @@
       <div class>
         <div class="invoice_info_list">
           <div>手机号码</div>
-          <div>{{ formData.receiverPhone }}</div>
+          <div>{{ formData.receiverPhone || '-' }}</div>
         </div>
         <div class="invoice_info_list">
           <div>电子邮箱</div>
-          <div>{{ formData.receiverEmail }}</div>
+          <div>{{ formData.receiverEmail || '-' }}</div>
         </div>
       </div>
     </div>
@@ -99,7 +99,7 @@
       <div class="title">发票须知</div>
       <div class="tips">
         <div>1、发票金额为实际支付金额，不包含优惠券等；</div>
-        <div>2、电子发票可以在订单确认后，在订单详情中查看和下载。</div>
+        <div>2、电子发票开具成功后可在发票中心查看和下载。</div>
       </div>
     </div>
     <div
@@ -396,6 +396,7 @@ export default {
       Dialog.alert({
         title: '温馨提示',
         message: '您好！现展示的为订单预计开票金额，最终金额以发票实际开具为准',
+        confirmButtonText: '我知道了',
       }).then(() => {
         // on close
       })
@@ -473,7 +474,8 @@ export default {
   background: #f5f5f5;
   min-height: 100vh;
   font-size: 0;
-
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
   .status_container {
     margin-top: -0.88rem;
     text-align: center;
@@ -497,11 +499,13 @@ export default {
       color: #ffffff;
       line-height: 32px;
       padding-bottom: 16px;
+      opacity: 0.8;
     }
     .status_tips {
       font-size: 24px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
+      opacity: 0.8;
       color: #ffffff;
       line-height: 24px;
       padding: 0 40px 60px;
@@ -517,7 +521,7 @@ export default {
     .type_list {
       font-size: 32px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       color: #000000;
       line-height: 32px;
       display: flex;
@@ -535,7 +539,7 @@ export default {
     .title {
       font-size: 32px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       color: #000000;
       line-height: 32px;
       padding-bottom: 20px;
@@ -601,10 +605,22 @@ export default {
   }
   .card.footer {
     text-align: right;
-    padding: 24px;
-
+    padding: 24px 40px;
+    margin-bottom: 0px;
     ::v-deep.sp-button {
       margin-left: 20px;
+      font-family: PingFangSC-Regular;
+      font-size: 28px;
+      padding: 0 32px;
+      height: 80px;
+    }
+    ::v-deep.sp-button--primary {
+      border: 1px solid #4974f5;
+      border-radius: 8px;
+    }
+    ::v-deep.sp-button--default {
+      border: 1px solid #dddddd;
+      border-radius: 8px;
     }
   }
   .email_input {
@@ -623,5 +639,47 @@ export default {
       box-sizing: border-box;
     }
   }
+}
+</style>
+<style lang="less">
+.sp-dialog {
+  width: 560px;
+
+  .sp-dialog__header {
+    font-family: PingFangSC-Medium;
+    font-size: 36px;
+    color: #1a1a1a;
+  }
+  .sp-dialog__message {
+    font-family: PingFangSC-Regular;
+    font-size: 28px;
+    color: #222222;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 40px;
+  }
+  .sp-dialog__confirm {
+    font-family: PingFangSC-Medium;
+    font-weight: bold;
+    font-size: 32px;
+    color: #4974f5;
+    text-align: center;
+    line-height: 32px;
+  }
+  .sp-dialog__content .email_input {
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    overflow: hidden;
+
+    input {
+      font-family: PingFangSC-Regular;
+      font-size: 28px;
+      color: #222222;
+      letter-spacing: 0;
+    }
+  }
+}
+.sp-overlay {
+  background-color: rgba(0, 0, 0, 0.4);
 }
 </style>

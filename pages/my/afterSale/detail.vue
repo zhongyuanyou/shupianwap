@@ -475,9 +475,6 @@ export default {
         orderNo: this.$route.query.orderNo,
         isProduct: '1',
         isAfterSaleFlow: '1',
-        afterSaleStatusNoList: !this.$route.query.id
-          ? JSON.stringify(this.afterSaleStatusNoList)
-          : '[]',
       }
       if (!this.$route.query.id && localStorage.getItem('afterSaleId')) {
         params.id = localStorage.getItem('afterSaleId')

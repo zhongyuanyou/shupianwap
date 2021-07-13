@@ -96,6 +96,7 @@ export default {
         this.$router.push('/my/wallet/withdraw/apply')
       } else {
         this.valid = true
+        this.password = ''
       }
     },
   },

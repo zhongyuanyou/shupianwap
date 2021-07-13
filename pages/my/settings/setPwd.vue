@@ -131,6 +131,7 @@ export default {
         return false
       }
       if (this.password !== this.confirmPassword) {
+        this.confirmPassword = ''
         this.$xToast.show({
           message: '密码与确认密码不一致',
           duration: 1000,
@@ -154,8 +155,7 @@ export default {
       })
       if (res.code === 200) {
         this.certificateInfo = res.data
-      }else{
-        
+      } else {
       }
     },
 
@@ -169,7 +169,7 @@ export default {
         operateName: this.userInfo.fullName,
       })
       if (res.code === 200) {
-        this.$xToast.show({ message: '设置成功' })
+        this.$xToast.show({ message: '重置密码成功' })
         setTimeout(() => {
           this.$router.push('/my/settings')
         }, 1500)

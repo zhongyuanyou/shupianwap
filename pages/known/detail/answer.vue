@@ -1,196 +1,198 @@
 <template>
-  <div class="answer">
-    <div>
-      <header-slot>
-        <div v-show="!showHead2" class="head1">
-          <my-icon
-            v-if="!isShare"
-            name="nav_ic_back"
-            size="0.40rem"
-            color="#1a1a1a"
-            class="my_icon nav-back"
-            @click.native="$back()"
-          ></my-icon>
-          <div class="btn-area">
-            <p @click="onInvite">
-              <my-icon name="yaoqinghuida_mian" size="0.36rem"></my-icon>
-              <span>邀请</span>
-            </p>
-            <p
-              v-if="
-                answerDetails && answerDetails.createrId !== userInfo.userId
-              "
-              @click.stop="writeAnswer"
-            >
-              <my-icon name="xiehuida" size="0.36rem"></my-icon>
-              <span>写回答</span>
-            </p>
-            <p v-else>
-              <my-icon
-                name="gengduo"
-                size="0.4rem"
-                color="#000000"
-                @click.native="more"
-              ></my-icon>
-            </p>
+  <section>
+    <ShareModal />
+    <div class="answer">
+      <div>
+        <header-slot>
+          <div v-show="!showHead2" class="head1">
+            <my-icon
+              v-if="!isShare"
+              name="nav_ic_back"
+              size="0.40rem"
+              color="#1a1a1a"
+              class="my_icon nav-back"
+              @click.native="$back()"
+            ></my-icon>
+            <div class="btn-area">
+              <p @click="onInvite">
+                <my-icon name="yaoqinghuida_mian" size="0.36rem"></my-icon>
+                <span>邀请</span>
+              </p>
+              <p
+                v-if="
+                  answerDetails && answerDetails.createrId !== userInfo.userId
+                "
+                @click.stop="writeAnswer"
+              >
+                <my-icon name="xiehuida" size="0.36rem"></my-icon>
+                <span>写回答</span>
+              </p>
+              <p v-else>
+                <my-icon
+                  name="gengduo"
+                  size="0.4rem"
+                  color="#000000"
+                  @click.native="more"
+                ></my-icon>
+              </p>
+            </div>
           </div>
+          <div v-show="showHead2" class="head2">
+            <my-icon
+              v-if="!isShare"
+              name="nav_ic_back"
+              size="0.40rem"
+              color="#1a1a1a"
+              class="my_icon nav-back"
+              @click.native="$back()"
+            ></my-icon>
+            <div class="user-info">
+              <sp-image
+                class="img"
+                :src="answerDetails.avatar"
+                @click="goUser(answerDetails.userId, answerDetails.userType)"
+              />
+              <div class="infos">{{ answerDetails.userName }}</div>
+              <template v-if="answerDetails.createrId !== userInfo.userId">
+                <div v-if="!isFollow" class="btn" @click="follow">
+                  <sp-button
+                    ><my-icon name="tianjia" size="0.27rem" color="#4974F5" />
+                    关注
+                  </sp-button>
+                </div>
+                <div v-else class="btn2" @click="follow">
+                  <span class="follow">已关注</span>
+                </div>
+              </template>
+            </div>
+          </div>
+        </header-slot>
+      </div>
+      <DownLoadArea
+        v-if="isShare"
+        :ios-link="iosLink"
+        :androd-link="androdLink"
+      />
+      <div class="title-area" @click="toQueDetail">
+        <div class="title">{{ answerDetails.title }}</div>
+        <div class="nums-area">
+          {{ answerDetails.answerCount }} 个回答 ·
+          {{ answerDetails.collectCount }} 收藏
         </div>
-        <div v-show="showHead2" class="head2">
-          <my-icon
-            v-if="!isShare"
-            name="nav_ic_back"
-            size="0.40rem"
-            color="#1a1a1a"
-            class="my_icon nav-back"
-            @click.native="$back()"
-          ></my-icon>
-          <div class="user-info">
-            <sp-image
-              class="img"
-              :src="answerDetails.avatar"
-              @click="goUser(answerDetails.userId, answerDetails.userType)"
-            />
-            <div class="infos">{{ answerDetails.userName }}</div>
-            <template v-if="answerDetails.createrId !== userInfo.userId">
-              <div v-if="!isFollow" class="btn" @click="follow">
-                <sp-button
-                  ><my-icon name="tianjia" size="0.27rem" color="#4974F5" />
-                  关注
-                </sp-button>
-              </div>
-              <div v-else class="btn2" @click="follow">
-                <span class="follow">已关注</span>
-              </div>
-            </template>
-          </div>
+      </div>
+      <div class="main">
+        <div ref="myPage" class="user-info">
+          <sp-image
+            class="img"
+            :src="answerDetails.avatar"
+            @click="goUser(answerDetails.userId, answerDetails.userType)"
+          />
+          <div class="infos">{{ answerDetails.userName }}</div>
+          <template v-if="answerDetails.createrId !== userInfo.userId">
+            <div v-if="!isFollow" class="btn" @click="follow">
+              <sp-button
+                ><my-icon name="tianjia" size="0.27rem" color="#4974F5" />
+                关注</sp-button
+              >
+            </div>
+            <div v-else class="btn2" @click="follow">
+              <span class="follow">已关注</span>
+            </div>
+          </template>
         </div>
-      </header-slot>
-    </div>
-    <DownLoadArea
-      v-if="isShare"
-      :ios-link="iosLink"
-      :androd-link="androdLink"
-    />
-    <div class="title-area" @click="toQueDetail">
-      <div class="title">{{ answerDetails.title }}</div>
-      <div class="nums-area">
-        {{ answerDetails.answerCount }} 个回答 ·
-        {{ answerDetails.collectCount }} 收藏
+        <div class="content" v-html="answerDetails.content"></div>
+        <p class="pub-time">编辑于{{ answerDetails.createTime }}</p>
       </div>
-    </div>
-    <div class="main">
-      <div ref="myPage" class="user-info">
-        <sp-image
-          class="img"
-          :src="answerDetails.avatar"
-          @click="goUser(answerDetails.userId, answerDetails.userType)"
-        />
-        <div class="infos">{{ answerDetails.userName }}</div>
-        <template v-if="answerDetails.createrId !== userInfo.userId">
-          <div v-if="!isFollow" class="btn" @click="follow">
-            <sp-button
-              ><my-icon name="tianjia" size="0.27rem" color="#4974F5" />
-              关注</sp-button
-            >
-          </div>
-          <div v-else class="btn2" @click="follow">
-            <span class="follow">已关注</span>
-          </div>
-        </template>
-      </div>
-      <div class="content" v-html="answerDetails.content"></div>
-      <p class="pub-time">编辑于{{ answerDetails.createTime }}</p>
-    </div>
-    <Comment
-      ref="openComment"
-      :article-id="answerDetails.id"
-      :source-type="answerDetails.type"
-    />
-    <sp-bottombar safe-area-inset-bottom>
-      <div
-        v-if="
-          answerDetails &&
-          answerDetails.isApplaudFlag === 0 &&
-          answerDetails.isDisapplaudFlag === 0
-        "
-        class="left-area"
-      >
-        <span class="icon" @click="handleClickBottom(1)">
-          <my-icon name="zantong" size="0.28rem" color="#4974F5"></my-icon
-        ></span>
-        <span class="text" @click="handleClickBottom(1)"
-          >赞同{{ answerDetails.applaudCount }}</span
-        >
-        <span class="icon oppose" @click="handleClickBottom(2)">
-          <my-icon name="fandui" size="0.28rem" color="#4974F5"></my-icon
-        ></span>
-      </div>
-      <div
-        v-if="answerDetails && answerDetails.isApplaudFlag === 1"
-        class="applaud"
-        @click="handleClickBottom(1)"
-      >
-        <span class="icon">
-          <my-icon name="zantong_mian" size="0.28rem" color="#fff"></my-icon
-        ></span>
-        <span class="text">已赞同</span>
-      </div>
-      <div
-        v-if="answerDetails.isDisapplaudFlag === 1"
-        class="applaud dis-applaud"
-        @click="handleClickBottom(2)"
-      >
-        <span class="icon">
-          <my-icon name="fandui_mian" size="0.28rem" color="#fff"></my-icon
-        ></span>
-        <span class="text">已反对</span>
-      </div>
-      <div class="right-area">
+      <Comment
+        ref="openComment"
+        :article-id="answerDetails.id"
+        :source-type="answerDetails.type"
+      />
+      <sp-bottombar safe-area-inset-bottom>
         <div
-          class="item"
-          :style="{
-            color: answerDetails.isCollectFlag === 1 ? '#4974F5' : '#999999',
-          }"
-          @click="handleClickBottom(3)"
+          v-if="
+            answerDetails &&
+            answerDetails.isApplaudFlag === 0 &&
+            answerDetails.isDisapplaudFlag === 0
+          "
+          class="left-area"
         >
-          <div class="icon">
-            <my-icon name="shoucang" size="0.4rem"></my-icon>
-          </div>
-          收藏
+          <span class="icon" @click="handleClickBottom(1)">
+            <my-icon name="zantong" size="0.28rem" color="#4974F5"></my-icon
+          ></span>
+          <span class="text" @click="handleClickBottom(1)"
+            >赞同{{ answerDetails.applaudCount }}</span
+          >
+          <span class="icon oppose" @click="handleClickBottom(2)">
+            <my-icon name="fandui" size="0.28rem" color="#4974F5"></my-icon
+          ></span>
         </div>
-        <div class="item" @click="comment()">
-          <div class="icon">
-            <my-icon name="pinglun" size="0.4rem" color="#999999"></my-icon>
-          </div>
-          评论
+        <div
+          v-if="answerDetails && answerDetails.isApplaudFlag === 1"
+          class="applaud"
+          @click="handleClickBottom(1)"
+        >
+          <span class="icon">
+            <my-icon name="zantong_mian" size="0.28rem" color="#fff"></my-icon
+          ></span>
+          <span class="text">已赞同</span>
         </div>
-      </div>
-    </sp-bottombar>
-    <!-- 上拉组件 -->
-    <sp-popup
-      v-model="popupShow"
-      position="bottom"
-      :style="{ height: '30%' }"
-      round
-      close-icon="close"
-      :close-on-click-overlay="false"
-    >
-      <div class="down_slide_list">
-        <ul>
-          <li @click="editAnswer(answerDetails.id)">
-            <my-icon name="bianji1" size="1rem" color="#1a1a1a"></my-icon>
-            <p>编辑</p>
-          </li>
-          <li @click="deleteAnswer(answerDetails.id)">
-            <my-icon name="shanchu1" size="1rem" color="#1a1a1a"></my-icon>
-            <p>删除</p>
-          </li>
-        </ul>
-        <div class="cancel" @click="cancel">取消</div>
-      </div>
-    </sp-popup>
-    <ShareModal></ShareModal>
-  </div>
+        <div
+          v-if="answerDetails.isDisapplaudFlag === 1"
+          class="applaud dis-applaud"
+          @click="handleClickBottom(2)"
+        >
+          <span class="icon">
+            <my-icon name="fandui_mian" size="0.28rem" color="#fff"></my-icon
+          ></span>
+          <span class="text">已反对</span>
+        </div>
+        <div class="right-area">
+          <div
+            class="item"
+            :style="{
+              color: answerDetails.isCollectFlag === 1 ? '#4974F5' : '#999999',
+            }"
+            @click="handleClickBottom(3)"
+          >
+            <div class="icon">
+              <my-icon name="shoucang" size="0.4rem"></my-icon>
+            </div>
+            收藏
+          </div>
+          <div class="item" @click="comment()">
+            <div class="icon">
+              <my-icon name="pinglun" size="0.4rem" color="#999999"></my-icon>
+            </div>
+            评论
+          </div>
+        </div>
+      </sp-bottombar>
+      <!-- 上拉组件 -->
+      <sp-popup
+        v-model="popupShow"
+        position="bottom"
+        :style="{ height: '30%' }"
+        round
+        close-icon="close"
+        :close-on-click-overlay="false"
+      >
+        <div class="down_slide_list">
+          <ul>
+            <li @click="editAnswer(answerDetails.id)">
+              <my-icon name="bianji1" size="1rem" color="#1a1a1a"></my-icon>
+              <p>编辑</p>
+            </li>
+            <li @click="deleteAnswer(answerDetails.id)">
+              <my-icon name="shanchu1" size="1rem" color="#1a1a1a"></my-icon>
+              <p>删除</p>
+            </li>
+          </ul>
+          <div class="cancel" @click="cancel">取消</div>
+        </div>
+      </sp-popup>
+    </div>
+  </section>
 </template>
 
 <script>

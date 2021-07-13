@@ -1,12 +1,14 @@
 <template>
-  <div class="company">
-    <DetailTemplate
-      :im-jump-query="imJumpQuery"
-      scene-id1="app-jycpxq-01"
-      scene-id2="app-jycpxq-02"
-    />
+  <section>
     <ShareModal />
-  </div>
+    <div class="company">
+      <DetailTemplate
+        :im-jump-query="imJumpQuery"
+        scene-id1="app-jycpxq-01"
+        scene-id2="app-jycpxq-02"
+      />
+    </div>
+  </section>
 </template>
 
 <script>

@@ -89,6 +89,11 @@ export default {
       loading: false,
     }
   },
+  computed: {
+    userInfo() {
+      return JSON.parse(localStorage.getItem('info'))
+    },
+  },
   mounted() {
     if (this.active === 0) {
       this.afterSaleStatus = this.searchStatus
@@ -105,6 +110,7 @@ export default {
     async getAfterSaleList() {
       this.loading = true
       const res = await this.$axios.post(afterSaleApi.list, {
+        userId: this.userInfo.id,
         page: this.page,
         limit: this.limit,
         afterSaleStatusNoList: this.afterSaleStatus,
