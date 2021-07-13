@@ -277,6 +277,9 @@ export default {
             if (this.articleDetails.userId) {
               this.getPlanerInfo(this.articleDetails.userId)
             }
+          } else {
+            this.$xToast.error('内容失效')
+            this.$router.replace('/known/')
           }
         })
     },
