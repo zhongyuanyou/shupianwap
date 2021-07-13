@@ -611,7 +611,11 @@ export default {
         orderData.orderStatusNo || ''
       )
 
-      if (orderStatusNum === 1) {
+      if (
+        orderStatusNum === 1 &&
+        orderData.orderStatusNo !== 'ORDER_CUS_STATUS_UNPAID' &&
+        orderData.orderStatusNo !== 'ORDER_CUS_STATUS_CANCELLED'
+      ) {
         return 0
       }
       // afterSaleStatus 售后状态
@@ -663,6 +667,11 @@ export default {
           query: {
             orderId: orderData.id,
           },
+        })
+      } else if (statusNum === 3) {
+        // 未售后和部分售后跳转至申请页面
+        this.$router.push({
+          path: '/my/afterSale/list',
         })
       } else {
         // 跳转售后详情页面
