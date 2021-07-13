@@ -487,7 +487,7 @@ export default {
         const isLogin = await this.judgeLoginMixin()
         if (isLogin) {
           this.$router.push({
-            path:"/planner/plannerShop",
+            path:"/store/plannerShop",
             query:this.$route.query
           })
         } else {

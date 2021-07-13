@@ -36,29 +36,27 @@
     <div class="bg-group">
       <div class="bg-group__head">
         <img
-          src="https://cdn.shupian.cn/sp-pt/wap/images/b2mei6f470w0000.png"
+          :src="detailData.personal.headPortrait"
           alt=""
         />
         <div class="bg-group__headtext">
           <p>
-            <span class="title">刘雅婷</span>
+            <span class="title">{{detailData.personal.name}}</span>
             <span class="label">我的团队></span>
           </p>
           <p>服务年限：{{formatServeAgeText}}</p>
         </div>
       </div>
       <div class="bg-group__label">
-        <span>公司过户变更</span>
-        <span>商标过户变更</span>
-        <span>公司股权变大萨达阿萨德</span>
+        <span v-for="(item,index) in detailData.personal.categories" :key="index">{{item}}</span>
       </div>
-      <div class="bg-group__footer" @click="goShop">
+      <div v-if="detailData.mchDetailId" class="bg-group__footer" @click="goShop">
         <img
-          src="https://cdn.shupian.cn/sp-pt/wap/images/b2mei6f470w0000.png"
+          :src="detailData.mchLogo"
           alt=""
         />
         <div class="bg-group__footertext">
-          <p>成都晓资风尚文化传媒有限萨达所大所大所多撒</p>
+          <p>{{detailData.mchName}}</p>
           <p>
             <img
               src="https://cdn.shupian.cn/sp-pt/wap/images/7mruoa3go2c0000.png"
@@ -78,10 +76,10 @@
           <span></span>
         </p>
         <p class="sp-score__score">
-          <span>440</span>
+          <span>{{detailData.personal.point}}</span>
         </p>
         <p class="sp-score__statistical">
-          <span>打败96%的规划师</span>
+          <span>打败{{detailData.personal.beatProp}}的规划师</span>
         </p>
         <p class="sp-score__detail">
           <span>什么是薯片分</span>
@@ -89,30 +87,25 @@
           <span>查看详情</span>
         </p>
       </div>
-      <div class="recommended" :class="titleStatus?'':'tabs'">
+      <div v-if="detailData.modules.length>0" class="recommended" :class="titleStatus?'':'tabs'">
         <p class="title">为您推荐</p>
         <sp-tabs v-model="active" sticky @scroll="stickyScroll" @click="tabsClick">
-          <sp-tab v-for="(item,index) in tabsData" :key="index" :title="item.label" :name="item.value" >
+          <sp-tab v-for="(item,index) in detailData.modules" :key="index" :title="item.name" :name="item.id" >
             <ul class="list-data">
-              <li v-for="(data,dataIndex) in tabsListData" :key="dataIndex">
+              <li v-for="(data,dataIndex) in detailData.goods" :key="dataIndex">
                 <img :src="data.img" alt="">
                 <div>
                     <p class="title">
-                        <span>四川**国际融资租赁有限公司</span>
+                        <span>{{data.name}}</span>
                     </p>
                     <p class="label">
-                        <span>店铺干净</span>
-                        <span>1对1服务</span>
-                        <span>免手续</span>
+                        <span v-for="(ta,taindex) in data.tags" :key="taindex">{{ta}}</span>
                     </p>
                     <p class="type">
-                        <span>贸易类</span>
-                        <span>一般纳税人</span>
-                        <span>3年以上</span>
-                        <span>500万</span>
+                        <span v-for="(de,deindex) in data.desc.split('|')" :key="deindex">{{de}}</span>
                     </p>
                     <p class="moneysee">
-                        <span>11350</span>
+                        <span>{{data.price}}</span>
                         <span>元</span>
                     </p>
                 </div>
@@ -128,9 +121,9 @@
           
           v-md:p_IMClick
           data-im_type="售前"
-          :data-planner_number="detailData.id"
-          :data-planner_name="detailData.name"
-          :data-crisps_fraction="detailData.point"
+          :data-planner_number="detailData.personal.id"
+          :data-planner_name="detailData.personal.name"
+          :data-crisps_fraction="detailData.personal.point"
           :data-track_code="isInApp ? 'SPP000040' : 'SPW000036'"
           type="primary"
           text="电话联系"
@@ -140,9 +133,9 @@
         <sp-bottombar-button
           v-md:p_IMClick
           data-im_type="售前"
-          :data-planner_number="detailData.id"
-          :data-planner_name="detailData.name"
-          :data-crisps_fraction="detailData.point"
+          :data-planner_number="detailData.personal.id"
+          :data-planner_name="detailData.personal.name"
+          :data-crisps_fraction="detailData.personal.point"
           :data-track_code="isInApp ? 'SPP000040' : 'SPW000036'"
           type="info"
           text="在线联系"
@@ -173,6 +166,7 @@ import {
     Tab 
 } from '@chipspc/vant-dgg'
 import { planner } from '@/api'
+import { storeApi } from '@/api/store'
 import Header from '@/components/common/head/header'
 import SpToast from '@/components/common/spToast/SpToast'
 import { callPhone, copyToClipboard, setUrlParams } from '@/utils/common'
@@ -193,71 +187,15 @@ export default {
         return {
             hideIM: this.$route.query.imUserId === this.$route.query.mchUserId,
             titleStatus: true, // 粘性布局触发时去掉头部
-            active: 'myQuestion', // tab状态
-            detailData:{},
-            tabsData: [
-                {
-                value: 'myQuestion',
-                label: '热销专区',
-                },
-                {
-                value: 'myBook',
-                label: '活动专区',
-                },
-                {
-                value: 'see',
-                label: '超值套餐',
-                },
-            ],
-            tabsListData: [
-                {
-                    action: '二级资质能街多大标的工程?',
-                    question: '我们会验证资质的信息，在国家住建局都能差的到的',
-                    zan: '18500',
-                    pl: '5489',
-                    img: 'https://cdn.shupian.cn/sp-pt/wap/images/cfu3wwitnuw0000.png',
-                },
-                {
-                    action: '请问现在开办一个公司需要准备什么需要准备什么',
-                    question:
-                        '我们会验证资质的信息，在国家住建局都能查的到的，验证真伪。',
-                    zan: '18500',
-                    pl: '5489',
-                    img: 'https://cdn.shupian.cn/sp-pt/wap/images/cfu3wwitnuw0000.png',
-                },
-                {
-                    action: '请问现在开办一个公司需要准备什么需要准备什么',
-                    question:
-                        '我们会验证资质的信息，在国家住建局都能查的到的，验证真伪。',
-                    zan: '18500',
-                    pl: '5489',
-                    img: 'https://cdn.shupian.cn/sp-pt/wap/images/cfu3wwitnuw0000.png',
-                },
-                {
-                    action: '请问现在开办一个公司需要准备什么需要准备什么',
-                    question:
-                        '我们会验证资质的信息，在国家住建局都能查的到的，验证真伪。',
-                    zan: '18500',
-                    pl: '5489',
-                    img: 'https://cdn.shupian.cn/sp-pt/wap/images/cfu3wwitnuw0000.png',
-                },
-                {
-                    action: '请问现在开办一个公司需要准备什么需要准备什么',
-                    question:
-                        '我们会验证资质的信息，在国家住建局都能查的到的，验证真伪。',
-                    zan: '18500',
-                    pl: '5489',
-                    img: 'https://cdn.shupian.cn/sp-pt/wap/images/cfu3wwitnuw0000.png',
-                },
-                {
-                    action: '请问现在开办一个公司需要准备什么需要准备什么',
-                    question:
-                        '我们会验证资质的信息，在国家住建局都能查的到的，验证真伪。',
-                    zan: '18500',
-                    pl: '5489',
-                    img: 'https://cdn.shupian.cn/sp-pt/wap/images/cfu3wwitnuw0000.png',
-                },
-            ],
+            active: '', // tab状态
+            detailData:{
+              personal:{
+                name:"--",
+                headPortrait:""
+              },
+              modules:[],
+              goods:[]
+            },
             shareOptions: [],
             showShare: false,
         }
@@ -275,7 +213,7 @@ export default {
             return formatData
         },
         formatServeAgeText() {
-            const serveAge = this.detailData.serveAge
+            const serveAge = this.detailData.personal.serveAge
             if (serveAge == null) {
                 return '--'
             }
@@ -348,10 +286,13 @@ export default {
                     return
                 }
                 const params = { mchUserId }
-                const data = await planner.plannerStoreInfo(params)
-                console.log(data)
+                const { data } = await this.$axios.get(storeApi.plannerStoreInfo, {params}, {
+                  headers: {
+                    'x-cache-control': 'cache',
+                  },
+                })
+                this.active = data.modules[0]?.id
                 this.detailData = data || {}
-                
                 return data
             } catch (error) {
                 console.error('getDetail:', error)
@@ -363,6 +304,10 @@ export default {
                 })
                 return Promise.reject(error)
             }
+        },
+        // 获取列表数据
+        async getList(){
+
         },
         handleCall() {
             // 如果当前页面在app中，则调用原生拨打电话的方法
@@ -463,7 +408,7 @@ export default {
                 const isLogin = await this.judgeLoginMixin()
                 if (isLogin) {
                     this.$router.push({
-                        path:"/planner/merchantsShop",
+                        path:"/store/merchantsShop",
                         query:this.$route.query
                     })
                 } else {
@@ -557,7 +502,7 @@ export default {
             }
         },
         tabsClick(title,name){
-            console.log(this.active)
+          console.log(this.active)
         },
     },
     head() {
@@ -576,7 +521,7 @@ export default {
 <style lang="less" scoped>
 .plannerShop {
   .bg-group {
-    min-height: 498px;
+    height: 498px;
     padding: 60px 40px 24px;
     background: url('https://cdn.shupian.cn/sp-pt/wap/images/g0qq9j24x200000.png')
       no-repeat;
@@ -684,7 +629,7 @@ export default {
       margin: 0 32px 0 20px;
       p {
         &:first-of-type {
-          max-width: 424px;
+          width: 424px;
           line-height: 45px;
           margin: 0 0 9px 0;
           font-family: PingFangSC-Regular;
