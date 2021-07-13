@@ -240,11 +240,10 @@ export default {
             this.$route.query.type === 'shopcar'
               ? this.$parent.order.skuTotalPrice
               : this.$parent.order.salesPrice
+          const discount =
+            parseFloat(this.checkarr.marketingCouponVO.discount) / 100
 
-          return (
-            ((10 - this.checkarr.marketingCouponVO.discount / 100) / 10) *
-            price
-          ).toFixed('2')
+          return (((10 - discount) / 10) * price).toFixed('2')
         }
       }
       return 0
