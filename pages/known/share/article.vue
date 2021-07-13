@@ -1,136 +1,137 @@
 <template>
-  <div class="article">
-    <HeaderSlot>
-      <div v-if="!showHead" class="flex">
-        <div class="nav-back">
-          <my-icon
-            v-if="!isShare"
-            name="nav_ic_back"
-            size="0.40rem"
-            color="#1a1a1a"
-            class="my_icon"
-            @click.native="$back()"
-          ></my-icon>
+  <section>
+      <ShareModal />
+      <HeaderSlot>
+        <div v-if="!showHead" class="flex">
+          <div class="nav-back">
+            <my-icon
+              v-if="!isShare"
+              name="nav_ic_back"
+              size="0.40rem"
+              color="#1a1a1a"
+              class="my_icon"
+              @click.native="$back()"
+            ></my-icon>
+          </div>
+          <div class="search">
+            <my-icon
+              style="margin-right: 0.15rem"
+              name="nav_ic_searchbig"
+              size="0.40rem"
+              color="#1a1a1a"
+              class="my_icon"
+              @click.native="$router.push('/known/search')"
+            ></my-icon>
+            <sp-icon
+              v-if="articleDetails.createrId === userInfo.userId"
+              name="ellipsis"
+              size="0.4rem"
+              color="#1a1a1a"
+              class="ellipsis"
+              @click="popupShow = true"
+            />
+          </div>
         </div>
-        <div class="search">
-          <my-icon
-            style="margin-right: 0.15rem"
-            name="nav_ic_searchbig"
-            size="0.40rem"
-            color="#1a1a1a"
-            class="my_icon"
-            @click.native="$router.push('/known/search')"
-          ></my-icon>
-          <sp-icon
-            v-if="articleDetails.createrId === userInfo.userId"
-            name="ellipsis"
-            size="0.4rem"
-            color="#1a1a1a"
-            class="ellipsis"
-            @click="popupShow = true"
+        <div v-if="showHead" class="flex">
+          <PageHead2
+            :header-data="articleDetails"
+            :is-follow="false"
+            :is-show-follow="false"
           />
         </div>
+      </HeaderSlot>
+      <DownLoadArea
+        v-if="isShare"
+        :ios-link="iosLink"
+        :androd-link="androdLink"
+      />
+      <div class="title-area">
+        <div class="title">{{ articleDetails.title }}</div>
       </div>
-      <div v-if="showHead" class="flex">
-        <PageHead2
-          :header-data="articleDetails"
-          :is-follow="false"
-          :is-show-follow="false"
-        />
-      </div>
-    </HeaderSlot>
-    <DownLoadArea
-      v-if="isShare"
-      :ios-link="iosLink"
-      :androd-link="androdLink"
-    />
-    <div class="title-area">
-      <div class="title">{{ articleDetails.title }}</div>
-    </div>
-    <div class="main">
-      <div ref="myPage" class="user-info">
-        <sp-image
-          class="img"
-          :src="articleDetails.avatar || $ossImgSetV2('9zzzas17j8k0000.png')"
-          @click.stop="goUser(articleDetails.userId, articleDetails.userType)"
-        />
-        <div class="infos">{{ articleDetails.userName }}</div>
-        <!-- && planerInfo.mchUserId -->
-        <template
-          v-if="
-            articleDetails.createrId !== userInfo.userId &&
-            articleDetails.userType == 2
-          "
-        >
-          <div class="btn">
-            <sp-button
-              size="small"
-              type="primary"
-              @click="sendTextMessage(planerInfo.mchUserId)"
-              >在线问</sp-button
-            >
-            <sp-button
-              size="small"
-              type="info"
-              @click="handleTel(planerInfo.mchUserId)"
-              >打电话</sp-button
-            >
-          </div>
-        </template>
-      </div>
-      <div class="content" v-html="articleDetails.content"></div>
-      <p class="pub-time">编辑于 {{ articleDetails.createTime }}</p>
-
-      <!-- 推荐文章 -->
-      <DetailArticleList :article-list="articleDetails.relatedArticles" />
-
-      <div
-        v-if="
-          articleDetails &&
-          articleDetails.goodsList &&
-          articleDetails.goodsList.length > 0
-        "
-        class="recommend"
-      >
-        <div class="recommend-title">推荐商品</div>
-        <div v-for="goods of articleDetails.goodsList" :key="goods.id">
-          <ShareGoods
-            :info="goods"
-            :type="
-              goods.productType === 'PRO_CLASS_TYPE_SALES'
-                ? 'Service'
-                : 'Trading'
+      <div class="main">
+        <div ref="myPage" class="user-info">
+          <sp-image
+            class="img"
+            :src="articleDetails.avatar || $ossImgSetV2('9zzzas17j8k0000.png')"
+            @click.stop="goUser(articleDetails.userId, articleDetails.userType)"
+          />
+          <div class="infos">{{ articleDetails.userName }}</div>
+          <!-- && planerInfo.mchUserId -->
+          <template
+            v-if="
+              articleDetails.createrId !== userInfo.userId &&
+              articleDetails.userType == 2
             "
-          ></ShareGoods>
+          >
+            <div class="btn">
+              <sp-button
+                size="small"
+                type="primary"
+                @click="sendTextMessage(planerInfo.mchUserId)"
+                >在线问</sp-button
+              >
+              <sp-button
+                size="small"
+                type="info"
+                @click="handleTel(planerInfo.mchUserId)"
+                >打电话</sp-button
+              >
+            </div>
+          </template>
+        </div>
+        <div class="content" v-html="articleDetails.content"></div>
+        <p class="pub-time">编辑于 {{ articleDetails.createTime }}</p>
+
+        <!-- 推荐文章 -->
+        <DetailArticleList :article-list="articleDetails.relatedArticles" />
+
+        <div
+          v-if="
+            articleDetails &&
+            articleDetails.goodsList &&
+            articleDetails.goodsList.length > 0
+          "
+          class="recommend"
+        >
+          <div class="recommend-title">推荐商品</div>
+          <div v-for="goods of articleDetails.goodsList" :key="goods.id">
+            <ShareGoods
+              :info="goods"
+              :type="
+                goods.productType === 'PRO_CLASS_TYPE_SALES'
+                  ? 'Service'
+                  : 'Trading'
+              "
+            ></ShareGoods>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!--    上拉组件-->
-    <sp-popup
-      v-model="popupShow"
-      position="bottom"
-      :style="{ height: '30%' }"
-      round
-      close-icon="close"
-      :close-on-click-overlay="false"
-    >
-      <div class="down_slide_list">
-        <ul>
-          <li @click="editQues(articleDetails.id)">
-            <my-icon name="bianji1" size="1rem" color="#555"></my-icon>
-            <p>编辑</p>
-          </li>
-          <li @click="deleteQues(articleDetails.id)">
-            <my-icon name="shanchu1" size="1rem" color="#555"></my-icon>
-            <p>删除</p>
-          </li>
-        </ul>
-        <div class="cancel" @click="popupShow = false">取消</div>
-      </div>
-    </sp-popup>
-    <ShareModal />
-  </div>
+      <!--    上拉组件-->
+      <sp-popup
+        v-model="popupShow"
+        position="bottom"
+        :style="{ height: '30%' }"
+        round
+        close-icon="close"
+        :close-on-click-overlay="false"
+      >
+        <div class="down_slide_list">
+          <ul>
+            <li @click="editQues(articleDetails.id)">
+              <my-icon name="bianji1" size="1rem" color="#555"></my-icon>
+              <p>编辑</p>
+            </li>
+            <li @click="deleteQues(articleDetails.id)">
+              <my-icon name="shanchu1" size="1rem" color="#555"></my-icon>
+              <p>删除</p>
+            </li>
+          </ul>
+          <div class="cancel" @click="popupShow = false">取消</div>
+        </div>
+      </sp-popup>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -302,6 +303,7 @@ export default {
           ...obj,
           ...res,
         }
+        this.
         console.log('planerInfo', this.planerInfo)
       })
     },
