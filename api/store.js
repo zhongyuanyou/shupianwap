@@ -1,4 +1,9 @@
 'use strict'
+/*
+ * @Author: majinghe
+ * @Date: 2021-07-13 2:12:06 PM
+ * @Description: 店铺中心API
+ */
 
 import { CHIPS_PC_URL } from '../config/constant'
 
