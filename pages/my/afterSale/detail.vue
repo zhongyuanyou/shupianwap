@@ -911,12 +911,13 @@ export default {
             h3 {
               font-size: 26px;
               color: #222222;
-              font-weight: bold;
+              font-weight: normal;
             }
             > p {
               margin-left: 40px;
               font-size: 26px;
               color: #1a1a1a;
+              font-weight: bold;
             }
             .copy {
               width: 72px;
@@ -926,6 +927,7 @@ export default {
               font-size: 22px;
               color: #1a1a1a;
               text-align: center;
+              font-weight: bold;
             }
             .question {
               margin-left: 40px;
@@ -1031,7 +1033,7 @@ export default {
               }
             }
             .right {
-              color: #ff3b30;
+              color: #ec5330;
               font-size: 36px;
               font-weight: bold;
               span {

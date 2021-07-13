@@ -326,10 +326,11 @@ export default {
   background: #ffffff;
   border: 1px dashed #dddddd;
   border-radius: 8px;
+  display: flex;
+  flex-flow: column;
 }
 ::v-deep .upload-add-img {
   position: relative;
-  top: -50px;
 }
 ::v-deep .upload-add-text {
   font-size: 24px;
@@ -337,7 +338,6 @@ export default {
   font-weight: 400;
   color: #999999;
   position: relative;
-  top: -70px;
 }
 .refund {
   min-height: 100vh;
