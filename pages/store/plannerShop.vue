@@ -87,10 +87,10 @@
           <span>查看详情</span>
         </p>
       </div>
-      <div v-if="detailData.modules.length>0" class="recommended" :class="titleStatus?'':'tabs'">
+      <div v-if="detailData.modules.length>0 && detailData.modules.data.some(item=>item.id)" class="recommended" :class="titleStatus?'':'tabs'">
         <p class="title">为您推荐</p>
         <sp-tabs v-model="active" sticky @scroll="stickyScroll" @click="tabsClick">
-          <sp-tab v-for="(item,index) in detailData.modules" :key="index" :title="item.name" :name="item.id" >
+          <sp-tab v-for="(item,index) in detailData.modules.data" :key="index" :title="item.name" :name="item.id" >
             <ul class="list-data">
               <li v-for="(data,dataIndex) in detailData.goods" :key="dataIndex">
                 <img :src="data.img" alt="">
@@ -257,6 +257,7 @@ export default {
             // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
             this.isInApp && this.clearUserInfo()
             this.getDetail()
+            this.getList()
         }
     },
     async mounted() {
@@ -291,7 +292,7 @@ export default {
                     'x-cache-control': 'cache',
                   },
                 })
-                this.active = data.modules[0]?.id
+                this.active = (data.modules.length>0 && data.modules[0].id) || ""
                 this.detailData = data || {}
                 return data
             } catch (error) {
@@ -307,7 +308,40 @@ export default {
         },
         // 获取列表数据
         async getList(){
-
+          try {
+            const { mchUserId } = this.$route.query
+            if (mchUserId == null) {
+                this.$xToast.show({
+                    message: '缺少规划师参数!',
+                    duration: 1000,
+                    forbidClick: false,
+                    icon: 'toast_ic_error',
+                })
+                return
+            }
+            const params = { 
+              storeId:"1118898494378396293",
+              typeId:"1118898494378396292",
+              page:1,
+              limit:10
+            }
+            const { data } = await this.$axios.post(storeApi.recommendGoods, params, {
+              headers: {
+                'x-cache-control': 'cache',
+              },
+            })
+            this.detailData.goods = data.records || []
+            return data
+          } catch (error) {
+            console.error('getDetail:', error)
+            this.$xToast.show({
+                message: error.message || '请求失败！',
+                duration: 1000,
+                forbidClick: false,
+                icon: 'toast_ic_error',
+            })
+            return Promise.reject(error)
+          }
         },
         handleCall() {
             // 如果当前页面在app中，则调用原生拨打电话的方法
