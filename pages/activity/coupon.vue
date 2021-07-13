@@ -82,9 +82,8 @@
               {{ item.couponName }}
             </div>
             <div ref="textpro" class="content" @click="popOver(index)">
-              <span v-if="item.useType === 1">全场通用</span>
-              <span v-if="item.useType === 2">限制分类</span>
-              <span v-if="item.useType === 3">限制商品</span>
+              <span v-if="item.useType === 2">仅限指定品类使用</span>
+              <span v-if="item.useType === 3">仅限指定商品使用</span>
             </div>
             <div class="date">{{ item.serviceLife }}</div>
             <!-- 右侧显示 end-->

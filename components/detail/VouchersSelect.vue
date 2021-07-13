@@ -97,11 +97,11 @@
                 </div>
                 <div class="vouchers_desc">
                   {{
-                    item.useType == 1
-                      ? '全品类通用'
-                      : item.useType == 2
-                      ? '限定部分类别产品使用'
-                      : '指定产品使用'
+                    item.useType == 2
+                      ? '仅限指定品类使用'
+                      : item.useType == 3
+                      ? '仅限指定商品使用'
+                      : ''
                   }}
                 </div>
                 <div class="vouchers_date">

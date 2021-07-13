@@ -46,11 +46,11 @@
           </div>
           <div ref="textpro" class="content">
             {{
-              item.marketingCouponVO.useType === 1
-                ? '全品类通用'
-                : item.marketingCouponVO.useType === 2
-                ? '限定部分类别产品使用'
-                : '指定产品使用'
+              item.marketingCouponVO.useType === 2
+                ? '仅限指定品类使用'
+                : item.marketingCouponVO.useType === 3
+                ? '仅限指定商品使用'
+                : ''
             }}
           </div>
           <div
