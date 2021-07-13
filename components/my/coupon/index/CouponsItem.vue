@@ -33,7 +33,7 @@
               ? '全品类通用'
               : item.useType === 2
               ? '限定部分类别产品使用'
-              : '置顶产品使用' -->
+              : '指定产品使用' -->
         </div>
         <div class="date-container">
           <span class="date" :class="item.showColorTime ? 'warn' : ''">
@@ -101,15 +101,7 @@ export default {
       return useTypeName
     },
     getDiscount(count) {
-      let num
-      if (Number(count) > 10) {
-        num = Number(count) / 100
-        num = num.toFixed('1')
-      } else {
-        num = Number(count) / 100
-        num = num.toFixed('2')
-      }
-      return num
+      return Number(count) / 100
     },
     // 进入详情
     goDetailPage(item) {

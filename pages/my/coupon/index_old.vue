@@ -50,7 +50,7 @@
                 ? '全品类通用'
                 : item.marketingCouponVO.useType === 2
                 ? '限定部分类别产品使用'
-                : '置顶产品使用'
+                : '指定产品使用'
             }}
           </div>
           <div
