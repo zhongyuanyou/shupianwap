@@ -394,6 +394,10 @@ export default {
         .catch((err) => {
           console.log(err)
           this.loading = false
+          this.InvoiceType = {
+            '007': '增值税普通发票 ',
+          }
+          this.formData.invoiceType = '007'
           this.$xToast.error('商户信息错误')
         })
     },
