@@ -121,7 +121,7 @@ import { actCard, coupon } from '@/api/index'
 
 export default {
   layout: 'keepAlive',
-  name: 'coupon',
+  name: 'Coupon',
   components: {
     LoadingCenter,
     Header,
