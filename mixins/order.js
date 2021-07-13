@@ -481,8 +481,9 @@ export default {
     // 判断展示合同按钮 false不展示  1签署合同 2查看合同 515 版本 仅用于展示合同按钮判断
     checkContractStatus(orderData) {
       const data = orderData || this.orderData
-      // 当客户订单状态为已取消时不展示按钮
-      if (data.cusOrderStatusNo === ORDERSTATUSCODE[4]) return false
+      // 当客户订单状态为已取消时或是融资生成订单时不展示按钮
+      if (data.cusOrderStatusNo === ORDERSTATUSCODE[4] || data.orderApplyInfoId)
+        return false
       if (this.fromPage === 'orderList') {
         // if (
         //   (data.contractStatus &&
