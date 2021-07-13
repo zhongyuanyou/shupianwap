@@ -89,14 +89,14 @@ export default {
     getuseTypeName(useType) {
       let useTypeName = ''
       switch (useType) {
-        case 1:
-          useTypeName = '全品类通用'
-          break
+        // case 1:
+        //   useTypeName = '全品类通用'
+        //   break
         case 2:
-          useTypeName = '限定部分类别产品使用'
+          useTypeName = '仅限指定品类使用'
           break
-        default:
-          useTypeName = '指定产品使用'
+        case 3:
+          useTypeName = '仅限指定商品使用'
       }
       return useTypeName
     },
