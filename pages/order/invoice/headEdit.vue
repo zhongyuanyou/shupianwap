@@ -1,8 +1,8 @@
 <template>
   <div class="invoice_edit">
-    <sp-sticky>
+    <HeaderSlot>
       <Header class="my-header" title="编辑发票抬头"></Header>
-    </sp-sticky>
+    </HeaderSlot>
     <div class="card">
       <div class="invoice_info">
         <sp-cell-group>
@@ -107,6 +107,8 @@
       </sp-field>
     </div>
 
+    <div class="paddingBottom160"></div>
+
     <sp-bottombar safe-area-inset-bottom class="submit_btns">
       <sp-bottombar-button
         type="default"
@@ -137,6 +139,7 @@ import {
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 
+import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
 import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
@@ -149,7 +152,7 @@ export default {
   components: {
     LoadingCenter,
     Header,
-
+    HeaderSlot,
     [Sticky.name]: Sticky,
     [Empty.name]: Empty,
     [Button.name]: Button,
@@ -375,6 +378,8 @@ export default {
   background: #f5f5f5;
   padding: 0 0 170px;
   min-height: 100vh;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
 
   ::v-deep .sp-cell {
     padding: 40px 0px 40px 32px;
@@ -411,6 +416,7 @@ export default {
   }
   .set_default {
     padding: 0 40px;
+    margin-top: 20px;
     background: #fff;
     .placeholder {
       font-size: 22px;
@@ -430,6 +436,16 @@ export default {
     ::v-deep .sp-field__button {
       line-height: 100%;
     }
+  }
+  .paddingBottom160 {
+    padding-bottom: 160px;
+  }
+  .sp-bottombar {
+    z-index: 2;
+  }
+  ::v-deep .sp-bottombar {
+    margin-bottom: constant(safe-area-inset-bottom);
+    margin-bottom: env(safe-area-inset-bottom);
   }
 }
 </style>

@@ -250,4 +250,14 @@ export default {
 ::v-deep .sp-dropdown-menu__bar {
   box-shadow: none;
 }
+::v-deep .sp-dropdown-menu__title {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #222222;
+  letter-spacing: 0;
+  text-align: center;
+}
+::v-deep .sp-dropdown-menu__title::after {
+  right: -12px;
+}
 </style>

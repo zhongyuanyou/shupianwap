@@ -117,19 +117,6 @@ export default {
   }
 }
 
-// & > div:nth-child(2) {
-//   flex: 1;
-//   background: #4974f5;
-//   border-radius: 8px;
-//   font-family: PingFangSC-Medium;
-//   font-size: 32px;
-//   color: #ffffff;
-//   text-align: center;
-//   line-height: 96px;
-//   height: 96px;
-//   cursor: pointer;
-// }
-
 ::v-deep .sp-cell::after {
   border: 0;
 }
@@ -144,9 +131,6 @@ export default {
   text-align: center;
 }
 ::v-deep .sp-dropdown-menu__title::after {
-  // border: 8px solid;
-  // border-color: transparent transparent #dcdee0 #dcdee0;
-  // margin-left: 12px;
   right: -12px;
 }
 </style>

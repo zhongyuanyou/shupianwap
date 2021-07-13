@@ -95,7 +95,7 @@
           <div class="order_text">
             {{ item.name }}
           </div>
-          <div v-if="index === 5 && saleDataListNum > 0" class="jb_num">
+          <div v-if="index === 4 && saleDataListNum > 0" class="jb_num">
             {{ saleDataListNum }}
           </div>
         </div>
@@ -512,18 +512,13 @@ export default {
   methods: {
     // 初始化获取售后单数
     async getAfterSaleListNum() {
-      const res = await this.$axios.post(afterSaleApi.list, {
-        page: '1',
-        limit: '10',
-        afterSaleStatusNoList: [
-          'AFTERSALE_STATUS_1',
-          'AFTERSALE_STATUS_2 ',
-          'AFTERSALE_STATUS_3',
-        ],
-        type: '3',
+      const res = await this.$axios.get(afterSaleApi.saleingNum, {
+        params: {
+          userId: this.userId,
+        },
       })
       if (res.code === 200) {
-        this.saleDataListNum = res.data.totalCount
+        this.saleDataListNum = res.data
       }
     },
     toKnownHome(info) {

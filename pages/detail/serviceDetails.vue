@@ -1,93 +1,97 @@
 <template>
-  <div class="serviceDetails">
-    <!-- 导航栏-->
-    <sp-sticky
-      v-if="!isApplets"
-      :class="{
-        scroTopStyle: Boolean(opacity),
-      }"
-      z-index="5"
-      @scroll="scrollHandle"
-    >
-      <sp-top-nav-bar
-        ellipsis
-        :background="`rgba(255,255,255,0)`"
-        @on-click-left="onClickLeft"
+  <section>
+    <ShareModal />
+    <div class="serviceDetails">
+      <!-- 导航栏-->
+      <sp-sticky
+        v-if="!isApplets"
+        :class="{
+          scroTopStyle: Boolean(opacity),
+        }"
+        z-index="5"
+        @scroll="scrollHandle"
       >
-        <template #left>
-          <div>
-            <my-icon name="nav_ic_back" size="0.4rem" color="#fff"></my-icon>
-          </div>
-        </template>
-        <template #right>
-          <div>
-            <my-icon
-              class="head__icon-share"
-              name="nav_ic_share"
-              size="0.4rem"
-              color="#fff"
-              @click.native="onClickRight"
-            />
-          </div>
-        </template>
-      </sp-top-nav-bar>
-    </sp-sticky>
-    <!--   banner -->
-    <Banner :images="scProductDetailData.productImgArr" />
-    <!--   BasicInfo(基本信息)-->
-    <BasicInfo
-      :base-data="scProductDetailData.baseData"
-      :operating-data="scProductDetailData.operating"
-      :tags-data="scProductDetailData.tags"
-    />
-    <!--    服务项目-->
-    <ServiceItems :normal-item-list-data="scProductDetailData.normalItemList" />
-    <!--    服务详情-->
-    <ServiceInfo :client-details-data="scProductDetailData.clientDetails" />
-    <!--    推荐规划师-->
-    <div class="planners-box">
-      <Planners
+        <sp-top-nav-bar
+          ellipsis
+          :background="`rgba(255,255,255,0)`"
+          @on-click-left="onClickLeft"
+        >
+          <template #left>
+            <div>
+              <my-icon name="nav_ic_back" size="0.4rem" color="#fff"></my-icon>
+            </div>
+          </template>
+          <template #right>
+            <div>
+              <my-icon
+                class="head__icon-share"
+                name="nav_ic_share"
+                size="0.4rem"
+                color="#fff"
+                @click.native="onClickRight"
+              />
+            </div>
+          </template>
+        </sp-top-nav-bar>
+      </sp-sticky>
+      <!--   banner -->
+      <Banner :images="scProductDetailData.productImgArr" />
+      <!--   BasicInfo(基本信息)-->
+      <BasicInfo
+        :base-data="scProductDetailData.baseData"
+        :operating-data="scProductDetailData.operating"
+        :tags-data="scProductDetailData.tags"
+      />
+      <!--    服务项目-->
+      <ServiceItems
+        :normal-item-list-data="scProductDetailData.normalItemList"
+      />
+      <!--    服务详情-->
+      <ServiceInfo :client-details-data="scProductDetailData.clientDetails" />
+      <!--    推荐规划师-->
+      <div class="planners-box">
+        <Planners
+          :base-data="scProductDetailData.baseData"
+          :operating-data="scProductDetailData.operating"
+          :im-jump-query="imJumpQuery"
+          :recommend-planner="planners"
+        />
+        <!--   暂时取消此表单   -->
+        <!--      <div class="planners-box-quiz">-->
+        <!--        <h2>您的疑问，第一时间为您解答</h2>-->
+        <!--        <div>-->
+        <!--          <input placeholder="输入您想咨询的问题" type="text" />-->
+        <!--          <sp-button type="primary">提问</sp-button>-->
+        <!--        </div>-->
+        <!--      </div>-->
+      </div>
+      <!--    猜你喜欢-->
+      <sp-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+      >
+        <RecommendScProduct
+          ref="recommendScProduct"
+          :recommend-product-data="recommendProduct"
+        />
+      </sp-list>
+      <commodityConsultation
         :base-data="scProductDetailData.baseData"
         :operating-data="scProductDetailData.operating"
         :im-jump-query="imJumpQuery"
-        :recommend-planner="planners"
+        :planner-info="scPlannerDetailData"
       />
-      <!--   暂时取消此表单   -->
-      <!--      <div class="planners-box-quiz">-->
-      <!--        <h2>您的疑问，第一时间为您解答</h2>-->
-      <!--        <div>-->
-      <!--          <input placeholder="输入您想咨询的问题" type="text" />-->
-      <!--          <sp-button type="primary">提问</sp-button>-->
-      <!--        </div>-->
-      <!--      </div>-->
+      <!--    分享组件-->
+      <sp-share-sheet
+        v-model="showShare"
+        title="立即分享给好友"
+        :options="shareOptions"
+        @select="onSelect"
+      />
     </div>
-    <!--    猜你喜欢-->
-    <sp-list
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onLoad"
-    >
-      <RecommendScProduct
-        ref="recommendScProduct"
-        :recommend-product-data="recommendProduct"
-      />
-    </sp-list>
-    <commodityConsultation
-      :base-data="scProductDetailData.baseData"
-      :operating-data="scProductDetailData.operating"
-      :im-jump-query="imJumpQuery"
-      :planner-info="scPlannerDetailData"
-    />
-    <!--    分享组件-->
-    <sp-share-sheet
-      v-model="showShare"
-      title="立即分享给好友"
-      :options="shareOptions"
-      @select="onSelect"
-    />
-    <ShareModal />
-  </div>
+  </section>
 </template>
 
 <script>
