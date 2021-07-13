@@ -52,8 +52,7 @@
             v-model="amount"
             type="number"
             maxlength="9"
-            oninput="if(value.length>9)value=value.slice(0,9)"
-            @keyup="clearNoNum"
+            @input="onInput"
           />
           <!-- <sp-field v-model="amount" type="number" maxlength="9" /> -->
         </div>
@@ -133,12 +132,31 @@ export default {
   //   },
   // },
   methods: {
-    clearNoNum(e) {
-      this.amount = e.target.value.replace(/[^\d.]/g, '')
-      this.amount = e.target.value.replace(/\.{2,}/g, '.')
-      this.amount = e.target.value.replace(/^\./g, '')
-      // 小数点后面保留2位
-      this.amount = e.target.value.replace(/^(\/-)*(\d+)\.(\d\d).*$/, '$1$2.$3')
+    onInput(e) {
+      if (e.target.value.indexOf('.') > -1) {
+        const arr = e.target.value.split('.')
+        if (!arr[0]) {
+          arr[0] = '0'
+        }
+        this.$nextTick(() => {
+          this.amount = (arr[0] + '.' + arr[1].slice(0, 2)).slice(0, 10)
+        })
+      } else {
+        if (e.target.value.length > 1 && e.target.value[0] === '0') {
+          this.$nextTick(() => {
+            this.amount = ''
+            e.target.value = ''
+          })
+        }
+        this.$nextTick(() => {
+          this.amount = this.amount.slice(0, 9)
+        })
+      }
+      // this.amount = e.target.value.replace(/[^\d.]/g, '')
+      // this.amount = e.target.value.replace(/\.{2,}/g, '.')
+      // this.amount = e.target.value.replace(/^\./g, '')
+      // // 小数点后面保留2位
+      // this.amount = e.target.value.replace(/^(\/-)*(\d+)\.(\d\d).*$/, '$1$2.$3')
     },
     // 返回到提现页面
     backHandle() {
