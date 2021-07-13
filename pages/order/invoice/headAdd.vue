@@ -195,8 +195,8 @@ export default {
 
       // 发票类型
       InvoiceType: {
-        ORDINARY: '电子普通发票',
-        SPECIAL: '增值税专用发票 ',
+        ORDINARY: '普通发票',
+        SPECIAL: '专用发票 ',
       },
       HeadType: {
         PERSONAL: '个人',
