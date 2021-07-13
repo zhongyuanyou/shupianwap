@@ -56,7 +56,7 @@ const planner = {
       url: CHIPS_WAP_BASE_URL + '/nk/planner/v1/detail.do',
     })
   },
-
+  
   /**
    * @description 获取电话号码
    * @param {string} id 业务id  (如:商户id,商户用户id,联系人id)
@@ -82,6 +82,18 @@ const planner = {
       params,
       method: 'post',
       url: '/crisps-marketing-web/yk/branchsell/copartner/v1/add_copartner_customer_bind.do',
+    })
+  },
+  /**
+   * @description 规划师店铺详情接口
+   * @param {Object} params 请求参数
+   * @param {string} params.id 规划师id
+   * @returns {promise}
+   */
+  plannerStoreInfo(params){
+    return request({
+      params,
+      url: CHIPS_WAP_BASE_URL + '/service/nk/store/v1/planner_store_info.do',
     })
   },
 }

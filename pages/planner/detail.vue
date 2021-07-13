@@ -9,7 +9,7 @@
 
 <template>
   <div class="detail">
-    <div v-if="!hideHeader && !isApplets" class="head">
+    <div v-if="!hideHeader && !isApplets && titleStatus" class="head">
       <Header title="规划师">
         <template #left>
           <sp-icon
@@ -17,7 +17,15 @@
             name="nav_ic_back"
             size="0.4rem"
             color="#1A1A1A"
-            style="margin-left: 0.4rem"
+            style="margin-left: 0.32rem"
+            @click.native="onClickLeft"
+          />
+          <sp-icon
+            class-prefix="spiconfont"
+            name="guanbi"
+            size="0.4rem"
+            color="#1A1A1A"
+            style="margin-left: 0.36rem"
             @click.native="onClickLeft"
           />
         </template>
@@ -25,7 +33,7 @@
           <sp-icon
             class-prefix="spiconfont"
             class="head__icon-share"
-            name="nav_ic_share"
+            name="fenxiang"
             size="0.4rem"
             color="#1A1A1A"
             style="margin-right: 0.4rem"
@@ -67,6 +75,7 @@
                       >{{ detailData.title }}</span
                     >
                   </div>
+                  
                   <div>
                     <h4 class="detail-content__name">{{ detailData.name }}</h4>
                     <p class="detail-content__discript">
@@ -74,7 +83,50 @@
                     </p>
                   </div>
                 </div>
-
+                <div class="detail-content__label">
+                  <p>
+                    <span>公司过户</span>
+                    <span>商标过户</span>
+                    <span>股权变更</span>
+                  </p>
+                  <ul>
+                    <li>
+                      <div>
+                        <img src="https://cdn.shupian.cn/sp-pt/wap/images/8uwqkc0j7lk0000.png" alt="">
+                        <span>17738433321</span>
+                      </div>
+                      <div>
+                        <img src="https://cdn.shupian.cn/sp-pt/wap/images/9283ol6moao0000.png" alt="">
+                        <span>17738433321</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <img src="https://cdn.shupian.cn/sp-pt/wap/images/8a8y6ljrlvo0000.png" alt="">
+                        <span>17738433321</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <img src="https://cdn.shupian.cn/sp-pt/wap/images/e90wl9dbyw00000.png" alt="">
+                        <span>17738433321</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="pullstyle">
+                        <img src="https://cdn.shupian.cn/sp-pt/wap/images/5lywjoit1as0000.png" alt="">
+                        <span :class="ownerInfo?'textshow':'textoverflow'">啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊阿斯加德苦辣尽快的结案时间看到卡死了的教案设计空间卡时间段里卡就是卡拉圣诞节快乐奥斯卡来得及案例可视对讲拉数据来看大神</span>
+                      </div>
+                    </li>
+                    <i 
+                      class="spiconfont pullImg" 
+                      :class="ownerInfo?'spiconfont-shangla':'spiconfont-xiala'"
+                      style="font-size:8px;"
+                      @click="ownerInfo = !ownerInfo"
+                    ></i>
+                  </ul>
+                  
+                </div>
                 <div class="detail-content__tag-list">
                   <sp-tag
                     v-for="tag of formatTagList"
@@ -82,6 +134,7 @@
                     class="detail-content__tag-list-item"
                     >{{ tag }}</sp-tag
                   >
+                  
                 </div>
               </div>
               <div class="detail-content__wrap-body">
@@ -93,20 +146,13 @@
                       detailData.serveNum ? `${detailData.serveNum}次` : '--'
                     }}</span>
                   </li>
-                  <li>
-                    <span class="label">好评率：</span>
-                    <span class="content">{{
-                      detailData.goodReputation
-                        ? `${detailData.goodReputation}%`
-                        : '--'
-                    }}</span>
-                  </li>
+                  
                   <li>
                     <span class="label">服务经验：</span>
                     <span class="content">{{ formatServeAgeText }}</span>
                   </li>
                   <li>
-                    <span class="label">成交记录：</span>
+                    <span class="label">成交次数：</span>
                     <span class="content">{{
                       detailData.payNum ? `${detailData.payNum}次` : '--'
                     }}</span>
@@ -119,7 +165,16 @@
                         : '--'
                     }}</span>
                   </li>
+                  <li>
+                    <span class="label">好评率：</span>
+                    <span class="content">{{
+                      detailData.goodReputation
+                        ? `${detailData.goodReputation}%`
+                        : '--'
+                    }}</span>
+                  </li>
                 </ul>
+                
               </div>
               <div v-show="formatShowPoint" class="detail-content__wrap-footer">
                 <div class="detail-content__section-title flex-r-sb flex-r-a-c">
@@ -156,18 +211,50 @@
         </div>
       </div>
       <div class="recommend" style="padding-bottom: 75px">
-        <RecommendList :mch-detail-id="detailData.mchDetailId" />
+        <sp-tabs v-model="active" sticky @scroll="stickyScroll" @click="tabsClick">
+          <sp-tab v-for="(item,index) in tabsData" :key="index" :title="item.label" :name="item.value" >
+            <ul class="list-data">
+              <li v-for="(data,dataIndex) in tabsListData" :key="dataIndex">
+                <div>
+                  <i class="spiconfont spiconfont-huida_mian" style="font-size:24px;color:#FF614E;"></i>
+                  <span>{{data.action}}</span>
+                </div>
+                <div>
+                  <i class="spiconfont spiconfont-wenti_mian" style="font-size:24px;color:#4974F5;"></i>
+                  <p>
+                    <span>{{data.question}}</span>
+                    <img v-if="data.img" :src="data.img" alt="">
+                  </p>
+                  
+                </div>
+                <div>
+                  <i class="empty"></i>
+                  <span>1.8 万点赞 · 5489 评论</span>
+                </div>
+              </li>
+            </ul>
+          </sp-tab>
+        </sp-tabs>
+        <!-- <RecommendList :mch-detail-id="detailData.mchDetailId" /> -->
       </div>
     </div>
     <div class="footer">
       <sp-bottombar safe-area-inset-bottom>
-        <sp-bottombar-button
+        <div class="phone" @click="goShop">
+          <i class="spiconfont spiconfont-xiaodian" style="font-size:24px"></i>
+          <p>小店</p>
+        </div>
+        <div class="phone" @click="handleCall">
+          <i class="spiconfont spiconfont-dianhua" style="font-size:24px"></i>
+          <p>电话</p>
+        </div>
+        <!-- <sp-bottombar-button
           v-if="!hideIM"
           type="primary"
           text="电话联系"
           :disabled="!detailData.phone"
           @click="handleCall"
-        />
+        /> -->
         <sp-bottombar-button
           v-if="!hideIM"
           v-md:p_IMClick
@@ -177,7 +264,7 @@
           :data-crisps_fraction="detailData.point"
           :data-track_code="isInApp ? 'SPP000040' : 'SPW000036'"
           type="info"
-          text="在线联系"
+          text="在线咨询"
           :disabled="!detailData.id"
           @click="handleIM"
         />
@@ -206,11 +293,13 @@ import {
   BottombarButton,
   ShareSheet,
   Toast,
+  Tabs,
+  Tab
 } from '@chipspc/vant-dgg'
 
 import Header from '@/components/common/head/header'
 import SpToast from '@/components/common/spToast/SpToast'
-import RecommendList from '@/components/planner/RecommendList'
+// import RecommendList from '@/components/planner/RecommendList'
 
 import { planner } from '@/api'
 import imHandle from '@/mixins/imHandle'
@@ -228,8 +317,10 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [ShareSheet.name]: ShareSheet,
     Header,
-    RecommendList,
     SpToast,
+    SpTabs:Tabs,
+    SpTab:Tab,
+    // RecommendList,
   },
   mixins: [imHandle],
   data() {
@@ -244,8 +335,53 @@ export default {
       redirectType: this.$route.query.redirectType || 'wap', // 跳转的到 wap里面还是app里面去
       requireCode: this.$route.query.requireCode || '', // 隐号拨打需要
       requireName: this.$route.query.requireName || '', // 隐号拨打需要
+      ownerInfo:false ,// 个人信息展开
+      titleStatus:true, // 粘性布局触发时去掉头部
+      tabsData:[
+        {
+          value:"myQuestion",
+          label:"我的回答"
+        },
+        {
+          value:"myBook",
+          label:"我的文章"
+        },
+        {
+          value:"see",
+          label:"热门资讯"
+        },
+      ],
+      tabsListData:[
+        {
+          action:"二级资质能街多大标的工程?",
+          question:"我们会验证资质的信息，在国家住建局都能差的到的",
+          zan:"18500",
+          pl:"5489"
+        },
+        {
+          action:"请问现在开办一个公司需要准备什么需要准备什么",
+          question:"我们会验证资质的信息，在国家住建局都能查的到的，验证真伪。",
+          zan:"18500",
+          pl:"5489",
+          img:"https://cdn.shupian.cn/sp-pt/wap/images/cfu3wwitnuw0000.png"
+        },
+        {
+          action:"请问现在开办一个公司需要准备什么需要准备什么",
+          question:"我们会验证资质的信息，在国家住建局都能查的到的，验证真伪。",
+          zan:"18500",
+          pl:"5489",
+        },
+        {
+          action:"请问现在开办一个公司需要准备什么需要准备什么",
+          question:"我们会验证资质的信息，在国家住建局都能查的到的，验证真伪。",
+          zan:"18500",
+          pl:"5489",
+        }
+      ],
+      active:"myQuestion" // tab状态
     }
   },
+  
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
@@ -321,6 +457,16 @@ export default {
       setUserInfo: 'user/SET_USER',
       clearUserInfo: 'user/CLEAR_USER',
     }),
+    stickyScroll(e){
+      if(e.isFixed){
+        this.titleStatus = false
+      }else{
+        this.titleStatus = true
+      }
+    },
+    tabsClick(title,name){
+      console.log(this.active)
+    },
     onClickLeft() {
       console.log('nav onClickLeft')
       this.uPGoBack()
@@ -328,6 +474,36 @@ export default {
     onClickRight() {
       console.log('nav onClickRight')
       this.uPShareOption()
+    },
+    async goShop(){
+      // console.log(1)
+      // this.$router.push({
+      //   path:"/planner/plannerShop/index",
+      //   query:{
+      //     a:"1"
+      //   }
+      // })
+      try {
+        const isLogin = await this.judgeLoginMixin()
+        if (isLogin) {
+          this.$router.push({
+            path:"/planner/plannerShop",
+            query:this.$route.query
+          })
+        } else {
+          Toast({
+            message: '请先登录账号',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+        }
+      } catch (err) {
+        Toast({
+          message: '未获取到划师联系方式',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
+      }
     },
     handleCall() {
       // 如果当前页面在app中，则调用原生拨打电话的方法
@@ -686,7 +862,7 @@ export default {
       &__bg {
         padding: 40px;
         position: relative;
-        background: url(https://cdn.shupian.cn/sp-pt/wap/images/fmyco4fucsg0000.png)
+        background: url(https://cdn.shupian.cn/sp-pt/wap/images/cfu3wwitnuw0000.png)
           top center/100% auto no-repeat;
         background-position-y: -286px;
       }
@@ -695,7 +871,7 @@ export default {
       }
       &__wrap {
         // height: 768px;
-        background: linear-gradient(135deg, #f9f1e8, #f9f1e8, #e3d1c3);
+        background-image: linear-gradient(134deg, #F9F1E8 0%, #F9F1E8 50%, #E3D1C3 100%);
         border-radius: 8px;
         padding: 48px 40px;
         box-sizing: border-box;
@@ -704,6 +880,7 @@ export default {
         }
         &-footer {
           margin-top: 14px;
+          
         }
       }
       &__avatar {
@@ -711,6 +888,80 @@ export default {
         height: 120px;
         margin-right: 24px;
         position: relative;
+      }
+      &__label{
+        font-size: 24px;
+        p{
+          margin:23px 0 32px 0;
+          span{
+            display: inline-block;
+            margin:0 12px 0 0 ;
+            padding:13px 16px;
+            background: #EADACD;
+            border-radius: 4px;
+          }
+        }
+        ul{
+          position: relative;
+          box-sizing: border-box;
+          opacity: 0.8;
+          background: #F9F1E8;
+          border-radius: 12px;
+          padding:29.2px 35.6px;
+          .pullImg{
+            position: absolute;
+            right:32px;
+            bottom:38px;
+            &::before{
+              display: block;
+              width: 12px;
+              height: 6.7px;
+            }
+            
+          }
+          li{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin:0 0 28px 0;
+            &:last-of-type{
+              margin: 0;
+            }
+            div{
+              img{
+                width:24px;
+                height: 24px;
+                margin:0 14px 0 0;
+                vertical-align: middle;
+              }
+              span{
+                vertical-align: middle;
+                
+              }
+              
+            }
+            .pullstyle{
+              display: flex;
+              justify-content: space-between;
+              img{
+                margin:0 24px 0 0;
+              }
+              span{
+                transition: all 0.3s;
+                width: 468px;
+              }
+              .textshow{
+                max-height: 200px;
+              }
+              .textoverflow{
+                max-height: 50px;
+                overflow:hidden;
+                text-overflow:ellipsis;
+                white-space:nowrap;
+              }
+            }
+          }
+        }
       }
       &__title {
         content: '';
@@ -838,14 +1089,85 @@ export default {
         width: auto;
       }
     }
+    .recommend{
+      .list-data{
+        li{
+          padding:32px 40px;
+          .empty{
+
+          }
+          .spiconfont{
+            margin:0 16px 0 0;
+          }
+          div{
+            display: flex;
+            justify-content: flex-start;
+            align-items: normal;
+            margin:0 0 24px 0;
+            >p{
+              display: flex;
+              justify-content: space-between;
+              align-items: normal;
+              img{
+                width: 190px;
+                height: 127px;
+                margin: 0 0 0 40px;
+                background: #F0F0F0;
+                border-radius: 12px;
+              }
+            }
+            &:first-of-type{
+              font-family: PingFangSC-Medium;
+              font-size: 36px;
+              color: #1A1A1A;
+            }
+            &:nth-of-type(2){
+              font-family: PingFangSC-Regular;
+              font-size: 30px;
+              color: #555555;
+            }
+            &:last-of-type{
+              margin:0 0 0 55px;
+              font-family: PingFangSC-Regular;
+              font-size: 24px;
+              color: #999999;
+              letter-spacing: 0;
+            }
+          }
+        }
+        
+      }
+      ::v-deep .sp-sticky{
+        background: #fff;
+      }
+      ::v-deep .sp-tabs__wrap{
+        width:80vw
+      }
+      ::v-deep .sp-tab{
+        font-family: PingFangSC-Regular;
+        font-size: 30px;
+        color: #999999;
+      }
+      ::v-deep .sp-tab--active{
+        font-family: PingFangSC-Medium;
+        font-size: 32px;
+        color: #222222;
+      }
+      ::v-deep .sp-tabs__line{
+        width: 28px;
+        height: 6px;
+        background: #4974F5;
+        border-radius: 3px;
+      }
+    }
   }
   .footer {
+    .phone{
+      font-size: 24px;
+      margin:0 44px 0 0;
+    }
     ::v-deep.sp-bottombar {
       z-index: 100;
-      .sp-button--info {
-        background-color: #24ae68;
-        border: 1px solid #24ae68;
-      }
     }
   }
   .item-wrap {
