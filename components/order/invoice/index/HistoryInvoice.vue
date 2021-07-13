@@ -57,10 +57,10 @@ export default {
   data() {
     return {
       InvoiceType: {
-        '027': '增值税电子专用发票',
-        '026': '电子普通发票',
-        '007': '增值税普通发票',
+        '007': '增值税普通发票 ',
+        '026': '增值税电子发票',
         '004': '增值税专用发票',
+        '027': '增值税电子专用发票',
       },
     }
   },
@@ -132,14 +132,13 @@ export default {
       min-width: 0;
       .flex_1 {
         min-width: 0;
-        overflow: hidden;
         margin-right: 40px;
       }
       .name {
         display: inline-block;
         width: 100%;
         font-size: 32px;
-        line-height: 36px;
+
         margin-top: -2px;
         font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;
