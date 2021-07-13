@@ -1,34 +1,36 @@
+
 <template>
-  <footer class="footer-nav">
-    <slot name="header"></slot>
-    <slot>
-      <ul class="footer-nav-ul">
-        <li
-          v-for="(item, index) of list"
-          :key="index"
-          class="footer-nav-ul-li"
-          @click="ClickItem(item, index)"
-        >
-          <span class="item">
-            <my-icon
-              class="my-icon"
-              :name="item.iconName"
-              size="0.32rem"
-              color="#222222"
-            ></my-icon>
-            <span class="name" :style="{ color: '#222222' }">
-              {{ item.name }}
+  <!-- 实例 /my/coupon 脚部 -->
+  <div class="footer" :style="{ height: footerNavHeight + 'px' }">
+    <footer ref="FooterNav" class="footer-nav">
+      <slot name="header"></slot>
+      <slot>
+        <ul class="footer-nav-ul">
+          <li
+            v-for="(item, index) of list"
+            :key="index"
+            class="footer-nav-ul-li"
+            @click="ClickItem(item, index)"
+          >
+            <span class="item">
+              <my-icon
+                class="my-icon"
+                :name="item.iconName"
+                size="0.32rem"
+                color="#222222"
+              ></my-icon>
+              <span class="name" :style="{ color: '#222222' }">
+                {{ item.name }}
+              </span>
             </span>
-          </span>
-        </li>
-      </ul>
-    </slot>
-  </footer>
+          </li>
+        </ul>
+      </slot>
+    </footer>
+  </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 export default {
   name: 'FooterNav',
   props: {
@@ -45,11 +47,27 @@ export default {
       active: 'home',
       DefaultColor: '#222222',
       ActiveColor: '#4974F5',
+
+      footerNavHeight: 117,
     }
   },
 
-  mounted() {},
+  mounted() {
+    this.footerNavHeight = this.$refs.FooterNav.offsetHeight
+    this.$nextTick(() => {
+      this.footerNavHeight = this.$refs.FooterNav.offsetHeight
+    })
+    window.addEventListener('resize', this.resize)
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.resize)
+  },
   methods: {
+    resize() {
+      this.$nextTick(() => {
+        this.footerNavHeight = this.$refs.FooterNav.offsetHeight
+      })
+    },
     ClickItem(item, index) {
       if (item.path) {
         return this.$router.push({
