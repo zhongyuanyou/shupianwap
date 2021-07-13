@@ -236,7 +236,7 @@
       title="优惠"
       help="使用说明"
       :tablist="couponInfo.tablist"
-      calculation="已选中推荐优惠券，可抵扣"
+      calculation="已选中优惠券，可抵扣"
       :datalist="couponInfo.datalist"
       :nolist="couponInfo.nolist"
       @change="conponChange"
@@ -250,7 +250,7 @@
       title="活动卡"
       help="使用说明"
       :tablist="card.tablist"
-      calculation="已选中推荐优惠券，可抵扣"
+      calculation="已选中活动卡，可抵扣"
       :datalist="card.datalist"
       :nolist="card.nolist"
       @change="cardChange"
@@ -304,7 +304,8 @@ export default {
       couponInfo: {
         popupshow: false,
 
-        coupon: '', // 选择的优惠券对象
+        selectedItem: {}, // 选择的对象
+        couponPrice: '', // 选择的优惠券对象
 
         tablist: [
           { name: '可用优惠券', num: '12', is: true },
@@ -315,11 +316,12 @@ export default {
       },
       card: {
         show: false,
+        selectedItem: {}, // 选择的对象
+        cardPrice: '', // 选择的card对象立减金额
         tablist: [
           { name: '可用活动卡', num: '12', is: true },
           { name: '不可用活动卡' },
         ],
-        cardPrice: '', // 选择的card对象立减金额
         datalist: [], // 支持的列表
         nolist: [], // 不支持的列表
       },
@@ -523,9 +525,9 @@ export default {
         }
 
         if (
-          this.conpon &&
-          this.$refs.conpon.checkarr &&
-          this.$refs.conpon.checkarr.marketingCouponVO.id
+          this.couponInfo.couponPrice &&
+          this.couponInfo.selectedItem &&
+          this.couponInfo.selectedItem.marketingCouponVO.id
         ) {
           const arr = {
             code: 'ORDER_DISCOUNT_DISCOUNT',
@@ -537,15 +539,15 @@ export default {
           this.Orderform.discount = new Array(1).fill(arr)
         } else if (
           this.card.cardPrice &&
-          this.$refs.cardPopup.checkarr &&
-          this.$refs.cardPopup.checkarr.cardId
+          this.card.selectedItem &&
+          this.card.selectedItem.id
         ) {
           const arr = {
             code: 'ORDER_DISCOUNT_DISCOUNT',
-            value: this.$refs.cardPopup.checkarr.cardId,
-            couponUseCode: this.$refs.cardPopup.checkarr.couponUseCode,
-            no: this.$refs.cardPopup.checkarr.cardId,
-            couponName: this.$refs.cardPopup.checkarr.cardName,
+            value: this.card.selectedItem.id,
+            couponUseCode: this.card.selectedItem.couponUseCode,
+            no: this.card.selectedItem.id,
+            couponName: this.card.selectedItem.cardName,
           }
           this.Orderform.discount = new Array(1).fill(arr)
         }
@@ -573,7 +575,7 @@ export default {
               overlay: true,
             })
             setTimeout(() => {
-              this.$router.replace({
+              this.$router.push({
                 path: '/pay/payType',
                 query: {
                   cusOrderId: result.cusOrderId,
@@ -706,15 +708,19 @@ export default {
       this.editShow = true
     },
 
-    conponChange(price, num) {
+    conponChange(price, num, item) {
       this.price = price
       this.couponInfo.couponPrice = num
+      this.couponInfo.selectedItem = item || {}
       this.card.cardPrice = ''
+      this.card.selectedItem = {}
     },
-    cardChange(price, num) {
+    cardChange(price, num, item) {
       this.price = price
       this.couponInfo.couponPrice = ''
+      this.couponInfo.selectedItem = {}
       this.card.cardPrice = num
+      this.card.selectedItem = item || {}
     },
     openPopupfn() {
       this.couponInfo.popupshow = true
