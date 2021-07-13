@@ -68,11 +68,9 @@
                       }}</span>
                       {{ item.cardName }}
                     </h1>
-                    <p v-if="item.useLimit === 1">全品类通用</p>
-                    <p v-else-if="item.useLimit === 2">
-                      限定“部分类别产品”使用
-                    </p>
-                    <p v-else>限定“指定产品”使用</p>
+                    <!-- <p v-if="item.useLimit === 1">全品类通用</p> -->
+                    <p v-if="item.useLimit === 2">仅限指定品类使用</p>
+                    <p v-else-if="item.useLimit === 3">仅限指定商品使用</p>
                     <p class="date">
                       {{ formatTime(item.validateDateStart) }}-{{
                         formatTime(item.validateDateEnd)
