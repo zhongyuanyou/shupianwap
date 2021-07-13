@@ -90,12 +90,14 @@
             color="#999"
             @click="showPullPop = false"
           ></sp-icon>
-          <sp-search
-            v-model="searchName"
-            placeholder="请输入搜索关键词"
-            @input="onSearch"
-            @cancel="onCancel"
-          />
+          <form action="/">
+            <sp-search
+              v-model="searchName"
+              placeholder="请输入搜索关键词"
+              @input="onSearch"
+              @cancel="onCancel"
+            />
+          </form>
         </div>
         <div class="bank-list">
           <ul v-if="list.length > 0" class="bank-ul">

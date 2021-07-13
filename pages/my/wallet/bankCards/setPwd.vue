@@ -87,6 +87,7 @@ export default {
         this.$router.push('/my/wallet/bankCards/untieSuccess')
       } else {
         this.valid = true
+        this.password = ''
         // this.$xToast.warning(res.data.error)
       }
     },

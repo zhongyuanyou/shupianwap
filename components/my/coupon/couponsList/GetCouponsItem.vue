@@ -39,7 +39,7 @@
           <div class="item-rt-content-left">
             <div ref="textpro" class="content">
               {{ getuseTypeName(item.useType) }}
-              <!-- item.useType === 1? '全品类通用': item.useType === 2? '限定部分类别产品使用': '置顶产品使用' -->
+              <!-- item.useType === 1? '全品类通用': item.useType === 2? '限定部分类别产品使用': '指定产品使用' -->
             </div>
 
             <div class="surplus warn">可使用{{ item.availableTimes }}次</div>
@@ -123,7 +123,7 @@ export default {
           useTypeName = '限定部分类别产品使用'
           break
         default:
-          useTypeName = '置顶产品使用'
+          useTypeName = '指定产品使用'
       }
       return useTypeName
     },
