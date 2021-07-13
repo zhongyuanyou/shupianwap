@@ -126,7 +126,10 @@
         重新申请
       </sp-button>
       <sp-button
-        v-if="formData.invoiceStatus == 'INVOICE_STATUS_SUCCESS'"
+        v-if="
+          formData.invoiceStatus == 'INVOICE_STATUS_SUCCESS' &&
+          formData.invoiceType === '026'
+        "
         size="normal"
         type="default"
         plain
@@ -206,10 +209,10 @@ export default {
 
       // 发票类型
       InvoiceType: {
-        '027': '增值税电子专用发票',
-        '026': '电子普通发票 ',
         '007': '增值税普通发票 ',
+        '026': '增值税电子发票',
         '004': '增值税专用发票',
+        '027': '增值税电子专用发票',
       },
       InvoiceContent: {
         GOODS_DETAILS: '商品明细 ',
