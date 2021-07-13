@@ -206,7 +206,6 @@ export default {
     },
     // 提现
     withdraw() {
-      const am = /(^[1-9]{1}[0-9]*$)|(^[0-9]*\.[0-9]{2}$)/
       if (!this.selectCardInfo.bankName) {
         this.$xToast.warning('请选择到账银行卡')
         return false
@@ -215,9 +214,6 @@ export default {
         return false
       } else if (Number(this.amount) > Number(this.accBalanceData.balance)) {
         this.$xToast.warning('账户余额不足')
-        return false
-      } else if (!am.test(this.amount)) {
-        this.$xToast.warning('金额信息或格式错误')
         return false
       }
       // else if (this.amount < 10) {
