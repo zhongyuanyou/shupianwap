@@ -139,7 +139,6 @@
                   </div>
                 </div>
               </div>
-              <p>订单金额不符合使用条件</p>
             </div>
           </div>
           <div v-else class="none">
@@ -252,7 +251,7 @@ export default {
 
   mounted() {},
   methods: {
-     getDiscount(count) {
+    getDiscount(count) {
       return Number(count) / 100
     },
     sum() {
@@ -535,7 +534,7 @@ export default {
     .listbox {
       height: 100%;
       > .nolist {
-        height: 271px;
+        height: 220px;
         margin-top: 24px;
         background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png)
           no-repeat;
