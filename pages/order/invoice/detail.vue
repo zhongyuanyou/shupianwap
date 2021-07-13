@@ -474,7 +474,8 @@ export default {
   background: #f5f5f5;
   min-height: 100vh;
   font-size: 0;
-
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
   .status_container {
     margin-top: -0.88rem;
     text-align: center;
@@ -520,7 +521,7 @@ export default {
     .type_list {
       font-size: 32px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       color: #000000;
       line-height: 32px;
       display: flex;
@@ -604,8 +605,8 @@ export default {
   }
   .card.footer {
     text-align: right;
-    padding: 24px;
-
+    padding: 24px 40px;
+    margin-bottom: 0px;
     ::v-deep.sp-button {
       margin-left: 20px;
       font-family: PingFangSC-Regular;
@@ -668,6 +669,7 @@ export default {
   .sp-dialog__content .email_input {
     border: 1px solid #dddddd;
     border-radius: 8px;
+    overflow: hidden;
 
     input {
       font-family: PingFangSC-Regular;
