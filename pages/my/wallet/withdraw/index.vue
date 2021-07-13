@@ -259,7 +259,6 @@ export default {
   }
   .tips {
     display: flex;
-    height: 112px;
     background: #fff3e9;
     padding: 17px 30px;
     align-items: flex-start;
@@ -324,6 +323,10 @@ export default {
           font-family: PingFangSC-Medium;
           font-size: 52px;
           color: #222222;
+          font-weight: bold;
+          position: relative;
+          top: 18px;
+          font-weight: bold;
         }
         ::v-deep .sp-cell {
           font-size: 50px;

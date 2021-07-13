@@ -330,7 +330,6 @@ export default {
     }
   }
   .my-wallet {
-    height: 602px;
     background: #ffffff;
     border-radius: 24px;
     position: relative;
@@ -401,8 +400,8 @@ export default {
     }
     .money-desc {
       font-size: 24px;
-      margin-top: 40px;
       color: #4974f5;
+      padding: 40px 0;
       span {
         margin-left: 8px;
       }
