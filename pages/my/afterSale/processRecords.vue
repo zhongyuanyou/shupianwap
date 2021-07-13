@@ -84,6 +84,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+::v-deep .sp-step--vertical:not(:last-child)::after{
+      border-bottom-width: 0px;
+}
 ::v-deep .sp-icon-checked {
   width: 16px !important;
   height: 16px !important;

@@ -150,6 +150,7 @@ export default {
       this.saleDataList = []
       this.finished = false
       this.loading = true
+      window.scrollTo(0, 0)
       this.getAfterSaleList()
     },
   },

@@ -17,11 +17,11 @@
       </div>
       <div class="btns">
         <button
-          @click="$router.replace(`/my/afterSale/detail?id=${$route.query.id}`)"
+          @click="$router.push(`/my/afterSale/detail?id=${$route.query.id}`)"
         >
           查看售后
         </button>
-        <button @click="$router.replace('/order')">返回订单</button>
+        <button @click="$router.push('/order')">返回订单</button>
       </div>
       <div class="line"></div>
       <div class="desc">

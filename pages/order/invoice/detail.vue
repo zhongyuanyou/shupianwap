@@ -340,33 +340,6 @@ export default {
             this.sendEmail = res.receiverEmail
           }
           this.formData = res || {}
-          // {
-          //   applySource: "INVOICE_APPLY_SOURCE_CUSTOMER",
-          //   applyTime: "2021-06-28 14:21:24",
-          //   applyUserId: "767579755195165966",,
-          //   applyUserName: "唐代兵",
-          //   bankAccount: "",
-          //   bankOfDeposit: "",
-          //   // goods: [,…],
-          //   id: "1251978880678714646",
-          //   invoiceApplyNo: "FP210628005002",
-          //   invoiceContent: "商品明细",
-          //   invoiceHeader: "INVOICE_HEADER_PERSONAL",
-          //   invoiceHeaderName: "h1",
-          //   invoiceMoney: "2",
-          //   invoiceStatus: "INVOICE_STATUS_PROCESS",
-          //   invoiceType: "027",
-          //   isValid: 1,
-          //   orderId: "8083886946797813760",
-          //   orderNo: "D21052164188",
-          //   receiverEmail: "h@adtk.cn",
-          //   receiverPhone: "17608390654",
-          //   registerAddress: "",
-          //   registerTel: "",
-          //   signStoreId: "607997736314104054",
-          //   signStoreName: "案加测试一公司",
-          //   taxpayerIdentifNum: "",
-          // }
         })
         .catch((error) => {
           this.loading = false
