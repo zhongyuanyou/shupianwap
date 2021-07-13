@@ -185,7 +185,11 @@
         > -->
         <!-- 未支付订单可取消订单 根据订单状态判断-->
         <sp-button
-          v-if="checkAfterSaleStatus() === 1"
+          v-if="
+            checkAfterSaleStatus() === 1 &&
+            orderData.cusOrderStatusNo !== 'ORDER_CUS_STATUS_UNPAID' &&
+            orderData.cusOrderStatusNo !== 'ORDER_CUS_STATUS_CANCELLED'
+          "
           class="btn-look"
           @click="handleClickItem(7)"
           >退款/售后</sp-button
