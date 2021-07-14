@@ -3,7 +3,14 @@
     <HeaderSlot>
       <Header class="my-header" title="编辑发票抬头"></Header>
     </HeaderSlot>
-    <div class="card">
+    <sp-skeleton
+      title
+      :row="6"
+      style="margin-top: 30px"
+      :loading="skeletonloading"
+    />
+
+    <div v-if="!skeletonloading" class="card">
       <div class="invoice_info">
         <sp-cell-group>
           <sp-cell
@@ -90,7 +97,10 @@
         </sp-cell-group>
       </div>
     </div>
-    <div v-if="formData.type === 'ORDINARY'" class="set_default">
+    <div
+      v-if="formData.type === 'ORDINARY' && !skeletonloading"
+      class="set_default"
+    >
       <sp-field label="设为默认" center>
         <template #input>
           <div class="placeholder">每次开票时会默认填写抬头信息</div>
@@ -109,7 +119,11 @@
 
     <div class="paddingBottom160"></div>
 
-    <sp-bottombar safe-area-inset-bottom class="submit_btns">
+    <sp-bottombar
+      v-if="!skeletonloading"
+      safe-area-inset-bottom
+      class="submit_btns"
+    >
       <sp-bottombar-button
         type="default"
         text="删除"
@@ -136,6 +150,7 @@ import {
   CellGroup,
   Switch,
   Dialog,
+  Skeleton,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 
@@ -163,10 +178,12 @@ export default {
     [CellGroup.name]: CellGroup,
     [Cell.name]: Cell,
     [Switch.name]: Switch,
+    [Skeleton.name]: Skeleton,
   },
   data() {
     return {
-      loading: false, // 加载效果状态
+      skeletonloading: true, // 骨架屏loading
+      loading: true, // 加载效果状态
       // 发票类型
       InvoiceType: {
         ORDINARY: '普通发票',
@@ -226,6 +243,9 @@ export default {
       }
       this.oldFormData = { ...this.formData, defaultHead: info.defaultHead }
       this.defaultHead = info.defaultHead // 默认抬头(0 非默认 1 默认 仅针对普票有效)
+
+      this.loading = false
+      this.skeletonloading = false
     },
     // 解密电话
     decryptionPhone(phone) {
@@ -256,8 +276,6 @@ export default {
           .then((res) => {
             this.finished = true
 
-            this.loading = false
-
             const list = (res && res.records) || []
             const head = list.find((item) => {
               return item.id === id
@@ -265,6 +283,8 @@ export default {
             if (head) {
               return this.setFormData(head)
             }
+            this.loading = false
+            this.skeletonloading = false
             this.$xToast.error('没有找到抬头信息')
           })
           .catch((error) => {
