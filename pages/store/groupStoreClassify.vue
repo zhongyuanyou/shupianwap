@@ -129,6 +129,11 @@ export default {
       ],
     }
   },
+  mounted() {
+    if (this.$route.query.active === 0 || this.$route.query.active) {
+      this.active = Number(this.$route.query.active)
+    }
+  },
   methods: {
     changeTab(index) {
       this.active = index

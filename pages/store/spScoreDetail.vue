@@ -1,13 +1,13 @@
 <template>
     <div class="spScoreDetail">
-        <div class="head">
+        <div :class="floatview?'head':'headWhite'">
             <Header title="薯片分">
                 <template #left>
                     <sp-icon
                         class-prefix="spiconfont"
                         name="nav_ic_back"
                         size="0.4rem"
-                        color="#fff"
+                        :color="floatview?'#fff':'#000'"
                         style="margin-left: 0.32rem"
                         @click.native="onClickLeft"
                     />
@@ -15,7 +15,7 @@
                         class-prefix="spiconfont"
                         name="guanbi"
                         size="0.4rem"
-                        color="#fff"
+                        :color="floatview?'#fff':'#000'"
                         style="margin-left: 0.36rem"
                         @click.native="onClickLeft"
                     />
@@ -26,7 +26,7 @@
                         class="head__icon-share"
                         name="fenxiang"
                         size="0.4rem"
-                        color="#fff"
+                        :color="floatview?'#fff':'#000'"
                         style="margin-right: 0.4rem"
                         @click.native="onClickRight"
                     />
@@ -94,20 +94,6 @@
     </div>
 </template>
 <script>
-import * as echarts from 'echarts/core';
-// 引入柱状图图表，图表后缀都为 Chart
-import {
-    RadarChart
-} from 'echarts/charts';
-// 引入提示框，标题，直角坐标系组件，组件后缀都为 Component
-import {
-    TitleComponent,
-    LegendComponent
-} from 'echarts/components';
- // 引入 Canvas 渲染器，注意引入 CanvasRenderer 或者 SVGRenderer 是必须的一步
-import {
-    CanvasRenderer
-} from 'echarts/renderers';
 import { 
     Bottombar,
     BottombarButton,
@@ -123,26 +109,19 @@ export default {
     },
     data(){
         return{
+            floatview:true,
             EchartOptions:{
                 color: {
-                    type: 'linear',
-                    x: 0,
-                    y: 0,
-                    x2: 0,
-                    y2: 0,
+                    type: 'radial',
+                    x: 0.5,
+                    y: 0.5,
+                    r: 0.5,
                     colorStops: [{
-                        offset: 0, color: 'rgba(73, 116, 245, 0.65)' // 0% 处的颜色
+                        offset: 0, color: 'rgba(73, 116, 245, 1)' // 0% 处的颜色
                     }, {
-                        offset: 1, color: 'rgba(73, 116, 245, 0.65)' // 100% 处的颜色
+                        offset: 1, color: 'rgba(73, 116, 245, 1)' // 100% 处的颜色
                     }],
-                    global: false // 缺省为 false
-                },
-                toolbox:{
-                    feature:{
-                        dataView:{
-                            backgroundColor:"#000"
-                        }
-                    }
+                    globalCoord: false // 缺省为 false
                 },
                 textStyle:{
                     fontFamily: "PingFangSC-Medium",
@@ -159,6 +138,22 @@ export default {
                         { name: '质量评价', max: 100},
                         { name: '平台合作', max: 100}
                     ],
+                    splitArea: {
+                        areaStyle: {
+                            color: ['rgba(148, 173, 247, 0.5)'],
+                        }
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: 'rgba(73, 116, 245, 0.2)',
+                            type:"dashed",
+                        }
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: 'rgba(148, 173, 247, 0)'
+                        }
+                    }
                     
                 },
                 series: [
@@ -169,21 +164,11 @@ export default {
                             {
                                 value: [50, 60, 70, 80, 90, 100],
                                 name: '薯片分',
-                                areaStyle: {
-                                    color: new echarts.graphic.RadialGradient(0.1, 0.9, 1, [
-                                        {
-                                            color: 'rgba(73, 116, 245, 1)',
-                                            offset: 0
-                                        },
-                                        {
-                                            color: 'rgba(73, 116, 245, 1)',
-                                            offset: 0.5
-                                        },
-                                        {
-                                            color: 'rgba(148, 173, 247, 1)',
-                                            offset: 1
-                                        }
-                                    ])
+                                areaStyle: { 
+                                    color: [
+                                        'rgba(73, 116, 245, 1)',
+                                        'rgba(117, 151, 255, 1)'
+                                    ]
                                 },
                                 lineStyle: {
                                     width:2,
@@ -196,24 +181,43 @@ export default {
                         ]
                     }
                 ]
-            }
+            },
+            
+        }
+    },
+    created() {
+        if (process && process.client) {
+            // notice:
+            // store中的用户信息默认来自cookie，会从cookie中获取；因为在wap中， userInfo中的token与userId等 保存在cookie中，
+            // 但是在app中登录等，登录信息cookie中的没有更新，导致直接从store中获取到的信息无效
+            // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
+            
         }
     },
     mounted(){
-        this.EchartInit()
+        window.addEventListener('scroll',this.handleScroll)
+        this.$nextTick(()=>{
+            this.EchartInit()
+        })
     },
     methods:{
         EchartInit(){
-             // 注册必须的组件
-            echarts.use(
-                [TitleComponent, LegendComponent, RadarChart, CanvasRenderer]
-            );
             // 接下来的使用就跟之前一样，初始化图表，设置配置项
             const main = document.getElementById('main')
-            
-            const myChart = echarts.init(main);
+            const myChart = this.$echarts.init(main);
             myChart.setOption(this.EchartOptions);
-        }
+        },
+        handleScroll(){
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop // 滚动条偏移量
+            if(scrollTop > 180){
+                this.floatview = false
+            }else{
+                this.floatview = true
+            }
+        },
+        onClickLeft() {
+            this.$router.back(-1)
+        },
     },
     
 
@@ -228,6 +232,15 @@ export default {
             color:#fff;
             .title{
               color:#fff;  
+            }
+        }
+    }
+    .headWhite{
+        ::v-deep .my-head{
+            background:#fff;
+            color:#000;
+            .title{
+              color:#000;  
             }
         }
     }
@@ -301,7 +314,7 @@ export default {
                 right:0;
                 margin:0 auto;
                 width: 100%;
-                height: 400px;
+                height: 410px;
             }
             p{
                 position: absolute;

@@ -10281,6 +10281,11 @@ native-request@^1.0.5:
   resolved "https://registry.npm.taobao.org/native-request/download/native-request-1.0.8.tgz#8f66bf606e0f7ea27c0e5995eb2f5d03e33ae6fb"
   integrity sha1-j2a/YG4PfqJ8DlmV6y9dA+M65vs=
 
+nativeshare@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.nlark.com/nativeshare/download/nativeshare-2.1.5.tgz#739abc9f361defb8d3bbc1f06b9a03f9477de77f"
+  integrity sha1-c5q8nzYd77jTu8Hwa5oD+Ud9538=
+
 natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.nlark.com/natural-compare/download/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
