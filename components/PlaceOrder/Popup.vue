@@ -246,7 +246,8 @@ export default {
           const discount =
             parseFloat(this.checkarr.marketingCouponVO.discount) / 100
 
-          return (((10 - discount) / 10) * price).toFixed('2')
+          const discountNum = ((10 - discount) / 10) * price
+          return Math.ceil(discountNum * 100) / 100
         }
       }
       return 0

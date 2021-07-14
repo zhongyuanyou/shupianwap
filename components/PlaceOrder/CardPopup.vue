@@ -254,7 +254,10 @@ export default {
               ? this.$parent.order.skuTotalPrice
               : this.$parent.order.salesPrice
 
-          return (((10 - this.checkarr.discount) / 10) * price).toFixed('2')
+          const discount = parseFloat(this.checkarr.discount) / 10
+          const discountNum = ((10 - discount) / 10) * price
+
+          return Math.ceil(discountNum * 100) / 100
         }
       }
       return 0
