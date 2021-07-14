@@ -21,7 +21,10 @@
       </div>
 
       <div class="list_content">
-        <div class="san"></div>
+        <span class="san_jiao"></span>
+        <div class="list_content_text">
+          案例简介：山东省潍坊市中级人民法院于2009年10月14日以（2009）潍刑一初字第35号刑事判决，认定被告人王志才犯故意杀人罪，判处死刑，剥夺死刑，剥夺政治权利
+        </div>
       </div>
     </div>
   </div>
@@ -71,6 +74,7 @@ export default {
         padding: 0 35px 0 24px;
         .name {
           font-family: PingFangSC-Medium;
+          font-weight: bold;
           font-size: 32px;
           color: #222222;
           line-height: 44px;
@@ -91,6 +95,7 @@ export default {
         }
         .unit {
           font-family: PingFangSC-Medium;
+          font-weight: bold;
           font-size: 24px;
           color: #4974f5;
           letter-spacing: 0;
@@ -100,15 +105,30 @@ export default {
     }
 
     .list_content {
-      height: 167.4px;
-      background: #f8f8f8;
+      position: relative;
 
-      .san {
+      padding: 20px;
+      background: #f8f8f8;
+      margin-top: 30px;
+
+      .san_jiao {
+        position: absolute;
+        top: -16px;
+        left: 79px;
+
         width: 0;
         height: 0;
-        border-left: 24px solid transparent;
-        border-right: 24px solid transparent;
-        border-bottom: 30px solid red;
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+        border-bottom: 16px solid #f8f8f8;
+      }
+      .list_content_text {
+        font-family: PingFangSC-Regular;
+        font-size: 24px;
+        color: #555555;
+        letter-spacing: 0;
+        line-height: 38px;
+        .textOverflow(3);
       }
     }
   }
