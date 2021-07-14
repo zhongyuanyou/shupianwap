@@ -85,9 +85,8 @@
                 </div>
                 <div class="detail-content__label">
                   <p>
-                    <span>公司过户</span>
-                    <span>商标过户</span>
-                    <span>股权变更</span>
+                    <span v-for="tag of formatTagList"
+                    :key="tag">{{ tag }}</span>
                   </p>
                   <ul>
                     <li>
@@ -127,7 +126,7 @@
                   </ul>
                   
                 </div>
-                <div class="detail-content__tag-list">
+                <!-- <div class="detail-content__tag-list">
                   <sp-tag
                     v-for="tag of formatTagList"
                     :key="tag"
@@ -135,7 +134,7 @@
                     >{{ tag }}</sp-tag
                   >
                   
-                </div>
+                </div> -->
               </div>
               <div class="detail-content__wrap-body">
                 <div class="detail-content__section-title">个人信息</div>
@@ -487,7 +486,7 @@ export default {
         const isLogin = await this.judgeLoginMixin()
         if (isLogin) {
           this.$router.push({
-            path:"/store/plannerShop",
+            path:"/store/plannerStore",
             query:this.$route.query
           })
         } else {
@@ -1165,6 +1164,7 @@ export default {
     .phone{
       font-size: 24px;
       margin:0 44px 0 0;
+      text-align: center;
     }
     ::v-deep.sp-bottombar {
       z-index: 100;
