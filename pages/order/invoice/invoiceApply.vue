@@ -75,7 +75,7 @@
               <sp-field
                 v-model="formData.registerAddress"
                 label="注册地址"
-                maxlength="120"
+                maxlength="80"
                 placeholder="请填写注册地址"
               />
               <sp-field
@@ -87,13 +87,13 @@
               <sp-field
                 v-model="formData.bankOfDeposit"
                 label="开户银行"
-                maxlength="50"
+                maxlength="45"
                 placeholder="请填写开户银行"
               />
               <sp-field
                 v-model="formData.bankAccount"
                 label="银行账号"
-                maxlength="50"
+                maxlength="45"
                 placeholder="请填写银行账号"
               />
             </div>
@@ -200,7 +200,7 @@ import { invoiceApi } from '@/api/index.js'
 import contractApi from '@/api/contract'
 const InvoiceType = {
   '007': '增值税普通发票 ',
-  '026': '增值税电子发票',
+  '026': '增值税电子普通发票',
   '004': '增值税专用发票',
   '027': '增值税电子专用发票',
 }
@@ -587,9 +587,9 @@ export default {
     font-size: 30px;
     color: #222222;
   }
-  .my-header {
-    border-bottom: 1px solid #f5f5f5;
-  }
+  // .my-header {
+  //   border-bottom: 1px solid #f5f5f5;
+  // }
   .card {
     background: #fff;
     margin-bottom: 20px;
