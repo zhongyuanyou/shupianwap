@@ -594,6 +594,11 @@ export default {
     padding-bottom: env(safe-area-inset-top);
   }
   .group-sticky {
+    position: fixed;
+    left: 0;
+    top:88px;
+    z-index: 99;
+    background: #fff;
     .group-tile {
       margin-top: 40px;
     }
