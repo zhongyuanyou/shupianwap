@@ -1,7 +1,7 @@
 <template>
   <div class="m-store group-store">
     <Header title="团队店铺" />
-    <div id="top" class="group-swiper">
+    <div class="group-swiper">
       <sp-swipe
         class="my-swiper"
         :autoplay="autoplay"
@@ -46,8 +46,8 @@
       </div>
       <my-icon name="you" size="0.4rem" color="#BBBBBB"></my-icon>
     </div>
-    <div id="server" class="group-server">
-      <div class="tile">团队服务</div>
+    <div class="group-server">
+      <div ref="sticky" class="tile">团队服务</div>
       <div class="server-block">
         <div class="server-block-line1">
           <div class="item">
@@ -129,7 +129,7 @@
         </div>
       </div>
     </div>
-    <div class="more-recommend">更多优惠</div>
+    <div class="more-recommend" @click="toClassifyPage">更多优惠</div>
     <div class="recommend-planner-wrapper">
       <div class="main-tile">推荐规划师</div>
       <div class="recommend-content">
@@ -174,41 +174,43 @@
         </div>
       </div>
     </div>
-    <div class="group-sticky">
-      <div class="group-tile">
-        <sp-image
-          src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-          fit="cover"
-          round
-          height="1.2rem"
-          width="1.2rem"
-          class="content-left"
-        ></sp-image>
-        <div class="content-right">
-          <div class="tile">春天花花团队</div>
-          <div class="desc">
-            团队口号：爱拼才会赢，追求客户的满意，是你我的责任
+    <transition name="fade">
+      <div v-if="stickyFlag" class="group-sticky">
+        <div class="group-tile">
+          <sp-image
+            src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+            fit="cover"
+            round
+            height="1.2rem"
+            width="1.2rem"
+            class="content-left"
+          ></sp-image>
+          <div class="content-right">
+            <div class="tile">春天花花团队</div>
+            <div class="desc">
+              团队口号：爱拼才会赢，追求客户的满意，是你我的责任
+            </div>
           </div>
         </div>
-      </div>
-      <div class="tabs">
-        <div
-          class="tab"
-          :class="[activeMain === 0 ? 'z-active' : '']"
-          @click="changeMainTab(0)"
-        >
-          主页
+        <div class="tabs">
+          <div
+            class="tab"
+            :class="[activeMain === 0 ? 'z-active' : '']"
+            @click="changeMainTab(0)"
+          >
+            主页
+          </div>
+          <div
+            class="tab"
+            :class="[activeMain === 1 ? 'z-active' : '']"
+            @click="changeMainTab(1)"
+          >
+            热门推荐
+          </div>
         </div>
-        <div
-          class="tab"
-          :class="[activeMain === 1 ? 'z-active' : '']"
-          @click="changeMainTab(1)"
-        >
-          热门推荐
-        </div>
+        <div class="line"></div>
       </div>
-      <div class="line"></div>
-    </div>
+    </transition>
     <div class="placeholder"></div>
   </div>
 </template>
@@ -231,6 +233,7 @@ export default {
       autoplay: 5000,
       active: 0,
       activeMain: 0,
+      stickyFlag: false,
       banners: [
         'https://cdn.shupian.cn/sp/cms/f6n6b9wvvmo0000.jpg',
         'https://cdn.shupian.cn/sp/cms/f6n6b9wvvmo0000.jpg',
@@ -258,13 +261,44 @@ export default {
     if (this.$route.query.active === 0 || this.$route.query.active) {
       this.active = Number(this.$route.query.active)
     }
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
     changeTab(index) {
       this.active = index
     },
     changeMainTab(index) {
-      this.activeMain = index
+      if (index === this.activeMain) {
+        return
+      }
+      if (index === 1) {
+        this.$router.push({
+          path: '/store/groupStoreClassify',
+          query: {
+            active: this.active,
+          },
+        })
+      }
+    },
+    toClassifyPage() {
+      this.$router.push({
+        path: '/store/groupStoreClassify',
+        query: {
+          active: this.active,
+        },
+      })
+    },
+    handleScroll() {
+      // 获得团队服务距离顶部高度
+      const top = this.$refs.sticky.getBoundingClientRect().top
+      if (top < 20) {
+        this.stickyFlag = true
+      } else {
+        this.stickyFlag = false
+      }
     },
   },
 }
@@ -644,6 +678,14 @@ export default {
       background: #f4f4f4;
       height: 1px;
     }
+  }
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+  .fade-enter,
+  .fade-leave-active {
+    opacity: 0;
   }
 }
 </style>
