@@ -135,6 +135,11 @@ export default {
     text-align: center;
   }
 }
+::v-deep .sp-step__title--active {
+  h3 {
+    color: #4974f5;
+  }
+}
 .refund-record {
   min-height: 100vh;
   background: #f8f8f8;
@@ -155,7 +160,7 @@ export default {
         align-items: center;
       }
       .desc {
-        margin-left: 28px;
+        // margin-left: 28px;
         h3 {
           font-size: 34px;
           color: #222222;
@@ -165,7 +170,7 @@ export default {
         p {
           font-family: PingFangSC-Regular;
           font-size: 24px;
-          color: #555555;
+          color: #999;
           line-height: 34px;
           margin-top: 17px;
         }
@@ -174,6 +179,7 @@ export default {
         font-size: 36px;
         color: #ec5330;
         margin-left: auto;
+        font-weight: bold;
         span {
           font-size: 24px !important;
         }

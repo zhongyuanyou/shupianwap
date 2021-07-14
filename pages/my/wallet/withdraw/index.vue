@@ -9,7 +9,7 @@
         >
       </template>
     </Header>
-    <div v-if="!selectCardInfo.bankName" class="tips">
+    <div class="tips">
       <sp-icon
         class-prefix="spiconfont"
         size="0.30rem"
@@ -23,7 +23,7 @@
         <div class="select-row">
           <div class="title">选择账户/银行卡</div>
           <div class="select-val" @click="openSelectBankPop">
-            <span>{{ selectCardInfo.bankName || '请选择' }}</span>
+            <span>去选择</span>
             <sp-icon
               class-prefix="spiconfont"
               size="0.25rem"
@@ -52,7 +52,7 @@
             v-model="amount"
             type="number"
             maxlength="9"
-            oninput="if(value.length>9)value=value.slice(0,9)"
+            @input="onInput"
           />
           <!-- <sp-field v-model="amount" type="number" maxlength="9" /> -->
         </div>
@@ -120,7 +120,44 @@ export default {
     this.getAccountBalance()
     this.getCardList()
   },
+  // watch: {
+  //   amount(newV, oldV) {
+  //     // console.log(typeof newV.substring(0, 2))
+  //     if (newV.substring(0, 2) === '00') {
+  //       newV = oldV
+  //       console.log(newV)
+  //       return false
+  //       // value = value.substring(0, 1)
+  //     }
+  //   },
+  // },
   methods: {
+    onInput(e) {
+      if (e.target.value.indexOf('.') > -1) {
+        const arr = e.target.value.split('.')
+        if (!arr[0]) {
+          arr[0] = '0'
+        }
+        this.$nextTick(() => {
+          this.amount = (arr[0] + '.' + arr[1].slice(0, 2)).slice(0, 10)
+        })
+      } else {
+        if (e.target.value.length > 1 && e.target.value[0] === '0') {
+          this.$nextTick(() => {
+            this.amount = ''
+            e.target.value = ''
+          })
+        }
+        this.$nextTick(() => {
+          this.amount = this.amount.slice(0, 9)
+        })
+      }
+      // this.amount = e.target.value.replace(/[^\d.]/g, '')
+      // this.amount = e.target.value.replace(/\.{2,}/g, '.')
+      // this.amount = e.target.value.replace(/^\./g, '')
+      // // 小数点后面保留2位
+      // this.amount = e.target.value.replace(/^(\/-)*(\d+)\.(\d\d).*$/, '$1$2.$3')
+    },
     // 返回到提现页面
     backHandle() {
       this.$router.push('/my/wallet')
@@ -169,7 +206,6 @@ export default {
     },
     // 提现
     withdraw() {
-      const am = /(^[1-9]{1}[0-9]*$)|(^[0-9]*\.[0-9]{2}$)/
       if (!this.selectCardInfo.bankName) {
         this.$xToast.warning('请选择到账银行卡')
         return false
@@ -178,9 +214,6 @@ export default {
         return false
       } else if (Number(this.amount) > Number(this.accBalanceData.balance)) {
         this.$xToast.warning('账户余额不足')
-        return false
-      } else if (!am.test(this.amount)) {
-        this.$xToast.warning('金额信息或格式错误')
         return false
       }
       // else if (this.amount < 10) {
@@ -202,7 +235,7 @@ export default {
         relationId: this.userInfo.id,
         relationName: this.userInfo.fullName,
         attach: '', // 回调会携带此参数
-        sysCode: 'chips-app',
+        sysCode: 'spc-wap',
         bankName: this.selectCardInfo.bankName,
         desensitizationCardNumber:
           this.selectCardInfo.desensitizationCardNumber,
@@ -223,6 +256,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@font-face {
+  font-family: TTFont;
+  src: url('@/assets/fonts/bebas/bebas.TTF');
+  font-weight: bold;
+}
 .withdraw {
   min-height: 100vh;
   background: #f4f4f4;
@@ -235,13 +273,12 @@ export default {
   }
   .tips {
     display: flex;
-    height: 112px;
     background: #fff3e9;
     padding: 17px 30px;
     align-items: flex-start;
     i {
       position: relative;
-      top: 8px;
+      top: 5px;
     }
     p {
       font-family: PingFangSC-Regular;
@@ -291,14 +328,19 @@ export default {
         align-items: center;
         input {
           width: 100%;
-          height: 76px;
           border: none;
-          font-size: 50px;
+          font-size: 82px;
+          font-weight: bold;
+          font-family: TTFont;
         }
         span {
           font-family: PingFangSC-Medium;
           font-size: 52px;
           color: #222222;
+          font-weight: bold;
+          position: relative;
+          top: 18px;
+          font-weight: bold;
         }
         ::v-deep .sp-cell {
           font-size: 50px;

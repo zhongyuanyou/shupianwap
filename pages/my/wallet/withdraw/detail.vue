@@ -4,7 +4,7 @@
     <div class="detail-info">
       <div class="count">
         <span>{{ withdrawDetails.orderTypeName }}金额</span>
-        <strong>￥{{ withdrawDetails.amount }}</strong>
+        <strong>{{ withdrawDetails.amount }}</strong>
       </div>
       <div class="field-list">
         <div class="row">
@@ -41,9 +41,12 @@
             <span v-if="withdrawDetails.status === 'SYS_TRADE_ORDER_STATUS_2'"
               >已处理</span
             >
-            <span v-if="withdrawDetails.status === 'SYS_TRADE_ORDER_STATUS_1'"
+
+            <span
+              v-else-if="withdrawDetails.status === 'SYS_TRADE_ORDER_STATUS_1'"
               >提现中</span
             >
+            <span v-else>提现失败</span>
             <span v-if="withdrawDetails.successTime"
               >({{ withdrawDetails.successTime }})</span
             >
@@ -83,6 +86,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@font-face {
+  font-family: TTFont;
+  src: url('@/assets/fonts/bebas/bebas.TTF');
+  font-weight: bold;
+}
 .detail {
   min-height: 100vh;
   background: #f8f8f8;
@@ -102,7 +110,7 @@ export default {
         color: #222222;
       }
       strong {
-        font-family: Bebas;
+        font-family: TTFont;
         font-size: 40px;
         color: #1a1a1a;
         text-align: right;

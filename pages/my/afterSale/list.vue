@@ -1,6 +1,6 @@
 <template>
   <div class="sale-list">
-    <sp-sticky>
+    <div class="fixed">
       <Header
         title="退款/售后"
         :custom-jump="customJump"
@@ -16,25 +16,29 @@
           ></sp-icon>
         </template>
       </Header>
-      <sp-tabs v-model="active" @change="tabChange">
-        <sp-tab
-          v-for="(item, index) in ['处理中', '全部']"
-          :key="index"
-          :title="item"
-        >
-        </sp-tab>
-      </sp-tabs>
-    </sp-sticky>
-    <sp-list
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="getAfterSaleList"
-    >
-      <div v-if="saleDataList.length > 0">
-        <after-sale-list :sale-list="saleDataList"></after-sale-list>
+      <div class="fixed">
+        <sp-tabs v-model="active" @change="tabChange">
+          <sp-tab
+            v-for="(item, index) in ['处理中', '全部']"
+            :key="index"
+            :title="item"
+          >
+          </sp-tab>
+        </sp-tabs>
       </div>
-    </sp-list>
+    </div>
+    <div style="margin-top: 88px">
+      <sp-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="getAfterSaleList"
+      >
+        <div v-if="saleDataList.length > 0">
+          <after-sale-list :sale-list="saleDataList"></after-sale-list>
+        </div>
+      </sp-list>
+    </div>
     <div v-if="!saleDataList.length && showNoDataImg" class="no-data-area">
       <img
         src="https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png"
@@ -85,6 +89,11 @@ export default {
       loading: false,
     }
   },
+  computed: {
+    userInfo() {
+      return JSON.parse(localStorage.getItem('info'))
+    },
+  },
   mounted() {
     if (this.active === 0) {
       this.afterSaleStatus = this.searchStatus
@@ -101,6 +110,7 @@ export default {
     async getAfterSaleList() {
       this.loading = true
       const res = await this.$axios.post(afterSaleApi.list, {
+        userId: this.userInfo.id,
         page: this.page,
         limit: this.limit,
         afterSaleStatusNoList: this.afterSaleStatus,
@@ -140,6 +150,7 @@ export default {
       this.saleDataList = []
       this.finished = false
       this.loading = true
+      window.scrollTo(0, 0)
       this.getAfterSaleList()
     },
   },
@@ -147,6 +158,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.fixed {
+  position: fixed;
+  top: 88px;
+  width: 100%;
+  z-index: 99;
+}
 .no-data-area {
   width: 100%;
   height: 100vh;

@@ -268,7 +268,12 @@
                 <p>
                   {{ afterSaleDetail.afterSaleProblemDetail }}
                 </p>
-                <ul>
+                <ul
+                  v-if="
+                    afterSaleDetail.fileImages &&
+                    afterSaleDetail.fileImages.length > 0
+                  "
+                >
                   <li
                     v-for="(item, index) in afterSaleDetail.fileImages"
                     :key="index"
@@ -284,20 +289,19 @@
     </div>
     <!-- 操作按钮 -->
     <div class="footer-btns">
-      <button @click="concatKefuBtn">联系客服</button>
-      <button
+      <div @click="concatKefuBtn">联系客服</div>
+      <div
         v-if="
-          (afterSaleDetail.afterSaleSubStatusNo === 'AFTERSALE_STATUS_TAG_5' ||
-            afterSaleDetail.afterSaleSubStatusNo ===
-              'AFTERSALE_STATUS_TAG_6') &&
+          (afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_2' ||
+            afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_3') &&
           afterSaleDetail.afterPlatInvolvedCount <
             afterSaleDetail.platInvolvedCount
         "
         @click="openDialog(0)"
       >
         平台介入
-      </button>
-      <button
+      </div>
+      <div
         v-if="
           afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_1' ||
           afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_2' ||
@@ -306,13 +310,13 @@
         @click="openDialog(1)"
       >
         撤销
-      </button>
-      <button
+      </div>
+      <div
         v-if="afterSaleDetail.afterSaleStatusNo === 'AFTERSALE_STATUS_3'"
         @click="openDialog(2)"
       >
         确认方案
-      </button>
+      </div>
       <!-- <button class="pay-btn">去支付</button> -->
     </div>
     <!--S loding-->
@@ -348,7 +352,7 @@ export default {
           confirmButtonText: '',
         },
         {
-          title: '',
+          title: '您确定撤回此售后申请？',
           message:
             '您将撤销本次申请，如有问题未解决，您还可以再次发起。确定撤销吗？',
           cancelButtonText: '暂不取消',
@@ -461,6 +465,9 @@ export default {
     // this.userInfo = JSON.parse(localStorage.getItem('info'))
     this.getAfterSaleDetails()
   },
+  destroyed() {
+    localStorage.removeItem('afterSaleId')
+  },
   // mounted() {
   //   this.userInfo = JSON.parse(localStorage.getItem('info'))
   // },
@@ -473,9 +480,6 @@ export default {
         orderNo: this.$route.query.orderNo,
         isProduct: '1',
         isAfterSaleFlow: '1',
-        afterSaleStatusNoList: !this.$route.query.id
-          ? JSON.stringify(this.afterSaleStatusNoList)
-          : '[]',
       }
       if (!this.$route.query.id && localStorage.getItem('afterSaleId')) {
         params.id = localStorage.getItem('afterSaleId')
@@ -655,9 +659,6 @@ export default {
       this.jumpOnlineKefu()
     },
   },
-  destroyed() {
-    localStorage.removeItem('afterSaleId')
-  },
 }
 </script>
 
@@ -714,6 +715,7 @@ export default {
               display: flex;
               align-items: center;
               .mark {
+                display: block;
                 width: 32px;
                 height: 32px;
                 background: #ffffff;
@@ -739,7 +741,11 @@ export default {
                 height: 40px;
                 background: #000;
                 border-radius: 40px;
+                position: relative;
                 img {
+                  position: absolute;
+                  left: 0;
+                  top: 0;
                   width: 100%;
                   height: 100%;
                 }
@@ -789,6 +795,9 @@ export default {
                     width: 30px;
                     height: 30px;
                     line-height: 30px;
+                    text-align: center;
+                    position: relative;
+                    top: -1px;
                   }
                   .title {
                     font-size: 28px;
@@ -828,7 +837,7 @@ export default {
               > .img-mark {
                 position: absolute;
                 right: 0;
-                top: 0;
+                top: 18px;
                 width: 140px;
                 height: 105px;
                 img {
@@ -904,15 +913,19 @@ export default {
             display: flex;
             margin-bottom: 22px;
             line-height: 36px;
+            &:last-child {
+              margin-bottom: 0;
+            }
             h3 {
               font-size: 26px;
               color: #222222;
-              font-weight: bold;
+              font-weight: normal;
             }
             > p {
               margin-left: 40px;
               font-size: 26px;
               color: #1a1a1a;
+              font-weight: bold;
             }
             .copy {
               width: 72px;
@@ -922,6 +935,8 @@ export default {
               font-size: 22px;
               color: #1a1a1a;
               text-align: center;
+              font-weight: bold;
+              background: #f5f5f5;
             }
             .question {
               margin-left: 40px;
@@ -929,6 +944,7 @@ export default {
               > p {
                 font-size: 26px;
                 color: #1a1a1a;
+                font-weight: bold;
               }
               ul {
                 display: flex;
@@ -1003,6 +1019,7 @@ export default {
             .right {
               color: #4974f5;
               font-size: 28px;
+              font-weight: bold;
             }
           }
           .amount {
@@ -1026,8 +1043,9 @@ export default {
               }
             }
             .right {
-              color: #ff3b30;
+              color: #ec5330;
               font-size: 36px;
+              font-weight: bold;
               span {
                 font-size: 24px !important;
               }
@@ -1048,10 +1066,11 @@ export default {
     bottom: 0;
     z-index: 9;
     width: 100%;
-    button {
+    > div {
       display: block;
-      width: 158px;
+      width: 154px;
       height: 80px;
+      line-height: 80px;
       background: #ffffff;
       border: 1px solid #dddddd;
       border-radius: 8px;
@@ -1059,6 +1078,8 @@ export default {
       font-size: 28px;
       color: #222222;
       margin: 24px 8px;
+      word-break: keep-all;
+      text-align: center;
     }
     .pay-btn {
       background: #ec5330 !important;

@@ -1,176 +1,186 @@
 <template>
-  <div class="home_container">
-    <div
-      class="header"
-      :class="{ header_fixed: fixed }"
-      :style="{ paddingTop: (appInfo.statusBarHeight || 0) + 'px' }"
-    >
-      <my-icon
-        v-if="!isShare"
-        name="nav_ic_back"
-        size="0.4rem"
-        :color="fixed ? '#1A1A1A' : '#D8D8D8'"
-        @click.native="$back"
-      ></my-icon>
-      <div style="margin-left: 0.2rem">{{ fixed ? userName : '' }}</div>
-    </div>
-    <DownLoadArea v-if="isShare" />
-    <div class="top_box">
-      <div class="card">
-        <sp-image round class="user_avatar" fit="cover" :src="avatar" />
-        <div class="bt_box">
-          <template v-if="homeUserId && homeUserId !== userInfo.userId">
+  <section>
+    <ShareModal v-if="isShare" />
+    <div class="home_container">
+      <div
+        class="header"
+        :class="{ header_fixed: fixed }"
+        :style="{ paddingTop: (appInfo.statusBarHeight || 0) + 'px' }"
+      >
+        <my-icon
+          v-if="!isShare"
+          name="nav_ic_back"
+          size="0.4rem"
+          :color="fixed ? '#1A1A1A' : '#D8D8D8'"
+          @click.native="$back"
+        ></my-icon>
+        <div style="margin-left: 0.2rem">{{ fixed ? userName : '' }}</div>
+      </div>
+      <DownLoadArea v-if="isShare" />
+      <div class="top_box">
+        <div class="card">
+          <sp-image round class="user_avatar" fit="cover" :src="avatar" />
+          <div class="bt_box">
+            <template v-if="homeUserId && homeUserId !== userInfo.userId">
+              <div
+                class="bt_attention"
+                :class="{ bt_has_attention: isAttention }"
+                @click="attention"
+              >
+                <my-icon
+                  v-show="!isAttention"
+                  name="tianjia"
+                  size="0.27rem"
+                  color="#fff"
+                />
+                <p>{{ isAttention ? '已关注' : '关注' }}</p>
+              </div>
+            </template>
             <div
-              class="bt_attention"
-              :class="{ bt_has_attention: isAttention }"
-              @click="attention"
+              v-if="isInApp && type === 2"
+              class="bt_contact"
+              @click="contact"
             >
               <my-icon
-                v-show="!isAttention"
-                name="tianjia"
-                size="0.27rem"
-                color="#fff"
-              />
-              <p>{{ isAttention ? '已关注' : '关注' }}</p>
+                name="pinglun_mian"
+                size="0.36rem"
+                color="#ffffff"
+              ></my-icon>
             </div>
-          </template>
-          <div v-if="isInApp && type === 2" class="bt_contact" @click="contact">
-            <my-icon
-              name="pinglun_mian"
-              size="0.36rem"
-              color="#ffffff"
-            ></my-icon>
           </div>
-        </div>
-        <div class="user_name">{{ userName }}</div>
-        <!-- <div class="user_desc clamp3">{{ desc }}</div> -->
-        <div class="user_data">
-          <div class="user_data_item" @click="toFans">
-            <div class="user_data_item_num">{{ fansNum }}</div>
-            <div class="user_data_item_name">粉丝</div>
+          <div class="user_name">{{ userName }}</div>
+          <!-- <div class="user_desc clamp3">{{ desc }}</div> -->
+          <div class="user_data">
+            <div class="user_data_item" @click="toFans">
+              <div class="user_data_item_num">{{ fansNum }}</div>
+              <div class="user_data_item_name">粉丝</div>
+            </div>
+            <div class="user_data_item" @click="toAttention">
+              <div class="user_data_item_num">{{ attentionNum }}</div>
+              <div class="user_data_item_name">关注</div>
+            </div>
+            <div class="user_data_item">
+              <div class="user_data_item_num">{{ applaudNum }}</div>
+              <div class="user_data_item_name">获赞</div>
+            </div>
           </div>
-          <div class="user_data_item" @click="toAttention">
-            <div class="user_data_item_num">{{ attentionNum }}</div>
-            <div class="user_data_item_name">关注</div>
-          </div>
-          <div class="user_data_item">
-            <div class="user_data_item_num">{{ applaudNum }}</div>
-            <div class="user_data_item_name">获赞</div>
-          </div>
-        </div>
-        <sp-swipe
-          v-if="adList.length"
-          class="user_banner"
-          :autoplay="3000"
-          indicator-color="white"
-        >
-          <sp-swipe-item
-            v-for="(item, index) in adList"
-            :key="index"
-            @click="adJump(item.materialList[0])"
+          <sp-swipe
+            v-if="adList.length"
+            class="user_banner"
+            :autoplay="3000"
+            indicator-color="white"
           >
-            <sp-image
-              class="banner_img"
-              fit="cover"
-              :src="item.materialList[0].materialUrl"
-          /></sp-swipe-item>
-        </sp-swipe>
+            <sp-swipe-item
+              v-for="(item, index) in adList"
+              :key="index"
+              @click="adJump(item.materialList[0])"
+            >
+              <sp-image
+                class="banner_img"
+                fit="cover"
+                :src="item.materialList[0].materialUrl"
+            /></sp-swipe-item>
+          </sp-swipe>
+        </div>
       </div>
-    </div>
-    <div class="bottom_box">
-      <sp-tabs
-        v-model="active"
-        title-active-color="#222222"
-        title-inactive-color="#999999"
-        @change="tabChange"
-      >
-        <sp-tab
-          v-for="item in menuList"
-          :key="item.index"
-          :title="item.name"
-          :name="item.index"
-        ></sp-tab>
-      </sp-tabs>
-      <div v-if="active !== 6">
-        <sp-list
-          v-model="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          class="list_container"
-          @load="getList"
+      <div class="bottom_box">
+        <sp-tabs
+          v-model="active"
+          title-active-color="#222222"
+          title-inactive-color="#999999"
+          @change="tabChange"
         >
-          <div v-for="(item, index) in list" :key="index">
-            <Item
-              v-if="active !== 5 && active !== 6"
-              :item="item"
-              @comments="comments"
-            />
-            <div v-else-if="active === 5" class="item_five">
-              <div class="item" @click="open(item)">
-                <div class="lf_img">
-                  <img
-                    v-if="item.image"
-                    :src="item.image.split(',')[0]"
-                    alt=""
-                  />
-                  <div class="time">{{ totime(item.duration) }}</div>
-                </div>
-                <div class="rt_content">
-                  <div class="title">{{ item.videoName }}</div>
-                  <div class="name_time">
-                    <div class="name">{{ userName }}</div>
-                    <div class="time">
-                      {{ timeSplice(item.createTime) }}
+          <sp-tab
+            v-for="item in menuList"
+            :key="item.index"
+            :title="item.name"
+            :name="item.index"
+          ></sp-tab>
+        </sp-tabs>
+        <div v-if="active !== 6">
+          <sp-list
+            v-model="loading"
+            :finished="finished"
+            finished-text="没有更多了"
+            class="list_container"
+            @load="getList"
+          >
+            <div v-for="(item, index) in list" :key="index">
+              <Item
+                v-if="active !== 5 && active !== 6"
+                :item="item"
+                @comments="comments"
+              />
+              <div v-else-if="active === 5" class="item_five">
+                <div class="item" @click="open(item)">
+                  <div class="lf_img">
+                    <img
+                      v-if="item.image"
+                      :src="item.image.split(',')[0]"
+                      alt=""
+                    />
+                    <div class="time">{{ totime(item.duration) }}</div>
+                  </div>
+                  <div class="rt_content">
+                    <div class="title">{{ item.videoName }}</div>
+                    <div class="name_time">
+                      <div class="name">{{ userName }}</div>
+                      <div class="time">
+                        {{ timeSplice(item.createTime) }}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </sp-list>
-      </div>
-      <div v-else class="smallVideolist">
-        <sp-list
-          v-model="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          :error.sync="error"
-          error-text="请求失败，点击重新加载"
-          @load="getList"
-        >
-          <div v-if="list.length > 0" class="video-list">
-            <div
-              v-for="(item, index) in list"
-              :key="index"
-              class="item"
-              @click="open(item)"
-            >
-              <sp-image
-                width="3.72rem"
-                height="6.61rem"
-                fit="cover"
-                :src="item.image"
-              />
-              <div class="content_box">
-                <div class="content">
-                  <div class="count">{{ item.custTotalCount }} 次观看</div>
-                  <div class="tile">{{ item.videoName }}</div>
+          </sp-list>
+        </div>
+        <div v-else class="smallVideolist">
+          <sp-list
+            v-model="loading"
+            :finished="finished"
+            finished-text="没有更多了"
+            :error.sync="error"
+            error-text="请求失败，点击重新加载"
+            @load="getList"
+          >
+            <div v-if="list.length > 0" class="video-list">
+              <div
+                v-for="(item, index) in list"
+                :key="index"
+                class="item"
+                @click="open(item)"
+              >
+                <sp-image
+                  width="3.72rem"
+                  height="6.61rem"
+                  fit="cover"
+                  :src="item.image"
+                />
+                <div class="content_box">
+                  <div class="content">
+                    <div class="count">{{ item.custTotalCount }} 次观看</div>
+                    <div class="tile">{{ item.videoName }}</div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </sp-list>
+          </sp-list>
+        </div>
       </div>
+      <comment-list
+        v-model="commentShow"
+        :article-id="articleId"
+        :source-type="sourceType"
+        @release="release"
+      ></comment-list>
+      <sp-center-popup
+        v-model="showPop"
+        :field="Filed4"
+        button-type="confirm"
+      />
     </div>
-    <comment-list
-      v-model="commentShow"
-      :article-id="articleId"
-      :source-type="sourceType"
-      @release="release"
-    ></comment-list>
-    <sp-center-popup v-model="showPop" :field="Filed4" button-type="confirm" />
-    <ShareModal />
-  </div>
+  </section>
 </template>
 
 <script>

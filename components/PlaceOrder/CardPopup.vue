@@ -42,18 +42,20 @@
                 @click="checkitem(item, index)"
               >
                 <div class="left">
-                  <div v-if="item.marketingCouponVO.couponType === 1">
+                  <div v-if="item.cardType === 1">
                     <div class="coupon_price">
-                      {{ item.marketingCouponVO.reducePrice }}
+                      {{ item.rebatePrice }}
                     </div>
-                    <div v-if="item.useType === 1" class="can_use">无门槛</div>
+                    <div v-if="item.rebateNeedPrice === 0" class="can_use">
+                      无门槛
+                    </div>
                     <div v-else class="can_use">
-                      满{{ item.marketingCouponVO.fullPrice }}元可用
+                      满{{ item.rebateNeedPrice }}元可用
                     </div>
                   </div>
                   <div v-else>
                     <div class="coupon_discount">
-                      {{ getDiscount(item.marketingCouponVO.discount) }}
+                      {{ item.discount }}
                       <span>折</span>
                     </div>
                   </div>
@@ -62,20 +64,18 @@
                   <div class="data">
                     <h1 class="title">
                       <span class="type-name">{{
-                        item.marketingCouponVO.typeName
+                        item.cardType == 1 ? '满减卡' : '折扣卡'
                       }}</span>
-                      {{ item.marketingCouponVO.couponName }}
+                      {{ item.cardName }}
                     </h1>
-                    <!-- <p v-if="item.marketingCouponVO.useType === 1">
-                      全品类通用
-                    </p> -->
-                    <p v-if="item.marketingCouponVO.useType === 2">
-                      仅限指定品类使用
+                    <!-- <p v-if="item.useLimit === 1">全品类通用</p> -->
+                    <p v-if="item.useLimit === 2">仅限指定品类使用</p>
+                    <p v-else-if="item.useLimit === 3">仅限指定商品使用</p>
+                    <p class="date">
+                      {{ formatTime(item.validateDateStart) }}-{{
+                        formatTime(item.validateDateEnd)
+                      }}
                     </p>
-                    <p v-if="item.marketingCouponVO.useType === 3">
-                      仅限指定商品使用
-                    </p>
-                    <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
                   <div class="right">
                     <sp-radio-group v-model="radio">
@@ -103,21 +103,29 @@
         </div>
         <div v-else class="databox nodatabox">
           <div v-if="nolist.length > 0" class="listbox">
+            <!-- {"id":"8101730035742867456","cardName":"满减活动卡1",
+            "cardId":"8101719748410933248","cardType":1,
+            "rebateNeedPrice":"2.00","rebatePrice":"1.00",
+            "validateDate":999,
+            "validateDateStart":"2021-07-09 14:46:17","validateDateEnd":"2024-04-03 14:46:17"}]} -->
+
             <div v-for="(item, index) in nolist" :key="index" class="nolist">
               <div class="top">
                 <div class="left">
-                  <div v-if="item.marketingCouponVO.couponType === 1">
+                  <div v-if="item.cardType === 1">
                     <div class="coupon_price">
-                      {{ item.marketingCouponVO.reducePrice }}
+                      {{ item.rebatePrice }}
                     </div>
-                    <div v-if="item.useType === 1" class="can_use">无门槛</div>
+                    <div v-if="item.rebateNeedPrice === 0" class="can_use">
+                      无门槛
+                    </div>
                     <div v-else class="can_use">
-                      满{{ item.marketingCouponVO.fullPrice }}元可用
+                      满{{ item.rebateNeedPrice }}元可用
                     </div>
                   </div>
                   <div v-else>
                     <div class="coupon_discount">
-                      {{ getDiscount(item.marketingCouponVO.discount) }}
+                      {{ item.discount }}
                       <span>折</span>
                     </div>
                   </div>
@@ -126,23 +134,25 @@
                   <div class="data">
                     <h1 class="title">
                       <span class="type-name">{{
-                        item.marketingCouponVO.typeName
+                        item.cardType == 1 ? '满减卡' : '折扣卡'
                       }}</span>
-                      {{ item.marketingCouponVO.couponName }}
+                      {{ item.cardName }}
                     </h1>
-                    <!-- <p v-if="item.marketingCouponVO.useType === 1">
-                      全品类通用
-                    </p> -->
                     <p v-if="item.marketingCouponVO.useType === 2">
                       仅限指定品类使用
                     </p>
-                    <p v-else-if="item.marketingCouponVO.useType === 3">
+                    <p v-if="item.marketingCouponVO.useType === 3">
                       仅限指定商品使用
                     </p>
-                    <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
+                    <p class="date">
+                      {{ formatTime(item.validateDateStart) }}-{{
+                        formatTime(item.validateDateEnd)
+                      }}
+                    </p>
                   </div>
                 </div>
               </div>
+              <p>订单金额不符合使用条件</p>
             </div>
           </div>
           <div v-else class="none">
@@ -235,31 +245,34 @@ export default {
   },
   computed: {
     num() {
-      if (this.checkarr.marketingCouponVO) {
-        if (this.checkarr.marketingCouponVO.couponType === 1) {
-          return this.checkarr.marketingCouponVO.reducePrice
+      if (this.checkarr) {
+        if (this.checkarr.cardType === 1) {
+          return this.checkarr.rebatePrice
         } else {
           const price =
             this.$route.query.type === 'shopcar'
               ? this.$parent.order.skuTotalPrice
               : this.$parent.order.salesPrice
-          const discount =
-            parseFloat(this.checkarr.marketingCouponVO.discount) / 100
 
+          const discount = parseFloat(this.checkarr.discount) / 10
           const discountNum = ((10 - discount) / 10) * price
+
           return Math.ceil(discountNum * 100) / 100
         }
       }
       return 0
     },
   },
-
   mounted() {},
   methods: {
-    getDiscount(count) {
-      return Number(count) / 100
+    formatTime(time) {
+      if (time) {
+        return time.replaceAll('-', '.').split(' ')[0]
+      }
+      return ''
     },
     sum() {
+      // 在后台进行精度计算
       order
         .getcalculation(
           { axios: this.$axios },
@@ -272,6 +285,8 @@ export default {
           }
         )
         .then((result) => {
+          // this.$parent.price = result
+
           this.$emit('change', result, -this.num, this.checkarr)
 
           this.close()
@@ -286,7 +301,6 @@ export default {
         })
     },
     checkitem(item, index) {
-      console.log('item', item)
       if (this.radio === index) {
         this.checkarr = ''
         this.radio = -1
@@ -540,7 +554,7 @@ export default {
     .listbox {
       height: 100%;
       > .nolist {
-        height: 220px;
+        height: 271px;
         margin: 24px auto 0;
         width: 670px;
         background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png)

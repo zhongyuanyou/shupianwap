@@ -1,12 +1,13 @@
 <template>
   <div class="invoice_add">
-    <sp-sticky>
+    <HeaderSlot>
       <Header class="my-header" title="添加发票抬头"></Header>
-    </sp-sticky>
+    </HeaderSlot>
+
     <div class="card">
       <div class="invoice_info">
         <sp-cell-group>
-          <sp-field label="发票类型">
+          <sp-field class="customLabel" label="发票类型">
             <template #input>
               <div class="options">
                 <sp-button
@@ -25,7 +26,7 @@
             </template>
           </sp-field>
 
-          <sp-field label="抬头类型">
+          <sp-field class="customLabel" label="抬头类型">
             <template #input>
               <div class="options">
                 <sp-button
@@ -134,7 +135,10 @@
         </template>
       </sp-field>
     </div>
-    <sp-bottombar safe-area-inset-bottom>
+
+    <div class="paddingBottom160"></div>
+
+    <sp-bottombar class="sp-bottombar" safe-area-inset-bottom>
       <sp-bottombar-button type="primary" text="立即添加" @click="onSubmit" />
     </sp-bottombar>
 
@@ -157,6 +161,7 @@ import {
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 
+import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
 import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
@@ -168,6 +173,7 @@ export default {
   name: 'HeadAdd',
   components: {
     LoadingCenter,
+    HeaderSlot,
     Header,
 
     [Sticky.name]: Sticky,
@@ -189,8 +195,8 @@ export default {
 
       // 发票类型
       InvoiceType: {
-        ORDINARY: '电子普通发票',
-        SPECIAL: '增值税专用发票 ',
+        ORDINARY: '普通发票',
+        SPECIAL: '专用发票 ',
       },
       HeadType: {
         PERSONAL: '个人',
@@ -312,24 +318,42 @@ export default {
 <style lang="less" scoped>
 .invoice_add {
   background: #f5f5f5;
-  padding: 0 0 170px;
+
   min-height: 100vh;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+
   ::v-deep .sp-cell {
     padding: 40px 0px 40px 32px;
-
-    .sp-field__label {
-      flex: none;
-      width: 4.5em;
-    }
+  }
+  ::v-deep .sp-cell__value {
+    overflow: auto;
+  }
+  ::v-deep .sp-field__label {
+    font-family: PingFangSC-Regular;
+    font-size: 30px;
+    color: #222222;
+    flex: none !important;
+    width: 4.5em;
+  }
+  ::v-deep .sp-field__control {
+    font-family: PingFangSC-Regular;
+    font-size: 30px;
+    color: #222222;
+  }
+  .customLabel ::v-deep .sp-field__label {
+    margin-top: 8px;
   }
 
   .card {
     background: #fff;
-    margin-bottom: 20px;
+    margin-top: 20px;
+    // margin-bottom: 20px;
     padding: 0 40px;
 
     .options {
       // padding-bottom: 20px;
+      // margin-top: -8px;
       .btn {
         margin-right: 32px;
         // margin-bottom: 8px;
@@ -357,8 +381,12 @@ export default {
     }
   }
   .set_default {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
     padding: 0 40px;
     background: #fff;
+
     .placeholder {
       font-size: 22px;
       font-family: PingFangSC-Regular, PingFang SC;
@@ -377,6 +405,16 @@ export default {
     ::v-deep .sp-field__button {
       line-height: 100%;
     }
+  }
+  .paddingBottom160 {
+    padding-bottom: 160px;
+  }
+  .sp-bottombar {
+    z-index: 2;
+  }
+  ::v-deep .sp-bottombar {
+    margin-bottom: constant(safe-area-inset-bottom);
+    margin-bottom: env(safe-area-inset-bottom);
   }
 }
 </style>

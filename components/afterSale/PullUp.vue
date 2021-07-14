@@ -6,7 +6,7 @@
       round
       position="bottom"
       close-icon-position="top-right"
-      :style="{ width: '100%', height: '60%' }"
+      :style="{ width: '100%', height: '70%' }"
     >
       <div class="title">{{ title }}</div>
       <div class="bank-list">
