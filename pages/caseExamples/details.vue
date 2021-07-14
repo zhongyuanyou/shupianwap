@@ -25,7 +25,7 @@
     <Banner :images="imgFileIdPaths" />
     <!--S banner-->
     <!--S 第一板块-->
-    <Title @onComment="comment" />
+    <Title />
 
     <!-- 案件简介 -->
     <CaseIntroduction></CaseIntroduction>
@@ -71,25 +71,26 @@
 </template>
 
 <script>
-import { TopNavBar, Sticky, List, ShareSheet } from '@chipspc/vant-dgg'
+import { TopNavBar, Sticky, List } from '@chipspc/vant-dgg'
 import { mapActions } from 'vuex'
-import Banner from '@/components/detail/Banner'
+import Banner from '@/components/detail/Banner.vue'
 import Title from '@/components/caseExamples/details/Title.vue'
 import CaseIntroduction from '@/components/caseExamples/details/CaseIntroduction.vue'
 
-import CommentBox from '@/components/detail/CommentBox'
-import OrderCase from '@/components/detail/OrderCase'
-import OrderDynamic from '@/components/detail/OrderDynamic'
+import CommentBox from '@/components/caseExamples/details/CommentBox.vue'
+import OrderCase from '@/components/detail/OrderCase.vue'
+import OrderDynamic from '@/components/detail/OrderDynamic.vue'
 
-import ContainProject from '@/components/detail/ContainProject'
-import ContainContent from '@/components/detail/ContainContent'
-import TcPlanners from '@/components/detail/TcPlanners1'
-import ServiceDetail from '@/components/detail/ServiceDetail'
-import RelatedRecommend from '@/components/detail/RelatedRecommend'
-import bottomBar from '@/components/detail/bottomBar/index'
+import ContainProject from '@/components/detail/ContainProject.vue'
+import ContainContent from '@/components/detail/ContainContent.vue'
+import TcPlanners from '@/components/detail/TcPlanners1.vue'
+import ServiceDetail from '@/components/detail/ServiceDetail.vue'
+import RelatedRecommend from '@/components/detail/RelatedRecommend.vue'
+import bottomBar from '@/components/detail/bottomBar/index.vue'
+
 import getUserSign from '@/utils/fingerprint'
 import { productDetailsApi, recommendApi, shopApi } from '@/api'
-import MyIcon from '@/components/common/myIcon/MyIcon'
+
 import { copyToClipboard } from '@/utils/common'
 import imHandle from '@/mixins/imHandle'
 export default {
@@ -109,7 +110,7 @@ export default {
     ServiceDetail,
     RelatedRecommend,
     bottomBar,
-    MyIcon,
+
     CommentBox,
     OrderCase,
     OrderDynamic,
@@ -204,41 +205,12 @@ export default {
     }
     // 获取商品图片
     this.getSellingImg()
-    // 获取推荐产品
-    this.getrecommendProduct()
-    // 推荐规划师
-    this.getRecommendPlanner()
-    // 获取钻展
-    this.getRecPlanner()
   },
   methods: {
     ...mapActions({
       POSITION_CITY: 'city/POSITION_CITY',
     }),
-    // shouchang
-    handleClickSave() {
-      if (this.sellingDetail.isSave) {
-        this.cancelSave()
-      } else {
-        this.addSave()
-      }
-    },
 
-    comment() {
-      const user = navigator.userAgent.toLowerCase()
-      console.log(user)
-      if (
-        user.match(/huawei/i) === 'huawei' ||
-        user.match(/honor/i) === 'honor'
-      ) {
-        document.querySelector('#comment').scrollIntoView(true)
-        document.body.scrollTop = document.body.scrollTop - 250
-      } else {
-        document.querySelector('#comment').scrollIntoView(true)
-        document.documentElement.scrollTop =
-          document.documentElement.scrollTop - 250
-      }
-    },
     scrollHandle({ scrollTop }) {
       // 滚动事件
       if (scrollTop > 216) {
@@ -264,148 +236,8 @@ export default {
       if (!this.city.code) {
         await this.POSITION_CITY({ type: 'init' })
       }
-      // 加载更多推荐
-      this.getrecommendProduct()
     },
-    // 获取推荐交易产品
-    async getrecommendProduct() {
-      this.loading = true
-      // 获取用户唯一标识
-      if (!this.deviceId) {
-        this.deviceId = await getUserSign()
-      }
-      const formatId1 = this.sellingDetail.classCodeLevel.split(',')[0] // 产品二级分类
-      const formatId2 = this.sellingDetail.classCodeLevel.split(',')[1] // 产品二级分类
-      const formatId3 = this.sellingDetail.classCodeLevel.split(',')[2] // 产品三级分类
-      this.$axios
-        .post(recommendApi.saleList, {
-          userId: this.$cookies.get('userId', { path: '/' }), // 用户id
-          deviceId: this.deviceId, // 设备ID
-          formatId: formatId2 || formatId3, // 产品二级类别,没有二级类别用三级类别（首页等场景不需传，如其他场景能获取到必传）
-          classCode: formatId1,
-          areaCode: this.$store.state.city.currentCity.code || '510100', // 区域编码
-          sceneId: 'app-fwcpxq-01', // 场景ID
-          productId: this.sellingDetail.id, // 产品ID（产品详情页必传）
-          productType: 'PRO_CLASS_TYPE_SALES', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
-          title: this.sellingDetail.name, // 产品名称（产品详情页传、咨询页等）
-          platform: 'm', // 平台（app,m,pc）
-          formatIdOne: formatId1 || formatId2,
-          page: { pageNo: this.productPage, pageSize: this.productLimit },
-        })
-        .then((res) => {
-          if (res.code === 200) {
-            // 关闭骨架屏
-            this.$refs.remNeed.needLoading = false
-            this.productPage += 1
-            if (res.data.records.length === 0) {
-              this.finished = true
-            }
-            this.productCount = res.data.totalCount // 推荐产品总条数
-            this.recommendProduct = [...this.recommendProduct].concat(
-              res.data.records
-            ) // 推荐产品列表
-            // 推荐产品最多加载30条
-            if (this.recommendProduct.length >= 30) {
-              this.finished = true
-            }
-          }
-          this.finished = true
-        })
-        .catch((err) => {
-          this.finished = true
-          console.log(err)
-        })
-    },
-    //  获取推荐规划师
-    async getRecommendPlanner() {
-      // 获取用户唯一标识
-      if (!this.deviceId) {
-        this.deviceId = await getUserSign()
-      }
-      this.$axios
-        .get(productDetailsApi.recPlanner, {
-          params: {
-            limit: this.plannerLimit,
-            page: this.plannerPage,
-            area: this.$store.state.city.currentCity.code || '510100',
-            deviceId: this.deviceId, // 设备ID
-            level_2_ID: this.sellingDetail.classCodeLevel
-              ? this.sellingDetail.classCodeLevel.split(',')[1]
-              : null, // 二级产品分类
-            login_name: null, // 规划师ID(选填)
-            productType: 'PRO_CLASS_TYPE_SERVICE', // 产品类型
-            sceneId: 'app-cpxqye-01', // 场景ID
-            user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-            platform: 'm', // 平台（app,m,pc）
-            productId: this.sellingDetail.id, // 产品id
-            firstTypeCode: this.sellingDetail.classCodeLevel
-              ? this.sellingDetail.classCodeLevel.split(',')[0]
-              : null,
-          },
-        })
-        .then((res) => {
-          if (res.code === 200) {
-            console.log('推荐规划师', this.planners)
-            this.planners = res.data.records
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-    // 获取钻展规划师
-    async getRecPlanner() {
-      // 获取用户唯一标识
-      const deviceId = await getUserSign()
-      const plannerRes = await this.$axios.get(productDetailsApi.recPlanner, {
-        params: {
-          limit: 1,
-          page: 1,
-          area: this.$store.state.city.currentCity.code || '510100',
-          deviceId, // 设备ID
-          level_2_ID: this.sellingDetail.classCodeLevel
-            ? this.sellingDetail.classCodeLevel.split(',')[1]
-            : null, // 二级产品分类
-          login_name: null, // 规划师ID(选填)
-          productType: 'PRO_CLASS_TYPE_SERVICE', // 产品类型
-          sceneId: 'app-cpxqye-02', // 场景ID
-          user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-          platform: 'm', // 平台（app,m,pc）
-          productId: this.sellingDetail.id, // 产品id
-          firstTypeCode: this.sellingDetail.classCodeLevel
-            ? this.sellingDetail.classCodeLevel.split(',')[0]
-            : null,
-        },
-      })
-      if (plannerRes.code === 200) {
-        this.tcPlannerBooth = plannerRes.data.records[0]
-        console.log('tcPlannerBooth', this.tcPlannerBooth)
-      }
-    },
-    // 购物车
-    async addCart() {
-      // 点击立即购买
-      const isLogin = await this.judgeLoginMixin()
-      if (isLogin) {
-        this.$router.push({
-          path: '/shopCart',
-        })
-      }
-    },
-    //  分享
-    onClickRight() {
-      this.showShare = true
-    },
-    // 点击分享
-    onSelect() {
-      const result = copyToClipboard(location.href)
-      if (result) {
-        this.$xToast.success('链接复制成功')
-        return
-      }
-      this.$xToast.error('链接复制失败,请重试')
-      // this.showShare = false
-    },
+
     // 获取商品图片
     getSellingImg() {
       // 获取客户端展示信息
@@ -417,29 +249,6 @@ export default {
         : []
       // 返回图片地址集合
     },
-    // 获取手机号
-    // getUserIndo() {
-    //   if (this.token) {
-    //     this.$axios
-    //       .get(userinfoApi.info, {
-    //         params: {
-    //           id: this.userInfo.userId,
-    //         },
-    //       })
-    //       .then((res) => {
-    //         if (res.code === 200) {
-    //           this.userInfoData = res.data
-    //         } else {
-    //           this.$xToast.show({
-    //             message: '网络错误,请刷稍后再试',
-    //             duration: 1000,
-    //             icon: 'toast_ic_error',
-    //             forbidClick: true,
-    //           })
-    //         }
-    //       })
-    //   }
-    // },
   },
 }
 </script>
@@ -463,27 +272,6 @@ export default {
   }
 }
 
-.template {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background-color: #f8f8f8;
-  /*padding-bottom: 144px;*/
-  ::v-deep .sp-hairline--bottom::after {
-    border-bottom: none;
-  }
-}
-.company {
-  &_info {
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin-top: 15px;
-  }
-}
 ::v-deep .sp-top-nav-bar__left,
 ::v-deep .sp-top-nav-bar__right {
   font-weight: initial;
