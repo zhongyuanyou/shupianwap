@@ -30,7 +30,7 @@
         </div>
         <div v-if="tablist[tabAct].is" class="calculation">
           {{ calculation }}
-          <span class="red">{{ num }}元</span>
+          <span class="red">{{ disPrice }}元</span>
         </div>
         <div v-if="tablist[tabAct].is">
           <div class="databox">
@@ -230,29 +230,31 @@ export default {
       tabAct: 0,
       checkarr: '',
       radio: null,
+      selectedCoupon: {},
+      disPrice: 0,
       // num: 0,
     }
   },
-  computed: {
-    num() {
-      if (this.checkarr.marketingCouponVO) {
-        if (this.checkarr.marketingCouponVO.couponType === 1) {
-          return this.checkarr.marketingCouponVO.reducePrice
-        } else {
-          const price =
-            this.$route.query.type === 'shopcar'
-              ? this.$parent.order.skuTotalPrice
-              : this.$parent.order.salesPrice
-          const discount =
-            parseFloat(this.checkarr.marketingCouponVO.discount) / 100
+  // computed: {
+  //   num() {
+  //     if (this.checkarr.marketingCouponVO) {
+  //       if (this.checkarr.marketingCouponVO.couponType === 1) {
+  //         return this.checkarr.marketingCouponVO.reducePrice
+  //       } else {
+  //         const price =
+  //           this.$route.query.type === 'shopcar'
+  //             ? this.$parent.order.skuTotalPrice
+  //             : this.$parent.order.salesPrice
+  //         const discount =
+  //           parseFloat(this.checkarr.marketingCouponVO.discount) / 100
 
-          const discountNum = ((10 - discount) / 10) * price
-          return Math.ceil(discountNum * 100) / 100
-        }
-      }
-      return 0
-    },
-  },
+  //         const discountNum = ((10 - discount) / 10) * price
+  //         return Math.ceil(discountNum * 100) / 100
+  //       }
+  //     }
+  //     return 0
+  //   },
+  // },
 
   mounted() {},
   methods: {
@@ -260,32 +262,60 @@ export default {
       return Number(count) / 100
     },
     sum() {
-      order
-        .getcalculation(
-          { axios: this.$axios },
-          {
-            price:
-              this.$route.query.type === 'shopcar'
-                ? this.$parent.order.skuTotalPrice
-                : this.$parent.order.salesPrice,
-            culation: this.num,
-          }
-        )
-        .then((result) => {
-          this.$emit('change', result, -this.num, this.checkarr)
+      const originPrice =
+        this.$route.query.type === 'shopcar'
+          ? this.$parent.order.skuTotalPrice
+          : this.$parent.order.salesPrice
+      let price = 0
+      if (this.selectedCoupon.marketingCouponVO.discount) {
+        price =
+          Number(originPrice) *
+          10000 *
+          (this.selectedCoupon.marketingCouponVO.discount / 1000)
+        if (price % 100 === 0) {
+          price = price / 10000
+        } else {
+          price = (Math.floor(price / 100) + 1) / 100
+        }
+      } else {
+        price =
+          Number(originPrice) -
+          this.selectedCoupon.marketingCouponVO.reducePrice
+      }
+      this.lastPrice = price
+      this.disPrice = originPrice - price
+      console.log('lastPrice', price)
+      this.$emit('change', price, -this.disPrice, this.checkarr)
 
-          this.close()
-        })
-        .catch((e) => {
-          Toast({
-            message: e.data.error,
-            iconPrefix: 'sp-iconfont',
-            icon: 'popup_ic_fail',
-            overlay: true,
-          })
-        })
+      this.close()
+      // order
+      //   .getcalculation(
+      //     { axios: this.$axios },
+      //     {
+      //       price:
+      //         this.$route.query.type === 'shopcar'
+      //           ? this.$parent.order.skuTotalPrice
+      //           : this.$parent.order.salesPrice,
+      //       culation: this.num,
+      //     }
+      //   )
+      //   .then((result) => {
+      //     this.$emit('change', result, -this.num, this.checkarr)
+
+      //     this.close()
+      //   })
+      //   .catch((e) => {
+      //     Toast({
+      //       message: e.data.error,
+      //       iconPrefix: 'sp-iconfont',
+      //       icon: 'popup_ic_fail',
+      //       overlay: true,
+      //     })
+      //   })
     },
     checkitem(item, index) {
+      this.selectedCoupon = item
+      console.log('this.selectedCoupon', this.selectedCoupon)
       console.log('item', item)
       if (this.radio === index) {
         this.checkarr = ''

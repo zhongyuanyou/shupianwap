@@ -189,7 +189,7 @@
             "
             @click="openPopupfn()"
           />
-          <Cell
+          <!-- <Cell
             title="活动卡"
             :value="
               card.cardPrice
@@ -203,7 +203,7 @@
               card.cardPrice ? 'red' : card.datalist.length > 0 ? 'black' : ''
             "
             @click="openCardFn()"
-          />
+          /> -->
         </CellGroup>
         <p class="money">
           合计：
@@ -466,7 +466,7 @@ export default {
             productPrice: data.salesPrice,
           })
 
-          this.getCardList()
+          // this.getCardList()
 
           console.log('productList', this.productList)
         } else {
