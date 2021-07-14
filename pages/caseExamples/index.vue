@@ -62,10 +62,10 @@ import { mapState } from 'vuex'
 
 import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
 import Header from '@/components/common/head/header.vue'
-import FooterNav from '~/components/my/coupon/FooterNav.vue'
+import FooterNav from '@/components/my/coupon/FooterNav.vue'
 
-import Classify from '~/components/caseExamples/Classify.vue'
-import CaseExamplesList from '~/components/caseExamples/List.vue'
+import Classify from '@/components/caseExamples/index/Classify.vue'
+import CaseExamplesList from '@/components/caseExamples/index/List.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 
 import { actCard, coupon } from '@/api/index'

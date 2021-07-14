@@ -25,7 +25,7 @@
     <Banner :images="imgFileIdPaths" />
     <!--S banner-->
     <!--S 第一板块-->
-    <Title :comment="commentdata[0].tit" @onComment="comment" />
+    <Title @onComment="comment" />
 
     <!-- 案件简介 -->
     <CaseIntroduction></CaseIntroduction>
@@ -194,11 +194,6 @@ export default {
       const val =
         this.commentlist[Math.floor(Math.random() * this.commentlist.length)]
       this.commentdata.push(val)
-      for (let b = 0; b < this.commentlist.length; b++) {
-        if (val.tit === this.commentlist[i].tit) {
-          this.commentlist.splice(i, 1)
-        }
-      }
     }
   },
   async mounted() {
@@ -228,72 +223,7 @@ export default {
         this.addSave()
       }
     },
-    // 取消收藏
-    cancelSave() {
-      // 直接调商户中心接口，未经过node中间层，中间层无法处理formData
-      const classCodeLevel = this.sellingDetail.classCodeLevel
-      let codeArr = []
-      if (classCodeLevel) {
-        codeArr = classCodeLevel.split(',')
-      }
-      const formData = new FormData()
-      formData.append('goodsId', this.sellingDetail.id)
-      this.$axios
-        .post(shopApi.cancelSave, formData)
-        .then((res) => {
-          if (res.code === 200) {
-            this.$xToast.success('取消成功')
-            this.sellingDetail.isSave = false
-          } else {
-            this.$xToast.error(res.message || '操作失败')
-          }
-        })
-        .catch((err) => {
-          console.log('err', err)
-          this.$xToast.error(err.message || '操作失败')
-        })
-    },
-    // 添加收藏
-    addSave() {
-      const classCodeLevel = this.sellingDetail.classCodeLevel
-      let codeArr = []
-      if (classCodeLevel) {
-        codeArr = classCodeLevel.split(',')
-      }
-      const params = {
-        goodsDtos: [
-          {
-            goodsId: this.sellingDetail.id,
-            goodsCode: this.sellingDetail.classCode,
-            catalog1: codeArr.length && codeArr.length > 0 ? codeArr[0] : '',
-            catalog2: codeArr.length && codeArr.length > 1 ? codeArr[1] : '',
-            catalog3: codeArr.length && codeArr.length > 2 ? codeArr[2] : '',
-            goodsType: 'proGoodsServer',
-            ext1: 1,
-          },
-        ],
-      }
-      this.$axios
-        .post(shopApi.addGoods, params)
-        .then((res) => {
-          console.log('res', res)
-          if (res && res.code === 200) {
-            this.$xToast.show({
-              message: '收藏成功',
-              duration: 3000,
-              icon: 'toast_ic_comp',
-              forbidClick: true,
-            })
-            this.sellingDetail.isSave = true
-          } else {
-            this.$xToast.error(res || '收藏失败')
-          }
-        })
-        .catch((err) => {
-          console.log('err', err)
-          this.$xToast.error('收藏失败')
-        })
-    },
+
     comment() {
       const user = navigator.userAgent.toLowerCase()
       console.log(user)
