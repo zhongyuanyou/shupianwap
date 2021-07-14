@@ -1,26 +1,20 @@
 <template>
   <div class="title">
-    <div class="title_tags">
-      <span
-        v-if="sellingGoodsData.salesGoodsSubVos.length > 1"
-        class="title_tags_item title_tags_main"
-        >套餐</span
-      >
+    <div class="flex title_tags">
+      <div class="flex_1 title_tags_left">
+        <span class="title_tags_item">视频看房</span>
+        <span class="title_tags_item">视频看房</span>
+        <span class="title_tags_item">视频看房</span>
+      </div>
+      <div class="title_tags_right">
+        <my-icon name="popup_ic_closeb" size="0.24rem" color="#222222" />9999
+      </div>
     </div>
 
-    <p class="title_btitle">{{ sellingGoodsData.name }}</p>
+    <p class="title_btitle">股份有限公司注册，公司资本为股份所组成的公司</p>
 
-    <div class="comment" @click="commentfn">
-      <p class="tit">{{ comment }}</p>
-      <p class="num">共999+评价</p>
-      <sp-icon name="arrow" class="icon" />
-    </div>
     <div class="title_bottom">
-      <span class="title_bottom_money">{{
-        sellingGoodsData.salesPrice !== '0.00'
-          ? sellingGoodsData.salesPrice + '元'
-          : '面议'
-      }}</span>
+      <span class="title_bottom_button"></span>
     </div>
   </div>
 </template>
@@ -31,26 +25,25 @@ export default {
   name: 'Title',
   components: {
     [Image.name]: Image,
-    SpIcon: Icon,
+    // SpIcon: Icon,
   },
   props: {
     comment: {
       type: String,
       default: '',
     },
+    sellingGoodsData: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
   },
   data() {
     return {}
   },
-  computed: {
-    sellingGoodsData() {
-      return this.$store.state.sellingGoodsDetail.sellingGoodsData
-    },
-  },
+  computed: {},
   methods: {
-    handleShowPriceRed() {
-      this.$refs.priceR.show = true
-    },
     commentfn() {
       this.$emit('onComment')
     },
@@ -60,12 +53,59 @@ export default {
 
 <style lang="less" scoped>
 .title {
+  font-size: 0;
+  .flex {
+    display: flex;
+    // align-items: flex-start;
+  }
+  .flex_1 {
+    flex: 1;
+  }
+
   .title_tags {
-    span {
-      background: #f0f2f5;
-      border-radius: 4px;
-      display: inline-block;
-      margin-right: 12px;
+    .title_tags_left {
+      .title_tags_item {
+        background: #f0f2f5;
+        border-radius: 4px;
+        display: inline-block;
+        margin-right: 12px;
+
+        font-family: PingFangSC-Regular;
+        font-size: 22px;
+        color: #5c7499;
+        letter-spacing: 0;
+        text-align: center;
+      }
+    }
+    .title_tags_right {
+      font-family: PingFangSC-Regular;
+      font-size: 24px;
+      color: #222222;
+      letter-spacing: 0;
+      line-height: 24px;
+    }
+  }
+
+  .title_btitle {
+    font-family: PingFangSC-Medium;
+    font-weight: bold;
+    font-size: 44px;
+    color: #222222;
+    line-height: 58px;
+    margin: 20px 0 38px;
+  }
+  .title_bottom {
+    &_button {
+      height: 96px;
+      background: #4974f5;
+      border-radius: 8px;
+
+      font-family: PingFangSC-Medium;
+      font-weight: bold;
+      font-size: 32px;
+      color: #ffffff;
+      text-align: center;
+      line-height: 32px;
     }
   }
 }
