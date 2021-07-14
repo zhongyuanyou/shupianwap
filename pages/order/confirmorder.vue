@@ -388,6 +388,7 @@ export default {
           this.order = result
           this.order.list = this.order.productVo
           this.price = this.order.skuTotalPrice
+          this.skeletonloading = false
           this.getInitData(5)
           this.getInitData(6)
         })
