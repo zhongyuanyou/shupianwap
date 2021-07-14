@@ -295,7 +295,7 @@ export default {
           }
         }
         p {
-          margin-left: 8px;
+          margin-left: 4px;
           font-size: 24px;
           color: #555555;
         }

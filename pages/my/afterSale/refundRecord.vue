@@ -179,6 +179,7 @@ export default {
         font-size: 36px;
         color: #ec5330;
         margin-left: auto;
+        font-weight: bold;
         span {
           font-size: 24px !important;
         }

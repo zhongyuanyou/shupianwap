@@ -71,6 +71,10 @@ export default {
     font-size: 32px;
     color: #ffffff;
     text-align: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    right: 0;
   }
 }
 </style>

@@ -184,23 +184,7 @@ export default {
     ShareGoods,
   },
   mixins: [imHandle],
-  async asyncData({ $axios, query, store }) {
-    let articleDetails = {}
-    try {
-      const res = await $axios.get(knownApi.questionArticle.articleDetail, {
-        params: {
-          shareId: query.shareId,
-        },
-      })
-      if (res.code === 200) {
-        articleDetails = res.data
-      }
-    } catch (error) {}
 
-    return {
-      articleDetails,
-    }
-  },
   data() {
     return {
       isShare: false,
@@ -236,6 +220,7 @@ export default {
       androdFinally: '',
       iosLink: 'cpsccustomer://',
       androdLink: 'cpsccustomer://',
+      articleDetails: {},
     }
   },
   computed: {
@@ -263,24 +248,41 @@ export default {
     }
     this.isShare = this.$route.query.isShare
     this.shareId = this.$route.query.shareId
-    this.iosPath.parameter.cid = this.articleDetails.id
-    this.iosLink = this.prefixPath + JSON.stringify(this.iosPath)
-    this.androdPath.parameter.id = this.articleDetails.id
-    this.androdLink = this.prefixPath + JSON.stringify(this.androdPath)
-    // if (this.shareId) {
-    //   this.iosLink = `cpsccustomer://{"path":"CPSCustomer:CPSCustomer/CPSCSharePlaceholderViewController///push/animation","parameter":{"selectedIndex":0,"type":2,"cid":${this.articleDetails.id}}}`
-    //   this.androdLink = `cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":1,"isLogin":"0","secondLink":"/known/detail/article","id":${this.articleDetails.id}}}`
-    // }
-    if (this.articleDetails.userId) {
-      this.getPlanerInfo(this.articleDetails.userId)
-    }
     console.log('androdLink', this.androdLink)
     window.addEventListener('scroll', this.handleScroll)
+    this.getDetail()
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    getDetail() {
+      this.$axios
+        .get(knownApi.questionArticle.articleDetail, {
+          params: {
+            shareId: this.$route.query.shareId,
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.articleDetails = res.data
+            this.iosPath.parameter.cid = this.articleDetails.id
+            this.iosLink = this.prefixPath + JSON.stringify(this.iosPath)
+            this.androdPath.parameter.id = this.articleDetails.id
+            this.androdLink = this.prefixPath + JSON.stringify(this.androdPath)
+            // if (this.shareId) {
+            //   this.iosLink = `cpsccustomer://{"path":"CPSCustomer:CPSCustomer/CPSCSharePlaceholderViewController///push/animation","parameter":{"selectedIndex":0,"type":2,"cid":${this.articleDetails.id}}}`
+            //   this.androdLink = `cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":1,"isLogin":"0","secondLink":"/known/detail/article","id":${this.articleDetails.id}}}`
+            // }
+            if (this.articleDetails.userId) {
+              this.getPlanerInfo(this.articleDetails.userId)
+            }
+          } else {
+            this.$xToast.error('内容失效')
+            this.$router.replace('/known/')
+          }
+        })
+    },
     getPlanerInfo(id) {
       // const res = await this.$axios.get(userinfoApi.info, {
       //   params: { id },

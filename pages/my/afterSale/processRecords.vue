@@ -2,7 +2,7 @@
   <div class="process-record">
     <Header title="处理记录" />
     <div class="process-box">
-      <sp-steps direction="vertical" :active="index">
+      <sp-steps direction="vertical">
         <sp-step v-for="(item, index) in processRecordData" :key="index">
           <h3>{{ item.dealStatusName }}</h3>
           <div class="date">{{ item.dealTime }}</div>
@@ -84,6 +84,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+::v-deep .sp-step--vertical:not(:last-child)::after{
+      border-bottom-width: 0px;
+}
 ::v-deep .sp-icon-checked {
   width: 16px !important;
   height: 16px !important;

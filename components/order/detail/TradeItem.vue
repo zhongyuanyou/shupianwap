@@ -1,5 +1,23 @@
 <template>
   <div class="item-inner">
+    <div v-if="item.skuDealType" class="img-mark">
+      <img
+        v-if="item.skuDealType === 'SKU_DEAL_TYPE_1'"
+        src="https://cdn.shupian.cn/sp-pt/wap/images/7yo84dwgx0k0000.png"
+        alt="取消办理"
+      />
+      <img
+        v-else-if="item.skuDealType === 'SKU_DEAL_TYPE_2'"
+        src="https://cdn.shupian.cn/sp-pt/wap/images/2qi17702lc00000.png"
+        alt="继续办理"
+      />
+      <span
+        v-if="item.skuDealType === 'SKU_DEAL_TYPE_1'"
+        class="after-sale-text"
+        >取消办理</span
+      >
+      <span v-else class="after-sale-text">继续办理</span>
+    </div>
     <div class="img">
       <sp-image class="sp-image" :src="item.indexImg"></sp-image>
     </div>
@@ -69,6 +87,30 @@ export default {
   width: 100%;
   height: auto;
   display: flex;
+  position: relative;
+  .img-mark {
+    position: absolute;
+    z-index: 0;
+    right: -40px;
+    top: 0;
+    height: 140px;
+    width: 200px;
+    img {
+      width: 140px;
+      height: 105px;
+    }
+    .after-sale-text {
+      padding-top: 130px;
+      font-size: 24px;
+      color: #fe8c29;
+      letter-spacing: 0;
+      text-align: right;
+      line-height: 24px;
+      position: absolute;
+      bottom: 0;
+      right: 40px;
+    }
+  }
   .img {
     width: 130px;
     height: 130px;
