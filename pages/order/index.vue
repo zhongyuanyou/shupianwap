@@ -221,6 +221,10 @@ export default {
       this.loadingMore = false
       this.noMore = false
       this.loading = true
+      if (this.$route.query.type) {
+        this.$router.push({ query: {} })
+      }
+      
       this.list = []
       this.getOrderList()
     },

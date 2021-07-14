@@ -17,12 +17,13 @@
       </div>
       <div class="btns">
         <button
-          @click="$router.replace(`/my/afterSale/detail?id=${$route.query.id}`)"
+          @click="$router.push(`/my/afterSale/detail?id=${$route.query.id}`)"
         >
           查看售后
         </button>
-        <button @click="$router.replace('/order')">返回订单</button>
+        <button @click="$router.push('/order')">返回订单</button>
       </div>
+      <div class="line"></div>
       <div class="desc">
         <p>
           <span
@@ -113,6 +114,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.line {
+  background: #f4f4f4;
+  height: 1px;
+  width: 100%;
+  margin: 64px 0;
+}
 .blue {
   color: #4974f5;
 }
@@ -120,10 +127,10 @@ export default {
   padding: 0 40px;
   padding-top: 76px;
   min-height: 100vh;
-  background: #f5f5f5;
+  background: #fff;
   > .apply-box {
     text-align: center;
-    p {
+    > p {
       font-size: 40px;
       margin-top: 24px;
       font-family: PingFangSC-Medium;
@@ -134,7 +141,7 @@ export default {
       font-family: PingFangSC-Regular;
       font-size: 28px;
       color: #555555;
-      line-height: 60px;
+      line-height: 48px;
       margin-top: 22px;
       padding: 0 100px;
       span {
@@ -142,7 +149,6 @@ export default {
         font-weight: bold;
       }
       .num {
-       
       }
     }
     .btns {
@@ -150,23 +156,25 @@ export default {
       justify-content: center;
       margin-top: 46px;
       button {
-        width: 160px;
         height: 64px;
         border-radius: 8px;
         font-size: 26px;
         margin-right: 20px;
+        word-break: keep-all;
+        padding: 0 28px;
         &:first-child {
           border: 1px solid #dddddd;
           color: #555555;
+          background: #fff;
         }
         &:last-child {
           border: 1px solid #4974f5;
           color: #4974f5;
+          background: #fff;
         }
       }
     }
     > .desc {
-      margin-top: 128px;
       text-align: left;
       > p {
         font-family: PingFangSC-Regular;

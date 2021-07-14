@@ -33,12 +33,13 @@
           v-model="bankName"
           name="银行名称"
           label="银行名称"
-          placeholder="输入银行卡号，系统自动识别"
+          placeholder="请输入银行卡号，系统自动识别"
           readonly="readonly"
-          :rules="[{ required: true, message: '输入正确的银行卡号可识别名称' }]"
+          :rules="[{ required: true }]"
         />
-        <sp-field
+        <!-- <sp-field
           v-model="accountBank"
+          type="textarea"
           name="开户行"
           label="开户行"
           placeholder="请输入开户行，系统自动搜索"
@@ -46,11 +47,17 @@
           :rules="[
             {
               required: true,
-              message: '请输入开户行，系统自动搜索',
             },
           ]"
           @click="openPullPop"
-        />
+        /> -->
+        <div class="textarea">
+          <div class="title">开户行<span>*</span></div>
+          <div class="name" @click="openPullPop">
+            {{ accountBank }}
+            <span v-show="!accountBank">请输入开户行，系统自动搜索</span>
+          </div>
+        </div>
         <!-- <sp-field
           v-model="bankPhone"
           type="tel"
@@ -83,12 +90,14 @@
             color="#999"
             @click="showPullPop = false"
           ></sp-icon>
-          <sp-search
-            v-model="searchName"
-            placeholder="请输入搜索关键词"
-            @input="onSearch"
-            @cancel="onCancel"
-          />
+          <form action="/">
+            <sp-search
+              v-model="searchName"
+              placeholder="请输入搜索关键词"
+              @input="onSearch"
+              @cancel="onCancel"
+            />
+          </form>
         </div>
         <div class="bank-list">
           <ul v-if="list.length > 0" class="bank-ul">
@@ -269,7 +278,7 @@ export default {
     selectItem(item) {
       this.accountBank = item.name
       this.activeIndex = item.id
-      this.openingBankCode = item.bankCode
+      this.openingBankCode = item.icbcToOtherCode
       this.showPullPop = false
     },
   },
@@ -277,6 +286,45 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.textarea {
+  display: flex;
+  justify-content: space-between;
+  padding: 38px 20px;
+  min-height: 112px;
+  border-bottom: 1px solid #f4f4f4;
+  .title {
+    color: #222;
+    font-size: 32px;
+    span {
+      color: #ec5330;
+      position: relative;
+      top: 5px;
+    }
+  }
+  .name {
+    font-size: 32px;
+    color: #222;
+    font-weight: bold;
+    max-width: 4.8rem;
+    line-height: 44px;
+    span {
+      color: #999 !important;
+      font-weight: normal !important;
+    }
+  }
+}
+::v-deep .sp-field__body {
+  ::-webkit-input-placeholder {
+    font-weight: normal !important;
+    color: #999 !important;
+    font-size: 32px !important;
+  }
+  textarea {
+    font-size: 32px;
+    font-weight: bold;
+    color: #222;
+  }
+}
 ::v-deep .sp-field__control {
   color: #222;
 }
@@ -367,20 +415,26 @@ export default {
     }
   }
 }
+
 .form {
   padding: 0 20px;
   ::v-deep .sp-cell {
-    height: auto;
+    min-height: 112px;
     align-items: center;
+    padding: 10px 20px;
   }
   ::v-deep.sp-field__body input {
     text-align: right;
+    font-weight: bold;
+    font-size: 32px;
   }
   ::v-deep.sp-field__error-message {
     text-align: right;
   }
   ::v-deep.sp-field__label {
     width: 4.8em;
+    font-size: 32px;
+    color: #222;
     span {
       position: relative;
       &:after {

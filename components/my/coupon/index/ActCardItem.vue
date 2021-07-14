@@ -5,11 +5,11 @@
     <div :class="couponType === 0 ? 'notUse' : 'haveUse'" class="coupon_item">
       <div class="item-lf">
         <div class="coupon_price">
-          <span v-if="item.cardType === 1">
+          <span v-if="item.cardType === 2">
             {{ getDiscount(item.discount) }}
             <span class="coupon_price_unit">折</span>
           </span>
-          <span v-else-if="item.cardType === 2">{{ item.rebatePrice }}</span>
+          <span v-else-if="item.cardType === 1">{{ item.rebatePrice }}</span>
         </div>
         <div v-if="item.rebateNeedPrice == 0" class="can_use">无门槛</div>
         <div v-else-if="item.rebateNeedPrice" class="can_use">
@@ -19,13 +19,15 @@
       <div class="item-rt">
         <div class="sign" :class="getStatusClassName()"></div>
         <div class="title" @click="goDetailPage(item)">
-          <span class="coupon_type_name" :class="{ invalid: couponType != 0 }">
-            {{ item.cardType == 2 ? '满减卡' : '折扣卡' }}
-          </span>
+          <span
+            class="coupon_type_name"
+            :class="{ invalid: couponType != 0 }"
+            >{{ item.cardType == 1 ? '满减卡' : '折扣卡' }}</span
+          >
           {{ item.cardName }}
         </div>
         <div ref="textpro" class="content">
-          {{ getuseTypeName(item.userLimit) }}
+          {{ getuseTypeName(item.useLimit) }}
           <!-- item.useType === 1
               ? '全品类通用'
               : item.useType === 2
@@ -88,24 +90,19 @@ export default {
       }
     },
     getDiscount(count) {
-      let num
-      if (Number(count) > 10) {
-        num = Number(count) / 100
-        num = num.toFixed('1')
-      }
-      return num || count
+      return Number(count) / 100
     },
     getuseTypeName(useType) {
       let useTypeName = ''
       switch (useType) {
-        case 1:
-          useTypeName = '全品类通用'
-          break
+        // case 1:
+        //   useTypeName = '全品类通用'
+        //   break
         case 2:
-          useTypeName = '限定部分类别产品使用'
+          useTypeName = '仅限指定品类使用'
           break
         case 3:
-          useTypeName = '指定产品使用'
+          useTypeName = '仅限指定商品使用'
       }
       return useTypeName
     },
@@ -196,7 +193,7 @@ export default {
       font-family: PingFang SC;
       font-weight: bold;
       color: #222222;
-      line-height: 32px;
+      // line-height: 32px;
       margin: 36px 0 23px 0;
       word-break: break-all;
       display: -webkit-box;
@@ -250,12 +247,24 @@ export default {
       display: flex;
       font-size: 0;
       align-items: flex-start;
+
       .date {
         flex: 1;
-        font-size: 20px;
+        font-size: 24px;
         font-family: PingFang SC;
         font-weight: 400;
         color: #999999;
+        overflow: hidden;
+
+        transform-origin: left center;
+        transform: scale(0.83);
+        white-space: nowrap;
+        // span {
+        //   white-space: nowrap;
+        //   display: inline-block;
+        //   transform-origin: left center;
+        //   transform: scale(0.83);
+        // }
       }
 
       .surplus {
@@ -263,10 +272,14 @@ export default {
 
         border-radius: 4px;
         padding: 0 6px;
-        font-size: 20px;
+        font-size: 24px;
         font-family: PingFang SC;
         font-weight: 400;
         color: #999999;
+
+        display: inline-block;
+        transform-origin: right center;
+        transform: scale(0.83);
       }
       .warn {
         font-size: 20px;

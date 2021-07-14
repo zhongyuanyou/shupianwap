@@ -1,8 +1,8 @@
 <template>
   <div class="invoice_apply">
-    <sp-sticky>
+    <HeaderSlot>
       <Header class="my-header" title="发票信息"></Header>
-    </sp-sticky>
+    </HeaderSlot>
 
     <div class="card">
       <div class="title">发票类型</div>
@@ -160,6 +160,7 @@
     </div>
     <div class="card">
       <sp-button
+        class="submit"
         size="normal"
         block
         type="primary"
@@ -192,16 +193,16 @@ import {
   Field,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-
+import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
 import Header from '@/components/common/head/header.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { invoiceApi } from '@/api/index.js'
 import contractApi from '@/api/contract'
 const InvoiceType = {
-  '027': '增值税电子专用发票',
-  '026': '电子普通发票',
   '007': '增值税普通发票 ',
+  '026': '增值税电子发票',
   '004': '增值税专用发票',
+  '027': '增值税电子专用发票',
 }
 
 export default {
@@ -209,6 +210,7 @@ export default {
   name: 'InvoiceApply',
   components: {
     LoadingCenter,
+    HeaderSlot,
     Header,
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
@@ -227,10 +229,10 @@ export default {
       show_more_input: false,
       // 发票类型
       InvoiceType: {
-        // '027': '增值税电子专用发票',
-        // '026': '电子普通发票 ',
         // '007': '增值税普通发票 ',
+        // '026': '增值税电子发票',
         // '004': '增值税专用发票',
+        // '027': '增值税电子专用发票',
       },
       InvoiceHeader: {
         INVOICE_HEADER_PERSONAL: '个人',
@@ -285,10 +287,12 @@ export default {
       ) {
         this.formData.invoiceHeader = 'INVOICE_HEADER_COMPANY'
       }
+      this.formData.invoiceHeaderName = ''
       this.getDefaultInvoiceHeader()
     },
     click_invoice_header(key) {
       this.formData.invoiceHeader = key
+      this.formData.invoiceHeaderName = ''
       this.getDefaultInvoiceHeader()
     },
     init() {
@@ -316,7 +320,9 @@ export default {
         })
         .catch((error) => {
           this.loading = false
+          this.getDefaultInvoiceHeader()
           this.getConfig()
+
           console.error(error)
           // this.$xToast.error(error.message || '请求失败，请重试')
         })
@@ -356,12 +362,18 @@ export default {
         )
         .then((res) => {
           const arr = res.applyInvoiceType.split(',')
-          const info = {}
-          arr.map((item) => {
-            if (InvoiceType[item]) {
-              info[item] = InvoiceType[item]
+          let info = {}
+          if (arr.length === 0) {
+            info = {
+              '007': '增值税普通发票 ',
             }
-          })
+          } else {
+            arr.map((item) => {
+              if (InvoiceType[item]) {
+                info[item] = InvoiceType[item]
+              }
+            })
+          }
 
           // arr.map((item, index) => {
           //   info[item] = res.applyInvoiceTypeNames[index]
@@ -373,13 +385,19 @@ export default {
             res.defaultInvoiceType &&
             this.InvoiceType[res.defaultInvoiceType]
           ) {
-            this.formData.invoiceType = res.defaultInvoiceType
+            this.formData.invoiceType = res.defaultInvoiceType || '007'
+          } else if (!this.formData.invoiceType && !res.defaultInvoiceType) {
+            this.formData.invoiceType = '007'
           }
           this.loading = false
         })
         .catch((err) => {
           console.log(err)
           this.loading = false
+          this.InvoiceType = {
+            '007': '增值税普通发票 ',
+          }
+          this.formData.invoiceType = '007'
           this.$xToast.error('商户信息错误')
         })
     },
@@ -397,14 +415,21 @@ export default {
                 this.formData.invoiceType === '004' ||
                 this.formData.invoiceType === '027'
               ) {
+                // 专用发票
                 invoiceType = 'SPECIAL'
               } else {
+                // 普通发票
                 invoiceType = 'ORDINARY'
               }
               if (this.formData.invoiceHeader === 'INVOICE_HEADER_PERSONAL') {
                 invoiceHeader = 'PERSONAL'
               } else {
                 invoiceHeader = 'COMPANY'
+              }
+              if (invoiceType === 'SPECIAL') {
+                return (
+                  item.headType === invoiceHeader && item.type === invoiceType
+                )
               }
 
               return (
@@ -434,22 +459,22 @@ export default {
         orderId: this.orderId,
         applySource: 'INVOICE_APPLY_SOURCE_CUSTOMER',
         // invoiceType: '026',
-        invoiceContent: 'GOODS_DETAILS',
+        // invoiceContent: 'GOODS_DETAILS',
         invoiceHeader:
           info.headType === 'COMPANY'
             ? 'INVOICE_HEADER_COMPANY'
             : 'INVOICE_HEADER_PERSONAL',
 
-        invoiceHeaderName: info.invoiceHead,
-        receiverPhone: '',
-        receiverEmail: '',
+        invoiceHeaderName: info.invoiceHead || '',
+        // receiverPhone: '',
+        // receiverEmail: '',
 
-        bankAccount: info.bankNumber,
-        bankOfDeposit: info.depositBank,
+        bankAccount: info.bankNumber || '',
+        bankOfDeposit: info.depositBank || '',
 
-        registerTel: phone,
-        registerAddress: info.address,
-        taxpayerIdentifNum: info.dutyParagraph,
+        registerTel: phone || '',
+        registerAddress: info.address || '',
+        taxpayerIdentifNum: info.dutyParagraph || '',
       })
     },
     // 解密电话
@@ -548,7 +573,23 @@ export default {
   background: #f5f5f5;
   min-height: 100vh;
   font-size: 0;
-
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+  ::v-deep .sp-field__label {
+    flex: none !important;
+    // width: 4.5em;
+    font-family: PingFangSC-Regular;
+    font-size: 30px;
+    color: #222222;
+  }
+  ::v-deep .sp-field__control {
+    font-family: PingFangSC-Regular;
+    font-size: 30px;
+    color: #222222;
+  }
+  .my-header {
+    border-bottom: 1px solid #f5f5f5;
+  }
   .card {
     background: #fff;
     margin-bottom: 20px;
@@ -557,7 +598,7 @@ export default {
     .title {
       font-size: 32px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
+      font-weight: bold;
       color: #000000;
       line-height: 32px;
       padding-bottom: 40px;
@@ -603,6 +644,14 @@ export default {
         }
       }
     }
+
+    .submit {
+      font-weight: bold;
+      font-family: PingFangSC-Medium;
+      font-size: 32px;
+      color: #ffffff;
+      text-align: center;
+    }
   }
   .options .btn::v-deep.sp-button--primary {
     min-width: 152px;
@@ -614,7 +663,7 @@ export default {
 
     font-size: 26px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: bold;
     line-height: 26px;
   }
   .options .btn.active::v-deep.sp-button--primary {

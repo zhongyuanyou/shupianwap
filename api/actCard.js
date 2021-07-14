@@ -30,12 +30,12 @@ const actCard = {
    * @param {array} params.productList 商品列表
    * @returns
    */
-  goods_card_list({ axios }, params) {
+  goods_card_list( params) {
     return request({
-      axios,
+
       params,
       method: 'post',
-      url: CHIPS_PC_URL + '/nk/marking/v1/goods_card_list.do',
+      url: CHIPS_PC_URL + '/yk/marking/v1/goods_card_list.do',
     })
   },
 
@@ -105,6 +105,9 @@ const actCard = {
       url: CHIPS_PC_URL + '/yk/marking/v1/add_order.do',
     })
   },
+
+
+
 }
 
 export default actCard

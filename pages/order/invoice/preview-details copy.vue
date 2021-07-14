@@ -8,18 +8,12 @@
     <div class="preview_content">
       <client-only>
         <div class="preview_image">
-          <div
-            v-for="item of showList"
-            :key="item.id"
-            class="preview_image_item"
-            @click="toDetail(item)"
-          >
-            <div class="mask">点击查看电子发票</div>
+          <div v-if="list.id" class="preview_image_item">
             <Pdf
-              v-if="ShowPdf"
-              :autoplay="false"
-              :src="item.pdfUrl"
-              :page="1"
+              v-for="i in list.numPages"
+              :key="i"
+              :src="list.pdfUrl"
+              :page="i"
               class="pdf-set"
             />
           </div>
@@ -56,36 +50,23 @@ export default {
   data() {
     return {
       loading: false, // 加载效果状态
+      pdfId: '',
       orderId: '',
 
-      swipeCurrent: 0,
-      list: [],
-
-      numPages: 1,
-      ShowPdf: true,
+      list: {},
     }
   },
-  computed: {
-    showList() {
-      return this.list.filter((item) => {
-        return item.pdfUrl
-      })
-    },
-  },
-  destroyed() {
-    this.ShowPdf = false
-  },
+
   mounted() {
     this.orderId = this.$route.query.orderId
+    this.pdfId = this.$route.query.pdfId
+
     this.init()
   },
   methods: {
-    onSwipeChange(index) {
-      this.swipeCurrent = index
-    },
     init() {
-      if (!this.orderId) {
-        return this.$xToast.error('没有指定订单')
+      if (!this.orderId && !this.pdfId) {
+        return this.$xToast.error('没有信息')
       }
       // const res = [
       //   {
@@ -113,8 +94,11 @@ export default {
       //     invoiceNo: '11111',
       //   },
       // ]
-
-      // this.pdfTask(res)
+      // const pdfInfo = res.find((item) => {
+      //   return item.id === this.pdfId
+      // })
+      // console.log(pdfInfo)
+      // this.pdfTask(pdfInfo)
 
       this.loading = true
       invoiceApi
@@ -128,8 +112,13 @@ export default {
         .then((res) => {
           this.loading = false
           console.log(' res', res)
-
-          this.pdfTask(res)
+          if (res) {
+            const pdfInfo = res.find((item) => {
+              return item.id === this.pdfId
+            })
+            console.log(pdfInfo)
+            this.pdfTask(pdfInfo)
+          }
         })
         .catch((error) => {
           this.loading = false
@@ -137,24 +126,12 @@ export default {
           this.$xToast.error(error.message || '请求失败，请重试')
         })
     },
-    pdfTask(res) {
-      res &&
-        res.map((item) => {
-          if (!item.pdfUrl) return
-          this.$pdf.createLoadingTask(item.pdfUrl).promise.then((pdf) => {
-            item.numPages = pdf.numPages
-          })
-        })
+    pdfTask(pdfInfo) {
+      if (!pdfInfo || !pdfInfo.pdfUrl) return
+      this.$pdf.createLoadingTask(pdfInfo.pdfUrl).promise.then((pdf) => {
+        pdfInfo.numPages = pdf.numPages
 
-      this.list = res || []
-    },
-    toDetail(item) {
-      this.$router.push({
-        path: '/order/invoice/preview-details',
-        query: {
-          orderId: this.orderId,
-          pdfId: item.id,
-        },
+        this.list = pdfInfo
       })
     },
   },
@@ -164,6 +141,7 @@ export default {
 <style lang="less" scoped>
 .invoice_preview {
   background: #ffffff;
+  background: #f5f5f5;
   height: 100vh;
 
   padding-bottom: constant(safe-area-inset-bottom);
@@ -179,25 +157,8 @@ export default {
     text-align: center;
     padding: 60px;
 
-    .preview_image_item {
-      position: relative;
+    .pdf-set {
       margin-bottom: 40px;
-      .mask {
-        position: absolute;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        line-height: 100%;
-        z-index: 98;
-        background: rgba(0, 0, 0, 0.3);
-        font-family: PingFangSC-Regular;
-        font-size: 28px;
-        color: #ffffff;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
     }
   }
 }

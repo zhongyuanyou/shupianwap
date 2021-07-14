@@ -272,13 +272,17 @@
             >查看发票</sp-button
           > -->
           <sp-button
-            v-if="checkAfterSaleStatus() === 1 || checkAfterSaleStatus() === 4"
+            v-if="
+              checkAfterSaleStatus() === 1 &&
+              orderData.cusOrderStatusNo !== 'ORDER_CUS_STATUS_UNPAID' &&
+              orderData.cusOrderStatusNo !== 'ORDER_CUS_STATUS_CANCELLED'
+            "
             class="btn-look"
             @click="handleClickItem(7)"
             >退款/售后</sp-button
           >
           <sp-button
-            v-if="checkAfterSaleStatus() === 2"
+            v-if="checkAfterSaleStatus() === 2 || checkAfterSaleStatus() === 5"
             class="btn-look"
             @click="handleClickItem(7)"
             >售后中</sp-button
