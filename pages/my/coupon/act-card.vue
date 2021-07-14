@@ -1,8 +1,8 @@
 <template>
   <div class="invoice">
-    <sp-sticky>
+    <HeaderSlot>
       <Header class="my-header" title="活动卡专区"></Header>
-    </sp-sticky>
+    </HeaderSlot>
     <div class="banner">
       <span class="card_des" @click="TipsShow = true">活动卡介绍</span>
       <!-- <img :src="$ossImgSetV2(banner)" alt="" /> -->
@@ -81,6 +81,7 @@ import {
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 
+import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
 import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
@@ -95,12 +96,11 @@ export default {
   components: {
     LoadingCenter,
     Header,
-    [WorkTab.name]: WorkTab,
-    [WorkTabs.name]: WorkTabs,
+    HeaderSlot,
+
     [Sticky.name]: Sticky,
     [Empty.name]: Empty,
-    [Bottombar.name]: Bottombar,
-    [BottombarButton.name]: BottombarButton,
+
     [Dialog.Component.name]: Dialog.Component,
     [List.name]: List,
     [Swipe.name]: Swipe,
@@ -233,6 +233,8 @@ export default {
 
   .banner {
     position: relative;
+    width: 750px;
+    margin: auto;
     img {
       width: 100%;
     }
@@ -279,7 +281,8 @@ export default {
     }
   }
   .coupon_list {
-    margin: 24px 40px 0;
+    margin: 24px auto 0;
+    width: 670px;
   }
   .dialog {
     padding: 48px 0 0 0;

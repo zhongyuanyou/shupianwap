@@ -138,11 +138,12 @@
                       }}</span>
                       {{ item.cardName }}
                     </h1>
-                    <p v-if="item.useLimit === 1">全品类通用</p>
-                    <p v-else-if="item.useLimit === 2">
-                      限定“部分类别产品”使用
+                    <p v-if="item.marketingCouponVO.useType === 2">
+                      仅限指定品类使用
                     </p>
-                    <p v-else>限定“指定产品”使用</p>
+                    <p v-if="item.marketingCouponVO.useType === 3">
+                      仅限指定商品使用
+                    </p>
                     <p class="date">
                       {{ formatTime(item.validateDateStart) }}-{{
                         formatTime(item.validateDateEnd)
@@ -253,7 +254,10 @@ export default {
               ? this.$parent.order.skuTotalPrice
               : this.$parent.order.salesPrice
 
-          return (((10 - this.checkarr.discount) / 10) * price).toFixed('2')
+          const discount = parseFloat(this.checkarr.discount) / 10
+          const discountNum = ((10 - discount) / 10) * price
+
+          return Math.ceil(discountNum * 100) / 100
         }
       }
       return 0
@@ -391,7 +395,8 @@ export default {
       overflow-y: auto;
       padding: 0 40px;
       > .list {
-        margin-top: 24px;
+        margin: 24px auto 0;
+        width: 670px;
         height: 212px;
         background: #ffffff;
         box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
@@ -550,7 +555,8 @@ export default {
       height: 100%;
       > .nolist {
         height: 271px;
-        margin-top: 24px;
+        margin: 24px auto 0;
+        width: 670px;
         background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png)
           no-repeat;
         background-size: 100%;
