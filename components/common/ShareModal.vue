@@ -26,7 +26,9 @@
             "
           />
           <div class="planner-info">
-            <span>您好，我是{{ planerInfo.name || '规划师' }}</span>
+            <span
+              >您好，我是{{ planerInfo.name || plannerName || '规划师' }}</span
+            >
           </div>
         </div>
       </div>
@@ -62,6 +64,16 @@ export default {
   components: {
     [Icon.name]: Icon,
   },
+  props: {
+    plannerName: {
+      type: String,
+      default: '',
+    },
+    mchId: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
       visible: false, // 是否最大化显示 true为最大化显示 false为最小化显示
@@ -82,7 +94,8 @@ export default {
     },
   },
   mounted() {
-    this.plannerId = this.$route.query.plannerId || this.$route.query.homeUserId
+    this.plannerId =
+      this.$route.query.plannerId || this.$route.query.homeUserId || this.mchId
     this.partnerId = this.$route.query.partnerId
     console.log('plannerId', this.plannerId)
     console.log('partnerId', this.partnerId)
@@ -115,6 +128,7 @@ export default {
           this.visible = true
         })
         .catch((err) => {
+          this.visible = true
           console.log('获取规划师信息err', err)
         })
     },

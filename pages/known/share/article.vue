@@ -1,6 +1,9 @@
 <template>
   <section>
-    <ShareModal />
+    <ShareModal
+      :planner-name="articleDetails.createrName || articleDetails.userName"
+      :mch-id="articleDetails.createrId"
+    />
     <HeaderSlot>
       <div v-if="!showHead" class="flex">
         <div class="nav-back">
@@ -45,92 +48,116 @@
       :ios-link="iosLink"
       :androd-link="androdLink"
     />
-    <div class="title-area">
-      <div class="title">{{ articleDetails.title }}</div>
-    </div>
-    <div class="main">
-      <div ref="myPage" class="user-info">
-        <sp-image
-          class="img"
-          :src="articleDetails.avatar || $ossImgSetV2('9zzzas17j8k0000.png')"
-          @click.stop="goUser(articleDetails.userId, articleDetails.userType)"
-        />
-        <div class="infos">{{ articleDetails.userName }}</div>
-        <!-- && planerInfo.mchUserId -->
-        <template
-          v-if="
-            (articleDetails.createrId !== userInfo.userId &&
-              articleDetails.userType == 2) ||
-            !userInfo.userId
-          "
-        >
-          <div class="btn">
-            <sp-button
-              size="small"
-              type="primary"
-              @click="sendTextMessage(planerInfo.mchUserId)"
-              >在线问</sp-button
-            >
-            <sp-button
-              size="small"
-              type="info"
-              @click="handleTel(planerInfo.mchUserId)"
-              >打电话</sp-button
-            >
-          </div>
-        </template>
+    <div v-if="articleDetails.title">
+      <div class="title-area">
+        <div class="title">{{ articleDetails.title }}</div>
       </div>
-      <div class="content" v-html="articleDetails.content"></div>
-      <p class="pub-time">编辑于 {{ articleDetails.createTime }}</p>
-
-      <!-- 推荐文章 -->
-      <DetailArticleList :article-list="articleDetails.relatedArticles" />
-
-      <div
-        v-if="
-          articleDetails &&
-          articleDetails.goodsList &&
-          articleDetails.goodsList.length > 0
-        "
-        class="recommend"
-      >
-        <div class="recommend-title">推荐商品</div>
-        <div v-for="goods of articleDetails.goodsList" :key="goods.id">
-          <ShareGoods
-            :info="goods"
-            :type="
-              goods.productType === 'PRO_CLASS_TYPE_SALES'
-                ? 'Service'
-                : 'Trading'
+      <div class="main">
+        <div ref="myPage" class="user-info">
+          <sp-image
+            class="img"
+            :src="articleDetails.avatar || $ossImgSetV2('9zzzas17j8k0000.png')"
+            @click.stop="goUser(articleDetails.userId, articleDetails.userType)"
+          />
+          <div class="infos">
+            {{ articleDetails.createrName || articleDetails.userName }}
+          </div>
+          <!-- && planerInfo.mchUserId -->
+          <template
+            v-if="
+              (articleDetails.createrId !== userInfo.userId &&
+                articleDetails.userType == 2) ||
+              !userInfo.userId
             "
-          ></ShareGoods>
+          >
+            <div class="btn">
+              <sp-button
+                size="small"
+                type="primary"
+                @click="
+                  sendTextMessage(
+                    planerInfo.mchUserId ||
+                      articleDetails.createrId ||
+                      articleDetails.userId
+                  )
+                "
+                >在线问</sp-button
+              >
+              <sp-button
+                size="small"
+                type="info"
+                @click="
+                  handleTel(
+                    planerInfo.mchUserId ||
+                      articleDetails.createrId ||
+                      articleDetails.userId
+                  )
+                "
+                >打电话</sp-button
+              >
+            </div>
+          </template>
+        </div>
+        <div class="content" v-html="articleDetails.content"></div>
+        <p class="pub-time">编辑于 {{ articleDetails.createTime }}</p>
+
+        <!-- 推荐文章 -->
+        <DetailArticleList :article-list="articleDetails.relatedArticles" />
+
+        <div
+          v-if="
+            articleDetails &&
+            articleDetails.goodsList &&
+            articleDetails.goodsList.length > 0
+          "
+          class="recommend"
+        >
+          <div class="recommend-title">推荐商品</div>
+          <div v-for="goods of articleDetails.goodsList" :key="goods.id">
+            <ShareGoods
+              :info="goods"
+              :type="
+                goods.productType === 'PRO_CLASS_TYPE_SALES'
+                  ? 'Service'
+                  : 'Trading'
+              "
+            ></ShareGoods>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!--    上拉组件-->
-    <sp-popup
-      v-model="popupShow"
-      position="bottom"
-      :style="{ height: '30%' }"
-      round
-      close-icon="close"
-      :close-on-click-overlay="false"
-    >
-      <div class="down_slide_list">
-        <ul>
-          <li @click="editQues(articleDetails.id)">
-            <my-icon name="bianji1" size="1rem" color="#555"></my-icon>
-            <p>编辑</p>
-          </li>
-          <li @click="deleteQues(articleDetails.id)">
-            <my-icon name="shanchu1" size="1rem" color="#555"></my-icon>
-            <p>删除</p>
-          </li>
-        </ul>
-        <div class="cancel" @click="popupShow = false">取消</div>
-      </div>
-    </sp-popup>
+      <!--    上拉组件-->
+      <sp-popup
+        v-model="popupShow"
+        position="bottom"
+        :style="{ height: '30%' }"
+        round
+        close-icon="close"
+        :close-on-click-overlay="false"
+      >
+        <div class="down_slide_list">
+          <ul>
+            <li @click="editQues(articleDetails.id)">
+              <my-icon name="bianji1" size="1rem" color="#555"></my-icon>
+              <p>编辑</p>
+            </li>
+            <li @click="deleteQues(articleDetails.id)">
+              <my-icon name="shanchu1" size="1rem" color="#555"></my-icon>
+              <p>删除</p>
+            </li>
+          </ul>
+          <div class="cancel" @click="popupShow = false">取消</div>
+        </div>
+      </sp-popup>
+    </div>
+    <div class="no-data" v-if="!articleDetails.title">
+      <img
+        src="https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png"
+        alt=""
+        srcset=""
+      />
+      <p>内容失效</p>
+    </div>
   </section>
 </template>
 
@@ -265,6 +292,7 @@ export default {
           },
         })
         .then((res) => {
+          this.loaded = true
           if (res.code === 200) {
             if (res.data.goodsList) {
               const goods = res.data.goodsList.filter((item) => {
@@ -285,9 +313,12 @@ export default {
               this.getPlanerInfo(this.articleDetails.userId)
             }
           } else {
-            this.$xToast.error('内容失效')
-            this.$router.replace('/known/')
+            this.loaded = true
           }
+        })
+        .catch((err) => {
+          this.loaded = true
+          console.error(err)
         })
     },
     getPlanerInfo(id) {
@@ -311,7 +342,6 @@ export default {
           ...obj,
           ...res,
         }
-        this.console.log('planerInfo', this.planerInfo)
       })
     },
     goUser(id, usertype) {
@@ -1084,6 +1114,16 @@ export default {
     color: #222222;
     bottom: 0;
     border-top: 1px solid #f4f4f4;
+  }
+}
+.no-data {
+  text-align: center;
+  font-size: 24px;
+  color: #666;
+  img {
+    width: 400px;
+    height: 400px;
+    margin: 0 auto;
   }
 }
 </style>
