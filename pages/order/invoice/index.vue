@@ -31,7 +31,7 @@
       <HeadManagement v-else-if="tabActive === 2" :list="list"></HeadManagement>
     </sp-list>
 
-    <div v-if="list.length == 0 && loading == false">
+    <div v-if="list.length == 0 && loading == false" class="empty-container">
       <sp-empty
         class="empty-text"
         :description="
@@ -357,13 +357,23 @@ export default {
   .paddingBottom150 {
     padding-bottom: 150px;
   }
-  .empty-text ::v-deep .sp-empty__description {
-    font-size: 30px;
-    font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
-    color: #222222;
-    line-height: 30px;
+  .empty-container {
+    min-height: 100vh;
+    background-color: #fff;
+    .empty-text ::v-deep .sp-empty__description {
+      font-size: 30px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #222222;
+      line-height: 30px;
+    }
   }
+
+  ::v-deep .sp-bottombar {
+    margin-bottom: constant(safe-area-inset-bottom);
+    margin-bottom: env(safe-area-inset-bottom);
+  }
+
   // .footer-nav {
   //   position: fixed;
   //   left: 50%;

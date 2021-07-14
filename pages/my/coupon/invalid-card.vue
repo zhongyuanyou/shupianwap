@@ -50,7 +50,7 @@ import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import ActCardItem from '~/components/my/coupon/index/ActCardItem.vue'
-import FooterNav from '~/components/my/coupon/FooterNav.vue'
+
 
 import { coupon, actCard } from '@/api/index'
 

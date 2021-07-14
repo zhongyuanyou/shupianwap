@@ -232,7 +232,7 @@ export default {
       font-family: PingFang SC;
       font-weight: bold;
       color: #222222;
-      line-height: 32px;
+
       margin: 26px 0 15px 0;
       word-break: break-all;
       display: -webkit-box;

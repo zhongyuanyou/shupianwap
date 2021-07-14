@@ -1,8 +1,8 @@
 <template>
   <div class="invoice" :style="{ paddingBottom: FooterNavHeight + 'px' }">
-    <sp-sticky>
+    <HeaderSlot>
       <Header class="my-header" title="购买确认"></Header>
-    </sp-sticky>
+    </HeaderSlot>
     <div v-show="cardInfo.id" class="details">
       <div class="coupon_list">
         <ActCard
@@ -71,18 +71,14 @@ import {
   Button,
   Toast,
   TopNavBar,
-  Uploader,
-  Sticky,
   Bottombar,
   BottombarButton,
-  WorkTab,
-  WorkTabs,
   Empty,
   List,
   Dialog,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-
+import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
 import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
@@ -96,9 +92,8 @@ export default {
   components: {
     LoadingCenter,
     Header,
-    [WorkTab.name]: WorkTab,
-    [WorkTabs.name]: WorkTabs,
-    [Sticky.name]: Sticky,
+    HeaderSlot,
+
     [Empty.name]: Empty,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,

@@ -1,8 +1,8 @@
 <template>
   <div class="invoice_apply">
-    <sp-sticky>
+    <HeaderSlot>
       <Header class="my-header" title="发票信息"></Header>
-    </sp-sticky>
+    </HeaderSlot>
 
     <div class="card">
       <div class="title">发票类型</div>
@@ -193,16 +193,16 @@ import {
   Field,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-
+import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
 import Header from '@/components/common/head/header.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { invoiceApi } from '@/api/index.js'
 import contractApi from '@/api/contract'
 const InvoiceType = {
-  '027': '增值税电子专用发票',
-  '026': '增值税电子发票',
   '007': '增值税普通发票 ',
+  '026': '增值税电子发票',
   '004': '增值税专用发票',
+  '027': '增值税电子专用发票',
 }
 
 export default {
@@ -210,6 +210,7 @@ export default {
   name: 'InvoiceApply',
   components: {
     LoadingCenter,
+    HeaderSlot,
     Header,
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
@@ -228,10 +229,10 @@ export default {
       show_more_input: false,
       // 发票类型
       InvoiceType: {
-        // '027': '增值税电子专用发票',
-        // '026': '增值税电子发票 ',
         // '007': '增值税普通发票 ',
+        // '026': '增值税电子发票',
         // '004': '增值税专用发票',
+        // '027': '增值税电子专用发票',
       },
       InvoiceHeader: {
         INVOICE_HEADER_PERSONAL: '个人',
@@ -361,12 +362,18 @@ export default {
         )
         .then((res) => {
           const arr = res.applyInvoiceType.split(',')
-          const info = {}
-          arr.map((item) => {
-            if (InvoiceType[item]) {
-              info[item] = InvoiceType[item]
+          let info = {}
+          if (arr.length === 0) {
+            info = {
+              '007': '增值税普通发票 ',
             }
-          })
+          } else {
+            arr.map((item) => {
+              if (InvoiceType[item]) {
+                info[item] = InvoiceType[item]
+              }
+            })
+          }
 
           // arr.map((item, index) => {
           //   info[item] = res.applyInvoiceTypeNames[index]
@@ -378,7 +385,9 @@ export default {
             res.defaultInvoiceType &&
             this.InvoiceType[res.defaultInvoiceType]
           ) {
-            this.formData.invoiceType = res.defaultInvoiceType
+            this.formData.invoiceType = res.defaultInvoiceType || '007'
+          } else if (!this.formData.invoiceType && !res.defaultInvoiceType) {
+            this.formData.invoiceType = '007'
           }
           this.loading = false
         })
@@ -560,7 +569,8 @@ export default {
   background: #f5f5f5;
   min-height: 100vh;
   font-size: 0;
-
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
   ::v-deep .sp-field__label {
     flex: none !important;
     // width: 4.5em;
