@@ -395,7 +395,8 @@ export default {
       overflow-y: auto;
       padding: 0 40px;
       > .list {
-        margin-top: 24px;
+        margin: 24px auto 0;
+        width: 670px;
         height: 212px;
         background: #ffffff;
         box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
@@ -554,7 +555,8 @@ export default {
       height: 100%;
       > .nolist {
         height: 271px;
-        margin-top: 24px;
+        margin: 24px auto 0;
+        width: 670px;
         background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png)
           no-repeat;
         background-size: 100%;
