@@ -59,8 +59,9 @@
         <!-- && planerInfo.mchUserId -->
         <template
           v-if="
-            articleDetails.createrId !== userInfo.userId &&
-            articleDetails.userType == 2
+            (articleDetails.createrId !== userInfo.userId &&
+              articleDetails.userType == 2) ||
+            !userInfo.userId
           "
         >
           <div class="btn">
