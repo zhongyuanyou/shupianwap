@@ -151,7 +151,7 @@ export default {
     }
   }
   #demo {
-    min-height: 100vh;
+    // height: auto;
     background: none;
   }
 }
