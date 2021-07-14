@@ -67,7 +67,7 @@
                 :required="formData.type === 'SPECIAL'"
                 label="注册地址"
                 :placeholder="formData.type === 'SPECIAL' ? '必填' : '选填'"
-                maxlength="120"
+                maxlength="80"
                 :rules="[
                   {
                     required: formData.type === 'SPECIAL',
@@ -92,7 +92,7 @@
                 v-model="formData.depositBank"
                 :required="formData.type === 'SPECIAL'"
                 label="开户银行"
-                maxlength="50"
+                maxlength="45"
                 :placeholder="formData.type === 'SPECIAL' ? '必填' : '选填'"
                 :rules="[
                   {
@@ -105,7 +105,7 @@
                 v-model="formData.bankNumber"
                 :required="formData.type === 'SPECIAL'"
                 label="银行账号"
-                maxlength="50"
+                maxlength="45"
                 :placeholder="formData.type === 'SPECIAL' ? '必填' : '选填'"
                 :rules="[
                   {
