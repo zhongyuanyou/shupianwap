@@ -190,8 +190,8 @@ export default {
       font-family: PingFang SC;
       font-weight: bold;
       color: #222222;
-      line-height: 32px;
-      margin: 36px 0 23px 0;
+      // line-height: 32px;
+      margin: 34px 0 23px 0;
       word-break: break-all;
       display: -webkit-box;
       -webkit-line-clamp: 1;

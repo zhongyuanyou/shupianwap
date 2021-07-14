@@ -694,7 +694,7 @@ export default {
   color: #4974f5;
 }
 .page-list {
-  height: calc(100vh - 120px);
-  overflow-y: scroll;
+  // height: calc(100vh - 120px);
+  // overflow-y: scroll;
 }
 </style>

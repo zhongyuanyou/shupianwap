@@ -23,7 +23,7 @@
     <div v-if="!skeletonloading" class="allbox">
       <div class="data-content">
         <div v-for="(item, index) in order.list" :key="index" class="list">
-          <div class="left">
+          <!-- <div class="left">
             <img
               :src="
                 item.salesGoodsOperatings
@@ -36,9 +36,29 @@
               "
               alt=""
             />
-          </div>
+          </div> -->
           <div class="right">
-            <h1 class="tit">{{ item.name }}</h1>
+            <h1 class="tit">
+              {{
+                item.salesGoodsSubVos && item.salesGoodsSubVos.length
+                  ? item.salesGoodsSubVos[0].goodsSubName
+                  : item.name
+              }}
+            </h1>
+            <p v-if="item.salesGoodsSubVos" class="goods-sku">
+              {{
+                item.salesGoodsSubVos.length
+                  ? item.salesGoodsSubVos[0].goodsSubDetailsName
+                  : ''
+              }}
+            </p>
+            <p v-if="item.saleGoodsSubs" class="goods-sku">
+              {{
+                item.saleGoodsSubs.length
+                  ? item.saleGoodsSubs[0].goodsSubDetailsName
+                  : ''
+              }}
+            </p>
             <!-- <p class="tag">{{ item.classCodeName }}</p> -->
             <p class="price">
               <span
@@ -49,6 +69,7 @@
                 $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
               }}</i>
             </p>
+            <!--
             <div v-if="$route.query.type === 'shopcar'" class="list">
               <div
                 v-for="(listitem, listindex) in item.saleGoodsSubs"
@@ -92,11 +113,12 @@
                 </p>
                 <p class="data">{{ listitem.goodsSubName }}</p>
                 <p class="price">
-                  <!-- {{ listitem.settlementPriceEdit }}  -->
+                  {{ listitem.settlementPriceEdit }}
                   {{ `x1` }}
                 </p>
               </div>
             </div>
+             -->
           </div>
         </div>
         <div class="inpbox">
@@ -186,7 +208,8 @@
         <p class="money">
           合计：
           <span>
-            <b>{{ order.salesPrice || order.skuTotalPrice }}</b> 元
+            <!-- <b>{{ order.salesPrice || order.skuTotalPrice }}</b> 元 -->
+            <b>{{ price }}</b> 元
           </span>
         </p>
       </div>
@@ -769,8 +792,9 @@ export default {
           }
         }
         > .right {
-          margin-left: 32px;
-          width: calc(100% - 192px);
+          // margin-left: 32px;
+          // width: calc(100% - 192px);
+          width: 100%;
           > h1 {
             width: 100%;
             font-size: 32px;
@@ -943,5 +967,10 @@ export default {
     width: 100vw;
     height: 100vh;
   }
+}
+.goods-sku {
+  color: #666;
+  font-size: 24px;
+  margin-top: 4px;
 }
 </style>
