@@ -266,6 +266,12 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
+            if (res.data.goodsList) {
+              const goods = res.data.goodsList.filter((item) => {
+                return item.status === 'PRO_STATUS_PUT_AWAY'
+              })
+              res.data.goodsList = goods
+            }
             this.articleDetails = res.data
             this.iosPath.parameter.cid = this.articleDetails.id
             this.iosLink = this.prefixPath + JSON.stringify(this.iosPath)
