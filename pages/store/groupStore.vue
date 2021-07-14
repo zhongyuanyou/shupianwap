@@ -174,6 +174,41 @@
         </div>
       </div>
     </div>
+    <div class="group-sticky">
+      <div class="group-tile">
+        <sp-image
+          src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+          fit="cover"
+          round
+          height="1.2rem"
+          width="1.2rem"
+          class="content-left"
+        ></sp-image>
+        <div class="content-right">
+          <div class="tile">春天花花团队</div>
+          <div class="desc">
+            团队口号：爱拼才会赢，追求客户的满意，是你我的责任
+          </div>
+        </div>
+      </div>
+      <div class="tabs">
+        <div
+          class="tab"
+          :class="[activeMain === 0 ? 'z-active' : '']"
+          @click="changeMainTab(0)"
+        >
+          主页
+        </div>
+        <div
+          class="tab"
+          :class="[activeMain === 1 ? 'z-active' : '']"
+          @click="changeMainTab(1)"
+        >
+          热门推荐
+        </div>
+      </div>
+      <div class="line"></div>
+    </div>
     <div class="placeholder"></div>
   </div>
 </template>
@@ -195,6 +230,7 @@ export default {
       indicators: true, // 是否需要指示器
       autoplay: 5000,
       active: 0,
+      activeMain: 0,
       banners: [
         'https://cdn.shupian.cn/sp/cms/f6n6b9wvvmo0000.jpg',
         'https://cdn.shupian.cn/sp/cms/f6n6b9wvvmo0000.jpg',
@@ -222,6 +258,9 @@ export default {
     changeTab(index) {
       this.active = index
     },
+    changeMainTab(index) {
+      this.activeMain = index
+    }
   },
 }
 </script>
@@ -553,6 +592,48 @@ export default {
     height: 64px;
     padding-bottom: constant(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-top);
+  }
+  .group-sticky {
+    .group-tile {
+      margin-top: 40px;
+    }
+    .tabs {
+      padding: 0 40px;
+      margin-top: 20px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      .tab {
+        position: relative;
+        font-size: 30px;
+        line-height: 30px;
+        color: #999999;
+        margin-right: 56px;
+        &.z-active {
+          color: #222222;
+          font-weight: bold;
+          font-size: 32px;
+          line-height: 32px;
+          color: #222222;
+        }
+        &.z-active::after {
+          position: absolute;
+          content: '';
+          width: 28px;
+          height: 6px;
+          background: #4974f5;
+          border-radius: 3px;
+          transform: translate(-50%, -50%);
+          left: 50%;
+          bottom: -16px;
+        }
+      }
+    }
+    .line {
+      width: 100%;
+      background: #f4f4f4;
+      height: 1px;
+    }
   }
 }
 </style>
