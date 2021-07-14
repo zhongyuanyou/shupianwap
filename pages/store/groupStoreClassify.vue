@@ -1,20 +1,7 @@
 <template>
+  <!-- 团队店铺二级分类 -->
   <div class="m-store group-store">
     <Header title="团队店铺" />
-    <div id="top" class="group-swiper">
-      <sp-swipe
-        class="my-swiper"
-        :autoplay="autoplay"
-        :show-indicators="indicators"
-      >
-        <sp-swipe-item v-for="(item, index) in banners" :key="index">
-          <a href="javascript:void(0)" class="swiper-box">
-            <img :src="item + $ossImgSet(750, 552)" alt="" />
-          </a>
-        </sp-swipe-item>
-      </sp-swipe>
-      <div class="swiper-spaceholder"></div>
-    </div>
     <div class="group-tile">
       <sp-image
         src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
@@ -31,53 +18,26 @@
         </div>
       </div>
     </div>
-    <div class="company-content">
-      <sp-image
-        src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-        fit="cover"
-        round
-        height="0.9rem"
-        width="0.9rem"
-        class="content-left"
-      ></sp-image>
-      <div class="tile-content">
-        <div class="tile">成都晓资风尚文化传媒有成都晓资风尚文化传媒有</div>
-        <div class="level"></div>
-      </div>
-      <my-icon name="you" size="0.4rem" color="#BBBBBB"></my-icon>
-    </div>
-    <div id="server" class="group-server">
-      <div class="tile">团队服务</div>
-      <div class="server-block">
-        <div class="server-block-line1">
-          <div class="item">
-            <div class="item-res">
-              <span>28</span><span class="unit">人</span>
-            </div>
-            <div class="item-desc">团队人数</div>
-          </div>
-          <div class="item">
-            <div class="item-res">
-              <span>788</span><span class="unit">位</span>
-            </div>
-            <div class="item-desc">服务客户</div>
-          </div>
-          <div class="item">
-            <div class="item-res">
-              <span>68</span><span class="unit">人</span>
-            </div>
-            <div class="item-desc">维护商品</div>
-          </div>
+    <div class="tabs-wrapper">
+      <div class="tabs">
+        <div
+          class="tab"
+          :class="[activeMain === 0 ? 'z-active' : '']"
+          @click="changeMainTab(0)"
+        >
+          主页
         </div>
-        <div class="server-block-tile">客户满意</div>
-        <div class="server-block-custinfo">
-          <div class="item">3分钟响应率：100%</div>
-          <div class="item">电话接通率：100%</div>
+        <div
+          class="tab"
+          :class="[activeMain === 1 ? 'z-active' : '']"
+          @click="changeMainTab(1)"
+        >
+          热门推荐
         </div>
       </div>
+      <div class="line"></div>
     </div>
-    <div id="goodRecommend" class="goods-recommend-wrapper">
-      <div class="main-tile">为您推荐</div>
+    <div class="goods-recommend-wrapper">
       <div class="tabs">
         <div
           class="tab"
@@ -129,86 +89,6 @@
         </div>
       </div>
     </div>
-    <div class="more-recommend">更多优惠</div>
-    <div class="recommend-planner-wrapper">
-      <div class="main-tile">推荐规划师</div>
-      <div class="recommend-content">
-        <div class="recommend-item">
-          <img
-            class="item-avatar"
-            src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-          />
-          <div class="name">张志毅</div>
-          <img
-            class="line"
-            src="https://cdn.shupian.cn/sp-pt/wap/images/fy75fih34c80000.png"
-          />
-          <div class="score">薯片分577</div>
-          <div class="desc">法律咨询咨寻法律咨询咨寻</div>
-        </div>
-        <div class="recommend-item">
-          <img
-            class="item-avatar"
-            src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-          />
-          <div class="name">刘涛</div>
-          <img
-            class="line"
-            src="https://cdn.shupian.cn/sp-pt/wap/images/fy75fih34c80000.png"
-          />
-          <div class="score">薯片分577</div>
-          <div class="desc">法律咨询</div>
-        </div>
-        <div class="recommend-item">
-          <img
-            class="item-avatar"
-            src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-          />
-          <div class="name">张志毅</div>
-          <img
-            class="line"
-            src="https://cdn.shupian.cn/sp-pt/wap/images/fy75fih34c80000.png"
-          />
-          <div class="score">薯片分577</div>
-          <div class="desc">法律咨询</div>
-        </div>
-      </div>
-    </div>
-    <div class="group-sticky">
-      <div class="group-tile">
-        <sp-image
-          src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-          fit="cover"
-          round
-          height="1.2rem"
-          width="1.2rem"
-          class="content-left"
-        ></sp-image>
-        <div class="content-right">
-          <div class="tile">春天花花团队</div>
-          <div class="desc">
-            团队口号：爱拼才会赢，追求客户的满意，是你我的责任
-          </div>
-        </div>
-      </div>
-      <div class="tabs">
-        <div
-          class="tab"
-          :class="[activeMain === 0 ? 'z-active' : '']"
-          @click="changeMainTab(0)"
-        >
-          主页
-        </div>
-        <div
-          class="tab"
-          :class="[activeMain === 1 ? 'z-active' : '']"
-          @click="changeMainTab(1)"
-        >
-          热门推荐
-        </div>
-      </div>
-      <div class="line"></div>
-    </div>
     <div class="placeholder"></div>
   </div>
 </template>
@@ -229,13 +109,8 @@ export default {
     return {
       indicators: true, // 是否需要指示器
       autoplay: 5000,
-      active: 0,
-      activeMain: 0,
-      banners: [
-        'https://cdn.shupian.cn/sp/cms/f6n6b9wvvmo0000.jpg',
-        'https://cdn.shupian.cn/sp/cms/f6n6b9wvvmo0000.jpg',
-        'https://cdn.shupian.cn/sp/cms/f6n6b9wvvmo0000.jpg',
-      ],
+      active: 0, // 活动分类
+      activeMain: 1, // 页面分类
       mockData: [
         {
           img: 'https://cdn.shupian.cn/cms/du7tol34xm80000.jpg',
@@ -254,17 +129,22 @@ export default {
       ],
     }
   },
-  mounted() {
-    if (this.$route.query.active === 0 || this.$route.query.active) {
-      this.active = Number(this.$route.query.active)
-    }
-  },
   methods: {
     changeTab(index) {
       this.active = index
     },
     changeMainTab(index) {
-      this.activeMain = index
+      if (index === this.activeMain) {
+        return
+      }
+      if (index === 0) {
+        this.$router.push({
+          path: '/store/groupStore',
+          query: {
+            active: this.active,
+          },
+        })
+      }
     },
   },
 }
@@ -272,39 +152,8 @@ export default {
 
 <style lang="less" scoped>
 .m-store.group-store {
-  .group-swiper {
-    width: 100%;
-    height: 500px;
-    position: relative;
-    .swiper-box {
-      display: block;
-      width: 100%;
-      height: 500px;
-      overflow: hidden;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-    .my-swiper {
-      ::v-deep.sp-swipe__indicators {
-        bottom: 40px;
-      }
-    }
-    .swiper-spaceholder {
-      position: absolute;
-      width: 100%;
-      height: 24px;
-      border-top-left-radius: 24px;
-      border-top-right-radius: 24px;
-      bottom: 0;
-      left: 0;
-      z-index: 1;
-      background: #fff;
-    }
-  }
   .group-tile {
-    margin-top: 30px;
+    margin-top: 37px;
     display: flex;
     align-items: center;
     padding: 0 40px;
@@ -326,6 +175,45 @@ export default {
         line-height: 37px;
         .textOverflow(2);
       }
+    }
+  }
+  .tabs-wrapper {
+    margin-top: 30px;
+    .tabs {
+      padding: 0 40px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      .tab {
+        position: relative;
+        font-size: 30px;
+        line-height: 30px;
+        color: #999999;
+        margin-right: 56px;
+        &.z-active {
+          color: #222222;
+          font-weight: bold;
+          font-size: 32px;
+          line-height: 32px;
+          color: #222222;
+        }
+        &.z-active::after {
+          position: absolute;
+          content: '';
+          width: 28px;
+          height: 6px;
+          background: #4974f5;
+          border-radius: 3px;
+          transform: translate(-50%, -50%);
+          left: 50%;
+          bottom: -16px;
+        }
+      }
+    }
+    .line {
+      width: 100%;
+      background: #f4f4f4;
+      height: 1px;
     }
   }
   .company-content {
@@ -409,7 +297,7 @@ export default {
   }
   .goods-recommend-wrapper {
     padding: 0 40px;
-    margin-top: 56px;
+    margin-top: 12px;
     .main-tile {
       font-size: 40px;
       color: #222222;
@@ -606,38 +494,6 @@ export default {
     background: #fff;
     .group-tile {
       margin-top: 40px;
-    }
-    .tabs {
-      padding: 0 40px;
-      margin-top: 20px;
-      height: 80px;
-      display: flex;
-      align-items: center;
-      .tab {
-        position: relative;
-        font-size: 30px;
-        line-height: 30px;
-        color: #999999;
-        margin-right: 56px;
-        &.z-active {
-          color: #222222;
-          font-weight: bold;
-          font-size: 32px;
-          line-height: 32px;
-          color: #222222;
-        }
-        &.z-active::after {
-          position: absolute;
-          content: '';
-          width: 28px;
-          height: 6px;
-          background: #4974f5;
-          border-radius: 3px;
-          transform: translate(-50%, -50%);
-          left: 50%;
-          bottom: -16px;
-        }
-      }
     }
     .line {
       width: 100%;
