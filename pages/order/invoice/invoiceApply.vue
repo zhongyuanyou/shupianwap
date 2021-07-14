@@ -200,7 +200,7 @@ import { invoiceApi } from '@/api/index.js'
 import contractApi from '@/api/contract'
 const InvoiceType = {
   '007': '增值税普通发票 ',
-  '026': '增值税电子发票',
+  '026': '增值税电子普通发票',
   '004': '增值税专用发票',
   '027': '增值税电子专用发票',
 }
