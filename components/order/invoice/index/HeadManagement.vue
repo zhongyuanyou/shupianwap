@@ -56,8 +56,8 @@ export default {
     return {
       // 发票类型
       InvoiceType: {
-        ORDINARY: '电子普通发票',
-        SPECIAL: '增值税专用发票 ',
+        ORDINARY: '普通发票',
+        SPECIAL: '专用发票 ',
       },
       HeadType: {
         PERSONAL: '个人',
@@ -68,15 +68,15 @@ export default {
   computed: {
     ShowList() {
       const ORDINARY_COMPANY = {
-        title: '电子普通发票-单位',
+        title: '普通发票-单位',
         list: [],
       }
       const SPECIAL_COMPANY = {
-        title: '增值税专用发票',
+        title: '专用发票',
         list: [],
       }
       const ORDINARY_PERSONAL = {
-        title: '电子普通发票-个人',
+        title: '普通发票-个人',
         list: [],
       }
 

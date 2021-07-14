@@ -157,6 +157,7 @@ export default {
     background: #fff;
     justify-content: space-between;
     margin-top: 20px;
+    align-items: center;
 
     h3 {
       font-weight: normal;

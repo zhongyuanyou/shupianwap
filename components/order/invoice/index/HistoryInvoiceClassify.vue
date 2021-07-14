@@ -64,10 +64,12 @@ export default {
           value: '',
           options: [
             { text: '全部发票类型', value: '' },
-            { text: '增值税电子专用发票', value: '027' },
-            { text: '增值税电子普通发票', value: '026' },
+
             { text: '增值税普通发票', value: '007' },
+            { text: '增值税电子发票', value: '026' },
+
             { text: '增值税专用发票', value: '004' },
+            { text: '增值税电子专用发票', value: '027' },
           ],
         },
       ],

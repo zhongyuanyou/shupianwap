@@ -268,7 +268,12 @@
                 <p>
                   {{ afterSaleDetail.afterSaleProblemDetail }}
                 </p>
-                <ul>
+                <ul
+                  v-if="
+                    afterSaleDetail.fileImages &&
+                    afterSaleDetail.fileImages.length > 0
+                  "
+                >
                   <li
                     v-for="(item, index) in afterSaleDetail.fileImages"
                     :key="index"
@@ -908,15 +913,19 @@ export default {
             display: flex;
             margin-bottom: 22px;
             line-height: 36px;
+            &:last-child {
+              margin-bottom: 0;
+            }
             h3 {
               font-size: 26px;
               color: #222222;
-              font-weight: bold;
+              font-weight: normal;
             }
             > p {
               margin-left: 40px;
               font-size: 26px;
               color: #1a1a1a;
+              font-weight: bold;
             }
             .copy {
               width: 72px;
@@ -926,6 +935,8 @@ export default {
               font-size: 22px;
               color: #1a1a1a;
               text-align: center;
+              font-weight: bold;
+              background: #f5f5f5;
             }
             .question {
               margin-left: 40px;
@@ -933,6 +944,7 @@ export default {
               > p {
                 font-size: 26px;
                 color: #1a1a1a;
+                font-weight: bold;
               }
               ul {
                 display: flex;
@@ -1031,7 +1043,7 @@ export default {
               }
             }
             .right {
-              color: #ff3b30;
+              color: #ec5330;
               font-size: 36px;
               font-weight: bold;
               span {

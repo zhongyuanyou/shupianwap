@@ -86,6 +86,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+::v-deep .sp-step--vertical:not(:last-child)::after{
+      border-bottom-width: 0px;
+}
 ::v-deep .sp-step__title--active {
   h3 {
     color: #4974f5 !important;
@@ -180,7 +183,7 @@ export default {
     }
     .desc {
       color: #222222;
-      margin-left: 28px;
+      // margin-left: 28px;
       h3 {
         font-family: PingFangSC-Medium;
         font-size: 32px;
