@@ -186,7 +186,8 @@
         <p class="money">
           合计：
           <span>
-            <b>{{ order.salesPrice || order.skuTotalPrice }}</b> 元
+            <!-- <b>{{ order.salesPrice || order.skuTotalPrice }}</b> 元 -->
+            <b>{{ price }}</b> 元
           </span>
         </p>
       </div>
