@@ -1,13 +1,13 @@
 <template>
     <div class="spScoreDetail">
-        <div class="head">
+        <div :class="floatview?'head':'headWhite'">
             <Header title="薯片分">
                 <template #left>
                     <sp-icon
                         class-prefix="spiconfont"
                         name="nav_ic_back"
                         size="0.4rem"
-                        color="#fff"
+                        :color="floatview?'#fff':'#000'"
                         style="margin-left: 0.32rem"
                         @click.native="onClickLeft"
                     />
@@ -15,7 +15,7 @@
                         class-prefix="spiconfont"
                         name="guanbi"
                         size="0.4rem"
-                        color="#fff"
+                        :color="floatview?'#fff':'#000'"
                         style="margin-left: 0.36rem"
                         @click.native="onClickLeft"
                     />
@@ -26,7 +26,7 @@
                         class="head__icon-share"
                         name="fenxiang"
                         size="0.4rem"
-                        color="#fff"
+                        :color="floatview?'#fff':'#000'"
                         style="margin-right: 0.4rem"
                         @click.native="onClickRight"
                     />
@@ -164,7 +164,7 @@ export default {
                             {
                                 value: [50, 60, 70, 80, 90, 100],
                                 name: '薯片分',
-                                areaStyle: {
+                                areaStyle: { 
                                     color: [
                                         'rgba(73, 116, 245, 1)',
                                         'rgba(117, 151, 255, 1)'
@@ -209,11 +209,10 @@ export default {
         },
         handleScroll(){
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop // 滚动条偏移量
-            console.log(scrollTop)
-            if(scrollTop > 200){
-                this.floatview = true
-            }else{
+            if(scrollTop > 180){
                 this.floatview = false
+            }else{
+                this.floatview = true
             }
         },
         onClickLeft() {
@@ -233,6 +232,15 @@ export default {
             color:#fff;
             .title{
               color:#fff;  
+            }
+        }
+    }
+    .headWhite{
+        ::v-deep .my-head{
+            background:#fff;
+            color:#000;
+            .title{
+              color:#000;  
             }
         }
     }
@@ -306,7 +314,7 @@ export default {
                 right:0;
                 margin:0 auto;
                 width: 100%;
-                height: 400px;
+                height: 410px;
             }
             p{
                 position: absolute;
