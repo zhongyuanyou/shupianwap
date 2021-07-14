@@ -35,7 +35,7 @@
               <sp-field
                 v-model="formData.address"
                 label="注册地址"
-                maxlength="120"
+                maxlength="80"
                 :required="formData.type === 'SPECIAL'"
                 :placeholder="formData.type === 'SPECIAL' ? '必填' : '选填'"
                 :rules="[
@@ -62,7 +62,7 @@
               <sp-field
                 v-model="formData.depositBank"
                 label="开户银行"
-                maxlength="50"
+                maxlength="45"
                 :required="formData.type === 'SPECIAL'"
                 :placeholder="formData.type === 'SPECIAL' ? '必填' : '选填'"
                 :rules="[
@@ -75,7 +75,7 @@
               <sp-field
                 v-model="formData.bankNumber"
                 label="银行账号"
-                maxlength="50"
+                maxlength="45"
                 :required="formData.type === 'SPECIAL'"
                 :placeholder="formData.type === 'SPECIAL' ? '必填' : '选填'"
                 :rules="[

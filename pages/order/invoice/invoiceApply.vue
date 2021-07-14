@@ -75,7 +75,7 @@
               <sp-field
                 v-model="formData.registerAddress"
                 label="注册地址"
-                maxlength="120"
+                maxlength="80"
                 placeholder="请填写注册地址"
               />
               <sp-field
@@ -87,13 +87,13 @@
               <sp-field
                 v-model="formData.bankOfDeposit"
                 label="开户银行"
-                maxlength="50"
+                maxlength="45"
                 placeholder="请填写开户银行"
               />
               <sp-field
                 v-model="formData.bankAccount"
                 label="银行账号"
-                maxlength="50"
+                maxlength="45"
                 placeholder="请填写银行账号"
               />
             </div>
