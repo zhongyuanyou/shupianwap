@@ -245,7 +245,7 @@ export default {
 
         applyTime: '',
         invoiceTime: '',
-
+        remake: '',
         remarks: '', // 备注（被驳回）
       },
 
@@ -308,7 +308,9 @@ export default {
         invoiceStatus === 'INVOICE_STATUS_REJECT' ||
         invoiceStatus === 'INVOICE_STATUS_FAIL'
       ) {
-        return info[invoiceStatus](this.formData.remarks || '未知错误')
+        return info[invoiceStatus](
+          this.formData.remake || this.formData.remarks || '未知错误'
+        )
       }
       return info[invoiceStatus] || {}
     },

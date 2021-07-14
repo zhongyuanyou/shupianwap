@@ -587,9 +587,9 @@ export default {
     font-size: 30px;
     color: #222222;
   }
-  .my-header {
-    border-bottom: 1px solid #f5f5f5;
-  }
+  // .my-header {
+  //   border-bottom: 1px solid #f5f5f5;
+  // }
   .card {
     background: #fff;
     margin-bottom: 20px;
