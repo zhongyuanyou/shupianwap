@@ -132,7 +132,5 @@ export default {
       }
     }
   }
-  .list_item:last-child {
-  }
 }
 </style>

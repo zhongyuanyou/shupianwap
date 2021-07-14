@@ -13,6 +13,21 @@
 
     <p class="title_btitle">股份有限公司注册，公司资本为股份所组成的公司</p>
 
+    <div class="title_info flex">
+      <div class="flex_1">
+        <div class="title_info_num">2999元</div>
+        价格
+      </div>
+      <div class="flex_1">
+        <div class="title_info_num">22天</div>
+        办理周期
+      </div>
+      <div class="flex_1">
+        <div class="title_info_num">四川成,都广元</div>
+        注册区域
+      </div>
+    </div>
+
     <div class="title_bottom">
       <span class="title_bottom_button"></span>
     </div>
@@ -53,6 +68,9 @@ export default {
 
 <style lang="less" scoped>
 .title {
+  font-family: PingFangSC;
+  padding: 45px 40px 40px;
+  background: #ffffff;
   font-size: 0;
   .flex {
     display: flex;
@@ -94,6 +112,33 @@ export default {
     line-height: 58px;
     margin: 20px 0 38px;
   }
+
+  .title_info {
+    font-size: 22px;
+    color: #999999;
+    letter-spacing: 0;
+    line-height: 30px;
+
+    .title_info_num {
+      letter-spacing: 0;
+      font-weight: bold;
+
+      font-family: PingFangSC-Medium;
+      font-size: 40px;
+      color: #ec5330;
+      line-height: 56px;
+
+      white-space: nowrap;
+    }
+
+    .title_info > div:nth-child(2) {
+      border-right: 1px solid rgba(255, 255, 255, 0.3);
+      border-left: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 0 10px;
+      margin: 0 10px;
+    }
+  }
+
   .title_bottom {
     &_button {
       height: 96px;

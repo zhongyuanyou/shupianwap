@@ -22,7 +22,10 @@
       @load="onLoad"
     >
       <div v-for="(item, index) of list" :key="index">
-        <CaseExamplesList :list="item"></CaseExamplesList>
+        <CaseExamplesList
+          :list="item"
+          @click.native="toDetails('/caseExamples/details', item)"
+        ></CaseExamplesList>
       </div>
     </sp-list>
 
@@ -155,9 +158,13 @@ export default {
         this.onLoad()
       }
     },
-    toPath(path) {
+    toDetails(path, item) {
+      console.log(path, item)
       this.$router.push({
         path,
+        query: {
+          id: item.id,
+        },
       })
     },
     init() {
