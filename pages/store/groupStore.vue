@@ -258,10 +258,19 @@ export default {
     }
   },
   mounted() {
-    if (this.$route.query.active === 0 || this.$route.query.active) {
-      this.active = Number(this.$route.query.active)
+    const query = this.$route.query
+    if (query.storeId) {
+      this.storeId = query.storeId
+    } else {
+      this.$xToast.error('获取团队店铺信息失败')
+      setTimeout(this.$back(),2000)
+      return
+    }
+    if (query.active === 0 || query.active) {
+      this.active = Number(query.active)
     }
     window.addEventListener('scroll', this.handleScroll)
+    this.getGroupInfoApi()
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
@@ -298,6 +307,13 @@ export default {
         this.stickyFlag = true
       } else {
         this.stickyFlag = false
+      }
+    },
+    async getGroupInfoApi() {
+      try {
+        const res = await 123
+      } catch (e) {
+        console.log(e)
       }
     },
   },
