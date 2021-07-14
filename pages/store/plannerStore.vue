@@ -50,7 +50,7 @@
       <div class="bg-group__label">
         <span v-for="(item,index) in detailData.personal.categories" :key="index">{{item}}</span>
       </div>
-      <div v-if="detailData.mchDetailId" class="bg-group__footer" @click="goShop">
+      <div v-if="detailData.mchStoreId" class="bg-group__footer" @click="goShop">
         <img
           :src="detailData.mchLogo"
           alt=""
@@ -83,8 +83,8 @@
         </p>
         <p class="sp-score__detail">
           <span>什么是薯片分</span>
-          <i class="spiconfont spiconfont-plan_ic_explain"></i>
-          <span>查看详情</span>
+          <i class="spiconfont spiconfont-plan_ic_explain" @click="handlePoint"></i>
+          <span @click="goScoreDetail">查看详情</span>
         </p>
       </div>
       <div v-if="detailData.modules.length>0 && detailData.modules.data.some(item=>item.id)" class="recommended" :class="titleStatus?'':'tabs'">
@@ -171,6 +171,8 @@ import Header from '@/components/common/head/header'
 import SpToast from '@/components/common/spToast/SpToast'
 import { callPhone, copyToClipboard, setUrlParams } from '@/utils/common'
 import imHandle from '@/mixins/imHandle'
+
+
 export default {
     components: {
         [Icon.name]: Icon,
@@ -198,6 +200,12 @@ export default {
             },
             shareOptions: [],
             showShare: false,
+            shlist:{
+              appId:"1231323",
+              timestamp:"12313",
+              nonceStr:"123123",
+              signature:"asdasda"
+            }
         }
     },
     computed:{
@@ -250,20 +258,21 @@ export default {
         },
     },
     created() {
-        if (process && process.client) {
-            // notice:
-            // store中的用户信息默认来自cookie，会从cookie中获取；因为在wap中， userInfo中的token与userId等 保存在cookie中，
-            // 但是在app中登录等，登录信息cookie中的没有更新，导致直接从store中获取到的信息无效
-            // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
-            this.isInApp && this.clearUserInfo()
-            this.getDetail()
-            this.getList()
-        }
+      if (process && process.client) {
+        // notice:
+        // store中的用户信息默认来自cookie，会从cookie中获取；因为在wap中， userInfo中的token与userId等 保存在cookie中，
+        // 但是在app中登录等，登录信息cookie中的没有更新，导致直接从store中获取到的信息无效
+        // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
+        this.isInApp && this.clearUserInfo()
+        this.getDetail()
+        this.getList()
+      }
     },
     async mounted() {
-        if (!this.city.code) {
+      if (!this.city.code) {
         await this.POSITION_CITY({ type: 'init' })
-        }
+      }
+    
     },
     methods: {
         ...mapActions({
@@ -273,6 +282,19 @@ export default {
             setUserInfo: 'user/SET_USER',
             clearUserInfo: 'user/CLEAR_USER',
         }),
+        goScoreDetail(){
+          this.$router.push({
+            path:"/store/spScoreDetail"
+          })
+        },
+        handlePoint() {
+          this.$refs.spToast.show({
+            message: '薯片分是对规划师的综合衡量，薯片分越高综合表现越好',
+            duration: 1500,
+            forbidClick: false,
+            // icon: 'spiconfont-tab_ic_check',
+          })
+        },
         // 获取详情数据
         async getDetail() {
             try {
@@ -442,8 +464,10 @@ export default {
                 const isLogin = await this.judgeLoginMixin()
                 if (isLogin) {
                     this.$router.push({
-                        path:"/store/merchantsShop",
-                        query:this.$route.query
+                        path:"/store/merchantsStore",
+                        query:{
+                          storeId:this.detailData.mchStoreId
+                        }
                     })
                 } else {
                     Toast({
@@ -555,7 +579,6 @@ export default {
 <style lang="less" scoped>
 .plannerShop {
   .bg-group {
-    height: 498px;
     padding: 60px 40px 24px;
     background: url('https://cdn.shupian.cn/sp-pt/wap/images/g0qq9j24x200000.png')
       no-repeat;

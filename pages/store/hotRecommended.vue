@@ -33,8 +33,7 @@
         </template>
       </Header>
     </div>
-    <div v-if="floatview" style="min-height: 2.38rem"></div>
-    <div id="group" :class="floatview?'bg-group-fixed':'bg-group'">
+    <div id="group" class="bg-group-fixed">
         <div class="footer">
             <img
                 :src="detailCodeData.MCH_LOGO"
@@ -51,7 +50,7 @@
             </p>
             </div>
         </div>
-        <div v-if="floatview" class="tabs">
+        <div class="tabs">
             <sp-tabs v-model="headActive" @click="headTabsClick">
                 <sp-tab v-for="(item,index) in headTabs" :key="index" :title="item.label" :name="item.value" >
                 </sp-tab>
@@ -59,49 +58,7 @@
         </div>
     </div>
     <div class="body">
-        <div class="body-content">
-            <p class="title">商户服务</p>
-            <div class="sp-score">
-                <div class="sp-score__score">
-                    <div>
-                        <p class="sp-score__title">
-                            <span>{{detailCodeData.PERSON_NUM}}</span>
-                            <span>人</span>
-                        </p>
-                        <p>
-                            <span>团队人数</span>
-                        </p>
-                    </div>
-                    <div>
-                        <p class="sp-score__title">
-                            <span>{{detailCodeData.SERVICE_CUSTOMER_NUM}}</span>
-                            <span>位</span>
-                        </p>
-                        <p>
-                            <span>服务客户</span>
-                        </p>
-                    </div>
-                    <div>
-                        <p class="sp-score__title">
-                            <span>{{detailCodeData.MAINTENANCE_GOODS_NUM}}</span>
-                            <span>个</span>
-                        </p>
-                        <p>
-                            <span>维护商品</span>
-                        </p>
-                    </div>
-                </div>
-                <div class="sp-score__satisfaction">
-                    <p>客户满意</p>
-                    <div class="satisfactiontext">
-                        <p>3分钟响应率：{{detailCodeData.CONSULT_RESPONSE}}%</p>
-                        <p>电话接通率：{{detailCodeData.CALL_THROUGH_RATE}}%</p>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="body-content recommended">
-            <p class="title">为您推荐</p>
             <sp-tabs v-model="active" @click="tabsClick">
                 <sp-tab v-for="(item,index) in tabsData" :key="index" :title="item.name" :name="item.id" >
                     <ul class="list-data">
@@ -126,37 +83,6 @@
                     </ul>
                 </sp-tab>
             </sp-tabs>
-            <button @click="moreRem">更多优惠</button>
-        </div>
-        <div class="body-content recommendedPlanner">
-            <p class="title">推荐规划师</p>
-            <div class="planner">
-                <ul>
-                    <li v-for="(item,index) in recommendedByPlanner" :key="index">
-                        <img :src="item.img" alt="">
-                        <p class="name">
-                            <span>
-                                {{item.name}}
-                            </span>
-                        </p>
-                        <div class="line">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                        <p class="score">
-                            <span>
-                                薯片分{{item.score}}
-                            </span>
-                        </p>
-                        <p class="job">
-                            <span>
-                                {{item.category}}
-                            </span>
-                        </p>
-                    </li>
-                </ul>
-            </div>
         </div>
     </div>
     <sp-share-sheet
@@ -198,7 +124,7 @@ export default {
     data() {
         return {
             active: '', // tab状态
-            headActive:"index",
+            headActive:"rememded",
             detailData:{},
             detailCodeData:{
                 MCH_SERVICE_DATA:[],
@@ -358,7 +284,12 @@ export default {
                             break;
                             case "GOODS_RECOMMEND":
                                 this.tabsData = item.data
-                                this.active = this.tabsData[0].id
+                                if(this.$route.query.active){
+                                    this.active = this.$route.query.active
+                                }else{
+                                    this.active = this.tabsData[0].id
+                                }
+                                
                             break;
                             case "PLANNER_RECOMMEND":
                                 this.recommendedByPlanner = item.data
@@ -569,27 +500,12 @@ export default {
         },
         tabsClick(title,name){
             console.log(this.active)
-            
         },
         headTabsClick(){
-            if(this.headActive==='rememded'){
-                this.$router.push({
-                    path:"/store/hotRecommended",
-                    query:{
-                        active:this.active
-                    }
-                })
+            if(this.headActive==='index'){
+                this.onClickLeft()
             }
-            console.log(this.headActive)
         },
-        moreRem(){
-            this.$router.push({
-                path:"/store/hotRecommended",
-                query:{
-                    active:this.active
-                }
-            })
-        }
     },
     head() {
         return {
@@ -754,7 +670,7 @@ export default {
     .body {
         position: relative;
         margin: -24px 0 0 0;
-        padding: 64px 40px;
+        padding: 280px 40px 64px;
         background-color: #fff;
         border-top-right-radius: 24px;
         border-top-left-radius: 24px;
@@ -923,7 +839,9 @@ export default {
             }
             ::v-deep .sp-tabs__wrap{
                 margin: 0 0 0 -40px;
-                width:80vw
+                .sp-tabs__nav{
+                    justify-content: space-between;
+                }
             }
             ::v-deep .sp-tab{
                 font-family: PingFangSC-Regular;
