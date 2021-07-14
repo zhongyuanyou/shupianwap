@@ -86,6 +86,34 @@ export default {
 </script>
 
 <style lang="less" scoped>
+::v-deep .sp-step--vertical:not(:last-child)::after{
+      border-bottom-width: 0px;
+}
+::v-deep .sp-step__title--active {
+  h3 {
+    color: #4974f5 !important;
+    font-weight: bold !important;
+  }
+}
+::v-deep .step__circle-container {
+  left: -16px !important;
+}
+::v-deep .sp-icon-checked {
+  width: 16px !important;
+  height: 16px !important;
+  border: none !important;
+  border-radius: 16px !important;
+}
+::v-deep .sp-step__circle {
+  width: 16px !important;
+  height: 16px !important;
+  border: none !important;
+  background: #ddd !important;
+}
+::v-deep .sp-step__line {
+  border-left: 1px dashed #ddd !important ;
+  background: none !important;
+}
 .refund-process {
   border-radius: 24px;
   margin-top: 20px;
@@ -95,16 +123,16 @@ export default {
     padding: 32px 28px;
   }
   ::v-deep.sp-step__circle {
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 16px;
     border: 6px solid #f4f4f4;
     background: #999;
   }
   ::v-deep.sp-icon-checked {
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 16px;
     background-color: #4974f5;
-    border-radius: 24px;
+    border-radius: 16px;
     border: 6px solid #d0dcff;
     &::before {
       content: '';
@@ -130,7 +158,7 @@ export default {
       font-size: 24px;
       color: #999999;
       line-height: 34px;
-      margin: 10px;
+      margin: 10px 0;
     }
   }
 }
@@ -155,7 +183,7 @@ export default {
     }
     .desc {
       color: #222222;
-      margin-left: 28px;
+      // margin-left: 28px;
       h3 {
         font-family: PingFangSC-Medium;
         font-size: 32px;

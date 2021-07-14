@@ -2,7 +2,7 @@
   <div class="process-record">
     <Header title="处理记录" />
     <div class="process-box">
-      <sp-steps direction="vertical" :active="index">
+      <sp-steps direction="vertical">
         <sp-step v-for="(item, index) in processRecordData" :key="index">
           <h3>{{ item.dealStatusName }}</h3>
           <div class="date">{{ item.dealTime }}</div>
@@ -84,6 +84,25 @@ export default {
 </script>
 
 <style lang="less" scoped>
+::v-deep .sp-step--vertical:not(:last-child)::after{
+      border-bottom-width: 0px;
+}
+::v-deep .sp-icon-checked {
+  width: 16px !important;
+  height: 16px !important;
+  border: none !important;
+}
+::v-deep .sp-step__circle {
+  width: 16px !important;
+  height: 16px !important;
+  border: none !important;
+  background: #ddd !important;
+  border-radius: 16px !important;
+}
+::v-deep .sp-step__line {
+  border-left: 1px dashed #ddd !important ;
+  background: none !important;
+}
 .no-data-area {
   width: 100%;
   height: 100vh;
@@ -106,6 +125,9 @@ export default {
     text-align: center;
   }
 }
+::v-deep .step__circle-container {
+  left: -16px !important;
+}
 .process-record {
   border-radius: 24px;
   padding-bottom: 148px;
@@ -125,7 +147,7 @@ export default {
     ::v-deep.sp-icon-checked {
       width: 24px;
       height: 24px;
-      background-color: #4974f5;
+      background-color: #ddd;
       border-radius: 24px;
       border: 6px solid #d0dcff;
       &::before {
@@ -187,7 +209,6 @@ export default {
     z-index: 9;
     width: 100%;
     button {
-      width: 159px;
       height: 80px;
       background: #ffffff;
       border: 1px solid #dddddd;
@@ -196,6 +217,8 @@ export default {
       font-size: 28px;
       color: #222222;
       margin: 0 8px;
+      padding: 0 10px;
+      word-break: break-all;
     }
   }
 }

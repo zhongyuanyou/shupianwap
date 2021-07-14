@@ -1,8 +1,8 @@
 <template>
   <div class="invoice" :style="{ paddingBottom: FooterNavHeight + 'px' }">
-    <sp-sticky>
+    <HeaderSlot>
       <Header class="my-header" title="购买确认"></Header>
-    </sp-sticky>
+    </HeaderSlot>
     <div v-show="cardInfo.id" class="details">
       <div class="coupon_list">
         <ActCard
@@ -39,7 +39,7 @@
 
         <div class="list">
           <div class="list_name">使用限制</div>
-          <div class="list_des">{{ getuseTypeName(cardInfo.useType) }}</div>
+          <div class="list_des">{{ getuseTypeName(cardInfo.useLimit) }}</div>
         </div>
         <div class="list">
           <div class="list_name">其他说明</div>
@@ -71,18 +71,14 @@ import {
   Button,
   Toast,
   TopNavBar,
-  Uploader,
-  Sticky,
   Bottombar,
   BottombarButton,
-  WorkTab,
-  WorkTabs,
   Empty,
   List,
   Dialog,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-
+import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
 import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
@@ -96,9 +92,8 @@ export default {
   components: {
     LoadingCenter,
     Header,
-    [WorkTab.name]: WorkTab,
-    [WorkTabs.name]: WorkTabs,
-    [Sticky.name]: Sticky,
+    HeaderSlot,
+
     [Empty.name]: Empty,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
@@ -148,14 +143,14 @@ export default {
     getuseTypeName(useType) {
       let useTypeName = ''
       switch (useType) {
-        case 1:
-          useTypeName = '全品类通用'
-          break
+        // case 1:
+        //   useTypeName = '全品类通用'
+        //   break
         case 2:
-          useTypeName = '限定部分类别产品使用'
+          useTypeName = '仅限指定品类使用'
           break
-        default:
-          useTypeName = '置顶产品使用'
+        case 3:
+          useTypeName = '仅限指定商品使用'
       }
       return useTypeName
     },
@@ -164,7 +159,7 @@ export default {
         path: '/pay/payType',
         query: {
           cusOrderId: OrderId,
-          fromPage: 'orderList',
+          fromPage: 'act_card',
         },
       })
     },
@@ -235,7 +230,7 @@ export default {
             skuCode: 'HDK-MJ-000004',
             skuCount: 1,
             skuSettlePrice: parseFloat(this.cardInfo.price) * 100,
-            skuPayableTotalVirtualMoney: 0,
+            skuVirtualPrice: 0,
             skuDetailInfo: JSON.stringify({
               sku: {
                 goodsName: this.cardInfo.cardName,
@@ -250,6 +245,11 @@ export default {
             orderSplitSubjectNo: this.cardInfo.merchant.mchNo,
             orderSplitSubjectName: this.cardInfo.merchant.name,
             orderSplitSubjectSource: this.cardInfo.merchant.mchClass,
+
+            // orderSplitSubjectId: '607997736314102922', // 拆单主体id
+            // orderSplitSubjectNo: 'MBU2025022',
+            // orderSplitSubjectName: '薯片科技',
+            // orderSplitSubjectSource: 'MERCHANT_M',
           },
         ],
 
@@ -258,11 +258,11 @@ export default {
         cusOrderTerminalNo: 'COMDIC_TERMINAL_WAP', // 下单终端编号(
         cusOrderPayType: 'PRO_PRE_PAY_POST_SERVICE', // 付款类型：先付款后服务
         payType: 'ORDER_PAY_MODE_ONLINE', // 支付类型：线上支付：
-        cusReceivingInformation: JSON.stringify({
-          personName: this.userInfo.nickName,
-          personPhone: '收货人联系方式',
-          personAddr: '-',
-        }),
+        // cusReceivingInformation: JSON.stringify({
+        //   personName: this.userInfo.nickName,
+        //   personPhone: '收货人联系方式',
+        //   personAddr: '-',
+        // }),
       }
       actCard
         .add_order({ axios: this.$axios }, params)

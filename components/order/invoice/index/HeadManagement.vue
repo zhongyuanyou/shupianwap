@@ -56,8 +56,8 @@ export default {
     return {
       // 发票类型
       InvoiceType: {
-        ORDINARY: '电子普通发票',
-        SPECIAL: '增值税专用发票 ',
+        ORDINARY: '普通发票',
+        SPECIAL: '专用发票 ',
       },
       HeadType: {
         PERSONAL: '个人',
@@ -68,15 +68,15 @@ export default {
   computed: {
     ShowList() {
       const ORDINARY_COMPANY = {
-        title: '电子普通发票-单位',
+        title: '普通发票-单位',
         list: [],
       }
       const SPECIAL_COMPANY = {
-        title: '增值税专用发票',
+        title: '专用发票',
         list: [],
       }
       const ORDINARY_PERSONAL = {
-        title: '电子普通发票-个人',
+        title: '普通发票-个人',
         list: [],
       }
 
@@ -136,18 +136,22 @@ export default {
         font-size: 30px;
         color: #222222;
         line-height: 30px;
+        vertical-align: middle;
       }
       .custom-tag {
         font-family: PingFangSC-Regular;
         // font-size: 20px;
         color: #ffffff;
         letter-spacing: 0;
-
-        // height: 28px;
+        background: #f1524e;
+        vertical-align: middle;
       }
       ::v-deep .sp-cell {
         padding: 32px 0;
         border-top: 1px solid #f4f4f4;
+      }
+      ::v-deep .sp-cell__title {
+        margin-right: 100px;
       }
     }
     & > div:nth-child(2) {

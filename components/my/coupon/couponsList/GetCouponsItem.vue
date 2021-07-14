@@ -39,7 +39,7 @@
           <div class="item-rt-content-left">
             <div ref="textpro" class="content">
               {{ getuseTypeName(item.useType) }}
-              <!-- item.useType === 1? '全品类通用': item.useType === 2? '限定部分类别产品使用': '置顶产品使用' -->
+              <!-- item.useType === 1? '全品类通用': item.useType === 2? '限定部分类别产品使用': '指定产品使用' -->
             </div>
 
             <div class="surplus warn">可使用{{ item.availableTimes }}次</div>
@@ -116,14 +116,14 @@ export default {
     getuseTypeName(useType) {
       let useTypeName = ''
       switch (useType) {
-        case 1:
-          useTypeName = '全品类通用'
-          break
+        // case 1:
+        //   useTypeName = '全品类通用'
+        //   break
         case 2:
-          useTypeName = '限定部分类别产品使用'
+          useTypeName = '仅限指定品类使用'
           break
-        default:
-          useTypeName = '置顶产品使用'
+        case 3:
+          useTypeName = '仅限指定商品使用'
       }
       return useTypeName
     },
@@ -232,7 +232,7 @@ export default {
       font-family: PingFang SC;
       font-weight: bold;
       color: #222222;
-      line-height: 32px;
+
       margin: 26px 0 15px 0;
       word-break: break-all;
       display: -webkit-box;

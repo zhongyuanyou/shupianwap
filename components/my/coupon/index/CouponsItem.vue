@@ -33,7 +33,7 @@
               ? '全品类通用'
               : item.useType === 2
               ? '限定部分类别产品使用'
-              : '置顶产品使用' -->
+              : '指定产品使用' -->
         </div>
         <div class="date-container">
           <span class="date" :class="item.showColorTime ? 'warn' : ''">
@@ -89,24 +89,19 @@ export default {
     getuseTypeName(useType) {
       let useTypeName = ''
       switch (useType) {
-        case 1:
-          useTypeName = '全品类通用'
-          break
+        // case 1:
+        //   useTypeName = '全品类通用'
+        //   break
         case 2:
-          useTypeName = '限定部分类别产品使用'
+          useTypeName = '仅限指定品类使用'
           break
-        default:
-          useTypeName = '指定产品使用'
+        case 3:
+          useTypeName = '仅限指定商品使用'
       }
       return useTypeName
     },
     getDiscount(count) {
-      let num
-      if (Number(count) > 10) {
-        num = Number(count) / 100
-        num = num.toFixed('1')
-      }
-      return num || count
+      return Number(count) / 100
     },
     // 进入详情
     goDetailPage(item) {
@@ -195,8 +190,8 @@ export default {
       font-family: PingFang SC;
       font-weight: bold;
       color: #222222;
-      line-height: 32px;
-      margin: 36px 0 23px 0;
+      // line-height: 32px;
+      margin: 34px 0 23px 0;
       word-break: break-all;
       display: -webkit-box;
       -webkit-line-clamp: 1;

@@ -295,7 +295,7 @@ export default {
           }
         }
         p {
-          margin-left: 8px;
+          margin-left: 4px;
           font-size: 24px;
           color: #555555;
         }
@@ -313,7 +313,11 @@ export default {
             height: 130px;
             background: #f5f5f5;
             border-radius: 8px;
+            position: relative;
             img {
+              position: absolute;
+              left: 0;
+              top: 0;
               width: 100%;
               height: 100%;
               border-radius: 8px;
@@ -337,6 +341,9 @@ export default {
                 width: 30px;
                 height: 30px;
                 line-height: 30px;
+                display: block;
+                position: relative;
+                top: -1px;
               }
               .title {
                 font-size: 28px;
@@ -376,7 +383,7 @@ export default {
           > .img-mark {
             position: absolute;
             right: 0;
-            top: 0;
+            top: 18px;
             width: 140px;
             height: 105px;
             img {
@@ -393,6 +400,7 @@ export default {
       display: flex;
       color: #222222;
       background: #f8f8f8;
+      align-items: center;
       strong {
         font-weight: bold;
         font-size: 24px;
@@ -409,8 +417,6 @@ export default {
       justify-content: flex-end;
       align-content: center;
       button {
-        display: block;
-        width: 152px;
         height: 64px;
         background: #ffffff;
         border: 1px solid #dddddd;
@@ -420,6 +426,8 @@ export default {
         text-align: center;
         margin-top: 32px;
         margin-left: 20px;
+        padding: 0 20px;
+        word-break: break-all;
       }
     }
   }

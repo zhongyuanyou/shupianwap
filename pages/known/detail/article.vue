@@ -1,163 +1,165 @@
 <template>
-  <div class="article">
-    <HeaderSlot>
-      <div v-if="!showHead" class="flex">
-        <div class="nav-back">
-          <my-icon
-            v-if="!isShare"
-            name="nav_ic_back"
-            size="0.40rem"
-            color="#1a1a1a"
-            class="my_icon"
-            @click.native="$back()"
-          ></my-icon>
+  <section>
+    <ShareModal />
+    <div class="article">
+      <HeaderSlot>
+        <div v-if="!showHead" class="flex">
+          <div class="nav-back">
+            <my-icon
+              v-if="!isShare"
+              name="nav_ic_back"
+              size="0.40rem"
+              color="#1a1a1a"
+              class="my_icon"
+              @click.native="$back()"
+            ></my-icon>
+          </div>
+          <div class="search">
+            <my-icon
+              style="margin-right: 0.15rem"
+              name="nav_ic_searchbig"
+              size="0.40rem"
+              color="#1a1a1a"
+              class="my_icon"
+              @click.native="$router.push('/known/search')"
+            ></my-icon>
+            <sp-icon
+              v-if="articleDetails.createrId === userInfo.userId"
+              name="ellipsis"
+              size="0.4rem"
+              color="#1a1a1a"
+              class="ellipsis"
+              @click="popupShow = true"
+            />
+          </div>
         </div>
-        <div class="search">
-          <my-icon
-            style="margin-right: 0.15rem"
-            name="nav_ic_searchbig"
-            size="0.40rem"
-            color="#1a1a1a"
-            class="my_icon"
-            @click.native="$router.push('/known/search')"
-          ></my-icon>
-          <sp-icon
-            v-if="articleDetails.createrId === userInfo.userId"
-            name="ellipsis"
-            size="0.4rem"
-            color="#1a1a1a"
-            class="ellipsis"
-            @click="popupShow = true"
+        <div v-if="showHead" class="flex">
+          <PageHead2
+            :header-data="articleDetails"
+            :is-follow="isFollow"
+            :is-show-follow="articleDetails.createrId !== userInfo.userId"
+            @follow="follow"
           />
         </div>
+      </HeaderSlot>
+      <DownLoadArea
+        v-if="isShare"
+        :ios-link="iosLink"
+        :androd-link="androdLink"
+      />
+      <div class="title-area">
+        <div class="title">{{ articleDetails.title }}</div>
       </div>
-      <div v-if="showHead" class="flex">
-        <PageHead2
-          :header-data="articleDetails"
-          :is-follow="isFollow"
-          :is-show-follow="articleDetails.createrId !== userInfo.userId"
-          @follow="follow"
-        />
+      <div class="main">
+        <div ref="myPage" class="user-info">
+          <sp-image
+            class="img"
+            :src="articleDetails.avatar"
+            @click.stop="goUser(articleDetails.userId, articleDetails.userType)"
+          />
+          <div class="infos">{{ articleDetails.userName }}</div>
+          <template v-if="articleDetails.createrId !== userInfo.userId">
+            <div v-if="!isFollow" class="btn" @click="follow">
+              <sp-button>
+                <my-icon name="tianjia" size="0.27rem" color="#4974F5" />
+                关注
+              </sp-button>
+            </div>
+            <div v-else class="btn2" @click="follow">
+              <span class="follow">已关注</span>
+            </div>
+          </template>
+        </div>
+        <div class="content" v-html="articleDetails.content"></div>
+        <p class="pub-time">编辑于 {{ articleDetails.createTime }}</p>
+        <DetailArticleList :article-list="articleList" />
       </div>
-    </HeaderSlot>
-    <DownLoadArea
-      v-if="isShare"
-      :ios-link="iosLink"
-      :androd-link="androdLink"
-    />
-    <div class="title-area">
-      <div class="title">{{ articleDetails.title }}</div>
-    </div>
-    <div class="main">
-      <div ref="myPage" class="user-info">
-        <sp-image
-          class="img"
-          :src="articleDetails.avatar"
-          @click.stop="goUser(articleDetails.userId, articleDetails.userType)"
-        />
-        <div class="infos">{{ articleDetails.userName }}</div>
-        <template v-if="articleDetails.createrId !== userInfo.userId">
-          <div v-if="!isFollow" class="btn" @click="follow">
-            <sp-button>
-              <my-icon name="tianjia" size="0.27rem" color="#4974F5" />
-              关注
-            </sp-button>
-          </div>
-          <div v-else class="btn2" @click="follow">
-            <span class="follow">已关注</span>
-          </div>
-        </template>
-      </div>
-      <div class="content" v-html="articleDetails.content"></div>
-      <p class="pub-time">编辑于 {{ articleDetails.createTime }}</p>
-      <DetailArticleList :article-list="articleList" />
-    </div>
-    <Comment
-      ref="openComment"
-      :article-id="articleDetails.id"
-      :source-type="articleDetails.type"
-    />
-    <sp-bottombar safe-area-inset-bottom>
-      <div
-        v-if="
-          articleDetails.isApplaudFlag === 0 &&
-          articleDetails.isDisapplaudFlag === 0
-        "
-        class="left-area"
-      >
-        <span class="icon" @click="handleClickBottom(1)">
-          <my-icon name="zantong" size="0.28rem" color="#4974F5"></my-icon
-        ></span>
-        <span class="text" @click="handleClickBottom(1)"
-          >赞同{{ articleDetails.applaudCount }}</span
-        >
-      </div>
-      <div
-        v-if="articleDetails.isApplaudFlag === 1"
-        class="applaud"
-        @click="handleClickBottom(1)"
-      >
-        <span class="icon">
-          <my-icon name="zantong_mian" size="0.28rem" color="#fff"></my-icon
-        ></span>
-        <span class="text">已赞同</span>
-      </div>
-      <div
-        v-if="articleDetails.isDisapplaudFlag === 1"
-        class="applaud dis-applaud"
-        @click="handleClickBottom(2)"
-      >
-        <span class="icon">
-          <my-icon name="fandui_mian" size="0.28rem" color="#fff"></my-icon
-        ></span>
-        <span class="text">已反对</span>
-      </div>
-      <div class="right-area">
+      <Comment
+        ref="openComment"
+        :article-id="articleDetails.id"
+        :source-type="articleDetails.type"
+      />
+      <sp-bottombar safe-area-inset-bottom>
         <div
-          class="item"
-          :style="{
-            color: articleDetails.isCollectFlag === 1 ? '#4974F5' : '#999999',
-          }"
-          @click="handleClickBottom(3)"
+          v-if="
+            articleDetails.isApplaudFlag === 0 &&
+            articleDetails.isDisapplaudFlag === 0
+          "
+          class="left-area"
         >
-          <div class="icon">
-            <my-icon name="shoucang" size="0.4rem"></my-icon>
-          </div>
-          收藏
+          <span class="icon" @click="handleClickBottom(1)">
+            <my-icon name="zantong" size="0.28rem" color="#4974F5"></my-icon
+          ></span>
+          <span class="text" @click="handleClickBottom(1)"
+            >赞同{{ articleDetails.applaudCount }}</span
+          >
         </div>
-        <div class="item" @click="comment()">
-          <div class="icon">
-            <my-icon name="pinglun" size="0.4rem" color="#999999"></my-icon>
-          </div>
-          评论
+        <div
+          v-if="articleDetails.isApplaudFlag === 1"
+          class="applaud"
+          @click="handleClickBottom(1)"
+        >
+          <span class="icon">
+            <my-icon name="zantong_mian" size="0.28rem" color="#fff"></my-icon
+          ></span>
+          <span class="text">已赞同</span>
         </div>
-      </div>
-    </sp-bottombar>
-    <!--    上拉组件-->
-    <sp-popup
-      v-model="popupShow"
-      position="bottom"
-      :style="{ height: '30%' }"
-      round
-      close-icon="close"
-      :close-on-click-overlay="false"
-    >
-      <div class="down_slide_list">
-        <ul>
-          <li @click="editQues(articleDetails.id)">
-            <my-icon name="bianji1" size="1rem" color="#555"></my-icon>
-            <p>编辑</p>
-          </li>
-          <li @click="deleteQues(articleDetails.id)">
-            <my-icon name="shanchu1" size="1rem" color="#555"></my-icon>
-            <p>删除</p>
-          </li>
-        </ul>
-        <div class="cancel" @click="popupShow = false">取消</div>
-      </div>
-    </sp-popup>
-    <ShareModal />
-  </div>
+        <div
+          v-if="articleDetails.isDisapplaudFlag === 1"
+          class="applaud dis-applaud"
+          @click="handleClickBottom(2)"
+        >
+          <span class="icon">
+            <my-icon name="fandui_mian" size="0.28rem" color="#fff"></my-icon
+          ></span>
+          <span class="text">已反对</span>
+        </div>
+        <div class="right-area">
+          <div
+            class="item"
+            :style="{
+              color: articleDetails.isCollectFlag === 1 ? '#4974F5' : '#999999',
+            }"
+            @click="handleClickBottom(3)"
+          >
+            <div class="icon">
+              <my-icon name="shoucang" size="0.4rem"></my-icon>
+            </div>
+            收藏
+          </div>
+          <div class="item" @click="comment()">
+            <div class="icon">
+              <my-icon name="pinglun" size="0.4rem" color="#999999"></my-icon>
+            </div>
+            评论
+          </div>
+        </div>
+      </sp-bottombar>
+      <!--    上拉组件-->
+      <sp-popup
+        v-model="popupShow"
+        position="bottom"
+        :style="{ height: '30%' }"
+        round
+        close-icon="close"
+        :close-on-click-overlay="false"
+      >
+        <div class="down_slide_list">
+          <ul>
+            <li @click="editQues(articleDetails.id)">
+              <my-icon name="bianji1" size="1rem" color="#555"></my-icon>
+              <p>编辑</p>
+            </li>
+            <li @click="deleteQues(articleDetails.id)">
+              <my-icon name="shanchu1" size="1rem" color="#555"></my-icon>
+              <p>删除</p>
+            </li>
+          </ul>
+          <div class="cancel" @click="popupShow = false">取消</div>
+        </div>
+      </sp-popup>
+    </div>
+  </section>
 </template>
 
 <script>

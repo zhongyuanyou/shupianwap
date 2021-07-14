@@ -1,14 +1,16 @@
 <template>
-  <div class="invoice" :style="{ paddingBottom: FooterNavHeight + 'px' }">
-    <sp-sticky>
-      <Header class="my-header" title="我的优惠券"></Header>
-      <client-only>
-        <sp-work-tabs v-model="tabActive" @click="onClickTab">
-          <sp-work-tab title="券包"></sp-work-tab>
-          <sp-work-tab title="卡包"></sp-work-tab>
-        </sp-work-tabs>
-      </client-only>
-    </sp-sticky>
+  <div class="coupon">
+    <div class="coupon-header" :style="{ height: HeaderHeight + 'px' }">
+      <div ref="couponHeaderWarpper" class="coupon-header-warpper">
+        <Header class="my-header" title="我的优惠券"></Header>
+        <client-only>
+          <sp-work-tabs v-model="tabActive" @click="onClickTab">
+            <sp-work-tab title="券包"></sp-work-tab>
+            <sp-work-tab title="卡包"></sp-work-tab>
+          </sp-work-tabs>
+        </client-only>
+      </div>
+    </div>
 
     <sp-list
       v-if="list.length > 0"
@@ -107,6 +109,7 @@ import {
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 
+import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
 import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
@@ -118,10 +121,11 @@ import { actCard, coupon } from '@/api/index'
 
 export default {
   layout: 'keepAlive',
-  name: 'Invoice',
+  name: 'Coupon',
   components: {
     LoadingCenter,
     Header,
+
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
     [Sticky.name]: Sticky,
@@ -163,16 +167,62 @@ export default {
           path: '/my/coupon/act-card',
         },
       ],
-      FooterNavHeight: 150,
+      HeaderHeight: '',
+      // FooterNavHeight: 150,
     }
   },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userId,
+      userInfo: (state) => state.user, // 登录的用户信息
+      isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
+    }),
+  },
   mounted() {
-    this.init()
-    this.onLoad()
+    this.tabActive = parseInt(this.$route.query.tabActive || 0)
+    this.tabActiveIndex = this.tabActive
 
-    this.FooterNavHeight = this.$refs.FooterNav.$el.offsetHeight
+    // this.FooterNavHeight = this.$refs.FooterNav.$el.offsetHeight
+    this.initData()
+    this.getHeaderHeight()
   },
   methods: {
+    getHeaderHeight() {
+      this.$nextTick(() => {
+        this.HeaderHeight = this.$refs.couponHeaderWarpper.offsetHeight
+        console.log(this.HeaderHeight)
+      })
+    },
+    initData() {
+      if (this.isInApp) {
+        if (this.userInfo.userId && this.userInfo.token) {
+          this.init()
+          this.onLoad()
+        } else {
+          const that = this
+          that.$appFn.dggGetUserInfo(async function (res) {
+            console.log('调用app获取信息', res)
+            if (res && res.code === 200) {
+              // 兼容启大顺参数返回
+              that.$store.dispatch(
+                'user/setUser',
+                typeof res.data === 'string' ? JSON.parse(res.data) : res.data
+              )
+              that.init()
+              that.onLoad()
+            } else {
+              const isLogin = await that.$isLogin()
+              that.init()
+              that.onLoad()
+            }
+          })
+        }
+      } else {
+        this.init()
+        this.onLoad()
+      }
+    },
     toActCard() {
       this.$router.push({
         path: '/my/coupon/act-card',
@@ -207,6 +257,11 @@ export default {
         return
       }
       this.tabActiveIndex = this.tabActive
+      this.$router.replace({
+        query: {
+          tabActive: this.tabActive,
+        },
+      })
       this.init()
       this.onLoad()
     },
@@ -300,13 +355,38 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.invoice {
+.coupon {
   min-height: 100%;
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
 
   background-color: #f5f5f5;
 
+  &-header {
+    &-warpper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #ffffff;
+      z-index: 999;
+      border-bottom: 1px solid #f5f5f5;
+    }
+  }
+
+  ::v-deep .sp-work-tab {
+    font-family: PingFangSC-Regular;
+    font-size: 30px;
+    color: #999999;
+    text-align: center;
+  }
+  ::v-deep .sp-work-tab--active {
+    color: #222222;
+  }
+
+  ::v-deep .sp-work-tabs__line {
+    background-color: #4974f5;
+  }
   .empty-text ::v-deep .sp-empty__description {
     font-size: 30px;
     font-family: PingFangSC-Medium, PingFang SC;
@@ -316,7 +396,8 @@ export default {
   }
 
   .coupon_list {
-    margin: 24px 40px 0;
+    width: 670px;
+    margin: 24px auto 0;
   }
 
   .rules_and_invalid {

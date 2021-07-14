@@ -149,7 +149,7 @@ export default {
       this.list = res || []
     },
     toDetail(item) {
-      this.$router.replace({
+      this.$router.push({
         path: '/order/invoice/preview-details',
         query: {
           orderId: this.orderId,

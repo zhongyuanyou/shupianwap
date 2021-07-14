@@ -17,7 +17,7 @@
             width="100%"
             height="100%"
             fit="cover"
-            :src="item.indexImg || 'https://img.yzcdn.cn/vant/cat.jpeg'"
+            :src="item.indexImg"
           />
         </div>
         <div class="goods_info flex_1">
@@ -286,6 +286,8 @@ export default {
       .goods_img {
         width: 130px;
         height: 130px;
+        border-radius: 8px;
+        overflow: hidden;
       }
       .goods_info {
         min-width: 0;
@@ -295,9 +297,10 @@ export default {
         padding-bottom: 14px;
         font-size: 28px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 600;
+        font-weight: bold;
         color: #222222;
-        line-height: 28px;
+        line-height: 32px;
+        margin-top: -2px;
         .mixin-text-oneoverflow();
       }
       .goods_info_des {
@@ -370,6 +373,14 @@ export default {
     }
     .card_footer {
       text-align: right;
+
+      ::v-deep .sp-button {
+        padding: 19px 24px;
+        font-family: PingFangSC-Regular;
+        font-size: 26px;
+        color: #222222;
+        letter-spacing: 0;
+      }
     }
   }
 }

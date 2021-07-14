@@ -219,7 +219,7 @@ export default {
       selectGoodsState: false, // 是否开启多选
       checkedAllState: false, // 全选状态
       page: 1,
-      tabIndex: 4,
+      tabIndex: 1,
       limit: 15,
       error: false,
       loading: false,

@@ -66,13 +66,15 @@
                       }}</span>
                       {{ item.marketingCouponVO.couponName }}
                     </h1>
-                    <p v-if="item.marketingCouponVO.useType === 1">
+                    <!-- <p v-if="item.marketingCouponVO.useType === 1">
                       全品类通用
+                    </p> -->
+                    <p v-if="item.marketingCouponVO.useType === 2">
+                      仅限指定品类使用
                     </p>
-                    <p v-else-if="item.marketingCouponVO.useType === 2">
-                      限定“部分类别产品”使用
+                    <p v-if="item.marketingCouponVO.useType === 3">
+                      仅限指定商品使用
                     </p>
-                    <p v-else>限定“指定产品”使用</p>
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
                   <div class="right">
@@ -128,18 +130,19 @@
                       }}</span>
                       {{ item.marketingCouponVO.couponName }}
                     </h1>
-                    <p v-if="item.marketingCouponVO.useType === 1">
+                    <!-- <p v-if="item.marketingCouponVO.useType === 1">
                       全品类通用
+                    </p> -->
+                    <p v-if="item.marketingCouponVO.useType === 2">
+                      仅限指定品类使用
                     </p>
-                    <p v-else-if="item.marketingCouponVO.useType === 2">
-                      限定“部分类别产品”使用
+                    <p v-else-if="item.marketingCouponVO.useType === 3">
+                      仅限指定商品使用
                     </p>
-                    <p v-else>限定“指定产品”使用</p>
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
                 </div>
               </div>
-              <p>订单金额不符合使用条件</p>
             </div>
           </div>
           <div v-else class="none">
@@ -227,18 +230,34 @@ export default {
       tabAct: 0,
       checkarr: '',
       radio: null,
-      num: 0,
+      // num: 0,
     }
   },
+  computed: {
+    num() {
+      if (this.checkarr.marketingCouponVO) {
+        if (this.checkarr.marketingCouponVO.couponType === 1) {
+          return this.checkarr.marketingCouponVO.reducePrice
+        } else {
+          const price =
+            this.$route.query.type === 'shopcar'
+              ? this.$parent.order.skuTotalPrice
+              : this.$parent.order.salesPrice
+          const discount =
+            parseFloat(this.checkarr.marketingCouponVO.discount) / 100
+
+          const discountNum = ((10 - discount) / 10) * price
+          return Math.ceil(discountNum * 100) / 100
+        }
+      }
+      return 0
+    },
+  },
+
   mounted() {},
   methods: {
     getDiscount(count) {
-      let disNum
-      if (Number(count) > 10) {
-        disNum = Number(count) / 100
-        disNum = disNum.toFixed('1')
-      }
-      return disNum
+      return Number(count) / 100
     },
     sum() {
       order
@@ -249,25 +268,15 @@ export default {
               this.$route.query.type === 'shopcar'
                 ? this.$parent.order.skuTotalPrice
                 : this.$parent.order.salesPrice,
-            culation: this.checkarr
-              ? this.checkarr.marketingCouponVO
-                ? this.checkarr.marketingCouponVO.reducePrice
-                : 0
-              : 0,
+            culation: this.num,
           }
         )
         .then((result) => {
-          this.$parent.price = result
-          this.$parent.popupshow = false
-          this.$parent.coupon = this.checkarr
-            ? this.checkarr.marketingCouponVO
-              ? `-${this.checkarr.marketingCouponVO.reducePrice}`
-              : ''
-            : ''
-          this.$parent.skeletonloading = false
+          this.$emit('change', result, -this.num, this.checkarr)
+
+          this.close()
         })
         .catch((e) => {
-          this.$parent.skeletonloading = false
           Toast({
             message: e.data.error,
             iconPrefix: 'sp-iconfont',
@@ -281,11 +290,9 @@ export default {
       if (this.radio === index) {
         this.checkarr = ''
         this.radio = -1
-        this.num = 0
       } else {
         this.checkarr = item
         this.radio = index
-        this.num = this.checkarr.marketingCouponVO.reducePrice
       }
     },
     close(data) {
@@ -374,7 +381,8 @@ export default {
       overflow-y: auto;
       padding: 0 40px;
       > .list {
-        margin-top: 24px;
+        margin: 24px auto 0;
+        width: 670px;
         height: 212px;
         background: #ffffff;
         box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
@@ -532,8 +540,9 @@ export default {
     .listbox {
       height: 100%;
       > .nolist {
-        height: 271px;
-        margin-top: 24px;
+        height: 220px;
+        margin: 24px auto 0;
+        width: 670px;
         background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png)
           no-repeat;
         background-size: 100%;
