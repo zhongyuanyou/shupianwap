@@ -1,9 +1,9 @@
 <template>
   <div class="invoice_preview">
-    <sp-sticky>
+    <HeaderSlot>
       <Header class="my-header" title="查看电子发票"></Header>
-      <sp-divider :style="{ margin: '0' }" />
-    </sp-sticky>
+      <!-- <sp-divider :style="{ margin: '0' }" /> -->
+    </HeaderSlot>
 
     <div class="preview_content">
       <client-only>
@@ -36,7 +36,7 @@ import { mapState } from 'vuex'
 // import Pdf from '@fe/vue-pdf'
 
 import Header from '@/components/common/head/header.vue'
-
+import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { invoiceApi } from '@/api/index.js'
 
@@ -47,7 +47,7 @@ export default {
     LoadingCenter,
     Header,
     Pdf: () => import('@fe/vue-pdf'),
-    [Sticky.name]: Sticky,
+    HeaderSlot,
     [Image.name]: Image,
     [Divider.name]: Divider,
     [Swipe.name]: Swipe,
