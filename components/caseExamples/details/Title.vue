@@ -29,7 +29,7 @@
     </div>
 
     <div class="title_bottom">
-      <span class="title_bottom_button"></span>
+      <div class="title_bottom_button">报价方案</div>
     </div>
   </div>
 </template>
@@ -130,18 +130,19 @@ export default {
 
       white-space: nowrap;
     }
-
-    .title_info > div:nth-child(2) {
-      border-right: 1px solid rgba(255, 255, 255, 0.3);
-      border-left: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 0 10px;
-      margin: 0 10px;
-    }
+  }
+  .title_info > div:nth-child(2) {
+    border-right: 1px solid #f4f4f4;
+    border-left: 1px solid #f4f4f4;
+    padding: 0 20px;
+    margin: 0 20px;
   }
 
   .title_bottom {
+    margin-top: 40px;
     &_button {
       height: 96px;
+      line-height: 96px;
       background: #4974f5;
       border-radius: 8px;
 
@@ -150,7 +151,6 @@ export default {
       font-size: 32px;
       color: #ffffff;
       text-align: center;
-      line-height: 32px;
     }
   }
 }
