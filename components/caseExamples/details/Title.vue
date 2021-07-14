@@ -7,7 +7,8 @@
         <span class="title_tags_item">视频看房</span>
       </div>
       <div class="title_tags_right">
-        <my-icon name="popup_ic_closeb" size="0.24rem" color="#222222" />9999
+        <my-icon name="login_ic_look" size="0.24rem" color="#4974F5" />
+        <span class="view">9999</span>
       </div>
     </div>
 
@@ -74,6 +75,7 @@ export default {
   font-size: 0;
   .flex {
     display: flex;
+    align-items: center;
     // align-items: flex-start;
   }
   .flex_1 {
@@ -87,6 +89,7 @@ export default {
         border-radius: 4px;
         display: inline-block;
         margin-right: 12px;
+        padding: 5px 8px;
 
         font-family: PingFangSC-Regular;
         font-size: 22px;
@@ -101,6 +104,10 @@ export default {
       color: #222222;
       letter-spacing: 0;
       line-height: 24px;
+
+      .view {
+        margin-left: 12px;
+      }
     }
   }
 
