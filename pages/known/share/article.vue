@@ -1,8 +1,8 @@
 <template>
   <section>
     <ShareModal
-      :planner-name="articleDetails.createrName || articleDetails.userName"
       :mch-id="articleDetails.createrId"
+      @setPlannerInfo="setPlannerInfo"
     />
     <HeaderSlot>
       <div v-if="!showHead" class="flex">
@@ -53,14 +53,27 @@
         <div class="title">{{ articleDetails.title }}</div>
       </div>
       <div class="main">
-        <div ref="myPage" class="user-info">
+        <div
+          v-if="topPlannerInfo.mchUserId || planerInfo.mchUserId"
+          ref="myPage"
+          class="user-info"
+        >
           <sp-image
             class="img"
-            :src="articleDetails.avatar || $ossImgSetV2('9zzzas17j8k0000.png')"
-            @click.stop="goUser(articleDetails.userId, articleDetails.userType)"
+            :src="topPlannerInfo.img || $ossImgSetV2('9zzzas17j8k0000.png')"
+            @click.stop="
+              goUser(
+                topPlannerInfo.mchUserId || planerInfo.mchUserId,
+                topPlannerInfo.type || planerInfo.type
+              )
+            "
           />
           <div class="infos">
-            {{ articleDetails.createrName || articleDetails.userName }}
+            {{
+              topPlannerInfo.userName ||
+              topPlannerInfo.name ||
+              planerInfo.userName
+            }}
           </div>
           <!-- && planerInfo.mchUserId -->
           <template
@@ -76,9 +89,7 @@
                 type="primary"
                 @click="
                   sendTextMessage(
-                    planerInfo.mchUserId ||
-                      articleDetails.createrId ||
-                      articleDetails.userId
+                    topPlannerInfo.mchUserId || planerInfo.mchUserId
                   )
                 "
                 >在线问</sp-button
@@ -87,11 +98,7 @@
                 size="small"
                 type="info"
                 @click="
-                  handleTel(
-                    planerInfo.mchUserId ||
-                      articleDetails.createrId ||
-                      articleDetails.userId
-                  )
+                  handleTel(topPlannerInfo.mchUserId || planerInfo.mchUserId)
                 "
                 >打电话</sp-button
               >
@@ -150,7 +157,7 @@
         </div>
       </sp-popup>
     </div>
-    <div class="no-data" v-if="!articleDetails.title">
+    <div v-if="!articleDetails.title && isLoaded" class="no-data">
       <img
         src="https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png"
         alt=""
@@ -215,6 +222,7 @@ export default {
 
   data() {
     return {
+      isLoaded: false,
       isShare: false,
       popupShow: false,
       articleList: [],
@@ -226,6 +234,7 @@ export default {
       releaseFlag: false, // 是否发布的新文章
       shareId: '', // 分享id
       planerInfo: {},
+      topPlannerInfo: {},
       prefixPath: 'cpsccustomer://',
       iosPath: {
         path: 'CPSCustomer:CPSCustomer/CPSCSharePlaceholderViewController///push/animation',
@@ -284,6 +293,12 @@ export default {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    setPlannerInfo(data) {
+      console.log('设置规划师', data)
+      if (data.mchUserId && data.name) {
+        this.topPlannerInfo = data
+      }
+    },
     getDetail() {
       this.$axios
         .get(knownApi.questionArticle.articleDetail, {
@@ -292,7 +307,7 @@ export default {
           },
         })
         .then((res) => {
-          this.loaded = true
+          this.isLoaded = true
           if (res.code === 200) {
             if (res.data.goodsList) {
               const goods = res.data.goodsList.filter((item) => {
@@ -312,12 +327,10 @@ export default {
             if (this.articleDetails.userId) {
               this.getPlanerInfo(this.articleDetails.userId)
             }
-          } else {
-            this.loaded = true
           }
         })
         .catch((err) => {
-          this.loaded = true
+          this.isLoaded = true
           console.error(err)
         })
     },
@@ -342,6 +355,7 @@ export default {
           ...obj,
           ...res,
         }
+        console.log('planerInfo', this.planerInfo)
       })
     },
     goUser(id, usertype) {
