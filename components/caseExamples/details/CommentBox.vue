@@ -1,8 +1,7 @@
 <template>
   <div class="comment">
-    <h1 class="title">用户评价</h1>
-    <!-- <sp-swipe class="my-swipe" :autoplay="5000" indicator-color="#4974f5;"> -->
-    <!-- <sp-swipe-item v-for="(item, index) in list" :key="index"> -->
+    <h1 class="title">客户评价</h1>
+
     <div v-for="(item, index) in list" :key="index" class="item">
       <div class="head">
         <img :src="item.img" alt="" />
@@ -16,20 +15,29 @@
       <p class="tit">
         {{ item.tit }}
       </p>
+      <div class="images">
+        <div class="images_container">
+          <sp-image
+            v-for="(image, imageIndex) in 4"
+            :key="imageIndex"
+            class="image"
+            src="image"
+          ></sp-image>
+        </div>
+      </div>
     </div>
-    <!-- </sp-swipe-item>
-    </sp-swipe> -->
   </div>
 </template>
 
 <script>
-import { Swipe, SwipeItem, Rate } from '@chipspc/vant-dgg'
+import { Swipe, SwipeItem, Image, Rate } from '@chipspc/vant-dgg'
 export default {
   name: 'Comment',
   components: {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
     [Rate.name]: Rate,
+    [Image.name]: Image,
   },
   props: {
     list: {
@@ -59,7 +67,7 @@ export default {
 
   > .item {
     margin-top: 42px;
-    padding: 0 40px 30px 40px;
+    padding: 0 40px 0px;
     .head {
       display: flex;
       > img {
@@ -91,12 +99,31 @@ export default {
       }
     }
     .tit {
+      margin-top: 24px;
       font-size: 26px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: #222222;
       line-height: 38px;
       padding-left: 100px;
+    }
+
+    .images {
+      overflow: hidden;
+      font-size: 0;
+      margin-top: 24px;
+      padding-left: 100px;
+
+      .images_container {
+        margin: 0 -5px;
+      }
+      .image {
+        margin: 0 5px 10px;
+        width: 32%;
+        width: calc(33% - 10px);
+        max-width: 216px;
+        height: 131px;
+      }
     }
   }
 }

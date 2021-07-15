@@ -97,18 +97,21 @@ export default {
       margin-left: 14px;
 
       > .item_num {
-        width: 24px;
-        height: 24px;
-        box-sizing: border-box;
-        border: 7px solid #4974f5;
-        box-shadow: 0 0 3px #4974f5;
+        width: 30px;
+        height: 30px;
+        // box-sizing: border-box;
+        // border: 7px solid #4974f5;
+        // box-shadow: 0 0 3px #4974f5;
         background: #ffffff;
 
         border-radius: 100%;
 
         position: absolute;
-        left: -14px;
-        top: 6px;
+        left: -16px;
+        top: 3px;
+        background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/a0x4tlxjr0g0000.png');
+        background-size: 100%;
+        background-repeat: no-repeat;
       }
       > .item_num_right {
         > .item_num_right_title {
@@ -152,6 +155,7 @@ export default {
     }
     > .item:last-child {
       border: none;
+      margin-left: 16px;
     }
   }
 }

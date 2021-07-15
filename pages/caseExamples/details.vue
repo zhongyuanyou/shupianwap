@@ -28,6 +28,10 @@
     <!--S 第一板块-->
     <Title />
 
+    <!--S 第五板块 推荐规划师-->
+    <ServiceTeam :im-jump-query="imJumpQuery" :recommend-planner="planners" />
+    <!--E 第五板块 推荐规划师-->
+
     <!-- 案件简介 -->
     <CaseIntroduction
       title="案例简介"
@@ -47,19 +51,6 @@
     <!--E 评论-->
     <CommentBox id="comment" :list="commentdata" />
 
-    <!--S 动态 -->
-    <OrderDynamic></OrderDynamic>
-    <!--S 第五板块 推荐规划师-->
-    <TcPlanners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
-    <!--E 第五板块 推荐规划师-->
-
-    <!--E  精选案例-->
-    <!--S 第十板块 服务详情-->
-    <ServiceDetail
-      comp-type="sc"
-      :detail-data="sellingDetail.salesGoodsOperatings.clientDetails[0]"
-    />
-
     <!--E 第十板块 猜你需要-->
     <bottomBar :im-jump-query="imJumpQuery" :planner-info="tcPlannerBooth" />
   </div>
@@ -75,12 +66,7 @@ import CaseIntroduction from '@/components/caseExamples/details/CaseIntroduction
 import CommentBox from '@/components/caseExamples/details/CommentBox.vue'
 import OrderCase from '@/components/caseExamples/details/OrderCase.vue'
 
-import OrderDynamic from '@/components/detail/OrderDynamic.vue'
-
-// import ContainProject from '@/components/detail/ContainProject.vue'
-import ContainContent from '@/components/detail/ContainContent.vue'
-import TcPlanners from '@/components/detail/TcPlanners1.vue'
-import ServiceDetail from '@/components/detail/ServiceDetail.vue'
+import ServiceTeam from '@/components/caseExamples/details/ServiceTeam.vue'
 
 import bottomBar from '@/components/detail/bottomBar/index.vue'
 
@@ -102,13 +88,11 @@ export default {
 
     // ContainProject,
     // ContainContent,
-    TcPlanners,
-    ServiceDetail,
+    ServiceTeam,
     bottomBar,
 
     CommentBox,
     OrderCase,
-    OrderDynamic,
   },
   mixins: [imHandle],
   props: {
@@ -135,7 +119,66 @@ export default {
         decodePhone: null,
         fullName: null,
       }, // 个人用户数据
-      planners: [], // 规划师列表
+      planners: [
+        {
+          mchUserId: '728694563914692664',
+          mchDetailId: '728694563914692654',
+          officeAddressId: '728694563914692663',
+          userName: '李鑫',
+          userCenterId: '732285019380940531',
+          userCenterNo: 'U2100446393',
+          phone:
+            '1E5FF47167BB2F1402193F3284BBF306*DGGJGZX*4/dD8hm6GF3CXFRX5D9c806lgwiDd0J85d2xbw==',
+          point: '5',
+          registerTime: '2021-01-08 09:07:33',
+          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
+          status: 1,
+          statusName: '启用',
+          userCenterStatus: 1,
+          userCenterStatusName: '正常',
+          recentCompany: '李鑫测试商户',
+          type: 'MERCHANT_B',
+          mchNo: 'PBU2141013',
+          isAdmin: 1,
+          serveNum: 0,
+          payNum: 0,
+          profilePhotoId: '',
+          dggPlannerRecomLog:
+            'productmap=[728694563914692664, 728691677696671018, 728691677696664530, 732284950661460939, 1076098595517908927, 767581610621041918, 767854117951796474, 767773578479304701, 1076098732956867488]&seqno=C306F8AD6FBAD6FDB9192946F8490AEA&recallno=44&ruleno=33&deviceId=deviceId&rankno=22',
+          portrait:
+            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
+        },
+        {
+          mchUserId: '728691677696664530',
+          mchDetailId: '728691574617454297',
+          officeAddressId: '728691574617454408',
+          userName: '王茂婕',
+          userCenterId: '607997598875151730',
+          userCenterNo: 'U2000431059',
+          phone:
+            '0E687EEE72F48183A2C6EFC593FC0A06*DGGJGZX*PH314Eo/oe71oSJobb0CE01mzKjRRSI1f61QbQ==',
+          point: '5',
+          registerTime: '2020-12-24 18:44:07',
+          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
+          status: 1,
+          statusName: '启用',
+          userCenterStatus: 1,
+          userCenterStatusName: '正常',
+          recentCompany: 'PCN测试服务商户',
+          type: 'MERCHANT_B',
+          mchNo: 'PBU2036000',
+          isAdmin: 0,
+          serveNum: 0,
+          serveAge: 7,
+          goodReputation: 95,
+          payNum: 0,
+          profilePhotoId: '',
+          dggPlannerRecomLog:
+            'productmap=[728694563914692664, 728691677696671018, 728691677696664530, 732284950661460939, 1076098595517908927, 767581610621041918, 767854117951796474, 767773578479304701, 1076098732956867488]&seqno=C306F8AD6FBAD6FDB9192946F8490AEA&recallno=44&ruleno=33&deviceId=deviceId&rankno=22',
+          portrait:
+            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
+        },
+      ], // 规划师列表
       plannerLimit: 3, // 推荐规划师每页条数
       plannerPage: 1, // 推荐规划师当前页
       tcPlannerBooth: {},
@@ -161,14 +204,6 @@ export default {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
           date: ' 2020.11.07',
           tit: '最初了解到薯片是在电梯里面，看到工商注册的广告，正好那段时间想出来创业，对注册公司不太了解，就找到薯片咨询了一下，注册公司流程繁琐。觉得还是交给代理公司去做，合作很愉快，同时也把公司其他业务交给了薯片来做，非常满意。',
-          val: 100,
-        },
-
-        {
-          phone: '189******18',
-          img: 'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
-          date: '2020.10.05',
-          tit: '当我遇到问题顾问非常耐心的解答了我的问题，有什么意见也是及时处理了的，而且办事人员每个步骤都通知到位，资料都整理的很好，我是很满意的。',
           val: 100,
         },
       ],
@@ -200,6 +235,8 @@ export default {
     }
     // 获取商品图片
     this.getSellingImg()
+
+    // this.getRecommendPlanner()
   },
   methods: {
     ...mapActions({
@@ -243,6 +280,44 @@ export default {
         ? clientDetails[0].imgFileIdPaths
         : []
       // 返回图片地址集合
+    },
+
+    //  获取推荐规划师
+    async getRecommendPlanner() {
+      // 获取用户唯一标识
+      if (!this.deviceId) {
+        this.deviceId = await getUserSign()
+      }
+      this.$axios
+        .get(productDetailsApi.recPlanner, {
+          params: {
+            limit: this.plannerLimit,
+            page: this.plannerPage,
+            area: this.$store.state.city.currentCity.code || '510100',
+            deviceId: this.deviceId, // 设备ID
+            level_2_ID: this.sellingDetail.classCodeLevel
+              ? this.sellingDetail.classCodeLevel.split(',')[1]
+              : null, // 二级产品分类
+            login_name: null, // 规划师ID(选填)
+            productType: 'PRO_CLASS_TYPE_SERVICE', // 产品类型
+            sceneId: 'app-cpxqye-01', // 场景ID
+            user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
+            platform: 'm', // 平台（app,m,pc）
+            productId: this.sellingDetail.id, // 产品id
+            firstTypeCode: this.sellingDetail.classCodeLevel
+              ? this.sellingDetail.classCodeLevel.split(',')[0]
+              : null,
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            console.log('推荐规划师', this.planners)
+            this.planners = res.data.records
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
   },
 }
