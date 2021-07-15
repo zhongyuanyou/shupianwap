@@ -596,10 +596,10 @@ export default {
     // 判断订单售后状态 是否展示售后按钮 展示何种售后按钮 0不售后 1退款售后 可售后 2 售后中 3售后完成 4 部分锁定 5已锁定
     checkAfterSaleStatus(orderData) {
       orderData = orderData || this.orderData || this.orderDetail
-      // 售后延期
-      if (orderData) {
-        return 0
-      }
+      // // 售后延期
+      // if (orderData) {
+      //   return 0
+      // }
       // 1.意向单、担保交易订单不展示售后按钮，
       if (
         orderData.orderType === 0 ||
