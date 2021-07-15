@@ -41,6 +41,7 @@ export default {
 
 <style lang="less" scoped>
 .content {
+  width: 100%;
   ::v-deep .title {
     font-family: PingFangSC-Medium;
     font-size: 40px;
