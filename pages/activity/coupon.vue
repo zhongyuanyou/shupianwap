@@ -161,6 +161,7 @@ export default {
       page: 1,
       limit: 20,
       nomore: false,
+      isLogin: '',
     }
   },
   computed: {
@@ -173,29 +174,30 @@ export default {
   },
   mounted() {
     this.getAdvertisingData()
+    this.getInitCouponData()
     // this.getInitCouponData()
-    if (this.isInApp) {
-      if (this.userInfo.userId && this.userInfo.token) {
-        console.log('无token')
-        this.getInitCouponData()
-      } else {
-        this.$appFn.dggGetUserInfo((res) => {
-          console.log('调用app获取信息', res)
-          if (res.code === 200) {
-            // 兼容启大顺参数返回
-            this.$store.dispatch(
-              'user/setUser',
-              typeof res.data === 'string' ? JSON.parse(res.data) : res.data
-            )
-            this.getInitCouponData()
-          } else {
-            this.getInitCouponData()
-          }
-        })
-      }
-    } else {
-      this.getInitCouponData()
-    }
+    // if (this.isInApp) {
+    //   if (this.userInfo.userId && this.userInfo.token) {
+    //     console.log('无token')
+    //     this.getInitCouponData()
+    //   } else {
+    //     this.$appFn.dggGetUserInfo((res) => {
+    //       console.log('调用app获取信息', res)
+    //       if (res.code === 200) {
+    //         // 兼容启大顺参数返回
+    //         this.$store.dispatch(
+    //           'user/setUser',
+    //           typeof res.data === 'string' ? JSON.parse(res.data) : res.data
+    //         )
+    //         this.getInitCouponData()
+    //       } else {
+    //         this.getInitCouponData()
+    //       }
+    //     })
+    //   }
+    // } else {
+    //   this.getInitCouponData()
+    // }
   },
   methods: {
     getRemainPercent(data) {
@@ -255,26 +257,28 @@ export default {
       }
     },
     async setCouponStatus(item) {
-      const isLogin = await this.$isLogin()
-      if (isLogin === 'app_login_success') {
-        this.getInitCouponData()
-        return
+      console.log('loading', this.loading)
+      if (this.loading) return
+      if (!this.isLogin) {
+        this.isLogin = await this.$isLogin()
+        if (this.isLogin === 'app_login_success') {
+          this.getInitCouponData()
+          return
+        }
       }
-      if (!isLogin) return
       this.loading = true
       this.$axios
         .post(`${CHIPS_WAP_BASE_URL}/yk/coupon/v2/receive_coupon.do`, {
           couponId: item.id,
         })
         .then((res) => {
+          this.loading = false
           if (res && res.code === 200) {
             Toast('领取成功')
             this.page = 1
             this.getInitCouponData()
-            this.loading = true
             this.nomore = false
           } else {
-            this.loading = false
             Toast.fail({
               duration: 2000,
               message: res.message || '领取失败',
@@ -284,6 +288,7 @@ export default {
           }
         })
         .catch((err) => {
+          this.loading = false
           console.log(err)
           Toast.fail({
             duration: 2000,
