@@ -605,11 +605,11 @@ export default {
         overflow: hidden;
       }
       > .box {
-        display: flex;
         margin-top: 18px;
         align-items: center;
+        position: relative;
         > div {
-          flex: 1;
+          padding-right: 210px;
           > p {
             display: -webkit-box;
             -webkit-box-orient: vertical;
@@ -641,6 +641,9 @@ export default {
           }
         }
         > img {
+          position: absolute;
+          right: 0;
+          top: 0;
           width: 190px;
           height: 127px;
           background: #d8d8d8;
