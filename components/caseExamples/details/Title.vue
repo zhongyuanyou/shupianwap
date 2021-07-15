@@ -71,6 +71,7 @@ export default {
 .title {
   font-family: PingFangSC;
   padding: 45px 40px 40px;
+  border-bottom: 0.24rem solid #f8f8f8;
   background: #ffffff;
   font-size: 0;
   .flex {

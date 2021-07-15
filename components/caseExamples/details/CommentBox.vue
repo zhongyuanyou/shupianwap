@@ -1,9 +1,9 @@
 <template>
   <div class="comment">
-    <h1 class="name">用户评价</h1>
+    <h1 class="title">用户评价</h1>
     <!-- <sp-swipe class="my-swipe" :autoplay="5000" indicator-color="#4974f5;"> -->
     <!-- <sp-swipe-item v-for="(item, index) in list" :key="index"> -->
-    <div class="item" v-for="(item, index) in list" :key="index">
+    <div v-for="(item, index) in list" :key="index" class="item">
       <div class="head">
         <img :src="item.img" alt="" />
         <div>

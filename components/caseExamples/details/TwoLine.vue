@@ -8,18 +8,26 @@
         :class="{ retract: MoreThanTwoLines && ellipsis }"
         :style="{ 'max-height': MoreThanTwoLines && ellipsis ? twoHeight : '' }"
       >
-        {{ text }}
+        {{ text
+        }}<span
+          style="display: inline-block; height: 1px"
+          :style="{ width: collectWidth + 20 + 'px' }"
+        ></span>
         <div
           v-if="MoreThanTwoLines"
           class="btns"
           :style="{ height: oneHeight + 'px', lineHeight: oneHeight + 'px' }"
         >
           <span v-if="ellipsis == true" class="fuhao">...</span>
-          <span class="btn" v-if="ellipsis == true" @click="ellipsis = false">
+          <span v-if="ellipsis == true" class="btn" @click="ellipsis = false">
             展开
             <my-icon name="xia" size="0.17rem" color="#999999"></my-icon>
           </span>
-          <span class="btn" v-if="ellipsis == false" @click="ellipsis = true"
+          <span
+            v-if="ellipsis == false"
+            ref="collect"
+            class="btn"
+            @click="ellipsis = true"
             >收起
             <my-icon name="shang" size="0.17rem" color="#999999"></my-icon>
           </span>
@@ -52,15 +60,9 @@ export default {
 
       oneHeight: '', // 单行高度
       twoHeight: '', // 两行高度px
+
+      collectWidth: 0, // 收起按钮的宽度，用于占位
     }
-  },
-  watch: {
-    text: {
-      // immediate: true,
-      handler(newVal) {
-        this.init()
-      },
-    },
   },
   computed: {
     fontStyle() {
@@ -73,6 +75,14 @@ export default {
       }
 
       return info
+    },
+  },
+  watch: {
+    text: {
+      // immediate: true,
+      handler(newVal) {
+        this.init()
+      },
     },
   },
   mounted() {
@@ -89,6 +99,7 @@ export default {
 
         this.$nextTick(() => {
           this.init()
+          this.getCollectWidth()
         })
       })
     },
@@ -113,6 +124,10 @@ export default {
         this.MoreThanTwoLines = false
         this.ellipsis = false
       }
+    },
+    getCollectWidth() {
+      const collectWidth = this.$refs?.collect?.offsetWidth
+      this.collectWidth = collectWidth || 0
     },
   },
 }
@@ -165,6 +180,7 @@ export default {
   }
   .btn {
     background: #fff;
+    font-weight: bold;
   }
 }
 

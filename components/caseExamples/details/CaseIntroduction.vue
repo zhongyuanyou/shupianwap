@@ -1,19 +1,17 @@
 <template>
   <div class="case_introduction">
-    <div class="title">案例简介</div>
+    <div class="title">{{ title }}</div>
     <div class="des">
-      <TwoLine
-        fontsize="0.3rem"
-        text="尤其是有很多流浪都是有铁粉的，我理解铁粉不是应该一开始关注随着时间推长。"
-      ></TwoLine>
+      <TwoLine fontsize="0.3rem" :text="text"></TwoLine>
     </div>
     <div class="images">
       <div class="images_container">
-        <sp-image class="image" src=""></sp-image>
-        <sp-image class="image" src=""></sp-image>
-        <sp-image class="image" src=""></sp-image>
-        <sp-image class="image" src=""></sp-image>
-        <sp-image class="image" src=""></sp-image>
+        <sp-image
+          v-for="(item, index) in images"
+          :key="index"
+          class="image"
+          src=""
+        ></sp-image>
       </div>
     </div>
   </div>
@@ -30,15 +28,17 @@ export default {
     // SpIcon: Icon,
   },
   props: {
-    comment: {
+    title: {
       type: String,
       default: '',
     },
-    sellingGoodsData: {
-      type: Object,
-      default: () => {
-        return {}
-      },
+    text: {
+      type: String,
+      default: '',
+    },
+    images: {
+      type: Array,
+      default: () => [],
     },
   },
   data() {
@@ -56,6 +56,7 @@ export default {
 <style lang="less" scoped>
 .case_introduction {
   font-family: PingFangSC;
+  border-bottom: 0.24rem solid #f8f8f8;
   padding: 48px 40px 40px;
   background: #ffffff;
   font-size: 0;

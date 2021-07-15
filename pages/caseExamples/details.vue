@@ -26,24 +26,33 @@
     <!--S banner-->
     <!--S 第一板块-->
     <Title />
-    <TwoLine
-      text="啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊aaaaaaaaaa啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"
-    ></TwoLine>
+
     <!-- 案件简介 -->
-    <CaseIntroduction></CaseIntroduction>
+    <CaseIntroduction
+      title="案例简介"
+      text="尤其是有很多流浪都是有铁粉的，我理解铁粉不是应该一开始关注随着时间推长。"
+      :images="[1, 1, 1, 1, 1, 1]"
+    />
+
+    <!-- 案件简介 -->
+    <CaseIntroduction
+      title="办理结果"
+      text="山东省潍坊市中级人民法院于2009年10月14日以(2009) 潍刑一初字第35号刑事判决 潍刑一初字第35号刑事判决潍刑一初字第35号刑事判决"
+      :images="[1, 2]"
+    />
+    <!--E 评论-->
+    <CommentBox id="comment" :list="commentdata" />
 
     <!--E 第一板块-->
 
     <!--E 第二板块 领券 SKU-->
     <!--S 第三板块 包含项目-->
-    <ContainProject />
+    <!-- <ContainProject /> -->
     <!--E 第三板块 包含项目-->
     <!--S 第三板块 包含服务-->
-    <ContainContent />
+    <!-- <ContainContent /> -->
     <!--E 第三板块 包含服务-->
-    <!--S 评论-->
-    <CommentBox id="comment" :list="commentdata" />
-    <!--E 评论-->
+
     <!--S 动态 -->
     <OrderDynamic></OrderDynamic>
     <!--S 第五板块 推荐规划师-->
@@ -70,13 +79,11 @@ import Banner from '@/components/detail/Banner.vue'
 import Title from '@/components/caseExamples/details/Title.vue'
 import CaseIntroduction from '@/components/caseExamples/details/CaseIntroduction.vue'
 
-import TwoLine from '@/components/caseExamples/details/TwoLine.vue'
-
 import CommentBox from '@/components/caseExamples/details/CommentBox.vue'
 import OrderCase from '@/components/detail/OrderCase.vue'
 import OrderDynamic from '@/components/detail/OrderDynamic.vue'
 
-import ContainProject from '@/components/detail/ContainProject.vue'
+// import ContainProject from '@/components/detail/ContainProject.vue'
 import ContainContent from '@/components/detail/ContainContent.vue'
 import TcPlanners from '@/components/detail/TcPlanners1.vue'
 import ServiceDetail from '@/components/detail/ServiceDetail.vue'
@@ -98,10 +105,9 @@ export default {
     Banner,
     Title,
     CaseIntroduction,
-    TwoLine,
 
-    ContainProject,
-    ContainContent,
+    // ContainProject,
+    // ContainContent,
     TcPlanners,
     ServiceDetail,
     bottomBar,
