@@ -28,7 +28,7 @@ export const mutations = {
     this.$cookies.set('currentCity', state.currentCity, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 城市选择加入根域名cookie供其他站点使用
+      // domain: 'shupian.cn', // 城市选择加入根域名cookie供其他站点使用
     })
   },
   // 设置当前定位城市
@@ -37,7 +37,7 @@ export const mutations = {
     this.$cookies.set('positionCityName', state.positionCityName, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 城市选择加入根域名cookie供其他站点使用
+      // domain: 'shupian.cn', // 城市选择加入根域名cookie供其他站点使用
     })
   },
   // 设置当前定位状态
@@ -46,7 +46,7 @@ export const mutations = {
     this.$cookies.set('positionStatus', state.positionStatus, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 城市选择加入根域名cookie供其他站点使用
+      // domain: 'shupian.cn', // 城市选择加入根域名cookie供其他站点使用
     })
   },
   // 修改城市CODE
