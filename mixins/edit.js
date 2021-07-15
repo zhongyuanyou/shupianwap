@@ -224,6 +224,7 @@ export default {
             query: {
               id,
               status: 'release', // 表示刚发布的文章
+              userId: this.userId,
             },
           })
         }, 1000)
@@ -234,6 +235,7 @@ export default {
             query: {
               id,
               status: 'release',
+              userId: this.userId,
             },
           })
         }, 1000)
@@ -243,6 +245,8 @@ export default {
             path: '/known/detail/answer',
             query: {
               id,
+              status: 'release',
+              userId: this.userId,
             },
           })
         }, 1000)

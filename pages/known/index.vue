@@ -247,23 +247,23 @@ export default {
     OrdinaryList,
     HeaderSlot,
   },
-  async asyncData({ store, $axios }) {
-    let tabs = []
-    try {
-      const { code, message, data } = await $axios.get(
-        knownApi.questionArticle.categoryList,
-        {
-          params: {
-            // type 1 获取企大顺导航
-            type: store.state.app.isInApp ? 1 : '',
-            // type: 1,
-          },
-        }
-      )
-      tabs = data
-    } catch (error) {}
-    return { tabs }
-  },
+  // async asyncData({ store, $axios }) {
+  //   let tabs = []
+  //   try {
+  //     const { code, message, data } = await $axios.get(
+  //       knownApi.questionArticle.categoryList,
+  //       {
+  //         params: {
+  //           type: 1, // 获取企大顺导航
+  //           // type: store.state.app.isInApp ? 1 : '',
+  //           // type: 1,
+  //         },
+  //       }
+  //     )
+  //     tabs = data
+  //   } catch (error) {}
+  //   return { tabs }
+  // },
   data() {
     return {
       loading: false, // 加载状态
@@ -276,6 +276,7 @@ export default {
       morePlate: [],
       active: 0,
       statusBarHeight: '',
+      tabs: [],
       appStyle: {
         'padding-left': '12px',
         'padding-right': '16px',
@@ -295,7 +296,8 @@ export default {
       return this.$store.state.user
     },
   },
-  mounted() {
+  async mounted() {
+    await this.getTabs()
     if (this.appInfo) {
       this.statusBarHeight = this.appInfo.statusBarHeight
     }
@@ -321,6 +323,21 @@ export default {
     next()
   },
   methods: {
+    async getTabs() {
+      try {
+        const { code, message, data } = await this.$axios.get(
+          knownApi.questionArticle.categoryList,
+          {
+            params: {
+              type: 1, // 获取企大顺导航
+              // type: store.state.app.isInApp ? 1 : '',
+              // type: 1,
+            },
+          }
+        )
+        this.tabs = data
+      } catch (error) {}
+    },
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
