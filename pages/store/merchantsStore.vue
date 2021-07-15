@@ -20,7 +20,7 @@
             @click.native="onClickLeft"
           />
         </template>
-        <template #right>
+        <!-- <template #right>
           <sp-icon
             class-prefix="spiconfont"
             class="head__icon-share"
@@ -30,11 +30,10 @@
             style="margin-right: 0.4rem"
             @click.native="onClickRight"
           />
-        </template>
+        </template> -->
       </Header>
     </div>
-    <div v-if="floatview" style="min-height: 2.38rem"></div>
-    <div id="group" :class="floatview?'bg-group-fixed':'bg-group'">
+    <div id="group" class="bg-group">
         <div class="footer">
             <img
                 :src="detailCodeData.MCH_LOGO"
@@ -51,7 +50,25 @@
             </p>
             </div>
         </div>
-        <div v-if="floatview" class="tabs">
+    </div>
+    <div class="bg-group-fixed" :style="floatview?'opacity:1':'opacity:0'">
+        <div class="footer">
+            <img
+                :src="detailCodeData.MCH_LOGO"
+                alt=""
+            />
+            <div class="footertext">
+            <p>{{detailCodeData.MCH_NAME}}</p>
+            <p>
+                <img
+                src="https://cdn.shupian.cn/sp-pt/wap/images/7mruoa3go2c0000.png"
+                alt=""
+                />
+                <span>2级商户</span>
+            </p>
+            </div>
+        </div>
+        <div class="tabs">
             <sp-tabs v-model="headActive" @click="headTabsClick">
                 <sp-tab v-for="(item,index) in headTabs" :key="index" :title="item.label" :name="item.value" >
                 </sp-tab>
@@ -59,6 +76,13 @@
         </div>
     </div>
     <div class="body">
+        <div class="swipe">
+            <sp-swipe class="my-swipe" :autoplay="3000" indicator-color="#4974F5">
+                <sp-swipe-item v-for="(item,index) in swiperImage" :key="index">
+                    <img :src="item.img" alt="">
+                </sp-swipe-item>
+            </sp-swipe>
+        </div>
         <div class="body-content">
             <p class="title">商户服务</p>
             <div class="sp-score">
@@ -108,7 +132,7 @@
                         <li v-for="(data,dataIndex) in tabsListData" :key="dataIndex">
                             <img :src="data.img" alt="">
                             <div>
-                                <p class="title">
+                                <p class="title" style="margin-top:0">
                                     <span>{{data.name}}</span>
                                 </p>
                                 <p class="label">
@@ -177,7 +201,9 @@ import {
     Icon,
     Tabs,
     Toast,
-    Tab 
+    Tab ,
+    Swipe, 
+    SwipeItem
 } from '@chipspc/vant-dgg'
 import { planner } from '@/api'
 import { storeApi } from '@/api/store'
@@ -190,6 +216,8 @@ export default {
         [Bottombar.name]: Bottombar,
         [BottombarButton.name]: BottombarButton,
         [ShareSheet.name]: ShareSheet,
+        [Swipe.name]:Swipe,
+        [SwipeItem.name]:SwipeItem,
         Header,
         SpToast,
         SpTabs:Tabs,
@@ -208,6 +236,7 @@ export default {
                 SWIPER_IMAGE:[]
             },
             floatview:false, // 滚动置顶
+            opacity:1,
             headTabs:[
                 {
                     value:"index",
@@ -226,6 +255,8 @@ export default {
             recommendedByPlanner:[
 
             ],
+            // 轮播图
+            swiperImage:[],
             shareOptions: [],
             showShare: false,
         }
@@ -309,9 +340,11 @@ export default {
             const height = group.offsetHeight
             if(scrollTop > height){
                 this.floatview = true
+                
             }else{
                 this.floatview = false
             }
+            
         },
         // 获取详情数据
         async getDetail() {
@@ -362,6 +395,9 @@ export default {
                             break;
                             case "PLANNER_RECOMMEND":
                                 this.recommendedByPlanner = item.data
+                            break;
+                            case "SWIPER_IMAGE":
+                                this.swiperImage = item.data
                             break;
                             default:
                             break;
@@ -569,7 +605,7 @@ export default {
         },
         tabsClick(title,name){
             console.log(this.active)
-            
+            this.getList()
         },
         headTabsClick(){
             if(this.headActive==='rememded'){
@@ -580,7 +616,6 @@ export default {
                     }
                 })
             }
-            console.log(this.headActive)
         },
         moreRem(){
             this.$router.push({
@@ -607,7 +642,6 @@ export default {
 <style lang="less" scoped>
 .merchantsShop {
     .bg-group {
-        min-height:238px;
         padding: 60px 40px 84px;
         background: url('https://cdn.shupian.cn/sp-pt/wap/images/aicz8hyty0c0000.png')
         no-repeat;
@@ -668,7 +702,6 @@ export default {
         position: fixed;
         top: 48px;
         width: 100%;
-        min-height:238px;
         padding: 60px 40px 0;
         background: #fff;
         background-size: 100% 100%;
@@ -678,6 +711,8 @@ export default {
         letter-spacing: 0;
         line-height: 28px;
         z-index: 2;
+        opacity:0;
+        transition: opacity 1s ;
         .footer {
             display: flex;
             justify-content: flex-start;
@@ -759,6 +794,27 @@ export default {
         border-top-right-radius: 24px;
         border-top-left-radius: 24px;
         z-index: 1;
+        .swipe{
+            border-radius: 8px;
+            .my-swipe{
+                .sp-swipe-item{
+                    height: 214px;
+                    text-align: center;
+                    background: #DDDDDD;
+                    border-radius: 8px;
+                    img{
+                        width: 100%;
+                        height: 100%;
+                        border-radius: 8px;
+                    }
+                }
+                
+            }
+            ::v-deep .sp-swipe__indicator{
+                width: 12px;
+                height:12px;
+            }
+        }
         .sp-score {
             width: 100%;
             height: 314px;

@@ -20,7 +20,7 @@
                         @click.native="onClickLeft"
                     />
                 </template>
-                <template #right>
+                <!-- <template #right>
                     <sp-icon
                         class-prefix="spiconfont"
                         class="head__icon-share"
@@ -30,7 +30,7 @@
                         style="margin-right: 0.4rem"
                         @click.native="onClickRight"
                     />
-                </template>
+                </template> -->
             </Header>
         </div>
         <div class="bgImg"></div>

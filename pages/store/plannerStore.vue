@@ -20,7 +20,7 @@
             @click.native="onClickLeft"
           />
         </template>
-        <template #right>
+        <!-- <template #right>
           <sp-icon
             class-prefix="spiconfont"
             class="head__icon-share"
@@ -30,7 +30,7 @@
             style="margin-right: 0.4rem"
             @click.native="onClickRight"
           />
-        </template>
+        </template> -->
       </Header>
     </div>
     <div class="bg-group">
@@ -42,7 +42,7 @@
         <div class="bg-group__headtext">
           <p>
             <span class="title">{{detailData.personal.name}}</span>
-            <span class="label">我的团队></span>
+            <span class="label" @click="goGroup">我的团队></span>
           </p>
           <p>服务年限：{{formatServeAgeText}}</p>
         </div>
@@ -383,7 +383,15 @@ export default {
             }
             this.bindhidden()
         },
-
+        // 跳转团队
+        goGroup(){
+          this.$router.push({
+            path:"/store/groupStore",
+            query:{
+              storeId:this.detailData.mchStoreId
+            }
+          })
+        },
         handleIM() {
             // const isLogin = await this.judgeLoginMixin()
             // if (isLogin) {
@@ -453,13 +461,6 @@ export default {
             }
         },
         async goShop(){
-            // console.log(1)
-            // this.$router.push({
-            //   path:"/planner/plannerShop/index",
-            //   query:{
-            //     a:"1"
-            //   }
-            // })
             try {
                 const isLogin = await this.judgeLoginMixin()
                 if (isLogin) {
