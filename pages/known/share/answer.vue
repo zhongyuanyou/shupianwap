@@ -61,10 +61,12 @@
         >
           <sp-image
             class="img"
-            :src="
-              topPlannerInfo.img ||
-              planerInfo.img ||
-              $ossImgSetV2('9zzzas17j8k0000.png')
+            :src="topPlannerInfo.img || $ossImgSetV2('9zzzas17j8k0000.png')"
+            @click.stop="
+              goUser(
+                topPlannerInfo.mchUserId || planerInfo.mchUserId,
+                topPlannerInfo.type || planerInfo.type
+              )
             "
           />
           <div class="infos">

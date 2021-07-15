@@ -328,10 +328,11 @@ export default {
       } else {
         // 根据优惠金额对优惠券排序
         const sortcouponList = xier(couponList)
+        console.log('sortcouponList', sortcouponList)
         //  取最大优惠金额
         const salesPrice =
           sellingGoodsData.salesPrice -
-          sortcouponList[sortcouponList.length - 1]
+          sortcouponList[sortcouponList.length - 1].reducePrice
         const salesPriceRes = salesPrice >= 0 ? salesPrice : 0
         this.couponPreferentialLine = salesPriceRes.toFixed(2)
         //  组装优惠券提示信息
