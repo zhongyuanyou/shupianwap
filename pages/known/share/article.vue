@@ -5,7 +5,7 @@
       @setPlannerInfo="setPlannerInfo"
     />
     <HeaderSlot>
-      <div v-if="!showHead" class="flex">
+      <div class="flex">
         <div class="nav-back">
           <my-icon
             v-if="!isShare"
@@ -35,13 +35,13 @@
           />
         </div>
       </div>
-      <div v-if="showHead" class="flex">
+      <!-- <div v-if="showHead" class="flex">
         <PageHead2
           :header-data="articleDetails"
           :is-follow="false"
           :is-show-follow="false"
         />
-      </div>
+      </div> -->
     </HeaderSlot>
     <DownLoadArea
       v-if="isShare"
@@ -177,7 +177,7 @@ import {
 } from '@chipspc/vant-dgg'
 import { knownApi } from '@/api'
 import PageHead from '@/components/common/head/header'
-import PageHead2 from '@/components/mustKnown/DetailHeaderUser.vue'
+// import PageHead2 from '@/components/mustKnown/DetailHeaderUser.vue'
 // 推荐文章列表
 import DetailArticleList from '@/components/mustKnown/DetailArticleList.vue'
 // 推荐商品组件
@@ -205,7 +205,7 @@ export default {
 
     HeaderSlot,
     // PageHead,
-    PageHead2,
+    // PageHead2,
     DetailArticleList,
     DownLoadArea,
     // Header,
