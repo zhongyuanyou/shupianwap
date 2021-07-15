@@ -1,22 +1,21 @@
 <template>
   <div class="invoice_preview">
-    <HeaderSlot>
+    <sp-sticky>
       <Header class="my-header" title="查看电子发票"></Header>
-      <!-- <sp-divider :style="{ margin: '0' }" /> -->
-    </HeaderSlot>
+      <sp-divider :style="{ margin: '0' }" />
+    </sp-sticky>
 
     <div class="preview_content">
       <client-only>
         <div class="preview_image">
-          <div class="preview_image_item">
-            <!-- <Pdf
+          <div v-if="list.id" class="preview_image_item">
+            <Pdf
               v-for="i in list.numPages"
               :key="i"
               :src="list.pdfUrl"
               :page="i"
               class="pdf-set"
-            /> -->
-            <div id="demo"></div>
+            />
           </div>
         </div>
       </client-only>
@@ -29,11 +28,9 @@ import { Sticky, Image, Divider, Swipe, SwipeItem } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 
 // import Pdf from '@fe/vue-pdf'
-import Pdfh5 from 'pdfh5'
-import 'pdfh5/css/pdfh5.css'
 
 import Header from '@/components/common/head/header.vue'
-import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
+
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { invoiceApi } from '@/api/index.js'
 
@@ -43,8 +40,8 @@ export default {
   components: {
     LoadingCenter,
     Header,
-    // Pdf: () => import('@fe/vue-pdf'),
-    HeaderSlot,
+    Pdf: () => import('@fe/vue-pdf'),
+    [Sticky.name]: Sticky,
     [Image.name]: Image,
     [Divider.name]: Divider,
     [Swipe.name]: Swipe,
@@ -71,6 +68,37 @@ export default {
       if (!this.orderId && !this.pdfId) {
         return this.$xToast.error('没有信息')
       }
+      // const res = [
+      //   {
+      //     id: '768005953635640743',
+      //     invoiceTypeCode: '026',
+      //     buyName: '3333',
+      //     invoiceCode: '1111',
+      //     invoiceNo: '222',
+      //     pdfUrl:
+      //       'https://cdn.shupian.cn/1625040012000_2020年顶联互动早训培训实施管理办法-V1.1(1).pdf',
+      //   },
+      //   {
+      //     id: '1047597054856949880',
+      //     invoiceTypeCode: '026',
+      //     buyName: '123',
+      //     invoiceCode: '123',
+      //     invoiceNo: '123',
+      //     pdfUrl: 'https://cdn.shupian.cn/1625129388000_27824495.pdf',
+      //   },
+      //   {
+      //     id: '1118898219500491114',
+      //     invoiceTypeCode: '004',
+      //     buyName: '个人111',
+      //     invoiceCode: '1111',
+      //     invoiceNo: '11111',
+      //   },
+      // ]
+      // const pdfInfo = res.find((item) => {
+      //   return item.id === this.pdfId
+      // })
+      // console.log(pdfInfo)
+      // this.pdfTask(pdfInfo)
 
       this.loading = true
       invoiceApi
@@ -100,28 +128,11 @@ export default {
     },
     pdfTask(pdfInfo) {
       if (!pdfInfo || !pdfInfo.pdfUrl) return
-      this.pdfh5 = new Pdfh5('#demo', {
-        pdfurl: pdfInfo.pdfUrl,
-      })
-      // 监听完成事件
-      this.pdfh5.on('complete', function (status, msg, time) {
-        console.log(
-          '状态：' +
-            status +
-            '，信息：' +
-            msg +
-            '，耗时：' +
-            time +
-            '毫秒，总页数：' +
-            this.totalNum
-        )
-      })
+      this.$pdf.createLoadingTask(pdfInfo.pdfUrl).promise.then((pdf) => {
+        pdfInfo.numPages = pdf.numPages
 
-      // this.$pdf.createLoadingTask(pdfInfo.pdfUrl).promise.then((pdf) => {
-      //   pdfInfo.numPages = pdf.numPages
-
-      //   this.list = pdfInfo
-      // })
+        this.list = pdfInfo
+      })
     },
   },
 }
@@ -131,7 +142,7 @@ export default {
 .invoice_preview {
   background: #ffffff;
   background: #f5f5f5;
-  min-height: 100vh;
+  height: 100vh;
 
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
@@ -142,17 +153,13 @@ export default {
     width: 100%;
   }
   .preview_image {
-    // width: 100%;
-    // text-align: center;
-    // padding: 60px;
+    width: 100%;
+    text-align: center;
+    padding: 60px;
 
     .pdf-set {
       margin-bottom: 40px;
     }
-  }
-  #demo {
-    // height: auto;
-    background: none;
   }
 }
 </style>
