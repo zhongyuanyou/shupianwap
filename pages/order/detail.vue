@@ -218,9 +218,24 @@
         <span class="text">{{ orderData.contractName || '暂无' }}</span>
       </p> -->
         <!-- <p class="order-item">
-        <span class="label">发票</span>
-        <span class="text">暂无</span>
-      </p> -->
+          <span class="label">发票类型</span>
+          <span class="text">电子普通发票</span>
+          <span class="tx-icon" @click="openInvoiceModal()">
+            <my-icon name="tixing_mian1" size="0.32rem"></my-icon>
+          </span>
+          <span
+            v-if="checkBillStatus() === 1 && cusOrderStatusType === 3"
+            class="btn-invoice btn"
+            @click="toInvoice()"
+            >申请开票</span
+          >
+          <span
+            v-if="checkBillStatus() === 3 && cusOrderStatusType === 3"
+            class="btn-invoice btn"
+            @click="toInvoice()"
+            >查看发票</span
+          >
+        </p> -->
         <p class="order-item last-p">
           <span class="label">备注</span>
           <span class="text">{{
@@ -244,6 +259,46 @@
       <!-- 当订单状态为已取消时隐藏顶部按钮区域 -->
       <div v-if="cusOrderStatusType !== 4" class="btn-area">
         <div class="inner">
+          <!-- <sp-button
+            v-if="checkBillStatus() === 1"
+            class="btn-look"
+            @click="handleClickItem(8)"
+            >申请发票</sp-button
+          >
+          <sp-button
+            v-if="checkBillStatus() === 3"
+            class="btn-look"
+            @click="handleClickItem(8)"
+            >查看发票</sp-button
+          > -->
+          <sp-button
+            v-if="
+              checkAfterSaleStatus() === 1 &&
+              orderData.cusOrderStatusNo !== 'ORDER_CUS_STATUS_UNPAID' &&
+              orderData.cusOrderStatusNo !== 'ORDER_CUS_STATUS_CANCELLED'
+            "
+            class="btn-look"
+            @click="handleClickItem(7)"
+            >退款/售后</sp-button
+          >
+          <sp-button
+            v-if="checkAfterSaleStatus() === 2 || checkAfterSaleStatus() === 5"
+            class="btn-look"
+            @click="handleClickItem(7)"
+            >售后中</sp-button
+          >
+          <sp-button
+            v-if="checkAfterSaleStatus() === 3"
+            class="btn-look"
+            @click="handleClickItem(7)"
+            >已售后</sp-button
+          >
+          <!-- <sp-button
+            v-if="checkAfterSaleStatus() === 4"
+            class="btn-look"
+            @click="handleClickItem(7)"
+            >部分售后</sp-button
+          > -->
           <!--   v-if="
             orderData.orderSplitAndCusVo[0].cusOrderPayStatusNo ===
             orderStatusCode[1]
@@ -345,6 +400,7 @@
       @cancleOrder="cancleOrder"
       @getBatchList="getBatchList"
     />
+    <InvoiceToast ref="InvoiceToast" />
   </div>
 </template>
 
@@ -362,6 +418,7 @@ import orderUtils from '@/utils/order'
 import orderApi from '@/api/order'
 import OrderMixins from '@/mixins/order'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import InvoiceToast from '@/components/order/detail/InvoiceModal'
 export default {
   components: {
     [Button.name]: Button,
@@ -374,6 +431,7 @@ export default {
     CancelOrder,
     PayModal,
     LoadingCenter,
+    InvoiceToast,
   },
   mixins: [OrderMixins],
   data() {
@@ -424,6 +482,9 @@ export default {
     this.tranXy = await this.getProtocol('protocol100033')
   },
   methods: {
+    openInvoiceModal() {
+      this.$refs.InvoiceToast.showPop = true
+    },
     scollChange() {
       const scrollTop = this.$refs.scrollView.scrollTop
       if (scrollTop >= 80) {
@@ -543,6 +604,16 @@ export default {
           // 确认完成
           this.opType = 'confirmComplete'
           this.confirmOrder()
+          break
+        case 7:
+          // 退款 售后
+          this.opType = 'afterSale'
+          this.toAfterSale()
+          break
+        case 8:
+          // 发票
+          this.opType = 'invoice'
+          this.toInvoice()
           break
       }
     },
@@ -676,6 +747,9 @@ export default {
       color: #222222;
       font-size: 22px;
     }
+    .btn-invoice {
+      float: right;
+    }
   }
   .last-p {
     margin-bottom: 0;
@@ -792,17 +866,30 @@ export default {
     float: right;
     width: auto;
     margin-right: 40px;
+    float: right;
+    margin-bottom: 30px;
+    height: auto;
+    margin-top: 10px;
+    overflow: hidden;
     .sp-button {
-      display: inline-block;
-      height: 80px;
-      margin-right: -10px;
-      border-radius: 8px;
-      background: #ffffff;
-      border: 1px solid #cdcdcd;
+      font-size: 26px;
+      height: 64px;
+      padding: 0 20px;
+      color: #999999;
+      line-height: 1;
+      margin: 0;
+      float: left;
+      margin-left: 14px;
+      float: left;
+      display: block;
       font-size: 28px;
       font-family: PingFang SC;
       font-weight: 400;
       color: #999999;
+      margin-left: 10px;
+    }
+    .sp-button:first-child {
+      margin-left: 0;
     }
     .btn-look {
       color: #222222;
@@ -823,5 +910,8 @@ export default {
   span {
     color: #4f90f6;
   }
+}
+.tx-icon {
+  margin-left: 10px;
 }
 </style>

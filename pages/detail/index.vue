@@ -1,8 +1,10 @@
 <template>
-  <div class="company">
-    <DetailTemplate scene-id1="app-fwcpxq-01" scene-id2="app-jycpxq-02" />
+  <section>
     <ShareModal />
-  </div>
+    <div class="company">
+      <DetailTemplate scene-id1="app-fwcpxq-01" scene-id2="app-jycpxq-02" />
+    </div>
+  </section>
 </template>
 
 <script>

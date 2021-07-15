@@ -39,6 +39,12 @@ const infoList = [
   'known-detail-invitationSearch',
   'my-collection',
   'activity-coupon',
+  'order-invoice',
+  'order-invoice-detail',
+  'order-invoice-headAdd',
+  'order-invoice-headEdit',
+  'order-invoice-invoiceApply',
+  'order-invoice-preview',
 ]
 // const getInfo = function () {
 //   return new Promise(function (resolve, reject) {
@@ -155,6 +161,7 @@ export default ({ app, store }) => {
             userId,
             userType,
             deviceId,
+            operUserType: userType,
           })
           store.commit('im/SET_IM_SDK', initImSdk)
         }

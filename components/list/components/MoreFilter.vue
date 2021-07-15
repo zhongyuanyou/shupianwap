@@ -260,7 +260,6 @@ export default {
                 if (_item.id !== 'all' && _item.name !== '不限') {
                   emitData.fieldCode = _item.ext1
                   const timeArr = moment().format('YYYY-MM-DD').split('-')
-                  // debugger
                   if (_item.name.indexOf('-') > -1) {
                     const a = parseInt(_item.name.split('-')[0])
                     const b = parseInt(_item.name.split('-')[1])

@@ -78,9 +78,9 @@ export default {
     }
   },
   mounted() {
-    this.timeer = setInterval(() => {
-      this.getUserInfo()
-    }, 2000)
+    // this.timeer = setInterval(() => {
+    this.getUserInfo()
+    // }, 2000)
   },
   beforeDestroy() {
     clearInterval(this.timeer)
@@ -129,9 +129,13 @@ export default {
               message: '认证成功',
               overlay: true,
             })
+
             clearInterval(this.timeer)
             this.$router.back(-1)
           }
+          // 认证成功更新info数据
+          localStorage.setItem('info', JSON.stringify(this.info))
+          this.$store.dispatch('user/setInfo', res.data)
         }
       } catch (err) {
         this.loading = false

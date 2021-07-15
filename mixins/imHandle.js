@@ -7,10 +7,11 @@
 import { Toast } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import config from '@/config'
-import { userinfoApi } from '@/api'
+import { userinfoApi, afterSaleApi } from '@/api'
 export default {
   computed: {
     ...mapState({
+      userInfo: (state) => state.user,
       token: (state) => state.user.token,
       userId: (state) => state.user.userId,
       userType: (state) => state.user.userType,
@@ -34,6 +35,29 @@ export default {
           redirect: this.$route.fullPath,
         },
       })
+    },
+    // 跳转在线客服
+    async jumpOnlineKefu() {
+      const res = await this.$axios.post(afterSaleApi.onlineKefu, {
+        userCenterTag: this.userInfo.id,
+        userName: this.userInfo.fullName,
+        userNo: this.userInfo.no,
+        platform: 'COMDIC_TERMINAL_WAP',
+        port: 'STAFF_PORT_WAP',
+        entrance: 'STAFF_DETAIL_PAGE_CODE',
+        province: this.userInfo.province,
+        city: this.userInfo.city,
+        equipment: '',
+        sourceTerminal: '',
+        customerType: '1',
+      })
+      if (res.code === 200) {
+        const groupId = res.data.groupInfo.groupId
+        const token = this.$cookies.get('token', { path: '/' })
+        const userId = this.$cookies.get('userId', { path: '/' })
+        const userType = this.$cookies.get('userType', { path: '/' })
+        window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${groupId}`
+      }
     },
     // 判断是否登录
     judgeLoginMixin(needUserInfo = false, url) {
@@ -121,7 +145,7 @@ export default {
               this.userType ||
               this.$cookies.get('userType', { path: '/' }) ||
               'VISITOR'
-            window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}`
+            window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}&operUserType=${userType}`
           } else if (res.code === 5223) {
             this.clearUserInfoAndJumpLoging()
           } else {
@@ -238,9 +262,9 @@ export default {
                   const userId = this.userType ? this.userId : myInfo.imUserId
                   const userType = this.userType || 'VISITOR'
                   if (this.isApplets) {
-                    window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}&requireCode=${sessionParams.requireCode}&requireName=${sessionParams.requireName}&isApplets=true`
+                    window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}&requireCode=${sessionParams.requireCode}&requireName=${sessionParams.requireName}&isApplets=true`
                   } else {
-                    window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}&requireCode=${sessionParams.requireCode}&requireName=${sessionParams.requireName}`
+                    window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}&requireCode=${sessionParams.requireCode}&requireName=${sessionParams.requireName}`
                   }
                 }, 2000)
                 // window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
@@ -288,9 +312,9 @@ export default {
             const userId = this.userType ? this.userId : myInfo.imUserId
             const userType = this.userType || 'VISITOR'
             if (this.isApplets) {
-              window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}&isApplets=true`
+              window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}&isApplets=true`
             } else {
-              window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}`
+              window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}`
             }
           } else if (res.code === 5223) {
             console.log('发送消息', res)

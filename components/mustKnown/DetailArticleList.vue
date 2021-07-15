@@ -1,6 +1,6 @@
 <template>
   <div class="list">
-    <p class="title1">推荐阅读</p>
+    <p v-if="articleList.length" class="title1">推荐阅读</p>
     <div
       v-for="(item, index) in articleList"
       :key="index"

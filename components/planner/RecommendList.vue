@@ -59,31 +59,23 @@
                 }}</span>
                 <span v-else>{{ item.salesGoodsOperatings.slogan }}</span>
               </div>
-              <div v-if="item.tags" class="tags">
+              <div
+                v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length"
+                class="tags"
+              >
                 <div
-                  v-if="
-                    item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
-                  "
-                  class="tags__item desc-label-tc"
+                  v-if="item.salesGoodsSubVos.length > 1"
+                  class="tag_item desc-label-tc"
                 >
                   套餐
                 </div>
-                <div
-                  v-for="tItem in tagsFilter(item.tags)"
-                  :key="tItem.id"
-                  class="tags__item"
+                <span
+                  v-for="(tagItem, index2) in item.salesGoodsTags"
+                  v-show="tagItem.categoryCode === 'DSJTC20210514000042'"
+                  :key="index2"
+                  class="tag_item"
+                  >{{ tagItem.tagValueName }}</span
                 >
-                  {{ tItem.name }}
-                </div>
-              </div>
-              <div v-else class="tags">
-                <div
-                  v-for="tItem in item.tag"
-                  :key="tItem.id"
-                  class="tags__item"
-                >
-                  {{ tItem.tagName }}
-                </div>
               </div>
               <p class="money">{{ item.referencePrice || item.price }}元</p>
             </div>
@@ -493,7 +485,7 @@ export default {
         overflow: hidden;
         height: 50px;
         flex-wrap: wrap;
-        &__item {
+        .tag_item {
           padding: 5px 10px;
           background: #f0f2f5;
           border-radius: 4px;

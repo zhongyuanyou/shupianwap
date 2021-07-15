@@ -6,6 +6,83 @@
   "description": "SP / S+ /  P+",
   "glyphs": [
     {
+      "icon_id": "22527736",
+      "name": "tk_ic_qtzf",
+      "font_class": "tk_ic_qtzf",
+      "unicode": "e6ad",
+      "unicode_decimal": 59053
+    },
+    {
+      "icon_id": "22515377",
+      "name": "fx_ic_bc",
+      "font_class": "fx_ic_bc",
+      "unicode": "e1247",
+      "unicode_decimal": 922183
+    },
+    {
+      "icon_id": "22416823",
+      "name": "商户",
+      "font_class": "shanghu",
+      "unicode": "e1246",
+      "unicode_decimal": 922182
+    },
+    {
+      "icon_id": "22416730",
+      "name": "小店",
+      "font_class": "xiaodian",
+      "unicode": "e1245",
+      "unicode_decimal": 922181
+    },
+    {
+      "icon_id": "22412880",
+      "name": "多选_横",
+      "font_class": "duoxuan_heng",
+      "unicode": "e1244",
+      "unicode_decimal": 922180
+    },
+    {
+      "icon_id": "22397656",
+      "name": "share_ic_schb",
+      "font_class": "share_ic_schb",
+      "unicode": "e1243",
+      "unicode_decimal": 922179
+    },
+    {
+      "icon_id": "22397178",
+      "name": "sh_ic_jxbl",
+      "font_class": "sh_ic_jxbl",
+      "unicode": "e1242",
+      "unicode_decimal": 922178
+    },
+    {
+      "icon_id": "22397179",
+      "name": "sh_ic_qxbl",
+      "font_class": "sh_ic_qxbl",
+      "unicode": "e1241",
+      "unicode_decimal": 922177
+    },
+    {
+      "icon_id": "22397053",
+      "name": "sc_ic_sx",
+      "font_class": "sc_ic_sx",
+      "unicode": "e1240",
+      "unicode_decimal": 922176
+    },
+    {
+      "icon_id": "22323343",
+      "name": "上传_图片_失败",
+      "font_class": "shangchuan_tupian_shibai",
+      "unicode": "e1239",
+      "unicode_decimal": 922169
+    },
+    {
+      "icon_id": "22323344",
+      "name": "上传_图片",
+      "font_class": "shangchuan_tupian",
+      "unicode": "e1238",
+      "unicode_decimal": 922168
+    },
+    {
       "icon_id": "22149141",
       "name": "per_ic_tksh",
       "font_class": "per_ic_tksh",
@@ -1012,6 +1089,13 @@
       "font_class": "shipinyulan",
       "unicode": "e6ac",
       "unicode_decimal": 59052
+    },
+    {
+      "icon_id": "22521452",
+      "name": "发布",
+      "font_class": "fabu-copy",
+      "unicode": "e1248",
+      "unicode_decimal": 922184
     },
     {
       "icon_id": "20601682",

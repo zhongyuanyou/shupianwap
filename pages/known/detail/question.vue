@@ -1,306 +1,319 @@
 <template>
-  <div
-    class="detail"
-    :style="{
-      paddingBottom: fixedshow ? '1.3rem' : '',
-    }"
-  >
-    <HeaderSlot>
-      <div class="flex">
-        <div v-if="!isShare">
-          <my-icon
-            name="nav_ic_back"
-            size="0.40rem"
-            color="#1a1a1a"
-            class="my_icon"
-            @click.native="goBack"
-          ></my-icon>
-        </div>
-        <p class="title">{{ title }}</p>
-        <div class="right-area">
-          <my-icon
-            style="margin-right: 0.15rem"
-            name="nav_ic_searchbig"
-            size="0.40rem"
-            color="#1a1a1a"
-            class="my_icon"
-            @click.native="$router.push('/known/search')"
-          ></my-icon>
-          <sp-icon
-            v-if="questionDetails.createrId === userInfo.userId"
-            name="ellipsis"
-            size="0.4rem"
-            color="#1a1a1a"
-            class="ellipsis"
-            @click="moreOperate"
-          />
-        </div>
-      </div>
-    </HeaderSlot>
-    <DownLoadArea
-      :ios-link="iosLink"
-      :androd-link="androdLink"
-    />
-    <div class="problem">
-      <div class="tag">
-        <ul class="box">
-          <template v-for="(item, index) in questionDetails.categoryName">
-            <li v-if="item" :key="index">
-              {{ item }}
-            </li>
-          </template>
-        </ul>
-      </div>
-      <h1 ref="title" class="tit">{{ questionDetails.title }}</h1>
-      <div
-        v-if="
-          questionDetails.contentImageUrl &&
-          questionDetails.contentImageUrl.length <= 2 &&
-          questionDetails.contentImageUrl.length > 0 &&
-          !contentshow
-        "
-        class="imglist"
-      >
-        <div
-          v-for="(item, index) in questionDetails.contentImageUrl"
-          :key="index"
-          class="imgbox"
-        >
-          <img :src="item" alt="" />
-        </div>
-      </div>
-      <div
-        v-if="
-          questionDetails.contentImageUrl &&
-          questionDetails.contentImageUrl.length > 2 &&
-          !contentshow
-        "
-        class="imglist"
-      >
-        <div class="imgbox">
-          <img :src="questionDetails.contentImageUrl[0]" alt="" />
-        </div>
-        <div class="imgbox">
-          <img :src="questionDetails.contentImageUrl[1]" alt="" />
-          <div class="imgbox1">
-            {{ `+${questionDetails.contentImageUrl.length}` }}
-          </div>
-        </div>
-      </div>
-      <div class="content">
-        <p v-if="!contentshow" class="tit">
-          {{ questionDetails.contentText }}
-        </p>
-        <div v-else class="tit" v-html="questionDetails.content"></div>
-
-        <div class="btn" @click="contentshow = !contentshow">
-          <span class="tit">{{ contentshow ? '收起' : '展开' }}</span>
-          <sp-icon
-            v-show="contentshow"
-            name="arrow-up"
-            size="0.3rem"
-            color="#999999"
-            style="margin-top: -0.06rem; margin-left: 0.05rem"
-            class="ellipsis"
-          />
-          <sp-icon
-            v-show="!contentshow"
-            name="arrow-down"
-            size="0.3rem"
-            color="#999999"
-            style="margin-left: 0.05rem"
-            class="ellipsis"
-          />
-        </div>
-      </div>
-      <div class="num">
-        <div class="left">
-          <div>{{ questionDetails.collectCount }} <span>收藏</span></div>
-          <p></p>
-          <div @click="commentShow = true">
-            {{ questionDetails.remarkCount }} <span>评论</span>
-          </div>
-          <p></p>
-          <div>{{ questionDetails.totalBrowseCount }} <span>浏览</span></div>
-        </div>
-        <div
-          class="right"
-          :class="questionDetails.isApplaudFlag === 1 ? 'act' : ''"
-          @click="like('LIKE')"
-        >
-          <my-icon name="dianzan" size="0.24rem"></my-icon>
-          好问题
-          <span v-if="questionDetails.applaudCount > 0">{{
-            questionDetails.applaudCount
-          }}</span>
-        </div>
-      </div>
-      <div ref="btns" class="btns">
-        <div
-          class="box"
-          :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
-          @click="goInvitionPage"
-        >
-          <my-icon name="yaoqinghuida_mian" size="0.32rem"></my-icon>
-          <p>邀请回答</p>
-        </div>
-        <div
-          class="box"
-          :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
-          @click="goPublishAnswer"
-        >
-          <my-icon name="xiehuida" size="0.32rem"></my-icon>
-          <p>写回答</p>
-        </div>
-        <div class="box" @click="like('COLLECT')">
-          <my-icon
-            :name="
-              questionDetails.isCollectFlag === 1 ? 'shoucang_mian' : 'shoucang'
-            "
-            :color="questionDetails.isCollectFlag === 1 ? '#555555' : '#4974F5'"
-            size="0.32rem"
-          ></my-icon>
-          <p
-            :style="{
-              color:
-                questionDetails.isCollectFlag === 1 ? '#555555' : '#4974F5',
-            }"
-          >
-            {{ questionDetails.isCollectFlag === 1 ? '已收藏' : '收藏' }}
-          </p>
-        </div>
-      </div>
-    </div>
-    <div v-if="releaseStatus === 'release'" class="success">
-      <div>
-        <sp-icon name="certificate" size="0.45rem" color="#00B365" /><span
-          >成功提问</span
-        >
-      </div>
-      <p>你可以邀请用户来更快获得回答</p>
-    </div>
-    <div class="answer">
-      <div class="head">
-        <p>回答 {{ total }}</p>
-        <div>
-          <i class="bg" :class="answersort === 1 ? 'right' : ''"></i>
-          <span :class="answersort === 0 ? 'act' : ''" @click="answersortfn(0)"
-            >默认</span
-          >
-          <span :class="answersort === 1 ? 'act' : ''" @click="answersortfn(1)"
-            >最新</span
-          >
-        </div>
-      </div>
-      <sp-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        :error.sync="error"
-        error-text="请求失败，点击重新加载"
-        @load="onLoad"
-      >
-        <div
-          v-for="(item, index) in questionList"
-          :key="index"
-          class="list"
-          @click="goAnsDetail(item.id)"
-        >
-          <div class="head">
-            <img
-              :src="item.avatar"
-              alt=""
-              @click.stop="goUser(item.userId, item.userType)"
-            />
-            <p>{{ item.userName }}</p>
-          </div>
-          <p class="content">
-            {{ item.contentText }}
-          </p>
-          <div class="foot">
-            <p>{{ item.applaudCount }} 赞同</p>
-            <span></span>
-            <p>{{ item.collectCount }} 喜欢</p>
-            <span></span>
-            <p>{{ item.remarkCount }} 评论</p>
-            <span></span>
-            <p>{{ item.createTime }}</p>
-          </div>
-        </div>
-      </sp-list>
-    </div>
-    <template v-show="fixedshow">
-      <sp-bottombar safe-area-inset-bottom>
-        <div
-          class="btn"
-          :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
-          @click="goInvitionPage"
-        >
-          <my-icon name="yaoqinghuida_mian" size="0.4rem"></my-icon>
-          <span>邀请回答</span>
-        </div>
-        <div
-          class="btn"
-          :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
-          @click="goPublishAnswer"
-        >
-          <my-icon name="xiehuida" size="0.4rem"></my-icon>
-          <span>写回答</span>
-        </div>
-        <div
-          class="collect"
-          :style="{
-            background:
-              questionDetails.isCollectFlag === 1 ? '#F5F5F5' : '#4974F5',
-            color: questionDetails.isCollectFlag === 1 ? '#CCCCCC' : '#FFFFFF',
-          }"
-          @click="like('COLLECT')"
-        >
-          <my-icon
-            :name="
-              questionDetails.isCollectFlag === 1 ? 'shoucang_mian' : 'shoucang'
-            "
-            :color="questionDetails.isCollectFlag === 1 ? '#CCCCCC' : '#FFFFFF'"
-            size="0.32rem"
-          ></my-icon>
-          <span>{{
-            questionDetails.isCollectFlag === 1 ? '已收藏' : '收藏'
-          }}</span>
-        </div>
-      </sp-bottombar>
-    </template>
-
-    <comment-list
-      v-model="commentShow"
-      :article-id="questionDetails.id"
-      :source-type="questionDetails.type"
-    ></comment-list>
-
-    <!--    上拉组件-->
-    <sp-popup
-      v-model="popupShow"
-      position="bottom"
-      :style="{ height: '30%' }"
-      round
-      close-icon="close"
-      :close-on-click-overlay="false"
-    >
-      <div class="down_slide_list">
-        <ul>
-          <li @click="editQues(questionDetails.id)">
-            <my-icon name="bianji1" size="1rem" color="#555"></my-icon>
-            <p>编辑</p>
-          </li>
-          <li @click="deleteQues(questionDetails.id)">
-            <my-icon name="shanchu1" size="1rem" color="#555"></my-icon>
-            <p>删除</p>
-          </li>
-        </ul>
-        <div class="cancel" @click="cancel">取消</div>
-      </div>
-    </sp-popup>
+  <section>
     <ShareModal v-if="isShare" />
-  </div>
+
+    <div
+      class="detail"
+      :style="{
+        paddingBottom: fixedshow ? '1.3rem' : '',
+      }"
+    >
+      <HeaderSlot>
+        <div class="flex">
+          <div v-if="!isShare">
+            <my-icon
+              name="nav_ic_back"
+              size="0.40rem"
+              color="#1a1a1a"
+              class="my_icon"
+              @click.native="goBack"
+            ></my-icon>
+          </div>
+          <p class="title">{{ title }}</p>
+          <div class="right-area">
+            <my-icon
+              style="margin-right: 0.15rem"
+              name="nav_ic_searchbig"
+              size="0.40rem"
+              color="#1a1a1a"
+              class="my_icon"
+              @click.native="$router.push('/known/search')"
+            ></my-icon>
+            <sp-icon
+              v-if="questionDetails.createrId === userInfo.userId"
+              name="ellipsis"
+              size="0.4rem"
+              color="#1a1a1a"
+              class="ellipsis"
+              @click="moreOperate"
+            />
+          </div>
+        </div>
+      </HeaderSlot>
+      <DownLoadArea :ios-link="iosLink" :androd-link="androdLink" />
+      <div class="problem">
+        <div class="tag">
+          <ul class="box">
+            <template v-for="(item, index) in questionDetails.categoryName">
+              <li v-if="item" :key="index">
+                {{ item }}
+              </li>
+            </template>
+          </ul>
+        </div>
+        <h1 ref="title" class="tit">{{ questionDetails.title }}</h1>
+        <div
+          v-if="
+            questionDetails.contentImageUrl &&
+            questionDetails.contentImageUrl.length <= 2 &&
+            questionDetails.contentImageUrl.length > 0 &&
+            !contentshow
+          "
+          class="imglist"
+        >
+          <div
+            v-for="(item, index) in questionDetails.contentImageUrl"
+            :key="index"
+            class="imgbox"
+          >
+            <img :src="item" alt="" />
+          </div>
+        </div>
+        <div
+          v-if="
+            questionDetails.contentImageUrl &&
+            questionDetails.contentImageUrl.length > 2 &&
+            !contentshow
+          "
+          class="imglist"
+        >
+          <div class="imgbox">
+            <img :src="questionDetails.contentImageUrl[0]" alt="" />
+          </div>
+          <div class="imgbox">
+            <img :src="questionDetails.contentImageUrl[1]" alt="" />
+            <div class="imgbox1">
+              {{ `+${questionDetails.contentImageUrl.length}` }}
+            </div>
+          </div>
+        </div>
+        <div class="content">
+          <p v-if="!contentshow" class="tit">
+            {{ questionDetails.contentText }}
+          </p>
+          <div v-else class="tit" v-html="questionDetails.content"></div>
+
+          <div class="btn" @click="contentshow = !contentshow">
+            <span class="tit">{{ contentshow ? '收起' : '展开' }}</span>
+            <sp-icon
+              v-show="contentshow"
+              name="arrow-up"
+              size="0.3rem"
+              color="#999999"
+              style="margin-top: -0.06rem; margin-left: 0.05rem"
+              class="ellipsis"
+            />
+            <sp-icon
+              v-show="!contentshow"
+              name="arrow-down"
+              size="0.3rem"
+              color="#999999"
+              style="margin-left: 0.05rem"
+              class="ellipsis"
+            />
+          </div>
+        </div>
+        <div class="num">
+          <div class="left">
+            <div>{{ questionDetails.collectCount }} <span>收藏</span></div>
+            <p></p>
+            <div @click="commentShow = true">
+              {{ questionDetails.remarkCount }} <span>评论</span>
+            </div>
+            <p></p>
+            <div>{{ questionDetails.totalBrowseCount }} <span>浏览</span></div>
+          </div>
+          <div
+            class="right"
+            :class="questionDetails.isApplaudFlag === 1 ? 'act' : ''"
+            @click="like('LIKE')"
+          >
+            <my-icon name="dianzan" size="0.24rem"></my-icon>
+            好问题
+            <span v-if="questionDetails.applaudCount > 0">{{
+              questionDetails.applaudCount
+            }}</span>
+          </div>
+        </div>
+        <div ref="btns" class="btns">
+          <div
+            class="box"
+            :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
+            @click="goInvitionPage"
+          >
+            <my-icon name="yaoqinghuida_mian" size="0.32rem"></my-icon>
+            <p>邀请回答</p>
+          </div>
+          <div
+            class="box"
+            :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
+            @click="goPublishAnswer"
+          >
+            <my-icon name="xiehuida" size="0.32rem"></my-icon>
+            <p>写回答</p>
+          </div>
+          <div class="box" @click="like('COLLECT')">
+            <my-icon
+              :name="
+                questionDetails.isCollectFlag === 1
+                  ? 'shoucang_mian'
+                  : 'shoucang'
+              "
+              :color="
+                questionDetails.isCollectFlag === 1 ? '#555555' : '#4974F5'
+              "
+              size="0.32rem"
+            ></my-icon>
+            <p
+              :style="{
+                color:
+                  questionDetails.isCollectFlag === 1 ? '#555555' : '#4974F5',
+              }"
+            >
+              {{ questionDetails.isCollectFlag === 1 ? '已收藏' : '收藏' }}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div v-if="releaseStatus === 'release'" class="success">
+        <div>
+          <sp-icon name="certificate" size="0.45rem" color="#00B365" /><span
+            >成功提问</span
+          >
+        </div>
+        <p>你可以邀请用户来更快获得回答</p>
+      </div>
+      <div class="answer">
+        <div class="head">
+          <p>回答 {{ total }}</p>
+          <div>
+            <i class="bg" :class="answersort === 1 ? 'right' : ''"></i>
+            <span
+              :class="answersort === 0 ? 'act' : ''"
+              @click="answersortfn(0)"
+              >默认</span
+            >
+            <span
+              :class="answersort === 1 ? 'act' : ''"
+              @click="answersortfn(1)"
+              >最新</span
+            >
+          </div>
+        </div>
+        <sp-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          :error.sync="error"
+          error-text="请求失败，点击重新加载"
+          @load="onLoad"
+        >
+          <div
+            v-for="(item, index) in questionList"
+            :key="index"
+            class="list"
+            @click="goAnsDetail(item.id)"
+          >
+            <div class="head">
+              <img
+                :src="item.avatar"
+                alt=""
+                @click.stop="goUser(item.userId, item.userType)"
+              />
+              <p>{{ item.userName }}</p>
+            </div>
+            <p class="content">
+              {{ item.contentText }}
+            </p>
+            <div class="foot">
+              <p>{{ item.applaudCount }} 赞同</p>
+              <span></span>
+              <p>{{ item.collectCount }} 喜欢</p>
+              <span></span>
+              <p>{{ item.remarkCount }} 评论</p>
+              <span></span>
+              <p>{{ item.createTime }}</p>
+            </div>
+          </div>
+        </sp-list>
+      </div>
+      <template v-show="fixedshow">
+        <sp-bottombar safe-area-inset-bottom>
+          <div
+            class="btn"
+            :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
+            @click="goInvitionPage"
+          >
+            <my-icon name="yaoqinghuida_mian" size="0.4rem"></my-icon>
+            <span>邀请回答</span>
+          </div>
+          <div
+            class="btn"
+            :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
+            @click="goPublishAnswer"
+          >
+            <my-icon name="xiehuida" size="0.4rem"></my-icon>
+            <span>写回答</span>
+          </div>
+          <div
+            class="collect"
+            :style="{
+              background:
+                questionDetails.isCollectFlag === 1 ? '#F5F5F5' : '#4974F5',
+              color:
+                questionDetails.isCollectFlag === 1 ? '#CCCCCC' : '#FFFFFF',
+            }"
+            @click="like('COLLECT')"
+          >
+            <my-icon
+              :name="
+                questionDetails.isCollectFlag === 1
+                  ? 'shoucang_mian'
+                  : 'shoucang'
+              "
+              :color="
+                questionDetails.isCollectFlag === 1 ? '#CCCCCC' : '#FFFFFF'
+              "
+              size="0.32rem"
+            ></my-icon>
+            <span>{{
+              questionDetails.isCollectFlag === 1 ? '已收藏' : '收藏'
+            }}</span>
+          </div>
+        </sp-bottombar>
+      </template>
+
+      <comment-list
+        v-model="commentShow"
+        :article-id="questionDetails.id"
+        :source-type="questionDetails.type"
+      ></comment-list>
+
+      <!--    上拉组件-->
+      <sp-popup
+        v-model="popupShow"
+        position="bottom"
+        :style="{ height: '30%' }"
+        round
+        close-icon="close"
+        :close-on-click-overlay="false"
+      >
+        <div class="down_slide_list">
+          <ul>
+            <li @click="editQues(questionDetails.id)">
+              <my-icon name="bianji1" size="1rem" color="#555"></my-icon>
+              <p>编辑</p>
+            </li>
+            <li @click="deleteQues(questionDetails.id)">
+              <my-icon name="shanchu1" size="1rem" color="#555"></my-icon>
+              <p>删除</p>
+            </li>
+          </ul>
+          <div class="cancel" @click="cancel">取消</div>
+        </div>
+      </sp-popup>
+    </div>
+  </section>
 </template>
 
 <script>

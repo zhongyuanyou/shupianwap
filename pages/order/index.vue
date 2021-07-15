@@ -221,6 +221,10 @@ export default {
       this.loadingMore = false
       this.noMore = false
       this.loading = true
+      if (this.$route.query.type) {
+        this.$router.push({ query: {} })
+      }
+      
       this.list = []
       this.getOrderList()
     },
@@ -317,6 +321,11 @@ export default {
           // 退款 售后
           this.opType = 'afterSale'
           this.toAfterSale()
+          break
+        case 8:
+          // 发票
+          this.opType = 'invoice'
+          this.toInvoice()
           break
       }
     },

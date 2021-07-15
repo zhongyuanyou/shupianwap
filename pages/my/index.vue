@@ -95,10 +95,147 @@
           <div class="order_text">
             {{ item.name }}
           </div>
+          <div v-if="index === 4 && saleDataListNum > 0" class="jb_num">
+            {{ saleDataListNum }}
+          </div>
         </div>
       </div>
     </div>
     <!--E 我的订单-->
+    <!--S 按钮区-->
+    <!-- <div class="my_btns">
+      <div
+        class="my_btns_item"
+        @click="handleClick('/contract/contractList', 'login')"
+      >
+        <div class="my_btns_item_icon">
+          <my-icon
+            name="gerenzhongxin_hetongicon"
+            size="0.36rem"
+            color="#4F9BFF"
+          />
+        </div>
+        <div class="my_btns_item_con">
+          我的合同
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="my_btns_item" @click="handleClick('/my/coupon', 'login')">
+        <div class="my_btns_item_icon">
+          <my-icon
+            name="gerenzhongxin_youhuiquanicon"
+            size="0.36rem"
+            color="#FFA416"
+          />
+        </div>
+        <div class="my_btns_item_con">
+          我的优惠券
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="my_btns_item" @click="handleClick('/my/interviewRecord')">
+        <div class="my_btns_item_icon">
+          <my-icon name="caifang_mian" size="0.36rem" color="#4974f5" />
+        </div>
+        <div class="my_btns_item_con no_line">
+          面谈记录
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="my_btns_item" @click="linkAuth">
+        <div class="my_btns_item_icon">
+          <my-icon name="shimingrenzheng" size="0.36rem" color="#00B365" />
+        </div>
+        <div class="my_btns_item_con">
+          实名认证
+          <div class="item_lf">
+            <span>{{
+              info.realStatus === 'NO_AUTHENTICATION'
+                ? '未实名认证'
+                : info.realStatus === 'AUTHENTICATION_SUCCESS'
+                ? '已实名认证'
+                : info.realStatus === 'AUTHENTICATION_ING'
+                ? '认证中'
+                : '未实名认证'
+            }}</span>
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="my_btns_item" @click="handleClick('/my/help')">
+        <div class="my_btns_item_icon">
+          <my-icon name="per_ic_help" size="0.36rem" color="#00B365" />
+        </div>
+        <div class="my_btns_item_con">
+          帮助中心
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="my_btns_item" @click="handleClick('/my/complain')">
+        <div class="my_btns_item_icon">
+          <my-icon name="per_ic_debunk" size="0.36rem" color="#10BBB8" />
+        </div>
+        <div class="my_btns_item_con">
+          我要吐槽
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+        <div class="my_btns_item" @click="handleClick('/my/wallet')">
+          <div class="my_btns_item_icon">
+            <my-icon name="caifang_mian" size="0.36rem" color="#4974f5" />
+          </div>
+          <div class="my_btns_item_con no_line">
+            我的钱包
+            <div class="item_lf">
+              <my-icon
+                name="zhifu"
+                size="0.24rem"
+                color="#CCCCCC"
+                class="myIcon"
+              />
+            </div>
+          </div>
+        </div>
+      </div> -->
 
     <!--S 我的服务-->
     <div class="my_order">
@@ -160,7 +297,7 @@
 <script>
 import { Button, Image, CenterPopup } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import { userinfoApi, evaluateApi } from '@/api'
+import { userinfoApi, evaluateApi, afterSaleApi } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 // import { GOODSLIST } from '~/config/constant'
 import { imInit } from '@/utils/im'
@@ -197,30 +334,39 @@ export default {
           iconName: 'per_ic_complete',
           name: '已完成',
         },
-        {
-          iconName: 'per_ic_cancel',
-          name: '已取消',
-        },
+        // {
+        //   iconName: 'per_ic_cancel',
+        //   name: '已取消',
+        // },
         {
           iconName: 'daipingjia',
           name: '待评价',
           type: 'daipingjia',
         },
+        // {
+        //   iconName: 'per_ic_tksh',
+        //   name: '退款/售后',
+        // },
       ],
       imgList: {
-        tx: '2exrifx8gxes000.png',
-        edit: '72tvzeql0iw0000.png',
-        plus: '895bdylh5rg000.png',
+        tx: '2exrifx8gxes000.png', // 头像
+        edit: '72tvzeql0iw0000.png', // 编辑
+        plus: '895bdylh5rg000.png', //
 
+        shop: 'f04le88sqm80000.png', // 购物车
+        yuYue: '7jk7c04dsa00000.png', // 预约
         contract: '2ghw6duy8l0k000.png', // 合同
         collection: 'axvqykli9yg0000.png', // 收藏
-        coupon: '1gw9pvueyc68000.png', // 优惠券
+        coupon: 'fucmezszllc000.png', // 优惠券
 
         mianTanJiLu: '714jp73eal40000.png', // 面谈记录
         real: 'f9q1kjsywx40000.png', // 实名认证
         help: 'g956fupye1c00.png', // 帮助中心
         complain: '6v7la4yubzk0000.png', // 我要吐槽
         about: 'ea2fs9wtslk0000.png', // 关于我们
+        qianbao: '62cvqnmjl5s0000.png', // 钱包
+
+        invoice: 'dx2el9toue00000.png', // 发票中心
       },
 
       info: {
@@ -235,9 +381,10 @@ export default {
       },
       loading: false,
       userName: '',
-      realStatus: 'NO_AUTHENTICATION',
+      realStatus: '',
       evaluateNumFlag: 'none', // 评论标识状态
       evaluateNum: 0, // 评价数量
+      saleDataListNum: 0, // 售后单数量
     }
   },
   computed: {
@@ -279,31 +426,17 @@ export default {
           img: this.$ossImgSetV2(this.imgList.coupon),
           url: '/my/coupon',
         },
-        // {
-        //   // iconName: 'gerenzhongxin_youhuiquanicon',
-        //   name: '优惠券',
-        //   img: this.$ossImgSetV2(this.imgList.coupon),
-        //   url: '/my/coupon',
-        // },
-        // {
-        //   // iconName: 'gerenzhongxin_youhuiquanicon',
-        //   name: '优惠券',
-        //   img: this.$ossImgSetV2(this.imgList.coupon),
-        //   url: '/my/coupon',
-        // },
-        {},
-        {},
       ]
     },
     ServiceTabs() {
       const realStatus =
         this.info.realStatus === 'NO_AUTHENTICATION'
-          ? '未实名认证'
+          ? '未实名'
           : this.info.realStatus === 'AUTHENTICATION_SUCCESS'
-          ? '已实名认证'
+          ? '已实名'
           : this.info.realStatus === 'AUTHENTICATION_ING'
           ? '认证中'
-          : '未实名认证'
+          : '未实名'
       let realUrl = ''
       if (
         this.info.realStatus === 'NO_AUTHENTICATION' ||
@@ -314,6 +447,12 @@ export default {
       }
 
       return [
+        {
+          // iconName: 'caifang_mian',
+          name: '发票中心',
+          img: this.$ossImgSetV2(this.imgList.invoice),
+          url: '/order/invoice',
+        },
         {
           // iconName: 'caifang_mian',
           name: '面谈记录',
@@ -344,6 +483,12 @@ export default {
           img: this.$ossImgSetV2(this.imgList.about),
           url: '/my/about',
         },
+        // {
+        //   // iconName: 'per_ic_about',
+        //   name: '我的钱包',
+        //   img: this.$ossImgSetV2(this.imgList.qianbao),
+        //   url: '/my/wallet',
+        // },
       ]
     },
   },
@@ -357,6 +502,7 @@ export default {
       }
       this.getUserInfo()
       this.getEvaluateNumApi()
+      this.getAfterSaleListNum()
       if (!this.token) {
         localStorage.removeItem('info')
       }
@@ -364,6 +510,17 @@ export default {
   },
 
   methods: {
+    // 初始化获取售后单数
+    async getAfterSaleListNum() {
+      const res = await this.$axios.get(afterSaleApi.saleingNum, {
+        params: {
+          userId: this.userId,
+        },
+      })
+      if (res.code === 200) {
+        this.saleDataListNum = res.data
+      }
+    },
     toKnownHome(info) {
       if (this.token && this.userId) {
         this.$router.push({
@@ -381,6 +538,7 @@ export default {
         })
       }
     },
+
     clickServiceTabs(item) {
       if (this.token) {
         item.url && this.$router.push({ path: item.url })
@@ -395,7 +553,7 @@ export default {
     },
     clickTab(index) {
       // 进入待评价页面
-      if (index === 5) {
+      if (index === 4) {
         if (this.token) {
           this.$router.push({ path: '/my/evaluate' })
         } else {
@@ -403,6 +561,19 @@ export default {
             path: '/login',
             query: {
               redirect: '/my/evaluate',
+            },
+          })
+        }
+        return
+      }
+      if (index === 5) {
+        if (this.token) {
+          this.$router.push({ path: '/my/afterSale/list' })
+        } else {
+          this.$router.push({
+            path: '/login',
+            query: {
+              redirect: '/my/afterSale/list',
             },
           })
         }
@@ -644,14 +815,22 @@ export default {
     }
     &_type {
       padding-top: 52px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+
+      // display: flex;
+      // align-items: center;
+      // justify-content: space-between;
       // flex-wrap: wrap;
       &_list {
+        display: inline-block;
+        width: 20%;
+        min-width: 120px;
+
         cursor: pointer;
         text-align: center;
-        min-width: 76px;
+        min-width: 108px;
+        margin-bottom: 30px;
+        padding: 0 10px;
+        position: relative;
         // flex-shrink: 0;
         // flex: 1;
         .icon {
@@ -665,7 +844,7 @@ export default {
           &_daipingjia {
             position: absolute;
             font: 24px @fontf-pfsc-med;
-            left: 41px;
+            // left: 41px;
             top: -18px;
             background: #ec5330;
             border-radius: 16px;
@@ -688,8 +867,23 @@ export default {
           font-family: PingFang-SC-Bold, PingFang-SC;
           font-weight: bold;
           color: #222222;
-          line-height: 24px;
+          line-height: 26px;
           padding-top: 20px;
+
+          .mixin-text-oneoverflow();
+        }
+        .jb_num {
+          position: absolute;
+          right: 0;
+          top: -6px;
+          width: 30px;
+          text-align: center;
+          height: 30px;
+          line-height: 32px;
+          border-radius: 30px;
+          background: red;
+          color: #fff;
+          font-size: 20px;
         }
       }
     }
