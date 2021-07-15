@@ -172,7 +172,9 @@ export default {
             customerUserId: this.$store.state.user.userId,
             plannerId: mchUserId,
             customerPhone: this.$cookies.get('mainAccountFull', { path: '/' }),
-            requireCode: this.sellingDetail.classCodeLevel.split(',')[0],
+            requireCode:
+              this.sellingDetail.classCodeLevel &&
+              this.sellingDetail.classCodeLevel.split(',')[0],
             requireName: '',
             // id: mchUserId,
             // sensitiveInfoType: 'MCH_USER',
@@ -225,7 +227,9 @@ export default {
       const intentionCity = {}
       intentionCity[this.city.code] = this.city.name
       const sessionParams = {
-        requireCode: this.sellingDetail.classCodeLevel.split(',')[0],
+        requireCode:
+          this.sellingDetail.classCodeLevel &&
+          this.sellingDetail.classCodeLevel.split(',')[0],
         requireName: '',
         imUserId: mchUserId, // 商户用户ID
         imUserType: type, // 用户类型
@@ -237,20 +241,41 @@ export default {
           startUserType: 'cps-app', //
         },
       }
+      let imageUrl = ''
+      if (this.sellingDetail.salesGoodsOperatings) {
+        if (
+          this.sellingDetail.salesGoodsOperatings.clientDetails &&
+          this.sellingDetail.salesGoodsOperatings.clientDetails.length > 0
+        ) {
+          if (
+            this.sellingDetail.salesGoodsOperatings.clientDetails[0]
+              .imgFileIdPaths &&
+            this.sellingDetail.salesGoodsOperatings.clientDetails[0]
+              .imgFileIdPaths.length > 0
+          ) {
+            imageUrl =
+              this.sellingDetail.salesGoodsOperatings.clientDetails[0]
+                .imgFileIdPaths[0]
+          }
+        }
+      }
       const msgParams = {
         sendType: 0, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
         msgType: 'im_tmplate', // 消息类型
         extContent: this.$route.query, // 路由参数
         productName: this.sellingDetail.name, // 产品名称
-        productContent: this.sellingDetail.salesGoodsOperatings.productDescribe, // 产品信息
+        productContent:
+          this.sellingDetail.salesGoodsOperatings &&
+          this.sellingDetail.salesGoodsOperatings.productDescribe, // 产品信息
         price: this.sellingDetail.salesPrice, // 价格
         forwardAbstract:
+          this.sellingDetail.salesGoodsOperatings &&
           this.sellingDetail.salesGoodsOperatings.productDescribe, // 摘要信息，可与显示内容保持一致
         routerId: 'IMRouter_APP_ProductDetail_Service', // 路由ID
-        imageUrl:
-          this.sellingDetail.salesGoodsOperatings.clientDetails[0]
-            .imgFileIdPaths[0], // 产品图片
-        unit: this.sellingDetail.salesPrice.split('.')[1], // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+        imageUrl, // 产品图片
+        unit:
+          this.sellingDetail.salesPrice &&
+          this.sellingDetail.salesPrice.split('.')[1], // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
       }
       this.sendTemplateMsgMixin({ sessionParams, msgParams })
       // } else {

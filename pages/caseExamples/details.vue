@@ -27,6 +27,8 @@
 
     <!--S 第一板块-->
     <Title />
+    <!-- 专家点评 -->
+    <ExpertComments></ExpertComments>
 
     <!--S 第五板块 推荐规划师-->
     <ServiceTeam :im-jump-query="imJumpQuery" :recommend-planner="planners" />
@@ -67,6 +69,7 @@ import CommentBox from '@/components/caseExamples/details/CommentBox.vue'
 import OrderCase from '@/components/caseExamples/details/OrderCase.vue'
 
 import ServiceTeam from '@/components/caseExamples/details/ServiceTeam.vue'
+import ExpertComments from '@/components/caseExamples/details/ExpertComments.vue'
 
 import bottomBar from '@/components/detail/bottomBar/index.vue'
 
@@ -93,6 +96,8 @@ export default {
 
     CommentBox,
     OrderCase,
+
+    ExpertComments,
   },
   mixins: [imHandle],
   props: {
@@ -121,34 +126,6 @@ export default {
       }, // 个人用户数据
       planners: [
         {
-          mchUserId: '728694563914692664',
-          mchDetailId: '728694563914692654',
-          officeAddressId: '728694563914692663',
-          userName: '李鑫',
-          userCenterId: '732285019380940531',
-          userCenterNo: 'U2100446393',
-          phone:
-            '1E5FF47167BB2F1402193F3284BBF306*DGGJGZX*4/dD8hm6GF3CXFRX5D9c806lgwiDd0J85d2xbw==',
-          point: '5',
-          registerTime: '2021-01-08 09:07:33',
-          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
-          status: 1,
-          statusName: '启用',
-          userCenterStatus: 1,
-          userCenterStatusName: '正常',
-          recentCompany: '李鑫测试商户',
-          type: 'MERCHANT_B',
-          mchNo: 'PBU2141013',
-          isAdmin: 1,
-          serveNum: 0,
-          payNum: 0,
-          profilePhotoId: '',
-          dggPlannerRecomLog:
-            'productmap=[728694563914692664, 728691677696671018, 728691677696664530, 732284950661460939, 1076098595517908927, 767581610621041918, 767854117951796474, 767773578479304701, 1076098732956867488]&seqno=C306F8AD6FBAD6FDB9192946F8490AEA&recallno=44&ruleno=33&deviceId=deviceId&rankno=22',
-          portrait:
-            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
-        },
-        {
           mchUserId: '728691677696664530',
           mchDetailId: '728691574617454297',
           officeAddressId: '728691574617454408',
@@ -238,246 +215,7 @@ export default {
           portrait:
             'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
         },
-        {
-          mchUserId: '728691677696664530',
-          mchDetailId: '728691574617454297',
-          officeAddressId: '728691574617454408',
-          userName: '王茂婕',
-          userCenterId: '607997598875151730',
-          userCenterNo: 'U2000431059',
-          phone:
-            '0E687EEE72F48183A2C6EFC593FC0A06*DGGJGZX*PH314Eo/oe71oSJobb0CE01mzKjRRSI1f61QbQ==',
-          point: '5',
-          registerTime: '2020-12-24 18:44:07',
-          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
-          status: 1,
-          statusName: '启用',
-          userCenterStatus: 1,
-          userCenterStatusName: '正常',
-          recentCompany: 'PCN测试服务商户',
-          type: 'MERCHANT_B',
-          mchNo: 'PBU2036000',
-          isAdmin: 0,
-          serveNum: 0,
-          serveAge: 7,
-          goodReputation: 95,
-          payNum: 0,
-          profilePhotoId: '',
-          dggPlannerRecomLog:
-            'productmap=[728694563914692664, 728691677696671018, 728691677696664530, 732284950661460939, 1076098595517908927, 767581610621041918, 767854117951796474, 767773578479304701, 1076098732956867488]&seqno=C306F8AD6FBAD6FDB9192946F8490AEA&recallno=44&ruleno=33&deviceId=deviceId&rankno=22',
-          portrait:
-            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
-        },
-        {
-          mchUserId: '728691677696664530',
-          mchDetailId: '728691574617454297',
-          officeAddressId: '728691574617454408',
-          userName: '王茂婕',
-          userCenterId: '607997598875151730',
-          userCenterNo: 'U2000431059',
-          phone:
-            '0E687EEE72F48183A2C6EFC593FC0A06*DGGJGZX*PH314Eo/oe71oSJobb0CE01mzKjRRSI1f61QbQ==',
-          point: '5',
-          registerTime: '2020-12-24 18:44:07',
-          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
-          status: 1,
-          statusName: '启用',
-          userCenterStatus: 1,
-          userCenterStatusName: '正常',
-          recentCompany: 'PCN测试服务商户',
-          type: 'MERCHANT_B',
-          mchNo: 'PBU2036000',
-          isAdmin: 0,
-          serveNum: 0,
-          serveAge: 7,
-          goodReputation: 95,
-          payNum: 0,
-          profilePhotoId: '',
-          dggPlannerRecomLog:
-            'productmap=[728694563914692664, 728691677696671018, 728691677696664530, 732284950661460939, 1076098595517908927, 767581610621041918, 767854117951796474, 767773578479304701, 1076098732956867488]&seqno=C306F8AD6FBAD6FDB9192946F8490AEA&recallno=44&ruleno=33&deviceId=deviceId&rankno=22',
-          portrait:
-            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
-        },
-        {
-          mchUserId: '728691677696664530',
-          mchDetailId: '728691574617454297',
-          officeAddressId: '728691574617454408',
-          userName: '王茂婕',
-          userCenterId: '607997598875151730',
-          userCenterNo: 'U2000431059',
-          phone:
-            '0E687EEE72F48183A2C6EFC593FC0A06*DGGJGZX*PH314Eo/oe71oSJobb0CE01mzKjRRSI1f61QbQ==',
-          point: '5',
-          registerTime: '2020-12-24 18:44:07',
-          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
-          status: 1,
-          statusName: '启用',
-          userCenterStatus: 1,
-          userCenterStatusName: '正常',
-          recentCompany: 'PCN测试服务商户',
-          type: 'MERCHANT_B',
-          mchNo: 'PBU2036000',
-          isAdmin: 0,
-          serveNum: 0,
-          serveAge: 7,
-          goodReputation: 95,
-          payNum: 0,
-          profilePhotoId: '',
-          dggPlannerRecomLog:
-            'productmap=[728694563914692664, 728691677696671018, 728691677696664530, 732284950661460939, 1076098595517908927, 767581610621041918, 767854117951796474, 767773578479304701, 1076098732956867488]&seqno=C306F8AD6FBAD6FDB9192946F8490AEA&recallno=44&ruleno=33&deviceId=deviceId&rankno=22',
-          portrait:
-            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
-        },
-        {
-          mchUserId: '728691677696664530',
-          mchDetailId: '728691574617454297',
-          officeAddressId: '728691574617454408',
-          userName: '王茂婕',
-          userCenterId: '607997598875151730',
-          userCenterNo: 'U2000431059',
-          phone:
-            '0E687EEE72F48183A2C6EFC593FC0A06*DGGJGZX*PH314Eo/oe71oSJobb0CE01mzKjRRSI1f61QbQ==',
-          point: '5',
-          registerTime: '2020-12-24 18:44:07',
-          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
-          status: 1,
-          statusName: '启用',
-          userCenterStatus: 1,
-          userCenterStatusName: '正常',
-          recentCompany: 'PCN测试服务商户',
-          type: 'MERCHANT_B',
-          mchNo: 'PBU2036000',
-          isAdmin: 0,
-          serveNum: 0,
-          serveAge: 7,
-          goodReputation: 95,
-          payNum: 0,
-          profilePhotoId: '',
-          dggPlannerRecomLog:
-            'productmap=[728694563914692664, 728691677696671018, 728691677696664530, 732284950661460939, 1076098595517908927, 767581610621041918, 767854117951796474, 767773578479304701, 1076098732956867488]&seqno=C306F8AD6FBAD6FDB9192946F8490AEA&recallno=44&ruleno=33&deviceId=deviceId&rankno=22',
-          portrait:
-            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
-        },
-        {
-          mchUserId: '728691677696664530',
-          mchDetailId: '728691574617454297',
-          officeAddressId: '728691574617454408',
-          userName: '王茂婕',
-          userCenterId: '607997598875151730',
-          userCenterNo: 'U2000431059',
-          phone:
-            '0E687EEE72F48183A2C6EFC593FC0A06*DGGJGZX*PH314Eo/oe71oSJobb0CE01mzKjRRSI1f61QbQ==',
-          point: '5',
-          registerTime: '2020-12-24 18:44:07',
-          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
-          status: 1,
-          statusName: '启用',
-          userCenterStatus: 1,
-          userCenterStatusName: '正常',
-          recentCompany: 'PCN测试服务商户',
-          type: 'MERCHANT_B',
-          mchNo: 'PBU2036000',
-          isAdmin: 0,
-          serveNum: 0,
-          serveAge: 7,
-          goodReputation: 95,
-          payNum: 0,
-          profilePhotoId: '',
-          dggPlannerRecomLog:
-            'productmap=[728694563914692664, 728691677696671018, 728691677696664530, 732284950661460939, 1076098595517908927, 767581610621041918, 767854117951796474, 767773578479304701, 1076098732956867488]&seqno=C306F8AD6FBAD6FDB9192946F8490AEA&recallno=44&ruleno=33&deviceId=deviceId&rankno=22',
-          portrait:
-            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
-        },
-        {
-          mchUserId: '728691677696664530',
-          mchDetailId: '728691574617454297',
-          officeAddressId: '728691574617454408',
-          userName: '王茂婕',
-          userCenterId: '607997598875151730',
-          userCenterNo: 'U2000431059',
-          phone:
-            '0E687EEE72F48183A2C6EFC593FC0A06*DGGJGZX*PH314Eo/oe71oSJobb0CE01mzKjRRSI1f61QbQ==',
-          point: '5',
-          registerTime: '2020-12-24 18:44:07',
-          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
-          status: 1,
-          statusName: '启用',
-          userCenterStatus: 1,
-          userCenterStatusName: '正常',
-          recentCompany: 'PCN测试服务商户',
-          type: 'MERCHANT_B',
-          mchNo: 'PBU2036000',
-          isAdmin: 0,
-          serveNum: 0,
-          serveAge: 7,
-          goodReputation: 95,
-          payNum: 0,
-          profilePhotoId: '',
-          dggPlannerRecomLog:
-            'productmap=[728694563914692664, 728691677696671018, 728691677696664530, 732284950661460939, 1076098595517908927, 767581610621041918, 767854117951796474, 767773578479304701, 1076098732956867488]&seqno=C306F8AD6FBAD6FDB9192946F8490AEA&recallno=44&ruleno=33&deviceId=deviceId&rankno=22',
-          portrait:
-            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
-        },
-        {
-          mchUserId: '728691677696664530',
-          mchDetailId: '728691574617454297',
-          officeAddressId: '728691574617454408',
-          userName: '王茂婕',
-          userCenterId: '607997598875151730',
-          userCenterNo: 'U2000431059',
-          phone:
-            '0E687EEE72F48183A2C6EFC593FC0A06*DGGJGZX*PH314Eo/oe71oSJobb0CE01mzKjRRSI1f61QbQ==',
-          point: '5',
-          registerTime: '2020-12-24 18:44:07',
-          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
-          status: 1,
-          statusName: '启用',
-          userCenterStatus: 1,
-          userCenterStatusName: '正常',
-          recentCompany: 'PCN测试服务商户',
-          type: 'MERCHANT_B',
-          mchNo: 'PBU2036000',
-          isAdmin: 0,
-          serveNum: 0,
-          serveAge: 7,
-          goodReputation: 95,
-          payNum: 0,
-          profilePhotoId: '',
-          dggPlannerRecomLog:
-            'productmap=[728694563914692664, 728691677696671018, 728691677696664530, 732284950661460939, 1076098595517908927, 767581610621041918, 767854117951796474, 767773578479304701, 1076098732956867488]&seqno=C306F8AD6FBAD6FDB9192946F8490AEA&recallno=44&ruleno=33&deviceId=deviceId&rankno=22',
-          portrait:
-            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
-        },
-        {
-          mchUserId: '728691677696664530',
-          mchDetailId: '728691574617454297',
-          officeAddressId: '728691574617454408',
-          userName: '王茂婕王茂婕',
-          userCenterId: '607997598875151730',
-          userCenterNo: 'U2000431059',
-          phone:
-            '0E687EEE72F48183A2C6EFC593FC0A06*DGGJGZX*PH314Eo/oe71oSJobb0CE01mzKjRRSI1f61QbQ==',
-          point: '5',
-          registerTime: '2020-12-24 18:44:07',
-          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
-          status: 1,
-          statusName: '启用',
-          userCenterStatus: 1,
-          userCenterStatusName: '正常',
-          recentCompany: 'PCN测试服务商户',
-          type: 'MERCHANT_B',
-          mchNo: 'PBU2036000',
-          isAdmin: 0,
-          serveNum: 0,
-          serveAge: 7,
-          goodReputation: 95,
-          payNum: 0,
-          profilePhotoId: '',
-          dggPlannerRecomLog:
-            'productmap=[728694563914692664, 728691677696671018, 728691677696664530, 732284950661460939, 1076098595517908927, 767581610621041918, 767854117951796474, 767773578479304701, 1076098732956867488]&seqno=C306F8AD6FBAD6FDB9192946F8490AEA&recallno=44&ruleno=33&deviceId=deviceId&rankno=22',
-          portrait:
-            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
-        },
+
         {
           mchUserId: '728691677696664530',
           mchDetailId: '728691574617454297',
