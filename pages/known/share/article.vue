@@ -1,6 +1,7 @@
 <template>
   <section>
     <ShareModal
+      v-show="articleDetails.title"
       :mch-id="articleDetails.createrId"
       @setPlannerInfo="setPlannerInfo"
     />
