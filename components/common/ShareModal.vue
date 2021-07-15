@@ -26,9 +26,7 @@
             "
           />
           <div class="planner-info">
-            <span
-              >您好，我是{{ planerInfo.name || plannerName || '规划师' }}</span
-            >
+            <span>您好，我是{{ planerInfo.name || '规划师' }}</span>
           </div>
         </div>
       </div>
@@ -65,10 +63,6 @@ export default {
     [Icon.name]: Icon,
   },
   props: {
-    plannerName: {
-      type: String,
-      default: '',
-    },
     mchId: {
       type: String,
       default: '',
@@ -112,7 +106,7 @@ export default {
       planner
         .detail({ id })
         .then((res) => {
-          console.log('获取规划师信息', res)
+          console.log('获取规划师信息res', res)
           const obj = {
             mchUserId: res.id,
             portrait: res.img,
@@ -124,7 +118,8 @@ export default {
             ...obj,
             ...res,
           }
-          this.$forceUpdate()
+          this.$emit('setPlannerInfo', this.planerInfo)
+          // this.$forceUpdate()
           this.visible = true
         })
         .catch((err) => {
