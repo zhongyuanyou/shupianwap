@@ -80,7 +80,7 @@
         round
         position="bottom"
         cl
-        :style="{ width: '100%', height: '60%' }"
+        :style="{ width: '100%', height: '70%' }"
       >
         <div class="form-search">
           <sp-icon
