@@ -24,6 +24,7 @@
     <!--S banner-->
     <Banner :images="imgFileIdPaths" />
     <!--S banner-->
+
     <!--S 第一板块-->
     <Title />
 
@@ -34,32 +35,24 @@
       :images="[1, 1, 1, 1, 1, 1]"
     />
 
-    <!-- 案件简介 -->
+    <!--S  办理经过-->
+    <OrderCase></OrderCase>
+    <!-- 办理结果 -->
     <CaseIntroduction
       title="办理结果"
       text="山东省潍坊市中级人民法院于2009年10月14日以(2009) 潍刑一初字第35号刑事判决 潍刑一初字第35号刑事判决潍刑一初字第35号刑事判决"
       :images="[1, 2]"
     />
+
     <!--E 评论-->
     <CommentBox id="comment" :list="commentdata" />
-
-    <!--E 第一板块-->
-
-    <!--E 第二板块 领券 SKU-->
-    <!--S 第三板块 包含项目-->
-    <!-- <ContainProject /> -->
-    <!--E 第三板块 包含项目-->
-    <!--S 第三板块 包含服务-->
-    <!-- <ContainContent /> -->
-    <!--E 第三板块 包含服务-->
 
     <!--S 动态 -->
     <OrderDynamic></OrderDynamic>
     <!--S 第五板块 推荐规划师-->
     <TcPlanners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
     <!--E 第五板块 推荐规划师-->
-    <!--S  精选案例-->
-    <OrderCase></OrderCase>
+
     <!--E  精选案例-->
     <!--S 第十板块 服务详情-->
     <ServiceDetail
@@ -80,7 +73,8 @@ import Title from '@/components/caseExamples/details/Title.vue'
 import CaseIntroduction from '@/components/caseExamples/details/CaseIntroduction.vue'
 
 import CommentBox from '@/components/caseExamples/details/CommentBox.vue'
-import OrderCase from '@/components/detail/OrderCase.vue'
+import OrderCase from '@/components/caseExamples/details/OrderCase.vue'
+
 import OrderDynamic from '@/components/detail/OrderDynamic.vue'
 
 // import ContainProject from '@/components/detail/ContainProject.vue'
