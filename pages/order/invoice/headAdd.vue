@@ -74,6 +74,8 @@
                     message: '请填写注册地址',
                   },
                 ]"
+                @focus="focusFn"
+                @blur="blurFn"
               />
               <sp-field
                 v-model="formData.phone"
@@ -87,6 +89,8 @@
                     message: '请填写注册电话',
                   },
                 ]"
+                @focus="focusFn"
+                @blur="blurFn"
               />
               <sp-field
                 v-model="formData.depositBank"
@@ -100,6 +104,8 @@
                     message: '请填写开户银行',
                   },
                 ]"
+                @focus="focusFn"
+                @blur="blurFn"
               />
               <sp-field
                 v-model="formData.bankNumber"
@@ -113,6 +119,8 @@
                     message: '银行账号',
                   },
                 ]"
+                @focus="focusFn"
+                @blur="blurFn"
               />
             </div>
           </sp-form>
@@ -136,9 +144,13 @@
       </sp-field>
     </div>
 
-    <div class="paddingBottom160"></div>
+    <div class="paddingBottom160" v-show="!focusState"></div>
 
-    <sp-bottombar class="sp-bottombar" safe-area-inset-bottom>
+    <sp-bottombar
+      class="sp-bottombar"
+      :style="{ position: focusState ? 'static' : 'fixed' }"
+      safe-area-inset-bottom
+    >
       <sp-bottombar-button type="primary" text="立即添加" @click="onSubmit" />
     </sp-bottombar>
 
@@ -216,6 +228,8 @@ export default {
       defaultHead: 0, // 默认抬头(0 非默认 1 默认 仅针对普票有效)
 
       HAVE_SPECIAL: true, // 是否已存在增值税专用发票，用以限制只能存在一个
+
+      focusState: false,
     }
   },
   computed: {
@@ -245,8 +259,37 @@ export default {
   },
   mounted() {
     this.getInvoiceHeaderList()
+
+    /*
+     *  监听input状态，屏幕滚动到input，上下居中
+     * 在安卓手机上屏幕尺寸变化会产生resize事件。所以监听resize事件。
+     * 然后定位到input框。
+     */
+
+    // window.addEventListener('resize', this.active)
+  },
+  destroyed() {
+    // window.removeEventListener('resize', this.active)
+    // window.removeEventListener('focus', focusFn)
+    // window.removeEventListener('blur', blurFn)
   },
   methods: {
+    focusFn() {
+      console.log('focus')
+      this.focusState = true
+    },
+    blurFn() {
+      console.log('blur')
+      this.focusState = false
+    },
+
+    active() {
+      setTimeout(() => {
+        if (document.activeElement.tagName === 'INPUT') {
+          document.activeElement.scrollIntoView({ behavior: 'smooth' })
+        }
+      }, 10)
+    },
     getInvoiceHeaderList() {
       this.loading = true
       invoiceApi
