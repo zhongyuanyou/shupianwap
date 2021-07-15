@@ -127,6 +127,7 @@ export default {
         knownApi.questionArticle.attentionMore,
         {
           page: this.page,
+          limit: 20,
         }
       )
       if (code === 200) {

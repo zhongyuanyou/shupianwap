@@ -586,6 +586,7 @@ export default {
 <style lang="less" scoped>
 .home_container {
   height: 100%;
+  width: 750px;
   background: #fff;
   .header {
     z-index: 10;
@@ -707,7 +708,7 @@ export default {
       }
       .user_banner {
         margin-top: 48px;
-        width: 686px;
+        width: 100%;
         height: 180px;
         border-radius: 12px;
         .banner_img {
