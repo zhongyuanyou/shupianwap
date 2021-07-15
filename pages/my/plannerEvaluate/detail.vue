@@ -87,7 +87,7 @@ export default {
   data() {
     return {
       evaluateTime: '',
-      avatar: '',
+      avatar: 'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png',
       avatarSize: '0.8rem',
       name: '规划师',
       starLevel: 1, // 星级
