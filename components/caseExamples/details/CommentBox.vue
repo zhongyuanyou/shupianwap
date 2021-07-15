@@ -1,24 +1,24 @@
 <template>
   <div class="comment">
-    <h1>用户评价</h1>
-    <sp-swipe class="my-swipe" :autoplay="5000" indicator-color="#4974f5;">
-      <sp-swipe-item v-for="(item, index) in list" :key="index">
-        <div class="item">
-          <div class="head">
-            <img :src="item.img" alt="" />
-            <div>
-              <div class="phone">
-                <p>{{ item.phone }}</p>
-              </div>
-              <div class="date">{{ item.date }}</div>
-            </div>
+    <h1 class="name">用户评价</h1>
+    <!-- <sp-swipe class="my-swipe" :autoplay="5000" indicator-color="#4974f5;"> -->
+    <!-- <sp-swipe-item v-for="(item, index) in list" :key="index"> -->
+    <div class="item" v-for="(item, index) in list" :key="index">
+      <div class="head">
+        <img :src="item.img" alt="" />
+        <div>
+          <div class="phone">
+            <p>{{ item.phone }}</p>
           </div>
-          <p class="tit">
-            {{ item.tit }}
-          </p>
+          <div class="date">{{ item.date }}</div>
         </div>
-      </sp-swipe-item>
-    </sp-swipe>
+      </div>
+      <p class="tit">
+        {{ item.tit }}
+      </p>
+    </div>
+    <!-- </sp-swipe-item>
+    </sp-swipe> -->
   </div>
 </template>
 
@@ -47,7 +47,8 @@ export default {
   background: #fff;
   border-bottom: 24px solid #f8f8f8;
   padding: 48px 0 16px 0;
-  > h1 {
+
+  > .title {
     padding-left: 40px;
     font-size: 40px;
     font-family: PingFangSC-Medium, PingFang SC;
@@ -55,19 +56,9 @@ export default {
     color: #1a1a1a;
     line-height: 40px;
   }
-  ::v-deep.sp-swipe__indicator {
-    background: #cccccc;
-  }
-  ::v-deep.sp-swipe__indicator--active {
-    background: #4974f5 !important;
-  }
-  ::v-deep.sp-swipe__indicators {
-    bottom: 0;
-  }
-  > .my-swipe {
+
+  > .item {
     margin-top: 42px;
-  }
-  .item {
     padding: 0 40px 30px 40px;
     .head {
       display: flex;
@@ -83,7 +74,7 @@ export default {
         > .phone {
           font-size: 32px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
+          font-weight: bold;
           color: #222222;
           line-height: 32px;
           display: flex;

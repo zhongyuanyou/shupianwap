@@ -2,7 +2,10 @@
   <div class="case_introduction">
     <div class="title">案例简介</div>
     <div class="des">
-      尤其是有很多流浪都是有铁粉的，我理解铁粉不是应该一开始关注随着时间推长。
+      <TwoLine
+        fontsize="0.3rem"
+        text="尤其是有很多流浪都是有铁粉的，我理解铁粉不是应该一开始关注随着时间推长。"
+      ></TwoLine>
     </div>
     <div class="images">
       <div class="images_container">
@@ -18,10 +21,12 @@
 
 <script>
 import { Image, Icon } from '@chipspc/vant-dgg'
+import TwoLine from '@/components/caseExamples/details/TwoLine.vue'
 export default {
   name: 'CaseIntroduction',
   components: {
     [Image.name]: Image,
+    TwoLine,
     // SpIcon: Icon,
   },
   props: {

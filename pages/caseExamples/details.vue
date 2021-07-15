@@ -26,7 +26,9 @@
     <!--S banner-->
     <!--S 第一板块-->
     <Title />
-
+    <TwoLine
+      text="啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊aaaaaaaaaa啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"
+    ></TwoLine>
     <!-- 案件简介 -->
     <CaseIntroduction></CaseIntroduction>
 
@@ -55,16 +57,7 @@
       comp-type="sc"
       :detail-data="sellingDetail.salesGoodsOperatings.clientDetails[0]"
     />
-    <!--S 第十板块 服务详情-->
-    <!--S 第十板块 猜你需要-->
-    <sp-list
-      v-model="loading"
-      :finished="finished"
-      finished-text="我是有底线的"
-      @load="onLoad"
-    >
-      <RelatedRecommend ref="remNeed" :product-data="recommendProduct" />
-    </sp-list>
+
     <!--E 第十板块 猜你需要-->
     <bottomBar :im-jump-query="imJumpQuery" :planner-info="tcPlannerBooth" />
   </div>
@@ -77,6 +70,8 @@ import Banner from '@/components/detail/Banner.vue'
 import Title from '@/components/caseExamples/details/Title.vue'
 import CaseIntroduction from '@/components/caseExamples/details/CaseIntroduction.vue'
 
+import TwoLine from '@/components/caseExamples/details/TwoLine.vue'
+
 import CommentBox from '@/components/caseExamples/details/CommentBox.vue'
 import OrderCase from '@/components/detail/OrderCase.vue'
 import OrderDynamic from '@/components/detail/OrderDynamic.vue'
@@ -85,7 +80,7 @@ import ContainProject from '@/components/detail/ContainProject.vue'
 import ContainContent from '@/components/detail/ContainContent.vue'
 import TcPlanners from '@/components/detail/TcPlanners1.vue'
 import ServiceDetail from '@/components/detail/ServiceDetail.vue'
-import RelatedRecommend from '@/components/detail/RelatedRecommend.vue'
+
 import bottomBar from '@/components/detail/bottomBar/index.vue'
 
 import getUserSign from '@/utils/fingerprint'
@@ -103,12 +98,12 @@ export default {
     Banner,
     Title,
     CaseIntroduction,
+    TwoLine,
 
     ContainProject,
     ContainContent,
     TcPlanners,
     ServiceDetail,
-    RelatedRecommend,
     bottomBar,
 
     CommentBox,
