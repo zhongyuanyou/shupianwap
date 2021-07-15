@@ -66,25 +66,29 @@
           </div>
         </div>
         <div class="team_list">
-          <div
-            v-for="item in recommendPlanner"
-            :key="item.userCenterId"
-            class="team_list_item"
-          >
-            <div>
-              <sp-image
-                width="0.85rem"
-                height="0.85rem"
-                round
-                fit="cover"
-                lazy-load
-                :src="`${item.portrait}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`"
-              />
-            </div>
-            <div class="team_list_name">
-              {{ item.userName }}
-            </div>
-          </div>
+          <swiper class="swiper" :options="swiperOption">
+            <swiper-slide
+              v-for="item in recommendPlanner"
+              :key="item.userCenterId"
+            >
+              <div class="team_list_item">
+                <div>
+                  <sp-image
+                    width="0.85rem"
+                    height="0.85rem"
+                    round
+                    fit="cover"
+                    lazy-load
+                    :src="`${item.portrait}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`"
+                  />
+                </div>
+                <div class="team_list_name">
+                  {{ item.userName }}
+                </div>
+              </div>
+            </swiper-slide>
+            <div slot="pagination" class="swiper-pagination"></div>
+          </swiper>
         </div>
       </sp-skeleton>
     </div>
@@ -92,6 +96,10 @@
 </template>
 
 <script>
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
+import 'swiper/swiper-bundle.css'
+// import 'swiper/css/swiper.css'
+
 import { Image, Button, Toast, Skeleton } from '@chipspc/vant-dgg'
 import { planner } from '~/api'
 import imHandle from '~/mixins/imHandle'
@@ -102,6 +110,8 @@ export default {
     [Image.name]: Image,
     [Button.name]: Button,
     [Skeleton.name]: Skeleton,
+    Swiper,
+    SwiperSlide,
   },
   mixins: [imHandle],
   props: {
@@ -115,6 +125,20 @@ export default {
         return {}
       },
     },
+  },
+  data() {
+    return {
+      swiperOption: {
+        slidesPerView: 'auto',
+        // centeredSlides: true,
+        spaceBetween: 10,
+
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+      },
+    }
   },
   computed: {
     city() {
@@ -243,11 +267,17 @@ export default {
   // height: 184px;
   background: #f8f8f8;
   border-radius: 12px;
+  padding: 0 14px;
+  font-size: 0;
+
+  .swiper-slide {
+    width: 115px;
+  }
 
   .team_list_item {
-    display: inline-block;
-    width: 115px;
-    padding: 32px 14px;
+    // display: inline-block;
+    // width: 115px;
+    padding: 32px 0px;
     text-align: center;
 
     .team_list_name {
@@ -257,6 +287,7 @@ export default {
       letter-spacing: 0;
       text-align: center;
       line-height: 25.93px;
+      padding-top: 16px;
     }
   }
 }
