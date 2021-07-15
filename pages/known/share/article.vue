@@ -76,13 +76,7 @@
             }}
           </div>
           <!-- && planerInfo.mchUserId -->
-          <template
-            v-if="
-              (articleDetails.createrId !== userInfo.userId &&
-                articleDetails.userType == 2) ||
-              !userInfo.userId
-            "
-          >
+          <template>
             <div class="btn">
               <sp-button
                 size="small"
@@ -288,6 +282,7 @@ export default {
     console.log('androdLink', this.androdLink)
     window.addEventListener('scroll', this.handleScroll)
     this.getDetail()
+    console.log('userInfo', this.userInfo)
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
