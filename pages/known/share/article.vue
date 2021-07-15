@@ -1,6 +1,7 @@
 <template>
   <section>
     <ShareModal
+      v-show="articleDetails.title"
       :mch-id="articleDetails.createrId"
       @setPlannerInfo="setPlannerInfo"
     />
@@ -89,6 +90,10 @@
                 >在线问</sp-button
               >
               <sp-button
+                v-if="
+                  (topPlannerInfo.mchUserId && topPlannerInfo.phone) ||
+                  (planerInfo.mchUserId && planerInfo.phone)
+                "
                 size="small"
                 type="info"
                 @click="
@@ -558,7 +563,7 @@ export default {
           areaName: this.city.name,
           customerUserId: this.$store.state.user.userId,
           plannerId: mchUserId,
-          customerPhone: this.planerInfo.phone,
+          customerPhone: this.topPlannerInfo.phone || this.planerInfo.phone,
           requireCode: '',
           requireName: '',
         }
