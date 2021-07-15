@@ -354,7 +354,11 @@ export default {
       align-items: center;
       padding: 10px 30px;
       border-bottom: 1px solid #f4f4f4;
+      > form {
+        width: 100%;
+      }
     }
+
     .bank-list {
       max-height: 80%;
       overflow-y: auto;

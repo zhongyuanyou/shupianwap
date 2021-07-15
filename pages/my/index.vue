@@ -343,10 +343,10 @@ export default {
           name: '待评价',
           type: 'daipingjia',
         },
-        {
-          iconName: 'per_ic_tksh',
-          name: '退款/售后',
-        },
+        // {
+        //   iconName: 'per_ic_tksh',
+        //   name: '退款/售后',
+        // },
       ],
       imgList: {
         tx: '2exrifx8gxes000.png', // 头像
@@ -483,12 +483,12 @@ export default {
           img: this.$ossImgSetV2(this.imgList.about),
           url: '/my/about',
         },
-        {
-          // iconName: 'per_ic_about',
-          name: '我的钱包',
-          img: this.$ossImgSetV2(this.imgList.qianbao),
-          url: '/my/wallet',
-        },
+        // {
+        //   // iconName: 'per_ic_about',
+        //   name: '我的钱包',
+        //   img: this.$ossImgSetV2(this.imgList.qianbao),
+        //   url: '/my/wallet',
+        // },
       ]
     },
   },
