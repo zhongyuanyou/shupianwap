@@ -51,6 +51,8 @@
               placeholder="请填写发票抬头"
               maxlength="100"
               :rules="[{ required: true, message: '请填写发票抬头' }]"
+              @focus="focusFn"
+              @blur="blurFn"
             />
 
             <div v-if="formData.headType === 'COMPANY'">
@@ -61,6 +63,8 @@
                 placeholder="请填写单位税号"
                 maxlength="20"
                 :rules="[{ required: true, message: '请填写单位税号' }]"
+                @focus="focusFn"
+                @blur="blurFn"
               />
               <sp-field
                 v-model="formData.address"
