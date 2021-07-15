@@ -329,8 +329,8 @@ export default {
           knownApi.questionArticle.categoryList,
           {
             params: {
-              type: 1, // 获取企大顺导航
-              // type: store.state.app.isInApp ? 1 : '',
+              // type: 1, // 获取企大顺导航
+              type: store.state.app.isInApp ? 1 : '',
               // type: 1,
             },
           }
