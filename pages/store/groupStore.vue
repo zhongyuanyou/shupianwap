@@ -1,13 +1,13 @@
 <template>
   <div class="m-store group-store">
     <Header title="团队店铺" />
-    <div class="group-swiper">
+    <div v-if="info.banners.length > 0" class="group-swiper">
       <sp-swipe
         class="my-swiper"
         :autoplay="autoplay"
         :show-indicators="indicators"
       >
-        <sp-swipe-item v-for="(item, index) in banners" :key="index">
+        <sp-swipe-item v-for="(item, index) in info.banners" :key="index">
           <a href="javascript:void(0)" class="swiper-box">
             <img :src="item + $ossImgSet(750, 552)" alt="" />
           </a>
@@ -15,9 +15,9 @@
       </sp-swipe>
       <div class="swiper-spaceholder"></div>
     </div>
-    <div class="group-tile">
+    <div v-if="Object.keys(info.teamInfo).length > 0" class="group-tile">
       <sp-image
-        src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+        :src="info.teamInfo.img"
         fit="cover"
         round
         height="1.2rem"
@@ -25,15 +25,16 @@
         class="content-left"
       ></sp-image>
       <div class="content-right">
-        <div class="tile">春天花花团队</div>
-        <div class="desc">
-          团队口号：爱拼才会赢，追求客户的满意，是你我的责任
-        </div>
+        <div class="tile">{{ info.teamInfo.name }}</div>
+        <div class="desc">团队口号：{{ info.teamInfo.profile }}</div>
       </div>
     </div>
-    <div class="company-content">
+    <div v-if="info.mchStoreId" class="company-content" @click="linkMch">
       <sp-image
-        src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+        :src="
+          info.mchLogo ||
+          'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png'
+        "
         fit="cover"
         round
         height="0.9rem"
@@ -41,76 +42,75 @@
         class="content-left"
       ></sp-image>
       <div class="tile-content">
-        <div class="tile">成都晓资风尚文化传媒有成都晓资风尚文化传媒有</div>
+        <div class="tile">{{ info.mchName || '' }}</div>
         <div class="level"></div>
       </div>
       <my-icon name="you" size="0.4rem" color="#BBBBBB"></my-icon>
     </div>
-    <div class="group-server">
+    <div v-if="Object.keys(info.teamService).length > 0" class="group-server">
       <div ref="sticky" class="tile">团队服务</div>
       <div class="server-block">
         <div class="server-block-line1">
           <div class="item">
             <div class="item-res">
-              <span>28</span><span class="unit">人</span>
+              <span>{{ info.teamService.personNum }}</span
+              ><span class="unit">人</span>
             </div>
             <div class="item-desc">团队人数</div>
           </div>
           <div class="item">
             <div class="item-res">
-              <span>788</span><span class="unit">位</span>
+              <span>{{ info.teamService.customerNum }}</span
+              ><span class="unit">位</span>
             </div>
             <div class="item-desc">服务客户</div>
           </div>
           <div class="item">
             <div class="item-res">
-              <span>68</span><span class="unit">人</span>
+              <span>{{ info.teamService.maintenanceNum }}</span
+              ><span class="unit">人</span>
             </div>
             <div class="item-desc">维护商品</div>
           </div>
         </div>
         <div class="server-block-tile">客户满意</div>
         <div class="server-block-custinfo">
-          <div class="item">3分钟响应率：100%</div>
-          <div class="item">电话接通率：100%</div>
+          <div class="item">
+            3分钟响应率：{{ info.teamService.consultResponse }}
+          </div>
+          <div class="item">
+            电话接通率：{{ info.teamService.callThroughRate }}
+          </div>
         </div>
       </div>
     </div>
-    <div id="goodRecommend" class="goods-recommend-wrapper">
+    <div
+      v-if="info.goodsRecommend.length > 0"
+      id="goodRecommend"
+      class="goods-recommend-wrapper"
+    >
       <div class="main-tile">为您推荐</div>
       <div class="tabs">
         <div
+          v-for="(item, index) in info.goodsRecommend"
+          :key="index"
           class="tab"
-          :class="[active === 0 ? 'z-active' : '']"
-          @click="changeTab(0)"
+          :class="[active === index ? 'z-active' : '']"
+          @click="changeTab(index, item.id)"
         >
-          热销专区
-        </div>
-        <div
-          class="tab"
-          :class="[active === 1 ? 'z-active' : '']"
-          @click="changeTab(1)"
-        >
-          活动专区
-        </div>
-        <div
-          class="tab"
-          :class="[active === 2 ? 'z-active' : '']"
-          @click="changeTab(2)"
-        >
-          超值套餐
+          {{item.name}}
         </div>
       </div>
-      <div class="recommend">
+      <div v-if="info.goods.length > 0" class="recommend">
         <div
-          v-for="(item, index) in mockData"
+          v-for="(item, index) in info.goods"
           :key="index"
           class="recommend-item"
         >
           <img :src="item.img" class="image" />
 
           <div class="item-content">
-            <div class="tile">{{ item.tile }}</div>
+            <div class="tile">{{ item.name }}</div>
             <div class="tips">
               <div
                 v-for="(itemTip, indexTip) in item.tips"
@@ -122,7 +122,7 @@
             </div>
             <div class="desc">{{ item.desc }}</div>
             <div class="amount">
-              <div>{{ item.amount }}</div>
+              <div>{{ item.price }}</div>
               <div class="amount-unit">元</div>
             </div>
           </div>
@@ -130,55 +130,30 @@
       </div>
     </div>
     <div class="more-recommend" @click="toClassifyPage">更多优惠</div>
-    <div class="recommend-planner-wrapper">
+    <div v-if="info.planners.length > 0" class="recommend-planner-wrapper">
       <div class="main-tile">推荐规划师</div>
       <div class="recommend-content">
-        <div class="recommend-item">
-          <img
-            class="item-avatar"
-            src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-          />
-          <div class="name">张志毅</div>
-          <img
-            class="line"
-            src="https://cdn.shupian.cn/sp-pt/wap/images/fy75fih34c80000.png"
-          />
-          <div class="score">薯片分577</div>
-          <div class="desc">法律咨询咨寻法律咨询咨寻</div>
-        </div>
-        <div class="recommend-item">
-          <img
-            class="item-avatar"
-            src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-          />
-          <div class="name">刘涛</div>
+        <div
+          v-for="(item, index) in info.planners"
+          :key="index"
+          class="recommend-item"
+        >
+          <img class="item-avatar" :src="item.img" />
+          <div class="name">{{ item.name }}</div>
           <img
             class="line"
             src="https://cdn.shupian.cn/sp-pt/wap/images/fy75fih34c80000.png"
           />
-          <div class="score">薯片分577</div>
-          <div class="desc">法律咨询</div>
-        </div>
-        <div class="recommend-item">
-          <img
-            class="item-avatar"
-            src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-          />
-          <div class="name">张志毅</div>
-          <img
-            class="line"
-            src="https://cdn.shupian.cn/sp-pt/wap/images/fy75fih34c80000.png"
-          />
-          <div class="score">薯片分577</div>
-          <div class="desc">法律咨询</div>
+          <div class="score">薯片分{{ item.score }}</div>
+          <div class="desc">{{ item.category }}</div>
         </div>
       </div>
     </div>
     <transition name="fade">
       <div v-if="stickyFlag" class="group-sticky">
-        <div class="group-tile">
+        <div v-if="Object.keys(info.teamInfo).length > 0" class="group-tile">
           <sp-image
-            src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+            :src="info.teamInfo.img"
             fit="cover"
             round
             height="1.2rem"
@@ -186,10 +161,8 @@
             class="content-left"
           ></sp-image>
           <div class="content-right">
-            <div class="tile">春天花花团队</div>
-            <div class="desc">
-              团队口号：爱拼才会赢，追求客户的满意，是你我的责任
-            </div>
+            <div class="tile">{{ info.teamInfo.name }}</div>
+            <div class="desc">团队口号：{{ info.teamInfo.profile }}</div>
           </div>
         </div>
         <div class="tabs">
@@ -218,6 +191,7 @@
 <script>
 import { Swipe, swipeItem, Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
+import { storeApi } from '@/api'
 
 export default {
   name: 'GroupStore',
@@ -234,27 +208,15 @@ export default {
       active: 0,
       activeMain: 0,
       stickyFlag: false,
-      banners: [
-        'https://cdn.shupian.cn/sp/cms/f6n6b9wvvmo0000.jpg',
-        'https://cdn.shupian.cn/sp/cms/f6n6b9wvvmo0000.jpg',
-        'https://cdn.shupian.cn/sp/cms/f6n6b9wvvmo0000.jpg',
-      ],
-      mockData: [
-        {
-          img: 'https://cdn.shupian.cn/cms/du7tol34xm80000.jpg',
-          tile: '四川**国际融资租赁有限公司',
-          tips: ['店铺干净', '1对1服务', '免手续'],
-          desc: '贸易类 | 一般纳税人 | 3年以上 | 500万',
-          amount: '11350',
-        },
-        {
-          img: 'https://cdn.shupian.cn/cms/du7tol34xm80000.jpg',
-          tile: '成都科技有限公司有限公司有限公司有限公司',
-          tips: ['店铺干净', '1对1服务', '免手续'],
-          desc: '贸易类 | 一般纳税人 | 3年以上 | 500万',
-          amount: '11350',
-        },
-      ],
+      storeId: '768006091074595352',
+      info: {
+        banners: [],
+        goodsRecommend: [],
+        goods: [],
+        teamInfo: {},
+        teamService: {},
+        planners: [],
+      }, // 详情数据
     }
   },
   mounted() {
@@ -262,9 +224,11 @@ export default {
     if (query.storeId) {
       this.storeId = query.storeId
     } else {
+      /*
       this.$xToast.error('获取团队店铺信息失败')
       setTimeout(this.$back(),2000)
       return
+      */
     }
     if (query.active === 0 || query.active) {
       this.active = Number(query.active)
@@ -276,7 +240,7 @@ export default {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
-    changeTab(index) {
+    changeTab(index, typeid) {
       this.active = index
     },
     changeMainTab(index) {
@@ -311,10 +275,29 @@ export default {
     },
     async getGroupInfoApi() {
       try {
-        const res = await 123
+        const params = {
+          storeId: this.storeId,
+        }
+        const { code, data, message } = await this.$axios.get(
+          storeApi.mchStoreInfo,
+          { params }
+        )
+        if (code !== 200) {
+          throw new Error(message)
+        }
+        this.info = data
       } catch (e) {
-        console.log(e)
+        this.$xToast.error(e.message)
+        // setTimeout(this.$back(), 2000)
       }
+    },
+    linkMch() {
+      this.$router.push({
+        path: '/store/merchantsStore',
+        query: {
+          storeId: this.info.mchStoreId,
+        },
+      })
     },
   },
 }
@@ -589,6 +572,7 @@ export default {
       box-sizing: border-box;
       display: flex;
       align-items: center;
+      overflow-y: auto;
       .recommend-item {
         display: flex;
         align-items: center;
@@ -650,6 +634,7 @@ export default {
   }
   .group-sticky {
     position: fixed;
+    width: 100%;
     left: 0;
     top: 88px;
     z-index: 99;
