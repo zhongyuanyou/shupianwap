@@ -84,7 +84,7 @@
         </div>
       </div>
     </div>
-    <div id="goodRecommend" class="goods-recommend-wrapper">
+    <div class="goods-recommend-wrapper">
       <div class="main-tile">为您推荐</div>
       <div class="tabs">
         <div
@@ -228,9 +228,6 @@ export default {
       return
       */
     }
-    if (query.active === 0 || query.active) {
-      this.active = Number(query.active)
-    }
     window.addEventListener('scroll', this.handleScroll)
 
     this.getGroupInfoApi()
@@ -249,19 +246,18 @@ export default {
         return
       }
       if (index === 1) {
-        this.$router.push({
-          path: '/store/groupStoreClassify',
-          query: {
-            active: this.active,
-          },
-        })
+        this.toClassifyPage()
       }
     },
     toClassifyPage() {
+      // 得到tpeid
+      const typeId = this.info.goodsRecommend[this.active].id
       this.$router.push({
         path: '/store/groupStoreClassify',
         query: {
           active: this.active,
+          storeId: this.storeId,
+          typeId,
         },
       })
     },
