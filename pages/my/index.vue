@@ -483,12 +483,12 @@ export default {
           img: this.$ossImgSetV2(this.imgList.about),
           url: '/my/about',
         },
-        // {
-        //   // iconName: 'per_ic_about',
-        //   name: '我的钱包',
-        //   img: this.$ossImgSetV2(this.imgList.qianbao),
-        //   url: '/my/wallet',
-        // },
+        {
+          // iconName: 'per_ic_about',
+          name: '我的钱包',
+          img: this.$ossImgSetV2(this.imgList.qianbao),
+          url: '/my/wallet',
+        },
       ]
     },
   },
