@@ -83,29 +83,10 @@ export default {
     [Icon.name]: Icon,
     HeaderSlot,
   },
-  async asyncData({ store, $axios, query }) {
-    let mustSeeData = []
-    try {
-      const { code, message, data } = await $axios.post(
-        knownApi.questionArticle.list,
-        {
-          categorIds: [query.id],
-          page: 1,
-          limit: 50,
-        }
-      )
-      mustSeeData = data.rows
-    } catch (error) {}
-    return { mustSeeData }
-  },
   data() {
     return {
       showHead: false,
-      categorIds: [],
       mustSeeData: [],
-      name: '',
-      description: '',
-      showPaper: false,
     }
   },
   computed: {
@@ -114,10 +95,12 @@ export default {
       appInfo: (state) => state.app.appInfo, // app信息
     }),
   },
+  created() {
+    if (process.client) {
+      this.getList()
+    }
+  },
   mounted() {
-    this.name = this.$route.query.name
-    this.description = this.$route.query.description
-    // this.init()
     window.addEventListener('scroll', this.handleScroll)
   },
   destroyed() {
@@ -137,27 +120,15 @@ export default {
         path: '/known/',
       })
     },
-    scrollHandle({ scrollTop }) {
-      // 滚动事件
-      if (scrollTop > 160) {
-        this.showPaper = true
-      } else {
-        this.showPaper = false
-      }
-    },
-    init() {
-      this.categorIds.push(this.$route.query.id)
-      this.getList()
-    },
     async getList() {
       // 组装参数
-      const params = {}
-      params.categorIds = this.categorIds
-      params.limit = 50
-      params.page = 1
       const { code, message, data } = await this.$axios.post(
         knownApi.questionArticle.list,
-        params
+        {
+          categorIds: [this.$route.query.id],
+          limit: 50,
+          page: 1,
+        }
       )
       if (code === 200) {
         if (data.rows.length > 0) {

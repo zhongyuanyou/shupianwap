@@ -48,36 +48,15 @@ export default {
   name: 'Recommend',
   components: {
     [Sticky.name]: Sticky,
+    [Icon.name]: Icon,
     ProblemItem,
     HeaderSlot,
   },
-  async asyncData({ store, $axios, query }) {
-    let newspaperData = []
-    try {
-      const { code, message, data } = await $axios.post(
-        knownApi.questionArticle.list,
-        {
-          categorIds: [query.id],
-          page: 1,
-          limit: 50,
-        }
-      )
-      newspaperData = data.rows
-    } catch (error) {}
-    return { newspaperData }
-  },
   data() {
     return {
-      name: '',
       showHead: false,
-      [Icon.name]: Icon,
-      description: '',
-      categorIds: [],
       newspaperData: [],
-      showPaper: false,
       title: '考研复试体检包含什么项目',
-      tabs: ['关注', '推荐', '热榜', '法律', '交易', '知产', '知识'],
-      nowIndex: 2,
       infoList: [
         {
           item: 1,
@@ -95,8 +74,12 @@ export default {
       appInfo: (state) => state.app.appInfo, // app信息
     }),
   },
+  created() {
+    if (process.client) {
+      this.init()
+    }
+  },
   mounted() {
-    this.init()
     window.addEventListener('scroll', this.handleScroll)
   },
   destroyed() {
@@ -112,40 +95,23 @@ export default {
     },
     // 初始化
     init() {
-      this.name = this.$route.query.name
-      this.description = this.$route.query.description
-      this.categorIds.push(this.$route.query.id)
-      // this.getList()
+      this.getList()
       this.getWekDay()
-    },
-    toggleTabs(index) {
-      console.log('index', index)
-      this.nowIndex = index
-    },
-    scrollHandle({ scrollTop }) {
-      // 滚动事件
-      if (scrollTop > 88) {
-        this.showPaper = true
-      } else {
-        this.showPaper = false
-      }
     },
     async getList() {
       // 组装参数
       const params = {}
-      params.categorIds = this.categorIds
-      params.limit = 50
-      params.page = 1
       const { code, message, data } = await this.$axios.post(
         knownApi.questionArticle.list,
-        params
+        {
+          categorIds: [this.$route.query.id],
+          limit: 50,
+          page: 1,
+        }
       )
       if (code === 200) {
         if (data.rows.length > 0) {
           this.newspaperData = data.rows
-        } else {
-          this.attentionStatus = false
-          this.showNotAttention = true
         }
       } else {
         console.log(message)
