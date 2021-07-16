@@ -2,17 +2,18 @@
   <div class="container">
     <p class="planners_title">服务团队</p>
     <div class="planners">
-      <sp-skeleton :row="6" :loading="recommendPlanner.length == 0">
+      <sp-skeleton :row="3" :loading="caseMember.length == 0">
+        <!--    v-for="(item, index) in caseMember"
+          :key="item.userCenterId" -->
         <div
-          v-for="(item, index) in recommendPlanner"
-          :key="item.userCenterId"
+          v-if="caseMember.length > 0"
           class="planners_item"
-          :style="{ marginTop: index === 0 ? '0.42rem' : '0.66rem' }"
+          :style="{ marginTop: '0.42rem' }"
         >
           <div class="planners_item_lf">
             <a
               href="javascript:void(0);"
-              @click="plannerInfoUrlJump(item.mchUserId)"
+              @click="plannerInfoUrlJump(caseMember[0].mchUserId)"
             >
               <sp-image
                 width="0.8rem"
@@ -20,33 +21,34 @@
                 round
                 fit="cover"
                 lazy-load
-                :src="`${item.portrait}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`"
+                :src="`${caseMember[0].portrait}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`"
               />
             </a>
             <div class="info">
               <div class="info_tp">
                 <a
                   href="javascript:void(0);"
-                  @click="plannerInfoUrlJump(item.mchUserId)"
+                  @click="plannerInfoUrlJump(caseMember[0].mchUserId)"
                 >
-                  <p class="name">{{ item.userName }}</p>
+                  <p class="name">{{ caseMember[0].userName }}</p>
                 </a>
 
                 <i class="gold_icon"> 金牌规划师 </i>
               </div>
               <div class="info_bot">
-                <span class="num">{{ Number(item.point) }}</span
+                <span class="num">{{ Number(caseMember[0].point) }}</span
                 ><span class="txt"
-                  >薯片分 | {{ Number(item.payNum) }} 服务次数</span
+                  >薯片分 | {{ Number(caseMember[0].payNum) }} 服务次数</span
                 >
               </div>
             </div>
           </div>
+
           <div class="planners_item_rt">
             <sp-button
               round
               class="contact-btn"
-              @click="sendTemplateMsgWithImg(item.mchUserId, item.type)"
+              @click="sendTemplateMsgWithImg(item.merchantUserId, item.type)"
               ><my-icon
                 class=""
                 name="notify_ic_chat"
@@ -56,7 +58,7 @@
             <sp-button
               round
               class="contact-btn"
-              @click="handleTel(item.mchUserId)"
+              @click="handleTel(item.merchantUserId)"
               ><my-icon
                 class=""
                 name="notify_ic_tel"
@@ -65,12 +67,10 @@
             /></sp-button>
           </div>
         </div>
+
         <div class="team_list">
           <swiper class="swiper" :options="swiperOption">
-            <swiper-slide
-              v-for="item in recommendPlanner"
-              :key="item.userCenterId"
-            >
+            <swiper-slide v-for="item in caseMember" :key="item.userCenterId">
               <div class="team_list_item">
                 <div>
                   <sp-image
@@ -115,15 +115,18 @@ export default {
   },
   mixins: [imHandle],
   props: {
-    recommendPlanner: {
+    /**
+     *  memberRole: "STAFF_MEMBER_SIGN"
+        merchantId: 607997736314103000
+        merchantName: "企大顺测试三公司"
+        merchantUserId: 607997770673841800
+        number: "U2000431134"
+        userId: 607997736314104200
+        userName: "郑利悦"
+     */
+    caseMember: {
       type: Array,
       default: () => [],
-    },
-    imJumpQuery: {
-      type: Object,
-      default: () => {
-        return {}
-      },
     },
   },
   data() {
@@ -144,11 +147,11 @@ export default {
     city() {
       return this.$store.state.city.currentCity
     },
-    // 产品详情
-    sellingDetail() {
-      // 获取客户端展示信息
-      return this.$store.state.sellingGoodsDetail.sellingGoodsData
-    },
+    // // 产品详情
+    // sellingDetail() {
+    //   // 获取客户端展示信息
+    //   return this.$store.state.sellingGoodsDetail.sellingGoodsData
+    // },
   },
   methods: {
     // 规划师详情跳转

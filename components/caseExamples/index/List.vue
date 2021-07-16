@@ -110,7 +110,7 @@ export default {
       padding: 20px;
       background: #f8f8f8;
       margin-top: 30px;
-
+      border-radius: 12px;
       .san_jiao {
         position: absolute;
         top: -16px;

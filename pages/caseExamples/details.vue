@@ -28,11 +28,13 @@
     <!--S 第一板块-->
     <Title :info="caseDetail" />
     <!-- 专家点评 -->
-    <ExpertComments></ExpertComments>
+    <ExpertComments
+      :customer-evaluate="caseDetail.customerEvaluate"
+    ></ExpertComments>
 
-    <!--S 第五板块 推荐规划师-->
-    <ServiceTeam :im-jump-query="imJumpQuery" :recommend-planner="planners" />
-    <!--E 第五板块 推荐规划师-->
+    <!--S 服务团队-->
+    <ServiceTeam :case-member="caseDetail.caseMember" />
+    <!--E 服务团队-->
 
     <!-- 案件简介 -->
     <CaseIntroduction
@@ -42,7 +44,8 @@
     />
 
     <!--S  办理经过-->
-    <OrderCase></OrderCase>
+    <HandlingProcess></HandlingProcess>
+
     <!-- 办理结果 -->
     <CaseIntroduction
       title="办理结果"
@@ -65,7 +68,7 @@ import Title from '@/components/caseExamples/details/Title.vue'
 import CaseIntroduction from '@/components/caseExamples/details/CaseIntroduction.vue'
 
 import CommentBox from '@/components/caseExamples/details/CommentBox.vue'
-import OrderCase from '@/components/caseExamples/details/OrderCase.vue'
+import HandlingProcess from '@/components/caseExamples/details/HandlingProcess.vue'
 
 import ServiceTeam from '@/components/caseExamples/details/ServiceTeam.vue'
 import ExpertComments from '@/components/caseExamples/details/ExpertComments.vue'
@@ -94,7 +97,7 @@ export default {
     bottomBar,
 
     CommentBox,
-    OrderCase,
+    HandlingProcess,
 
     ExpertComments,
   },
