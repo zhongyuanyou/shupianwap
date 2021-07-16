@@ -1,7 +1,7 @@
 <template>
   <div class="m-store group-store">
     <Header title="团队店铺" />
-    <div v-if="info.banners.length > 0" class="group-swiper">
+    <div class="group-swiper">
       <sp-swipe
         class="my-swiper"
         :autoplay="autoplay"
@@ -15,7 +15,7 @@
       </sp-swipe>
       <div class="swiper-spaceholder"></div>
     </div>
-    <div v-if="Object.keys(info.teamInfo).length > 0" class="group-tile">
+    <div class="group-tile">
       <sp-image
         :src="info.teamInfo.img"
         fit="cover"
@@ -47,7 +47,7 @@
       </div>
       <my-icon name="you" size="0.4rem" color="#BBBBBB"></my-icon>
     </div>
-    <div v-if="Object.keys(info.teamService).length > 0" class="group-server">
+    <div class="group-server">
       <div ref="sticky" class="tile">团队服务</div>
       <div class="server-block">
         <div class="server-block-line1">
@@ -84,11 +84,7 @@
         </div>
       </div>
     </div>
-    <div
-      v-if="info.goodsRecommend.length > 0"
-      id="goodRecommend"
-      class="goods-recommend-wrapper"
-    >
+    <div id="goodRecommend" class="goods-recommend-wrapper">
       <div class="main-tile">为您推荐</div>
       <div class="tabs">
         <div
@@ -131,7 +127,7 @@
       </div>
     </div>
     <div class="more-recommend" @click="toClassifyPage">更多优惠</div>
-    <div v-if="info.planners.length > 0" class="recommend-planner-wrapper">
+    <div class="recommend-planner-wrapper">
       <div class="main-tile">推荐规划师</div>
       <div class="recommend-content">
         <div
@@ -236,6 +232,7 @@ export default {
       this.active = Number(query.active)
     }
     window.addEventListener('scroll', this.handleScroll)
+
     this.getGroupInfoApi()
   },
   destroyed() {
@@ -293,6 +290,7 @@ export default {
         const goods = data.goods.slice(0, 4)
         data.goods = goods
         this.info = data
+        return data
       } catch (e) {
         this.$xToast.error(e.message)
         // setTimeout(this.$back(), 2000)
