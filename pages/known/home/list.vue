@@ -178,7 +178,7 @@ export default {
       const { code, message, data } = await this.$axios.post(
         knownApi.home.list,
         {
-          type: this.active,
+          types: [this.active],
           userIds: this.homeUserId || this.userInfo.userId,
           currentUserId: this.userInfo.userId,
           page: this.page,
