@@ -535,7 +535,8 @@ export default {
     align-items: center;
     position: relative;
     .sp-tabs {
-      width: 670px;
+      width: 89.33vw;
+      overflow: hidden;
       ::v-deep.sp-tab {
         font-size: 32px;
         font-weight: bold;
