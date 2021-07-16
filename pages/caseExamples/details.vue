@@ -53,7 +53,6 @@
     <!--E 评论-->
     <CommentBox id="comment" :list="commentdata" />
 
-    <!--E 第十板块 猜你需要-->
     <bottomBar :im-jump-query="imJumpQuery" :planner-info="tcPlannerBooth" />
   </div>
 </template>

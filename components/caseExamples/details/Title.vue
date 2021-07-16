@@ -30,17 +30,21 @@
     </div>
 
     <div class="title_bottom">
-      <div class="title_bottom_button">报价方案</div>
+      <QuotationScheme></QuotationScheme>
+      <!-- <div class="title_bottom_button">报价方案</div> -->
     </div>
   </div>
 </template>
 
 <script>
 import { Image, Icon } from '@chipspc/vant-dgg'
+import QuotationScheme from '@/components/caseExamples/details/QuotationScheme.vue'
+
 export default {
   name: 'Title',
   components: {
     [Image.name]: Image,
+    QuotationScheme,
     // SpIcon: Icon,
   },
   props: {
@@ -148,18 +152,18 @@ export default {
 
   .title_bottom {
     margin-top: 40px;
-    &_button {
-      height: 96px;
-      line-height: 96px;
-      background: #4974f5;
-      border-radius: 8px;
+    // &_button {
+    //   height: 96px;
+    //   line-height: 96px;
+    //   background: #4974f5;
+    //   border-radius: 8px;
 
-      font-family: PingFangSC-Medium;
-      font-weight: bold;
-      font-size: 32px;
-      color: #ffffff;
-      text-align: center;
-    }
+    //   font-family: PingFangSC-Medium;
+    //   font-weight: bold;
+    //   font-size: 32px;
+    //   color: #ffffff;
+    //   text-align: center;
+    // }
   }
 }
 </style>

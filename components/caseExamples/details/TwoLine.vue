@@ -107,15 +107,13 @@ export default {
       // 获取一行文字的height 计算当前文字比较列表文字
 
       const oneHeight = this.$refs.more.scrollHeight
-      console.log('oneHeight', oneHeight)
+
       const twoHeight = oneHeight * 2 || 40
       const txtDom = this.$refs.textContainer
       const curHeight = txtDom.scrollHeight
 
       this.oneHeight = oneHeight
       this.twoHeight = `${twoHeight}px`
-
-      console.log(curHeight, twoHeight)
 
       if (curHeight > twoHeight) {
         this.MoreThanTwoLines = true
@@ -143,18 +141,6 @@ export default {
 .retract {
   overflow: hidden;
 }
-
-// .retract:after {
-//   content: '...';
-//   color: #000000;
-//   position: absolute;
-//   bottom: 0;
-//   right: 0.6rem;
-//   width: 0.6rem;
-//   padding-left: 30px;
-//   background: linear-gradient(to right, transparent, #fff 45%);
-//   // background: #fff;
-// }
 
 .btns {
   position: absolute;
