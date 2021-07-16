@@ -51,6 +51,21 @@ export default {
     ProblemItem,
     HeaderSlot,
   },
+  async asyncData({ store, $axios, query }) {
+    let newspaperData = []
+    try {
+      const { code, message, data } = await $axios.post(
+        knownApi.questionArticle.list,
+        {
+          categorIds: [query.id],
+          page: 1,
+          limit: 50,
+        }
+      )
+      newspaperData = data.rows
+    } catch (error) {}
+    return { newspaperData }
+  },
   data() {
     return {
       name: '',
@@ -100,7 +115,7 @@ export default {
       this.name = this.$route.query.name
       this.description = this.$route.query.description
       this.categorIds.push(this.$route.query.id)
-      this.getList()
+      // this.getList()
       this.getWekDay()
     },
     toggleTabs(index) {

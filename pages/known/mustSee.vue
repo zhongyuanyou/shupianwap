@@ -83,6 +83,21 @@ export default {
     [Icon.name]: Icon,
     HeaderSlot,
   },
+  async asyncData({ store, $axios, query }) {
+    let mustSeeData = []
+    try {
+      const { code, message, data } = await $axios.post(
+        knownApi.questionArticle.list,
+        {
+          categorIds: [query.id],
+          page: 1,
+          limit: 50,
+        }
+      )
+      mustSeeData = data.rows
+    } catch (error) {}
+    return { mustSeeData }
+  },
   data() {
     return {
       showHead: false,
@@ -102,7 +117,7 @@ export default {
   mounted() {
     this.name = this.$route.query.name
     this.description = this.$route.query.description
-    this.init()
+    // this.init()
     window.addEventListener('scroll', this.handleScroll)
   },
   destroyed() {
