@@ -20,7 +20,7 @@
             @click.native="onClickLeft"
           />
         </template>
-        <template #right>
+        <!-- <template #right>
           <sp-icon
             class-prefix="spiconfont"
             class="head__icon-share"
@@ -30,17 +30,17 @@
             style="margin-right: 0.4rem"
             @click.native="onClickRight"
           />
-        </template>
+        </template> -->
       </Header>
     </div>
     <div id="group" class="bg-group-fixed">
         <div class="footer">
             <img
-                :src="detailCodeData.MCH_LOGO"
+                :src="detailData.mchLogo"
                 alt=""
             />
             <div class="footertext">
-            <p>{{detailCodeData.MCH_NAME}}</p>
+            <p>{{detailData.mchName}}</p>
             <p>
                 <img
                 src="https://cdn.shupian.cn/sp-pt/wap/images/7mruoa3go2c0000.png"
@@ -60,26 +60,33 @@
     <div class="body">
         <div class="body-content recommended">
             <sp-tabs v-model="active" @click="tabsClick">
-                <sp-tab v-for="(item,index) in tabsData" :key="index" :title="item.name" :name="item.id" >
+                <sp-tab v-for="(item,index) in detailData.goodsRecommend" :key="index" :title="item.name" :name="item.id" >
                     <ul class="list-data">
-                        <li v-for="(data,dataIndex) in tabsListData" :key="dataIndex">
-                            <img :src="data.img" alt="">
-                            <div>
-                                <p class="title">
-                                    <span>{{data.name}}</span>
-                                </p>
-                                <p class="label">
-                                    <span v-for="(ta,taindex) in data.tags" :key="taindex">{{ta}}</span>
-                                </p>
-                                <p class="type">
-                                    <span v-for="(de,deindex) in data.desc && data.desc.split('|')" :key="deindex">{{de}}</span>
-                                </p>
-                                <p class="moneysee">
-                                    <span>{{data.price}}</span>
-                                    <span>元</span>
-                                </p>
-                            </div>
-                        </li>
+                        <van-list
+                            v-model="refresh.pullUp.status"
+                            :finished="refresh.pullUp.finished"
+                            @load="onLoad"
+                        >
+                            <li v-for="(data,dataIndex) in tabsListData" :key="dataIndex" @click="linkGood(item)">
+                                <img :src="data.img" alt="">
+                                <div>
+                                    <p class="title">
+                                        <span>{{data.name}}</span>
+                                    </p>
+                                    <p class="label">
+                                        <span v-for="(ta,taindex) in data.tags" :key="taindex">{{ta}}</span>
+                                    </p>
+                                    <p class="type">
+                                        <span v-for="(de,deindex) in data.desc && data.desc.split('|')" :key="deindex">{{de}}</span>
+                                    </p>
+                                    <p class="moneysee">
+                                        <span>{{data.price}}</span>
+                                        <span>元</span>
+                                    </p>
+                                </div>
+                            </li>
+                        </van-list>
+                        
                     </ul>
                 </sp-tab>
             </sp-tabs>
@@ -152,6 +159,20 @@ export default {
             recommendedByPlanner:[
 
             ],
+            refresh: {
+                pageIndex:1,
+                pageSize:10,
+                // 下拉加载
+                pullRefresh:{
+                    status:false,
+                    count:0
+                },
+                // 上拉刷新
+                pullUp:{
+                    status: false,
+                    finished: false,
+                }
+            },
             shareOptions: [],
             showShare: false,
         }
@@ -239,6 +260,15 @@ export default {
                 this.floatview = false
             }
         },
+
+        onLoad(){
+            this.refresh.pageIndex++
+            this.getList('onLoad')
+        },
+        changePull(status){
+            this.refresh.pullUp.status = status
+            this.refresh.pullUp.finished = status
+        },
         // 获取详情数据
         async getDetail() {
             try {
@@ -261,47 +291,8 @@ export default {
                     // GOODS_RECOMMEND 商品推荐
                     // SWIPER_IMAGE 轮播图
                     this.detailData = data.data || {}
-                    const obj = {
-                        SERVICE_CUSTOMER_NUM:"",
-                        PERSON_NUM:"",
-                        CALL_THROUGH_RATE:"",
-                        CONSULT_RESPONSE:"",
-                        MAINTENANCE_GOODS_NUM:"",
-                        MCH_NAME:"",
-                        MCH_LOGO:""
-                    }
-                    this.detailData.modules.forEach(item => {
-                        switch(item.code){
-                            case "MCH_SERVICE_DATA":
-                                item.data.forEach(child=>{
-                                    obj[child.code] = child.value
-                                })
-                            break;
-                            case "MCH_BASE_INFO":
-                                item.data.forEach(child=>{
-                                    obj[child.code] = child.value
-                                })
-                            break;
-                            case "GOODS_RECOMMEND":
-                                this.tabsData = item.data
-                                if(this.$route.query.active){
-                                    this.active = this.$route.query.active
-                                }else{
-                                    this.active = this.tabsData[0].id
-                                }
-                                
-                            break;
-                            case "PLANNER_RECOMMEND":
-                                this.recommendedByPlanner = item.data
-                            break;
-                            default:
-                            break;
-                        }
-                    })
-                    this.detailCodeData = obj
-                    this.getList()
                 }
-                
+                this.getList()
                 return data
             } catch (error) {
                 console.error('getDetail:', error)
@@ -315,7 +306,7 @@ export default {
             }
         },
         // 获取列表数据
-        async getList(){
+        async getList(type){
           try {
             const params = { 
               storeId:"1118898494378396293",
@@ -329,9 +320,19 @@ export default {
               },
             })
             if(data.code===200){
-                this.tabsListData = data.data.records || []
+                if(data.data.records){
+                    this.changePull(false)
+                }else{
+                    this.changePull(true)
+                }
+                if (type === "onLoad") {
+                    // 上拉加载
+                    this.tabsListData =[...this.tabsListData , ...data.data.records];
+                } else {
+                    // 下拉刷新
+                    this.tabsListData = this.tabsListData.filter(item=>item.status==='');
+                }
             }
-            
             return data
           } catch (error) {
             console.error('getDetail:', error)
@@ -498,8 +499,27 @@ export default {
             ]
             this.showShare = true
         },
+        linkGood(item) {
+            if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
+                this.$router.push({
+                path: '/detail/transactionDetails',
+                query: {
+                    type: item.typeCode,
+                    productId: item.id,
+                },
+                })
+            } else {
+                this.$router.push({
+                path: '/detail',
+                query: {
+                    productId: item.id,
+                },
+                })
+            }
+        },
         tabsClick(title,name){
             console.log(this.active)
+            this.getList()
         },
         headTabsClick(){
             if(this.headActive==='index'){
@@ -540,6 +560,8 @@ export default {
         > img {
             width: 120px;
             height: 120px;
+            background: url('https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png') no-repeat;
+            background-size: 100% 100%;
             border: 1px solid #FFFFFF;
             border-radius: 50%;
         }
@@ -601,6 +623,8 @@ export default {
             > img {
                 width: 120px;
                 height: 120px;
+                background: url('https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png') no-repeat;
+                background-size: 100% 100%;
                 border: 1px solid #FFFFFF;
                 border-radius: 50%;
             }

@@ -11,14 +11,14 @@
                         style="margin-left: 0.32rem"
                         @click.native="onClickLeft"
                     />
-                    <sp-icon
+                    <!-- <sp-icon
                         class-prefix="spiconfont"
                         name="guanbi"
                         size="0.4rem"
                         :color="floatview?'#fff':'#000'"
                         style="margin-left: 0.36rem"
                         @click.native="onClickLeft"
-                    />
+                    /> -->
                 </template>
                 <!-- <template #right>
                     <sp-icon
