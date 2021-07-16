@@ -69,7 +69,9 @@
         >
           <h1 v-html="item.titleHtml"></h1>
           <div class="box">
-            <div>
+            <div
+              :style="{ 'padding-right': item.contentImageUrl ? '210px' : '0' }"
+            >
               <p v-html="item.contentTextHtml"></p>
               <div v-if="item.contentImageUrl" class="num">
                 <span>{{ item.applaudCount }} 赞同</span>
