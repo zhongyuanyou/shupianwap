@@ -98,7 +98,7 @@
           :class="[active === index ? 'z-active' : '']"
           @click="changeTab(index, item.id)"
         >
-          {{item.name}}
+          {{ item.name }}
         </div>
       </div>
       <div v-if="info.goods.length > 0" class="recommend">
@@ -106,6 +106,7 @@
           v-for="(item, index) in info.goods"
           :key="index"
           class="recommend-item"
+          @click="linkGood(item)"
         >
           <img :src="item.img" class="image" />
 
@@ -137,6 +138,7 @@
           v-for="(item, index) in info.planners"
           :key="index"
           class="recommend-item"
+          @click="linkPlanner(item)"
         >
           <img class="item-avatar" :src="item.img" />
           <div class="name">{{ item.name }}</div>
@@ -242,6 +244,8 @@ export default {
   methods: {
     changeTab(index, typeid) {
       this.active = index
+      // 查询推荐商品
+      this.getGoodsApi(typeid)
     },
     changeMainTab(index) {
       if (index === this.activeMain) {
@@ -285,10 +289,35 @@ export default {
         if (code !== 200) {
           throw new Error(message)
         }
+        // 商品只取4条记录
+        const goods = data.goods.slice(0, 4)
+        data.goods = goods
         this.info = data
       } catch (e) {
         this.$xToast.error(e.message)
         // setTimeout(this.$back(), 2000)
+      }
+    },
+    async getGoodsApi(typeId) {
+      try {
+        const params = {
+          storeId: this.storeId,
+          typeId,
+        }
+        const { code, data, message } = await this.$axios.post(
+          storeApi.recommendGoods,
+          params
+        )
+        if (code !== 200) {
+          throw new Error(message)
+        }
+        const goods = Array.isArray(data.records)
+          ? data.records.slice(0, 4)
+          : []
+        this.info.goods = goods
+      } catch (e) {
+        this.$xToast.error(e.message)
+        this.info.goods = []
       }
     },
     linkMch() {
@@ -296,6 +325,32 @@ export default {
         path: '/store/merchantsStore',
         query: {
           storeId: this.info.mchStoreId,
+        },
+      })
+    },
+    linkGood(item) {
+      if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
+        this.$router.push({
+          path: '/detail/transactionDetails',
+          query: {
+            type: item.typeCode,
+            productId: item.id,
+          },
+        })
+      } else {
+        this.$router.push({
+          path: '/detail',
+          query: {
+            productId: item.id,
+          },
+        })
+      }
+    },
+    linkPlanner(item) {
+      this.$router.push({
+        path: '/planner/detail',
+        query: {
+          mchUserId: item.plannerId,
         },
       })
     },
