@@ -365,6 +365,9 @@ export default {
             this.active = index
           }
         })
+      } else if (this.$store.state.app.isInApp) {
+        // 在企大顺app中默认显示推荐tab
+        this.active = 1
       } else {
         this.active = 2
       }
