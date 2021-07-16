@@ -4,7 +4,7 @@
     <Header title="团队店铺" />
     <div class="group-tile">
       <sp-image
-        src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+        :src="info.teamInfo.img"
         fit="cover"
         round
         height="1.2rem"
@@ -12,10 +12,8 @@
         class="content-left"
       ></sp-image>
       <div class="content-right">
-        <div class="tile">春天花花团队</div>
-        <div class="desc">
-          团队口号：爱拼才会赢，追求客户的满意，是你我的责任
-        </div>
+        <div class="tile">{{ info.teamInfo.name }}</div>
+        <div class="desc">团队口号：{{ info.teamInfo.profile }}</div>
       </div>
     </div>
     <div class="tabs-wrapper">
@@ -40,53 +38,50 @@
     <div class="goods-recommend-wrapper">
       <div class="tabs">
         <div
+          v-for="(item, index) in info.goodsRecommend"
+          :key="index"
           class="tab"
-          :class="[active === 0 ? 'z-active' : '']"
-          @click="changeTab(0)"
+          :class="[active === index ? 'z-active' : '']"
+          @click="changeTab(index, item)"
         >
-          热销专区
-        </div>
-        <div
-          class="tab"
-          :class="[active === 1 ? 'z-active' : '']"
-          @click="changeTab(1)"
-        >
-          活动专区
-        </div>
-        <div
-          class="tab"
-          :class="[active === 2 ? 'z-active' : '']"
-          @click="changeTab(2)"
-        >
-          超值套餐
+          {{ item.name }}
         </div>
       </div>
       <div class="recommend">
-        <div
-          v-for="(item, index) in mockData"
-          :key="index"
-          class="recommend-item"
+        <sp-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          :error.sync="error"
+          error-text="请求失败，点击重新加载"
+          @load="onLoad"
         >
-          <img :src="item.img" class="image" />
+          <div
+            v-for="(item, index) in goods"
+            :key="index"
+            class="recommend-item"
+          >
+            <img :src="item.img" class="image" />
 
-          <div class="item-content">
-            <div class="tile">{{ item.tile }}</div>
-            <div class="tips">
-              <div
-                v-for="(itemTip, indexTip) in item.tips"
-                :key="indexTip"
-                class="tip"
-              >
-                {{ itemTip }}
+            <div class="item-content">
+              <div class="tile">{{ item.name }}</div>
+              <div class="tips">
+                <div
+                  v-for="(itemTip, indexTip) in item.tags"
+                  :key="indexTip"
+                  class="tip"
+                >
+                  {{ itemTip }}
+                </div>
+              </div>
+              <div class="desc">{{ item.desc }}</div>
+              <div class="amount">
+                <div>{{ item.price }}</div>
+                <div class="amount-unit">元</div>
               </div>
             </div>
-            <div class="desc">{{ item.desc }}</div>
-            <div class="amount">
-              <div>{{ item.amount }}</div>
-              <div class="amount-unit">元</div>
-            </div>
-          </div>
-        </div>
+          </div></sp-list
+        >
       </div>
     </div>
     <div class="placeholder"></div>
@@ -94,8 +89,9 @@
 </template>
 
 <script>
-import { Swipe, swipeItem, Image } from '@chipspc/vant-dgg'
+import { Swipe, swipeItem, Image, List } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
+import { storeApi } from '@/api'
 
 export default {
   name: 'GroupStore',
@@ -104,6 +100,7 @@ export default {
     [Swipe.name]: Swipe,
     [swipeItem.name]: swipeItem,
     [Image.name]: Image,
+    [List.name]: List,
   },
   data() {
     return {
@@ -127,16 +124,45 @@ export default {
           amount: '11350',
         },
       ],
+      page: 1,
+      limit: 10,
+      error: false,
+      loading: false,
+      finished: false,
+      storeId: '',
+      info: {
+        teamInfo: {},
+      },
+      goods: [],
+      typeId: '',
     }
   },
   mounted() {
-    if (this.$route.query.active === 0 || this.$route.query.active) {
+    const query = this.$route.query
+    if (query.active === 0 || query.active) {
       this.active = Number(this.$route.query.active)
     }
+    this.storeId = query.storeId
+    this.typeId = query.typeId
+    this.getGroupInfoApi()
   },
   methods: {
-    changeTab(index) {
+    onLoad() {
+      this.getGoodsApi()
+    },
+    changeTab(index, item) {
       this.active = index
+      this.initTab(item)
+      // 查询推荐商品
+      this.onLoad()
+    },
+    initTab(item) {
+      this.loading = true
+      this.finished = false
+      this.error = false
+      this.page = 1
+      this.goods = []
+      this.typeId = item.id
     },
     changeMainTab(index) {
       if (index === this.activeMain) {
@@ -145,10 +171,57 @@ export default {
       if (index === 0) {
         this.$router.push({
           path: '/store/groupStore',
-          query: {
-            active: this.active,
-          },
         })
+      }
+    },
+    async getGoodsApi() {
+      try {
+        const params = {
+          storeId: this.storeId,
+          typeId: this.typeId,
+          page: this.page,
+          limit: this.limit,
+        }
+        const { code, data, message } = await this.$axios.post(
+          storeApi.recommendGoods,
+          params
+        )
+        if (code !== 200) {
+          throw new Error(message)
+        }
+        if (Array.isArray(data.records)) {
+          this.goods.push(...data.records)
+        } else {
+          this.goods = []
+        }
+        this.page++
+        if (data.totalPage === undefined || this.page > data.totalPage) {
+          this.finished = true
+        }
+        this.loading = false
+      } catch (e) {
+        this.$xToast.error(e.message)
+        this.error = true
+        this.goods = []
+        this.loading = false
+      }
+    },
+    async getGroupInfoApi() {
+      try {
+        const params = {
+          storeId: this.storeId,
+        }
+        const { code, data, message } = await this.$axios.get(
+          storeApi.mchStoreInfo,
+          { params }
+        )
+        if (code !== 200) {
+          throw new Error(message)
+        }
+        this.info = data
+      } catch (e) {
+        this.$xToast.error(e.message)
+        // setTimeout(this.$back(), 2000)
       }
     },
   },

@@ -11,16 +11,16 @@
             style="margin-left: 0.32rem"
             @click.native="onClickLeft"
           />
-          <sp-icon
+          <!-- <sp-icon
             class-prefix="spiconfont"
             name="guanbi"
             size="0.4rem"
             color="#1A1A1A"
             style="margin-left: 0.36rem"
             @click.native="onClickLeft"
-          />
+          /> -->
         </template>
-        <!-- <template #right>
+        <template v-if="isInApp" #right>
           <sp-icon
             class-prefix="spiconfont"
             class="head__icon-share"
@@ -30,17 +30,17 @@
             style="margin-right: 0.4rem"
             @click.native="onClickRight"
           />
-        </template> -->
+        </template>
       </Header>
     </div>
     <div id="group" class="bg-group">
         <div class="footer">
             <img
-                :src="detailCodeData.MCH_LOGO"
+                :src="detailData.mchLogo"
                 alt=""
             />
             <div class="footertext">
-            <p>{{detailCodeData.MCH_NAME}}</p>
+            <p>{{detailData.mchName}}</p>
             <p>
                 <img
                 src="https://cdn.shupian.cn/sp-pt/wap/images/7mruoa3go2c0000.png"
@@ -54,11 +54,11 @@
     <div class="bg-group-fixed" :style="floatview?'opacity:1':'opacity:0'">
         <div class="footer">
             <img
-                :src="detailCodeData.MCH_LOGO"
+                :src="detailData.mchLogo"
                 alt=""
             />
             <div class="footertext">
-            <p>{{detailCodeData.MCH_NAME}}</p>
+            <p>{{detailData.mchName}}</p>
             <p>
                 <img
                 src="https://cdn.shupian.cn/sp-pt/wap/images/7mruoa3go2c0000.png"
@@ -78,8 +78,8 @@
     <div class="body">
         <div class="swipe">
             <sp-swipe class="my-swipe" :autoplay="3000" indicator-color="#4974F5">
-                <sp-swipe-item v-for="(item,index) in swiperImage" :key="index">
-                    <img :src="item.img" alt="">
+                <sp-swipe-item v-for="(item,index) in detailData.banners" :key="index">
+                    <img :src="item" alt="">
                 </sp-swipe-item>
             </sp-swipe>
         </div>
@@ -89,7 +89,7 @@
                 <div class="sp-score__score">
                     <div>
                         <p class="sp-score__title">
-                            <span>{{detailCodeData.PERSON_NUM}}</span>
+                            <span>{{detailData.teamService.personNum}}</span>
                             <span>人</span>
                         </p>
                         <p>
@@ -98,7 +98,7 @@
                     </div>
                     <div>
                         <p class="sp-score__title">
-                            <span>{{detailCodeData.SERVICE_CUSTOMER_NUM}}</span>
+                            <span>{{detailData.teamService.customerNum}}</span>
                             <span>位</span>
                         </p>
                         <p>
@@ -107,7 +107,7 @@
                     </div>
                     <div>
                         <p class="sp-score__title">
-                            <span>{{detailCodeData.MAINTENANCE_GOODS_NUM}}</span>
+                            <span>{{detailData.teamService.maintenanceNum}}</span>
                             <span>个</span>
                         </p>
                         <p>
@@ -118,8 +118,8 @@
                 <div class="sp-score__satisfaction">
                     <p>客户满意</p>
                     <div class="satisfactiontext">
-                        <p>3分钟响应率：{{detailCodeData.CONSULT_RESPONSE}}%</p>
-                        <p>电话接通率：{{detailCodeData.CALL_THROUGH_RATE}}%</p>
+                        <p>3分钟响应率：{{detailData.teamService.consultResponse}}%</p>
+                        <p>电话接通率：{{detailData.teamService.callThroughRate}}%</p>
                     </div>
                 </div>
             </div>
@@ -127,12 +127,12 @@
         <div class="body-content recommended">
             <p class="title">为您推荐</p>
             <sp-tabs v-model="active" @click="tabsClick">
-                <sp-tab v-for="(item,index) in tabsData" :key="index" :title="item.name" :name="item.id" >
+                <sp-tab v-for="(item,index) in detailData.goodsRecommend" :key="index" :title="item.name" :name="item.id" >
                     <ul class="list-data">
-                        <li v-for="(data,dataIndex) in tabsListData" :key="dataIndex">
+                        <li v-for="(data,dataIndex) in detailData.goods" :key="dataIndex" @click="linkGood(item)">
                             <img :src="data.img" alt="">
                             <div>
-                                <p class="title" style="margin-top:0">
+                                <p class="title" style="margin:0">
                                     <span>{{data.name}}</span>
                                 </p>
                                 <p class="label">
@@ -156,7 +156,7 @@
             <p class="title">推荐规划师</p>
             <div class="planner">
                 <ul>
-                    <li v-for="(item,index) in recommendedByPlanner" :key="index">
+                    <li v-for="(item,index) in detailData.planners" :key="index" @click="linkPlanner(item)">
                         <img :src="item.img" alt="">
                         <p class="name">
                             <span>
@@ -227,13 +227,13 @@ export default {
         return {
             active: '', // tab状态
             headActive:"index",
-            detailData:{},
-            detailCodeData:{
-                MCH_SERVICE_DATA:[],
-                PLANNER_RECOMMEND:[],
-                MCH_BASE_INFO:[],
-                GOODS_RECOMMEND:[],
-                SWIPER_IMAGE:[]
+            detailData:{
+                goodsRecommend:{
+
+                },
+                teamService:{
+
+                }
             },
             floatview:false, // 滚动置顶
             opacity:1,
@@ -251,12 +251,6 @@ export default {
             ],
             tabsListData: [
             ],
-            // 规划师推荐
-            recommendedByPlanner:[
-
-            ],
-            // 轮播图
-            swiperImage:[],
             shareOptions: [],
             showShare: false,
         }
@@ -346,6 +340,7 @@ export default {
             }
             
         },
+        
         // 获取详情数据
         async getDetail() {
             try {
@@ -368,43 +363,6 @@ export default {
                     // GOODS_RECOMMEND 商品推荐
                     // SWIPER_IMAGE 轮播图
                     this.detailData = data.data || {}
-                    const obj = {
-                        SERVICE_CUSTOMER_NUM:"",
-                        PERSON_NUM:"",
-                        CALL_THROUGH_RATE:"",
-                        CONSULT_RESPONSE:"",
-                        MAINTENANCE_GOODS_NUM:"",
-                        MCH_NAME:"",
-                        MCH_LOGO:""
-                    }
-                    this.detailData.modules.forEach(item => {
-                        switch(item.code){
-                            case "MCH_SERVICE_DATA":
-                                item.data.forEach(child=>{
-                                    obj[child.code] = child.value
-                                })
-                            break;
-                            case "MCH_BASE_INFO":
-                                item.data.forEach(child=>{
-                                    obj[child.code] = child.value
-                                })
-                            break;
-                            case "GOODS_RECOMMEND":
-                                this.tabsData = item.data
-                                this.active = this.tabsData[0].id
-                            break;
-                            case "PLANNER_RECOMMEND":
-                                this.recommendedByPlanner = item.data
-                            break;
-                            case "SWIPER_IMAGE":
-                                this.swiperImage = item.data
-                            break;
-                            default:
-                            break;
-                        }
-                    })
-                    this.detailCodeData = obj
-                    this.getList()
                 }
                 
                 return data
@@ -434,7 +392,7 @@ export default {
               },
             })
             if(data.code===200){
-                this.tabsListData = data.data.records || []
+                this.detailData.goods = data.data.records || []
             }
             
             return data
@@ -617,6 +575,32 @@ export default {
                 })
             }
         },
+        linkPlanner(item) {
+            this.$router.push({
+                path: '/planner/detail',
+                query: {
+                mchUserId: item.plannerId,
+                },
+            })
+        },
+        linkGood(item) {
+            if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
+                this.$router.push({
+                path: '/detail/transactionDetails',
+                query: {
+                    type: item.typeCode,
+                    productId: item.id,
+                },
+                })
+            } else {
+                this.$router.push({
+                path: '/detail',
+                query: {
+                    productId: item.id,
+                },
+                })
+            }
+        },
         moreRem(){
             this.$router.push({
                 path:"/store/hotRecommended",
@@ -643,8 +627,7 @@ export default {
 .merchantsShop {
     .bg-group {
         padding: 60px 40px 84px;
-        background: url('https://cdn.shupian.cn/sp-pt/wap/images/aicz8hyty0c0000.png')
-        no-repeat;
+        background: url('https://cdn.shupian.cn/sp-pt/wap/images/aicz8hyty0c0000.png') no-repeat;
         background-size: 100% 100%;
         font-family: PingFangSC-Regular;
         font-size: 28px;
@@ -658,6 +641,8 @@ export default {
         > img {
             width: 120px;
             height: 120px;
+            background: url('https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png') no-repeat;
+            background-size: 100% 100%;
             border: 1px solid #FFFFFF;
             border-radius: 50%;
         }
@@ -712,7 +697,7 @@ export default {
         line-height: 28px;
         z-index: 2;
         opacity:0;
-        transition: opacity 1s ;
+        transition: opacity .5s ;
         .footer {
             display: flex;
             justify-content: flex-start;
@@ -720,6 +705,8 @@ export default {
             > img {
                 width: 120px;
                 height: 120px;
+                background: url('https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png') no-repeat;
+                background-size: 100% 100%;
                 border: 1px solid #FFFFFF;
                 border-radius: 50%;
             }
@@ -912,14 +899,14 @@ export default {
                             line-height: 42px;
                         }
                         .label{
-                            margin:12px 0 16px 0;
+                            margin:12px 0 0 0;
                             font-family: PingFangSC-Regular;
                             font-size: 22px;
                             color: #5C7499;
                             line-height: 22px;
                             span{
                                 display: inline-block;
-                                margin:0 12px 0 0;
+                                margin:0 12px 12px 0;
                                 padding:5px 8px;
                                 background: #F0F2F5;
                                 border-radius: 4px;
@@ -934,8 +921,11 @@ export default {
                             line-height: 22px;
                             span{
                                 display: inline-block;
-                                padding:0 8px 0 0;
+                                padding:0 8px 0 8px;
                                 border-right: 1px solid #1A1A1A;
+                                &:first-of-type{
+                                    padding-left: 0;
+                                }
                                 &:last-child{
                                     border:none
                                 }

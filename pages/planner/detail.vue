@@ -20,16 +20,16 @@
             style="margin-left: 0.32rem"
             @click.native="onClickLeft"
           />
-          <sp-icon
+          <!-- <sp-icon
             class-prefix="spiconfont"
             name="guanbi"
             size="0.4rem"
             color="#1A1A1A"
             style="margin-left: 0.36rem"
             @click.native="onClickLeft"
-          />
+          /> -->
         </template>
-        <!-- <template #right>
+        <template v-if="isInApp" #right>
           <sp-icon
             class-prefix="spiconfont"
             class="head__icon-share"
@@ -39,7 +39,7 @@
             style="margin-right: 0.4rem"
             @click.native="onClickRight"
           />
-        </template> -->
+        </template>
       </Header>
     </div>
     <div class="body">
@@ -65,7 +65,7 @@
                       height="1.2rem"
                       fit="cover"
                       :src="
-                        detailData.img ||
+                        (newDetailData.photo && newDetailData.photo[0]) ||
                         'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
                       "
                     />
@@ -77,44 +77,48 @@
                   </div>
                   
                   <div>
-                    <h4 class="detail-content__name">{{ detailData.name }}</h4>
+                    <h4 class="detail-content__name">{{ newDetailData.userName }}</h4>
                     <p class="detail-content__discript">
-                      {{ detailData.synopsis }}
+                      {{ newDetailData.merchantName }}
                     </p>
                   </div>
                 </div>
                 <div class="detail-content__label">
                   <p>
-                    <span v-for="tag of formatTagList"
-                    :key="tag">{{ tag }}</span>
+                    <span 
+                      v-for="tag of newDetailData.label"
+                      :key="tag"
+                    >
+                      {{ tag }}
+                    </span>
                   </p>
                   <ul>
                     <li>
                       <div>
                         <img src="https://cdn.shupian.cn/sp-pt/wap/images/8uwqkc0j7lk0000.png" alt="">
-                        <span>17738433321</span>
+                        <span>{{newDetailData.phone}}</span>
                       </div>
-                      <div>
+                      <div v-if="newDetailData.baseInfo.wechat">
                         <img src="https://cdn.shupian.cn/sp-pt/wap/images/9283ol6moao0000.png" alt="">
-                        <span>17738433321</span>
+                        <span>{{newDetailData.baseInfo.wechat}}</span>
                       </div>
                     </li>
-                    <li>
+                    <li v-if="newDetailData.baseInfo.mailbox">
                       <div>
                         <img src="https://cdn.shupian.cn/sp-pt/wap/images/8a8y6ljrlvo0000.png" alt="">
-                        <span>17738433321</span>
+                        <span>{{newDetailData.baseInfo.mailbox}}</span>
                       </div>
                     </li>
                     <li>
                       <div>
                         <img src="https://cdn.shupian.cn/sp-pt/wap/images/e90wl9dbyw00000.png" alt="">
-                        <span>17738433321</span>
+                        <span>{{newDetailData.officeAddress}}</span>
                       </div>
                     </li>
                     <li>
                       <div class="pullstyle">
                         <img src="https://cdn.shupian.cn/sp-pt/wap/images/5lywjoit1as0000.png" alt="">
-                        <span :class="ownerInfo?'textshow':'textoverflow'">啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊阿斯加德苦辣尽快的结案时间看到卡死了的教案设计空间卡时间段里卡就是卡拉圣诞节快乐奥斯卡来得及案例可视对讲拉数据来看大神</span>
+                        <span :class="ownerInfo?'textshow':'textoverflow'">{{newDetailData.baseInfo.lawyerIntro || "--"}}</span>
                       </div>
                     </li>
                     <i 
@@ -142,33 +146,33 @@
                   <li>
                     <span class="label">服务次数：</span>
                     <span class="content">{{
-                      detailData.serveNum ? `${detailData.serveNum}次` : '--'
+                      newDetailData.baseData.peopleServed? `${newDetailData.baseData.peopleServed}次` : '--'
                     }}</span>
                   </li>
                   
                   <li>
                     <span class="label">服务经验：</span>
-                    <span class="content">{{ formatServeAgeText }}</span>
+                    <span class="content">{{ newDetailData.baseData.serviceExperience}}</span>
                   </li>
                   <li>
                     <span class="label">成交次数：</span>
                     <span class="content">{{
-                      detailData.payNum ? `${detailData.payNum}次` : '--'
+                      newDetailData.baseData.dealNumber ? `${newDetailData.baseData.dealNumber}次` : '--'
                     }}</span>
                   </li>
                   <li>
                     <span class="label">平均响应时间：</span>
                     <span class="content">{{
-                      detailData.averageResponseTime
-                        ? `${detailData.averageResponseTime}s`
+                      newDetailData.baseData.responseTime
+                        ? `${newDetailData.baseData.responseTime}s`
                         : '--'
                     }}</span>
                   </li>
                   <li>
                     <span class="label">好评率：</span>
                     <span class="content">{{
-                      detailData.goodReputation
-                        ? `${detailData.goodReputation}%`
+                      newDetailData.baseData.favComRate
+                        ? `${newDetailData.baseData.favComRate}%`
                         : '--'
                     }}</span>
                   </li>
@@ -182,20 +186,22 @@
                   <i class="horizontal-line"></i>
                 </div>
                 <div class="detail-content__sp-score">
-                  {{ detailData.point || '--' }}
+                  {{ newDetailData.point || '--' }}
                 </div>
                 <div v-if="detailData.prop" class="detail-content__level">
                   打败{{ detailData.prop }}的规划师
                 </div>
                 <div class="detail-content__explain">
                   <span>
-                    什么是薯片分
+                    {{newDetailData.pointLevelName}}
                     <my-icon
                       name="plan_ic_explain"
                       size="0.24rem"
                       color="#666666"
-                      @click.native="handlePoint"
+                      @click.native="goScoreDetail"
                     />
+                    <!-- handlePoint -->
+                    <!-- <span @click="goScoreDetail">查看详情</span> -->
                   </span>
                   <!-- 一期没有 详情页面只能影藏掉 -->
                   <!-- <sp-button
@@ -209,26 +215,66 @@
           </div>
         </div>
       </div>
+      <div class="video-content">
+        <div class="video"> 
+          <div class="video-title">
+            <span>05月25日直播回放</span>
+            <span>2.8万人看过</span>
+          </div>
+          <div class="video-player">
+            <i class="spiconfont spiconfont-bofang" style=""></i>
+          </div>
+          <div class="video-footer">
+            <span>领导干部MPA必读核心课程 公共部门经济学</span>
+          </div>
+        </div>
+      </div>
       <div class="recommend" style="padding-bottom: 75px">
         <sp-tabs v-model="active" sticky @scroll="stickyScroll" @click="tabsClick">
           <sp-tab v-for="(item,index) in tabsData" :key="index" :title="item.label" :name="item.value" >
-            <ul class="list-data">
-              <li v-for="(data,dataIndex) in tabsListData" :key="dataIndex">
+            <ul v-if="active==='myQuestion'" class="list-data myQuestion">
+              <li v-for="(data,dataIndex) in newDetailData.content.wenda" :key="dataIndex">
                 <div>
                   <i class="spiconfont spiconfont-huida_mian" style="font-size:24px;color:#FF614E;"></i>
-                  <span>{{data.action}}</span>
+                  <span>{{data.title}}</span>
                 </div>
                 <div>
                   <i class="spiconfont spiconfont-wenti_mian" style="font-size:24px;color:#4974F5;"></i>
                   <p>
-                    <span>{{data.question}}</span>
-                    <img v-if="data.img" :src="data.img" alt="">
+                    <span>{{data.content}}</span>
+                    <img v-if="data.contentImageUrl" :src="data.contentImageUrl" alt="">
                   </p>
                   
                 </div>
                 <div>
                   <i class="empty"></i>
-                  <span>1.8 万点赞 · 5489 评论</span>
+                  <span>{{data.disapplaudCount}} 万点赞 · {{data.remarkCount}} 评论</span>
+                </div>
+              </li>
+            </ul>
+            <ul v-if="active==='myBook'" class="list-data myBook">
+              <li v-for="(data,dataIndex) in newDetailData.content.article" :key="dataIndex">
+                <div>
+                  <p>
+                    <span>{{data.title}}</span>
+                    <img v-if="data.contentImageUrl" :src="data.contentImageUrl" alt="">
+                  </p>
+                </div>
+                <div>
+                  <span>{{data.totalBrowseCount}} 万浏览 · {{data.disapplaudCount}} 点赞 · {{timerUntil(data.createTime)}}</span>
+                </div>
+              </li>
+            </ul>
+            <ul v-if="active==='see'" class="list-data see">
+              <li v-for="(data,dataIndex) in newDetailData.content.hotNews" :key="dataIndex">
+                <div>
+                  <p>
+                    <span>{{data.title}}</span>
+                    <img v-if="data.contentImageUrl" :src="data.contentImageUrl" alt="">
+                  </p>
+                </div>
+                <div>
+                  <span>行业资讯 · {{data.createTime}}</span>
                 </div>
               </li>
             </ul>
@@ -295,15 +341,14 @@ import {
   Tabs,
   Tab
 } from '@chipspc/vant-dgg'
-
 import Header from '@/components/common/head/header'
 import SpToast from '@/components/common/spToast/SpToast'
 // import RecommendList from '@/components/planner/RecommendList'
-
+import { formatDate } from '@/static/js/date'
 import { planner } from '@/api'
 import imHandle from '@/mixins/imHandle'
 import { callPhone, copyToClipboard, setUrlParams } from '@/utils/common'
-
+import { storeApi } from '@/api/store'
 export default {
   name: 'Detail',
   components: {
@@ -326,6 +371,16 @@ export default {
     return {
       loading: true,
       detailData: {},
+      newDetailData:{
+        photo:[],
+        baseInfo:{},
+        baseData:{},
+        content:{
+          wenda:[],
+          article:[],
+          hotNews:[]
+        }
+      },
       shareOptions: [],
       showShare: false,
       isShare: Number(this.$route.query.isShare) === 1, // 默认不是分享页面，从规划师列表进来就不是分享
@@ -336,6 +391,12 @@ export default {
       requireName: this.$route.query.requireName || '', // 隐号拨打需要
       ownerInfo:false ,// 个人信息展开
       titleStatus:true, // 粘性布局触发时去掉头部
+      // 播放设置
+      playerOptions:{
+        poster: '',
+        width:"100%",
+        height:"3.45rem"
+      },
       tabsData:[
         {
           value:"myQuestion",
@@ -437,7 +498,6 @@ export default {
       // 但是在app中登录等，登录信息cookie中的没有更新，导致直接从store中获取到的信息无效
       // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
       this.isInApp && this.clearUserInfo()
-
       this.getDetail().finally(() => {
         this.loading = false
       })
@@ -447,6 +507,7 @@ export default {
     if (!this.city.code) {
       await this.POSITION_CITY({ type: 'init' })
     }
+    
   },
   methods: {
     ...mapActions({
@@ -456,6 +517,52 @@ export default {
       setUserInfo: 'user/SET_USER',
       clearUserInfo: 'user/CLEAR_USER',
     }),
+    goScoreDetail(){
+      this.$router.push({
+        path:"/store/spScoreDetail"
+      })
+    },
+    // 定义视频
+    errorBtnHandle() {
+      // if (this.vId) {
+      //   this.getVideoApi()
+      // } else {
+      //   this.$xToast.error('获取视频信息失败')
+      // }
+    },
+    // 判定时间差值
+    timerUntil(time){
+      let data = ''
+      const today = (new Date()).getTime()
+      // 变为秒
+      const difference = (Number(time) - Number(today))/1000
+      // 1分钟内发布
+      if(difference<60){
+        data = '刚刚'
+      }
+      // 一小时内发布的
+      else if (difference>=60 && difference<3600){
+        data = `${Math.floor(difference/60)}分钟前` 
+      }
+      // 超过一小时小于24小时
+      else if (difference>=3600 && difference<86400){
+        if(formatDate(new Date(time),'dd') === formatDate(new Date(),'dd')){
+          // 仍在当天
+          data = `${Math.floor(difference/3600)}小时前`
+        }else{
+          // 跨天
+          data = `昨天${formatDate(new Date(time),'hh:mm')}`
+        }
+      }
+      // 超过24小时
+      else if (difference>=86400){
+        data = `${formatDate(new Date(time),'yyyy-MM-dd hh:mm')}` 
+      }else{
+        data ='未知时间'
+      }
+      return data
+    },
+    // 当粘粘属性出发时
     stickyScroll(e){
       if(e.isFixed){
         this.titleStatus = false
@@ -799,6 +906,37 @@ export default {
           return
         }
         const params = { id: mchUserId }
+        const newData = await this.$axios.get(storeApi.plannerDetail, 
+          {
+            params:{
+              mchUserId,
+              dataFlg:"1",
+              cardType:"plannerCode"
+            }
+          }, 
+          {
+          headers: {
+              'x-cache-control': 'cache',
+            },
+          }
+        )
+        if(newData.code===200){
+          this.newDetailData = newData.data ||{}
+          this.newDetailData.label = this.newDetailData.label && this.newDetailData.label.split('|')
+          if(this.newDetailData.label && this.newDetailData.label.length>3){
+            this.newDetailData.label = this.newDetailData.label.splice(0,2)
+          }
+          this.newDetailData.content.hotNews.createTime && (this.newDetailData.content.hotNews.createTime = formatDate(new Date(this.newDetailData.content.hotNews.createTime),'yyyy-MM-dd'))
+        }else{
+          this.$xToast.show({
+            message: newData.message || '请求失败！',
+            duration: 1000,
+            forbidClick: false,
+            icon: 'toast_ic_error',
+          })
+        }
+        
+         
         const data = await planner.detail(params)
         this.detailData = data || {}
         return data
@@ -904,7 +1042,7 @@ export default {
           position: relative;
           box-sizing: border-box;
           opacity: 0.8;
-          background: #F9F1E8;
+          background: #EADACD;
           border-radius: 12px;
           padding:29.2px 35.6px;
           .pullImg{
@@ -1088,10 +1226,127 @@ export default {
         width: auto;
       }
     }
+    .video-content{
+      width: 100%;
+      padding:0 40px;
+    }
+    .video{
+      height: 375.2px;
+      background: #CCCCCC;
+      border-radius: 12px;
+      padding: 20px;
+      margin:0 0 90px 0;
+      .video-title{
+        display: flex;
+        span{
+          display: inline-block;
+          font-family: PingFangSC-Medium;
+          font-size: 22px;
+          color: #FFFFFF;
+          letter-spacing: 0;
+          line-height: 40px;
+          &:first-of-type{
+            width: 209px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            background: #4974F5;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+          }
+          &:last-of-type{
+            width: 145px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            background: rgba(0,0,0,0.3);
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+          }
+        }
+      }
+      .video-player{
+        position: relative;
+        width: 96px;
+        height: 96px;
+        margin: 61px auto 36px;
+        background: rgba(0,0,0,0.40);
+        border-radius: 50%;
+        .spiconfont-bofang{
+          position: absolute;
+          top:0;
+          bottom:0;
+          left:0;
+          right:0;
+          width: 27.4px;
+          height: 33.7px;
+          margin:auto;
+          font-size: 30px;
+          color: #FFFFFF;
+          
+        }
+      }
+      .video-footer{
+        font-family: PingFangSC-Medium;
+        font-size: 36px;
+        color: #FFFFFF;
+        line-height: 48px;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.08);
+      }
+    }
     .recommend{
       .list-data{
+        padding:0 40px
+      }
+      .myQuestion{
         li{
-          padding:32px 40px;
+          padding:32px 0;
+          .spiconfont{
+            margin:0 16px 0 0;
+          }
+          div{
+            display: flex;
+            justify-content: flex-start;
+            align-items: normal;
+            margin:0 0 24px 0;
+            >p{
+              display: flex;
+              justify-content: space-between;
+              align-items: normal;
+              img{
+                width: 190px;
+                height: 127px;
+                margin: 0 0 0 40px;
+                background: #F0F0F0;
+                border-radius: 12px;
+              }
+            }
+            &:first-of-type{
+              font-family: PingFangSC-Medium;
+              font-size: 36px;
+              color: #1A1A1A;
+              font-weight: bold;
+            }
+            &:nth-of-type(2){
+              font-family: PingFangSC-Regular;
+              font-size: 30px;
+              color: #555555;
+            }
+            &:last-of-type{
+              margin:0 0 0 55px;
+              font-family: PingFangSC-Regular;
+              font-size: 24px;
+              color: #999999;
+              letter-spacing: 0;
+            }
+          }
+        }
+        
+      }
+      .myBook{
+        li{
+          padding:32px 0;
+          border-bottom:1px solid #f2f2f2;
           .empty{
 
           }
@@ -1119,6 +1374,7 @@ export default {
               font-family: PingFangSC-Medium;
               font-size: 36px;
               color: #1A1A1A;
+              font-weight: bold;
             }
             &:nth-of-type(2){
               font-family: PingFangSC-Regular;
@@ -1126,7 +1382,54 @@ export default {
               color: #555555;
             }
             &:last-of-type{
-              margin:0 0 0 55px;
+              font-family: PingFangSC-Regular;
+              font-size: 24px;
+              color: #999999;
+              letter-spacing: 0;
+            }
+          }
+        }
+        
+      }
+      .see{
+        li{
+          padding:32px 0;
+          border-bottom:1px solid #f2f2f2;
+          .empty{
+
+          }
+          .spiconfont{
+            margin:0 16px 0 0;
+          }
+          div{
+            display: flex;
+            justify-content: flex-start;
+            align-items: normal;
+            margin:0 0 24px 0;
+            >p{
+              display: flex;
+              justify-content: space-between;
+              align-items: normal;
+              img{
+                width: 190px;
+                height: 127px;
+                margin: 0 0 0 40px;
+                background: #F0F0F0;
+                border-radius: 12px;
+              }
+            }
+            &:first-of-type{
+              font-family: PingFangSC-Medium;
+              font-size: 36px;
+              color: #1A1A1A;
+              font-weight: bold;
+            }
+            &:nth-of-type(2){
+              font-family: PingFangSC-Regular;
+              font-size: 30px;
+              color: #555555;
+            }
+            &:last-of-type{
               font-family: PingFangSC-Regular;
               font-size: 24px;
               color: #999999;

@@ -11,16 +11,16 @@
             style="margin-left: 0.32rem"
             @click.native="onClickLeft"
           />
-          <sp-icon
+          <!-- <sp-icon
             class-prefix="spiconfont"
             name="guanbi"
             size="0.4rem"
             color="#1A1A1A"
             style="margin-left: 0.36rem"
             @click.native="onClickLeft"
-          />
+          /> -->
         </template>
-        <!-- <template #right>
+        <template v-if="isInApp" #right>
           <sp-icon
             class-prefix="spiconfont"
             class="head__icon-share"
@@ -30,13 +30,13 @@
             style="margin-right: 0.4rem"
             @click.native="onClickRight"
           />
-        </template> -->
+        </template>
       </Header>
     </div>
     <div class="bg-group">
       <div class="bg-group__head">
         <img
-          :src="detailData.personal.headPortrait"
+          :src="detailData.personal.headPortrait || 'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png'"
           alt=""
         />
         <div class="bg-group__headtext">
@@ -121,25 +121,25 @@
           
           v-md:p_IMClick
           data-im_type="售前"
-          :data-planner_number="detailData.personal.id"
-          :data-planner_name="detailData.personal.name"
-          :data-crisps_fraction="detailData.personal.point"
+          :data-planner_number="IMDetailData.id"
+          :data-planner_name="IMDetailData.name"
+          :data-crisps_fraction="IMDetailData.point"
           :data-track_code="isInApp ? 'SPP000040' : 'SPW000036'"
           type="primary"
           text="电话联系"
-          :disabled="!detailData.id"
+          :disabled="!IMDetailData.id"
           @click="handleCall"
         />
         <sp-bottombar-button
           v-md:p_IMClick
           data-im_type="售前"
-          :data-planner_number="detailData.personal.id"
-          :data-planner_name="detailData.personal.name"
-          :data-crisps_fraction="detailData.personal.point"
+          :data-planner_number="IMDetailData.id"
+          :data-planner_name="IMDetailData.name"
+          :data-crisps_fraction="IMDetailData.point"
           :data-track_code="isInApp ? 'SPP000040' : 'SPW000036'"
           type="info"
           text="在线联系"
-          :disabled="!detailData.id"
+          :disabled="!IMDetailData.id"
           @click="handleIM"
         />
 
@@ -198,6 +198,7 @@ export default {
               modules:[],
               goods:[]
             },
+            IMDetailData:{},
             shareOptions: [],
             showShare: false,
             shlist:{
@@ -215,7 +216,7 @@ export default {
             isApplets: (state) => state.app.isApplets,
         }),
         formatTagList() {
-            const tagList = this.detailData.tagList
+            const tagList = this.IMDetailData.tagList
             if (!Array.isArray(tagList)) return []
             const formatData = tagList.slice(0, 5)
             return formatData
@@ -246,7 +247,7 @@ export default {
             return ''
         },
         formatShowPoint() {
-            const { show } = this.detailData || {}
+            const { show } = this.IMDetailData || {}
             // 分享的页面需要 show:1 才展示薯片分
             if (this.isShare && show !== 1) {
                 return false
@@ -308,14 +309,25 @@ export default {
                     })
                     return
                 }
+                // 详解接口请求数据
                 const params = { mchUserId }
-                const { data } = await this.$axios.get(storeApi.plannerStoreInfo, {params}, {
+                // 详情接口
+                const { data,code,message } = await this.$axios.get(storeApi.plannerStoreInfo, {params}, {
                   headers: {
                     'x-cache-control': 'cache',
                   },
                 })
+                // IM接口请求数据
+                const IMParams = { id: mchUserId }
+                // IM数据
+                const IMData = await planner.detail(IMParams)
+                this.IMDetailData = IMData || {}
+                if(code!==200){
+                  throw new Error(message)
+                }
                 this.active = (data.modules.length>0 && data.modules[0].id) || ""
                 this.detailData = data || {}
+                
                 return data
             } catch (error) {
                 console.error('getDetail:', error)
@@ -392,13 +404,112 @@ export default {
             }
           })
         },
+        // app获取用户信息
+        getUserInfo() {
+          return new Promise((resolve, reject) => {
+            if (this.userInfo.userId) {
+              resolve(this.userInfo.userId)
+              return
+            }
+            this.$appFn.dggGetUserInfo((res) => {
+              const { code, data } = res || {}
+              // 未登录需要登录
+              if (code !== 200) {
+                this.$appFn.dggLogin((loginRes) => {
+                  if (loginRes && loginRes.code === 200) {
+                    console.log('loginRes : ', loginRes)
+                    let loginResData = {}
+                    // 为了兼容 企大顺
+                    if (typeof loginRes.data === 'string') {
+                      try {
+                        loginResData = JSON.parse(loginRes.data)
+                      } catch (error) {
+                        console.error(error)
+                      }
+                    } else {
+                      loginResData = loginRes.data
+                    }
+                    if (loginResData && loginResData.userId && loginResData.token) {
+                      this.setUserInfo(loginResData)
+                      resolve(loginResData.userId)
+                      return
+                    }
+                    reject(new Error('登录后userId或者token缺失'))
+                    return
+                  }
+                  reject(new Error('登录失败'))
+                })
+                return
+              }
+              let userInfo = {}
+              if (typeof data === 'string') {
+                try {
+                  userInfo = JSON.parse(data)
+                } catch (error) {
+                  console.error(error)
+                }
+              } else {
+                userInfo = data
+              }
+              if (userInfo && userInfo.userId && userInfo.token) {
+                this.setUserInfo(userInfo)
+                resolve(userInfo.userId)
+                return
+              }
+              reject(new Error('用户信息中userId或者token缺失'))
+            })
+          })
+        },
+        // 发起聊天
+        async uPIM(data = {}) {
+          const { mchUserId, userName, type } = data
+          // 如果当前页面在app中，则调用原生IM的方法
+          if (this.isInApp) {
+            try {
+              // 需要判断登陆没有，没有登录就是调用登录
+              await this.getUserInfo()
+              this.$appFn.dggOpenIM(
+                {
+                  name: userName,
+                  userId: mchUserId,
+                  userType: type || 'MERCHANT_B',
+                  requireCode: this.requireCode || '',
+                  requireName: this.requireName || '',
+                },
+                (res) => {
+                  const { code } = res || {}
+                  if (code !== 200)
+                    this.$xToast.show({
+                      message: `联系失败`,
+                      duration: 1000,
+                      forbidClick: true,
+                      icon: 'toast_ic_remind',
+                    })
+                }
+              )
+            } catch (error) {
+              console.error('uPIM error:', error)
+            }
+          } else {
+            const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+            // const isLogin = await this.judgeLoginMixin()
+            // if (isLogin) {
+            this.creatImSessionMixin({
+              imUserId: mchUserId,
+              imUserType,
+              requireCode: this.requireCode || '',
+              requireName: this.requireName || '',
+            })
+            // }
+          }
+        },
         handleIM() {
             // const isLogin = await this.judgeLoginMixin()
             // if (isLogin) {
             this.uPIM({
-                mchUserId: this.detailData.id,
-                userName: this.detailData.userName,
-                type: this.detailData.mchClass,
+                mchUserId: this.IMDetailData.id,
+                userName: this.IMDetailData.userName,
+                type: this.IMDetailData.mchClass,
             })
             // } else {
             //   Toast({
@@ -410,15 +521,13 @@ export default {
         },
         async bindhidden() {
             try {
-                console.log(1)
                 const isLogin = await this.judgeLoginMixin()
-                console.log(2)
                 if (isLogin) {
                 const telData = await planner.newtel({
                     areaCode: this.city.code,
                     areaName: this.city.name,
                     customerUserId: this.$store.state.user.userId,
-                    plannerId: this.detailData.id,
+                    plannerId: this.IMDetailData.id,
                     customerPhone:
                     this.$store.state.user.mainAccountFull ||
                     this.$cookies.get('mainAccountFull', { path: '/' }),
@@ -528,8 +637,8 @@ export default {
                 console.log('sharedUrl:', sharedUrl)
                 this.$appFn.dggShare(
                 {
-                    image: this.detailData.img,
-                    title: '规划师',
+                    image: this.IMDetailData.img,
+                    title: '规划师店铺',
                     subTitle: '',
                     url: sharedUrl,
                 },
