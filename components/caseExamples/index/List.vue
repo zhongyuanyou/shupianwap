@@ -11,11 +11,11 @@
           />
         </div>
         <div class="flex_1 list_header_center">
-          <div class="name">案例名称案例名称案例名称案例名称</div>
-          <div class="time">办理周期：28天</div>
+          <div class="name">{{ item.caseName }}</div>
+          <div class="time">办理周期：{{ item.dealTime }}天</div>
         </div>
         <div class="list_header_right">
-          <span class="num">9.6</span>
+          <span class="num">{{ item.caseScore }}</span>
           <span class="unit">分</span>
         </div>
       </div>
@@ -38,9 +38,9 @@ export default {
   },
   props: {
     item: {
-      type: Array,
+      type: Object,
       default() {
-        return []
+        return {}
       },
     },
   },

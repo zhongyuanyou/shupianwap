@@ -8,6 +8,9 @@ const caseApi = {
 
   /**
    * 申请发票
+   * java
+   * @link http://yapi.dgg.cn/project/1334/interface/api/108709
+   * node中间层
    * @link http://yapi.dgg.cn/project/935/interface/api/114533
    * @param {object} params
    * @param {[{column,asc}]} params.orderItems column排序字段,asc：true正序
@@ -32,7 +35,8 @@ const caseApi = {
 
 /**
  * @link http://yapi.dgg.cn/project/935/interface/api/114563
- * @param {*} params
+ * @param {object} params
+ * @param {number} params.id
  * @returns
  */
   case_detail( params) {

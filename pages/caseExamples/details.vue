@@ -26,7 +26,7 @@
     <!--S banner-->
 
     <!--S 第一板块-->
-    <Title />
+    <Title :info="caseDetail" />
     <!-- 专家点评 -->
     <ExpertComments></ExpertComments>
 
@@ -73,7 +73,7 @@ import ExpertComments from '@/components/caseExamples/details/ExpertComments.vue
 import bottomBar from '@/components/detail/bottomBar/index.vue'
 
 import getUserSign from '@/utils/fingerprint'
-import { productDetailsApi, recommendApi, shopApi } from '@/api'
+import { productDetailsApi, caseApi } from '@/api'
 
 import { copyToClipboard } from '@/utils/common'
 import imHandle from '@/mixins/imHandle'
@@ -110,6 +110,8 @@ export default {
 
   data() {
     return {
+      caseDetail: {},
+
       opacity: 0,
       finished: false, // 停止加载更多
       loading: false,
@@ -300,6 +302,7 @@ export default {
     if (!this.city.code) {
       await this.POSITION_CITY({ type: 'init' })
     }
+    this.getDetails()
     // 获取商品图片
     this.getSellingImg()
 
@@ -336,7 +339,50 @@ export default {
         await this.POSITION_CITY({ type: 'init' })
       }
     },
+    getDetails() {
+      caseApi
+        .case_detail({
+          id: this.$route.query.id,
+        })
+        .then((res) => {
+          if (res && res.caseLabel) {
+            res.caseLabel = JSON.parse(res.caseLabel)
+          }
+          if (res && res.detailInfo) {
+            const arr = [
+              'commodityAmountInfo', // 金额明细
+              'caseSynopsis', // 简介明细
+              'caseExperience', // 案例经过
+              'caseResult', // 结果
+              'caseMember', // 案例成员
+              'customerEvaluate', // 客户评价
+              'specialistEvaluate', // 专家评价
+              'caseDetailShow', // 详情展示json
+              'caseCatalog', // 目录json
+            ]
+            arr.map(function (item) {
+              try {
+                if (res.detailInfo[item]) {
+                  res.detailInfo[item] = JSON.parse(res.detailInfo[item])
+                } else {
+                  res.detailInfo[item] = ''
+                }
+              } catch (error) {
+                res.detailInfo[item] = ''
+                console.log(error)
+              }
+            })
+          }
+          console.log(res)
+          console.log('detailInfo', res.detailInfo)
+          this.caseDetail = res || {}
+        })
+        .catch((err) => {
+          this.loading = false
 
+          this.$xToast.error(err.message || '请求失败')
+        })
+    },
     // 获取商品图片
     getSellingImg() {
       // 获取客户端展示信息

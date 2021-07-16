@@ -23,7 +23,7 @@
     >
       <div v-for="(item, index) of list" :key="index">
         <CaseExamplesList
-          :list="item"
+          :item="item"
           @click.native="toDetails('/caseExamples/details', item)"
         ></CaseExamplesList>
       </div>
@@ -32,7 +32,7 @@
     <div v-if="list.length == 0 && loading == false">
       <sp-empty
         class="empty-text"
-        :description="tabActive === 0 ? '暂无优惠券' : '暂无活动卡'"
+        :description="'暂无数据'"
         :image="imgAddress"
       />
     </div>
@@ -68,7 +68,7 @@ import Classify from '@/components/caseExamples/index/Classify.vue'
 import CaseExamplesList from '@/components/caseExamples/index/List.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 
-import { actCard, coupon } from '@/api/index'
+import { caseApi } from '@/api/index'
 
 export default {
   layout: 'keepAlive',
@@ -99,7 +99,7 @@ export default {
       error: false,
       finished: false,
       page: 1,
-      limit: 15,
+      limit: 7,
 
       list: [],
 
@@ -181,37 +181,37 @@ export default {
 
       console.log('执行 onLoad')
 
-      this.getCardList()
+      this.getCaseList()
     },
-    getCardList() {
+    getCaseList() {
       const params = {
-        condition: 1, //
+        orderItems: [
+          {
+            column: 'createTime',
+            asc: true,
+          },
+        ], //
         limit: this.limit,
         page: this.page,
       }
-      actCard
-        .user_act_card_list({ axios: this.$axios }, params)
+      caseApi
+        .case_list(params)
         .then((res) => {
           if (params.page === 1) {
-            this.list = res.rows
+            this.list = res.records
           } else {
-            // this.list.concat(res.rows)
-            this.list = res.rows
+            this.list.concat(res.records)
           }
 
           this.loading = false
           this.page++
           if (this.page > res.totalPage || !res.totalPage) {
             this.finished = true
-            console.log('请求完了')
-          } else {
-            console.log('请求还完了')
           }
         })
         .catch((err) => {
           this.loading = false
           this.error = true
-          this.finished = true
           this.$xToast.error(err.message || '请求失败')
         })
     },

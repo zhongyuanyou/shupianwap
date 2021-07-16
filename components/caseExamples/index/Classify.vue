@@ -30,6 +30,7 @@
             </div>
           </div>
         </div>
+
         <div class="filter-footer">
           <div class="filter-footer-rest">
             <div class="filter-footer-rest-icon">
@@ -135,35 +136,7 @@ export default {
   color: #1a1a1a;
   line-height: 36px;
 }
-.custom {
-  padding: 0px 40px 16px;
 
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  div {
-    text-align: center;
-    background: #f8f8f8;
-    border-radius: 4px;
-    width: 206px;
-    padding: 20px 0;
-    margin-bottom: 24px;
-    font-family: PingFangSC-Regular;
-    font-size: 24px;
-    color: #222222;
-  }
-  .active {
-    border-radius: 4px;
-    width: 206px;
-    padding: 20px 0;
-    margin-bottom: 24px;
-    font-size: 24px;
-    background: #f2f5ff;
-    border-radius: 4px;
-    color: #4974f5;
-    text-align: center;
-  }
-}
 .filter-footer {
   display: flex;
   height: 159px;
