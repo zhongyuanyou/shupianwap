@@ -37,12 +37,14 @@
 
 <script>
 import { Tabs, Tab, Image, List } from '@chipspc/vant-dgg'
+import { mapMutations } from 'vuex'
 import CommentList from '@/components/mustKnown/CommentList'
 import Item from '@/components/mustKnown/home/Item'
 import { knownApi } from '~/api'
 import Header from '@/components/common/head/header'
 export default {
-  name: 'Collection',
+  layout: 'keepAlive',
+  name: 'KnownHomeList',
   components: {
     [Tabs.name]: Tabs,
     [Tab.name]: Tab,
@@ -132,7 +134,24 @@ export default {
   mounted() {
     // window.addEventListener('scroll', this.getScroll)
   },
+  beforeRouteLeave(to, from, next) {
+    if (
+      [
+        'known-detail-answer',
+        'known-detail-article',
+        'known-detail-question',
+      ].includes(to.name)
+    ) {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'KnownHomeList' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'KnownHomeList' })
+    }
+    next()
+  },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     getScroll() {
       const scrollTop =
         window.pageYOffset ||

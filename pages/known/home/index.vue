@@ -193,6 +193,7 @@ import {
   SwipeItem,
   CenterPopup,
 } from '@chipspc/vant-dgg'
+import { mapMutations } from 'vuex'
 import CommentList from '@/components/mustKnown/CommentList'
 import Item from '@/components/mustKnown/home/Item'
 import { knownApi } from '~/api'
@@ -203,7 +204,8 @@ import ShareModal from '@/components/common/ShareModal'
 import { numChangeW } from '@/utils/common'
 
 export default {
-  name: 'Collection',
+  layout: 'keepAlive',
+  name: 'KnownHomeCollection',
   components: {
     [Tabs.name]: Tabs,
     [Tab.name]: Tab,
@@ -326,7 +328,24 @@ export default {
     //   })
     // }
   },
+  beforeRouteLeave(to, from, next) {
+    if (
+      [
+        'known-detail-answer',
+        'known-detail-article',
+        'known-detail-question',
+      ].includes(to.name)
+    ) {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'KnownHomeCollection' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'KnownHomeCollection' })
+    }
+    next()
+  },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     open(item) {
       if (this.isInApp && this.appInfo.appCode === 'CPSAPP') {
         if (this.active === 5) {
