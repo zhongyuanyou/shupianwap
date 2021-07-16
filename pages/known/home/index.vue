@@ -712,7 +712,7 @@ export default {
         height: 180px;
         border-radius: 12px;
         .banner_img {
-          width: 686px;
+          width: 100%;
           height: 180px;
           border-radius: 12px;
         }
