@@ -50,7 +50,7 @@
           name="fenlei"
           size="0.32rem"
           color="#1A1A1A"
-          class="my_icon"
+          class="fenlei_icon"
           @click.native="showPop = true"
         ></my-icon>
       </div>
@@ -533,6 +533,7 @@ export default {
   .category_box {
     display: flex;
     align-items: center;
+    position: relative;
     .sp-tabs {
       width: 670px;
       ::v-deep.sp-tab {
@@ -548,6 +549,13 @@ export default {
     }
     .my_icon {
       margin-left: 10px;
+    }
+    .fenlei_icon {
+      position: absolute;
+      z-index: 9;
+      right: 30px;
+      background: #fff;
+      padding-left: 10px;
     }
   }
   .container_news_see {
