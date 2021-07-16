@@ -586,7 +586,6 @@ export default {
 <style lang="less" scoped>
 .home_container {
   height: 100%;
-  width: 750px;
   background: #fff;
   .header {
     z-index: 10;
