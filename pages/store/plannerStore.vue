@@ -57,7 +57,7 @@
         />
         <div class="bg-group__footertext">
           <p>{{detailData.mchName}}</p>
-          <p>
+          <p v-show="false">
             <img
               src="https://cdn.shupian.cn/sp-pt/wap/images/7mruoa3go2c0000.png"
               alt=""

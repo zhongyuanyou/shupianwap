@@ -494,7 +494,7 @@ export default {
       let data = ''
       const today = (new Date()).getTime()
       // 变为秒
-      const difference = (Number(time) - Number(today))/1000
+      const difference = (Number(today) - Number(time))/1000
       // 1分钟内发布
       if(difference<60){
         data = '刚刚'
@@ -515,7 +515,7 @@ export default {
       }
       // 超过24小时
       else if (difference>=86400){
-        data = `${formatDate(new Date(time),'yyyy-MM-dd hh:mm')}` 
+        data = `${formatDate(new Date(time),'yyyy-MM-dd')}` 
       }else{
         data ='未知时间'
       }
