@@ -41,7 +41,7 @@
             />
             <div class="footertext">
             <p>{{detailData.mchName}}</p>
-            <p>
+            <p v-show="false">
                 <img
                 src="https://cdn.shupian.cn/sp-pt/wap/images/7mruoa3go2c0000.png"
                 alt=""
@@ -118,8 +118,8 @@
                 <div class="sp-score__satisfaction">
                     <p>客户满意</p>
                     <div class="satisfactiontext">
-                        <p>3分钟响应率：{{detailData.teamService.consultResponse}}%</p>
-                        <p>电话接通率：{{detailData.teamService.callThroughRate}}%</p>
+                        <p>3分钟响应率：{{detailData.teamService.consultResponse}}</p>
+                        <p>电话接通率：{{detailData.teamService.callThroughRate}}</p>
                     </div>
                 </div>
             </div>
@@ -129,7 +129,7 @@
             <sp-tabs v-model="active" @click="tabsClick">
                 <sp-tab v-for="(item,index) in detailData.goodsRecommend" :key="index" :title="item.name" :name="item.id" >
                     <ul class="list-data">
-                        <li v-for="(data,dataIndex) in detailData.goods" :key="dataIndex" @click="linkGood(item)">
+                        <li v-for="(data,dataIndex) in detailData.goods" :key="dataIndex" @click="linkGood(data)">
                             <img :src="data.img" alt="">
                             <div>
                                 <p class="title" style="margin:0">
@@ -194,7 +194,7 @@
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
-import { 
+import {
     Bottombar,
     BottombarButton,
     ShareSheet,
@@ -202,7 +202,7 @@ import {
     Tabs,
     Toast,
     Tab ,
-    Swipe, 
+    Swipe,
     SwipeItem
 } from '@chipspc/vant-dgg'
 import { planner } from '@/api'
@@ -240,7 +240,7 @@ export default {
             headTabs:[
                 {
                     value:"index",
-                    label:"主页" 
+                    label:"主页"
                 },
                 {
                     value:"rememded",
@@ -334,13 +334,13 @@ export default {
             const height = group.offsetHeight
             if(scrollTop > height){
                 this.floatview = true
-                
+
             }else{
                 this.floatview = false
             }
-            
+
         },
-        
+
         // 获取详情数据
         async getDetail() {
             try {
@@ -356,15 +356,18 @@ export default {
                 }
                 const params = { storeId }
                 const data  = await this.$axios.get(storeApi.mchStoreInfo, {params})
-                if(data.code===200){
-                    // MCH_SERVICE_DATA 商户服务数据
-                    // PLANNER_RECOMMEND 规划师推荐
-                    // MCH_BASE_INFO 商户基础信息
-                    // GOODS_RECOMMEND 商品推荐
-                    // SWIPER_IMAGE 轮播图
-                    this.detailData = data.data || {}
+                if (data.code !== 200) {
+                    throw new Error(data.message)
                 }
-                
+                // MCH_SERVICE_DATA 商户服务数据
+                // PLANNER_RECOMMEND 规划师推荐
+                // MCH_BASE_INFO 商户基础信息
+                // GOODS_RECOMMEND 商品推荐
+                // SWIPER_IMAGE 轮播图
+                const goods = data.data.goods.slice(0, 4)
+                data.data.goods = goods
+                this.detailData = data.data || {}
+
                 return data
             } catch (error) {
                 console.error('getDetail:', error)
@@ -379,33 +382,34 @@ export default {
         },
         // 获取列表数据
         async getList(){
-          try {
-            const params = { 
-              storeId:"1118898494378396293",
-              typeId:"1118898494378396292",
-              page:1,
-              limit:10
-            }
-            const  data = await this.$axios.post(storeApi.recommendGoods, params, {
-              headers: {
-                'x-cache-control': 'cache',
-              },
-            })
-            if(data.code===200){
+            const { storeId } = this.$route.query
+            try {
+                const params = {
+                    storeId,
+                    typeId:this.active,
+                    page:1,
+                    limit:10
+                }
+                const  {data,code,message} = await this.$axios.post(storeApi.recommendGoods, params, {
+                    headers: {
+                        'x-cache-control': 'cache',
+                    },
+                })
+                if (code !== 200) {
+                    throw new Error(message)
+                }
                 this.detailData.goods = data.data.records || []
+                return data
+            } catch (error) {
+                console.error('getDetail:', error)
+                this.$xToast.show({
+                    message: error.message || '请求失败！',
+                    duration: 1000,
+                    forbidClick: false,
+                    icon: 'toast_ic_error',
+                })
+                return Promise.reject(error)
             }
-            
-            return data
-          } catch (error) {
-            console.error('getDetail:', error)
-            this.$xToast.show({
-                message: error.message || '请求失败！',
-                duration: 1000,
-                forbidClick: false,
-                icon: 'toast_ic_error',
-            })
-            return Promise.reject(error)
-          }
         },
         handleCall() {
             // 如果当前页面在app中，则调用原生拨打电话的方法
@@ -485,7 +489,7 @@ export default {
                     })
                 }
             } catch (err) {
-                
+
                 Toast({
                     message: '未获取到划师联系方式',
                     iconPrefix: 'sp-iconfont',
@@ -570,7 +574,8 @@ export default {
                 this.$router.push({
                     path:"/store/hotRecommended",
                     query:{
-                        active:this.active
+                        active:'',
+                        storeId:this.detailData.id
                     }
                 })
             }
@@ -605,7 +610,8 @@ export default {
             this.$router.push({
                 path:"/store/hotRecommended",
                 query:{
-                    active:this.active
+                    active:this.active,
+                    storeId:this.detailData.id
                 }
             })
         }
@@ -779,7 +785,7 @@ export default {
         position: relative;
         margin: -24px 0 0 0;
         padding: 64px 40px;
-        
+
         background-color: #fff;
         border-top-right-radius: 24px;
         border-top-left-radius: 24px;
@@ -798,7 +804,7 @@ export default {
                         border-radius: 8px;
                     }
                 }
-                
+
             }
             ::v-deep .sp-swipe__indicator{
                 width: 12px;
@@ -821,7 +827,7 @@ export default {
                 font-size: 24px;
                 color: #999999;
                 letter-spacing: 0;
-                
+
             }
             &__title{
                 span{
@@ -876,7 +882,7 @@ export default {
             }
         }
         .recommended {
-        
+
             .title {
                 font-family: PingFangSC-Medium;
                 font-size: 40px;
@@ -955,7 +961,7 @@ export default {
                         }
                     }
                 }
-                
+
             }
             button{
                 width: 100%;
@@ -971,8 +977,8 @@ export default {
                 border:none;
             }
             ::v-deep .sp-tabs__wrap{
-                margin: 0 0 0 -40px;
-                width:80vw
+                // margin: 0 0 0 -40px;
+                // width:80vw
             }
             ::v-deep .sp-tab{
                 font-family: PingFangSC-Regular;
@@ -1024,6 +1030,7 @@ export default {
                             align-items: center;
                             span{
                                 display: inline-block;
+                                vertical-align: middle;
                                 &:first-of-type{
                                     width: 72px;
                                     height: 2px;
@@ -1033,6 +1040,7 @@ export default {
                                 &:nth-of-type(2){
                                     width: 4px;
                                     height: 4px;
+                                    margin: 0 8px;
                                     background: #DDDDDD;
                                     border-radius: 50%;
                                 }
