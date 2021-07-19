@@ -9,7 +9,7 @@
 
 <template>
   <div class="detail">
-    <div v-if="!hideHeader && !isApplets" class="head">
+    <div v-if="!hideHeader && !isApplets && titleStatus" class="head">
       <Header title="规划师">
         <template #left>
           <sp-icon
@@ -17,15 +17,23 @@
             name="nav_ic_back"
             size="0.4rem"
             color="#1A1A1A"
-            style="margin-left: 0.4rem"
+            style="margin-left: 0.32rem"
             @click.native="onClickLeft"
           />
+          <!-- <sp-icon
+            class-prefix="spiconfont"
+            name="guanbi"
+            size="0.4rem"
+            color="#1A1A1A"
+            style="margin-left: 0.36rem"
+            @click.native="onClickLeft"
+          /> -->
         </template>
-        <template #right>
+        <template v-if="isInApp" #right>
           <sp-icon
             class-prefix="spiconfont"
             class="head__icon-share"
-            name="nav_ic_share"
+            name="fenxiang"
             size="0.4rem"
             color="#1A1A1A"
             style="margin-right: 0.4rem"
@@ -57,7 +65,7 @@
                       height="1.2rem"
                       fit="cover"
                       :src="
-                        detailData.img ||
+                        (newDetailData.photo && newDetailData.photo[0]) ||
                         'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
                       "
                     />
@@ -67,22 +75,70 @@
                       >{{ detailData.title }}</span
                     >
                   </div>
+                  
                   <div>
-                    <h4 class="detail-content__name">{{ detailData.name }}</h4>
+                    <h4 class="detail-content__name">{{ newDetailData.userName }}</h4>
                     <p class="detail-content__discript">
-                      {{ detailData.synopsis }}
+                      {{ newDetailData.merchantName }}
                     </p>
                   </div>
                 </div>
-
-                <div class="detail-content__tag-list">
+                <div class="detail-content__label">
+                  <p>
+                    <span 
+                      v-for="tag of newDetailData.label"
+                      :key="tag"
+                    >
+                      {{ tag }}
+                    </span>
+                  </p>
+                  <ul>
+                    <li>
+                      <div>
+                        <img src="https://cdn.shupian.cn/sp-pt/wap/images/8uwqkc0j7lk0000.png" alt="">
+                        <span>{{newDetailData.phone}}</span>
+                      </div>
+                      <div v-if="newDetailData.baseInfo.wechat">
+                        <img src="https://cdn.shupian.cn/sp-pt/wap/images/9283ol6moao0000.png" alt="">
+                        <span>{{newDetailData.baseInfo.wechat}}</span>
+                      </div>
+                    </li>
+                    <li v-if="newDetailData.baseInfo.mailbox">
+                      <div>
+                        <img src="https://cdn.shupian.cn/sp-pt/wap/images/8a8y6ljrlvo0000.png" alt="">
+                        <span>{{newDetailData.baseInfo.mailbox}}</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <img src="https://cdn.shupian.cn/sp-pt/wap/images/e90wl9dbyw00000.png" alt="">
+                        <span>{{newDetailData.officeAddress}}</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="pullstyle">
+                        <img src="https://cdn.shupian.cn/sp-pt/wap/images/5lywjoit1as0000.png" alt="">
+                        <span :class="ownerInfo?'textshow':'textoverflow'">{{newDetailData.baseInfo.lawyerIntro || "--"}}</span>
+                      </div>
+                    </li>
+                    <i 
+                      class="spiconfont pullImg" 
+                      :class="ownerInfo?'spiconfont-shangla':'spiconfont-xiala'"
+                      style="font-size:8px;"
+                      @click="ownerInfo = !ownerInfo"
+                    ></i>
+                  </ul>
+                  
+                </div>
+                <!-- <div class="detail-content__tag-list">
                   <sp-tag
                     v-for="tag of formatTagList"
                     :key="tag"
                     class="detail-content__tag-list-item"
                     >{{ tag }}</sp-tag
                   >
-                </div>
+                  
+                </div> -->
               </div>
               <div class="detail-content__wrap-body">
                 <div class="detail-content__section-title">个人信息</div>
@@ -90,36 +146,38 @@
                   <li>
                     <span class="label">服务次数：</span>
                     <span class="content">{{
-                      detailData.serveNum ? `${detailData.serveNum}次` : '--'
+                      newDetailData.baseData.peopleServed? `${newDetailData.baseData.peopleServed}次` : '--'
                     }}</span>
                   </li>
-                  <li>
-                    <span class="label">好评率：</span>
-                    <span class="content">{{
-                      detailData.goodReputation
-                        ? `${detailData.goodReputation}%`
-                        : '--'
-                    }}</span>
-                  </li>
+                  
                   <li>
                     <span class="label">服务经验：</span>
-                    <span class="content">{{ formatServeAgeText }}</span>
+                    <span class="content">{{ newDetailData.baseData.serviceExperience}}</span>
                   </li>
                   <li>
-                    <span class="label">成交记录：</span>
+                    <span class="label">成交次数：</span>
                     <span class="content">{{
-                      detailData.payNum ? `${detailData.payNum}次` : '--'
+                      newDetailData.baseData.dealNumber ? `${newDetailData.baseData.dealNumber}次` : '--'
                     }}</span>
                   </li>
                   <li>
                     <span class="label">平均响应时间：</span>
                     <span class="content">{{
-                      detailData.averageResponseTime
-                        ? `${detailData.averageResponseTime}s`
+                      newDetailData.baseData.responseTime
+                        ? `${newDetailData.baseData.responseTime}s`
+                        : '--'
+                    }}</span>
+                  </li>
+                  <li>
+                    <span class="label">好评率：</span>
+                    <span class="content">{{
+                      newDetailData.baseData.favComRate
+                        ? `${newDetailData.baseData.favComRate}%`
                         : '--'
                     }}</span>
                   </li>
                 </ul>
+                
               </div>
               <div v-show="formatShowPoint" class="detail-content__wrap-footer">
                 <div class="detail-content__section-title flex-r-sb flex-r-a-c">
@@ -128,20 +186,22 @@
                   <i class="horizontal-line"></i>
                 </div>
                 <div class="detail-content__sp-score">
-                  {{ detailData.point || '--' }}
+                  {{ newDetailData.point || '--' }}
                 </div>
                 <div v-if="detailData.prop" class="detail-content__level">
                   打败{{ detailData.prop }}的规划师
                 </div>
                 <div class="detail-content__explain">
                   <span>
-                    什么是薯片分
+                    {{newDetailData.pointLevelName}}
                     <my-icon
                       name="plan_ic_explain"
                       size="0.24rem"
                       color="#666666"
-                      @click.native="handlePoint"
+                      @click.native="goScoreDetail"
                     />
+                    <!-- handlePoint -->
+                    <!-- <span @click="goScoreDetail">查看详情</span> -->
                   </span>
                   <!-- 一期没有 详情页面只能影藏掉 -->
                   <!-- <sp-button
@@ -155,19 +215,91 @@
           </div>
         </div>
       </div>
+      <div class="video-content">
+        <div class="video"> 
+          <div class="video-title">
+            <span>05月25日直播回放</span>
+            <span>2.8万人看过</span>
+          </div>
+          <div class="video-player">
+            <i class="spiconfont spiconfont-bofang" style=""></i>
+          </div>
+          <div class="video-footer">
+            <span>领导干部MPA必读核心课程 公共部门经济学</span>
+          </div>
+        </div>
+      </div>
       <div class="recommend" style="padding-bottom: 75px">
-        <RecommendList :mch-detail-id="detailData.mchDetailId" />
+        <sp-tabs v-model="active" sticky @scroll="stickyScroll" @click="tabsClick">
+          <sp-tab v-for="(item,index) in tabsData" :key="index" :title="item.label" :name="item.value" >
+            <ul v-if="active==='myQuestion'" class="list-data myQuestion">
+              <li v-for="(data,dataIndex) in newDetailData.content.wenda" :key="dataIndex">
+                <div>
+                  <i class="spiconfont spiconfont-huida_mian" style="font-size:24px;color:#FF614E;"></i>
+                  <span>{{data.title}}</span>
+                </div>
+                <div>
+                  <i class="spiconfont spiconfont-wenti_mian" style="font-size:24px;color:#4974F5;"></i>
+                  <p>
+                    <span>{{data.content}}</span>
+                    <img v-if="data.contentImageUrl" :src="data.contentImageUrl" alt="">
+                  </p>
+                  
+                </div>
+                <div>
+                  <i class="empty"></i>
+                  <span>{{data.disapplaudCount}} 万点赞 · {{data.remarkCount}} 评论</span>
+                </div>
+              </li>
+            </ul>
+            <ul v-if="active==='myBook'" class="list-data myBook">
+              <li v-for="(data,dataIndex) in newDetailData.content.article" :key="dataIndex">
+                <div>
+                  <p>
+                    <span>{{data.title}}</span>
+                    <img v-if="data.contentImageUrl" :src="data.contentImageUrl" alt="">
+                  </p>
+                </div>
+                <div>
+                  <span>{{data.totalBrowseCount}} 万浏览 · {{data.disapplaudCount}} 点赞 · {{timerUntil(data.createTime)}}</span>
+                </div>
+              </li>
+            </ul>
+            <ul v-if="active==='see'" class="list-data see">
+              <li v-for="(data,dataIndex) in newDetailData.content.hotNews" :key="dataIndex">
+                <div>
+                  <p>
+                    <span>{{data.title}}</span>
+                    <img v-if="data.contentImageUrl" :src="data.contentImageUrl" alt="">
+                  </p>
+                </div>
+                <div>
+                  <span>行业资讯 · {{data.createTime}}</span>
+                </div>
+              </li>
+            </ul>
+          </sp-tab>
+        </sp-tabs>
+        <!-- <RecommendList :mch-detail-id="detailData.mchDetailId" /> -->
       </div>
     </div>
     <div class="footer">
       <sp-bottombar safe-area-inset-bottom>
-        <sp-bottombar-button
+        <div class="phone" @click="goShop">
+          <i class="spiconfont spiconfont-xiaodian" style="font-size:24px"></i>
+          <p>小店</p>
+        </div>
+        <div class="phone" @click="handleCall">
+          <i class="spiconfont spiconfont-dianhua" style="font-size:24px"></i>
+          <p>电话</p>
+        </div>
+        <!-- <sp-bottombar-button
           v-if="!hideIM"
           type="primary"
           text="电话联系"
           :disabled="!detailData.phone"
           @click="handleCall"
-        />
+        /> -->
         <sp-bottombar-button
           v-if="!hideIM"
           v-md:p_IMClick
@@ -177,7 +309,7 @@
           :data-crisps_fraction="detailData.point"
           :data-track_code="isInApp ? 'SPP000040' : 'SPW000036'"
           type="info"
-          text="在线联系"
+          text="在线咨询"
           :disabled="!detailData.id"
           @click="handleIM"
         />
@@ -206,16 +338,17 @@ import {
   BottombarButton,
   ShareSheet,
   Toast,
+  Tabs,
+  Tab
 } from '@chipspc/vant-dgg'
-
 import Header from '@/components/common/head/header'
 import SpToast from '@/components/common/spToast/SpToast'
-import RecommendList from '@/components/planner/RecommendList'
-
+// import RecommendList from '@/components/planner/RecommendList'
+import { formatDate } from '@/static/js/date'
 import { planner } from '@/api'
 import imHandle from '@/mixins/imHandle'
 import { callPhone, copyToClipboard, setUrlParams } from '@/utils/common'
-
+import { storeApi } from '@/api/store'
 export default {
   name: 'Detail',
   components: {
@@ -228,14 +361,26 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [ShareSheet.name]: ShareSheet,
     Header,
-    RecommendList,
     SpToast,
+    SpTabs:Tabs,
+    SpTab:Tab,
+    // RecommendList,
   },
   mixins: [imHandle],
   data() {
     return {
       loading: true,
       detailData: {},
+      newDetailData:{
+        photo:[],
+        baseInfo:{},
+        baseData:{},
+        content:{
+          wenda:[],
+          article:[],
+          hotNews:[]
+        }
+      },
       shareOptions: [],
       showShare: false,
       isShare: Number(this.$route.query.isShare) === 1, // 默认不是分享页面，从规划师列表进来就不是分享
@@ -244,8 +389,59 @@ export default {
       redirectType: this.$route.query.redirectType || 'wap', // 跳转的到 wap里面还是app里面去
       requireCode: this.$route.query.requireCode || '', // 隐号拨打需要
       requireName: this.$route.query.requireName || '', // 隐号拨打需要
+      ownerInfo:false ,// 个人信息展开
+      titleStatus:true, // 粘性布局触发时去掉头部
+      // 播放设置
+      playerOptions:{
+        poster: '',
+        width:"100%",
+        height:"3.45rem"
+      },
+      tabsData:[
+        {
+          value:"myQuestion",
+          label:"我的回答"
+        },
+        {
+          value:"myBook",
+          label:"我的文章"
+        },
+        {
+          value:"see",
+          label:"热门资讯"
+        },
+      ],
+      tabsListData:[
+        {
+          action:"二级资质能街多大标的工程?",
+          question:"我们会验证资质的信息，在国家住建局都能差的到的",
+          zan:"18500",
+          pl:"5489"
+        },
+        {
+          action:"请问现在开办一个公司需要准备什么需要准备什么",
+          question:"我们会验证资质的信息，在国家住建局都能查的到的，验证真伪。",
+          zan:"18500",
+          pl:"5489",
+          img:"https://cdn.shupian.cn/sp-pt/wap/images/cfu3wwitnuw0000.png"
+        },
+        {
+          action:"请问现在开办一个公司需要准备什么需要准备什么",
+          question:"我们会验证资质的信息，在国家住建局都能查的到的，验证真伪。",
+          zan:"18500",
+          pl:"5489",
+        },
+        {
+          action:"请问现在开办一个公司需要准备什么需要准备什么",
+          question:"我们会验证资质的信息，在国家住建局都能查的到的，验证真伪。",
+          zan:"18500",
+          pl:"5489",
+        }
+      ],
+      active:"myQuestion" // tab状态
     }
   },
+  
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
@@ -302,7 +498,6 @@ export default {
       // 但是在app中登录等，登录信息cookie中的没有更新，导致直接从store中获取到的信息无效
       // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
       this.isInApp && this.clearUserInfo()
-
       this.getDetail().finally(() => {
         this.loading = false
       })
@@ -312,6 +507,7 @@ export default {
     if (!this.city.code) {
       await this.POSITION_CITY({ type: 'init' })
     }
+    
   },
   methods: {
     ...mapActions({
@@ -321,6 +517,62 @@ export default {
       setUserInfo: 'user/SET_USER',
       clearUserInfo: 'user/CLEAR_USER',
     }),
+    goScoreDetail(){
+      this.$router.push({
+        path:"/store/spScoreDetail"
+      })
+    },
+    // 定义视频
+    errorBtnHandle() {
+      // if (this.vId) {
+      //   this.getVideoApi()
+      // } else {
+      //   this.$xToast.error('获取视频信息失败')
+      // }
+    },
+    // 判定时间差值
+    timerUntil(time){
+      let data = ''
+      const today = (new Date()).getTime()
+      // 变为秒
+      const difference = (Number(time) - Number(today))/1000
+      // 1分钟内发布
+      if(difference<60){
+        data = '刚刚'
+      }
+      // 一小时内发布的
+      else if (difference>=60 && difference<3600){
+        data = `${Math.floor(difference/60)}分钟前` 
+      }
+      // 超过一小时小于24小时
+      else if (difference>=3600 && difference<86400){
+        if(formatDate(new Date(time),'dd') === formatDate(new Date(),'dd')){
+          // 仍在当天
+          data = `${Math.floor(difference/3600)}小时前`
+        }else{
+          // 跨天
+          data = `昨天${formatDate(new Date(time),'hh:mm')}`
+        }
+      }
+      // 超过24小时
+      else if (difference>=86400){
+        data = `${formatDate(new Date(time),'yyyy-MM-dd hh:mm')}` 
+      }else{
+        data ='未知时间'
+      }
+      return data
+    },
+    // 当粘粘属性出发时
+    stickyScroll(e){
+      if(e.isFixed){
+        this.titleStatus = false
+      }else{
+        this.titleStatus = true
+      }
+    },
+    tabsClick(title,name){
+      console.log(this.active)
+    },
     onClickLeft() {
       console.log('nav onClickLeft')
       this.uPGoBack()
@@ -328,6 +580,36 @@ export default {
     onClickRight() {
       console.log('nav onClickRight')
       this.uPShareOption()
+    },
+    async goShop(){
+      // console.log(1)
+      // this.$router.push({
+      //   path:"/planner/plannerShop/index",
+      //   query:{
+      //     a:"1"
+      //   }
+      // })
+      try {
+        const isLogin = await this.judgeLoginMixin()
+        if (isLogin) {
+          this.$router.push({
+            path:"/store/plannerStore",
+            query:this.$route.query
+          })
+        } else {
+          Toast({
+            message: '请先登录账号',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+        }
+      } catch (err) {
+        Toast({
+          message: '未获取到划师联系方式',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
+      }
     },
     handleCall() {
       // 如果当前页面在app中，则调用原生拨打电话的方法
@@ -624,6 +906,37 @@ export default {
           return
         }
         const params = { id: mchUserId }
+        const newData = await this.$axios.get(storeApi.plannerDetail, 
+          {
+            params:{
+              mchUserId,
+              dataFlg:"1",
+              cardType:"plannerCode"
+            }
+          }, 
+          {
+          headers: {
+              'x-cache-control': 'cache',
+            },
+          }
+        )
+        if(newData.code===200){
+          this.newDetailData = newData.data ||{}
+          this.newDetailData.label = this.newDetailData.label && this.newDetailData.label.split('|')
+          if(this.newDetailData.label && this.newDetailData.label.length>3){
+            this.newDetailData.label = this.newDetailData.label.splice(0,2)
+          }
+          this.newDetailData.content.hotNews.createTime && (this.newDetailData.content.hotNews.createTime = formatDate(new Date(this.newDetailData.content.hotNews.createTime),'yyyy-MM-dd'))
+        }else{
+          this.$xToast.show({
+            message: newData.message || '请求失败！',
+            duration: 1000,
+            forbidClick: false,
+            icon: 'toast_ic_error',
+          })
+        }
+        
+         
         const data = await planner.detail(params)
         this.detailData = data || {}
         return data
@@ -686,7 +999,7 @@ export default {
       &__bg {
         padding: 40px;
         position: relative;
-        background: url(https://cdn.shupian.cn/sp-pt/wap/images/fmyco4fucsg0000.png)
+        background: url(https://cdn.shupian.cn/sp-pt/wap/images/cfu3wwitnuw0000.png)
           top center/100% auto no-repeat;
         background-position-y: -286px;
       }
@@ -695,7 +1008,7 @@ export default {
       }
       &__wrap {
         // height: 768px;
-        background: linear-gradient(135deg, #f9f1e8, #f9f1e8, #e3d1c3);
+        background-image: linear-gradient(134deg, #F9F1E8 0%, #F9F1E8 50%, #E3D1C3 100%);
         border-radius: 8px;
         padding: 48px 40px;
         box-sizing: border-box;
@@ -704,6 +1017,7 @@ export default {
         }
         &-footer {
           margin-top: 14px;
+          
         }
       }
       &__avatar {
@@ -711,6 +1025,80 @@ export default {
         height: 120px;
         margin-right: 24px;
         position: relative;
+      }
+      &__label{
+        font-size: 24px;
+        p{
+          margin:23px 0 32px 0;
+          span{
+            display: inline-block;
+            margin:0 12px 0 0 ;
+            padding:13px 16px;
+            background: #EADACD;
+            border-radius: 4px;
+          }
+        }
+        ul{
+          position: relative;
+          box-sizing: border-box;
+          opacity: 0.8;
+          background: #EADACD;
+          border-radius: 12px;
+          padding:29.2px 35.6px;
+          .pullImg{
+            position: absolute;
+            right:32px;
+            bottom:38px;
+            &::before{
+              display: block;
+              width: 12px;
+              height: 6.7px;
+            }
+            
+          }
+          li{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin:0 0 28px 0;
+            &:last-of-type{
+              margin: 0;
+            }
+            div{
+              img{
+                width:24px;
+                height: 24px;
+                margin:0 14px 0 0;
+                vertical-align: middle;
+              }
+              span{
+                vertical-align: middle;
+                
+              }
+              
+            }
+            .pullstyle{
+              display: flex;
+              justify-content: space-between;
+              img{
+                margin:0 24px 0 0;
+              }
+              span{
+                transition: all 0.3s;
+                width: 468px;
+              }
+              .textshow{
+                max-height: 200px;
+              }
+              .textoverflow{
+                max-height: 50px;
+                overflow:hidden;
+                text-overflow:ellipsis;
+                white-space:nowrap;
+              }
+            }
+          }
+        }
       }
       &__title {
         content: '';
@@ -838,14 +1226,251 @@ export default {
         width: auto;
       }
     }
+    .video-content{
+      width: 100%;
+      padding:0 40px;
+    }
+    .video{
+      height: 375.2px;
+      background: #CCCCCC;
+      border-radius: 12px;
+      padding: 20px;
+      margin:0 0 90px 0;
+      .video-title{
+        display: flex;
+        span{
+          display: inline-block;
+          font-family: PingFangSC-Medium;
+          font-size: 22px;
+          color: #FFFFFF;
+          letter-spacing: 0;
+          line-height: 40px;
+          &:first-of-type{
+            width: 209px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            background: #4974F5;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+          }
+          &:last-of-type{
+            width: 145px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            background: rgba(0,0,0,0.3);
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+          }
+        }
+      }
+      .video-player{
+        position: relative;
+        width: 96px;
+        height: 96px;
+        margin: 61px auto 36px;
+        background: rgba(0,0,0,0.40);
+        border-radius: 50%;
+        .spiconfont-bofang{
+          position: absolute;
+          top:0;
+          bottom:0;
+          left:0;
+          right:0;
+          width: 27.4px;
+          height: 33.7px;
+          margin:auto;
+          font-size: 30px;
+          color: #FFFFFF;
+          
+        }
+      }
+      .video-footer{
+        font-family: PingFangSC-Medium;
+        font-size: 36px;
+        color: #FFFFFF;
+        line-height: 48px;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.08);
+      }
+    }
+    .recommend{
+      .list-data{
+        padding:0 40px
+      }
+      .myQuestion{
+        li{
+          padding:32px 0;
+          .spiconfont{
+            margin:0 16px 0 0;
+          }
+          div{
+            display: flex;
+            justify-content: flex-start;
+            align-items: normal;
+            margin:0 0 24px 0;
+            >p{
+              display: flex;
+              justify-content: space-between;
+              align-items: normal;
+              img{
+                width: 190px;
+                height: 127px;
+                margin: 0 0 0 40px;
+                background: #F0F0F0;
+                border-radius: 12px;
+              }
+            }
+            &:first-of-type{
+              font-family: PingFangSC-Medium;
+              font-size: 36px;
+              color: #1A1A1A;
+              font-weight: bold;
+            }
+            &:nth-of-type(2){
+              font-family: PingFangSC-Regular;
+              font-size: 30px;
+              color: #555555;
+            }
+            &:last-of-type{
+              margin:0 0 0 55px;
+              font-family: PingFangSC-Regular;
+              font-size: 24px;
+              color: #999999;
+              letter-spacing: 0;
+            }
+          }
+        }
+        
+      }
+      .myBook{
+        li{
+          padding:32px 0;
+          border-bottom:1px solid #f2f2f2;
+          .empty{
+
+          }
+          .spiconfont{
+            margin:0 16px 0 0;
+          }
+          div{
+            display: flex;
+            justify-content: flex-start;
+            align-items: normal;
+            margin:0 0 24px 0;
+            >p{
+              display: flex;
+              justify-content: space-between;
+              align-items: normal;
+              img{
+                width: 190px;
+                height: 127px;
+                margin: 0 0 0 40px;
+                background: #F0F0F0;
+                border-radius: 12px;
+              }
+            }
+            &:first-of-type{
+              font-family: PingFangSC-Medium;
+              font-size: 36px;
+              color: #1A1A1A;
+              font-weight: bold;
+            }
+            &:nth-of-type(2){
+              font-family: PingFangSC-Regular;
+              font-size: 30px;
+              color: #555555;
+            }
+            &:last-of-type{
+              font-family: PingFangSC-Regular;
+              font-size: 24px;
+              color: #999999;
+              letter-spacing: 0;
+            }
+          }
+        }
+        
+      }
+      .see{
+        li{
+          padding:32px 0;
+          border-bottom:1px solid #f2f2f2;
+          .empty{
+
+          }
+          .spiconfont{
+            margin:0 16px 0 0;
+          }
+          div{
+            display: flex;
+            justify-content: flex-start;
+            align-items: normal;
+            margin:0 0 24px 0;
+            >p{
+              display: flex;
+              justify-content: space-between;
+              align-items: normal;
+              img{
+                width: 190px;
+                height: 127px;
+                margin: 0 0 0 40px;
+                background: #F0F0F0;
+                border-radius: 12px;
+              }
+            }
+            &:first-of-type{
+              font-family: PingFangSC-Medium;
+              font-size: 36px;
+              color: #1A1A1A;
+              font-weight: bold;
+            }
+            &:nth-of-type(2){
+              font-family: PingFangSC-Regular;
+              font-size: 30px;
+              color: #555555;
+            }
+            &:last-of-type{
+              font-family: PingFangSC-Regular;
+              font-size: 24px;
+              color: #999999;
+              letter-spacing: 0;
+            }
+          }
+        }
+        
+      }
+      ::v-deep .sp-sticky{
+        background: #fff;
+      }
+      ::v-deep .sp-tabs__wrap{
+        width:80vw
+      }
+      ::v-deep .sp-tab{
+        font-family: PingFangSC-Regular;
+        font-size: 30px;
+        color: #999999;
+      }
+      ::v-deep .sp-tab--active{
+        font-family: PingFangSC-Medium;
+        font-size: 32px;
+        color: #222222;
+      }
+      ::v-deep .sp-tabs__line{
+        width: 28px;
+        height: 6px;
+        background: #4974F5;
+        border-radius: 3px;
+      }
+    }
   }
   .footer {
+    .phone{
+      font-size: 24px;
+      margin:0 44px 0 0;
+      text-align: center;
+    }
     ::v-deep.sp-bottombar {
       z-index: 100;
-      .sp-button--info {
-        background-color: #24ae68;
-        border: 1px solid #24ae68;
-      }
     }
   }
   .item-wrap {
