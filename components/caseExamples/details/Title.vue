@@ -2,29 +2,36 @@
   <div class="title">
     <div class="flex title_tags">
       <div class="flex_1 title_tags_left">
-        <span class="title_tags_item">视频看房</span>
-        <span class="title_tags_item">视频看房</span>
-        <span class="title_tags_item">视频看房</span>
+        <div v-if="info.caseLabel">
+          <span
+            v-for="item of info.caseLabel"
+            :key="item.labelCode"
+            class="title_tags_item"
+            >{{ item.labelName }}</span
+          >
+        </div>
       </div>
       <div class="title_tags_right">
         <my-icon name="login_ic_look" size="0.24rem" color="#4974F5" />
-        <span class="view">9999</span>
+        <span class="view">{{ info.caseDefaultRead }}</span>
       </div>
     </div>
 
-    <p class="title_btitle">股份有限公司注册，公司资本为股份所组成的公司</p>
+    <p class="title_btitle">{{ info.caseName }}</p>
 
     <div class="title_info flex">
       <div class="flex_1">
-        <div class="title_info_num">2999元</div>
+        <div class="title_info_num">{{ info.commodityAmount }}元</div>
         价格
       </div>
       <div class="flex_1">
-        <div class="title_info_num">22天</div>
+        <div class="title_info_num">{{ info.dealTime }}天</div>
         办理周期
       </div>
       <div class="flex_1">
-        <div class="title_info_num">四川成,都广元</div>
+        <div class="title_info_num">
+          {{ info.dealProvince }}{{ info.dealCity }}
+        </div>
         注册区域
       </div>
     </div>
@@ -48,13 +55,9 @@ export default {
     // SpIcon: Icon,
   },
   props: {
-    comment: {
-      type: String,
-      default: '',
-    },
-    sellingGoodsData: {
+    info: {
       type: Object,
-      default: () => {
+      default() {
         return {}
       },
     },
@@ -63,11 +66,7 @@ export default {
     return {}
   },
   computed: {},
-  methods: {
-    commentfn() {
-      this.$emit('onComment')
-    },
-  },
+  methods: {},
 }
 </script>
 

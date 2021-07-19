@@ -34,7 +34,12 @@ import { formApi } from './form'
 import { walletApi } from './wallet'
 import { invoiceApi } from './invoice'
 import actCard from './actCard.js' // 活动卡
+import {caseApi} from './case.js' // 活动卡
+
 import { storeApi } from './store' // 店铺中心接口
+
+
+export {caseApi}
 export { actCard }
 export { auth, shoppingCar, planner }
 export { category }

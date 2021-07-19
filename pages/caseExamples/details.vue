@@ -26,13 +26,15 @@
     <!--S banner-->
 
     <!--S 第一板块-->
-    <Title />
+    <Title :info="caseDetail" />
     <!-- 专家点评 -->
-    <ExpertComments></ExpertComments>
+    <ExpertComments
+      :customer-evaluate="caseDetail.customerEvaluate"
+    ></ExpertComments>
 
-    <!--S 第五板块 推荐规划师-->
-    <ServiceTeam :im-jump-query="imJumpQuery" :recommend-planner="planners" />
-    <!--E 第五板块 推荐规划师-->
+    <!--S 服务团队-->
+    <ServiceTeam :case-member="caseDetail.caseMember" />
+    <!--E 服务团队-->
 
     <!-- 案件简介 -->
     <CaseIntroduction
@@ -42,7 +44,8 @@
     />
 
     <!--S  办理经过-->
-    <OrderCase></OrderCase>
+    <HandlingProcess></HandlingProcess>
+
     <!-- 办理结果 -->
     <CaseIntroduction
       title="办理结果"
@@ -65,7 +68,7 @@ import Title from '@/components/caseExamples/details/Title.vue'
 import CaseIntroduction from '@/components/caseExamples/details/CaseIntroduction.vue'
 
 import CommentBox from '@/components/caseExamples/details/CommentBox.vue'
-import OrderCase from '@/components/caseExamples/details/OrderCase.vue'
+import HandlingProcess from '@/components/caseExamples/details/HandlingProcess.vue'
 
 import ServiceTeam from '@/components/caseExamples/details/ServiceTeam.vue'
 import ExpertComments from '@/components/caseExamples/details/ExpertComments.vue'
@@ -73,7 +76,7 @@ import ExpertComments from '@/components/caseExamples/details/ExpertComments.vue
 import bottomBar from '@/components/detail/bottomBar/index.vue'
 
 import getUserSign from '@/utils/fingerprint'
-import { productDetailsApi, recommendApi, shopApi } from '@/api'
+import { productDetailsApi, caseApi } from '@/api'
 
 import { copyToClipboard } from '@/utils/common'
 import imHandle from '@/mixins/imHandle'
@@ -94,7 +97,7 @@ export default {
     bottomBar,
 
     CommentBox,
-    OrderCase,
+    HandlingProcess,
 
     ExpertComments,
   },
@@ -110,6 +113,8 @@ export default {
 
   data() {
     return {
+      caseDetail: {},
+
       opacity: 0,
       finished: false, // 停止加载更多
       loading: false,
@@ -300,6 +305,7 @@ export default {
     if (!this.city.code) {
       await this.POSITION_CITY({ type: 'init' })
     }
+    this.getDetails()
     // 获取商品图片
     this.getSellingImg()
 
@@ -336,7 +342,50 @@ export default {
         await this.POSITION_CITY({ type: 'init' })
       }
     },
+    getDetails() {
+      caseApi
+        .case_detail({
+          id: this.$route.query.id,
+        })
+        .then((res) => {
+          if (res && res.caseLabel) {
+            res.caseLabel = JSON.parse(res.caseLabel)
+          }
+          if (res && res.detailInfo) {
+            const arr = [
+              'commodityAmountInfo', // 金额明细
+              'caseSynopsis', // 简介明细
+              'caseExperience', // 案例经过
+              'caseResult', // 结果
+              'caseMember', // 案例成员
+              'customerEvaluate', // 客户评价
+              'specialistEvaluate', // 专家评价
+              'caseDetailShow', // 详情展示json
+              'caseCatalog', // 目录json
+            ]
+            arr.map(function (item) {
+              try {
+                if (res.detailInfo[item]) {
+                  res.detailInfo[item] = JSON.parse(res.detailInfo[item])
+                } else {
+                  res.detailInfo[item] = ''
+                }
+              } catch (error) {
+                res.detailInfo[item] = ''
+                console.log(error)
+              }
+            })
+          }
+          console.log(res)
+          console.log('detailInfo', res.detailInfo)
+          this.caseDetail = res || {}
+        })
+        .catch((err) => {
+          this.loading = false
 
+          this.$xToast.error(err.message || '请求失败')
+        })
+    },
     // 获取商品图片
     getSellingImg() {
       // 获取客户端展示信息
