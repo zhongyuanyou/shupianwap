@@ -7,14 +7,14 @@
       <div class="content">
         <div class="sum">
           <div class="name">整体费用</div>
-          <div class="price">899.6</div>
+          <div class="price">{{ sum }}</div>
           <div class="unit">万元</div>
         </div>
 
-        <div v-for="item of 9" :key="item" class="list">
+        <div v-for="(item, index) of info" :key="index" class="list">
           <div class="icon"></div>
-          <div class="name">整体费用</div>
-          <div class="price">899.6</div>
+          <div class="name">{{ item.name }}</div>
+          <div class="price">{{ item.amount }}</div>
           <div class="unit">万元</div>
         </div>
       </div>
@@ -29,10 +29,30 @@ export default {
     [ActionSheet.name]: ActionSheet,
     // SpIcon: Icon,
   },
+  props: {
+    info: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
+  },
   data() {
     return {
       show: false,
     }
+  },
+  computed: {
+    sum() {
+      if (this.info.length > 0) {
+        let sum = 0
+        this.info.map((item) => {
+          sum += parseFloat(item.amount) || 0
+        })
+        return sum
+      }
+      return 0
+    },
   },
 }
 </script>

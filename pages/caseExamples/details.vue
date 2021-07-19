@@ -27,20 +27,16 @@
 
     <!--S 第一板块-->
     <Title :info="caseDetail" />
-    <!-- 专家点评 -->
-    <ExpertComments
-      :customer-evaluate="caseDetail.customerEvaluate"
-    ></ExpertComments>
 
     <!--S 服务团队-->
-    <ServiceTeam :case-member="caseDetail.caseMember" />
+    <ServiceTeam :case-member="caseDetail.member" />
     <!--E 服务团队-->
 
     <!-- 案件简介 -->
     <CaseIntroduction
       title="案例简介"
-      text="尤其是有很多流浪都是有铁粉的，我理解铁粉不是应该一开始关注随着时间推长。"
-      :images="[1, 1, 1, 1, 1, 1]"
+      :text="caseInfo.content"
+      :images="caseInfo.picture"
     />
 
     <!--S  办理经过-->
@@ -52,6 +48,11 @@
       text="山东省潍坊市中级人民法院于2009年10月14日以(2009) 潍刑一初字第35号刑事判决 潍刑一初字第35号刑事判决潍刑一初字第35号刑事判决"
       :images="[1, 2]"
     />
+
+    <!-- 专家点评 -->
+    <ExpertComments
+      :info="getDataFromDetailInfo('expertEvaluation')"
+    ></ExpertComments>
 
     <!--E 评论-->
     <CommentBox id="comment" :list="commentdata" />
@@ -291,6 +292,18 @@ export default {
     city() {
       return this.$store.state.city.currentCity
     },
+
+    caseInfo() {
+      const caseInfo = this.getDataFromDetailInfo('caseInfo')
+
+      if (caseInfo && caseInfo.show && caseInfo.show[0]) {
+        return {
+          content: caseInfo.show[0].content,
+          picture: [caseInfo.show[0].picture],
+        }
+      }
+      return {}
+    },
   },
   created() {
     for (let i = 0; i < 3; i++) {
@@ -342,6 +355,18 @@ export default {
         await this.POSITION_CITY({ type: 'init' })
       }
     },
+
+    getDataFromDetailInfo(key) {
+      // ['1',"processing",'caseInfo',"hHauR8vs78n2brXYuBia1G","caseResult", "expertEvaluation","UserReviews"]
+      let info = {}
+      if (this?.caseDetail?.detailInfo?.infos) {
+        info = this.caseDetail.detailInfo.infos.find((item) => {
+          return item.key === key
+        })
+      }
+      console.log(key, info)
+      return info.show || []
+    },
     getDetails() {
       caseApi
         .case_detail({
@@ -352,12 +377,13 @@ export default {
             res.caseLabel = JSON.parse(res.caseLabel)
           }
           if (res && res.detailInfo) {
+            res.detailInfo = JSON.parse(res.detailInfo)
             const arr = [
               'commodityAmountInfo', // 金额明细
               'caseSynopsis', // 简介明细
               'caseExperience', // 案例经过
               'caseResult', // 结果
-              'caseMember', // 案例成员
+              'members', // 案例成员
               'customerEvaluate', // 客户评价
               'specialistEvaluate', // 专家评价
               'caseDetailShow', // 详情展示json

@@ -5,17 +5,21 @@
     </div>
     <div class="report_con">
       <div class="result">
-        <p class="score">{{ num }}</p>
+        <p class="score">{{ newInfo.fraction }}</p>
         <p class="txt">评估结果：<span>优秀</span></p>
       </div>
 
       <div class="process">
-        <div v-for="(item, index) of list" :key="index" class="process_item">
+        <div
+          v-for="(item, index) of newInfo.dimension"
+          :key="index"
+          class="process_item"
+        >
           <p class="title">{{ item.name }}</p>
           <div class="process_item_line no_margin">
-            <sp-progress :show-pivot="false" :percentage="item.val" />
+            <sp-progress :show-pivot="false" :percentage="item.fraction" />
           </div>
-          <p class="process_item_score">{{ item.val }}</p>
+          <p class="process_item_score">{{ item.fraction }}</p>
         </div>
       </div>
     </div>
@@ -33,10 +37,10 @@
             src="https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0"
           ></sp-image>
         </div>
-        <div class="report_user_info_name">用户名</div>
+        <div class="report_user_info_name">专家评语</div>
       </div>
       <div class="report_user_content">
-        最常见的定义是：“主题是文章中通过具体材料所表达的基本思想。”这个定义由来已久，似无庸置疑，但仔细想来，它似有片面之嫌。常识告诉我们：文章是表情达意的工具。这个定义只及“达意”（表达的基本思想），而不及“表情”，岂不为缺漏？或谓“达意”。
+        {{ newInfo.content }}
       </div>
     </div>
   </div>
@@ -50,46 +54,46 @@ export default {
     [Progress.name]: Progress,
     [Image.name]: Image,
   },
+  props: {
+    info: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
+  },
   data() {
     return {
       num: 99,
-      list: [
-        {
-          name: '接单速度',
-          val: 99.99,
-        },
-        {
-          name: '接单速度',
-          val: 99,
-        },
-        {
-          name: '接单速度',
-          val: 9.1,
-        },
-        {
-          name: '接单速度',
-          val: 99,
-        },
-        {
-          name: '接单速度',
-          val: 99,
-        },
-        {
-          name: '接单速度',
-          val: 99,
-        },
-        {
-          name: '接单速度',
-          val: 99,
-        },
-        {
-          name: '接单速度',
-          val: 99,
-        },
-      ],
     }
   },
-  computed: {},
+  computed: {
+    newInfo() {
+      let content = '' // 评价内容
+      let fraction = '' // "综合评分"
+
+      const dimension = [] // 评价维度
+
+      console.log(this.info)
+
+      if (this.info.length > 0) {
+        content = this.info[0].expertEvaluation[1].content
+
+        fraction = this.info[0].expertEvaluation[0].infos[0].fraction
+
+        for (
+          let i = 1;
+          i < this.info[0].expertEvaluation[0].infos.length;
+          i++
+        ) {
+          const element = this.info[0].expertEvaluation[0].infos[i]
+          dimension.push(element)
+        }
+      }
+
+      return { content, fraction, dimension }
+    },
+  },
   mounted() {},
   methods: {},
 }
@@ -167,6 +171,7 @@ export default {
 
         .title {
           margin-right: 20px;
+          min-width: 120px;
         }
         &_line {
           flex: 1;
@@ -187,6 +192,7 @@ export default {
   }
 
   .report_user {
+    padding-top: 64px;
     .report_user_info {
       display: flex;
       flex-direction: row;
