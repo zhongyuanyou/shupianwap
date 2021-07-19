@@ -45,6 +45,7 @@ const infoList = [
   'order-invoice-headEdit',
   'order-invoice-invoiceApply',
   'order-invoice-preview',
+  'myDemandCard-index',
   'my-coupon',
 ]
 // const getInfo = function () {
