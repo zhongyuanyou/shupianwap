@@ -1,6 +1,17 @@
 <template>
   <div class="m-store group-store">
-    <Header title="团队店铺" />
+    <Header title="团队店铺">
+      <template v-if="isInApp" #right>
+        <my-icon
+          class-prefix="spiconfont"
+          class="head__icon-share"
+          name="fenxiang"
+          size="0.4rem"
+          color="#1A1A1A"
+          style="margin-right: 0.4rem"
+          @click.native="handleShare"
+        ></my-icon> </template
+    ></Header>
     <div class="group-swiper">
       <sp-swipe
         class="my-swiper"
@@ -187,9 +198,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { Swipe, swipeItem, Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import { storeApi } from '@/api'
+import { setUrlParams } from '@/utils/common'
 
 export default {
   name: 'GroupStore',
@@ -206,7 +219,7 @@ export default {
       active: 0,
       activeMain: 0,
       stickyFlag: false,
-      storeId: '768006091074595352',
+      storeId: '', // 768006091074595352
       info: {
         banners: [],
         goodsRecommend: [],
@@ -217,16 +230,19 @@ export default {
       }, // 详情数据
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   mounted() {
     const query = this.$route.query
     if (query.storeId) {
       this.storeId = query.storeId
     } else {
-      /*
       this.$xToast.error('获取团队店铺信息失败')
       setTimeout(this.$back(),2000)
       return
-      */
     }
     window.addEventListener('scroll', this.handleScroll)
 
@@ -289,7 +305,7 @@ export default {
         return data
       } catch (e) {
         this.$xToast.error(e.message)
-        // setTimeout(this.$back(), 2000)
+        setTimeout(this.$back(), 2000)
       }
     },
     async getGoodsApi(typeId) {
@@ -347,6 +363,35 @@ export default {
           mchUserId: item.plannerId,
         },
       })
+    },
+    handleShare() {
+      if (this.isInApp) {
+        const url = window && window.location.href
+        const sharedUrl = setUrlParams(url, { isShare: 1 })
+        console.log('sharedUrl:', sharedUrl)
+        this.$appFn.dggShare(
+          {
+            image: this.detailData.img,
+            title: '规划师',
+            subTitle: '',
+            url: sharedUrl,
+          },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '分享失败！',
+                duration: 1500,
+                forbidClick: false,
+                icon: 'toast_ic_remind',
+              })
+            }
+          }
+        )
+        return
+      }
+      this.shareOptions = [{ name: '复制链接', icon: 'link' }]
+      this.showShare = true
     },
   },
 }
@@ -677,9 +722,10 @@ export default {
     }
   }
   .placeholder {
+    background: #fff;
     height: 64px;
-    padding-bottom: constant(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-top);
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
   }
   .group-sticky {
     position: fixed;

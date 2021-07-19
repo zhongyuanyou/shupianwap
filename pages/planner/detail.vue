@@ -215,24 +215,24 @@
           </div>
         </div>
       </div>
-      <div class="video-content">
-        <div class="video"> 
+      <div v-if="newDetailData.live.id" class="video-content">
+        <div class="video" :style="{'background-image':`url(${newDetailData.live.coverUrl})`}"> 
           <div class="video-title">
-            <span>05月25日直播回放</span>
-            <span>2.8万人看过</span>
+            <span v-show="newDetailData.live.createTime">{{s_to_ym(newDetailData.live.createTime)}}直播回放</span>
+            <span v-show="newDetailData.live.viewCount">{{newDetailData.live.viewCount}}人看过</span>
           </div>
           <div class="video-player">
             <i class="spiconfont spiconfont-bofang" style=""></i>
           </div>
           <div class="video-footer">
-            <span>领导干部MPA必读核心课程 公共部门经济学</span>
+            <span>{{newDetailData.live.studioName}}</span>
           </div>
         </div>
       </div>
       <div class="recommend" style="padding-bottom: 75px">
         <sp-tabs v-model="active" sticky @scroll="stickyScroll" @click="tabsClick">
-          <sp-tab v-for="(item,index) in tabsData" :key="index" :title="item.label" :name="item.value" >
-            <ul v-if="active==='myQuestion'" class="list-data myQuestion">
+          <sp-tab v-for="(item,index) in newDetailData.titleNavs" :key="index" :title="item" :name="item" >
+            <ul v-if="active==='我的问答'" class="list-data myQuestion">
               <li v-for="(data,dataIndex) in newDetailData.content.wenda" :key="dataIndex">
                 <div>
                   <i class="spiconfont spiconfont-huida_mian" style="font-size:24px;color:#FF614E;"></i>
@@ -241,7 +241,7 @@
                 <div>
                   <i class="spiconfont spiconfont-wenti_mian" style="font-size:24px;color:#4974F5;"></i>
                   <p>
-                    <span>{{data.content}}</span>
+                    <span>{{data.contentText}}</span>
                     <img v-if="data.contentImageUrl" :src="data.contentImageUrl" alt="">
                   </p>
                   
@@ -252,7 +252,7 @@
                 </div>
               </li>
             </ul>
-            <ul v-if="active==='myBook'" class="list-data myBook">
+            <ul v-if="active==='我的文章'" class="list-data myBook">
               <li v-for="(data,dataIndex) in newDetailData.content.article" :key="dataIndex">
                 <div>
                   <p>
@@ -265,7 +265,7 @@
                 </div>
               </li>
             </ul>
-            <ul v-if="active==='see'" class="list-data see">
+            <ul v-if="active==='热门资讯'" class="list-data see">
               <li v-for="(data,dataIndex) in newDetailData.content.hotNews" :key="dataIndex">
                 <div>
                   <p>
@@ -379,7 +379,8 @@ export default {
           wenda:[],
           article:[],
           hotNews:[]
-        }
+        },
+        live:{}
       },
       shareOptions: [],
       showShare: false,
@@ -391,54 +392,7 @@ export default {
       requireName: this.$route.query.requireName || '', // 隐号拨打需要
       ownerInfo:false ,// 个人信息展开
       titleStatus:true, // 粘性布局触发时去掉头部
-      // 播放设置
-      playerOptions:{
-        poster: '',
-        width:"100%",
-        height:"3.45rem"
-      },
-      tabsData:[
-        {
-          value:"myQuestion",
-          label:"我的回答"
-        },
-        {
-          value:"myBook",
-          label:"我的文章"
-        },
-        {
-          value:"see",
-          label:"热门资讯"
-        },
-      ],
-      tabsListData:[
-        {
-          action:"二级资质能街多大标的工程?",
-          question:"我们会验证资质的信息，在国家住建局都能差的到的",
-          zan:"18500",
-          pl:"5489"
-        },
-        {
-          action:"请问现在开办一个公司需要准备什么需要准备什么",
-          question:"我们会验证资质的信息，在国家住建局都能查的到的，验证真伪。",
-          zan:"18500",
-          pl:"5489",
-          img:"https://cdn.shupian.cn/sp-pt/wap/images/cfu3wwitnuw0000.png"
-        },
-        {
-          action:"请问现在开办一个公司需要准备什么需要准备什么",
-          question:"我们会验证资质的信息，在国家住建局都能查的到的，验证真伪。",
-          zan:"18500",
-          pl:"5489",
-        },
-        {
-          action:"请问现在开办一个公司需要准备什么需要准备什么",
-          question:"我们会验证资质的信息，在国家住建局都能查的到的，验证真伪。",
-          zan:"18500",
-          pl:"5489",
-        }
-      ],
-      active:"myQuestion" // tab状态
+      active:"" // tab状态
     }
   },
   
@@ -517,6 +471,11 @@ export default {
       setUserInfo: 'user/SET_USER',
       clearUserInfo: 'user/CLEAR_USER',
     }),
+    s_to_ym(s) {
+      const oldTime = s.split(" ")[0];
+      const time = oldTime.split("-");
+      return `${time[1]}月${time[2]}日`;
+    },
     goScoreDetail(){
       this.$router.push({
         path:"/store/spScoreDetail"
@@ -535,7 +494,7 @@ export default {
       let data = ''
       const today = (new Date()).getTime()
       // 变为秒
-      const difference = (Number(time) - Number(today))/1000
+      const difference = (Number(today) - Number(time))/1000
       // 1分钟内发布
       if(difference<60){
         data = '刚刚'
@@ -556,7 +515,7 @@ export default {
       }
       // 超过24小时
       else if (difference>=86400){
-        data = `${formatDate(new Date(time),'yyyy-MM-dd hh:mm')}` 
+        data = `${formatDate(new Date(time),'yyyy-MM-dd')}` 
       }else{
         data ='未知时间'
       }
@@ -922,6 +881,7 @@ export default {
         )
         if(newData.code===200){
           this.newDetailData = newData.data ||{}
+          this.active = this.newDetailData.titleNavs[0]
           this.newDetailData.label = this.newDetailData.label && this.newDetailData.label.split('|')
           if(this.newDetailData.label && this.newDetailData.label.length>3){
             this.newDetailData.label = this.newDetailData.label.splice(0,2)
@@ -993,8 +953,10 @@ export default {
 .detail {
   height: 100%;
   background-color: #ffffff;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
   .body {
-    padding: 0;
+    
     .detail-content {
       &__bg {
         padding: 40px;
@@ -1232,7 +1194,8 @@ export default {
     }
     .video{
       height: 375.2px;
-      background: #CCCCCC;
+      background: #CCCCCC no-repeat;
+      background-size:100% 100%; 
       border-radius: 12px;
       padding: 20px;
       margin:0 0 90px 0;
@@ -1313,6 +1276,7 @@ export default {
               display: flex;
               justify-content: space-between;
               align-items: normal;
+              width:100%;
               img{
                 width: 190px;
                 height: 127px;
@@ -1362,6 +1326,7 @@ export default {
               display: flex;
               justify-content: space-between;
               align-items: normal;
+              width: 100%;
               img{
                 width: 190px;
                 height: 127px;

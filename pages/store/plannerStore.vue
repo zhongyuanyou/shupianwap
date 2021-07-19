@@ -42,7 +42,7 @@
         <div class="bg-group__headtext">
           <p>
             <span class="title">{{detailData.personal.name}}</span>
-            <span class="label" @click="goGroup">我的团队></span>
+            <span v-if="detailData.mchStoreId" class="label" @click="goGroup">我的团队></span>
           </p>
           <p>服务年限：{{formatServeAgeText}}</p>
         </div>
@@ -57,7 +57,7 @@
         />
         <div class="bg-group__footertext">
           <p>{{detailData.mchName}}</p>
-          <p>
+          <p v-show="false">
             <img
               src="https://cdn.shupian.cn/sp-pt/wap/images/7mruoa3go2c0000.png"
               alt=""
@@ -266,7 +266,7 @@ export default {
         // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
         this.isInApp && this.clearUserInfo()
         this.getDetail()
-        this.getList()
+        
       }
     },
     async mounted() {
@@ -327,7 +327,7 @@ export default {
                 }
                 this.active = (data.modules.length>0 && data.modules[0].id) || ""
                 this.detailData = data || {}
-                
+                this.getList()
                 return data
             } catch (error) {
                 console.error('getDetail:', error)
@@ -343,28 +343,21 @@ export default {
         // 获取列表数据
         async getList(){
           try {
-            const { mchUserId } = this.$route.query
-            if (mchUserId == null) {
-                this.$xToast.show({
-                    message: '缺少规划师参数!',
-                    duration: 1000,
-                    forbidClick: false,
-                    icon: 'toast_ic_error',
-                })
-                return
-            }
             const params = { 
-              storeId:"1118898494378396293",
-              typeId:"1118898494378396292",
+              storeId:this.detailData.id,
+              typeId:this.active,
               page:1,
               limit:10
             }
-            const { data } = await this.$axios.post(storeApi.recommendGoods, params, {
+            const { data,code,message } = await this.$axios.post(storeApi.recommendGoods, params, {
               headers: {
                 'x-cache-control': 'cache',
               },
             })
-            this.detailData.goods = data.records || []
+            if (code !== 200) {
+              throw new Error(message)
+            }
+            this.detailData.goods = data.records || [] 
             return data
           } catch (error) {
             console.error('getDetail:', error)
@@ -576,7 +569,8 @@ export default {
                     this.$router.push({
                         path:"/store/merchantsStore",
                         query:{
-                          storeId:this.detailData.mchStoreId
+                          storeId:this.detailData.mchStoreId,
+                          isShare:"0"
                         }
                     })
                 } else {
@@ -688,6 +682,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .plannerShop {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom) ;
   .bg-group {
     padding: 60px 40px 24px;
     background: url('https://cdn.shupian.cn/sp-pt/wap/images/g0qq9j24x200000.png')
@@ -834,6 +830,7 @@ export default {
     position: relative;
     margin: -24px 0 0 0;
     padding: 64px 40px;
+    
     background-color: #fff;
     border-top-right-radius: 24px;
     border-top-left-radius: 24px;
