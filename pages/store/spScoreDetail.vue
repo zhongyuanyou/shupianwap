@@ -1,6 +1,6 @@
 <template>
     <div class="spScoreDetail">
-        <div :class="floatview?'head':'headWhite'">
+        <div v-if="!this.$route.query.noHead" :class="floatview?'head':'headWhite'">
             <Header title="薯片分">
                 <template #left>
                     <sp-icon

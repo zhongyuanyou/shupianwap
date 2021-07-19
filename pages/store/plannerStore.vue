@@ -266,7 +266,7 @@ export default {
         // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
         this.isInApp && this.clearUserInfo()
         this.getDetail()
-        this.getList()
+        
       }
     },
     async mounted() {
@@ -327,7 +327,7 @@ export default {
                 }
                 this.active = (data.modules.length>0 && data.modules[0].id) || ""
                 this.detailData = data || {}
-                
+                this.getList()
                 return data
             } catch (error) {
                 console.error('getDetail:', error)
@@ -343,28 +343,21 @@ export default {
         // 获取列表数据
         async getList(){
           try {
-            const { mchUserId } = this.$route.query
-            if (mchUserId == null) {
-                this.$xToast.show({
-                    message: '缺少规划师参数!',
-                    duration: 1000,
-                    forbidClick: false,
-                    icon: 'toast_ic_error',
-                })
-                return
-            }
             const params = { 
-              storeId:"1118898494378396293",
-              typeId:"1118898494378396292",
+              storeId:this.detailData.id,
+              typeId:this.active,
               page:1,
               limit:10
             }
-            const { data } = await this.$axios.post(storeApi.recommendGoods, params, {
+            const { data,code,message } = await this.$axios.post(storeApi.recommendGoods, params, {
               headers: {
                 'x-cache-control': 'cache',
               },
             })
-            this.detailData.goods = data.records || []
+            if (code !== 200) {
+              throw new Error(message)
+            }
+            this.detailData.goods = data.records || [] 
             return data
           } catch (error) {
             console.error('getDetail:', error)
