@@ -129,7 +129,7 @@
             <sp-tabs v-model="active" @click="tabsClick">
                 <sp-tab v-for="(item,index) in detailData.goodsRecommend" :key="index" :title="item.name" :name="item.id" >
                     <ul class="list-data">
-                        <li v-for="(data,dataIndex) in detailData.goods" :key="dataIndex" @click="linkGood(item)">
+                        <li v-for="(data,dataIndex) in detailData.goods" :key="dataIndex" @click="linkGood(data)">
                             <img :src="data.img" alt="">
                             <div>
                                 <p class="title" style="margin:0">
@@ -194,7 +194,7 @@
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
-import { 
+import {
     Bottombar,
     BottombarButton,
     ShareSheet,
@@ -202,7 +202,7 @@ import {
     Tabs,
     Toast,
     Tab ,
-    Swipe, 
+    Swipe,
     SwipeItem
 } from '@chipspc/vant-dgg'
 import { planner } from '@/api'
@@ -240,7 +240,7 @@ export default {
             headTabs:[
                 {
                     value:"index",
-                    label:"主页" 
+                    label:"主页"
                 },
                 {
                     value:"rememded",
@@ -334,13 +334,13 @@ export default {
             const height = group.offsetHeight
             if(scrollTop > height){
                 this.floatview = true
-                
+
             }else{
                 this.floatview = false
             }
-            
+
         },
-        
+
         // 获取详情数据
         async getDetail() {
             try {
@@ -364,8 +364,10 @@ export default {
                 // MCH_BASE_INFO 商户基础信息
                 // GOODS_RECOMMEND 商品推荐
                 // SWIPER_IMAGE 轮播图
+                const goods = data.data.goods.slice(0, 4)
+                data.data.goods = goods
                 this.detailData = data.data || {}
-                
+
                 return data
             } catch (error) {
                 console.error('getDetail:', error)
@@ -382,7 +384,7 @@ export default {
         async getList(){
             const { storeId } = this.$route.query
             try {
-                const params = { 
+                const params = {
                     storeId,
                     typeId:this.active,
                     page:1,
@@ -487,7 +489,7 @@ export default {
                     })
                 }
             } catch (err) {
-                
+
                 Toast({
                     message: '未获取到划师联系方式',
                     iconPrefix: 'sp-iconfont',
@@ -783,7 +785,7 @@ export default {
         position: relative;
         margin: -24px 0 0 0;
         padding: 64px 40px;
-        
+
         background-color: #fff;
         border-top-right-radius: 24px;
         border-top-left-radius: 24px;
@@ -802,7 +804,7 @@ export default {
                         border-radius: 8px;
                     }
                 }
-                
+
             }
             ::v-deep .sp-swipe__indicator{
                 width: 12px;
@@ -825,7 +827,7 @@ export default {
                 font-size: 24px;
                 color: #999999;
                 letter-spacing: 0;
-                
+
             }
             &__title{
                 span{
@@ -880,7 +882,7 @@ export default {
             }
         }
         .recommended {
-        
+
             .title {
                 font-family: PingFangSC-Medium;
                 font-size: 40px;
@@ -959,7 +961,7 @@ export default {
                         }
                     }
                 }
-                
+
             }
             button{
                 width: 100%;
