@@ -105,7 +105,7 @@ export default {
       evaluateImgs: [],
       imgs: '',
       orderDesc: '',
-      indexImg: '',
+      indexImg: 'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png',
       imageSize: '1.3rem',
       size: '2.1rem',
       orderName: '',
@@ -163,7 +163,7 @@ export default {
       }
     },
     initData() {
-      this.indexImg = this.$route.query.indexImg
+      this.indexImg = this.$route.query.indexImg || 'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png'
       this.orderName = this.$route.query.orderName
       this.orderDesc = this.$route.query.orderDesc
     },

@@ -244,6 +244,7 @@ export default {
       .right {
         padding-left: 20px;
         flex: 1;
+        overflow: hidden;
         .user-name {
           font-size: 28px;
           font-family: PingFangSC-Medium, PingFang SC;
