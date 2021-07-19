@@ -45,8 +45,9 @@ const infoList = [
   'order-invoice-headEdit',
   'order-invoice-invoiceApply',
   'order-invoice-preview',
-  'myDemandCard-index',
+  'NeedCard',
   'my-coupon',
+  'myDemandCard',
 ]
 // const getInfo = function () {
 //   return new Promise(function (resolve, reject) {
@@ -65,6 +66,7 @@ export default ({ app, store }) => {
     })
   })
   app.router.beforeEach((to, from, next) => {
+    console.log('to.name', to.name)
     if (process.client) {
       const loginRoutePath = '/login' // 登录路由
       const defaultRoutePath = '/' // 首页路由
@@ -112,30 +114,34 @@ export default ({ app, store }) => {
         // 验证跳转页面是否嵌入app中后是否需获取app中到用户详情
         // eslint-disable-next-line no-lonely-if
         if (store.state.app.isInApp && infoList.includes(to.name)) {
-          // 若跳转的页面在infoList中，则需要执行app请求用户信息操作
-          appHandler.dggGetUserInfo((res) => {
-            if (res.code === 200) {
-              try {
-                // const userInfo = res.data || {}
-                console.log(res.data)
-                let userInfo = {}
-                if (typeof res.data === 'string') {
-                  userInfo = JSON.parse(res.data)
-                } else {
-                  userInfo = res.data
+          if (!token) {
+            // 若跳转的页面在infoList中，则需要执行app请求用户信息操作
+            appHandler.dggGetUserInfo((res) => {
+              if (res.code === 200) {
+                try {
+                  // const userInfo = res.data || {}
+                  console.log(res.data)
+                  let userInfo = {}
+                  if (typeof res.data === 'string') {
+                    userInfo = JSON.parse(res.data)
+                  } else {
+                    userInfo = res.data
+                  }
+                  if (userInfo && userInfo.userId && userInfo.token) {
+                    store.commit('user/SET_USER', userInfo)
+                  }
+                  next()
+                } catch (err) {
+                  next()
                 }
-                if (userInfo && userInfo.userId && userInfo.token) {
-                  store.commit('user/SET_USER', userInfo)
-                }
-                next()
-              } catch (err) {
+              } else {
+                store.commit('user/CLEAR_USER')
                 next()
               }
-            } else {
-              store.commit('user/CLEAR_USER')
-              next()
-            }
-          })
+            })
+          } else {
+            next()
+          }
         } else {
           next()
         }
