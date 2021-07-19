@@ -42,7 +42,7 @@
         <div class="bg-group__headtext">
           <p>
             <span class="title">{{detailData.personal.name}}</span>
-            <span class="label" @click="goGroup">我的团队></span>
+            <span v-if="detailData.mchStoreId" class="label" @click="goGroup">我的团队></span>
           </p>
           <p>服务年限：{{formatServeAgeText}}</p>
         </div>
@@ -576,7 +576,8 @@ export default {
                     this.$router.push({
                         path:"/store/merchantsStore",
                         query:{
-                          storeId:this.detailData.mchStoreId
+                          storeId:this.detailData.mchStoreId,
+                          isShare:"0"
                         }
                     })
                 } else {
@@ -688,6 +689,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .plannerShop {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom) ;
   .bg-group {
     padding: 60px 40px 24px;
     background: url('https://cdn.shupian.cn/sp-pt/wap/images/g0qq9j24x200000.png')
@@ -834,6 +837,7 @@ export default {
     position: relative;
     margin: -24px 0 0 0;
     padding: 64px 40px;
+    
     background-color: #fff;
     border-top-right-radius: 24px;
     border-top-left-radius: 24px;

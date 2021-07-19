@@ -226,6 +226,8 @@ export default {
 <style lang="less" scoped>
 .spScoreDetail{
     background:#F8F8F8;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
     .head{
         ::v-deep .my-head{
             background:url('https://cdn.shupian.cn/sp-pt/wap/images/5wdaynyoovs0000.png') no-repeat;
@@ -256,6 +258,7 @@ export default {
         position: relative;
         margin:-560px 0 0 0;
         padding:0 20px;
+        
         z-index:2;
         >div{
             margin:0 0 20px 0

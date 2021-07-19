@@ -344,17 +344,17 @@ export default {
         // 获取详情数据
         async getDetail() {
             try {
-                // const { storeId } = this.$route.query
-                // if (storeId == null) {
-                //     this.$xToast.show({
-                //         message: '缺少店铺参数!',
-                //         duration: 1000,
-                //         forbidClick: false,
-                //         icon: 'toast_ic_error',
-                //     })
-                //     return
-                // }
-                const params = { storeId:"1118898391299179659" }
+                const { storeId } = this.$route.query
+                if (storeId == null) {
+                    this.$xToast.show({
+                        message: '缺少店铺参数!',
+                        duration: 1000,
+                        forbidClick: false,
+                        icon: 'toast_ic_error',
+                    })
+                    return
+                }
+                const params = { storeId }
                 const data  = await this.$axios.get(storeApi.mchStoreInfo, {params})
                 if(data.code===200){
                     // MCH_SERVICE_DATA 商户服务数据
@@ -625,6 +625,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .merchantsShop {
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom) ;
     .bg-group {
         padding: 60px 40px 84px;
         background: url('https://cdn.shupian.cn/sp-pt/wap/images/aicz8hyty0c0000.png') no-repeat;
@@ -777,6 +779,7 @@ export default {
         position: relative;
         margin: -24px 0 0 0;
         padding: 64px 40px;
+        
         background-color: #fff;
         border-top-right-radius: 24px;
         border-top-left-radius: 24px;
