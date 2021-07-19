@@ -215,7 +215,7 @@
           </div>
         </div>
       </div>
-      <div v-if="newDetailData.live.id" class="video-content">
+      <div v-if="newDetailData.live.id" class="video-content" @click="seeVideo">
         <div class="video" :style="{'background-image':`url(${newDetailData.live.coverUrl})`}"> 
           <div class="video-title">
             <span v-show="newDetailData.live.createTime">{{s_to_ym(newDetailData.live.createTime)}}直播回放</span>
@@ -229,9 +229,17 @@
           </div>
         </div>
       </div>
-      <div class="recommend" style="padding-bottom: 75px">
-        <sp-tabs v-model="active" sticky @scroll="stickyScroll" @click="tabsClick">
-          <sp-tab v-for="(item,index) in newDetailData.titleNavs" :key="index" :title="item" :name="item" >
+      <div v-if="newDetailData.titleNavs" class="recommend" style="padding-bottom: 75px"> 
+        <div class="tabs">
+          <ul>
+            <li v-for="(item,index) in newDetailData.titleNavs" :key="index" :class="active===item?'tab_active':''" @click="tabsActive(item)">
+              <span>{{item}}</span>
+              <span v-if="active===item" class="tabs_line"></span>
+            </li>
+          </ul>
+        </div>
+        <!-- <sp-tabs v-model="active" sticky @scroll="stickyScroll" @click="tabsClick">
+          <sp-tab v-for="(item,index) in newDetailData.titleNavs" :key="index" :title="item" :name="item" > -->
             <ul v-if="active==='我的问答'" class="list-data myQuestion">
               <li v-for="(data,dataIndex) in newDetailData.content.wenda" :key="dataIndex">
                 <div>
@@ -278,8 +286,8 @@
                 </div>
               </li>
             </ul>
-          </sp-tab>
-        </sp-tabs>
+          <!-- </sp-tab>
+        </sp-tabs> -->
         <!-- <RecommendList :mch-detail-id="detailData.mchDetailId" /> -->
       </div>
     </div>
@@ -338,8 +346,6 @@ import {
   BottombarButton,
   ShareSheet,
   Toast,
-  Tabs,
-  Tab
 } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import SpToast from '@/components/common/spToast/SpToast'
@@ -362,8 +368,6 @@ export default {
     [ShareSheet.name]: ShareSheet,
     Header,
     SpToast,
-    SpTabs:Tabs,
-    SpTab:Tab,
     // RecommendList,
   },
   mixins: [imHandle],
@@ -458,6 +462,7 @@ export default {
     }
   },
   async mounted() {
+    console.log(navigator)
     if (!this.city.code) {
       await this.POSITION_CITY({ type: 'init' })
     }
@@ -531,6 +536,9 @@ export default {
     },
     tabsClick(title,name){
       console.log(this.active)
+    },
+    tabsActive(item){
+      this.active = item
     },
     onClickLeft() {
       console.log('nav onClickLeft')
@@ -850,7 +858,59 @@ export default {
         })
       })
     },
-
+    // 跳转播放视频
+    seeVideo(){
+      const iOSRouterPath = {
+        path: '/live/PlayBackActivity',
+        parameter: {
+          id:this.newDetailData.live.roomId
+        },
+      }
+      const androidRouterPath = {
+        path: '/live/PlayBackActivity',
+        parameter: {
+          id:this.newDetailData.live.roomId
+        },
+      }
+      if (this.isInApp) {
+        // 安卓方法
+        this.$appFn.dggJumpRoute(
+          {
+            iOSRouter: iOSRouterPath,
+            androidRouter: androidRouterPath,
+          },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '打开视频失败！',
+                duration: 1500,
+                forbidClick: false,
+                icon: 'toast_ic_remind',
+              })
+            }
+          }
+        )
+        // ios方法
+        this.$appFn.dggLiveOnline(
+          {
+            iOSRouter: iOSRouterPath,
+            androidRouter: androidRouterPath,
+          },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '打开视频失败！',
+                duration: 1500,
+                forbidClick: false,
+                icon: 'toast_ic_remind',
+              })
+            }
+          }
+        )
+      }
+    },
     // 获取详情数据
     async getDetail() {
       try {
@@ -886,7 +946,10 @@ export default {
           if(this.newDetailData.label && this.newDetailData.label.length>3){
             this.newDetailData.label = this.newDetailData.label.splice(0,2)
           }
-          this.newDetailData.content.hotNews.createTime && (this.newDetailData.content.hotNews.createTime = formatDate(new Date(this.newDetailData.content.hotNews.createTime),'yyyy-MM-dd'))
+          this.newDetailData.content.hotNews.forEach(item=>{
+            item.createTime && (item.createTime = formatDate(new Date(item.createTime),'yyyy-MM-dd'))
+          })
+          
         }else{
           this.$xToast.show({
             message: newData.message || '请求失败！',
@@ -1259,7 +1322,41 @@ export default {
     }
     .recommend{
       .list-data{
-        padding:0 40px
+        padding:41px 40px 0;
+      }
+      .tabs{
+        padding:0 40px;
+        font-family: PingFangSC-Regular;
+        font-size: 30px;
+        color: #999999;
+        line-height: 30px;
+        ul{
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          li{
+            position: relative;
+            margin: 0 56px 0 0;
+            .tabs_line{
+              position: absolute;
+              bottom:-22px;
+              left:0;
+              right: 0;
+              margin:0 auto;
+              display:block ;
+              width: 28px;
+              height: 6px;
+              background: #4974F5;
+              border-radius: 3px;
+            }
+          }
+          .tab_active{
+            font-weight: bold;
+            font-family: PingFangSC-Medium;
+            font-size: 32px;
+            color: #222222;
+          }
+        }
       }
       .myQuestion{
         li{
@@ -1408,9 +1505,10 @@ export default {
         background: #fff;
       }
       ::v-deep .sp-tabs__wrap{
-        width:80vw
+        padding:0 40px;
       }
       ::v-deep .sp-tab{
+        justify-content: flex-start;
         font-family: PingFangSC-Regular;
         font-size: 30px;
         color: #999999;
