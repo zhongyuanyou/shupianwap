@@ -137,7 +137,7 @@ module.exports = {
     { src: '@/plugins/vue-quill-editor', ssr: false },
     { src: '@/plugins/vue-prototype', ssr: false },
     { src: '@/plugins/clear-emoij', ssr: false },
-    { src: '@/plugins/echarts', ssr:false },
+    // { src: '@/plugins/echarts', ssr:false },
   ],
   router: {
     middleware: 'appDock',
