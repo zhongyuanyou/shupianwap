@@ -41,7 +41,7 @@
             />
             <div class="footertext">
             <p>{{detailData.mchName}}</p>
-            <p>
+            <p v-show="false">
                 <img
                 src="https://cdn.shupian.cn/sp-pt/wap/images/7mruoa3go2c0000.png"
                 alt=""
@@ -130,7 +130,7 @@ export default {
     },
     data() {
         return {
-            active: '', // tab状态
+            active: this.$route.query.active, // tab状态
             headActive:"rememded",
             detailData:{},
             detailCodeData:{
@@ -272,26 +272,28 @@ export default {
         // 获取详情数据
         async getDetail() {
             try {
-                // const { storeId } = this.$route.query
-                // if (storeId == null) {
-                //     this.$xToast.show({
-                //         message: '缺少店铺参数!',
-                //         duration: 1000,
-                //         forbidClick: false,
-                //         icon: 'toast_ic_error',
-                //     })
-                //     return
-                // }
-                const params = { storeId:"1118898391299179659" }
-                const data  = await this.$axios.get(storeApi.mchStoreInfo, {params})
-                if(data.code===200){
+                const { storeId } = this.$route.query
+                if (storeId == null) {
+                    this.$xToast.show({
+                        message: '缺少店铺参数!',
+                        duration: 1000,
+                        forbidClick: false,
+                        icon: 'toast_ic_error',
+                    })
+                    return
+                }
+                const params = { storeId }
+                const { data , code , message }  = await this.$axios.get(storeApi.mchStoreInfo, {params})
+                if(code !==200){
                     // MCH_SERVICE_DATA 商户服务数据
                     // PLANNER_RECOMMEND 规划师推荐
                     // MCH_BASE_INFO 商户基础信息
                     // GOODS_RECOMMEND 商品推荐
                     // SWIPER_IMAGE 轮播图
-                    this.detailData = data.data || {}
+                    throw new Error(message)
+                    
                 }
+                this.detailData = data || {}
                 this.getList()
                 return data
             } catch (error) {
@@ -307,20 +309,24 @@ export default {
         },
         // 获取列表数据
         async getList(type){
-          try {
-            const params = { 
-              storeId:"1118898494378396293",
-              typeId:"1118898494378396292",
-              page:1,
-              limit:10
-            }
-            const  data = await this.$axios.post(storeApi.recommendGoods, params, {
-              headers: {
-                'x-cache-control': 'cache',
-              },
-            })
-            if(data.code===200){
-                if(data.data.records){
+            const { storeId } = this.$route.query
+            try {
+                const params = { 
+                    storeId,
+                    typeId:"1118898494378396292",
+                    page:1,
+                    limit:10
+                }
+                const  { data , code , message} = await this.$axios.post(storeApi.recommendGoods, params, {
+                    headers: {
+                        'x-cache-control': 'cache',
+                    },
+                })
+                if(code !==200){
+                    this.changePull(true)
+                    throw new Error(message)
+                }
+                if(data.records){
                     this.changePull(false)
                 }else{
                     this.changePull(true)
@@ -332,18 +338,17 @@ export default {
                     // 下拉刷新
                     this.tabsListData = this.tabsListData.filter(item=>item.status==='');
                 }
+                return data
+            } catch (error) {
+                console.error('getDetail:', error)
+                this.$xToast.show({
+                    message: error.message || '请求失败！',
+                    duration: 1000,
+                    forbidClick: false,
+                    icon: 'toast_ic_error',
+                })
+                return Promise.reject(error)
             }
-            return data
-          } catch (error) {
-            console.error('getDetail:', error)
-            this.$xToast.show({
-                message: error.message || '请求失败！',
-                duration: 1000,
-                forbidClick: false,
-                icon: 'toast_ic_error',
-            })
-            return Promise.reject(error)
-          }
         },
         handleCall() {
             // 如果当前页面在app中，则调用原生拨打电话的方法

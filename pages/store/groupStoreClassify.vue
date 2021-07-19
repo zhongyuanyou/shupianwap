@@ -60,6 +60,7 @@
             v-for="(item, index) in goods"
             :key="index"
             class="recommend-item"
+            @click="linkGood(item)"
           >
             <img :src="item.img" class="image" />
 
@@ -108,22 +109,6 @@ export default {
       autoplay: 5000,
       active: 0, // 活动分类
       activeMain: 1, // 页面分类
-      mockData: [
-        {
-          img: 'https://cdn.shupian.cn/cms/du7tol34xm80000.jpg',
-          tile: '四川**国际融资租赁有限公司',
-          tips: ['店铺干净', '1对1服务', '免手续'],
-          desc: '贸易类 | 一般纳税人 | 3年以上 | 500万',
-          amount: '11350',
-        },
-        {
-          img: 'https://cdn.shupian.cn/cms/du7tol34xm80000.jpg',
-          tile: '成都科技有限公司有限公司有限公司有限公司',
-          tips: ['店铺干净', '1对1服务', '免手续'],
-          desc: '贸易类 | 一般纳税人 | 3年以上 | 500万',
-          amount: '11350',
-        },
-      ],
       page: 1,
       limit: 10,
       error: false,
@@ -221,7 +206,25 @@ export default {
         this.info = data
       } catch (e) {
         this.$xToast.error(e.message)
-        // setTimeout(this.$back(), 2000)
+        setTimeout(this.$back(), 2000)
+      }
+    },
+    linkGood(item) {
+      if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
+        this.$router.push({
+          path: '/detail/transactionDetails',
+          query: {
+            type: item.typeCode,
+            productId: item.id,
+          },
+        })
+      } else {
+        this.$router.push({
+          path: '/detail',
+          query: {
+            productId: item.id,
+          },
+        })
       }
     },
   },
@@ -560,9 +563,10 @@ export default {
     }
   }
   .placeholder {
+    background: #fff;
     height: 64px;
-    padding-bottom: constant(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-top);
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
   }
   .group-sticky {
     position: fixed;
