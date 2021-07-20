@@ -1,7 +1,7 @@
 <template>
   <!-- 团队店铺二级分类 -->
   <div class="m-store group-store">
-    <Header title="团队店铺" />
+    <Header title="团队店铺" :fixed="true" />
     <div class="group-tile">
       <sp-image
         :src="info.teamInfo.img"
