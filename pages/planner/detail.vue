@@ -959,13 +959,13 @@ export default {
         return Promise.reject(error)
       }
     },
-    linkFoundDetail(item){
+    linkFoundDetail(item){ 
       this.$router.push({
-        path: `/found/detail?id=${item.id}`,
+        path: `/found/detail/${item.id}`,
       })
     },
     linkKnownDetailQuestion(item){
-      this.$router.push({
+      this.$router.push({ 
         path: `/known/detail/question?id=${item.id}`,
       })
     },
