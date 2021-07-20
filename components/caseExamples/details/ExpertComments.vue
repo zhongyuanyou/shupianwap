@@ -77,17 +77,14 @@ export default {
       console.log(this.info)
 
       if (this.info.length > 0) {
-        content = this.info[0].expertEvaluation[1].content
+        content = this.info[1].content
 
-        fraction = this.info[0].expertEvaluation[0].infos[0].fraction
-
-        for (
-          let i = 1;
-          i < this.info[0].expertEvaluation[0].infos.length;
-          i++
-        ) {
-          const element = this.info[0].expertEvaluation[0].infos[i]
-          dimension.push(element)
+        if (this.info[0].infos && this.info[0].infos.length > 0) {
+          fraction = this.info[0].infos[0].fraction
+          for (let i = 1; i < this.info[0].infos.length; i++) {
+            const element = this.info[0].infos[i]
+            dimension.push(element)
+          }
         }
       }
 

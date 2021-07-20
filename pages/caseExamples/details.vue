@@ -22,41 +22,43 @@
     </sp-sticky>
     <!--E 导航栏-->
     <!--S banner-->
-    <Banner :images="imgFileIdPaths" />
+    <Banner :images="imgs" />
     <!--S banner-->
 
     <!--S 第一板块-->
     <Title :info="caseDetail" />
 
     <!--S 服务团队-->
-    <ServiceTeam :case-member="caseDetail.member" />
+    <ServiceTeam
+      :planner="planerInfo"
+      :team-mmembers="teamMmembers"
+      :case-member="caseDetailInfo.members"
+    />
     <!--E 服务团队-->
 
     <!-- 案件简介 -->
     <CaseIntroduction
       title="案例简介"
       :text="caseInfo.content"
-      :images="caseInfo.picture"
+      :images="caseInfo.imgs"
     />
 
     <!--S  办理经过-->
-    <HandlingProcess></HandlingProcess>
+    <HandlingProcess :info="processing"></HandlingProcess>
 
     <!-- 办理结果 -->
     <CaseIntroduction
       title="办理结果"
-      text="山东省潍坊市中级人民法院于2009年10月14日以(2009) 潍刑一初字第35号刑事判决 潍刑一初字第35号刑事判决潍刑一初字第35号刑事判决"
-      :images="[1, 2]"
+      :text="caseResult.content"
+      :images="caseResult.imgs"
     />
 
     <!-- 专家点评 -->
-    <ExpertComments
-      :info="getDataFromDetailInfo('expertEvaluation')"
-    ></ExpertComments>
+    <ExpertComments :info="expertEvaluation"></ExpertComments>
 
     <!--E 评论-->
     <CommentBox id="comment" :list="commentdata" />
-
+    <!-- tcPlannerBooth -->
     <bottomBar :im-jump-query="imJumpQuery" :planner-info="tcPlannerBooth" />
   </div>
 </template>
@@ -77,12 +79,11 @@ import ExpertComments from '@/components/caseExamples/details/ExpertComments.vue
 import bottomBar from '@/components/detail/bottomBar/index.vue'
 
 import getUserSign from '@/utils/fingerprint'
-import { productDetailsApi, caseApi } from '@/api'
+import { productDetailsApi, caseApi, planner } from '@/api'
 
-import { copyToClipboard } from '@/utils/common'
 import imHandle from '@/mixins/imHandle'
 export default {
-  name: 'DetailTemplate',
+  name: 'CaseExamplesdetails',
   components: {
     [TopNavBar.name]: TopNavBar,
     [Sticky.name]: Sticky,
@@ -114,82 +115,16 @@ export default {
 
   data() {
     return {
-      caseDetail: {},
+      caseDetail: {}, // 信息，包含详情
+      caseDetailInfo: {}, // 详情
 
       opacity: 0,
       finished: false, // 停止加载更多
       loading: false,
-      productPage: 1, // 推荐产品当前页
-      productLimit: 10, // 推荐产品没有条数
-      productCount: 0, // 推荐产品总数
-      recommendProduct: [], // 推荐产品
-      showShare: false, // 是否弹起分享组件
-      shareOptions: [{ name: '复制链接', icon: 'link' }],
-      userInfoData: {
-        decodePhone: null,
-        fullName: null,
-      }, // 个人用户数据
+
+      planerInfo: {}, // 请求的规划师信息
+
       planners: [
-        {
-          mchUserId: '728691677696664530',
-          mchDetailId: '728691574617454297',
-          officeAddressId: '728691574617454408',
-          userName: '王茂婕',
-          userCenterId: '607997598875151730',
-          userCenterNo: 'U2000431059',
-          phone:
-            '0E687EEE72F48183A2C6EFC593FC0A06*DGGJGZX*PH314Eo/oe71oSJobb0CE01mzKjRRSI1f61QbQ==',
-          point: '5',
-          registerTime: '2020-12-24 18:44:07',
-          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
-          status: 1,
-          statusName: '启用',
-          userCenterStatus: 1,
-          userCenterStatusName: '正常',
-          recentCompany: 'PCN测试服务商户',
-          type: 'MERCHANT_B',
-          mchNo: 'PBU2036000',
-          isAdmin: 0,
-          serveNum: 0,
-          serveAge: 7,
-          goodReputation: 95,
-          payNum: 0,
-          profilePhotoId: '',
-          dggPlannerRecomLog:
-            'productmap=[728694563914692664, 728691677696671018, 728691677696664530, 732284950661460939, 1076098595517908927, 767581610621041918, 767854117951796474, 767773578479304701, 1076098732956867488]&seqno=C306F8AD6FBAD6FDB9192946F8490AEA&recallno=44&ruleno=33&deviceId=deviceId&rankno=22',
-          portrait:
-            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
-        },
-        {
-          mchUserId: '728691677696664530',
-          mchDetailId: '728691574617454297',
-          officeAddressId: '728691574617454408',
-          userName: '王茂婕',
-          userCenterId: '607997598875151730',
-          userCenterNo: 'U2000431059',
-          phone:
-            '0E687EEE72F48183A2C6EFC593FC0A06*DGGJGZX*PH314Eo/oe71oSJobb0CE01mzKjRRSI1f61QbQ==',
-          point: '5',
-          registerTime: '2020-12-24 18:44:07',
-          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
-          status: 1,
-          statusName: '启用',
-          userCenterStatus: 1,
-          userCenterStatusName: '正常',
-          recentCompany: 'PCN测试服务商户',
-          type: 'MERCHANT_B',
-          mchNo: 'PBU2036000',
-          isAdmin: 0,
-          serveNum: 0,
-          serveAge: 7,
-          goodReputation: 95,
-          payNum: 0,
-          profilePhotoId: '',
-          dggPlannerRecomLog:
-            'productmap=[728694563914692664, 728691677696671018, 728691677696664530, 732284950661460939, 1076098595517908927, 767581610621041918, 767854117951796474, 767773578479304701, 1076098732956867488]&seqno=C306F8AD6FBAD6FDB9192946F8490AEA&recallno=44&ruleno=33&deviceId=deviceId&rankno=22',
-          portrait:
-            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
-        },
         {
           mchUserId: '728691677696664530',
           mchDetailId: '728691574617454297',
@@ -257,31 +192,19 @@ export default {
       tcPlannerBooth: {},
       deviceId: null, // 设备唯一码
       imgFileIdPaths: [], // 产品图片
-      commentlist: [
-        {
-          phone: '153******67',
-          img: 'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
-          date: ' 2020.10.06',
-          tit: '需要办好几个业务，其中有个营业执照比较急，找了一些其他的公司咨询，要么不能在规定时间办理，要么价格贵太多，对比了以后最终选择在薯片办理，当然也不失所望，办理速度快，在承诺时间内就拿到了执照了，其他几个业务也办下来了，性价比挺高的。',
-          val: 100,
-        },
-        {
-          phone: '175******69',
-          img: 'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
-          date: ' 2020.11.16',
-          tit: '办理的几项业务中，对比其他公司收费不算是高，也是明码标价，关键是服务很细致没有其他的担忧，而且过程中没有任何要求额外加价的情况，省时省精力还有质量保证，其实折算下来比那些号称低价的花费更少，总之性价比很高。',
-          val: 100,
-        },
-        {
-          phone: '134******98',
-          img: 'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
-          date: ' 2020.11.07',
-          tit: '最初了解到薯片是在电梯里面，看到工商注册的广告，正好那段时间想出来创业，对注册公司不太了解，就找到薯片咨询了一下，注册公司流程繁琐。觉得还是交给代理公司去做，合作很愉快，同时也把公司其他业务交给了薯片来做，非常满意。',
-          val: 100,
-        },
-      ],
-      commentdata: [],
+
       isShare: false,
+
+      keys: Object.keys({
+        1: '案例列表图',
+        hHauR8vs78n2brXYuBia1G: '案例头图',
+        caseInfo: '案例简介',
+        processing: '办理经过',
+        // case1626678429069: '交易处理记录222222',
+        caseResult: '案例结果',
+        expertEvaluation: '专家评价',
+        UserReviews: '用户评价',
+      }),
     }
   },
   computed: {
@@ -293,42 +216,106 @@ export default {
       return this.$store.state.city.currentCity
     },
 
+    imgs() {
+      return this.caseDetailInfo?.hHauR8vs78n2brXYuBia1G?.imgs || []
+    },
+    // 案例简介
     caseInfo() {
-      const caseInfo = this.getDataFromDetailInfo('caseInfo')
-
-      if (caseInfo && caseInfo.show && caseInfo.show[0]) {
+      if (this.caseDetailInfo.caseInfo) {
         return {
-          content: caseInfo.show[0].content,
-          picture: [caseInfo.show[0].picture],
+          content: this.caseDetailInfo.caseInfo.content,
+          imgs: this.caseDetailInfo.caseInfo.imgs,
         }
       }
       return {}
     },
+    // 专家评价
+    expertEvaluation() {
+      return this.caseDetailInfo?.expertEvaluation?.expertEvaluation || []
+    },
+    // 办理结果
+    caseResult() {
+      return this.caseDetailInfo?.caseResult || {}
+    },
+    // 办理过程
+    processing() {
+      if (this.caseDetailInfo?.processing?.experience) {
+        const experience = this.caseDetailInfo?.processing?.experience
+        const newExperience = []
+        // const keys = ['BaseDate', 'BasePeople', 'BaseText', 'BaseUpload']
+        experience.map((item) => {
+          // 循环经过,item是一个数组
+
+          const newExperienceItem = {
+            name: item.name,
+            time: this.getExperience(item.show, 'BaseDate').value,
+            content: this.getExperience(item.show, 'BaseText').value,
+            images: this.getExperience(item.show, 'BaseUpload').imgs || [],
+          }
+
+          newExperience.push(newExperienceItem)
+        })
+        console.log('newExperience', newExperience)
+        return newExperience
+      }
+      return []
+    },
+    commentdata() {
+      if (this.caseDetailInfo?.UserReviews?.cusEvaluation) {
+        const cusEvaluation = this.caseDetailInfo?.UserReviews?.cusEvaluation
+        const list = []
+
+        cusEvaluation.map((item) => {
+          // 循环经过,item是一个数组
+
+          const newItem = {
+            name: item.name,
+            username: this.getExperience(item.value, 'BaseInput').value,
+            time: this.getExperience(item.value, 'BaseDateTime').value,
+            content: this.getExperience(item.value, 'BaseText').value,
+            images: this.getExperience(item.value, 'BaseUpload').value,
+          }
+
+          list.push(newItem)
+        })
+        return list
+      }
+      return []
+    },
+
+    planner() {
+      const planner = this.handelPlannerData('STAFF_MEMBER_SIGN')
+      return planner?.value || {}
+    },
+    teamMmembers() {
+      const mmembers = this.handelPlannerData('STAFF_MEMBER_DIGESTION')
+      return mmembers?.value || []
+    },
   },
-  created() {
-    for (let i = 0; i < 3; i++) {
-      const val =
-        this.commentlist[Math.floor(Math.random() * this.commentlist.length)]
-      this.commentdata.push(val)
-    }
-  },
-  async mounted() {
-    this.isShare = this.$route.query.isShare
-    // 假如未获取到站点信息,再获取地理位置
-    if (!this.city.code) {
-      await this.POSITION_CITY({ type: 'init' })
-    }
+
+  created() {},
+  mounted() {
     this.getDetails()
-    // 获取商品图片
-    this.getSellingImg()
+    // this.getRecPlanner()
 
     // this.getRecommendPlanner()
   },
   methods: {
-    ...mapActions({
-      POSITION_CITY: 'city/POSITION_CITY',
-    }),
-
+    handelPlannerData(key) {
+      if (this.caseDetailInfo.members) {
+        const info = this.caseDetailInfo.members.find((item) => {
+          return item.type === key
+        })
+        return info
+      }
+      return {}
+    },
+    getExperience(arr, key) {
+      const info = arr.find((item) => {
+        return item.type === key
+      })
+      return info || {}
+    },
     scrollHandle({ scrollTop }) {
       // 滚动事件
       if (scrollTop > 216) {
@@ -338,34 +325,32 @@ export default {
       }
     },
     onClickLeft() {
-      if (this.isShare) return
-      // 返回上一页
-      if (history.length < 2) {
-        this.$router.push({
-          path: '/search/searchResult?keywords=',
-        })
-      } else {
-        this.$router.back()
-      }
-    },
-    //
-    async onLoad() {
-      // 假如未获取到站点信息,再获取地理位置
-      if (!this.city.code) {
-        await this.POSITION_CITY({ type: 'init' })
-      }
+      this.$router.back()
     },
 
-    getDataFromDetailInfo(key) {
+    getDataFromDetailInfo(detailInfo, key) {
       // ['1',"processing",'caseInfo',"hHauR8vs78n2brXYuBia1G","caseResult", "expertEvaluation","UserReviews"]
       let info = {}
-      if (this?.caseDetail?.detailInfo?.infos) {
-        info = this.caseDetail.detailInfo.infos.find((item) => {
-          return item.key === key
+      if (detailInfo?.infos) {
+        info = detailInfo.infos.find((infosItem) => {
+          return infosItem.key === key
         })
       }
+      if (info) {
+        return info
+      }
       console.log(key, info)
-      return info.show || []
+      return {}
+    },
+
+    handelData(detailInfo, keys) {
+      keys.map((key) => {
+        const info = this.getDataFromDetailInfo(detailInfo, key)
+        if (info.show && info.show.length > 0) {
+          detailInfo[key] = info.show[0]
+          console.log(key, info.show[0])
+        }
+      })
     },
     getDetails() {
       caseApi
@@ -373,38 +358,15 @@ export default {
           id: this.$route.query.id,
         })
         .then((res) => {
-          if (res && res.caseLabel) {
-            res.caseLabel = JSON.parse(res.caseLabel)
-          }
           if (res && res.detailInfo) {
-            res.detailInfo = JSON.parse(res.detailInfo)
-            const arr = [
-              'commodityAmountInfo', // 金额明细
-              'caseSynopsis', // 简介明细
-              'caseExperience', // 案例经过
-              'caseResult', // 结果
-              'members', // 案例成员
-              'customerEvaluate', // 客户评价
-              'specialistEvaluate', // 专家评价
-              'caseDetailShow', // 详情展示json
-              'caseCatalog', // 目录json
-            ]
-            arr.map(function (item) {
-              try {
-                if (res.detailInfo[item]) {
-                  res.detailInfo[item] = JSON.parse(res.detailInfo[item])
-                } else {
-                  res.detailInfo[item] = ''
-                }
-              } catch (error) {
-                res.detailInfo[item] = ''
-                console.log(error)
-              }
-            })
+            this.handelData(res.detailInfo, this.keys)
           }
           console.log(res)
           console.log('detailInfo', res.detailInfo)
           this.caseDetail = res || {}
+          this.caseDetailInfo = res.detailInfo || {}
+
+          this.getPlanerInfo(this.planner.id)
         })
         .catch((err) => {
           this.loading = false
@@ -412,16 +374,57 @@ export default {
           this.$xToast.error(err.message || '请求失败')
         })
     },
-    // 获取商品图片
-    getSellingImg() {
-      // 获取客户端展示信息
-      const clientDetails =
-        this.sellingDetail.salesGoodsOperatings.clientDetails
-      // 获取商品图片集合
-      this.imgFileIdPaths = clientDetails.length
-        ? clientDetails[0].imgFileIdPaths
-        : []
-      // 返回图片地址集合
+    getPlanerInfo(id) {
+      planner
+        .detail({ id })
+        .then((res) => {
+          console.log('获取规划师信息', res)
+          const obj = {
+            mchUserId: res.id,
+            portrait: res.img,
+            userName: res.name,
+            postName: res.zwName,
+            type: res.mchClass,
+          }
+          this.planerInfo = {
+            ...obj,
+            ...res,
+          }
+        })
+        .catch((err) => {
+          console.log('获取规划师信息err', err)
+        })
+    },
+    // 获取钻展规划师
+    async getRecPlanner() {
+      // 获取用户唯一标识
+      const deviceId = await getUserSign()
+      const plannerRes = await this.$axios.get(productDetailsApi.recPlanner, {
+        params: {
+          limit: 1,
+          page: 1,
+          area: this.$store.state.city.currentCity.code || '510100',
+          deviceId, // 设备ID
+          level_2_ID: null,
+          // level_2_ID: this.sellingDetail.classCodeLevel
+          //   ? this.sellingDetail.classCodeLevel.split(',')[1]
+          //   : null, // 二级产品分类
+          login_name: null, // 规划师ID(选填)
+          productType: 'PRO_CLASS_TYPE_SERVICE', // 产品类型
+          sceneId: 'app-cpxqye-02', // 场景ID
+          user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
+          platform: 'm', // 平台（app,m,pc）
+          productId: this.caseDetail.productId, // 产品id
+          firstTypeCode: null,
+          // firstTypeCode: this.sellingDetail.classCodeLevel
+          //   ? this.sellingDetail.classCodeLevel.split(',')[0]
+          //   : null,
+        },
+      })
+      if (plannerRes.code === 200) {
+        this.tcPlannerBooth = plannerRes.data.records[0]
+        console.log('tcPlannerBooth', this.tcPlannerBooth)
+      }
     },
 
     //  获取推荐规划师
@@ -437,9 +440,7 @@ export default {
             page: this.plannerPage,
             area: this.$store.state.city.currentCity.code || '510100',
             deviceId: this.deviceId, // 设备ID
-            level_2_ID: this.sellingDetail.classCodeLevel
-              ? this.sellingDetail.classCodeLevel.split(',')[1]
-              : null, // 二级产品分类
+            level_2_ID: null, // 二级产品分类
             login_name: null, // 规划师ID(选填)
             productType: 'PRO_CLASS_TYPE_SERVICE', // 产品类型
             sceneId: 'app-cpxqye-01', // 场景ID
@@ -483,7 +484,9 @@ export default {
     }
   }
 }
-
+::v-deep .sp-hairline--bottom::after {
+  border-bottom: none;
+}
 ::v-deep .sp-top-nav-bar__left,
 ::v-deep .sp-top-nav-bar__right {
   font-weight: initial;

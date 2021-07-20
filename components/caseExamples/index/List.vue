@@ -7,7 +7,7 @@
             width="100%"
             height="100%"
             fit="cover"
-            :src="item.indexImg || 'https://img.yzcdn.cn/vant/cat.jpeg'"
+            :src="item.caseImg"
           />
         </div>
         <div class="flex_1 list_header_center">
@@ -20,11 +20,9 @@
         </div>
       </div>
 
-      <div class="list_content">
+      <div v-if="content" class="list_content">
         <span class="san_jiao"></span>
-        <div class="list_content_text">
-          案例简介：山东省潍坊市中级人民法院于2009年10月14日以（2009）潍刑一初字第35号刑事判决，认定被告人王志才犯故意杀人罪，判处死刑，剥夺死刑，剥夺政治权利
-        </div>
+        <div class="list_content_text">案例简介：{{ content }}</div>
       </div>
     </div>
   </div>
@@ -42,6 +40,11 @@ export default {
       default() {
         return {}
       },
+    },
+  },
+  computed: {
+    content() {
+      return this.item?.detailInfo?.caseInfo?.content || ''
     },
   },
 }

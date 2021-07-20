@@ -138,6 +138,8 @@ export default {
         return item
       })
     },
+
+    getCity() {},
     getSearchServeGoodsList() {
       goods
         .searchServeGoodsList(
@@ -154,7 +156,7 @@ export default {
           if (data && data.typeData && data.typeData.length > 0) {
             this.tab2.options = [
               {
-                id: 1,
+                id: 'PRO_CLASS_TYPE_SERVICE',
                 name: '服务商品',
                 text: '服务商品',
                 children: [
@@ -995,7 +997,7 @@ export default {
                 ], // data.typeData,
               },
               {
-                id: 2,
+                id: 'PRO_CLASS_TYPE_TRANSACTION',
                 name: '交易商品',
                 text: '交易商品',
                 children: [],
@@ -1873,7 +1875,7 @@ export default {
 
     // 服务商品选择
     ServerSelect(item1, item2, item3) {
-      console.log('item1,item2', item1, item2)
+      console.log('item1,item2', item1, item2, item3)
       this.tab2.title = item3.text || item2.text || item1.text
       this.tab2.value = [item1?.id, item2?.id, item3?.id]
       this.change()

@@ -5,15 +5,11 @@
       <sp-skeleton :row="3" :loading="caseMember.length == 0">
         <!--    v-for="(item, index) in caseMember"
           :key="item.userCenterId" -->
-        <div
-          v-if="caseMember.length > 0"
-          class="planners_item"
-          :style="{ marginTop: '0.42rem' }"
-        >
+        <div class="planners_item" :style="{ marginTop: '0.42rem' }">
           <div class="planners_item_lf">
             <a
               href="javascript:void(0);"
-              @click="plannerInfoUrlJump(caseMember[0].mchUserId)"
+              @click="plannerInfoUrlJump(planner.mchUserId)"
             >
               <sp-image
                 width="0.8rem"
@@ -21,25 +17,27 @@
                 round
                 fit="cover"
                 lazy-load
-                :src="`${caseMember[0].portrait}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`"
+                :src="
+                  planner.img
+                    ? `${planner.img}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`
+                    : defaultImg
+                "
               />
             </a>
             <div class="info">
               <div class="info_tp">
                 <a
                   href="javascript:void(0);"
-                  @click="plannerInfoUrlJump(caseMember[0].mchUserId)"
+                  @click="plannerInfoUrlJump(planner.mchUserId)"
                 >
-                  <p class="name">{{ caseMember[0].userName }}</p>
+                  <p class="name">{{ planner.name }}</p>
                 </a>
 
                 <i class="gold_icon"> 金牌规划师 </i>
               </div>
               <div class="info_bot">
-                <span class="num">{{ Number(caseMember[0].point) }}</span
-                ><span class="txt"
-                  >薯片分 | {{ Number(caseMember[0].payNum) }} 服务次数</span
-                >
+                <span class="num">{{ planner.point }}</span
+                ><span class="txt">薯片分 | {{ planner.payNum }} 服务次数</span>
               </div>
             </div>
           </div>
@@ -48,7 +46,7 @@
             <sp-button
               round
               class="contact-btn"
-              @click="sendTemplateMsgWithImg(item.merchantUserId, item.type)"
+              @click="sendTemplateMsgWithImg(planner.mchBaseId, planner.type)"
               ><my-icon
                 class=""
                 name="notify_ic_chat"
@@ -58,7 +56,7 @@
             <sp-button
               round
               class="contact-btn"
-              @click="handleTel(item.merchantUserId)"
+              @click="handleTel(planner.mchBaseId)"
               ><my-icon
                 class=""
                 name="notify_ic_tel"
@@ -70,7 +68,7 @@
 
         <div class="team_list">
           <swiper class="swiper" :options="swiperOption">
-            <swiper-slide v-for="item in caseMember" :key="item.userCenterId">
+            <swiper-slide v-for="item in teamMmembers" :key="item.userCenterId">
               <div class="team_list_item">
                 <div>
                   <sp-image
@@ -79,11 +77,15 @@
                     round
                     fit="cover"
                     lazy-load
-                    :src="`${item.portrait}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`"
+                    :src="
+                      item.portrait
+                        ? `${item.portrait}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`
+                        : defaultImg
+                    "
                   />
                 </div>
                 <div class="team_list_name">
-                  {{ item.userName }}
+                  {{ item.name }}
                 </div>
               </div>
             </swiper-slide>
@@ -115,22 +117,25 @@ export default {
   },
   mixins: [imHandle],
   props: {
-    /**
-     *  memberRole: "STAFF_MEMBER_SIGN"
-        merchantId: 607997736314103000
-        merchantName: "企大顺测试三公司"
-        merchantUserId: 607997770673841800
-        number: "U2000431134"
-        userId: 607997736314104200
-        userName: "郑利悦"
-     */
     caseMember: {
+      type: Array,
+      default: () => [],
+    },
+    planner: {
+      type: Object,
+      default: () => {
+        return []
+      },
+    },
+    teamMmembers: {
       type: Array,
       default: () => [],
     },
   },
   data() {
     return {
+      defaultImg:
+        'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0',
       swiperOption: {
         slidesPerView: 'auto',
         // centeredSlides: true,
@@ -147,13 +152,23 @@ export default {
     city() {
       return this.$store.state.city.currentCity
     },
-    // // 产品详情
-    // sellingDetail() {
-    //   // 获取客户端展示信息
-    //   return this.$store.state.sellingGoodsDetail.sellingGoodsData
+    // planner() {
+    //   const planner = this.handelData('STAFF_MEMBER_SIGN')
+    //   return planner?.value || {}
+    // },
+    // teamMmembers() {
+    //   const mmembers = this.handelData('STAFF_MEMBER_DIGESTION')
+    //   return mmembers?.value || []
     // },
   },
   methods: {
+    // handelData(key) {
+    //   const info = this.caseMember.find((item) => {
+    //     return item.type === key
+    //   })
+    //   return info
+    // },
+
     // 规划师详情跳转
     plannerInfoUrlJump(mchUserId) {
       this.$router.push({

@@ -4,7 +4,13 @@
 
     <div v-for="(item, index) in list" :key="index" class="item">
       <div class="head">
-        <img :src="item.img" alt="" />
+        <img
+          :src="
+            item.img ||
+            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0'
+          "
+          alt=""
+        />
         <div>
           <div class="phone">
             <p>{{ item.phone }}</p>
@@ -18,10 +24,10 @@
       <div class="images">
         <div class="images_container">
           <sp-image
-            v-for="(image, imageIndex) in 4"
+            v-for="(image, imageIndex) in item.imgs"
             :key="imageIndex"
             class="image"
-            src="image"
+            :src="image"
           ></sp-image>
         </div>
       </div>
