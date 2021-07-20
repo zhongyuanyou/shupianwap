@@ -965,7 +965,7 @@ export default {
       })
     },
     linkKnownDetailQuestion(item){
-      this.$router.push({
+      this.$router.push({ 
         path: `/known/detail/question?id=${item.id}`,
       })
     },
