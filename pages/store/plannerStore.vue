@@ -64,8 +64,9 @@
             />
             <span>2级商户</span>
           </p>
+          <i class="spiconfont spiconfont-you"></i>
         </div>
-        <i class="spiconfont spiconfont-you"></i>
+        
       </div>
     </div>
     <div class="body">
@@ -323,6 +324,8 @@ export default {
                 }
                 this.active = (data.modules.length>0 && data.modules[0].id) || ""
                 this.detailData = data || {}
+                // 推荐商品
+                this.detailData.goods = this.detailData.goods.filter(item=>Number(item.state)===1)
                 // IM接口请求数据
                 const IMParams = { id: mchUserId }
                 // IM数据
@@ -348,7 +351,7 @@ export default {
               storeId:this.detailData.id,
               typeId:this.active,
               page:1,
-              limit:10
+              limit:20
             }
             const { data,code,message } = await this.$axios.post(storeApi.recommendGoods, params, {
               headers: {
@@ -358,7 +361,8 @@ export default {
             if (code !== 200) {
               throw new Error(message)
             }
-            this.detailData.goods = data.records || [] 
+            // 推荐商品
+            this.detailData.goods = data.records.filter(item=>Number(item.state)===1) || [] 
             return data
           } catch (error) {
             console.error('getDetail:', error)
@@ -563,31 +567,40 @@ export default {
                 })
             }
         },
-        async goShop(){
-            try {
-                const isLogin = await this.judgeLoginMixin()
-                if (isLogin) {
-                    this.$router.push({
-                        path:"/store/merchantsStore",
-                        query:{
-                          storeId:this.detailData.mchStoreId,
-                          isShare:"0"
-                        }
-                    })
-                } else {
-                    Toast({
-                        message: '请先登录账号',
-                        iconPrefix: 'sp-iconfont',
-                        icon: 'popup_ic_fail',
-                    })
-                }
-            } catch (err) {
-                Toast({
-                    message: '未获取到划师联系方式',
-                    iconPrefix: 'sp-iconfont',
-                    icon: 'popup_ic_fail',
-                })
+        // async goShop(){
+        //     try {
+        //         const isLogin = await this.judgeLoginMixin()
+        //         if (isLogin) {
+        //             this.$router.push({
+        //                 path:"/store/merchantsStore",
+        //                 query:{
+        //                   storeId:this.detailData.mchStoreId,
+        //                   isShare:"0"
+        //                 }
+        //             })
+        //         } else {
+        //             Toast({
+        //                 message: '请先登录账号',
+        //                 iconPrefix: 'sp-iconfont',
+        //                 icon: 'popup_ic_fail',
+        //             })
+        //         }
+        //     } catch (err) {
+        //         Toast({
+        //             message: '未获取到划师联系方式',
+        //             iconPrefix: 'sp-iconfont',
+        //             icon: 'popup_ic_fail',
+        //         })
+        //     }
+        // },
+        goShop(){
+          this.$router.push({
+            path:"/store/merchantsStore",
+            query:{
+              storeId:this.detailData.mchStoreId,
+              isShare:"0"
             }
+          })
         },
         // 拨打电话号码
         uPCall(telNumber) {
@@ -784,13 +797,18 @@ export default {
         border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 50%;
       }
+      
+    }
+    &__footertext {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin: 0 0 0 20px;
       > i {
         font-size: 35px;
         opacity: 0.5;
       }
-    }
-    &__footertext {
-      margin: 0 32px 0 20px;
       p {
         &:first-of-type {
           width: 470px;
@@ -948,8 +966,11 @@ export default {
                     line-height: 22px;
                     span{
                         display: inline-block;
-                        padding:0 8px 0 0;
+                        padding:0 8px;
                         border-right: 1px solid #1A1A1A;
+                        &:first-of-type{
+                          padding:0 8px 0 0; 
+                        }
                         &:last-child{
                             border:none
                         }
