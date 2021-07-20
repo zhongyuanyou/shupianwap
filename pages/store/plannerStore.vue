@@ -64,8 +64,9 @@
             />
             <span>2级商户</span>
           </p>
+          <i class="spiconfont spiconfont-you"></i>
         </div>
-        <i class="spiconfont spiconfont-you"></i>
+        
       </div>
     </div>
     <div class="body">
@@ -87,10 +88,10 @@
           <span @click="goScoreDetail">查看详情</span>
         </p>
       </div>
-      <div v-if="detailData.modules.length>0 && detailData.modules.data.some(item=>item.id)" class="recommended" :class="titleStatus?'':'tabs'">
+      <div v-if="detailData.modules.length>0 && detailData.modules.some(item=>item.code==='GOODS_RECOMMEND')" class="recommended" :class="titleStatus?'':'tabs'">
         <p class="title">为您推荐</p>
         <sp-tabs v-model="active" sticky @scroll="stickyScroll" @click="tabsClick">
-          <sp-tab v-for="(item,index) in detailData.modules.data" :key="index" :title="item.name" :name="item.id" >
+          <sp-tab v-for="(item,index) in detailData.modules.filter(item=>item.code==='GOODS_RECOMMEND')[0].data" :key="index" :title="item.name" :name="item.id" >
             <ul class="list-data">
               <li v-for="(data,dataIndex) in detailData.goods" :key="dataIndex">
                 <img :src="data.img" alt="">
@@ -99,7 +100,7 @@
                         <span>{{data.name}}</span>
                     </p>
                     <p class="label">
-                        <span v-for="(ta,taindex) in data.tags" :key="taindex">{{ta}}</span>
+                        <span v-for="(ta,taindex) in data.tags" v-show="taindex>2" :key="taindex">{{ta}}</span>
                     </p>
                     <p class="type">
                         <span v-for="(de,deindex) in data.desc.split('|')" :key="deindex">{{de}}</span>
@@ -317,17 +318,19 @@ export default {
                     'x-cache-control': 'cache',
                   },
                 })
-                // IM接口请求数据
-                const IMParams = { id: mchUserId }
-                // IM数据
-                const IMData = await planner.detail(IMParams)
-                this.IMDetailData = IMData || {}
+                
                 if(code!==200){
                   throw new Error(message)
                 }
                 this.active = (data.modules.length>0 && data.modules[0].id) || ""
                 this.detailData = data || {}
-                this.getList()
+                // 推荐商品
+                this.detailData.goods = this.detailData.goods.filter(item=>Number(item.state)===1)
+                // IM接口请求数据
+                const IMParams = { id: mchUserId }
+                // IM数据
+                const IMData = await planner.detail(IMParams)
+                this.IMDetailData = IMData || {}
                 return data
             } catch (error) {
                 console.error('getDetail:', error)
@@ -342,12 +345,13 @@ export default {
         },
         // 获取列表数据
         async getList(){
+          if(!this.active) return
           try {
             const params = { 
               storeId:this.detailData.id,
               typeId:this.active,
               page:1,
-              limit:10
+              limit:20
             }
             const { data,code,message } = await this.$axios.post(storeApi.recommendGoods, params, {
               headers: {
@@ -357,7 +361,8 @@ export default {
             if (code !== 200) {
               throw new Error(message)
             }
-            this.detailData.goods = data.records || [] 
+            // 推荐商品
+            this.detailData.goods = data.records.filter(item=>Number(item.state)===1) || [] 
             return data
           } catch (error) {
             console.error('getDetail:', error)
@@ -393,7 +398,7 @@ export default {
           this.$router.push({
             path:"/store/groupStore",
             query:{
-              storeId:this.detailData.mchStoreId
+              storeId:this.detailData.teamStoreId
             }
           })
         },
@@ -562,31 +567,40 @@ export default {
                 })
             }
         },
-        async goShop(){
-            try {
-                const isLogin = await this.judgeLoginMixin()
-                if (isLogin) {
-                    this.$router.push({
-                        path:"/store/merchantsStore",
-                        query:{
-                          storeId:this.detailData.mchStoreId,
-                          isShare:"0"
-                        }
-                    })
-                } else {
-                    Toast({
-                        message: '请先登录账号',
-                        iconPrefix: 'sp-iconfont',
-                        icon: 'popup_ic_fail',
-                    })
-                }
-            } catch (err) {
-                Toast({
-                    message: '未获取到划师联系方式',
-                    iconPrefix: 'sp-iconfont',
-                    icon: 'popup_ic_fail',
-                })
+        // async goShop(){
+        //     try {
+        //         const isLogin = await this.judgeLoginMixin()
+        //         if (isLogin) {
+        //             this.$router.push({
+        //                 path:"/store/merchantsStore",
+        //                 query:{
+        //                   storeId:this.detailData.mchStoreId,
+        //                   isShare:"0"
+        //                 }
+        //             })
+        //         } else {
+        //             Toast({
+        //                 message: '请先登录账号',
+        //                 iconPrefix: 'sp-iconfont',
+        //                 icon: 'popup_ic_fail',
+        //             })
+        //         }
+        //     } catch (err) {
+        //         Toast({
+        //             message: '未获取到划师联系方式',
+        //             iconPrefix: 'sp-iconfont',
+        //             icon: 'popup_ic_fail',
+        //         })
+        //     }
+        // },
+        goShop(){
+          this.$router.push({
+            path:"/store/merchantsStore",
+            query:{
+              storeId:this.detailData.mchStoreId,
+              isShare:"0"
             }
+          })
         },
         // 拨打电话号码
         uPCall(telNumber) {
@@ -664,7 +678,7 @@ export default {
             }
         },
         tabsClick(title,name){
-          console.log(this.active)
+          this.getList()
         },
     },
     head() {
@@ -783,16 +797,21 @@ export default {
         border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 50%;
       }
+      
+    }
+    &__footertext {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin: 0 0 0 20px;
       > i {
         font-size: 35px;
         opacity: 0.5;
       }
-    }
-    &__footertext {
-      margin: 0 32px 0 20px;
       p {
         &:first-of-type {
-          width: 424px;
+          width: 470px;
           line-height: 45px;
           margin: 0 0 9px 0;
           font-family: PingFangSC-Regular;
@@ -947,8 +966,11 @@ export default {
                     line-height: 22px;
                     span{
                         display: inline-block;
-                        padding:0 8px 0 0;
+                        padding:0 8px;
                         border-right: 1px solid #1A1A1A;
+                        &:first-of-type{
+                          padding:0 8px 0 0; 
+                        }
                         &:last-child{
                             border:none
                         }

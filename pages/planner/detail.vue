@@ -241,15 +241,15 @@
         <!-- <sp-tabs v-model="active" sticky @scroll="stickyScroll" @click="tabsClick">
           <sp-tab v-for="(item,index) in newDetailData.titleNavs" :key="index" :title="item" :name="item" > -->
             <ul v-if="active==='我的问答'" class="list-data myQuestion">
-              <li v-for="(data,dataIndex) in newDetailData.content.wenda" :key="dataIndex">
+              <li v-for="(data,dataIndex) in newDetailData.content.wenda" :key="dataIndex" @click="linkKnownDetailQuestion(data)">
                 <div>
                   <i class="spiconfont spiconfont-huida_mian" style="font-size:24px;color:#FF614E;"></i>
-                  <span>{{data.title}}</span>
+                  <span class="two_line">{{data.title}}</span>
                 </div>
                 <div>
                   <i class="spiconfont spiconfont-wenti_mian" style="font-size:24px;color:#4974F5;"></i>
                   <p>
-                    <span>{{data.contentText}}</span>
+                    <span class="three_line">{{data.contentText}}</span>
                     <img v-if="data.contentImageUrl" :src="data.contentImageUrl" alt="">
                   </p>
                   
@@ -261,10 +261,10 @@
               </li>
             </ul>
             <ul v-if="active==='我的文章'" class="list-data myBook">
-              <li v-for="(data,dataIndex) in newDetailData.content.article" :key="dataIndex">
+              <li v-for="(data,dataIndex) in newDetailData.content.article" :key="dataIndex" @click="linkKnownDetailArticle(data)">
                 <div>
                   <p>
-                    <span>{{data.title}}</span>
+                    <span class="two_line">{{data.title}}</span>
                     <img v-if="data.contentImageUrl" :src="data.contentImageUrl" alt="">
                   </p>
                 </div>
@@ -274,10 +274,10 @@
               </li>
             </ul>
             <ul v-if="active==='热门资讯'" class="list-data see">
-              <li v-for="(data,dataIndex) in newDetailData.content.hotNews" :key="dataIndex">
+              <li v-for="(data,dataIndex) in newDetailData.content.hotNews" :key="dataIndex" @click="linkFoundDetail(data)">
                 <div>
                   <p>
-                    <span>{{data.title}}</span>
+                    <span class="two_line">{{data.title}}</span>
                     <img v-if="data.contentImageUrl" :src="data.contentImageUrl" alt="">
                   </p>
                 </div>
@@ -548,35 +548,11 @@ export default {
       console.log('nav onClickRight')
       this.uPShareOption()
     },
-    async goShop(){
-      // console.log(1)
-      // this.$router.push({
-      //   path:"/planner/plannerShop/index",
-      //   query:{
-      //     a:"1"
-      //   }
-      // })
-      try {
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          this.$router.push({
-            path:"/store/plannerStore",
-            query:this.$route.query
-          })
-        } else {
-          Toast({
-            message: '请先登录账号',
-            iconPrefix: 'sp-iconfont',
-            icon: 'popup_ic_fail',
-          })
-        }
-      } catch (err) {
-        Toast({
-          message: '未获取到划师联系方式',
-          iconPrefix: 'sp-iconfont',
-          icon: 'popup_ic_fail',
-        })
-      }
+    goShop(){
+      this.$router.push({
+        path:"/store/plannerStore",
+        query:this.$route.query
+      })
     },
     handleCall() {
       // 如果当前页面在app中，则调用原生拨打电话的方法
@@ -860,55 +836,64 @@ export default {
     },
     // 跳转播放视频
     seeVideo(){
-      const iOSRouterPath = {
-        path: '/live/PlayBackActivity',
-        parameter: {
-          id:this.newDetailData.live.roomId
-        },
-      }
-      const androidRouterPath = {
-        path: '/live/PlayBackActivity',
-        parameter: {
-          id:this.newDetailData.live.roomId
-        },
-      }
+      
       if (this.isInApp) {
+        const iOSRouterPath = {
+          path: '/live/PlayBackActivity',
+          parameter: {
+            id:this.newDetailData.live.roomId
+          },
+        }
+        const androidRouterPath = {
+          path: '/live/PlayBackActivity',
+          parameter: {
+            id:this.newDetailData.live.roomId
+          },
+        }
+        const userAgent = window.navigator.userAgent
+        const isAndroid = userAgent.indexOf('Android') > -1 || userAgent.indexOf('Adr') > -1 // android终端
+        const isIOS = userAgent.match(/iPhone|iPad|iPod/i) // ios终端
         // 安卓方法
-        this.$appFn.dggJumpRoute(
-          {
-            iOSRouter: iOSRouterPath,
-            androidRouter: androidRouterPath,
-          },
-          (res) => {
-            const { code } = res || {}
-            if (code !== 200) {
-              this.$xToast.show({
-                message: '打开视频失败！',
-                duration: 1500,
-                forbidClick: false,
-                icon: 'toast_ic_remind',
-              })
+        if(isAndroid){
+          this.$appFn.dggJumpRoute(
+            {
+              iOSRouter: iOSRouterPath,
+              androidRouter: androidRouterPath,
+            },
+            (res) => {
+              const { code } = res || {}
+              if (code !== 200) {
+                this.$xToast.show({
+                  message: '打开视频失败！',
+                  duration: 1500,
+                  forbidClick: false,
+                  icon: 'toast_ic_remind',
+                })
+              }
             }
-          }
-        )
-        // ios方法
-        this.$appFn.dggLiveOnline(
-          {
-            iOSRouter: iOSRouterPath,
-            androidRouter: androidRouterPath,
-          },
-          (res) => {
-            const { code } = res || {}
-            if (code !== 200) {
-              this.$xToast.show({
-                message: '打开视频失败！',
-                duration: 1500,
-                forbidClick: false,
-                icon: 'toast_ic_remind',
-              })
+          )
+        }
+        if(isIOS){
+          // ios方法
+          this.$appFn.dggLiveOnline(
+            {
+              iOSRouter: iOSRouterPath,
+              androidRouter: androidRouterPath,
+            },
+            (res) => {
+              const { code } = res || {}
+              if (code !== 200) {
+                this.$xToast.show({
+                  message: '打开视频失败！',
+                  duration: 1500,
+                  forbidClick: false,
+                  icon: 'toast_ic_remind',
+                })
+              }
             }
-          }
-        )
+          )
+        }
+        
       }
     },
     // 获取详情数据
@@ -974,6 +959,21 @@ export default {
         return Promise.reject(error)
       }
     },
+    linkFoundDetail(item){
+      this.$router.push({
+        path: `/found/detail?id=${item.id}`,
+      })
+    },
+    linkKnownDetailQuestion(item){
+      this.$router.push({
+        path: `/known/detail/question?id=${item.id}`,
+      })
+    },
+    linkKnownDetailArticle(item){
+      this.$router.push({
+        path: `/known/detail/article?id=${item.id}`,
+      })
+    }
   },
   head() {
     return {
@@ -1323,6 +1323,20 @@ export default {
     .recommend{
       .list-data{
         padding:41px 40px 0;
+        .three_line{
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical
+        }
+        .two_line{
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical
+        }
       }
       .tabs{
         padding:0 40px;

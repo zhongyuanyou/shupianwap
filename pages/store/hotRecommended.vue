@@ -11,14 +11,14 @@
             style="margin-left: 0.32rem"
             @click.native="onClickLeft"
           />
-          <sp-icon
+          <!-- <sp-icon
             class-prefix="spiconfont"
             name="guanbi"
             size="0.4rem"
             color="#1A1A1A"
             style="margin-left: 0.36rem"
             @click.native="onClickLeft"
-          />
+          /> -->
         </template>
         <!-- <template #right>
           <sp-icon
@@ -36,11 +36,11 @@
     <div id="group" class="bg-group-fixed">
         <div class="footer">
             <img
-                :src="detailData.mchLogo"
+                :src="detailData.mchBaseInfo.logo"
                 alt=""
             />
             <div class="footertext">
-            <p>{{detailData.mchName}}</p>
+            <p>{{detailData.mchBaseInfo.name}}</p>
             <p v-show="false">
                 <img
                 src="https://cdn.shupian.cn/sp-pt/wap/images/7mruoa3go2c0000.png"
@@ -62,7 +62,7 @@
             <sp-tabs v-model="active" @click="tabsClick">
                 <sp-tab v-for="(item,index) in detailData.goodsRecommend" :key="index" :title="item.name" :name="item.id" >
                     <ul class="list-data">
-                        <van-list
+                        <sp-list
                             v-model="refresh.pullUp.status"
                             :finished="refresh.pullUp.finished"
                             @load="onLoad"
@@ -74,7 +74,7 @@
                                         <span>{{data.name}}</span>
                                     </p>
                                     <p class="label">
-                                        <span v-for="(ta,taindex) in data.tags" :key="taindex">{{ta}}</span>
+                                        <span v-for="(ta,taindex) in data.tags" v-show="taindex>2" :key="taindex">{{ta}}</span>
                                     </p>
                                     <p class="type">
                                         <span v-for="(de,deindex) in data.desc && data.desc.split('|')" :key="deindex">{{de}}</span>
@@ -85,9 +85,10 @@
                                     </p>
                                 </div>
                             </li>
-                        </van-list>
+                        </sp-list>
                         
                     </ul>
+                    <p v-if="refresh.pullUp.finished" class="list-data-noinfo">没有更多了</p>
                 </sp-tab>
             </sp-tabs>
         </div>
@@ -110,7 +111,8 @@ import {
     Icon,
     Tabs,
     Toast,
-    Tab 
+    Tab,
+    List
 } from '@chipspc/vant-dgg'
 import { planner } from '@/api'
 import { storeApi } from '@/api/store'
@@ -123,6 +125,7 @@ export default {
         [Bottombar.name]: Bottombar,
         [BottombarButton.name]: BottombarButton,
         [ShareSheet.name]: ShareSheet,
+        [List.name]:List,
         Header,
         SpToast,
         SpTabs:Tabs,
@@ -132,13 +135,10 @@ export default {
         return {
             active: this.$route.query.active, // tab状态
             headActive:"rememded",
-            detailData:{},
-            detailCodeData:{
-                MCH_SERVICE_DATA:[],
-                PLANNER_RECOMMEND:[],
-                MCH_BASE_INFO:[],
-                GOODS_RECOMMEND:[],
-                SWIPER_IMAGE:[]
+            detailData:{
+                goodsRecommend:[],
+                mchService:{},
+                mchBaseInfo:{}
             },
             floatview:false, // 滚动置顶
             headTabs:[
@@ -160,7 +160,7 @@ export default {
 
             ],
             refresh: {
-                pageIndex:1,
+                pageIndex:0,
                 pageSize:10,
                 // 下拉加载
                 pullRefresh:{
@@ -294,7 +294,6 @@ export default {
                     
                 }
                 this.detailData = data || {}
-                this.getList()
                 return data
             } catch (error) {
                 console.error('getDetail:', error)
@@ -313,9 +312,9 @@ export default {
             try {
                 const params = { 
                     storeId,
-                    typeId:"1118898494378396292",
-                    page:1,
-                    limit:10
+                    typeId:this.active,
+                    page:this.refresh.pageIndex,
+                    limit:this.refresh.pageSize
                 }
                 const  { data , code , message} = await this.$axios.post(storeApi.recommendGoods, params, {
                     headers: {
@@ -326,17 +325,19 @@ export default {
                     this.changePull(true)
                     throw new Error(message)
                 }
-                if(data.records){
-                    this.changePull(false)
-                }else{
+                // this.refresh.pageSize
+                if(data.records && data.records.length<this.refresh.pageSize){
                     this.changePull(true)
+                    
+                }else{
+                    this.changePull(false)
                 }
                 if (type === "onLoad") {
                     // 上拉加载
-                    this.tabsListData =[...this.tabsListData , ...data.data.records];
+                    this.tabsListData =[...this.tabsListData , ...data.records];
                 } else {
                     // 下拉刷新
-                    this.tabsListData = this.tabsListData.filter(item=>item.status==='');
+                    this.tabsListData = data.records
                 }
                 return data
             } catch (error) {
@@ -523,8 +524,8 @@ export default {
             }
         },
         tabsClick(title,name){
-            console.log(this.active)
-            this.getList()
+            this.refresh.pageIndex = 1
+            this.getList('noOnload')
         },
         headTabsClick(){
             if(this.headActive==='index'){
@@ -766,20 +767,22 @@ export default {
             }
         }
         .body-content{
-            .title {
-                margin:32px 0;
-                font-family: PingFangSC-Medium;
-                font-size: 40px;
-                font-weight: bold;
-                color: #222222;
-            }
+            
         }
         .recommended {
-        
             .title {
+                margin: 0 12px 0 0;
                 font-family: PingFangSC-Medium;
                 font-size: 40px;
                 color: #222222;
+            }
+            .list-data-noinfo{
+                font-family: PingFangSC-Regular;
+                font-size: 24px;
+                color: #999999;
+                letter-spacing: 0;
+                text-align: center;
+                line-height: 24px;
             }
             .list-data{
                 li{
@@ -823,8 +826,11 @@ export default {
                             line-height: 22px;
                             span{
                                 display: inline-block;
-                                padding:0 8px 0 0;
+                                padding:0 8px 0 8px;
                                 border-right: 1px solid #1A1A1A;
+                                &:first-of-type{
+                                    padding-left: 0;
+                                }
                                 &:last-child{
                                     border:none
                                 }
@@ -867,6 +873,7 @@ export default {
                 border:none;
             }
             ::v-deep .sp-tabs__wrap{
+                width:80vw;
                 margin: 0 0 0 -40px;
                 .sp-tabs__nav{
                     justify-content: space-between;
