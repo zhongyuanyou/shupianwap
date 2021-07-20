@@ -15,7 +15,7 @@
           <div class="phone">
             <p>{{ item.username }}</p>
           </div>
-          <div class="date" v-if="item.time">{{ formatDate(item.time) }}</div>
+          <div v-if="item.time" class="date">{{ formatDate(item.time) }}</div>
         </div>
       </div>
       <p class="tit">

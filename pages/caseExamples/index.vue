@@ -144,6 +144,7 @@ export default {
     },
     // 分类选择
     selectClassify(tab1, tab2, tabs) {
+      console.log(tab1, tab2, tabs)
       if (tab1.value === 2) {
         this.search.orderItems = [
           {
@@ -162,6 +163,9 @@ export default {
             asc: false,
           },
         ]
+      }
+
+      if (tab2.value && tab2.value.length > 0) {
       }
       this.initData()
       // this.search.orderItems = {}
@@ -240,7 +244,6 @@ export default {
         const info = this.getDataFromDetailInfo(detailInfo, key)
         if (info.show && info.show.length > 0) {
           detailInfo[key] = info.show[0]
-          console.log(key, info.show[0])
         }
       })
     },
