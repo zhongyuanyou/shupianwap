@@ -111,11 +111,11 @@ export default {
         orderItems: [
           // {
           //   column: 'caseScore',
-          //   asc: true,
+          //   asc: false,
           // },
           {
             column: 'createTime',
-            asc: true,
+            asc: false,
           },
         ],
       },
@@ -143,7 +143,29 @@ export default {
       })
     },
     // 分类选择
-    selectClassify(tab1, tab2, tabs) {},
+    selectClassify(tab1, tab2, tabs) {
+      if (tab1.value === 2) {
+        this.search.orderItems = [
+          {
+            column: 'caseScore',
+            asc: false,
+          },
+          {
+            column: 'createTime',
+            asc: false,
+          },
+        ]
+      } else {
+        this.search.orderItems = [
+          {
+            column: 'createTime',
+            asc: false,
+          },
+        ]
+      }
+      this.initData()
+      // this.search.orderItems = {}
+    },
     initData() {
       if (this.isInApp) {
         if (this.userInfo.userId && this.userInfo.token) {
@@ -198,6 +220,41 @@ export default {
 
       this.getCaseList()
     },
+
+    getDataFromDetailInfo(detailInfo, key) {
+      // ['1',"processing",'caseInfo',"hHauR8vs78n2brXYuBia1G","caseResult", "expertEvaluation","UserReviews"]
+      let info = {}
+      if (detailInfo?.infos) {
+        info = detailInfo.infos.find((infosItem) => {
+          return infosItem.key === key
+        })
+      }
+      if (info) {
+        return info
+      }
+      console.log(key, info)
+      return {}
+    },
+    handelData(detailInfo, keys) {
+      keys.map((key) => {
+        const info = this.getDataFromDetailInfo(detailInfo, key)
+        if (info.show && info.show.length > 0) {
+          detailInfo[key] = info.show[0]
+          console.log(key, info.show[0])
+        }
+      })
+    },
+    caseInfo(item) {
+      const caseInfo = this.getDataFromDetailInfo(item, 'caseInfo')
+      console.log(caseInfo.show[0])
+      if (caseInfo && caseInfo.show && caseInfo.show[0]) {
+        return {
+          content: caseInfo.show[0].content,
+          picture: [caseInfo.show[0].picture],
+        }
+      }
+      return {}
+    },
     getCaseList() {
       const params = {
         limit: this.limit,
@@ -207,6 +264,25 @@ export default {
       caseApi
         .case_list(search)
         .then((res) => {
+          console.log('res.records', res.records)
+
+          if (res.records && res.records.length > 0) {
+            const keys = Object.keys({
+              1: '案例列表图',
+              hHauR8vs78n2brXYuBia1G: '案例头图',
+              caseInfo: '案例简介',
+              processing: '办理经过',
+              // case1626678429069: '交易处理记录222222',
+              caseResult: '案例结果',
+              expertEvaluation: '专家评价',
+              UserReviews: '用户评价',
+            })
+
+            res.records.map((item) => {
+              this.handelData(item.detailInfo, keys)
+            })
+          }
+
           if (params.page === 1) {
             this.list = res.records
           } else {
