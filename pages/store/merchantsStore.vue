@@ -317,6 +317,9 @@ export default {
             await this.POSITION_CITY({ type: 'init' })
         }
     },
+    destroyed () {
+        window.removeEventListener('scroll', this.handleScroll)
+    },
     methods: {
         ...mapActions({
             POSITION_CITY: 'city/POSITION_CITY',
@@ -328,7 +331,7 @@ export default {
         handleScroll(){
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop // 滚动条偏移量
             const group = document.getElementById('group');  // 要滚动到顶部吸附的元素的偏移量
-            const height = group.offsetHeight
+            const height = group && group.offsetHeight 
             if(scrollTop > height){
                 this.floatview = true
 
@@ -361,8 +364,7 @@ export default {
                 // MCH_BASE_INFO 商户基础信息
                 // GOODS_RECOMMEND 商品推荐
                 // SWIPER_IMAGE 轮播图
-                const goods = data.data.goods.slice(0, 4)
-                data.data.goods = goods
+                data.data.goods = data.data.goods.filter(item=>Number(item.state)===1)
                 this.detailData = data.data || {}
 
                 return data
@@ -395,7 +397,7 @@ export default {
                 if (code !== 200) {
                     throw new Error(message)
                 }
-                this.detailData.goods = data.records || []
+                this.detailData.goods = data.records.filter(item=>Number(item.state)===1)
                 return data
             } catch (error) {
                 console.error('getDetail:', error)
