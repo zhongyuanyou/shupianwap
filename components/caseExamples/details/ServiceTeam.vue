@@ -3,8 +3,7 @@
     <p class="planners_title">服务团队</p>
     <div class="planners">
       <sp-skeleton :row="3" :loading="caseMember.length == 0">
-        <!--    v-for="(item, index) in caseMember"
-          :key="item.userCenterId" -->
+        <!-- v-if="planner.mchUserId" -->
         <div class="planners_item" :style="{ marginTop: '0.42rem' }">
           <div class="planners_item_lf">
             <a
@@ -18,8 +17,8 @@
                 fit="cover"
                 lazy-load
                 :src="
-                  planner.img
-                    ? `${planner.img}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`
+                  planner.headUrl
+                    ? `${planner.headUrl}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`
                     : defaultImg
                 "
               />
@@ -30,14 +29,18 @@
                   href="javascript:void(0);"
                   @click="plannerInfoUrlJump(planner.mchUserId)"
                 >
-                  <p class="name">{{ planner.name }}</p>
+                  <p class="name">{{ planner.userName }}</p>
                 </a>
 
                 <i class="gold_icon"> 金牌规划师 </i>
               </div>
               <div class="info_bot">
                 <span class="num">{{ planner.point }}</span
-                ><span class="txt">薯片分 | {{ planner.payNum }} 服务次数</span>
+                ><span class="txt"
+                  >薯片分 |
+                  {{ planner.baseData && planner.baseData.peopleServed }}
+                  服务次数</span
+                >
               </div>
             </div>
           </div>
@@ -65,7 +68,7 @@
             /></sp-button>
           </div>
         </div>
-
+        <!-- v-if="teamMmembers.length > 0" -->
         <div class="team_list">
           <swiper class="swiper" :options="swiperOption">
             <swiper-slide v-for="item in teamMmembers" :key="item.userCenterId">
@@ -124,7 +127,7 @@ export default {
     planner: {
       type: Object,
       default: () => {
-        return []
+        return {}
       },
     },
     teamMmembers: {
@@ -171,6 +174,9 @@ export default {
 
     // 规划师详情跳转
     plannerInfoUrlJump(mchUserId) {
+      if (!mchUserId) {
+        return
+      }
       this.$router.push({
         path: '/planner/detail',
         query: {

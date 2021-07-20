@@ -246,7 +246,7 @@ export default {
     },
     caseInfo(item) {
       const caseInfo = this.getDataFromDetailInfo(item, 'caseInfo')
-      console.log(caseInfo.show[0])
+
       if (caseInfo && caseInfo.show && caseInfo.show[0]) {
         return {
           content: caseInfo.show[0].content,
@@ -264,15 +264,13 @@ export default {
       caseApi
         .case_list(search)
         .then((res) => {
-          console.log('res.records', res.records)
-
           if (res.records && res.records.length > 0) {
             const keys = Object.keys({
               1: '案例列表图',
               hHauR8vs78n2brXYuBia1G: '案例头图',
               caseInfo: '案例简介',
               processing: '办理经过',
-              // case1626678429069: '交易处理记录222222',
+
               caseResult: '案例结果',
               expertEvaluation: '专家评价',
               UserReviews: '用户评价',

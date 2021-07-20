@@ -13,13 +13,13 @@
         />
         <div>
           <div class="phone">
-            <p>{{ item.phone }}</p>
+            <p>{{ item.username }}</p>
           </div>
-          <div class="date">{{ item.date }}</div>
+          <div class="date" v-if="item.time">{{ formatDate(item.time) }}</div>
         </div>
       </div>
       <p class="tit">
-        {{ item.tit }}
+        {{ item.content }}
       </p>
       <div class="images">
         <div class="images_container">
@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { Swipe, SwipeItem, Image, Rate } from '@chipspc/vant-dgg'
 export default {
   name: 'Comment',
@@ -51,6 +52,11 @@ export default {
       default: () => {
         return []
       },
+    },
+  },
+  methods: {
+    formatDate(time) {
+      return moment(time).format('YYYY年MM月DD日')
     },
   },
 }
