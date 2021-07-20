@@ -5,7 +5,7 @@ const path = require('path')
 const BASE = require('./config/index.js')
 const NODE_ENV = process.env.NODE_ENV
 const baseUrl = BASE.baseURL
-console.log('baseUrl', baseUrl)
+console.log('baseUrl1', baseUrl)
 const ossUrl = BASE.ossUrl
 const bablePlugin = [
   [

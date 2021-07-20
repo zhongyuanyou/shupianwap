@@ -7,7 +7,7 @@
       <div ref="couponHeaderWarpper" class="case_examples_list-header-warpper">
         <Header class="my-header" title="案例"></Header>
         <client-only>
-          <Classify></Classify>
+          <Classify @select="selectClassify"></Classify>
         </client-only>
       </div>
     </div>
@@ -102,7 +102,23 @@ export default {
       limit: 7,
 
       list: [],
+      search: {
+        productTypeCode: '',
+        dealProvince: '',
+        dealCity: '',
+        dealArea: '',
 
+        orderItems: [
+          // {
+          //   column: 'caseScore',
+          //   asc: true,
+          // },
+          {
+            column: 'createTime',
+            asc: true,
+          },
+        ],
+      },
       HeaderHeight: '',
       // FooterNavHeight: 150,
     }
@@ -116,9 +132,6 @@ export default {
     }),
   },
   mounted() {
-    // this.tabActive = parseInt(this.$route.query.tabActive || 0)
-
-    // this.FooterNavHeight = this.$refs.FooterNav.$el.offsetHeight
     this.initData()
     this.getHeaderHeight()
   },
@@ -129,6 +142,8 @@ export default {
         console.log(this.HeaderHeight)
       })
     },
+    // 分类选择
+    selectClassify(tab1, tab2, tabs) {},
     initData() {
       if (this.isInApp) {
         if (this.userInfo.userId && this.userInfo.token) {
@@ -185,17 +200,12 @@ export default {
     },
     getCaseList() {
       const params = {
-        orderItems: [
-          {
-            column: 'createTime',
-            asc: true,
-          },
-        ], //
         limit: this.limit,
         page: this.page,
       }
+      const search = Object.assign({}, params, this.search)
       caseApi
-        .case_list(params)
+        .case_list(search)
         .then((res) => {
           if (params.page === 1) {
             this.list = res.records

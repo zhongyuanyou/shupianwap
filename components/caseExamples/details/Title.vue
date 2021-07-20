@@ -32,12 +32,12 @@
         <div class="title_info_num">
           {{ info.dealProvince }}{{ info.dealCity }}
         </div>
-        注册区域
+        办理区域
       </div>
     </div>
 
     <div class="title_bottom">
-      <QuotationScheme></QuotationScheme>
+      <QuotationScheme :info="priceData || []"></QuotationScheme>
       <!-- <div class="title_bottom_button">报价方案</div> -->
     </div>
   </div>
@@ -65,7 +65,11 @@ export default {
   data() {
     return {}
   },
-  computed: {},
+  computed: {
+    priceData() {
+      return this.info?.detailInfo?.priceData
+    },
+  },
   methods: {},
 }
 </script>
