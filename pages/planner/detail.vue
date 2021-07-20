@@ -961,7 +961,7 @@ export default {
     },
     linkFoundDetail(item){
       this.$router.push({
-        path: `/found/detail?id=${item.id}`,
+        path: `/found/detail/${item.id}`,
       })
     },
     linkKnownDetailQuestion(item){
