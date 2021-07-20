@@ -1,6 +1,6 @@
 <template>
   <div class="m-store group-store">
-    <Header title="团队店铺">
+    <Header title="团队店铺" :fixed="true">
       <template v-if="isInApp" #right>
         <my-icon
           class-prefix="spiconfont"
