@@ -2,9 +2,9 @@
   <div class="title">
     <div class="flex title_tags">
       <div class="flex_1 title_tags_left">
-        <div v-if="info.caseLabel">
+        <div v-if="info.detailInfo && info.detailInfo.caseLabel">
           <span
-            v-for="item of info.caseLabel"
+            v-for="item of info.detailInfo.caseLabel"
             :key="item.labelCode"
             class="title_tags_item"
             >{{ item.labelName }}</span
@@ -21,7 +21,9 @@
 
     <div class="title_info flex">
       <div class="flex_1">
-        <div class="title_info_num">{{ info.commodityAmount }}元</div>
+        <div class="title_info_num">
+          {{ (info.commodityAmount / 100 || 0).toFixed(2) }}元
+        </div>
         价格
       </div>
       <div class="flex_1">
@@ -36,7 +38,7 @@
       </div>
     </div>
 
-    <div class="title_bottom">
+    <div v-if="priceData.length > 0" class="title_bottom">
       <QuotationScheme :info="priceData || []"></QuotationScheme>
       <!-- <div class="title_bottom_button">报价方案</div> -->
     </div>
@@ -67,7 +69,7 @@ export default {
   },
   computed: {
     priceData() {
-      return this.info?.detailInfo?.priceData
+      return this.info?.detailInfo?.priceData || []
     },
   },
   methods: {},

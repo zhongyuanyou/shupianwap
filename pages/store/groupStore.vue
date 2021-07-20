@@ -301,14 +301,10 @@ export default {
         if (code !== 200) {
           throw new Error(message)
         }
-        // 商品只取4条记录
-        const goods = data.goods.slice(0, 4)
-        data.goods = goods
         this.info = data
         return data
       } catch (e) {
         this.$xToast.error(e.message)
-        setTimeout(this.$back(), 2000)
       }
     },
     async getGoodsApi(typeId) {
