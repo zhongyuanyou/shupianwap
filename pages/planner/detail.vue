@@ -244,12 +244,12 @@
               <li v-for="(data,dataIndex) in newDetailData.content.wenda" :key="dataIndex">
                 <div>
                   <i class="spiconfont spiconfont-huida_mian" style="font-size:24px;color:#FF614E;"></i>
-                  <span>{{data.title}}</span>
+                  <span class="two_line">{{data.title}}</span>
                 </div>
                 <div>
                   <i class="spiconfont spiconfont-wenti_mian" style="font-size:24px;color:#4974F5;"></i>
                   <p>
-                    <span>{{data.contentText}}</span>
+                    <span class="three_line">{{data.contentText}}</span>
                     <img v-if="data.contentImageUrl" :src="data.contentImageUrl" alt="">
                   </p>
                   
@@ -264,7 +264,7 @@
               <li v-for="(data,dataIndex) in newDetailData.content.article" :key="dataIndex">
                 <div>
                   <p>
-                    <span>{{data.title}}</span>
+                    <span class="two_line">{{data.title}}</span>
                     <img v-if="data.contentImageUrl" :src="data.contentImageUrl" alt="">
                   </p>
                 </div>
@@ -277,7 +277,7 @@
               <li v-for="(data,dataIndex) in newDetailData.content.hotNews" :key="dataIndex">
                 <div>
                   <p>
-                    <span>{{data.title}}</span>
+                    <span class="two_line">{{data.title}}</span>
                     <img v-if="data.contentImageUrl" :src="data.contentImageUrl" alt="">
                   </p>
                 </div>
@@ -1323,6 +1323,20 @@ export default {
     .recommend{
       .list-data{
         padding:41px 40px 0;
+        .three_line{
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical
+        }
+        .two_line{
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical
+        }
       }
       .tabs{
         padding:0 40px;

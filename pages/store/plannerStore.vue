@@ -87,10 +87,10 @@
           <span @click="goScoreDetail">查看详情</span>
         </p>
       </div>
-      <div v-if="detailData.modules.length>0 && detailData.modules.data.some(item=>item.id)" class="recommended" :class="titleStatus?'':'tabs'">
+      <div v-if="detailData.modules.length>0 && detailData.modules.some(item=>item.code==='GOODS_RECOMMEND')" class="recommended" :class="titleStatus?'':'tabs'">
         <p class="title">为您推荐</p>
         <sp-tabs v-model="active" sticky @scroll="stickyScroll" @click="tabsClick">
-          <sp-tab v-for="(item,index) in detailData.modules.data" :key="index" :title="item.name" :name="item.id" >
+          <sp-tab v-for="(item,index) in detailData.modules.filter(item=>item.code==='GOODS_RECOMMEND')[0].data" :key="index" :title="item.name" :name="item.id" >
             <ul class="list-data">
               <li v-for="(data,dataIndex) in detailData.goods" :key="dataIndex">
                 <img :src="data.img" alt="">
@@ -99,7 +99,7 @@
                         <span>{{data.name}}</span>
                     </p>
                     <p class="label">
-                        <span v-for="(ta,taindex) in data.tags" :key="taindex">{{ta}}</span>
+                        <span v-for="(ta,taindex) in data.tags" v-show="taindex>2" :key="taindex">{{ta}}</span>
                     </p>
                     <p class="type">
                         <span v-for="(de,deindex) in data.desc.split('|')" :key="deindex">{{de}}</span>
@@ -317,17 +317,17 @@ export default {
                     'x-cache-control': 'cache',
                   },
                 })
-                // IM接口请求数据
-                const IMParams = { id: mchUserId }
-                // IM数据
-                const IMData = await planner.detail(IMParams)
-                this.IMDetailData = IMData || {}
+                
                 if(code!==200){
                   throw new Error(message)
                 }
                 this.active = (data.modules.length>0 && data.modules[0].id) || ""
                 this.detailData = data || {}
-                this.getList()
+                // IM接口请求数据
+                const IMParams = { id: mchUserId }
+                // IM数据
+                const IMData = await planner.detail(IMParams)
+                this.IMDetailData = IMData || {}
                 return data
             } catch (error) {
                 console.error('getDetail:', error)
@@ -342,6 +342,7 @@ export default {
         },
         // 获取列表数据
         async getList(){
+          if(!this.active) return
           try {
             const params = { 
               storeId:this.detailData.id,
@@ -393,7 +394,7 @@ export default {
           this.$router.push({
             path:"/store/groupStore",
             query:{
-              storeId:this.detailData.mchStoreId
+              storeId:this.detailData.teamStoreId
             }
           })
         },
@@ -664,7 +665,7 @@ export default {
             }
         },
         tabsClick(title,name){
-          console.log(this.active)
+          this.getList()
         },
     },
     head() {
@@ -792,7 +793,7 @@ export default {
       margin: 0 32px 0 20px;
       p {
         &:first-of-type {
-          width: 424px;
+          width: 470px;
           line-height: 45px;
           margin: 0 0 9px 0;
           font-family: PingFangSC-Regular;

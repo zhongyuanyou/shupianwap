@@ -36,11 +36,11 @@
     <div id="group" class="bg-group">
         <div class="footer">
             <img
-                :src="detailData.mchLogo"
+                :src="detailData.mchBaseInfo.logo"
                 alt=""
             />
             <div class="footertext">
-            <p>{{detailData.mchName}}</p>
+            <p>{{detailData.mchBaseInfo.name}}</p>
             <p v-show="false">
                 <img
                 src="https://cdn.shupian.cn/sp-pt/wap/images/7mruoa3go2c0000.png"
@@ -54,12 +54,12 @@
     <div class="bg-group-fixed" :style="floatview?'opacity:1':'opacity:0'">
         <div class="footer">
             <img
-                :src="detailData.mchLogo"
+                :src="detailData.mchBaseInfo.logo"
                 alt=""
             />
             <div class="footertext">
-            <p>{{detailData.mchName}}</p>
-            <p>
+            <p>{{detailData.mchBaseInfo.name}}</p>
+            <p v-show="false">
                 <img
                 src="https://cdn.shupian.cn/sp-pt/wap/images/7mruoa3go2c0000.png"
                 alt=""
@@ -89,7 +89,7 @@
                 <div class="sp-score__score">
                     <div>
                         <p class="sp-score__title">
-                            <span>{{detailData.teamService.personNum}}</span>
+                            <span>{{detailData.mchService.personNum}}</span>
                             <span>人</span>
                         </p>
                         <p>
@@ -98,7 +98,7 @@
                     </div>
                     <div>
                         <p class="sp-score__title">
-                            <span>{{detailData.teamService.customerNum}}</span>
+                            <span>{{detailData.mchService.customerNum}}</span>
                             <span>位</span>
                         </p>
                         <p>
@@ -107,7 +107,7 @@
                     </div>
                     <div>
                         <p class="sp-score__title">
-                            <span>{{detailData.teamService.maintenanceNum}}</span>
+                            <span>{{detailData.mchService.maintenanceNum}}</span>
                             <span>个</span>
                         </p>
                         <p>
@@ -118,13 +118,13 @@
                 <div class="sp-score__satisfaction">
                     <p>客户满意</p>
                     <div class="satisfactiontext">
-                        <p>3分钟响应率：{{detailData.teamService.consultResponse}}</p>
-                        <p>电话接通率：{{detailData.teamService.callThroughRate}}</p>
+                        <p>3分钟响应率：{{detailData.mchService.consultResponse}}</p>
+                        <p>电话接通率：{{detailData.mchService.callThroughRate}}</p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="body-content recommended">
+        <div v-if="detailData.goodsRecommend.length>0" class="body-content recommended">
             <p class="title">为您推荐</p>
             <sp-tabs v-model="active" @click="tabsClick">
                 <sp-tab v-for="(item,index) in detailData.goodsRecommend" :key="index" :title="item.name" :name="item.id" >
@@ -136,7 +136,7 @@
                                     <span>{{data.name}}</span>
                                 </p>
                                 <p class="label">
-                                    <span v-for="(ta,taindex) in data.tags" :key="taindex">{{ta}}</span>
+                                    <span v-for="(ta,taindex) in data.tags" v-show="taindex>2" :key="taindex">{{ta}}</span>
                                 </p>
                                 <p class="type">
                                     <span v-for="(de,deindex) in data.desc && data.desc.split('|')" :key="deindex">{{de}}</span>
@@ -150,7 +150,7 @@
                     </ul>
                 </sp-tab>
             </sp-tabs>
-            <button @click="moreRem">更多优惠</button>
+            <button v-if="detailData.goods.length>0" @click="moreRem">更多优惠</button>
         </div>
         <div class="body-content recommendedPlanner">
             <p class="title">推荐规划师</p>
@@ -228,12 +228,9 @@ export default {
             active: '', // tab状态
             headActive:"index",
             detailData:{
-                goodsRecommend:{
-
-                },
-                teamService:{
-
-                }
+                goodsRecommend:[],
+                mchService:{},
+                mchBaseInfo:{}
             },
             floatview:false, // 滚动置顶
             opacity:1,
@@ -398,7 +395,7 @@ export default {
                 if (code !== 200) {
                     throw new Error(message)
                 }
-                this.detailData.goods = data.data.records || []
+                this.detailData.goods = data.records || []
                 return data
             } catch (error) {
                 console.error('getDetail:', error)
@@ -977,8 +974,8 @@ export default {
                 border:none;
             }
             ::v-deep .sp-tabs__wrap{
-                // margin: 0 0 0 -40px;
-                // width:80vw
+                margin: 0 0 0 -40px;
+                width:80vw
             }
             ::v-deep .sp-tab{
                 font-family: PingFangSC-Regular;
@@ -1008,10 +1005,13 @@ export default {
                 border-radius: 12px;
                 ul{
                     display: flex;
-                    justify-content: space-between;
                     align-items: center;
                     li{
+                        margin:0 50px 0 0;
                         text-align: center;
+                        &:last-of-type{
+                            margin:0;
+                        }
                         img{
                             width: 96px;
                             height: 96px;
