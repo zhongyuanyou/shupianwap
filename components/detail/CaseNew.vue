@@ -4,22 +4,35 @@
       精选案例
       <span>查看全部 <my-icon name="you" size="0.2rem"></my-icon></span>
     </h1>
-    <div class="case-box">
+    <div @click="toDetail" class="case-box">
       <div class="case-img">
-        <sp-image :src="caseData.img" alt=""></sp-image>
+        <sp-image :src="caseData.caseImg" alt=""></sp-image>
       </div>
       <div class="case-name">
-        <h1>{{ caseData.caseName || caseData.productName }}</h1>
-        <p v-if="caseData.detailInfo && caseData.detailInfo.dealTime">
-          办理周期:{{ caseData.detailInfo.dealTime }}天
-        </p>
+        <h3>{{ caseData.caseName || caseData.productName }}</h3>
+        <p>办理周期:{{ caseData.dealTime }}天</p>
       </div>
-      <div v-if="caseData.caseScore" class="case-score">
-        {{ caseData.caseScore }}<span class="case-text">分 </span>
+      <div class="case-score">
+        {{ caseData.caseScore / 100 || 9.9 }}<span class="case-text">分 </span>
       </div>
     </div>
-    <div class="case-des">
-      {{ caseData.detailInfo && caseData.detailInfo.caseSynopsis }}
+    <div @click="toDetail" class="case-des">
+      <p class="text">
+        {{ caseData.caseIntro && caseData.caseIntro.show[0].content }}
+      </p>
+      <!-- <div
+        v-if="caseData.caseIntro && caseData.caseIntro.show[0].content.imgs"
+        class="img_list"
+      >
+        <div
+          v-for="(item2, index) in caseData.caseIntro.show[0].content.imgs"
+          :key="index"
+          class="img_item"
+        >
+          <sp-image :src="item2" class="sp-img"></sp-image>
+        </div>
+        {{ caseData.caseIntro && caseData.caseIntro.show[0].content.imgs }}
+      </div> -->
     </div>
     <!-- <p>{{ caseData.detailInfo.createTime }}</p> -->
   </div>
@@ -45,8 +58,12 @@ export default {
   computed: {
     // 产品详情
     classCodeLevelList() {
-      // 获取客户端展示信息
-      return this.$store.state.tcProductDetail.detailData.classCodeLevelList
+      if (this.$route.path.match('transactionDetails')) {
+        return this.$store.state.tcProductDetail.detailData.classCodeLevelList
+      } else {
+        return this.$store.state.sellingGoodsDetail.sellingGoodsData
+          .classCodeLevelList
+      }
     },
   },
   mounted() {
@@ -56,14 +73,22 @@ export default {
     getCase() {
       console.log('classCodeLevelList', this.classCodeLevelList)
       const params = {
-        page: 1,
-        limit: 10,
         orderItems: [
           {
             column: 'createTime',
+            asc: false,
+          },
+          {
+            column: 'caseScore',
+            asc: false,
+          },
+          {
+            column: 'isTop',
             asc: true,
           },
         ],
+        page: '1',
+        limit: '10',
       }
       // if (this.classCodeLevelList.length > 2) {
       //   params.productThreeBelongCode = this.classCodeLevelList[2]
@@ -88,6 +113,9 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+    },
+    toDetail() {
+      this.$router.push('/caseExamples/details?id=' + this.caseData.id)
     },
   },
 }
@@ -144,7 +172,9 @@ export default {
       font-size: 32px;
       color: #222222;
       line-height: 44px;
-      .textOverflow(2);
+      h3 {
+        .textOverflow(2);
+      }
       p {
         font-size: 24px;
         color: #1a1a1a;
@@ -168,27 +198,38 @@ export default {
         font-weight: normal;
       }
     }
-    .case-des {
-      position: relative;
-      width: 100%;
-      height: 167.4px;
-      background: #f8f8f8;
-      width: 630px;
-      height: 114px;
+  }
+  .case-des {
+    margin-top: 30px;
+    position: relative;
+    width: 100%;
+    background: #f8f8f8;
+    height: auto;
+    border-radius: 12px;
+    .text {
+      font-size: 24px;
+      .textOverflow(3);
+      padding: 20px 30px;
       font-size: 24px;
       color: #555555;
       letter-spacing: 0;
       line-height: 38px;
-      ::after {
-        content: '';
-        position: absolute;
-        border-right: 0 solid transparent;
-        border-left: 0 solid transparent;
-        border-bottom: 10px solid #555555;
-        left: 80px;
-        top: -10px;
-      }
     }
+    .img_list {
+      overflow: hidden;
+    }
+  }
+  .case-des::after {
+    content: '';
+    position: absolute;
+    left: 40px;
+    top: -60px;
+    width: 0;
+    height: 0;
+    border-top: 30px solid transparent;
+    border-right: 30px solid transparent;
+    border-bottom: 30px solid #f8f8f8;
+    border-left: 30px solid transparent;
   }
 }
 </style>
