@@ -628,7 +628,7 @@ export default {
         this.$router.push({
           path: '/store/hotRecommended',
           query: {
-            active: '',
+            active: this.active,
             storeId: this.detailData.id,
           },
         })

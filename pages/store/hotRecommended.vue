@@ -800,6 +800,7 @@ export default {
         color: #222222;
       }
       .list-data-noinfo {
+        padding:36px 0;
         font-family: PingFangSC-Regular;
         font-size: 24px;
         color: #999999;
