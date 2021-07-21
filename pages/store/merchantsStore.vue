@@ -33,21 +33,31 @@
         </template>
       </Header>
     </div>
+
     <div id="group" class="bg-group">
-      <div class="footer">
-        <img :src="detailData.mchBaseInfo.logo" alt="" />
-        <div class="footertext">
-          <p>{{ detailData.mchBaseInfo.name }}</p>
-          <p v-show="false">
-            <img
-              src="https://cdn.shupian.cn/sp-pt/wap/images/7mruoa3go2c0000.png"
-              alt=""
-            />
-            <span>2级商户</span>
-          </p>
+      <sp-skeleton
+        title
+        avatar
+        avatar-size="1.2rem"
+        :row="2"
+        :loading="loading"
+      >
+        <div class="footer">
+          <img :src="detailData.mchBaseInfo.logo" alt="" />
+          <div class="footertext">
+            <p>{{ detailData.mchBaseInfo.name }}</p>
+            <p v-show="false">
+              <img
+                src="https://cdn.shupian.cn/sp-pt/wap/images/7mruoa3go2c0000.png"
+                alt=""
+              />
+              <span>2级商户</span>
+            </p>
+          </div>
         </div>
-      </div>
+      </sp-skeleton>
     </div>
+
     <div class="bg-group-fixed" :style="floatview ? 'opacity:1' : 'opacity:0'">
       <div class="footer">
         <img :src="detailData.mchBaseInfo.logo" alt="" />
@@ -86,46 +96,49 @@
         </sp-swipe>
       </div>
       <div class="body-content">
-        <p class="title">商户服务</p>
-        <div class="sp-score">
-          <div class="sp-score__score">
-            <div>
-              <p class="sp-score__title">
-                <span>{{ detailData.mchService.personNum }}</span>
-                <span>人</span>
-              </p>
-              <p>
-                <span>团队人数</span>
-              </p>
+        <sp-skeleton title :row="4" :loading="loading">
+          <p class="title">商户服务</p>
+          <div class="sp-score">
+            <div class="sp-score__score">
+              <div>
+                <p class="sp-score__title">
+                  <span>{{ detailData.mchService.personNum }}</span>
+                  <span>人</span>
+                </p>
+                <p>
+                  <span>团队人数</span>
+                </p>
+              </div>
+              <div>
+                <p class="sp-score__title">
+                  <span>{{ detailData.mchService.customerNum }}</span>
+                  <span>位</span>
+                </p>
+                <p>
+                  <span>服务客户</span>
+                </p>
+              </div>
+              <div>
+                <p class="sp-score__title">
+                  <span>{{ detailData.mchService.maintenanceNum }}</span>
+                  <span>个</span>
+                </p>
+                <p>
+                  <span>维护商品</span>
+                </p>
+              </div>
             </div>
-            <div>
-              <p class="sp-score__title">
-                <span>{{ detailData.mchService.customerNum }}</span>
-                <span>位</span>
-              </p>
-              <p>
-                <span>服务客户</span>
-              </p>
-            </div>
-            <div>
-              <p class="sp-score__title">
-                <span>{{ detailData.mchService.maintenanceNum }}</span>
-                <span>个</span>
-              </p>
-              <p>
-                <span>维护商品</span>
-              </p>
+            <div class="sp-score__satisfaction">
+              <p>客户满意</p>
+              <div class="satisfactiontext">
+                <p>3分钟响应率：{{ detailData.mchService.consultResponse }}</p>
+                <p>电话接通率：{{ detailData.mchService.callThroughRate }}</p>
+              </div>
             </div>
           </div>
-          <div class="sp-score__satisfaction">
-            <p>客户满意</p>
-            <div class="satisfactiontext">
-              <p>3分钟响应率：{{ detailData.mchService.consultResponse }}</p>
-              <p>电话接通率：{{ detailData.mchService.callThroughRate }}</p>
-            </div>
-          </div>
-        </div>
+        </sp-skeleton>
       </div>
+      <sp-skeleton title :row="12" :loading="loading"> </sp-skeleton>
       <div
         v-if="detailData.goodsRecommend.length > 0"
         class="body-content recommended"
@@ -177,7 +190,7 @@
           更多优惠
         </button>
       </div>
-      <div class="body-content recommendedPlanner">
+      <div v-if="!loading" class="body-content recommendedPlanner" >
         <p class="title">推荐规划师</p>
         <div class="planner">
           <ul>
@@ -231,6 +244,7 @@ import {
   Tab,
   Swipe,
   SwipeItem,
+  Skeleton,
 } from '@chipspc/vant-dgg'
 import { planner } from '@/api'
 import { storeApi } from '@/api/store'
@@ -245,6 +259,7 @@ export default {
     [ShareSheet.name]: ShareSheet,
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
+    [Skeleton.name]: Skeleton,
     Header,
     SpToast,
     SpTabs: Tabs,
@@ -252,6 +267,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       active: '', // tab状态
       headActive: 'index',
       detailData: {
@@ -333,7 +349,9 @@ export default {
       // 但是在app中登录等，登录信息cookie中的没有更新，导致直接从store中获取到的信息无效
       // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
       this.isInApp && this.clearUserInfo()
-      this.getDetail()
+      this.getDetail().finally(() => {
+        this.loading = false
+      })
     }
   },
   async mounted() {
@@ -663,6 +681,10 @@ export default {
 .merchantsShop {
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
+  ::v-deep .sp-skeleton {
+    margin: 16px 0 0 0;
+    padding: 0;
+  }
   .bg-group {
     padding: 60px 40px 84px;
     background: url('https://cdn.shupian.cn/sp-pt/wap/images/aicz8hyty0c0000.png')

@@ -26,7 +26,9 @@
       </sp-swipe>
       <div class="swiper-spaceholder"></div>
     </div>
-    <div class="group-tile">
+    <sp-skeleton title avatar avatar-size="1.2rem" :row="3" :loading="loading">
+    </sp-skeleton>
+    <div v-if="!loading" class="group-tile">
       <sp-image
         :src="info.teamInfo.img"
         fit="cover"
@@ -58,109 +60,113 @@
       </div>
       <my-icon name="you" size="0.4rem" color="#BBBBBB"></my-icon>
     </div>
-    <div class="group-server">
-      <div ref="sticky" class="tile">团队服务</div>
-      <div class="server-block">
-        <div class="server-block-line1">
-          <div class="item">
-            <div class="item-res">
-              <span>{{ info.teamService.personNum }}</span
-              ><span class="unit">人</span>
+    <sp-skeleton title :row="12" :loading="loading"> </sp-skeleton>
+    <div v-if="!loading">
+      <div class="group-server">
+        <div ref="sticky" class="tile">团队服务</div>
+        <div class="server-block">
+          <div class="server-block-line1">
+            <div class="item">
+              <div class="item-res">
+                <span>{{ info.teamService.personNum }}</span
+                ><span class="unit">人</span>
+              </div>
+              <div class="item-desc">团队人数</div>
             </div>
-            <div class="item-desc">团队人数</div>
-          </div>
-          <div class="item">
-            <div class="item-res">
-              <span>{{ info.teamService.customerNum }}</span
-              ><span class="unit">位</span>
+            <div class="item">
+              <div class="item-res">
+                <span>{{ info.teamService.customerNum }}</span
+                ><span class="unit">位</span>
+              </div>
+              <div class="item-desc">服务客户</div>
             </div>
-            <div class="item-desc">服务客户</div>
-          </div>
-          <div class="item">
-            <div class="item-res">
-              <span>{{ info.teamService.maintenanceNum }}</span
-              ><span class="unit">人</span>
+            <div class="item">
+              <div class="item-res">
+                <span>{{ info.teamService.maintenanceNum }}</span
+                ><span class="unit">人</span>
+              </div>
+              <div class="item-desc">维护商品</div>
             </div>
-            <div class="item-desc">维护商品</div>
           </div>
-        </div>
-        <div class="server-block-tile">客户满意</div>
-        <div class="server-block-custinfo">
-          <div class="item">
-            3分钟响应率：{{ info.teamService.consultResponse }}
+          <div class="server-block-tile">客户满意</div>
+          <div class="server-block-custinfo">
+            <div class="item">
+              3分钟响应率：{{ info.teamService.consultResponse }}
+            </div>
+            <div class="item">
+              电话接通率：{{ info.teamService.callThroughRate }}
+            </div>
           </div>
-          <div class="item">
-            电话接通率：{{ info.teamService.callThroughRate }}
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="goods-recommend-wrapper">
-      <div class="main-tile">为您推荐</div>
-      <div class="tabs">
-        <div
-          v-for="(item, index) in info.goodsRecommend"
-          :key="index"
-          class="tab"
-          :class="[active === index ? 'z-active' : '']"
-          @click="changeTab(index, item.id)"
-        >
-          {{ item.name }}
         </div>
       </div>
-      <div v-if="info.goods.length > 0" class="recommend">
-        <div
-          v-for="(item, index) in info.goods"
-          :key="index"
-          class="recommend-item"
-          @click="linkGood(item)"
-        >
-          <img :src="item.img" class="image" />
+      <div class="goods-recommend-wrapper">
+        <div class="main-tile">为您推荐</div>
+        <div class="tabs">
+          <div
+            v-for="(item, index) in info.goodsRecommend"
+            :key="index"
+            class="tab"
+            :class="[active === index ? 'z-active' : '']"
+            @click="changeTab(index, item.id)"
+          >
+            {{ item.name }}
+          </div>
+        </div>
+        <div v-if="info.goods.length > 0" class="recommend">
+          <div
+            v-for="(item, index) in info.goods"
+            :key="index"
+            class="recommend-item"
+            @click="linkGood(item)"
+          >
+            <img :src="item.img" class="image" />
 
-          <div class="item-content">
-            <div class="tile">{{ item.name }}</div>
-            <div
-              v-if="Array.isArray(item.tips) && item.tips.length > 0"
-              class="tips"
-            >
+            <div class="item-content">
+              <div class="tile">{{ item.name }}</div>
               <div
-                v-for="(itemTip, indexTip) in item.tips"
-                :key="indexTip"
-                class="tip"
+                v-if="Array.isArray(item.tips) && item.tips.length > 0"
+                class="tips"
               >
-                {{ itemTip }}
+                <div
+                  v-for="(itemTip, indexTip) in item.tips"
+                  :key="indexTip"
+                  class="tip"
+                >
+                  {{ itemTip }}
+                </div>
+              </div>
+              <div class="desc">{{ item.desc }}</div>
+              <div class="amount">
+                <div>{{ item.price }}</div>
+                <div class="amount-unit">元</div>
               </div>
             </div>
-            <div class="desc">{{ item.desc }}</div>
-            <div class="amount">
-              <div>{{ item.price }}</div>
-              <div class="amount-unit">元</div>
-            </div>
+          </div>
+        </div>
+      </div>
+      <div class="more-recommend" @click="toClassifyPage">更多优惠</div>
+      <div class="recommend-planner-wrapper">
+        <div class="main-tile">推荐规划师</div>
+        <div class="recommend-content">
+          <div
+            v-for="(item, index) in info.planners"
+            :key="index"
+            class="recommend-item"
+            @click="linkPlanner(item)"
+          >
+            <img class="item-avatar" :src="item.img" />
+            <div class="name">{{ item.name }}</div>
+            <img
+              class="line"
+              src="https://cdn.shupian.cn/sp-pt/wap/images/fy75fih34c80000.png"
+            />
+            <div class="score">薯片分{{ item.score }}</div>
+            <div class="desc">{{ item.category }}</div>
           </div>
         </div>
       </div>
     </div>
-    <div class="more-recommend" @click="toClassifyPage">更多优惠</div>
-    <div class="recommend-planner-wrapper">
-      <div class="main-tile">推荐规划师</div>
-      <div class="recommend-content">
-        <div
-          v-for="(item, index) in info.planners"
-          :key="index"
-          class="recommend-item"
-          @click="linkPlanner(item)"
-        >
-          <img class="item-avatar" :src="item.img" />
-          <div class="name">{{ item.name }}</div>
-          <img
-            class="line"
-            src="https://cdn.shupian.cn/sp-pt/wap/images/fy75fih34c80000.png"
-          />
-          <div class="score">薯片分{{ item.score }}</div>
-          <div class="desc">{{ item.category }}</div>
-        </div>
-      </div>
-    </div>
+
     <transition name="fade">
       <div v-if="stickyFlag" class="group-sticky">
         <div v-if="Object.keys(info.teamInfo).length > 0" class="group-tile">
@@ -202,7 +208,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { Swipe, swipeItem, Image } from '@chipspc/vant-dgg'
+import { Swipe, swipeItem, Image, Skeleton } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import { storeApi } from '@/api'
 import { setUrlParams } from '@/utils/common'
@@ -214,9 +220,11 @@ export default {
     [Swipe.name]: Swipe,
     [swipeItem.name]: swipeItem,
     [Image.name]: Image,
+    [Skeleton.name]: Skeleton,
   },
   data() {
     return {
+      loading: true, // 骨架屏状态
       indicators: true, // 是否需要指示器
       autoplay: 5000,
       active: 0,
@@ -249,7 +257,9 @@ export default {
     }
     window.addEventListener('scroll', this.handleScroll)
 
-    this.getGroupInfoApi()
+    this.getGroupInfoApi().finally(() => {
+      this.loading = false
+    })
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
@@ -301,14 +311,10 @@ export default {
         if (code !== 200) {
           throw new Error(message)
         }
-        // 商品只取4条记录
-        const goods = data.goods.slice(0, 4)
-        data.goods = goods
         this.info = data
         return data
       } catch (e) {
         this.$xToast.error(e.message)
-        setTimeout(this.$back(), 2000)
       }
     },
     async getGoodsApi(typeId) {
@@ -377,7 +383,7 @@ export default {
         console.log('sharedUrl:', sharedUrl)
         this.$appFn.dggShare(
           {
-            image: this.detailData.img,
+            image: this.info.teamInfo.img,
             title: '规划师',
             subTitle: '',
             url: sharedUrl,
@@ -405,6 +411,9 @@ export default {
 
 <style lang="less" scoped>
 .m-store.group-store {
+  ::v-deep .sp-skeleton {
+    margin: 16px 0 0 0;
+  }
   .group-swiper {
     width: 100%;
     height: 500px;
