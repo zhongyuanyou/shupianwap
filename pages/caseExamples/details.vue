@@ -29,8 +29,9 @@
     <Title :info="caseDetail" />
 
     <!--S 服务团队-->
+    <!--       v-if="planner.mchUserId || teamMmembers.length > 0" -->
     <ServiceTeam
-      :planner="planerInfo"
+      :planner="planner"
       :team-mmembers="teamMmembers"
       :case-member="caseDetailInfo.members"
     />
@@ -57,7 +58,7 @@
     <ExpertComments :info="expertEvaluation"></ExpertComments>
 
     <!--E 评论-->
-    <CommentBox id="comment" :list="commentdata" />
+    <CommentBox v-if="commentdata.length > 0" :list="commentdata" />
     <!-- tcPlannerBooth -->
     <bottomBar :im-jump-query="imJumpQuery" :planner-info="tcPlannerBooth" />
   </div>
@@ -79,7 +80,7 @@ import ExpertComments from '@/components/caseExamples/details/ExpertComments.vue
 import bottomBar from '@/components/detail/bottomBar/index.vue'
 
 import getUserSign from '@/utils/fingerprint'
-import { productDetailsApi, caseApi, planner } from '@/api'
+import { productDetailsApi, caseApi, planner, storeApi } from '@/api'
 
 import imHandle from '@/mixins/imHandle'
 export default {
@@ -125,37 +126,6 @@ export default {
       planerInfo: {}, // 请求的规划师信息
 
       planners: [
-        {
-          mchUserId: '728691677696664530',
-          mchDetailId: '728691574617454297',
-          officeAddressId: '728691574617454408',
-          userName: '王茂婕',
-          userCenterId: '607997598875151730',
-          userCenterNo: 'U2000431059',
-          phone:
-            '0E687EEE72F48183A2C6EFC593FC0A06*DGGJGZX*PH314Eo/oe71oSJobb0CE01mzKjRRSI1f61QbQ==',
-          point: '5',
-          registerTime: '2020-12-24 18:44:07',
-          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
-          status: 1,
-          statusName: '启用',
-          userCenterStatus: 1,
-          userCenterStatusName: '正常',
-          recentCompany: 'PCN测试服务商户',
-          type: 'MERCHANT_B',
-          mchNo: 'PBU2036000',
-          isAdmin: 0,
-          serveNum: 0,
-          serveAge: 7,
-          goodReputation: 95,
-          payNum: 0,
-          profilePhotoId: '',
-          dggPlannerRecomLog:
-            'productmap=[728694563914692664, 728691677696671018, 728691677696664530, 732284950661460939, 1076098595517908927, 767581610621041918, 767854117951796474, 767773578479304701, 1076098732956867488]&seqno=C306F8AD6FBAD6FDB9192946F8490AEA&recallno=44&ruleno=33&deviceId=deviceId&rankno=22',
-          portrait:
-            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
-        },
-
         {
           mchUserId: '728691677696664530',
           mchDetailId: '728691574617454297',
@@ -273,11 +243,13 @@ export default {
             username: this.getExperience(item.value, 'BaseInput').value,
             time: this.getExperience(item.value, 'BaseDateTime').value,
             content: this.getExperience(item.value, 'BaseText').value,
-            images: this.getExperience(item.value, 'BaseUpload').value,
+            imgs: this.getExperience(item.value, 'BaseUpload').value,
           }
 
           list.push(newItem)
         })
+
+        console.log('commentdata', list)
         return list
       }
       return []
@@ -296,7 +268,6 @@ export default {
   created() {},
   mounted() {
     this.getDetails()
-    // this.getRecPlanner()
 
     // this.getRecommendPlanner()
   },
@@ -366,7 +337,7 @@ export default {
           this.caseDetail = res || {}
           this.caseDetailInfo = res.detailInfo || {}
 
-          this.getPlanerInfo(this.planner.id)
+          // this.getPlanerInfo(this.planner.merchantUserId)
         })
         .catch((err) => {
           this.loading = false
@@ -374,93 +345,28 @@ export default {
           this.$xToast.error(err.message || '请求失败')
         })
     },
-    getPlanerInfo(id) {
-      planner
-        .detail({ id })
-        .then((res) => {
-          console.log('获取规划师信息', res)
-          const obj = {
-            mchUserId: res.id,
-            portrait: res.img,
-            userName: res.name,
-            postName: res.zwName,
-            type: res.mchClass,
-          }
-          this.planerInfo = {
-            ...obj,
-            ...res,
-          }
-        })
-        .catch((err) => {
-          console.log('获取规划师信息err', err)
-        })
-    },
-    // 获取钻展规划师
-    async getRecPlanner() {
-      // 获取用户唯一标识
-      const deviceId = await getUserSign()
-      const plannerRes = await this.$axios.get(productDetailsApi.recPlanner, {
-        params: {
-          limit: 1,
-          page: 1,
-          area: this.$store.state.city.currentCity.code || '510100',
-          deviceId, // 设备ID
-          level_2_ID: null,
-          // level_2_ID: this.sellingDetail.classCodeLevel
-          //   ? this.sellingDetail.classCodeLevel.split(',')[1]
-          //   : null, // 二级产品分类
-          login_name: null, // 规划师ID(选填)
-          productType: 'PRO_CLASS_TYPE_SERVICE', // 产品类型
-          sceneId: 'app-cpxqye-02', // 场景ID
-          user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-          platform: 'm', // 平台（app,m,pc）
-          productId: this.caseDetail.productId, // 产品id
-          firstTypeCode: null,
-          // firstTypeCode: this.sellingDetail.classCodeLevel
-          //   ? this.sellingDetail.classCodeLevel.split(',')[0]
-          //   : null,
-        },
-      })
-      if (plannerRes.code === 200) {
-        this.tcPlannerBooth = plannerRes.data.records[0]
-        console.log('tcPlannerBooth', this.tcPlannerBooth)
-      }
-    },
-
-    //  获取推荐规划师
-    async getRecommendPlanner() {
-      // 获取用户唯一标识
-      if (!this.deviceId) {
-        this.deviceId = await getUserSign()
-      }
-      this.$axios
-        .get(productDetailsApi.recPlanner, {
+    async getPlanerInfo(id) {
+      try {
+        const newData = await this.$axios.get(storeApi.plannerDetail, {
           params: {
-            limit: this.plannerLimit,
-            page: this.plannerPage,
-            area: this.$store.state.city.currentCity.code || '510100',
-            deviceId: this.deviceId, // 设备ID
-            level_2_ID: null, // 二级产品分类
-            login_name: null, // 规划师ID(选填)
-            productType: 'PRO_CLASS_TYPE_SERVICE', // 产品类型
-            sceneId: 'app-cpxqye-01', // 场景ID
-            user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
-            platform: 'm', // 平台（app,m,pc）
-            productId: this.sellingDetail.id, // 产品id
-            firstTypeCode: this.sellingDetail.classCodeLevel
-              ? this.sellingDetail.classCodeLevel.split(',')[0]
-              : null,
+            mchUserId: id,
+            dataFlg: '1',
+            cardType: 'plannerCode',
           },
         })
-        .then((res) => {
-          if (res.code === 200) {
-            console.log('推荐规划师', this.planners)
-            this.planners = res.data.records
-          }
+        if (newData.code === 200) {
+          this.planerInfo = newData.data || {}
+        }
+      } catch (error) {
+        console.error('getDetail:', error)
+        this.$xToast.show({
+          message: error.message || '请求失败！',
+          duration: 1000,
+          forbidClick: false,
+          icon: 'toast_ic_error',
         })
-        .catch((err) => {
-          console.log(err)
-        })
+        return Promise.reject(error)
+      }
     },
   },
 }
