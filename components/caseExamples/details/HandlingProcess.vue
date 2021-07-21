@@ -3,24 +3,29 @@
     <h1 class="title">办理经过</h1>
 
     <div class="list">
-      <div v-for="(item, index) in list" :key="index" class="item">
+      <div v-for="(item, index) in info" :key="index" class="item">
         <span class="item_num"> </span>
 
         <div class="item_num_right">
-          <h1 class="item_num_right_title">{{ item.title }}</h1>
-          <p class="item_num_right_time">{{ item.time }}</p>
+          <h1 class="item_num_right_title">{{ item.name }}</h1>
+          <p
+            v-if="item.time && item.time.length > 0"
+            class="item_num_right_time"
+          >
+            {{ formatDate(item.time[0]) }}~{{ formatDate(item.time[1]) }}
+          </p>
 
-          <div class="item_num_right_des">
-            <TwoLine fontsize="0.26rem" :text="item.text"></TwoLine>
+          <div v-if="item.content" class="item_num_right_des">
+            <TwoLine fontsize="0.26rem" :text="item.content"></TwoLine>
           </div>
 
-          <div class="images">
+          <div v-if="item.images && item.images.length > 0" class="images">
             <div class="images_container">
               <sp-image
                 v-for="(image, imageIndex) in item.images"
                 :key="imageIndex"
                 class="image"
-                src="image"
+                :src="image"
               ></sp-image>
             </div>
           </div>
@@ -30,6 +35,7 @@
   </div>
 </template>
 <script>
+import moment from 'moment'
 import { Image, Icon } from '@chipspc/vant-dgg'
 import TwoLine from '@/components/caseExamples/details/TwoLine.vue'
 export default {
@@ -39,33 +45,40 @@ export default {
     [Icon.name]: Icon,
     TwoLine,
   },
+  props: {
+    info: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
+  },
   data() {
     return {
-      show: true,
       list: [
         {
-          title: '公司核名',
+          name: '公司核名',
           time: '2021.4.15公司核名公司核名公司核名公司核名公司核名公司核名公司核名',
-          text: '山东省潍坊市中级人民法院于2009年10月14日以(2009) 潍刑一初字第35号刑事判决，认定被告人王志才犯故意杀人罪，判处死刑，剥夺政治权利终身。宣判后，王志才提出上诉。山东省高级人民法院于2010年6月18日以(2010)鲁刑四终字第2号刑事裁定，驳回上诉，维持原判，并依法报请最高人民法院核准。最高人民法院根据复核确认的事实，以（2010三复2265192）',
+          content:
+            '山东省潍坊市中级人民法院于2009年10月14日以(2009) 潍刑一初字第35号刑事判决，认定被告人王志才犯故意杀人罪，判处死刑，剥夺政治权利终身。宣判后，王志才提出上诉。山东省高级人民法院于2010年6月18日以(2010)鲁刑四终字第2号刑事裁定，驳回上诉，维持原判，并依法报请最高人民法院核准。最高人民法院根据复核确认的事实，以（2010三复2265192）',
           images: [1, 2, 3],
         },
         {
-          title: '撰写申请材料',
-          time: '2021.4.16',
-          text: '山东省潍坊市中级人民法院于2009年10月14日以(2009) 潍刑一初字第35号刑事判决，认定被告人王志才犯故意杀人罪，判处死刑，剥夺政治权利终身。宣判后，王志才提出上诉。山东省高级人民法院于2010年6月18日以(2010)鲁刑四终字第2号刑事裁定，驳回上诉，维持原判，并依法报请最高人民法院核准。最高人民法院根据复核确认的事实，以（2010三复2265192）',
-          images: [1, 2, 3, 4, 6],
-        },
-        {
-          title: '提交资料至工商管理局',
+          name: '提交资料至工商管理局',
           time: '2021.4.19',
           images: [1, 2, 3, 4],
         },
         {
-          title: '领取执照',
+          name: '领取执照',
           time: '2021.4.23',
         },
       ],
     }
+  },
+  methods: {
+    formatDate(time) {
+      return moment(time).format('YYYY年MM月DD日')
+    },
   },
 }
 </script>

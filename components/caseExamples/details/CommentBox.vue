@@ -4,24 +4,30 @@
 
     <div v-for="(item, index) in list" :key="index" class="item">
       <div class="head">
-        <img :src="item.img" alt="" />
+        <img
+          :src="
+            item.img ||
+            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0'
+          "
+          alt=""
+        />
         <div>
           <div class="phone">
-            <p>{{ item.phone }}</p>
+            <p>{{ item.username }}</p>
           </div>
-          <div class="date">{{ item.date }}</div>
+          <div v-if="item.time" class="date">{{ formatDate(item.time) }}</div>
         </div>
       </div>
       <p class="tit">
-        {{ item.tit }}
+        {{ item.content }}
       </p>
       <div class="images">
         <div class="images_container">
           <sp-image
-            v-for="(image, imageIndex) in 4"
+            v-for="(image, imageIndex) in item.imgs"
             :key="imageIndex"
             class="image"
-            src="image"
+            :src="image"
           ></sp-image>
         </div>
       </div>
@@ -30,6 +36,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { Swipe, SwipeItem, Image, Rate } from '@chipspc/vant-dgg'
 export default {
   name: 'Comment',
@@ -45,6 +52,11 @@ export default {
       default: () => {
         return []
       },
+    },
+  },
+  methods: {
+    formatDate(time) {
+      return moment(time).format('YYYY年MM月DD日')
     },
   },
 }

@@ -48,8 +48,7 @@ export default {
     },
     text: {
       type: String,
-      default:
-        'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+      default: '',
     },
   },
   data() {
@@ -153,7 +152,6 @@ export default {
   font-size: 24px;
   // line-height: 24px;
 
-  color: #222222;
   letter-spacing: 0;
 
   > span {
@@ -167,6 +165,8 @@ export default {
   .btn {
     background: #fff;
     font-weight: bold;
+
+    color: #222222;
   }
 }
 

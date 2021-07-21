@@ -1,6 +1,6 @@
 <template>
   <div class="m-store group-store">
-    <Header title="团队店铺">
+    <Header title="团队店铺" :fixed="true">
       <template v-if="isInApp" #right>
         <my-icon
           class-prefix="spiconfont"
@@ -301,14 +301,10 @@ export default {
         if (code !== 200) {
           throw new Error(message)
         }
-        // 商品只取4条记录
-        const goods = data.goods.slice(0, 4)
-        data.goods = goods
         this.info = data
         return data
       } catch (e) {
         this.$xToast.error(e.message)
-        setTimeout(this.$back(), 2000)
       }
     },
     async getGoodsApi(typeId) {
@@ -377,7 +373,7 @@ export default {
         console.log('sharedUrl:', sharedUrl)
         this.$appFn.dggShare(
           {
-            image: this.detailData.img,
+            image: this.info.teamInfo.img,
             title: '规划师',
             subTitle: '',
             url: sharedUrl,

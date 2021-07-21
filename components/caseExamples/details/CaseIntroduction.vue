@@ -1,16 +1,17 @@
 <template>
   <div class="case_introduction">
-    <div class="title">{{ title }}</div>
-    <div class="des">
+    <div v-if="title" class="title">{{ title }}</div>
+    <div v-if="text" class="des">
       <TwoLine fontsize="0.3rem" :text="text"></TwoLine>
     </div>
-    <div class="images">
+    <div v-if="images.length > 0" class="images">
       <div class="images_container">
         <sp-image
           v-for="(item, index) in images"
           :key="index"
+          fit="cover"
           class="image"
-          src=""
+          :src="item"
         ></sp-image>
       </div>
     </div>
@@ -76,13 +77,14 @@ export default {
     line-height: 40px;
   }
   .des {
-    margin: 38px 0 28px;
+    margin: 38px 0 0;
     font-size: 30px;
     color: #555555;
     line-height: 46px;
   }
   .images {
     overflow: hidden;
+    margin-top: 28px;
     .images_container {
       margin: 0 -5px;
     }
