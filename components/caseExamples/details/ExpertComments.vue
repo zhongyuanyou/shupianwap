@@ -17,7 +17,7 @@
         >
           <p class="title">{{ item.name }}</p>
           <div class="process_item_line no_margin">
-            <sp-progress :show-pivot="false" :percentage="item.fraction" />
+            <sp-progress :show-pivot="false" :percentage="item.fraction * 10" />
           </div>
           <p class="process_item_score">{{ item.fraction }}</p>
         </div>
@@ -167,7 +167,7 @@ export default {
         margin-top: 27px;
 
         .title {
-          margin-right: 20px;
+          margin-right: 10px;
           min-width: 120px;
         }
         &_line {

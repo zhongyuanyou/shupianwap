@@ -35,6 +35,7 @@
     <!--S 服务团队-->
     <!--       v-if="planner.mchUserId || teamMmembers.length > 0" -->
     <ServiceTeam
+      :info="caseDetail"
       :planner="planner"
       :team-mmembers="teamMmembers"
       :case-member="caseDetailInfo.members"
@@ -53,6 +54,7 @@
 
     <!-- 办理结果 -->
     <CaseIntroduction
+      v-if="caseDetail.caseType === 'CASE_TYPE_1'"
       title="办理结果"
       :text="caseResult.content"
       :images="caseResult.imgs"
@@ -65,6 +67,8 @@
     <CommentBox v-if="commentdata.length > 0" :list="commentdata" />
     <!-- tcPlannerBooth -->
     <bottomBar :im-jump-query="imJumpQuery" :planner-info="tcPlannerBooth" />
+
+    <Loading-center v-show="loading" />
   </div>
 </template>
 
@@ -87,10 +91,12 @@ import getUserSign from '@/utils/fingerprint'
 import { productDetailsApi, caseApi, planner, storeApi } from '@/api'
 import contractApi from '@/api/contract'
 
-// import imHandle from '@/mixins/imHandle'
+import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
+
 export default {
   name: 'CaseExamplesdetails',
   components: {
+    LoadingCenter,
     [TopNavBar.name]: TopNavBar,
     [Sticky.name]: Sticky,
     [List.name]: List,
@@ -99,8 +105,6 @@ export default {
     Title,
     CaseIntroduction,
 
-    // ContainProject,
-    // ContainContent,
     ServiceTeam,
     bottomBar,
 
@@ -360,11 +364,13 @@ export default {
       })
     },
     getDetails() {
+      this.loading = true
       caseApi
         .case_detail({
           id: this.$route.query.id,
         })
         .then((res) => {
+          this.loading = false
           if (!res) {
             return this.$xToast.error('未获取到数据')
           }

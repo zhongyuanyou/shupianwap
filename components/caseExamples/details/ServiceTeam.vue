@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <p class="planners_title">服务团队</p>
+    <p v-if="info.caseType === 'CASE_TYPE_1'" class="planners_title">
+      服务团队
+    </p>
     <div class="planners">
       <sp-skeleton :row="3" :loading="caseMember.length == 0">
         <!-- v-if="planner.mchUserId" -->
@@ -69,7 +71,10 @@
           </div>
         </div>
         <!--  -->
-        <div v-if="teamMmembers.length > 0" class="team_list">
+        <div
+          v-if="teamMmembers.length > 0 && info.caseType === 'CASE_TYPE_1'"
+          class="team_list"
+        >
           <swiper class="swiper" :options="swiperOption">
             <swiper-slide v-for="item in teamMmembers" :key="item.id">
               <div class="team_list_item" @click="plannerInfoUrlJump(item.id)">
@@ -121,6 +126,12 @@ export default {
   },
   mixins: [imHandle],
   props: {
+    info: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
     caseMember: {
       type: Array,
       default: () => [],
@@ -152,27 +163,8 @@ export default {
       },
     }
   },
-  computed: {
-    city() {
-      return this.$store.state.city.currentCity
-    },
-    // planner() {
-    //   const planner = this.handelData('STAFF_MEMBER_SIGN')
-    //   return planner?.value || {}
-    // },
-    // teamMmembers() {
-    //   const mmembers = this.handelData('STAFF_MEMBER_DIGESTION')
-    //   return mmembers?.value || []
-    // },
-  },
+  computed: {},
   methods: {
-    // handelData(key) {
-    //   const info = this.caseMember.find((item) => {
-    //     return item.type === key
-    //   })
-    //   return info
-    // },
-
     // 规划师详情跳转
     plannerInfoUrlJump(mchUserId) {
       if (!mchUserId) {
@@ -243,169 +235,169 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.team_list {
-  margin-top: 50px;
-  // height: 184px;
-  background: #f8f8f8;
-  border-radius: 12px;
-  padding: 0 14px;
-  font-size: 0;
-
-  .swiper-slide {
-    width: 115px;
-  }
-
-  .team_list_item {
-    // display: inline-block;
-    // width: 115px;
-    padding: 32px 0px;
-    text-align: center;
-
-    .team_list_name {
-      font-family: PingFangSC-Regular;
-      font-size: 24px;
-      color: #222222;
-      letter-spacing: 0;
-      text-align: center;
-      line-height: 25.93px;
-      padding-top: 16px;
-    }
-  }
-}
-
 .container {
   background-color: #fff;
   border-bottom: 24px solid #f8f8f8;
   padding: 44px 0 0px;
-}
-.planners {
-  padding: 0 40px 64px 40px;
-  /*border-bottom: 1px solid #f4f4f4;*/
-  ::v-deep.sp-skeleton {
-    margin-top: 48px;
-  }
-  .icon {
-    display: inline-block;
-    background-repeat: no-repeat;
-    background-size: cover;
-    vertical-align: middle;
-  }
-  .gold_icon {
-    min-width: 146px;
-    max-width: 200px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    height: 34px;
-    line-height: 32px;
-    border: 1px solid #e0a963;
-    margin-left: 12px;
-    border-radius: 16px;
-    font-size: 20px;
-    font-weight: 400;
-    color: #e0a963;
-    padding-left: 38px;
-    padding-right: 7px;
-    text-align: center;
-    position: relative;
-    font-style: normal;
-    &::before {
-      content: '';
-      display: block;
-      width: 34px;
+
+  .planners {
+    padding: 0 40px 64px 40px;
+    /*border-bottom: 1px solid #f4f4f4;*/
+    ::v-deep.sp-skeleton {
+      margin-top: 48px;
+    }
+    .icon {
+      display: inline-block;
+      background-repeat: no-repeat;
+      background-size: cover;
+      vertical-align: middle;
+    }
+    .gold_icon {
+      min-width: 146px;
+      max-width: 200px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
       height: 34px;
-      background: url(https://cdn.shupian.cn/sp-pt/wap/images/7cwzjbxvkhs0000.png)
-        no-repeat;
-      background-size: 34px 34px;
-      position: absolute;
-      left: -1px;
-      top: -1px;
-    }
-  }
-  &_title {
-    font-size: 40px;
-    font-family: PingFang SC;
-    font-weight: bold;
-    color: #1a1a1a;
-    line-height: 52px;
-    padding: 0 40px;
-  }
-  &_item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-direction: row;
-    &_lf {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      a {
-        display: flex;
-      }
-      .info {
-        height: 80px;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        flex-direction: column;
-        margin-left: 24px;
-        &_tp {
-          display: flex;
-          justify-content: flex-start;
-          align-items: center;
-          flex-direction: row;
-          height: 32px;
-          .name {
-            max-width: 150px;
-            font-size: 32px;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-            font-weight: bold;
-            color: #1a1a1a;
-            line-height: 32px;
-          }
-        }
-        &_bot {
-          font-size: 24px;
-          font-family: PingFang SC;
-          font-weight: 400;
-          color: #1a1a1a;
-          display: flex;
-          justify-content: flex-start;
-          align-items: flex-end;
-          flex-direction: row;
-          height: 30px;
-          line-height: 30px;
-          .num {
-            font-size: 30px;
-            font-family: PingFang SC;
-            font-weight: bold;
-            color: #ec5330;
-          }
-          .txt {
-            margin-left: 17px;
-          }
-        }
+      line-height: 32px;
+      border: 1px solid #e0a963;
+      margin-left: 12px;
+      border-radius: 16px;
+      font-size: 20px;
+      font-weight: 400;
+      color: #e0a963;
+      padding-left: 38px;
+      padding-right: 7px;
+      text-align: center;
+      position: relative;
+      font-style: normal;
+      &::before {
+        content: '';
+        display: block;
+        width: 34px;
+        height: 34px;
+        background: url(https://cdn.shupian.cn/sp-pt/wap/images/7cwzjbxvkhs0000.png)
+          no-repeat;
+        background-size: 34px 34px;
+        position: absolute;
+        left: -1px;
+        top: -1px;
       }
     }
-    &_rt {
-      height: 80px;
+    &_title {
+      font-size: 40px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #1a1a1a;
+      line-height: 52px;
+      padding: 0 40px;
+    }
+    &_item {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
       flex-direction: row;
-      ::v-deep .sp-button {
-        border: none;
-      }
-      .contact-btn {
-        width: 80px;
-        height: 80px;
-        background: rgba(235, 243, 255, 0.8);
-        margin-right: 40px;
-        &:last-child {
-          margin-right: 0;
+      &_lf {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        a {
+          display: flex;
         }
+        .info {
+          height: 80px;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          flex-direction: column;
+          margin-left: 24px;
+          &_tp {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-direction: row;
+            height: 32px;
+            .name {
+              max-width: 150px;
+              font-size: 32px;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+              font-weight: bold;
+              color: #1a1a1a;
+              line-height: 32px;
+            }
+          }
+          &_bot {
+            font-size: 24px;
+            font-family: PingFang SC;
+            font-weight: 400;
+            color: #1a1a1a;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-end;
+            flex-direction: row;
+            height: 30px;
+            line-height: 30px;
+            .num {
+              font-size: 30px;
+              font-family: PingFang SC;
+              font-weight: bold;
+              color: #ec5330;
+            }
+            .txt {
+              margin-left: 17px;
+            }
+          }
+        }
+      }
+      &_rt {
+        height: 80px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex-direction: row;
+        ::v-deep .sp-button {
+          border: none;
+        }
+        .contact-btn {
+          width: 80px;
+          height: 80px;
+          background: rgba(235, 243, 255, 0.8);
+          margin-right: 40px;
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  }
+  .team_list {
+    margin-top: 50px;
+    // height: 184px;
+    background: #f8f8f8;
+    border-radius: 12px;
+    padding: 0 14px;
+    font-size: 0;
+
+    .swiper-slide {
+      width: 115px;
+    }
+
+    .team_list_item {
+      // display: inline-block;
+      // width: 115px;
+      padding: 32px 0px;
+      text-align: center;
+
+      .team_list_name {
+        font-family: PingFangSC-Regular;
+        font-size: 24px;
+        color: #222222;
+        letter-spacing: 0;
+        text-align: center;
+        line-height: 25.93px;
+        padding-top: 16px;
       }
     }
   }
