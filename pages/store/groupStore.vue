@@ -373,7 +373,7 @@ export default {
         console.log('sharedUrl:', sharedUrl)
         this.$appFn.dggShare(
           {
-            image: this.detailData.img,
+            image: this.info.teamInfo.img,
             title: '规划师',
             subTitle: '',
             url: sharedUrl,
