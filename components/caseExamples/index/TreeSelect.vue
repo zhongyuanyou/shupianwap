@@ -153,6 +153,9 @@ export default {
 
     reset() {
       this.init()
+      this.active_1 = {}
+      this.active_2 = {}
+      this.active_3 = {}
       this.callback()
     },
     confirm() {
@@ -172,7 +175,7 @@ export default {
 
 <style lang="less" scoped>
 .tree_select {
-  height: 60vh;
+  height: 55vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;

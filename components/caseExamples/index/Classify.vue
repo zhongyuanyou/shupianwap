@@ -15,30 +15,6 @@
         :level="3"
         @select="ServerSelect"
       ></TreeSelect>
-
-      <!-- <ServerContainer :items="tab2.options" :level="3" @select="ServerSelect">
-        <template v-slot:children="props">
-          <Server :items="props.children" :level="3"></Server>
-        </template>
-      </ServerContainer> -->
-
-      <!-- <sp-tree-select
-        height="55vw"
-        :items="serveGoodsType"
-        :main-active-index.sync="mainActiveIndex"
-        :active-index.sync="activeIndex1"
-        @click-nav="clickNav1"
-      >
-        <template #content>
-          <sp-tree-select
-            height="55vw"
-            :items="serveGoodsType2"
-            :main-active-index.sync="activeIndex1"
-            :active-index.sync="activeIndex2"
-          >
-          </sp-tree-select>
-        </template>
-      </sp-tree-select> -->
     </sp-dropdown-item>
     <sp-dropdown-item ref="tab3" :title="tab3.title">
       <TreeSelect
@@ -53,11 +29,7 @@
 <script>
 import { DropdownMenu, DropdownItem } from '@chipspc/vant-dgg'
 
-import ServerContainer from './ServerContainer.vue'
-import Server from './Server.vue'
-
 import TreeSelect from './TreeSelect.vue'
-import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect1.vue'
 
 import { goods } from '@/api/index'
 
@@ -66,9 +38,6 @@ export default {
     [DropdownMenu.name]: DropdownMenu,
     [DropdownItem.name]: DropdownItem,
     TreeSelect,
-    // ServiceSelect,
-    // Server,
-    // ServerContainer,
   },
   data() {
     return {
@@ -101,7 +70,7 @@ export default {
         ],
       },
       tab3: {
-        title: '全国',
+        title: '区域',
         value: [],
         options: [],
       },
@@ -125,22 +94,6 @@ export default {
   },
   methods: {
     setData(list) {
-      list.unshift({
-        id: -1,
-        name: '不限',
-        text: '不限',
-      })
-
-      return list.map((item) => {
-        item.text = item.name
-
-        if (item.children) {
-          item.children = this.setData(item.children)
-        }
-        return item
-      })
-    },
-    setDataName(list) {
       list.unshift({
         id: -1,
         name: '不限',
@@ -216,7 +169,7 @@ export default {
                 data.filters[0].code === 'CONDITION-JY-GS-DQ'
               ) {
                 area = data.filters[0].children
-                this.tab3.options = area
+                this.tab3.options = this.setData(area)
               }
               if (
                 data.filters &&
@@ -322,15 +275,30 @@ export default {
     // 服务商品选择
     ServerSelect(item1, item2, item3) {
       console.log('ServerSelect', item1, item2, item3)
-      this.tab2.title = item3.text || item2.text || item1.text
+      this.tab2.title = '分类'
+      const arr = [item1, item2, item3]
+      arr.map((item) => {
+        if (item?.code) {
+          this.tab2.title = item.name || '分类'
+        }
+      })
+
       this.tab2.value = [item1?.code, item2?.code, item3?.code]
       this.change()
       this.$refs.tab2.toggle()
     },
     AreaSelect(item1, item2, item3) {
       console.log('AreaSelect', item1, item2, item3)
-      this.tab3.title = item3.text || item2.text || item1.text
+      // this.tab3.title = item3.text || item2.text || item1.text || '区域'
+      this.tab3.title = '区域'
+      const arr = [item1, item2, item3]
+      arr.map((item) => {
+        if (item?.code) {
+          this.tab3.title = item.text || '区域'
+        }
+      })
       this.tab3.value = [item1?.code, item2?.code, item3?.code]
+
       this.change()
       this.$refs.tab3.toggle()
     },

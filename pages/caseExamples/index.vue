@@ -29,7 +29,7 @@
       </div>
     </sp-list>
 
-    <div v-if="list.length == 0 && loading == false">
+    <div v-if="list.length == 0 && loading == false" class="empty-container">
       <sp-empty
         class="empty-text"
         :description="'暂无数据'"
@@ -328,12 +328,18 @@ export default {
   ::v-deep .sp-work-tabs__line {
     background-color: #4974f5;
   }
-  .empty-text ::v-deep .sp-empty__description {
-    font-size: 30px;
-    font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
-    color: #222222;
-    line-height: 30px;
+
+  .empty-container {
+    height: 100vh;
+    background-color: #ffffff;
+
+    .empty-text ::v-deep .sp-empty__description {
+      font-size: 30px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 600;
+      color: #222222;
+      line-height: 30px;
+    }
   }
 }
 </style>
