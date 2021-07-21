@@ -32,14 +32,6 @@
     <!--S 第一板块-->
     <Title :info="caseDetail" />
 
-    <!--S 服务团队-->
-    <!--       v-if="planner.mchUserId || teamMmembers.length > 0" -->
-    <ServiceTeam
-      :info="caseDetail"
-      :planner="planner"
-      :team-mmembers="teamMmembers"
-      :case-member="caseDetailInfo.members"
-    />
     <!--E 服务团队-->
 
     <!-- 案件简介 -->
@@ -50,7 +42,17 @@
     />
 
     <!--S  办理经过-->
-    <HandlingProcess :info="processing"></HandlingProcess>
+
+    <HandlingProcess
+      v-if="processing.length > 0 && caseDetail.caseType === 'CASE_TYPE_1'"
+      :info="processing"
+    ></HandlingProcess>
+    <CaseIntroduction
+      v-if="processing.length > 0 && caseDetail.caseType === 'CASE_TYPE_2'"
+      title="办理经过"
+      :text="processing[0].content || processing[0].name"
+      :images="processing[0].imgs"
+    />
 
     <!-- 办理结果 -->
     <CaseIntroduction
@@ -58,6 +60,14 @@
       title="办理结果"
       :text="caseResult.content"
       :images="caseResult.imgs"
+    />
+
+    <!--S 服务团队-->
+    <ServiceTeam
+      :info="caseDetail"
+      :planner="planner"
+      :team-mmembers="teamMmembers"
+      :case-member="caseDetailInfo.members"
     />
 
     <!-- 专家点评 -->
@@ -229,7 +239,7 @@ export default {
             name: item.name,
             time: this.getExperience(item.show, 'BaseDate').value,
             content: this.getExperience(item.show, 'BaseText').value,
-            images: this.getExperience(item.show, 'BaseUpload').imgs || [],
+            imgs: this.getExperience(item.show, 'BaseUpload').imgs || [],
           }
 
           newExperience.push(newExperienceItem)
