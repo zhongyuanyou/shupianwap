@@ -12,22 +12,28 @@
     <div v-if="!hideHeader && !isApplets && titleStatus" class="head">
       <Header title="规划师">
         <template #left>
-          <sp-icon
-            class-prefix="spiconfont"
-            name="nav_ic_back"
-            size="0.4rem"
-            color="#1A1A1A"
-            style="margin-left: 0.32rem"
-            @click.native="onClickLeft"
-          />
-          <!-- <sp-icon
-            class-prefix="spiconfont"
-            name="guanbi"
-            size="0.4rem"
-            color="#1A1A1A"
-            style="margin-left: 0.36rem"
-            @click.native="onClickLeft"
-          /> -->
+          <div v-if="urlData.isShare!=='1'">
+            <sp-icon
+            
+              class-prefix="spiconfont"
+              name="nav_ic_back"
+              size="0.4rem"
+              color="#1A1A1A"
+              style="margin-left: 0.32rem"
+              @click.native="onClickLeft"
+            />
+          </div>
+          <div v-if="urlData.isShare==='1'">
+            <sp-icon
+              class-prefix="spiconfont"
+              name="xiaochengxuzhuye"
+              size="0.4rem"
+              color="#1A1A1A"
+              style="margin-left: 0.36rem"
+              @click.native="gohome"
+            />
+          </div>
+          
         </template>
         <template v-if="isInApp" #right>
           <sp-icon
@@ -198,10 +204,10 @@
                       name="plan_ic_explain"
                       size="0.24rem"
                       color="#666666"
-                      @click.native="goScoreDetail"
+                      @click.native="handlePoint"
                     />
                     <!-- handlePoint -->
-                    <!-- <span @click="goScoreDetail">查看详情</span> -->
+                    <span @click="goScoreDetail">查看详情</span>
                   </span>
                   <!-- 一期没有 详情页面只能影藏掉 -->
                   <!-- <sp-button
@@ -374,6 +380,7 @@ export default {
   data() {
     return {
       loading: true,
+      urlData:this.$route.query,
       detailData: {},
       newDetailData:{
         photo:[],
@@ -551,7 +558,10 @@ export default {
     goShop(){
       this.$router.push({
         path:"/store/plannerStore",
-        query:this.$route.query
+        query:{
+          mchUserId:this.$route.query.mchUserId,
+          isShare:"0"
+        }
       })
     },
     handleCall() {
@@ -894,6 +904,13 @@ export default {
           )
         }
         
+      }else{
+        this.$refs.spToast.show({
+          message: '请在薯片APP中查看',
+          duration: 1500,
+          forbidClick: false,
+          // icon: 'spiconfont-tab_ic_check',
+        })
       }
     },
     // 获取详情数据
@@ -973,6 +990,9 @@ export default {
       this.$router.push({
         path: `/known/detail/article?id=${item.id}`,
       })
+    },
+    gohome(){
+      this.$router.push('/')
     }
   },
   head() {

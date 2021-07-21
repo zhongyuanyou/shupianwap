@@ -1,24 +1,30 @@
 <template>
   <div class="plannerShop">
+    <div v-if="urlData.platform==='mpass'" style="width:100%;background:#fff" :style="{height:urlData.top+ 'px'}"></div>
     <div v-if="titleStatus" class="head">
       <Header title="规划师店铺" :fixed="true">
         <template #left>
-          <sp-icon
-            class-prefix="spiconfont"
-            name="nav_ic_back"
-            size="0.4rem"
-            color="#1A1A1A"
-            style="margin-left: 0.32rem"
-            @click.native="onClickLeft"
-          />
-          <!-- <sp-icon
-            class-prefix="spiconfont"
-            name="guanbi"
-            size="0.4rem"
-            color="#1A1A1A"
-            style="margin-left: 0.36rem"
-            @click.native="onClickLeft"
-          /> -->
+          <div v-if="urlData.isShare!=='1'">
+            <sp-icon
+            
+              class-prefix="spiconfont"
+              name="nav_ic_back"
+              size="0.4rem"
+              color="#1A1A1A"
+              style="margin-left: 0.32rem"
+              @click.native="onClickLeft"
+            />
+          </div>
+          <div v-if="urlData.isShare==='1'">
+            <sp-icon
+              class-prefix="spiconfont"
+              name="xiaochengxuzhuye"
+              size="0.4rem"
+              color="#1A1A1A"
+              style="margin-left: 0.36rem"
+              @click.native="gohome"
+            />
+          </div>
         </template>
         <template v-if="isInApp" #right>
           <sp-icon
@@ -143,6 +149,7 @@
                   <li
                     v-for="(data, dataIndex) in detailData.goods"
                     :key="dataIndex"
+                    @click="linkGood(data)"
                   >
                     <img :src="data.img" alt="" />
                     <div>
@@ -189,7 +196,7 @@
           type="primary"
           text="电话联系"
           :disabled="!IMDetailData.id"
-          @click="handleCall"
+          @click="urlData.platform!=='mpass' && handleCall"
         />
         <sp-bottombar-button
           v-md:p_IMClick
@@ -201,7 +208,7 @@
           type="info"
           text="在线联系"
           :disabled="!IMDetailData.id"
-          @click="handleIM"
+          @click="urlData.platform!=='mpass' && handleIM"
         />
       </sp-bottombar>
     </div>
@@ -250,6 +257,7 @@ export default {
     return {
       loading:true,
       hideIM: this.$route.query.imUserId === this.$route.query.mchUserId,
+      urlData:this.$route.query,
       titleStatus: true, // 粘性布局触发时去掉头部
       active: '', // tab状态
       detailData: {
@@ -355,6 +363,30 @@ export default {
       this.$router.push({
         path: '/store/spScoreDetail',
       })
+    },
+    gohome(){
+      this.$router.push('/')
+    },
+    linkGood(item) {
+      
+      if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
+        this.urlData.platform!=='mpass' && 
+        this.$router.push({
+          path: '/detail/transactionDetails',
+          query: {
+            type: item.typeCode,
+            productId: item.id,
+          },
+        })
+      } else {
+        this.urlData.platform!=='mpass' && 
+        this.$router.push({
+          path: '/detail',
+          query: {
+            productId: item.id,
+          },
+        })
+      }
     },
     handlePoint() {
       this.$refs.spToast.show({
@@ -474,6 +506,7 @@ export default {
     },
     // 跳转团队
     goGroup() {
+      this.urlData.platform!=='mpass' &&
       this.$router.push({
         path: '/store/groupStore',
         query: {
@@ -646,33 +679,8 @@ export default {
         })
       }
     },
-    // async goShop(){
-    //     try {
-    //         const isLogin = await this.judgeLoginMixin()
-    //         if (isLogin) {
-    //             this.$router.push({
-    //                 path:"/store/merchantsStore",
-    //                 query:{
-    //                   storeId:this.detailData.mchStoreId,
-    //                   isShare:"0"
-    //                 }
-    //             })
-    //         } else {
-    //             Toast({
-    //                 message: '请先登录账号',
-    //                 iconPrefix: 'sp-iconfont',
-    //                 icon: 'popup_ic_fail',
-    //             })
-    //         }
-    //     } catch (err) {
-    //         Toast({
-    //             message: '未获取到划师联系方式',
-    //             iconPrefix: 'sp-iconfont',
-    //             icon: 'popup_ic_fail',
-    //         })
-    //     }
-    // },
     goShop() {
+      this.urlData.platform!=='mpass' &&
       this.$router.push({
         path: '/store/merchantsStore',
         query: {
@@ -1123,6 +1131,8 @@ export default {
     }
     ::v-deep .sp-bottombar {
       z-index: 100;
+      padding-bottom: constant(safe-area-inset-bottom);
+      padding-bottom: env(safe-area-inset-bottom);
     }
     ::v-deep .sp-button--info {
       background-color: #24ae68;

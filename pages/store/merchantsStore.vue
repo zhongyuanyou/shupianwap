@@ -3,22 +3,27 @@
     <div class="head">
       <Header title="商户店铺" :fixed="true">
         <template #left>
-          <sp-icon
-            class-prefix="spiconfont"
-            name="nav_ic_back"
-            size="0.4rem"
-            color="#1A1A1A"
-            style="margin-left: 0.32rem"
-            @click.native="onClickLeft"
-          />
-          <!-- <sp-icon
-            class-prefix="spiconfont"
-            name="guanbi"
-            size="0.4rem"
-            color="#1A1A1A"
-            style="margin-left: 0.36rem"
-            @click.native="onClickLeft"
-          /> -->
+          <div v-if="urlData.isShare!=='1'">
+            <sp-icon
+            
+              class-prefix="spiconfont"
+              name="nav_ic_back"
+              size="0.4rem"
+              color="#1A1A1A"
+              style="margin-left: 0.32rem"
+              @click.native="onClickLeft"
+            />
+          </div>
+          <div v-if="urlData.isShare==='1'">
+            <sp-icon
+              class-prefix="spiconfont"
+              name="xiaochengxuzhuye"
+              size="0.4rem"
+              color="#1A1A1A"
+              style="margin-left: 0.36rem"
+              @click.native="gohome"
+            />
+          </div>
         </template>
         <template v-if="isInApp" #right>
           <sp-icon
@@ -269,6 +274,7 @@ export default {
     return {
       loading: true,
       active: '', // tab状态
+      urlData:this.$route.query,
       headActive: 'index',
       detailData: {
         goodsRecommend: [],
@@ -653,6 +659,9 @@ export default {
           },
         })
       }
+    },
+    gohome(){
+      this.$router.push('/')
     },
     moreRem() {
       this.$router.push({
