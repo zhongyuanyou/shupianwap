@@ -202,6 +202,7 @@ export default {
     },
     methods:{
         EchartInit(){
+            console.log(this.$echarts)
             // 接下来的使用就跟之前一样，初始化图表，设置配置项
             const main = document.getElementById('main')
             const myChart = this.$echarts.init(main);
