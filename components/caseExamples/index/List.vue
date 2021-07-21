@@ -15,11 +15,12 @@
           <div class="time">办理周期：{{ item.dealTime }}天</div>
         </div>
         <div class="list_header_right">
-          <span class="num">{{ item.caseScore }}</span>
+          <span class="num">{{ (item.caseScore / 100 || 0).toFixed(1) }} </span>
           <span class="unit">分</span>
         </div>
       </div>
-
+      <!-- 服务产品类型 CASE_TYPE_1
+      交易产品类型  CASE_TYPE_2 -->
       <div v-if="content" class="list_content">
         <span class="san_jiao"></span>
         <div class="list_content_text">案例简介：{{ content }}</div>
@@ -44,7 +45,13 @@ export default {
   },
   computed: {
     content() {
-      return this.item?.detailInfo?.caseInfo?.content || ''
+      if (
+        this.item?.caseIntro?.show &&
+        this.item?.caseIntro?.show?.length > 0
+      ) {
+        return this.item?.caseIntro?.show[0].content || ''
+      }
+      return ''
     },
   },
 }

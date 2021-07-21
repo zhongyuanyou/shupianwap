@@ -26,13 +26,12 @@
       <div class="col_3">
         <div
           v-for="(row, index) of col_3"
-          v-show="active_3.id === row.id"
           :key="index"
           :class="{ active: active_3.id == row.id }"
           @click.stop="rowClick(3, row, index)"
         >
-          <div>{{ row.text }}</div>
-          <div>
+          <div>{{ row.text || row.name }}</div>
+          <div v-show="active_3.id === row.id">
             <my-icon name="yiguanzhu" color="#4974F5" size="0.28rem" />
           </div>
         </div>
@@ -40,6 +39,7 @@
     </div>
 
     <BottomConfirm
+      class="BottomConfirm"
       @resetFilters="reset"
       @confirmFilters="confirm"
     ></BottomConfirm>
@@ -80,20 +80,27 @@ export default {
       active_3: {},
 
       selected_ids: [],
+
+      formatList: [],
     }
   },
-  computed: {
-    formatList() {
-      if (!Array.isArray(this.list)) return []
-      const cloneItem = clone(this.list, true)
-      console.log(cloneItem)
-      return this.setData(cloneItem)
-    },
-  },
+  // computed: {
+  //   formatList() {
+  //     if (!Array.isArray(this.list)) return []
+  //     const cloneItem = clone(this.list, true)
+  //     console.log(cloneItem)
+  //     return this.setData(cloneItem)
+  //   },
+  // },
   watch: {
-    formatList: {
+    list: {
       immediate: true,
+      deep: true,
       handler(newVal) {
+        console.log('监听变化')
+        const cloneItem = clone(this.list, true)
+        this.formatList = this.setData(cloneItem)
+
         this.init()
       },
     },
@@ -171,9 +178,10 @@ export default {
   flex-direction: column;
 
   .col_container {
-    height: 100%;
+    // height: 100%;
     flex: 1;
     display: flex;
+    overflow: hidden;
 
     .col_1,
     .col_2,
@@ -184,6 +192,7 @@ export default {
       letter-spacing: 0;
       line-height: 28px;
       overflow-y: auto;
+      height: 100%;
       > div {
         padding: 28px 12px 28px 40px;
       }
@@ -220,6 +229,10 @@ export default {
       height: 28px;
       padding: 0 40px;
     }
+  }
+
+  .BottomConfirm {
+    flex-shrink: 0;
   }
 }
 </style>

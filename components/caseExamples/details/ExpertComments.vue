@@ -6,7 +6,7 @@
     <div class="report_con">
       <div class="result">
         <p class="score">{{ newInfo.fraction }}</p>
-        <p class="txt">评估结果：<span>优秀</span></p>
+        <p class="txt">综合点评：<span>优秀</span></p>
       </div>
 
       <div class="process">
