@@ -1,6 +1,6 @@
 <template>
   <div class="m-store group-store">
-    <Header title="团队店铺">
+    <Header title="团队店铺" :fixed="true">
       <template v-if="isInApp" #right>
         <my-icon
           class-prefix="spiconfont"
@@ -119,7 +119,10 @@
 
           <div class="item-content">
             <div class="tile">{{ item.name }}</div>
-            <div class="tips">
+            <div
+              v-if="Array.isArray(item.tips) && item.tips.length > 0"
+              class="tips"
+            >
               <div
                 v-for="(itemTip, indexTip) in item.tips"
                 :key="indexTip"
@@ -241,7 +244,7 @@ export default {
       this.storeId = query.storeId
     } else {
       this.$xToast.error('获取团队店铺信息失败')
-      setTimeout(this.$back(),2000)
+      setTimeout(this.$back(), 2000)
       return
     }
     window.addEventListener('scroll', this.handleScroll)
@@ -298,14 +301,10 @@ export default {
         if (code !== 200) {
           throw new Error(message)
         }
-        // 商品只取4条记录
-        const goods = data.goods.slice(0, 4)
-        data.goods = goods
         this.info = data
         return data
       } catch (e) {
         this.$xToast.error(e.message)
-        setTimeout(this.$back(), 2000)
       }
     },
     async getGoodsApi(typeId) {
@@ -313,6 +312,8 @@ export default {
         const params = {
           storeId: this.storeId,
           typeId,
+          page: 1,
+          limit: 20,
         }
         const { code, data, message } = await this.$axios.post(
           storeApi.recommendGoods,
@@ -321,10 +322,11 @@ export default {
         if (code !== 200) {
           throw new Error(message)
         }
-        const goods = Array.isArray(data.records)
-          ? data.records.slice(0, 4)
-          : []
-        this.info.goods = goods
+        const goods = Array.isArray(data.records) ? data.records : []
+
+        this.info.goods = goods.filter((item) => {
+          return item.state === 1
+        })
       } catch (e) {
         this.$xToast.error(e.message)
         this.info.goods = []
@@ -371,7 +373,7 @@ export default {
         console.log('sharedUrl:', sharedUrl)
         this.$appFn.dggShare(
           {
-            image: this.detailData.img,
+            image: this.info.teamInfo.img,
             title: '规划师',
             subTitle: '',
             url: sharedUrl,
@@ -601,6 +603,7 @@ export default {
             margin-top: 12px;
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
             .tip {
               height: 32px;
               line-height: 32px;
@@ -611,10 +614,11 @@ export default {
               text-align: center;
               margin-right: 12px;
               padding: 0 4px;
+              margin-bottom: 5px;
             }
           }
           .desc {
-            margin-top: 16px;
+            margin-top: 11px;
             font-size: 22px;
             color: #1a1a1a;
           }

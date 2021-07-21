@@ -8,14 +8,14 @@
         <div class="sum">
           <div class="name">整体费用</div>
           <div class="price">{{ sum }}</div>
-          <div class="unit">万元</div>
+          <div class="unit">元</div>
         </div>
 
         <div v-for="(item, index) of info" :key="index" class="list">
           <div class="icon"></div>
           <div class="name">{{ item.name }}</div>
-          <div class="price">{{ item.amount }}</div>
-          <div class="unit">万元</div>
+          <div class="price">{{ item.amount / 100 }}</div>
+          <div class="unit">元</div>
         </div>
       </div>
     </sp-action-sheet>
@@ -47,9 +47,9 @@ export default {
       if (this.info.length > 0) {
         let sum = 0
         this.info.map((item) => {
-          sum += parseFloat(item.amount) || 0
+          sum += parseFloat(item.amount) / 100 || 0
         })
-        return sum
+        return sum.toFixed(2)
       }
       return 0
     },

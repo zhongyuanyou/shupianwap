@@ -1,7 +1,7 @@
 <template>
   <!-- 团队店铺二级分类 -->
   <div class="m-store group-store">
-    <Header title="团队店铺" />
+    <Header title="团队店铺" :fixed="true" />
     <div class="group-tile">
       <sp-image
         :src="info.teamInfo.img"
@@ -156,6 +156,7 @@ export default {
       if (index === 0) {
         this.$router.push({
           path: '/store/groupStore',
+          query: { storeId: this.storeId },
         })
       }
     },
@@ -443,6 +444,7 @@ export default {
             margin-top: 12px;
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
             .tip {
               height: 32px;
               line-height: 32px;
@@ -453,10 +455,11 @@ export default {
               text-align: center;
               margin-right: 12px;
               padding: 0 4px;
+              margin-bottom: 5px;
             }
           }
           .desc {
-            margin-top: 16px;
+            margin-top: 11px;
             font-size: 22px;
             color: #1a1a1a;
           }
