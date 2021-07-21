@@ -813,15 +813,16 @@ export default {
           display: flex;
           justify-content: flex-start;
           align-items: flex-start;
-          padding: 32px 0;
+          padding: 22px 0 28px;
           img {
             width: 160px;
             height: 160px;
             margin: 0 36px 0 0;
-            border-radius: 5px;
+            border-radius: 15px;
           }
           div {
             .recommendedtitle {
+              font-weight: bold;
               font-family: PingFangSC-Medium;
               font-size: 32px;
               color: #222222;

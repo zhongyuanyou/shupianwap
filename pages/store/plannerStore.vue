@@ -153,7 +153,7 @@
                   >
                     <img :src="data.img" alt="" />
                     <div>
-                      <p class="title">
+                      <p class="recommendedtitle">
                         <span>{{ data.name }}</span>
                       </p>
                       <p class="label">
@@ -1014,30 +1014,35 @@ export default {
       }
     }
     .recommended {
-      padding: 56px 0;
       .title {
+        margin: 56px 0 8px;
         font-family: PingFangSC-Medium;
         font-size: 40px;
         color: #222222;
+        
       }
       .list-data {
+        margin:12px 0 0 0;
         li {
           display: flex;
           justify-content: flex-start;
           align-items: flex-start;
-          padding: 32px 0;
+          padding: 22px 0 28px;
           img {
             width: 160px;
             height: 160px;
             margin: 0 36px 0 0;
-            border-radius: 5px;
+            border-radius: 15px;
           }
           div {
-            .title {
+            .recommendedtitle {
+              
               font-family: PingFangSC-Medium;
               font-size: 32px;
+              font-weight: bold;
               color: #222222;
               line-height: 42px;
+              
             }
             .label {
               margin: 12px 0 16px 0;
