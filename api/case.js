@@ -2,7 +2,7 @@
 
 import { CHIPS_PC_URL } from '../config/constant'
 import { request } from '@/utils/request'
-// const CHIPS_PC_URL="http://172.16.132.83:7002/service"
+//  const CHIPS_PC_URL="http://172.16.132.83:7001/service"
 const caseApi = {
 
 

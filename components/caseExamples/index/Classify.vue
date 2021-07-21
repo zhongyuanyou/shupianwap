@@ -9,60 +9,19 @@
     />
 
     <!--v-model="tab2.value" :options="tab2.options" -->
-    <sp-dropdown-item ref="tab2" :title="tab2.title" @change="change($event)">
+    <sp-dropdown-item ref="tab2" :title="tab2.title">
       <TreeSelect
         :list="tab2.options"
         :level="3"
         @select="ServerSelect"
       ></TreeSelect>
-
-      <!-- <ServerContainer :items="tab2.options" :level="3" @select="ServerSelect">
-        <template v-slot:children="props">
-          <Server :items="props.children" :level="3"></Server>
-        </template>
-      </ServerContainer> -->
-
-      <!-- <sp-tree-select
-        height="55vw"
-        :items="serveGoodsType"
-        :main-active-index.sync="mainActiveIndex"
-        :active-index.sync="activeIndex1"
-        @click-nav="clickNav1"
-      >
-        <template #content>
-          <sp-tree-select
-            height="55vw"
-            :items="serveGoodsType2"
-            :main-active-index.sync="activeIndex1"
-            :active-index.sync="activeIndex2"
-          >
-          </sp-tree-select>
-        </template>
-      </sp-tree-select> -->
     </sp-dropdown-item>
-
-    <!-- 国际分类 -->
-    <sp-dropdown-item
-      v-for="(item, index) of tabs"
-      ref="tabs"
-      :key="index"
-      v-model="item.value"
-      :title="item.title"
-    >
-      <template>
-        <div class="custom">
-          <div class="custom-container">
-            <div
-              v-for="option in item.options"
-              :key="option.id"
-              :class="option.value === item.value ? 'active' : ''"
-              @click="custom(item, option, index)"
-            >
-              {{ option.text }}
-            </div>
-          </div>
-        </div>
-      </template>
+    <sp-dropdown-item ref="tab3" :title="tab3.title">
+      <TreeSelect
+        :list="tab3.options"
+        :level="3"
+        @select="AreaSelect"
+      ></TreeSelect>
     </sp-dropdown-item>
   </sp-dropdown-menu>
 </template>
@@ -70,11 +29,7 @@
 <script>
 import { DropdownMenu, DropdownItem } from '@chipspc/vant-dgg'
 
-import ServerContainer from './ServerContainer.vue'
-import Server from './Server.vue'
-
 import TreeSelect from './TreeSelect.vue'
-import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect1.vue'
 
 import { goods } from '@/api/index'
 
@@ -83,9 +38,6 @@ export default {
     [DropdownMenu.name]: DropdownMenu,
     [DropdownItem.name]: DropdownItem,
     TreeSelect,
-    // ServiceSelect,
-    // Server,
-    // ServerContainer,
   },
   data() {
     return {
@@ -99,12 +51,30 @@ export default {
       },
       tab2: {
         title: '分类',
-        value: '',
+        value: [],
         options: [
-          // { text: '交易商品', value: 1 },
-          // { text: '服务商品', value: 2 },
+          {
+            id: 1,
+            code: 'PRO_CLASS_TYPE_SERVICE',
+            name: '服务商品',
+            text: '服务商品',
+            children: [],
+          },
+          {
+            id: 2,
+            code: 'PRO_CLASS_TYPE_TRANSACTION',
+            name: '交易商品',
+            text: '交易商品',
+            children: [],
+          },
         ],
       },
+      tab3: {
+        title: '区域',
+        value: [],
+        options: [],
+      },
+
       tabs: [
         {
           title: '区域',
@@ -120,6 +90,7 @@ export default {
   },
   mounted() {
     this.getSearchServeGoodsList()
+    this.getCity()
   },
   methods: {
     setData(list) {
@@ -139,7 +110,123 @@ export default {
       })
     },
 
-    getCity() {},
+    getCity() {
+      const arr = [
+        {
+          name: '公司交易',
+          id: 'FL20201224136319',
+          code: 'FL20201224136319',
+          classCode: 'FL20201224136319',
+          dictCode: 'CONDITION-JY-GS',
+        },
+        {
+          name: '专利交易',
+          id: 'FL20201224136341',
+          code: 'FL20201224136341',
+          classCode: 'FL20201224136341',
+          dictCode: 'CONDITION-JY-ZY',
+        },
+
+        {
+          name: '商标交易',
+          id: 'FL20201224136273',
+          code: 'FL20201224136273',
+          classCode: 'FL20201224136273',
+          dictCode: 'CONDITION-JY-SB',
+        },
+        {
+          name: '资质交易',
+          id: 'FL20201224136348',
+          code: 'FL20201224136348',
+          classCode: 'FL20201224136348',
+          dictCode: 'CONDITION-JY-ZZ',
+        },
+      ]
+      let area = []
+
+      arr.map((item) => {
+        goods
+          .searchJyGoodsList(
+            { axios: this.$axios },
+            {
+              start: 1,
+              limit: 1,
+              needTypes: 1,
+              classCode: item.classCode,
+              dictCode: item.dictCode,
+              searchKey: '',
+              statusList: ['PRO_STATUS_LOCKED', 'PRO_STATUS_PUT_AWAY'],
+              fieldList: [],
+              platformPriceStart: '',
+              platformPriceEnd: '',
+            }
+          )
+          .then((data) => {
+            if (item.dictCode === 'CONDITION-JY-GS') {
+              if (
+                data.filters &&
+                data.filters.length > 0 &&
+                data.filters[0].code === 'CONDITION-JY-GS-DQ'
+              ) {
+                area = data.filters[0].children
+                this.tab3.options = this.setData(area)
+              }
+              if (
+                data.filters &&
+                data.filters.length > 0 &&
+                data.filters[2].code === 'CONDITION-JY-GS-HY'
+              ) {
+                // 行业
+                item.children = data.filters[2].children
+              }
+            } else if (item.dictCode === 'CONDITION-JY-ZY') {
+              if (
+                data.filters &&
+                data.filters.length > 1 &&
+                data.filters[1].code === 'CONDITION-JY-ZY-HY'
+              ) {
+                // 行业
+                item.children = data.filters[1].children
+              }
+            } else if (item.dictCode === 'CONDITION-JY-SB') {
+              if (
+                data.filters &&
+                data.filters.length > 0 &&
+                data.filters[0].code === 'CONDITION-JY-SB-FL'
+              ) {
+                // 分类
+                item.children = data.filters[0].children
+              }
+            } else if (item.dictCode === 'CONDITION-JY-ZZ') {
+              if (
+                data.filters &&
+                data.filters.length > 0 &&
+                data.filters[0].code === 'CONDITION-JY-ZZ-LB'
+              ) {
+                // 行业
+                item.children = data.filters[0].children
+              }
+            }
+            this.$set(this.tab2.options, 1, {
+              id: 2,
+              code: 'PRO_CLASS_TYPE_TRANSACTION',
+              name: '交易商品',
+              text: '交易商品',
+              children: arr,
+            })
+
+            // this.tab2.options[1] = {
+            //   id: 2,
+            //   code: 'PRO_CLASS_TYPE_TRANSACTION',
+            //   name: '交易商品',
+            //   text: '交易商品',
+            //   children: arr,
+            // }
+
+            // this.$forceUpdate()
+          })
+      })
+    },
     getSearchServeGoodsList() {
       goods
         .searchServeGoodsList(
@@ -154,22 +241,13 @@ export default {
         )
         .then((data) => {
           if (data && data.typeData && data.typeData.length > 0) {
-            this.tab2.options = [
-              {
-                id: 1,
-                code: 1,
-                name: '服务商品',
-                text: '服务商品',
-                children: data.typeData,
-              },
-              {
-                id: 2,
-                code: 2,
-                name: '交易商品',
-                text: '交易商品',
-                children: [],
-              },
-            ]
+            this.tab2.options[0] = {
+              id: 1,
+              code: 'PRO_CLASS_TYPE_SERVICE',
+              name: '服务商品',
+              text: '服务商品',
+              children: data.typeData,
+            }
           }
         })
         .catch()
@@ -183,7 +261,7 @@ export default {
     },
 
     change() {
-      this.$emit('select', this.tab1, this.tab2, this.tabs)
+      this.$emit('select', this.tab1, this.tab2, this.tab3)
       if (this.tab1.value) {
         const item = this.tab1.options.find((item) => {
           return item.value === this.tab1.value
@@ -196,11 +274,33 @@ export default {
 
     // 服务商品选择
     ServerSelect(item1, item2, item3) {
-      console.log('服务交易', item1, item2, item3)
-      this.tab2.title = item3.text || item2.text || item1.text
+      console.log('ServerSelect', item1, item2, item3)
+      this.tab2.title = '分类'
+      const arr = [item1, item2, item3]
+      arr.map((item) => {
+        if (item?.code) {
+          this.tab2.title = item.name || '分类'
+        }
+      })
+
       this.tab2.value = [item1?.code, item2?.code, item3?.code]
       this.change()
       this.$refs.tab2.toggle()
+    },
+    AreaSelect(item1, item2, item3) {
+      console.log('AreaSelect', item1, item2, item3)
+      // this.tab3.title = item3.text || item2.text || item1.text || '区域'
+      this.tab3.title = '区域'
+      const arr = [item1, item2, item3]
+      arr.map((item) => {
+        if (item?.code) {
+          this.tab3.title = item.text || '区域'
+        }
+      })
+      this.tab3.value = [item1?.code, item2?.code, item3?.code]
+
+      this.change()
+      this.$refs.tab3.toggle()
     },
   },
 }

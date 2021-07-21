@@ -74,7 +74,8 @@
     <TcPlanners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
     <!--E 第五板块 推荐规划师-->
     <!--S  精选案例-->
-    <OrderCase></OrderCase>
+    <!-- <OrderCase></OrderCase> -->
+    <CaseNew />
     <!--E  精选案例-->
     <!--S 第十板块 服务详情-->
     <ServiceDetail
@@ -109,7 +110,8 @@ import { mapActions } from 'vuex'
 import Banner from '~/components/detail/Banner'
 import Title from '~/components/detail/Title1'
 import CommentBox from '~/components/detail/CommentBox'
-import OrderCase from '~/components/detail/OrderCase'
+// import OrderCase from '~/components/detail/OrderCase'
+import CaseNew from '~/components/detail/CaseNew'
 import OrderDynamic from '~/components/detail/OrderDynamic'
 import VouchersSelect from '~/components/detail/VouchersSelect'
 import ContainProject from '~/components/detail/ContainProject'
@@ -141,8 +143,9 @@ export default {
     bottomBar,
     MyIcon,
     CommentBox,
-    OrderCase,
+    // OrderCase,
     OrderDynamic,
+    CaseNew,
   },
   mixins: [imHandle],
   props: {
