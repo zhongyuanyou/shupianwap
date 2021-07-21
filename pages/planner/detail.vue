@@ -115,16 +115,16 @@
                         <span>{{newDetailData.baseInfo.mailbox}}</span>
                       </div>
                     </li>
-                    <li>
+                    <li v-if="newDetailData.officeAddress">
                       <div>
                         <img src="https://cdn.shupian.cn/sp-pt/wap/images/e90wl9dbyw00000.png" alt="">
                         <span>{{newDetailData.officeAddress}}</span>
                       </div>
                     </li>
-                    <li>
+                    <li v-if="newDetailData.baseInfo.lawyerIntro">
                       <div class="pullstyle">
                         <img src="https://cdn.shupian.cn/sp-pt/wap/images/5lywjoit1as0000.png" alt="">
-                        <span :class="ownerInfo?'textshow':'textoverflow'">{{newDetailData.baseInfo.lawyerIntro || "--"}}</span>
+                        <span :class="ownerInfo?'textshow':'textoverflow'">{{newDetailData.baseInfo.lawyerIntro}}</span>
                       </div>
                     </li>
                     <i 
