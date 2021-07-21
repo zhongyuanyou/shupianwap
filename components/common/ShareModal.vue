@@ -100,7 +100,11 @@ export default {
       this.getPlanerInfo(this.plannerId)
     }
     if (this.userInfo.userId) {
-      this.getUserIndo()
+      if (this.userInfo.userId !== this.partnerId) {
+        this.getUserIndo()
+      } else {
+        this.visible = false
+      }
     }
   },
   methods: {
@@ -120,9 +124,13 @@ export default {
             ...obj,
             ...res,
           }
+          if (this.userInfo.userId !== this.partnerId) {
+            this.visible = true
+          } else {
+            this.visible = false
+          }
           this.$emit('setPlannerInfo', this.planerInfo)
           // this.$forceUpdate()
-          this.visible = true
         })
         .catch((err) => {
           this.visible = true
@@ -404,6 +412,12 @@ export default {
           overflow: hidden;
           text-align: center;
           align-items: middle;
+          background: #f5f5f5;
+          img {
+            width: auto;
+            min-height: 100%;
+            min-width: 100%;
+          }
         }
         .avatar {
           max-width: 160px;
