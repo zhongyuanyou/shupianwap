@@ -301,7 +301,7 @@ export default {
     },
     getDetail() {
       this.$axios
-        .get(knownApi.questionArticle.articleDetail, {
+        .get(knownApi.questionArticle.anserShareDetail, {
           params: {
             shareId: this.$route.query.shareId,
           },

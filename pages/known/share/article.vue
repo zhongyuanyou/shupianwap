@@ -139,10 +139,10 @@
           <span>金牌规划师</span>
         </div>
         <!-- && planerInfo.mchUserId -->
-        <div class="btn">
+        <div class="bottom_btn_area">
           <sp-button
-            size="small"
             type="info"
+            class="btn1"
             @click="
               sendTextMessage(topPlannerInfo.mchUserId || planerInfo.mchUserId)
             "
@@ -153,7 +153,6 @@
               (topPlannerInfo.mchUserId && topPlannerInfo.phone) ||
               (planerInfo.mchUserId && planerInfo.phone)
             "
-            size="small"
             type="primary"
             @click="handleTel(topPlannerInfo.mchUserId || planerInfo.mchUserId)"
             >打电话</sp-button
@@ -570,7 +569,7 @@ export default {
           // 解密电话
           if (telData.status === 1) {
             const tel = telData.phone
-            window.location.href = `tel://${tel}`
+            window.location.href = `tel:${tel}`
           } else if (telData.status === 0) {
             Toast({
               message: '当前人员已禁用，无法拨打电话',
@@ -753,7 +752,7 @@ export default {
   }
 }
 .main {
-  padding: 40px 40px 80px;
+  padding: 40px 40px 140px;
   .content {
     word-break: break-all;
     padding-top: 40px;
@@ -967,7 +966,7 @@ export default {
     > div.tit {
       display: block;
     }
-    > .btn {
+    > .btn-area {
       margin-top: 20px;
       font-size: 28px;
       font-weight: 400;
@@ -1084,7 +1083,7 @@ export default {
   position: fixed;
   bottom: 0;
   left: 0;
-  height: 120px;
+  height: 144px;
   width: 100%;
   padding: 10px 40px 0 40px;
   background: white;
@@ -1094,48 +1093,57 @@ export default {
     display: flex;
     align-items: center;
     .img {
-      width: 72px;
-      height: 72px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
       background: #d8d8d8;
       overflow: hidden;
     }
     .infos {
       flex: 1;
-      font-size: 30px;
+      font-size: 32px;
       font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: bold;
       color: #222222;
       line-height: 30px;
       padding-left: 16px;
+      .name {
+        font-size: 32px;
+        color: #222222;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
       span {
         font-size: 24px;
+        background: #ffefc5;
+        border: 2px solid #dac79a;
+        border-radius: 4px;
+        font-size: 22px;
+        color: #7b6225;
+        letter-spacing: 0;
+        text-align: center;
+        line-height: 0;
+        padding: 8px 10px;
       }
     }
-    .btn2 {
-      background: none;
-      font-size: 30px;
-      font-weight: bold;
-      color: #999999;
-      background: #f5f5f5;
+    .bottom_btn_area {
+      float: right;
       height: 72px;
-      border-radius: 0.12rem;
-      padding: 0 25px;
-      display: flex;
-      align-items: center;
-    }
-    .btn {
-      height: 72px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-
+      font-size: 32px;
+      color: #ffffff;
       ::v-deep.sp-button--info {
         margin-left: 12px;
         background-color: #24ae68;
         border: 1px solid #24ae68;
       }
-
+      .sp-button {
+        height: 96px;
+        border-radius: 8px;
+        font-size: 32px;
+        color: #ffffff;
+      }
+      .btn1 {
+        margin-right: 20px;
+      }
       // .sp-button {
       //   width: 100%;
       //   height: 100%;
