@@ -99,7 +99,7 @@
     <!-- <CaseNew /> -->
     <CaseNew />
     <!--S 第八板块 成功案例-->
-    <Case />
+    <!-- <Case /> -->
     <!--E 第八板块 成功案例-->
     <!--S 第九板块 同类推荐-->
     <Recommend
@@ -157,7 +157,7 @@ import TcPlanners from '~/components/detail/TcPlanners'
 import ServiceDetail from '~/components/detail/ServiceDetail'
 import Dynamic from '~/components/detail/Dynamic'
 import Question from '~/components/detail/Question'
-import Case from '~/components/detail/Case'
+// import Case from '~/components/detail/Case'
 import Recommend from '~/components/detail/Recommend'
 import Need from '~/components/detail/Need'
 import CaseNew from '~/components/detail/CaseNew'
@@ -189,7 +189,7 @@ export default {
     ServiceDetail,
     Dynamic,
     Question,
-    Case,
+    // Case,
     Recommend,
     Need,
     tcCommodityConsultation,
