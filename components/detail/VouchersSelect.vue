@@ -704,34 +704,34 @@ export default {
     color: #222222;
     font-size: 28px;
     font-weight: bold;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     padding: 0 40px;
   }
   .p2 {
     color: #222222;
     font-size: 26px;
     font-weight: 400;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
     padding: 0 40px;
     span {
       color: #ec5330;
+      font-weight: 600;
     }
   }
   .popup_box {
     padding: 0 40px;
     overflow-y: auto;
     position: relative;
-
+    .vouchers_box_title {
+      padding-top: 20px;
+      color: #222222;
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 24px;
+    }
     .vouchers_box {
       max-height: 820px;
       padding-bottom: 54px;
-      &_title {
-        padding-top: 30px;
-        color: #222222;
-        font-size: 28px;
-        font-weight: bold;
-        margin-bottom: 24px;
-      }
       .vouchers_list {
         .vouchers_item {
           display: flex;
@@ -739,7 +739,7 @@ export default {
           width: 670px;
           height: 216px;
           padding-bottom: 4px;
-          background-image: url('https://cdn.shupian.cn/sp-pt/wap/f5p8bx9q4oo0000.png?x-oss-process=image/resize,m_fill,w_670,h_212,limit_0');
+          background-image: url('https://cdn.shupian.cn/sp-pt/wap/g4kbai7wgrk0000.png');
           background-repeat: no-repeat;
           background-size: 100% 100%;
           .vouchers_item_left {
@@ -753,7 +753,7 @@ export default {
               font-weight: 400;
               color: #ffffff;
               text-align: center;
-              padding-top: 27px;
+              padding-top: 20px;
               overflow: hidden;
               position: relative;
               // text-overflow: ellipsis;
@@ -772,7 +772,7 @@ export default {
               font-weight: 400;
               color: #ffffff;
               text-align: center;
-              padding-top: 44px;
+              padding-top: 24px;
               position: relative;
               padding-right: 20px;
               margin-bottom: 10px;
@@ -796,12 +796,13 @@ export default {
           }
           .vouchers_item_right {
             /*flex: 1;*/
-            position: relative;
             padding-left: 24px;
             padding-top: 30px;
             width: 462px;
             padding-right: 32px;
+            position: relative;
             .vouchers_title {
+              position: relative;
               font-size: 32px;
               font-weight: bold;
               color: #222222;
@@ -810,16 +811,26 @@ export default {
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
-              .types {
+              padding-left: 74px;
+              span {
+                position: absolute;
                 border-radius: 4px;
-                padding: 2px;
-                font-size: 20px;
+                font-size: 24px;
+                left: 0;
+                top: 2px;
+                line-height: 24px;
+              }
+              .type-name {
                 color: #ffffff;
                 background-image: linear-gradient(
                   90deg,
                   #fa6d5a 0%,
                   #fa5741 100%
                 );
+                transform: scale(0.8);
+                transform-origin: 0 0.04rem;
+                line-height: 0;
+                padding: 0.2rem 0.04rem;
               }
               .no-coupon {
                 background: #cccccc;
@@ -840,7 +851,7 @@ export default {
             }
             .vouchers_bt {
               position: absolute;
-              top: 84px;
+              top: 104px;
               right: 32px;
               width: 140px;
               height: 54px;
