@@ -299,7 +299,7 @@ export default {
       return this.$store.state.city.currentCity
     },
   },
-  created() {
+  mounted() {
     if (this.isInApp) {
       if (this.userInfo.userId && this.userInfo.token) {
         this.getDetail()
@@ -319,15 +319,7 @@ export default {
       this.getDetail()
     }
   },
-  async mounted() {
-    if (!this.city.code) {
-      await this.POSITION_CITY({ type: 'init' })
-    }
-  },
   methods: {
-    ...mapActions({
-      POSITION_CITY: 'city/POSITION_CITY',
-    }),
     ...mapMutations({
       setUserInfo: 'user/SET_USER',
       clearUserInfo: 'user/CLEAR_USER',
