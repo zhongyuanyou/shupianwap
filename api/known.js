@@ -29,7 +29,7 @@ const knownApi = {
     detail: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_detail.do`,
 
     articleDetail: `${CHIPS_WAP_BASE_URL}/nk/known_share/v1/article_detail.do`,
-
+    anserShareDetail: `${CHIPS_WAP_BASE_URL}/nk/known_share/v1/anser_detail.do`, // 回答分享详情
     recommendArticle: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/recommendArticle.do`,
     findAttention: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/findAttention.do`,
     findMyInvitedPage: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_my_invited_page.do`, // 我被邀请回答的问题分页查询

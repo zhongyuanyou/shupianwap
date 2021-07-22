@@ -658,6 +658,7 @@ export default {
     color: #666;
     font-weight: 400;
     color: #555555;
+    overflow: hidden;
     ::v-deep img {
       width: 100%;
       height: auto;
