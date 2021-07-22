@@ -71,7 +71,43 @@ export default {
             code: 'PRO_CLASS_TYPE_TRANSACTION',
             name: '交易商品',
             text: '交易商品',
-            children: [],
+            children: [
+              {
+                name: '不限',
+                text: '不限',
+                id: -1,
+                code: -1,
+              },
+              {
+                name: '公司交易',
+                id: 'FL20201224136319',
+                code: 'FL20201224136319',
+                classCode: 'FL20201224136319',
+                dictCode: 'CONDITION-JY-GS',
+              },
+              {
+                name: '专利交易',
+                id: 'FL20201224136341',
+                code: 'FL20201224136341',
+                classCode: 'FL20201224136341',
+                dictCode: 'CONDITION-JY-ZY',
+              },
+
+              {
+                name: '商标交易',
+                id: 'FL20201224136273',
+                code: 'FL20201224136273',
+                classCode: 'FL20201224136273',
+                dictCode: 'CONDITION-JY-SB',
+              },
+              {
+                name: '资质交易',
+                id: 'FL20201224136348',
+                code: 'FL20201224136348',
+                classCode: 'FL20201224136348',
+                dictCode: 'CONDITION-JY-ZZ',
+              },
+            ],
           },
         ],
       },
@@ -131,121 +167,142 @@ export default {
     },
 
     getCity() {
-      const arr = [
-        {
-          name: '公司交易',
-          id: 'FL20201224136319',
-          code: 'FL20201224136319',
-          classCode: 'FL20201224136319',
-          dictCode: 'CONDITION-JY-GS',
-        },
-        {
-          name: '专利交易',
-          id: 'FL20201224136341',
-          code: 'FL20201224136341',
-          classCode: 'FL20201224136341',
-          dictCode: 'CONDITION-JY-ZY',
-        },
+      goods
+        .searchJyGoodsList(
+          { axios: this.$axios },
+          {
+            start: 1,
+            limit: 1,
+            needTypes: 1,
+            classCode: 'FL20201224136319',
+            dictCode: 'CONDITION-JY-GS',
+            searchKey: '',
+            statusList: ['PRO_STATUS_LOCKED', 'PRO_STATUS_PUT_AWAY'],
+            fieldList: [],
+            platformPriceStart: '',
+            platformPriceEnd: '',
+          }
+        )
+        .then((data) => {
+          if (
+            data.filters &&
+            data.filters.length > 0 &&
+            data.filters[0].code === 'CONDITION-JY-GS-DQ'
+          ) {
+            this.tab3.options = this.setData(data.filters[0].children)
+          }
+        })
+      // const arr = [
+      //   // {
+      //   //   name: '不限',
+      //   //   text: '不限',
+      //   //   id: -1,
+      //   //   code: -1,
+      //   // },
+      //   {
+      //     name: '公司交易',
+      //     id: 'FL20201224136319',
+      //     code: 'FL20201224136319',
+      //     classCode: 'FL20201224136319',
+      //     dictCode: 'CONDITION-JY-GS',
+      //   },
+      //   {
+      //     name: '专利交易',
+      //     id: 'FL20201224136341',
+      //     code: 'FL20201224136341',
+      //     classCode: 'FL20201224136341',
+      //     dictCode: 'CONDITION-JY-ZY',
+      //   },
 
-        {
-          name: '商标交易',
-          id: 'FL20201224136273',
-          code: 'FL20201224136273',
-          classCode: 'FL20201224136273',
-          dictCode: 'CONDITION-JY-SB',
-        },
-        {
-          name: '资质交易',
-          id: 'FL20201224136348',
-          code: 'FL20201224136348',
-          classCode: 'FL20201224136348',
-          dictCode: 'CONDITION-JY-ZZ',
-        },
-      ]
-      let area = []
+      //   {
+      //     name: '商标交易',
+      //     id: 'FL20201224136273',
+      //     code: 'FL20201224136273',
+      //     classCode: 'FL20201224136273',
+      //     dictCode: 'CONDITION-JY-SB',
+      //   },
+      //   {
+      //     name: '资质交易',
+      //     id: 'FL20201224136348',
+      //     code: 'FL20201224136348',
+      //     classCode: 'FL20201224136348',
+      //     dictCode: 'CONDITION-JY-ZZ',
+      //   },
+      // ]
 
-      arr.map((item) => {
-        goods
-          .searchJyGoodsList(
-            { axios: this.$axios },
-            {
-              start: 1,
-              limit: 1,
-              needTypes: 1,
-              classCode: item.classCode,
-              dictCode: item.dictCode,
-              searchKey: '',
-              statusList: ['PRO_STATUS_LOCKED', 'PRO_STATUS_PUT_AWAY'],
-              fieldList: [],
-              platformPriceStart: '',
-              platformPriceEnd: '',
-            }
-          )
-          .then((data) => {
-            if (item.dictCode === 'CONDITION-JY-GS') {
-              if (
-                data.filters &&
-                data.filters.length > 0 &&
-                data.filters[0].code === 'CONDITION-JY-GS-DQ'
-              ) {
-                area = data.filters[0].children
-                this.tab3.options = this.setData(area)
-              }
-              if (
-                data.filters &&
-                data.filters.length > 0 &&
-                data.filters[2].code === 'CONDITION-JY-GS-HY'
-              ) {
-                // 行业
-                item.children = data.filters[2].children
-              }
-            } else if (item.dictCode === 'CONDITION-JY-ZY') {
-              if (
-                data.filters &&
-                data.filters.length > 1 &&
-                data.filters[1].code === 'CONDITION-JY-ZY-HY'
-              ) {
-                // 行业
-                item.children = data.filters[1].children
-              }
-            } else if (item.dictCode === 'CONDITION-JY-SB') {
-              if (
-                data.filters &&
-                data.filters.length > 0 &&
-                data.filters[0].code === 'CONDITION-JY-SB-FL'
-              ) {
-                // 分类
-                item.children = data.filters[0].children
-              }
-            } else if (item.dictCode === 'CONDITION-JY-ZZ') {
-              if (
-                data.filters &&
-                data.filters.length > 0 &&
-                data.filters[0].code === 'CONDITION-JY-ZZ-LB'
-              ) {
-                // 行业
-                item.children = data.filters[0].children
-              }
-            }
-            this.$set(this.tab2.options, 1, {
-              id: 2,
-              code: 'PRO_CLASS_TYPE_TRANSACTION',
-              name: '交易商品',
-              text: '交易商品',
-              children: arr,
-            })
-
-            // this.tab2.options[1] = {
-            //   id: 2,
-            //   code: 'PRO_CLASS_TYPE_TRANSACTION',
-            //   name: '交易商品',
-            //   text: '交易商品',
-            //   children: arr,
-            // }
-
-            // this.$forceUpdate()
-          })
-      })
+      // let area = []
+      // arr.map((item) => {
+      //   goods
+      //     .searchJyGoodsList(
+      //       { axios: this.$axios },
+      //       {
+      //         start: 1,
+      //         limit: 1,
+      //         needTypes: 1,
+      //         classCode: item.classCode,
+      //         dictCode: item.dictCode,
+      //         searchKey: '',
+      //         statusList: ['PRO_STATUS_LOCKED', 'PRO_STATUS_PUT_AWAY'],
+      //         fieldList: [],
+      //         platformPriceStart: '',
+      //         platformPriceEnd: '',
+      //       }
+      //     )
+      //     .then((data) => {
+      //       if (item.dictCode === 'CONDITION-JY-GS') {
+      //         if (
+      //           data.filters &&
+      //           data.filters.length > 0 &&
+      //           data.filters[0].code === 'CONDITION-JY-GS-DQ'
+      //         ) {
+      //           area = data.filters[0].children
+      //           this.tab3.options = this.setData(area)
+      //         }
+      //         if (
+      //           data.filters &&
+      //           data.filters.length > 0 &&
+      //           data.filters[2].code === 'CONDITION-JY-GS-HY'
+      //         ) {
+      //           // 行业
+      //           item.children = data.filters[2].children
+      //         }
+      //       } else if (item.dictCode === 'CONDITION-JY-ZY') {
+      //         if (
+      //           data.filters &&
+      //           data.filters.length > 1 &&
+      //           data.filters[1].code === 'CONDITION-JY-ZY-HY'
+      //         ) {
+      //           // 行业
+      //           item.children = data.filters[1].children
+      //         }
+      //       } else if (item.dictCode === 'CONDITION-JY-SB') {
+      //         if (
+      //           data.filters &&
+      //           data.filters.length > 0 &&
+      //           data.filters[0].code === 'CONDITION-JY-SB-FL'
+      //         ) {
+      //           // 分类
+      //           item.children = data.filters[0].children
+      //         }
+      //       } else if (item.dictCode === 'CONDITION-JY-ZZ') {
+      //         if (
+      //           data.filters &&
+      //           data.filters.length > 0 &&
+      //           data.filters[0].code === 'CONDITION-JY-ZZ-LB'
+      //         ) {
+      //           // 行业
+      //           item.children = data.filters[0].children
+      //         }
+      //       }
+      //       this.$set(this.tab2.options, 1, {
+      //         id: 2,
+      //         code: 'PRO_CLASS_TYPE_TRANSACTION',
+      //         name: '交易商品',
+      //         text: '交易商品',
+      //         children: arr,
+      //       })
+      //     })
+      // })
     },
     getSearchServeGoodsList() {
       goods
@@ -261,12 +318,21 @@ export default {
         )
         .then((data) => {
           if (data && data.typeData && data.typeData.length > 0) {
+            const d = this.setData(data.typeData)
+            d[0].children = [
+              {
+                id: -1,
+                name: '不限',
+                text: '不限',
+              },
+            ]
+
             this.tab2.options[0] = {
               id: 1,
               code: 'PRO_CLASS_TYPE_SERVICE',
               name: '服务商品',
               text: '服务商品',
-              children: data.typeData,
+              children: d,
             }
           }
         })
