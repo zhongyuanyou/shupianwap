@@ -52,7 +52,7 @@
       <div
         slot="header"
         class="rules_and_invalid"
-        :style="{ rules_and_invalid_bk: list.length > 0 }"
+        :class="{ rules_and_invalid_bk: list.length > 0 }"
       >
         <span class="" @click="TipsShow = true">
           通用规则

@@ -199,7 +199,7 @@ export default {
       font-weight: bold;
       color: #222222;
       // line-height: 32px;
-      margin: 34px 24px 23px 0;
+      margin: 34px 24px 12px 0;
       word-break: break-all;
       display: -webkit-box;
       -webkit-line-clamp: 1;
@@ -255,7 +255,7 @@ export default {
       top: 0px;
     }
     .date-container {
-      margin-top: 18px;
+      margin-top: 36px;
       display: flex;
       font-size: 0;
       align-items: flex-start;
