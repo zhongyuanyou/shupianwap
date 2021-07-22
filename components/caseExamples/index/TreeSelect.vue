@@ -133,9 +133,11 @@ export default {
             this[key].map((item) => {
               if (item.code === val) {
                 this[activeKey] = item
-                if (item.children) {
-                  this[nextKey] = item.children
-                }
+
+                this.rowClick(index + 1, item)
+                // if (item.children) {
+                //   this[nextKey] = item.children
+                // }
               }
             })
           }
