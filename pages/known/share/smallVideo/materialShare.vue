@@ -8,6 +8,12 @@
       class="my-icon"
       @click.native="link"
     ></my-icon>
+    <div class="info-content">
+      <div class="tile">1个视频助新人创业完全闭坑指南，…</div>
+      <div class="desc">
+        王健林批评马云：平时不看书，还讲一堆大道理,给青少年灌输不好思想
+      </div>
+    </div>
     <div class="goods-swipe">
       <sp-swipe :autoplay="3000" :show-indicators="true">
         <sp-swipe-item>
@@ -272,6 +278,26 @@ export default {
           }
         }
       }
+    }
+  }
+  .info-content {
+    position: fixed;
+    bottom: 466px;
+    padding: 0 32px;
+    .tile {
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 40px;
+      line-height: 56px;
+      .mixin-text-oneoverflow();
+      margin-bottom: 10px;
+    }
+    .desc {
+      font-size: 32px;
+      line-height: 44px;
+      color: #fff;
+      font-weight: bold;
+      .textOverflow(2);
     }
   }
 }
