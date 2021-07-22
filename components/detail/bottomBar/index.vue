@@ -44,6 +44,7 @@
           在线咨询
         </sp-button>
         <sp-button
+          v-if="[1, 2].includes(salesGoodsSubVos)"
           class="now_buy"
           @click="nowBuy"
         >
