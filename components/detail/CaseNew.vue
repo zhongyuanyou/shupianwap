@@ -138,13 +138,18 @@ export default {
       this.$router.push('/caseExamples/details?id=' + this.caseData.id)
     },
     toALL() {
-      this.$router.push({
-        path: '/caseExamples',
-        query: {
+      let query = {}
+      console.log('classCodeLevelList', this.classCodeLevelList)
+      if (this.classCodeLevelList && this.classCodeLevelList.length > 0) {
+        query = {
           classCode1: this.classCodeLevelList[0],
           classCode2: this.classCodeLevelList[1],
           classCode3: this.classCodeLevelList[2],
-        },
+        }
+      }
+      this.$router.push({
+        path: '/caseExamples',
+        query,
       })
     },
   },
