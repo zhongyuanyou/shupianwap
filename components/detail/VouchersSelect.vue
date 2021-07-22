@@ -509,19 +509,24 @@ export default {
       }
       .content {
         display: flex;
+        align-items: center;
         flex-wrap: wrap;
         // align-items: center;
         // flex: 1;
         max-width: 550px;
         color: #222222;
         font-size: 26px;
-        height: 35px;
+        height: 40px;
         overflow: hidden;
+        white-space: nowrap;
+
         .tag {
           display: inline-block;
-          width: 60px;
-          height: 32px;
-          line-height: 32px;
+          // width: 60px;
+          padding: 0px 8px;
+          border-radius: 4px;
+          // height: 32px;
+          // line-height: 32px;
           background-color: #feefef;
           color: #f1524e;
           font-size: 22px;
