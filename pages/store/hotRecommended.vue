@@ -60,7 +60,7 @@
       </div>
     </div>
     <div class="body">
-      <div class="body-content recommended" v-if="tabsListData.length>0">
+      <div v-if="tabsListData.length>0" class="body-content recommended">
         <div class="tabs">
           <ul>
             <li
@@ -117,7 +117,7 @@
           没有更多了
         </p>
       </div>
-      <div class="no-info" v-else>
+      <div v-else class="no-info">
         <img src="https://cdn.shupian.cn/sp-pt/wap/images/32lnvdx3omo0000.png" alt="">
         <p>抱歉,未找到相关结果</p>
       </div>
