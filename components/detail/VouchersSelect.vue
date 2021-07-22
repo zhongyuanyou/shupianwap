@@ -840,6 +840,10 @@ export default {
               .no-coupon {
                 background: #cccccc;
                 color: #ffffff;
+                transform: scale(0.8);
+                transform-origin: 0 0.04rem;
+                line-height: 0;
+                padding: 0.2rem 0.04rem;
               }
             }
             .vouchers_desc {
