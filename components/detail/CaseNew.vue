@@ -78,8 +78,9 @@ export default {
       if (this.$route.path.match('transactionDetails')) {
         return this.$store.state.tcProductDetail.detailData.classCodeLevelList
       } else {
-        return this.$store.state.sellingGoodsDetail.sellingGoodsData
-          .classCodeLevelList
+        return this.$store.state.sellingGoodsDetail.sellingGoodsData.classCodeLevel.split(
+          ','
+        )
       }
     },
   },
@@ -88,6 +89,7 @@ export default {
   },
   methods: {
     getCase() {
+      console.log('classCodeLevelList', this.classCodeLevelList)
       const params = {
         orderItems: [
           {
@@ -110,16 +112,17 @@ export default {
         page: '1',
         limit: '10',
       }
-      // if (this.classCodeLevelList.length > 2) {
-      //   params.productThreeBelongCode = this.classCodeLevelList[2]
-      //   params.productTwoBelongCode = this.classCodeLevelList[1]
-      //   params.productOneBelongCode = this.classCodeLevelList[0]
-      // } else if (this.classCodeLevelList.length > 1) {
-      //   params.productTwoBelongCode = this.classCodeLevelList[1]
-      //   params.productOneBelongCode = 'FL20201224136319'
-      // } else if (this.classCodeLevelList.length === 1) {
-      //   params.productOneBelongCode = this.classCodeLevelList[0]
-      // }
+      if (this.classCodeLevelList.length > 2) {
+        params.productThreeBelongCode = this.classCodeLevelList[2]
+        params.productTwoBelongCode = this.classCodeLevelList[1]
+        params.productOneBelongCode = this.classCodeLevelList[0]
+      } else if (this.classCodeLevelList.length > 1) {
+        params.productTwoBelongCode = this.classCodeLevelList[1]
+        params.productOneBelongCode = this.classCodeLevelList[0]
+      } else if (this.classCodeLevelList.length === 1) {
+        params.productOneBelongCode = this.classCodeLevelList[0]
+      }
+      // params.productTwoBelongCode = 'FL20201224136337'
       caseApi
         .case_list(params)
         .then((res) => {
@@ -138,15 +141,17 @@ export default {
       this.$router.push('/caseExamples/details?id=' + this.caseData.id)
     },
     toALL() {
-      let query = {}
       console.log('classCodeLevelList', this.classCodeLevelList)
+      let query = {}
       if (this.classCodeLevelList && this.classCodeLevelList.length > 0) {
         query = {
           classCode1: this.classCodeLevelList[0],
           classCode2: this.classCodeLevelList[1],
-          classCode3: this.classCodeLevelList[2],
         }
       }
+      query.goodsType = this.$route.path.match('transactionDetails')
+        ? 'trans'
+        : 'serve'
       this.$router.push({
         path: '/caseExamples',
         query,
