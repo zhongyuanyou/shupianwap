@@ -42,7 +42,7 @@ export default {
           value: '',
           options: [
             { text: '全部状态', value: '' },
-            { text: '待开票', value: 'INVOICE_STATUS_WAITE ' },
+            { text: '待开票', value: 'INVOICE_STATUS_WAITE' },
             { text: '开票中', value: 'INVOICE_STATUS_PROCESS' },
             { text: '开票成功', value: 'INVOICE_STATUS_SUCCESS' },
             { text: '开票失败', value: 'INVOICE_STATUS_FAIL' },

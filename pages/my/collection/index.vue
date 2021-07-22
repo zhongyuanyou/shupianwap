@@ -156,7 +156,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import {
   Tabs,
   Tab,
@@ -174,7 +174,8 @@ import Header from '@/components/common/head/header.vue'
 import ServiceGoods from '@/components/my/collection/ServiceGoods.vue'
 
 export default {
-  name: 'Collection',
+  layout: 'keepAlive',
+  name: 'MyCollection',
   components: {
     [Button.name]: Tabs,
     [Tabs.name]: Tabs,
@@ -231,7 +232,24 @@ export default {
       userId: (state) => state.user.userId,
     }),
   },
+  beforeRouteLeave(to, from, next) {
+    if (
+      [
+        'known-detail-answer',
+        'known-detail-article',
+        'known-detail-question',
+      ].includes(to.name)
+    ) {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'MyCollection' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'MyCollection' })
+    }
+    next()
+  },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     checkedAllChange(state) {
       if (state) {
         this.$refs.checkboxGroup.toggleAll(true)

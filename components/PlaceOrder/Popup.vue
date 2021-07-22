@@ -61,20 +61,22 @@
                 <div class="right">
                   <div class="data">
                     <h1 class="title">
-                      <span class="type-name">{{
+                      <span class="type-name type-name1">{{
                         item.marketingCouponVO.typeName
                       }}</span>
                       {{ item.marketingCouponVO.couponName }}
                     </h1>
+                    <div class="goods-types">
+                      <p v-if="item.marketingCouponVO.useType === 2">
+                        仅限指定品类使用
+                      </p>
+                      <p v-if="item.marketingCouponVO.useType === 3">
+                        仅限指定商品使用
+                      </p>
+                    </div>
                     <!-- <p v-if="item.marketingCouponVO.useType === 1">
                       全品类通用
                     </p> -->
-                    <p v-if="item.marketingCouponVO.useType === 2">
-                      仅限指定品类使用
-                    </p>
-                    <p v-if="item.marketingCouponVO.useType === 3">
-                      仅限指定商品使用
-                    </p>
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
                   <div class="right">
@@ -125,20 +127,22 @@
                 <div class="right">
                   <div class="data">
                     <h1 class="title">
-                      <span class="type-name">{{
+                      <span class="type-name type-name2">{{
                         item.marketingCouponVO.typeName
                       }}</span>
                       {{ item.marketingCouponVO.couponName }}
                     </h1>
-                    <!-- <p v-if="item.marketingCouponVO.useType === 1">
+                    <div class="goods-types">
+                      <!-- <p v-if="item.marketingCouponVO.useType === 1">
                       全品类通用
                     </p> -->
-                    <p v-if="item.marketingCouponVO.useType === 2">
-                      仅限指定品类使用
-                    </p>
-                    <p v-else-if="item.marketingCouponVO.useType === 3">
-                      仅限指定商品使用
-                    </p>
+                      <p v-if="item.marketingCouponVO.useType === 2">
+                        仅限指定品类使用
+                      </p>
+                      <p v-else-if="item.marketingCouponVO.useType === 3">
+                        仅限指定商品使用
+                      </p>
+                    </div>
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
                 </div>
@@ -159,7 +163,14 @@
 </template>
 
 <script>
-import { Popup, Icon, RadioGroup, Radio, Toast } from '@chipspc/vant-dgg'
+import {
+  Popup,
+  Icon,
+  RadioGroup,
+  Radio,
+  Toast,
+  Button,
+} from '@chipspc/vant-dgg'
 import { order } from '@/api/index'
 export default {
   name: 'PlaceOrderPopup',
@@ -168,6 +179,7 @@ export default {
     Icon,
     [RadioGroup.name]: RadioGroup,
     [Radio.name]: Radio,
+    [Button.name]: Button,
   },
   props: {
     show: {
@@ -388,6 +400,7 @@ export default {
     }
     > .act {
       color: #4974f5;
+      font-weight: 600;
       i {
         display: block;
       }
@@ -493,16 +506,26 @@ export default {
               font-size: 32px;
               color: #222222;
               line-height: 40px;
-              margin: 30px 0 12px 0;
+              margin: 20px 0 12px 0;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
-              span {
-                border-radius: 4px;
-                padding: 2px;
-                font-size: 20px;
-              }
+              position: relative;
+              padding-left: 80px;
               .type-name {
+                border-radius: 8px;
+                overflow: hidden;
+                font-size: 24px;
+                position: absolute;
+                height: 36px;
+                padding-bottom: 2px;
+                width: 84px;
+                text-align: center;
+                top: 2px;
+                left: 0;
+                font-weight: normal;
+                transform: scale(0.9);
+                transform-origin: 0 0;
                 color: #ffffff;
                 background-image: linear-gradient(
                   90deg,
@@ -510,6 +533,9 @@ export default {
                   #fa5741 100%
                 );
               }
+            }
+            .goods-types {
+              height: 20px;
             }
             > p {
               font-size: 24px;
@@ -648,17 +674,32 @@ export default {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-                span {
-                  border-radius: 4px;
-                  padding: 2px;
-                  font-size: 20px;
-                }
+                font-weight: normal;
+                position: relative;
+                padding-left: 80px;
                 .type-name {
+                  text-align: center;
+                  border-radius: 8px;
+                  overflow: hidden;
+                  font-size: 24px;
+                  position: absolute;
+                  height: 36px;
+                  padding-bottom: 2px;
+                  width: 84px;
+                  left: 0;
+                  top: 2px;
+                  font-weight: normal;
+                  transform: scale(0.9);
+                  transform-origin: 0 0;
                   background: #cccccc;
                   color: #ffffff;
+                  text-align: center;
                 }
               }
-              > p {
+              .goods-types {
+                min-height: 20px;
+              }
+              p {
                 font-size: 24px;
                 font-weight: 400;
                 color: #555555;

@@ -1,140 +1,87 @@
 <template>
   <section>
-    <ShareModal />
-    <div class="article">
-      <HeaderSlot>
-        <div v-if="!showHead" class="flex">
-          <div class="nav-back">
-            <my-icon
-              v-if="!isShare"
-              name="nav_ic_back"
-              size="0.40rem"
-              color="#1a1a1a"
-              class="my_icon"
-              @click.native="$back()"
-            ></my-icon>
-          </div>
-          <div class="search">
-            <my-icon
-              style="margin-right: 0.15rem"
-              name="nav_ic_searchbig"
-              size="0.40rem"
-              color="#1a1a1a"
-              class="my_icon"
-              @click.native="$router.push('/known/search')"
-            ></my-icon>
-            <sp-icon
-              v-if="articleDetails.createrId === userInfo.userId"
-              name="ellipsis"
-              size="0.4rem"
-              color="#1a1a1a"
-              class="ellipsis"
-              @click="popupShow = true"
-            />
-          </div>
+    <ShareModal
+      v-show="articleDetails.title"
+      :mch-id="articleDetails.createrId"
+      @setPlannerInfo="setPlannerInfo"
+    />
+    <HeaderSlot>
+      <div class="flex">
+        <div class="nav-back">
+          <my-icon
+            v-if="!isShare"
+            name="nav_ic_back"
+            size="0.40rem"
+            color="#1a1a1a"
+            class="my_icon"
+            @click.native="$back()"
+          ></my-icon>
         </div>
-        <div v-if="showHead" class="flex">
-          <PageHead2
-            :header-data="articleDetails"
-            :is-follow="isFollow"
-            :is-show-follow="articleDetails.createrId !== userInfo.userId"
-            @follow="follow"
+        <div class="search">
+          <my-icon
+            style="margin-right: 0.15rem"
+            name="nav_ic_searchbig"
+            size="0.40rem"
+            color="#1a1a1a"
+            class="my_icon"
+            @click.native="$router.push('/known/search')"
+          ></my-icon>
+          <sp-icon
+            v-if="articleDetails.createrId === userInfo.userId"
+            name="ellipsis"
+            size="0.4rem"
+            color="#1a1a1a"
+            class="ellipsis"
+            @click="popupShow = true"
           />
         </div>
-      </HeaderSlot>
-      <DownLoadArea
-        v-if="isShare"
-        :ios-link="iosLink"
-        :androd-link="androdLink"
-      />
+      </div>
+      <!-- <div v-if="showHead" class="flex">
+        <PageHead2
+          :header-data="articleDetails"
+          :is-follow="false"
+          :is-show-follow="false"
+        />
+      </div> -->
+    </HeaderSlot>
+    <DownLoadArea
+      v-if="isShare"
+      :ios-link="iosLink"
+      :androd-link="androdLink"
+    />
+    <div v-if="articleDetails.title">
       <div class="title-area">
         <div class="title">{{ articleDetails.title }}</div>
       </div>
       <div class="main">
-        <div ref="myPage" class="user-info">
-          <sp-image
-            class="img"
-            :src="articleDetails.avatar"
-            @click.stop="goUser(articleDetails.userId, articleDetails.userType)"
-          />
-          <div class="infos">{{ articleDetails.userName }}</div>
-          <template v-if="articleDetails.createrId !== userInfo.userId">
-            <div v-if="!isFollow" class="btn" @click="follow">
-              <sp-button>
-                <my-icon name="tianjia" size="0.27rem" color="#4974F5" />
-                关注
-              </sp-button>
-            </div>
-            <div v-else class="btn2" @click="follow">
-              <span class="follow">已关注</span>
-            </div>
-          </template>
-        </div>
         <div class="content" v-html="articleDetails.content"></div>
         <p class="pub-time">编辑于 {{ articleDetails.createTime }}</p>
-        <DetailArticleList :article-list="articleList" />
-      </div>
-      <Comment
-        ref="openComment"
-        :article-id="articleDetails.id"
-        :source-type="articleDetails.type"
-      />
-      <sp-bottombar safe-area-inset-bottom>
+
+        <!-- 推荐文章 -->
+        <DetailArticleList :article-list="articleDetails.relatedArticles" />
+
         <div
           v-if="
-            articleDetails.isApplaudFlag === 0 &&
-            articleDetails.isDisapplaudFlag === 0
+            articleDetails &&
+            articleDetails.goodsList &&
+            articleDetails.goodsList.length > 0
           "
-          class="left-area"
+          class="recommend"
         >
-          <span class="icon" @click="handleClickBottom(1)">
-            <my-icon name="zantong" size="0.28rem" color="#4974F5"></my-icon
-          ></span>
-          <span class="text" @click="handleClickBottom(1)"
-            >赞同{{ articleDetails.applaudCount }}</span
-          >
-        </div>
-        <div
-          v-if="articleDetails.isApplaudFlag === 1"
-          class="applaud"
-          @click="handleClickBottom(1)"
-        >
-          <span class="icon">
-            <my-icon name="zantong_mian" size="0.28rem" color="#fff"></my-icon
-          ></span>
-          <span class="text">已赞同</span>
-        </div>
-        <div
-          v-if="articleDetails.isDisapplaudFlag === 1"
-          class="applaud dis-applaud"
-          @click="handleClickBottom(2)"
-        >
-          <span class="icon">
-            <my-icon name="fandui_mian" size="0.28rem" color="#fff"></my-icon
-          ></span>
-          <span class="text">已反对</span>
-        </div>
-        <div class="right-area">
-          <div
-            class="item"
-            :style="{
-              color: articleDetails.isCollectFlag === 1 ? '#4974F5' : '#999999',
-            }"
-            @click="handleClickBottom(3)"
-          >
-            <div class="icon">
-              <my-icon name="shoucang" size="0.4rem"></my-icon>
-            </div>
-            收藏
-          </div>
-          <div class="item" @click="comment()">
-            <div class="icon">
-              <my-icon name="pinglun" size="0.4rem" color="#999999"></my-icon>
-            </div>
-            评论
+          <div class="recommend-title">推荐商品</div>
+          <div v-for="goods of articleDetails.goodsList" :key="goods.id">
+            <ShareGoods
+              :info="goods"
+              :type="
+                goods.productType === 'PRO_CLASS_TYPE_SALES'
+                  ? 'Service'
+                  : 'Trading'
+              "
+            ></ShareGoods>
           </div>
         </div>
-      </sp-bottombar>
+      </div>
+
       <!--    上拉组件-->
       <sp-popup
         v-model="popupShow"
@@ -159,6 +106,60 @@
         </div>
       </sp-popup>
     </div>
+    <div v-if="!articleDetails.title && isLoaded" class="no-data">
+      <img
+        src="https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png"
+        alt=""
+        srcset=""
+      />
+      <p>内容失效</p>
+    </div>
+    <div class="bottom-btn">
+      <div
+        v-if="topPlannerInfo.mchUserId || planerInfo.mchUserId"
+        ref="myPage"
+        class="user-info"
+      >
+        <sp-image
+          class="img"
+          :src="
+            topPlannerInfo.img ||
+            planerInfo.img ||
+            $ossImgSetV2('9zzzas17j8k0000.png')
+          "
+        />
+        <div class="infos">
+          <p class="name">
+            {{
+              topPlannerInfo.userName ||
+              topPlannerInfo.name ||
+              planerInfo.userName
+            }}
+          </p>
+          <span>金牌规划师</span>
+        </div>
+        <!-- && planerInfo.mchUserId -->
+        <div class="bottom_btn_area">
+          <sp-button
+            type="info"
+            class="btn1"
+            @click="
+              sendTextMessage(topPlannerInfo.mchUserId || planerInfo.mchUserId)
+            "
+            >在线问</sp-button
+          >
+          <sp-button
+            v-if="
+              (topPlannerInfo.mchUserId && topPlannerInfo.phone) ||
+              (planerInfo.mchUserId && planerInfo.phone)
+            "
+            type="primary"
+            @click="handleTel(topPlannerInfo.mchUserId || planerInfo.mchUserId)"
+            >打电话</sp-button
+          >
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -177,15 +178,21 @@ import {
 } from '@chipspc/vant-dgg'
 import { knownApi } from '@/api'
 import PageHead from '@/components/common/head/header'
-import PageHead2 from '@/components/mustKnown/DetailHeaderUser'
+// import PageHead2 from '@/components/mustKnown/DetailHeaderUser.vue'
 // 推荐文章列表
-import DetailArticleList from '@/components/mustKnown/DetailArticleList'
-// 默认评论列表
-import Comment from '~/components/mustKnown/DetailComment'
-import HeaderSlot from '@/components/common/head/HeaderSlot'
-import DownLoadArea from '@/components/common/downLoadArea'
-import ShareModal from '@/components/common/ShareModal'
+import DetailArticleList from '@/components/mustKnown/DetailArticleList.vue'
+// 推荐商品组件
+import ShareGoods from '@/components/mustKnown/share/ShareGoods.vue'
+
+import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
+import DownLoadArea from '@/components/common/downLoadArea.vue'
+import ShareModal from '@/components/common/ShareModal.vue'
 // import SpBottom from '@/components/common/spBottom/SpBottom'
+import { callPhone } from '@/utils/common'
+
+import { planner, userinfoApi } from '~/api'
+import imHandle from '~/mixins/imHandle'
+
 export default {
   layout: 'keepAlive',
   components: {
@@ -196,38 +203,21 @@ export default {
     [Field.name]: Field,
     [Dialog.name]: Dialog,
     [Bottombar.name]: Bottombar,
-    Comment,
+
     HeaderSlot,
     // PageHead,
-    PageHead2,
+    // PageHead2,
     DetailArticleList,
     DownLoadArea,
     // Header,
     ShareModal,
+    ShareGoods,
   },
-  async asyncData({ $axios, query, store }) {
-    let articleDetails = {}
-    try {
-      const res = await $axios.get(knownApi.questionArticle.detail, {
-        params: {
-          id: query.id,
-          userId: store.state.user.userId,
-          userHandleFlag: store.state.user.userId ? 1 : 0,
-        },
-      })
-      if (res.code === 200) {
-        articleDetails = res.data
-      }
-    } catch (error) {}
+  mixins: [imHandle],
 
-    return {
-      articleDetails,
-    }
-  },
   data() {
     return {
-      iosLink: 'cpsccustomer://',
-      androdLink: 'cpsccustomer://',
+      isLoaded: false,
       isShare: false,
       popupShow: false,
       articleList: [],
@@ -235,13 +225,42 @@ export default {
       // articleDetails: '',
       currentDetailsId: '',
       handleType: '',
-      isFollow: false,
+
       releaseFlag: false, // 是否发布的新文章
+      shareId: '', // 分享id
+      planerInfo: {},
+      topPlannerInfo: {},
+      prefixPath: 'cpsccustomer://',
+      iosPath: {
+        path: 'CPSCustomer:CPSCustomer/CPSCSharePlaceholderViewController///push/animation',
+        parameter: {
+          selectedIndex: 0,
+          type: '2',
+          cid: '',
+        },
+      },
+      iosPathFinally: '',
+      androdPath: {
+        path: '/main/android/main',
+        parameter: {
+          selectedIndex: 1,
+          isLogin: '0',
+          secondLink: '/known/detail/article',
+          id: '',
+        },
+      },
+      androdFinally: '',
+      iosLink: 'cpsccustomer://',
+      androdLink: 'cpsccustomer://',
+      articleDetails: {},
     }
   },
   computed: {
     userInfo() {
       return this.$store.state.user
+    },
+    city() {
+      return this.$store.state.city.currentCity
     },
     id() {
       return this.$route.query.id
@@ -253,102 +272,99 @@ export default {
       return this.$store.state.app.appInfo
     },
   },
-  created() {
-    if (process.client) {
-      this.getRecommendData()
-      if (this.userInfo.token) {
-        this.initFollow()
-      }
-    }
-  },
+  created() {},
 
   mounted() {
-    this.isShare = this.$route.query.isShare
     if (this.$route.query.status === 'release') {
       this.releaseFlag = true
     }
+    this.isShare = this.$route.query.isShare
+    this.shareId = this.$route.query.shareId
+    console.log('androdLink', this.androdLink)
     window.addEventListener('scroll', this.handleScroll)
+    this.getDetail()
+    console.log('userInfo', this.userInfo)
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    setPlannerInfo(data) {
+      console.log('设置规划师', data)
+      if (data.mchUserId && data.name) {
+        this.topPlannerInfo = data
+      }
+    },
+    getDetail() {
+      this.$axios
+        .get(knownApi.questionArticle.anserShareDetail, {
+          params: {
+            shareId: this.$route.query.shareId,
+          },
+        })
+        .then((res) => {
+          this.isLoaded = true
+          if (res.code === 200) {
+            if (res.data.goodsList) {
+              const goods = res.data.goodsList.filter((item) => {
+                return item.status === 'PRO_STATUS_PUT_AWAY'
+              })
+              res.data.goodsList = goods
+            }
+            this.articleDetails = res.data
+            this.iosPath.parameter.cid = this.articleDetails.id
+            this.iosLink = this.prefixPath + JSON.stringify(this.iosPath)
+            this.androdPath.parameter.id = this.articleDetails.id
+            this.androdLink = this.prefixPath + JSON.stringify(this.androdPath)
+            // if (this.shareId) {
+            //   this.iosLink = `cpsccustomer://{"path":"CPSCustomer:CPSCustomer/CPSCSharePlaceholderViewController///push/animation","parameter":{"selectedIndex":0,"type":2,"cid":${this.articleDetails.id}}}`
+            //   this.androdLink = `cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":1,"isLogin":"0","secondLink":"/known/detail/article","id":${this.articleDetails.id}}}`
+            // }
+            if (this.articleDetails.userId) {
+              this.getPlanerInfo(this.articleDetails.userId)
+            }
+          }
+        })
+        .catch((err) => {
+          this.isLoaded = true
+          console.error(err)
+        })
+    },
+    getPlanerInfo(id) {
+      // const res = await this.$axios.get(userinfoApi.info, {
+      //   params: { id },
+      // })
+      // console.log('res', res)
+      // if (res.code === 200) {
+      // }
+
+      planner.detail({ id }).then((res) => {
+        const obj = {
+          mchUserId: res.id,
+          portrait: res.img,
+          userName: res.name,
+          postName: res.zwName,
+          type: res.mchClass,
+        }
+
+        this.planerInfo = {
+          ...obj,
+          ...res,
+        }
+        console.log('planerInfo', this.planerInfo)
+      })
+    },
     goUser(id, usertype) {
       this.$router.push({
         path: '/known/home',
         query: { homeUserId: id, type: usertype },
       })
     },
-    initFollow() {
-      this.$axios
-        .get(knownApi.questionArticle.findAttention, {
-          params: {
-            currentUserId: this.userInfo.userId,
-            homeUserId: this.articleDetails.userId,
-          },
-        })
-        .then((res) => {
-          if (res.data) {
-            this.isFollow = true
-          } else {
-            this.isFollow = false
-          }
-        })
-    },
-    async follow() {
-      const res = await this.$isLogin()
-      if (res === 'app_login_success') {
-        this.initFollow()
-        return
-      }
-      this.$axios
-        .post(knownApi.home.attention, {
-          handleUserName: this.userInfo.userName,
-          handleUserId: this.userInfo.userId,
-          handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-          handleType: this.isFollow ? 2 : 1,
-          attentionUserId: this.articleDetails.userId,
-          attentionUserName: this.articleDetails.userName,
-          attentionUserType: this.articleDetails.userType,
-        })
-        .then((res) => {
-          this.loading = false
-          if (res.code === 200) {
-            this.$xToast.show({
-              message: this.isFollow ? '取消关注' : '关注成功',
-            })
-            this.isFollow = !this.isFollow
-          } else {
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
-          }
-        })
-    },
+
     comment() {
       this.$refs.openComment.commentShow = true
     },
-    getRecommendData() {
-      this.loading = true
-      this.$axios
-        .get(knownApi.questionArticle.recommendArticle, { params: {} })
-        .then((res) => {
-          this.loading = false
-          if (res.code === 200) {
-            this.articleList = res.data
-          } else {
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
-          }
-        })
-    },
+
     getDetailData() {
       this.loading = true
       this.$axios
@@ -506,18 +522,155 @@ export default {
           console.log(err)
         })
     },
+    // 拨打电话
+    async handleTel(mchUserId) {
+      console.log('mchUserId', mchUserId)
+      try {
+        if (this.isInApp) {
+          this.$appFn.dggBindHiddenPhone({ plannerId: mchUserId }, (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '拨号失败！',
+                duration: 1000,
+                forbidClick: true,
+                icon: 'toast_ic_remind',
+              })
+            }
+          })
+          return
+        }
+
+        // if (this.planerInfo.phone) {
+        //   window.location.href = `tel://${this.planerInfo.phone}`
+        //   return
+        // } else {
+        //   Toast({
+        //     message: '无法拨打电话',
+        //     iconPrefix: 'sp-iconfont',
+        //     icon: 'popup_ic_fail',
+        //   })
+        //   return
+        // }
+
+        // if (this.$store.state.user.userId) {
+        const params = {
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          plannerId: mchUserId,
+          customerPhone: this.topPlannerInfo.phone || this.planerInfo.phone,
+          requireCode: '',
+          requireName: '',
+        }
+
+        try {
+          const telData = await planner.newtel(params)
+          // 解密电话
+          if (telData.status === 1) {
+            const tel = telData.phone
+            window.location.href = `tel:${tel}`
+          } else if (telData.status === 0) {
+            Toast({
+              message: '当前人员已禁用，无法拨打电话',
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_fail',
+            })
+          } else if (telData.status === 3) {
+            Toast({
+              message: '当前人员已离职，无法拨打电话',
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_fail',
+            })
+          }
+        } catch (error) {
+          Toast({
+            message: error.message || '无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+          console.error('getTel:', error)
+          return Promise.reject(error)
+        }
+        // } else {
+        //   Toast({
+        //     message: '未登录',
+        //     iconPrefix: 'sp-iconfont',
+        //     icon: 'popup_ic_fail',
+        //   })
+        // }
+      } catch (err) {
+        console.log(err)
+        Toast({
+          message: '未获取到划师联系方式',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
+      }
+    },
+    // // 调起IM
+    // // 发送模板消息(带图片)
+    // sendTemplateMsgWithImg(mchUserId, type) {
+    //   // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
+    //   // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
+    //   // const intentionType = {}
+    //   // intentionType[
+    //   //   this.baseData.parentClassCode &&
+    //   //     this.baseData.parentClassCode.split(',')[0]
+    //   // ] = this.baseData.className
+    //   // // 意向城市
+    //   // const intentionCity = {}
+    //   // intentionCity[this.city.code] = this.city.name
+    //   console.log(mchUserId, type)
+    //   const sessionParams = {
+    //     imUserId: mchUserId, // 商户用户ID
+    //     imUserType: type, // 用户类型
+    //     requireCode: '',
+    //     requireName: '',
+    //     ext: {
+    //       intentionType: '', // 意向业务 非必传
+    //       intentionCity: '', // 意向城市 非必传
+    //       recommendId: '',
+    //       recommendAttrJson: {},
+    //       startUserType: 'cps-app', //
+    //     },
+    //   }
+    //   const msgParams = {
+    //     sendType: 1, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
+    //     msgType: 'text', // 消息类型
+    //     content: JSON.stringify({
+    //       text: this.articleDetails.title,
+    //     }),
+    //     extContent: this.$route.query, // 路由参数
+    //     productName: this.articleDetails.title, // 产品名称
+    //     productContent: this.articleDetails.content, // 产品信息
+    //     price: 0, // 价格
+    //     forwardAbstract: this.articleDetails.content, // 摘要信息，可与显示内容保持一致
+    //     // routerId: this.articleDetails.routerId, // 路由ID
+    //     // imageUrl: this.articleDetails.imageUrl[0], // 产品图片
+    //     // unit: this.articleDetails.unit, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+    //   }
+    //   this.sendTemplateMsgMixin({ sessionParams, msgParams })
+    //   // this.sendTemplateMsgMixin({ sessionParams })
+    // },
   },
 }
 </script>
-<style scoped lang="css">
-.ql-align-right {
-  text-align: right;
-}
-</style>
+
 <style lang="less" scoped>
 .article {
   background: #fff;
 }
+// 推荐标题
+.recommend-title {
+  font-size: 32px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: bold;
+  color: #222222;
+  line-height: 32px;
+  padding: 40px 0;
+}
+
 // .fixed-head {
 //   position: fixed;
 //   left: 0;
@@ -599,57 +752,7 @@ export default {
   }
 }
 .main {
-  padding: 40px;
-  .user-info {
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-    .img {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: #d8d8d8;
-      overflow: hidden;
-    }
-    .infos {
-      flex: 1;
-      font-size: 30px;
-      font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: bold;
-      color: #222222;
-      line-height: 30px;
-      padding-left: 16px;
-    }
-    .btn2 {
-      background: none;
-      font-size: 30px;
-      font-weight: bold;
-      color: #999999;
-      background: #f5f5f5;
-      height: 72px;
-      border-radius: 0.12rem;
-      padding: 0 25px;
-      display: flex;
-      align-items: center;
-    }
-    .btn {
-      height: 72px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      .sp-button {
-        width: 100%;
-        height: 100%;
-        background: #f5f5f5;
-        border-radius: 12px;
-        color: rgba(73, 116, 245, 1);
-        display: block;
-        font-weight: bold;
-        float: left;
-        display: flex;
-      }
-    }
-  }
+  padding: 40px 40px 140px;
   .content {
     word-break: break-all;
     padding-top: 40px;
@@ -658,7 +761,6 @@ export default {
     color: #666;
     font-weight: 400;
     color: #555555;
-    overflow: hidden;
     ::v-deep img {
       width: 100%;
       height: auto;
@@ -864,7 +966,7 @@ export default {
     > div.tit {
       display: block;
     }
-    > .btn {
+    > .btn-area {
       margin-top: 20px;
       font-size: 28px;
       font-weight: 400;
@@ -965,6 +1067,95 @@ export default {
     color: #222222;
     bottom: 0;
     border-top: 1px solid #f4f4f4;
+  }
+}
+.no-data {
+  text-align: center;
+  font-size: 24px;
+  color: #666;
+  img {
+    width: 400px;
+    height: 400px;
+    margin: 0 auto;
+  }
+}
+.bottom-btn {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 144px;
+  width: 100%;
+  padding: 10px 40px 0 40px;
+  background: white;
+  .user-info {
+    width: 100%;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    .img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #d8d8d8;
+      overflow: hidden;
+    }
+    .infos {
+      flex: 1;
+      font-size: 32px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      color: #222222;
+      line-height: 30px;
+      padding-left: 16px;
+      .name {
+        font-size: 32px;
+        color: #222222;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+      span {
+        font-size: 24px;
+        background: #ffefc5;
+        border: 2px solid #dac79a;
+        border-radius: 4px;
+        font-size: 22px;
+        color: #7b6225;
+        letter-spacing: 0;
+        text-align: center;
+        line-height: 0;
+        padding: 8px 10px;
+      }
+    }
+    .bottom_btn_area {
+      float: right;
+      height: 72px;
+      font-size: 32px;
+      color: #ffffff;
+      ::v-deep.sp-button--info {
+        margin-left: 12px;
+        background-color: #24ae68;
+        border: 1px solid #24ae68;
+      }
+      .sp-button {
+        height: 96px;
+        border-radius: 8px;
+        font-size: 32px;
+        color: #ffffff;
+      }
+      .btn1 {
+        margin-right: 20px;
+      }
+      // .sp-button {
+      //   width: 100%;
+      //   height: 100%;
+      //   background: #f5f5f5;
+      //   border-radius: 12px;
+      //   color: rgba(73, 116, 245, 1);
+      //   display: block;
+      //   font-weight: bold;
+      //   float: left;
+      //   display: flex;
+      // }
+    }
   }
 }
 </style>

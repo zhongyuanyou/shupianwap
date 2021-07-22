@@ -398,7 +398,7 @@ export default {
             '007': '增值税普通发票 ',
           }
           this.formData.invoiceType = '007'
-          this.$xToast.error('商户信息错误')
+          // this.$xToast.error('商户信息错误')
         })
     },
     /** 获取默认抬头 */
