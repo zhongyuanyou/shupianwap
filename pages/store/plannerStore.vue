@@ -1,12 +1,7 @@
 <template>
   <div class="plannerShop">
-    <div
-      v-if="urlData.platform === 'mpass'"
-      style="width: 100%; background: #fff"
-      :style="{ height: urlData.top + 'px' }"
-    ></div>
     <div v-if="titleStatus" class="head">
-      <Header title="规划师店铺" :fixed="true">
+      <Header title="规划师店铺" :custom-safe-top="urlData.platform === 'mpass'?Number(urlData.top):0">
         <template #left>
           <div v-if="urlData.isShare !== '1'">
             <sp-icon
@@ -192,7 +187,7 @@
           type="primary"
           text="电话联系"
           :disabled="!IMDetailData.id"
-          @click="urlData.platform !== 'mpass' && handleCall"
+          @click="handleCall"
         />
         <sp-bottombar-button
           v-md:p_IMClick
@@ -204,7 +199,7 @@
           type="info"
           text="在线联系"
           :disabled="!IMDetailData.id"
-          @click="urlData.platform !== 'mpass' && handleIM"
+          @click="handleIM"
         />
       </sp-bottombar>
     </div>
@@ -321,6 +316,7 @@ export default {
     },
   },
   mounted() {
+    console.log(JSON.stringify(this.urlData),'页面参数')
     if (this.isInApp) {
       if (this.userInfo.userId && this.userInfo.token) {
         this.getDetail().finally(() => {
@@ -482,6 +478,7 @@ export default {
       }
     },
     handleCall() {
+      if(this.urlData.platform === 'mpass'){return}
       // 如果当前页面在app中，则调用原生拨打电话的方法
       if (this.isInApp) {
         this.$appFn.dggBindHiddenPhone(
@@ -613,6 +610,7 @@ export default {
       }
     },
     handleIM() {
+      if(this.urlData.platform === 'mpass'){return}
       // const isLogin = await this.judgeLoginMixin()
       // if (isLogin) {
       this.uPIM({
@@ -694,7 +692,12 @@ export default {
       callPhone(telNumber.phone)
     },
     onClickLeft() {
-      this.$router.back(-1)
+      if(this.urlData.platform === 'mpass'){
+        window.history.back();
+      }else{
+        this.$router.back(-1)
+      }
+      
     },
     onClickRight() {
       console.log('nav onClickRight')
@@ -782,6 +785,7 @@ export default {
   ::v-deep .sp-skeleton {
     margin: 16px 0 0 0;
     padding: 0;
+    
   }
   .bg-group {
     padding: 60px 40px 24px;
