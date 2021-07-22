@@ -338,6 +338,9 @@ export default {
         color: #f1524e;
       }
       .surplus {
+        font-size: 20px;
+        font-family: PingFang SC;
+        font-weight: 400;
         display: inline-block;
         margin-right: 30px;
         margin-bottom: 10px;
