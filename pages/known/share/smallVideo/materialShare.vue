@@ -1,6 +1,6 @@
 <template>
   <div class="m-known-share smallVideo materialShare">
-    <img class="bg" src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg" />
+    <img class="bg" :src="vDetail.image" />
     <my-icon
       name="bofang_mian"
       size="1.28rem"
@@ -9,49 +9,45 @@
       @click.native="link"
     ></my-icon>
     <div class="info-content">
-      <div class="tile">1个视频助新人创业完全闭坑指南，…</div>
+      <div class="tile">{{ vDetail.videoName }}</div>
       <div class="desc">
-        王健林批评马云：平时不看书，还讲一堆大道理,给青少年灌输不好思想
+        {{ vDetail.videoDesc }}
       </div>
     </div>
-    <div class="goods-swipe">
+    <div v-show="goods.length > 0" class="goods-swipe">
       <sp-swipe :autoplay="3000" :show-indicators="true">
-        <sp-swipe-item>
+        <sp-swipe-item v-for="(info, index) in goods" :key="index">
           <div class="good-content">
             <sp-image
               fit="cover"
               width="1.4rem"
               height="1.4rem"
               radius="0.24rem"
-              src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+              :src="
+                info.img || (info.productImgArr && info.productImgArr[0]) || ''
+              "
             />
             <div class="info">
-              <div class="info-tile">商品名称商品名称商品</div>
+              <div class="info-tile">{{ info.name || '' }}</div>
               <div class="info-desc">
                 <div class="price">
-                  <span>698</span><span class="unit">元</span>
+                  <template
+                    v-if="
+                      info.price == 0 ||
+                      info.price === '0.00' ||
+                      info.price === '0.0' ||
+                      info.price === '0'
+                    "
+                  ></template>
+                  <template v-else></template>
+                  <span>{{
+                    info.price || info.salesPrice || info.platformPrice
+                  }}</span
+                  ><span class="unit">元</span>
                 </div>
-                <sp-button class="btn">立即抢购</sp-button>
-              </div>
-            </div>
-          </div>
-        </sp-swipe-item>
-        <sp-swipe-item>
-          <div class="good-content">
-            <sp-image
-              fit="cover"
-              width="1.4rem"
-              height="1.4rem"
-              radius="0.24rem"
-              src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-            />
-            <div class="info">
-              <div class="info-tile">商品名称商品名称商品</div>
-              <div class="info-desc">
-                <div class="price">
-                  <span>698</span><span class="unit">元</span>
-                </div>
-                <sp-button class="btn">立即抢购</sp-button>
+                <sp-button class="btn" @click="goodLink(info)"
+                  >立即抢购</sp-button
+                >
               </div>
             </div>
           </div>
@@ -60,28 +56,36 @@
     </div>
     <div class="planner-info">
       <div class="flex-left">
-        <sp-image
-          class="img"
-          round
-          src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-        />
+        <sp-image class="img" round :src="planerInfo.portrait" />
         <div class="infos">
-          <div class="infos-name">我是规划师</div>
-          <div class="infos-desc">金牌规213划师</div>
+          <div class="infos-name">{{ planerInfo.userName }}</div>
+          <div class="infos-desc">{{ planerInfo.postName }}</div>
         </div>
       </div>
       <!-- && planerInfo.mchUserId -->
       <div class="flex-right">
-        <sp-button size="small" type="primary">在线问</sp-button>
-        <sp-button size="small" type="info">打电话</sp-button>
+        <sp-button
+          size="small"
+          type="primary"
+          @click="sendTextMessage(planerInfo.mchUserId)"
+          >在线问</sp-button
+        >
+        <sp-button
+          size="small"
+          type="info"
+          @click="handleTel(planerInfo.mchUserId)"
+          >打电话</sp-button
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Image, Button, Swipe, SwipeItem } from '@chipspc/vant-dgg'
+import { Image, Button, Swipe, SwipeItem, Toast } from '@chipspc/vant-dgg'
 import knownApi from '@/api/known'
+import { planner } from '~/api'
+import imHandle from '~/mixins/imHandle'
 
 export default {
   name: 'KnownSmallVideo',
@@ -91,52 +95,171 @@ export default {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
   },
+  mixins: [imHandle],
   data() {
     return {
-      vId: '',
+      id: '', // 分享id
       categoryId: '', // 种类id
       vurl: '', // 视频url
       vDetail: {},
       videoType: '',
+      goods: [],
+      plannerId: '',
+      planerInfo: {},
     }
   },
+  computed: {
+    userInfo() {
+      return this.$store.state.user
+    },
+    city() {
+      return this.$store.state.city.currentCity
+    },
+    isInApp() {
+      return this.$store.state.app.isInApp
+    },
+    appInfo() {
+      return this.$store.state.app.appInfo
+    },
+  },
   mounted() {
-    this.vId = this.$route.query.id || '8086190052126556160'
-    // this.getVideoApi()
+    this.id = this.$route.query.shareId || '8106374534213206016'
+    this.plannerId = this.$route.query.plannerId || '758742052284024473'
+    this.getShareInfoApi()
+    this.getPlannerInfoApi()
   },
   methods: {
-    // 查询视频信息
-    getVideoApi() {
+    // 分享信息
+    getShareInfoApi() {
       const params = {
-        id: this.vId,
+        id: this.id,
       }
       this.$axios
-        .post(knownApi.video.videoDetail, params)
+        .post(knownApi.video.materialVideoShare, params)
         .then((res) => {
           if (res.code !== 200) {
             throw new Error('查询视频失败')
           }
           this.vDetail = res.data
-          this.categoryId = res.data.categoryId
-          this.vurl = res.data.videoUrl
+          this.vurl = this.vDetail.videoUrl
+          this.goods = res.data.goodsList
+          console.log(`output goods: ${JSON.stringify(this.goods[0])}`)
         })
         .catch((e) => {
           this.$xToast.error(e.message)
         })
     },
+    getPlannerInfoApi() {
+      planner.detail({ id: this.plannerId }).then((res) => {
+        const obj = {
+          mchUserId: res.id,
+          portrait:
+            res.img ||
+            'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png',
+          userName: res.name,
+          postName: res.zwName,
+          type: res.mchClass,
+        }
+        this.planerInfo = {
+          ...obj,
+          ...res,
+        }
+      })
+    },
     link() {
-      if (!this.vId || !this.vurl) {
+      if (!this.vurl) {
         this.$xToast.error('获取视频信息失败')
         return
       }
       this.$router.push({
         path: '/known/share/smallvideo/detail',
         query: {
-          categoryId: this.categoryId,
           vurl: this.vurl,
           shareType: 'materialShare', // 传对应的分销标识
         },
       })
+    },
+    goodLink(item) {
+      if (item.productType === 'PRO_CLASS_TYPE_SALES') {
+        this.$router.push({
+          path: '/detail',
+          query: {
+            productId: item.id,
+          },
+        })
+      } else {
+        this.$router.push({
+          path: '/detail/transactionDetails',
+          query: {
+            productId: item.id,
+          },
+        })
+      }
+    },
+    // 拨打电话
+    async handleTel(mchUserId) {
+      console.log('mchUserId', mchUserId)
+      try {
+        if (this.isInApp) {
+          this.$appFn.dggBindHiddenPhone({ plannerId: mchUserId }, (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '拨号失败！',
+                duration: 1000,
+                forbidClick: true,
+                icon: 'toast_ic_remind',
+              })
+            }
+          })
+          return
+        }
+        const params = {
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          plannerId: mchUserId,
+          customerPhone: this.topPlannerInfo.phone || this.planerInfo.phone,
+          requireCode: '',
+          requireName: '',
+        }
+
+        try {
+          const telData = await planner.newtel(params)
+          // 解密电话
+          if (telData.status === 1) {
+            const tel = telData.phone
+            window.location.href = `tel:${tel}`
+          } else if (telData.status === 0) {
+            Toast({
+              message: '当前人员已禁用，无法拨打电话',
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_fail',
+            })
+          } else if (telData.status === 3) {
+            Toast({
+              message: '当前人员已离职，无法拨打电话',
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_fail',
+            })
+          }
+        } catch (error) {
+          Toast({
+            message: error.message || '无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+          console.error('getTel:', error)
+          return Promise.reject(error)
+        }
+      } catch (err) {
+        console.log(err)
+        Toast({
+          message: '未获取到划师联系方式',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
+      }
     },
   },
 }
@@ -284,6 +407,7 @@ export default {
     position: fixed;
     bottom: 466px;
     padding: 0 32px;
+    width: 100%;
     .tile {
       color: #ffffff;
       font-weight: bold;
