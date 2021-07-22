@@ -262,10 +262,6 @@ export default {
     }
   },
   async mounted() {
-    window.addEventListener('scroll', this.handleScroll)
-    if (!this.city.code) {
-      await this.POSITION_CITY({ type: 'init' })
-    }
   },
   methods: {
     ...mapActions({

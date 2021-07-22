@@ -469,7 +469,6 @@ export default {
     }
   },
   async mounted() {
-    console.log(navigator)
     if (!this.city.code) {
       await this.POSITION_CITY({ type: 'init' })
     }
