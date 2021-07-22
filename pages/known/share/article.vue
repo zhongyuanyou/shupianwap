@@ -752,10 +752,10 @@ export default {
   }
 }
 .main {
-  padding: 40px 40px 140px;
+  padding: 0 40px 140px 40px;
   .content {
+    margin-top: 10px;
     word-break: break-all;
-    padding-top: 40px;
     font-size: 32px;
     line-height: 50px;
     color: #666;
