@@ -69,7 +69,9 @@
         >
           <h1 v-html="item.titleHtml"></h1>
           <div class="box">
-            <div>
+            <div
+              :style="{ 'padding-right': item.contentImageUrl ? '210px' : '0' }"
+            >
               <p v-html="item.contentTextHtml"></p>
               <div v-if="item.contentImageUrl" class="num">
                 <span>{{ item.applaudCount }} 赞同</span>
@@ -235,7 +237,7 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import {
   Sticky,
   Icon,
@@ -251,6 +253,7 @@ import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { numChangeW } from '@/utils/common'
 
 export default {
+  layout: 'keepAlive',
   name: 'Searchresult',
   components: {
     [Sticky.name]: Sticky,
@@ -310,7 +313,23 @@ export default {
     this.tabIndex = query.type || '1'
     this.value = query.keyword
   },
+  beforeRouteLeave(to, from, next) {
+    if (
+      [
+        'known-detail-question',
+        'known-detail-article',
+      ].includes(to.name)
+    ) {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'Searchresult' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'Searchresult' })
+    }
+    next()
+  },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     timeSplice(time) {
       return time.substring(0, time.length - 3)
     },
@@ -605,11 +624,11 @@ export default {
         overflow: hidden;
       }
       > .box {
-        display: flex;
         margin-top: 18px;
         align-items: center;
+        position: relative;
         > div {
-          flex: 1;
+          padding-right: 210px;
           > p {
             display: -webkit-box;
             -webkit-box-orient: vertical;
@@ -641,6 +660,9 @@ export default {
           }
         }
         > img {
+          position: absolute;
+          right: 0;
+          top: 0;
           width: 190px;
           height: 127px;
           background: #d8d8d8;

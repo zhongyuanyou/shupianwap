@@ -2,7 +2,9 @@
   <div v-if="showCase" class="case">
     <h1 class="case-title">
       精选案例
-      <span>查看全部 <my-icon name="you" size="0.2rem"></my-icon></span>
+      <span @click="toALL()"
+        >查看全部 <my-icon name="you" size="0.2rem"></my-icon
+      ></span>
     </h1>
     <div @click="toDetail" class="case-box">
       <div class="case-img">
@@ -16,8 +18,23 @@
         {{ caseData.caseScore / 100 || 9.9 }}<span class="case-text">分 </span>
       </div>
     </div>
-    <div @click="toDetail" class="case-des">
-      <p class="text">
+    <div
+      v-if="
+        caseData.caseIntro &&
+        caseData.caseIntro.show &&
+        caseData.caseIntro.show[0].content
+      "
+      @click="toDetail"
+      class="case-des"
+    >
+      <p
+        v-if="
+          caseData.caseIntro &&
+          caseData.caseIntro.show &&
+          caseData.caseIntro.show[0].content
+        "
+        class="text"
+      >
         {{ caseData.caseIntro && caseData.caseIntro.show[0].content }}
       </p>
       <!-- <div
@@ -71,21 +88,24 @@ export default {
   },
   methods: {
     getCase() {
-      console.log('classCodeLevelList', this.classCodeLevelList)
       const params = {
         orderItems: [
-          {
-            column: 'createTime',
-            asc: false,
-          },
-          {
-            column: 'caseScore',
-            asc: false,
-          },
           {
             column: 'isTop',
             asc: true,
           },
+          // {
+          //   column: 'createTime',
+          //   asc: false,
+          // },
+          // {
+          //   column: 'caseScore',
+          //   asc: false,
+          // },
+          // {
+          //   column: 'isTop',
+          //   asc: true,
+          // },
         ],
         page: '1',
         limit: '10',
@@ -116,6 +136,16 @@ export default {
     },
     toDetail() {
       this.$router.push('/caseExamples/details?id=' + this.caseData.id)
+    },
+    toALL() {
+      this.$router.push({
+        path: '/caseExamples',
+        query: {
+          classCode1: this.classCodeLevelList[0],
+          classCode2: this.classCodeLevelList[1],
+          classCode3: this.classCodeLevelList[2],
+        },
+      })
     },
   },
 }
@@ -214,6 +244,7 @@ export default {
       color: #555555;
       letter-spacing: 0;
       line-height: 38px;
+      max-height: 140px;
     }
     .img_list {
       overflow: hidden;

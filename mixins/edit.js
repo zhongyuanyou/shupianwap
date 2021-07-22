@@ -215,6 +215,7 @@ export default {
     },
     // 页面跳转
     switchUrl(id) {
+      const userId = this.userId || this.$cookies.get('userId', { path: '/' })
       const _this = this
       // 新增内容时
       if (this.fromPage === 'article') {
@@ -226,7 +227,7 @@ export default {
               status: 'release', // 表示刚发布的文章
             },
           })
-        }, 1000)
+        }, 3000)
       } else if (this.fromPage === 'question') {
         timeoute = setTimeout(function () {
           _this.$router.replace({
@@ -236,16 +237,17 @@ export default {
               status: 'release',
             },
           })
-        }, 1000)
+        }, 3000)
       } else {
         timeoute = setTimeout(function () {
           _this.$router.replace({
             path: '/known/detail/answer',
             query: {
               id,
+              status: 'release',
             },
           })
-        }, 1000)
+        }, 3000)
       }
     },
     checkParams() {

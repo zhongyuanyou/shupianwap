@@ -258,7 +258,11 @@ export default {
         })
     },
     openBalanceDesc() {
-      this.$refs.balanceDesc.showBalanceDesc = true
+      if (!this.accAccountData.status && this.accAccountData.status !== 1) {
+        this.openActivationDialog()
+      } else {
+        this.$refs.balanceDesc.showBalanceDesc = true
+      }
     },
     // 获取钱包信息
     async getAccountInfo() {

@@ -937,6 +937,7 @@ export default {
               text-align: center;
               font-weight: bold;
               background: #f5f5f5;
+              line-height: 32px;
             }
             .question {
               margin-left: 40px;

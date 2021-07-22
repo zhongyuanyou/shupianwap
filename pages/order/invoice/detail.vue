@@ -210,7 +210,7 @@ export default {
       // 发票类型
       InvoiceType: {
         '007': '增值税普通发票 ',
-        '026': '增值税电子发票',
+        '026': '增值税电子普通发票',
         '004': '增值税专用发票',
         '027': '增值税电子专用发票',
       },
@@ -245,7 +245,7 @@ export default {
 
         applyTime: '',
         invoiceTime: '',
-
+        remake: '',
         remarks: '', // 备注（被驳回）
       },
 
@@ -308,7 +308,9 @@ export default {
         invoiceStatus === 'INVOICE_STATUS_REJECT' ||
         invoiceStatus === 'INVOICE_STATUS_FAIL'
       ) {
-        return info[invoiceStatus](this.formData.remarks || '未知错误')
+        return info[invoiceStatus](
+          this.formData.remake || this.formData.remarks || '未知错误'
+        )
       }
       return info[invoiceStatus] || {}
     },
