@@ -1,7 +1,7 @@
 <template>
   <div class="plannerShop">
     <div
-      v-if="urlData.platform === 'mpass'"
+      v-if="urlData.platform === 'mpaas'"
       style="width: 100%; background: #fff"
       :style="{ height: urlData.top + 'px' }"
     ></div>
@@ -192,7 +192,7 @@
           type="primary"
           text="电话联系"
           :disabled="!IMDetailData.id"
-          @click="urlData.platform !== 'mpass' && handleCall"
+          @click="handleCall"
         />
         <sp-bottombar-button
           v-md:p_IMClick
@@ -204,7 +204,7 @@
           type="info"
           text="在线联系"
           :disabled="!IMDetailData.id"
-          @click="urlData.platform !== 'mpass' && handleIM"
+          @click="handleIM"
         />
       </sp-bottombar>
     </div>
@@ -361,7 +361,7 @@ export default {
     },
     linkGood(item) {
       if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
-        this.urlData.platform !== 'mpass' &&
+        this.urlData.platform !== 'mpaas' &&
           this.$router.push({
             path: '/detail/transactionDetails',
             query: {
@@ -370,7 +370,7 @@ export default {
             },
           })
       } else {
-        this.urlData.platform !== 'mpass' &&
+        this.urlData.platform !== 'mpaas' &&
           this.$router.push({
             path: '/detail',
             query: {
@@ -482,6 +482,7 @@ export default {
       }
     },
     handleCall() {
+      if(this.urlData.platform === 'mpaas'){return}
       // 如果当前页面在app中，则调用原生拨打电话的方法
       if (this.isInApp) {
         this.$appFn.dggBindHiddenPhone(
@@ -501,7 +502,7 @@ export default {
     },
     // 跳转团队
     goGroup() {
-      this.urlData.platform !== 'mpass' &&
+      this.urlData.platform !== 'mpaas' &&
         this.$router.push({
           path: '/store/groupStore',
           query: {
@@ -613,6 +614,7 @@ export default {
       }
     },
     handleIM() {
+      if(this.urlData.platform === 'mpaas'){return}
       // const isLogin = await this.judgeLoginMixin()
       // if (isLogin) {
       this.uPIM({
@@ -679,7 +681,7 @@ export default {
       }
     },
     goShop() {
-      this.urlData.platform !== 'mpass' &&
+      this.urlData.platform !== 'mpaas' &&
         this.$router.push({
           path: '/store/merchantsStore',
           query: {
