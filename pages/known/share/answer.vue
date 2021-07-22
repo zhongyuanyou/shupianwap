@@ -1,8 +1,8 @@
 <template>
   <section>
     <ShareModal
-      v-show="articleDetails.title"
-      :mch-id="articleDetails.createrId"
+      v-show="answerDetails.title"
+      :mch-id="answerDetails.createrId"
       @setPlannerInfo="setPlannerInfo"
     />
     <HeaderSlot>
@@ -27,7 +27,7 @@
             @click.native="$router.push('/known/search')"
           ></my-icon>
           <sp-icon
-            v-if="articleDetails.createrId === userInfo.userId"
+            v-if="answerDetails.createrId === userInfo.userId"
             name="ellipsis"
             size="0.4rem"
             color="#1a1a1a"
@@ -38,7 +38,7 @@
       </div>
       <!-- <div v-if="showHead" class="flex">
         <PageHead2
-          :header-data="articleDetails"
+          :header-data="answerDetails"
           :is-follow="false"
           :is-show-follow="false"
         />
@@ -49,27 +49,52 @@
       :ios-link="iosLink"
       :androd-link="androdLink"
     />
-    <div v-if="articleDetails.title">
-      <div class="title-area">
-        <div class="title">{{ articleDetails.title }}</div>
-      </div>
-      <div class="main">
-        <div class="content" v-html="articleDetails.content"></div>
-        <p class="pub-time">编辑于 {{ articleDetails.createTime }}</p>
+    <div
+      class="page-list"
+      style="background: #f5f5f5"
+      v-show="answerDetails.title"
+    >
+      <div class="area area1">
+        <div class="title-area">
+          <div class="title">{{ answerDetails.title }}</div>
+          <div class="nums-area">
+            {{ answerDetails.answerCount }} 个回答 ·
+            {{ answerDetails.collectCount }} 收藏
+          </div>
+        </div>
+        <!-- <div class="html_content" v-html="answerDetails.content"></div> -->
+        <p class="pub-time">编辑于 {{ answerDetails.createTime }}</p>
 
         <!-- 推荐文章 -->
-        <DetailArticleList :article-list="articleDetails.relatedArticles" />
-
-        <div
-          v-if="
-            articleDetails &&
-            articleDetails.goodsList &&
-            articleDetails.goodsList.length > 0
-          "
-          class="recommend"
-        >
+        <!-- <DetailArticleList :article-list="answerDetails.relatedArticles" /> -->
+      </div>
+      <div class="area area2">
+        <div class="userinfos">
+          <div class="user_head">
+            <img
+              :src="
+                answerDetails.avatar ||
+                'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png'
+              "
+              alt=""
+              srcset=""
+            />
+          </div>
+          <div class="user_name">{{ answerDetails.userName }}</div>
+        </div>
+        <div class="html_content" v-html="answerDetails.content"></div>
+      </div>
+      <div
+        v-if="
+          answerDetails &&
+          answerDetails.goodsList &&
+          answerDetails.goodsList.length > 0
+        "
+        class="area area3"
+      >
+        <div class="recommend">
           <div class="recommend-title">推荐商品</div>
-          <div v-for="goods of articleDetails.goodsList" :key="goods.id">
+          <div v-for="goods of answerDetails.goodsList" :key="goods.id">
             <ShareGoods
               :info="goods"
               :type="
@@ -81,7 +106,6 @@
           </div>
         </div>
       </div>
-
       <!--    上拉组件-->
       <sp-popup
         v-model="popupShow"
@@ -93,11 +117,11 @@
       >
         <div class="down_slide_list">
           <ul>
-            <li @click="editQues(articleDetails.id)">
+            <li @click="editQues(answerDetails.id)">
               <my-icon name="bianji1" size="1rem" color="#555"></my-icon>
               <p>编辑</p>
             </li>
-            <li @click="deleteQues(articleDetails.id)">
+            <li @click="deleteQues(answerDetails.id)">
               <my-icon name="shanchu1" size="1rem" color="#555"></my-icon>
               <p>删除</p>
             </li>
@@ -106,7 +130,7 @@
         </div>
       </sp-popup>
     </div>
-    <div v-if="!articleDetails.title && isLoaded" class="no-data">
+    <div v-if="!answerDetails.title && isLoaded" class="no-data">
       <img
         src="https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png"
         alt=""
@@ -180,7 +204,7 @@ import { knownApi } from '@/api'
 import PageHead from '@/components/common/head/header'
 // import PageHead2 from '@/components/mustKnown/DetailHeaderUser.vue'
 // 推荐文章列表
-import DetailArticleList from '@/components/mustKnown/DetailArticleList.vue'
+// import DetailArticleList from '@/components/mustKnown/DetailArticleList.vue'
 // 推荐商品组件
 import ShareGoods from '@/components/mustKnown/share/ShareGoods.vue'
 
@@ -207,7 +231,7 @@ export default {
     HeaderSlot,
     // PageHead,
     // PageHead2,
-    DetailArticleList,
+    // DetailArticleList,
     DownLoadArea,
     // Header,
     ShareModal,
@@ -222,7 +246,7 @@ export default {
       popupShow: false,
       articleList: [],
       showHead: false,
-      // articleDetails: '',
+      // answerDetails: '',
       currentDetailsId: '',
       handleType: '',
 
@@ -252,7 +276,7 @@ export default {
       androdFinally: '',
       iosLink: 'cpsccustomer://',
       androdLink: 'cpsccustomer://',
-      articleDetails: {},
+      answerDetails: {},
     }
   },
   computed: {
@@ -311,17 +335,17 @@ export default {
               })
               res.data.goodsList = goods
             }
-            this.articleDetails = res.data
-            this.iosPath.parameter.cid = this.articleDetails.id
+            this.answerDetails = res.data
+            this.iosPath.parameter.cid = this.answerDetails.id
             this.iosLink = this.prefixPath + JSON.stringify(this.iosPath)
-            this.androdPath.parameter.id = this.articleDetails.id
+            this.androdPath.parameter.id = this.answerDetails.id
             this.androdLink = this.prefixPath + JSON.stringify(this.androdPath)
             // if (this.shareId) {
-            //   this.iosLink = `cpsccustomer://{"path":"CPSCustomer:CPSCustomer/CPSCSharePlaceholderViewController///push/animation","parameter":{"selectedIndex":0,"type":2,"cid":${this.articleDetails.id}}}`
-            //   this.androdLink = `cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":1,"isLogin":"0","secondLink":"/known/detail/article","id":${this.articleDetails.id}}}`
+            //   this.iosLink = `cpsccustomer://{"path":"CPSCustomer:CPSCustomer/CPSCSharePlaceholderViewController///push/animation","parameter":{"selectedIndex":0,"type":2,"cid":${this.answerDetails.id}}}`
+            //   this.androdLink = `cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":1,"isLogin":"0","secondLink":"/known/detail/article","id":${this.answerDetails.id}}}`
             // }
-            if (this.articleDetails.userId) {
-              this.getPlanerInfo(this.articleDetails.userId)
+            if (this.answerDetails.userId) {
+              this.getPlanerInfo(this.answerDetails.userId)
             }
           }
         })
@@ -377,7 +401,7 @@ export default {
         .then((res) => {
           this.loading = false
           if (res.code === 200) {
-            this.articleDetails = res.data
+            this.answerDetails = res.data
           } else {
             Toast.fail({
               duration: 2000,
@@ -407,37 +431,35 @@ export default {
       }
       this.handleType = ''
       if (type === 1) {
-        this.articleDetails.applaudCount = Number(
-          this.articleDetails.applaudCount
+        this.answerDetails.applaudCount = Number(
+          this.answerDetails.applaudCount
         )
-        if (this.articleDetails.isApplaudFlag === 1) {
+        if (this.answerDetails.isApplaudFlag === 1) {
           this.handleType = 7
-          this.articleDetails.isApplaudFlag = 0
-          this.articleDetails.applaudCount =
-            this.articleDetails.applaudCount - 1
+          this.answerDetails.isApplaudFlag = 0
+          this.answerDetails.applaudCount = this.answerDetails.applaudCount - 1
         } else {
           this.handleType = 1
-          this.articleDetails.isApplaudFlag = 1
-          this.articleDetails.applaudCount =
-            this.articleDetails.applaudCount + 1
+          this.answerDetails.isApplaudFlag = 1
+          this.answerDetails.applaudCount = this.answerDetails.applaudCount + 1
         }
       }
       if (type === 2) {
-        if (this.articleDetails.isDisapplaudFlag === 1) {
+        if (this.answerDetails.isDisapplaudFlag === 1) {
           this.handleType = 8
-          this.articleDetails.isDisapplaudFlag = 0
+          this.answerDetails.isDisapplaudFlag = 0
         } else {
           this.handleType = 2
-          this.articleDetails.isDisapplaudFlag = 1
+          this.answerDetails.isDisapplaudFlag = 1
         }
       }
       if (type === 3) {
-        if (this.articleDetails.isCollectFlag === 1) {
+        if (this.answerDetails.isCollectFlag === 1) {
           this.handleType = 9
-          this.articleDetails.isCollectFlag = 0
+          this.answerDetails.isCollectFlag = 0
         } else {
           this.handleType = 4
-          this.articleDetails.isCollectFlag = 1
+          this.answerDetails.isCollectFlag = 1
         }
       }
       this.$axios
@@ -452,21 +474,21 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             if (type === 1) {
-              if (this.articleDetails.isApplaudFlag === 1) {
+              if (this.answerDetails.isApplaudFlag === 1) {
                 this.$xToast.show({ message: '点赞成功' })
               } else {
                 this.$xToast.show({ message: '取消点赞' })
               }
             }
             if (type === 2) {
-              if (this.articleDetails.isDisapplaudFlag === 1) {
+              if (this.answerDetails.isDisapplaudFlag === 1) {
                 this.$xToast.show({ message: '已反对' })
               } else {
                 this.$xToast.show({ message: '取消反对' })
               }
             }
             if (type === 3) {
-              if (this.articleDetails.isCollectFlag === 1) {
+              if (this.answerDetails.isCollectFlag === 1) {
                 this.$xToast.show({ message: '收藏成功' })
               } else {
                 this.$xToast.show({ message: '取消收藏' })
@@ -639,16 +661,16 @@ export default {
     //     sendType: 1, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
     //     msgType: 'text', // 消息类型
     //     content: JSON.stringify({
-    //       text: this.articleDetails.title,
+    //       text: this.answerDetails.title,
     //     }),
     //     extContent: this.$route.query, // 路由参数
-    //     productName: this.articleDetails.title, // 产品名称
-    //     productContent: this.articleDetails.content, // 产品信息
+    //     productName: this.answerDetails.title, // 产品名称
+    //     productContent: this.answerDetails.content, // 产品信息
     //     price: 0, // 价格
-    //     forwardAbstract: this.articleDetails.content, // 摘要信息，可与显示内容保持一致
-    //     // routerId: this.articleDetails.routerId, // 路由ID
-    //     // imageUrl: this.articleDetails.imageUrl[0], // 产品图片
-    //     // unit: this.articleDetails.unit, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+    //     forwardAbstract: this.answerDetails.content, // 摘要信息，可与显示内容保持一致
+    //     // routerId: this.answerDetails.routerId, // 路由ID
+    //     // imageUrl: this.answerDetails.imageUrl[0], // 产品图片
+    //     // unit: this.answerDetails.unit, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
     //   }
     //   this.sendTemplateMsgMixin({ sessionParams, msgParams })
     //   // this.sendTemplateMsgMixin({ sessionParams })
@@ -658,8 +680,40 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.page-list {
+  padding-bottom: 140px;
+}
+.area1 {
+  margin-bottom: 40px;
+}
+.area2 {
+  margin-bottom: 40px;
+  .userinfos {
+    overflow: hidden;
+  }
+  .user_head {
+    width: 72px;
+    height: 72px;
+    background: #d8d8d8;
+    border-radius: 50%;
+    overflow: hidden;
+    float: left;
+    margin-right: 20px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .user_name {
+    font-size: 30px;
+    color: #222222;
+    line-height: 30px;
+    float: left;
+    line-height: 72px;
+  }
+}
 .article {
-  background: #fff;
+  background: #f5f5f5;
 }
 // 推荐标题
 .recommend-title {
@@ -751,9 +805,10 @@ export default {
     font-weight: bold;
   }
 }
-.main {
-  padding: 40px 40px 140px;
-  .content {
+.area {
+  background: white;
+  padding: 40px;
+  .html_content {
     word-break: break-all;
     padding-top: 40px;
     font-size: 32px;

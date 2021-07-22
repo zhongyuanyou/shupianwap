@@ -97,9 +97,6 @@ export default {
     this.plannerId =
       this.$route.query.plannerId || this.$route.query.homeUserId || this.mchId
     this.partnerId = this.$route.query.partnerId
-    console.log('plannerId', this.plannerId)
-    console.log('partnerId', this.partnerId)
-    console.log('this.$route.query.plannerId', this.$route.query.plannerId)
     if (this.$route.query.isShare && this.plannerId) {
       this.getPlanerInfo(this.plannerId)
     }
@@ -184,37 +181,42 @@ export default {
         })
         return
       }
-      planner
-        .bindCustomer({
-          copartnerId: this.partnerId,
-          customerId: this.userInfoData.id,
-          customerPhone: this.userInfoData.mainAccount,
-          customerName: this.userInfoData.fullName,
-          copartnerPort: 'COMDIC_PLATFORM_CRISPS',
-          customerPort: 'COMDIC_PLATFORM_CRISPS',
-          bindType: 'CUSTOMER_BDLX_FXBD',
-          requestPlatform: 'COMDIC_PLATFORM_CRISPS',
-          copartnerUserType: 'ORDINARY_USER',
-        })
-        .then((res) => {
-          console.log('res', res)
-          this.$xToast.success('委托成功，请静候规划师与您电话联系！')
-          this.visible = false
-        })
-        .catch((err) => {
-          console.log('err', err)
-          this.$xToast.error(err.message || '委托失败')
-          this.visible = true
-        })
+      if (!this.partnerId) {
+        console.log('ddd')
+        this.consultForm()
+      } else {
+        planner
+          .bindCustomer({
+            copartnerId: this.partnerId,
+            customerId: this.userInfoData.id,
+            customerPhone: this.userInfoData.mainAccount,
+            customerName: this.userInfoData.fullName,
+            copartnerPort: 'COMDIC_PLATFORM_CRISPS',
+            customerPort: 'COMDIC_PLATFORM_CRISPS',
+            bindType: 'CUSTOMER_BDLX_FXBD',
+            requestPlatform: 'COMDIC_PLATFORM_CRISPS',
+            copartnerUserType: 'ORDINARY_USER',
+          })
+          .then((res) => {
+            console.log('res', res)
+            this.$xToast.success('委托成功，请静候规划师与您电话联系！')
+            this.visible = false
+          })
+          .catch((error) => {
+            console.log('error', error)
+            this.$xToast.error(error.message || '委托失败')
+            this.visible = true
+          })
+      }
     },
     // 生成客户资源并分配
-    async consultForm() {
+    consultForm() {
       this.loading = true
-      const userInfo = await this.getUserInfo(this.userId)
+      const userInfo = this.userInfoData
       if (!userInfo) return
       const params = {
-        bizAreaCode: this.city.code,
-        bizAreaName: this.city.name,
+        // bizAreaCode: this.city.code || '510100',
+        // bizAreaName: this.city.name || '成都市',
         comment: '',
         customerAttribute: '',
         customerName: userInfo.fullName,
@@ -222,48 +224,27 @@ export default {
         customerSex: userInfo.sex || 2,
         sourceUrl: location.href,
         sourceSyscode: 'crisps-app', // 来源系统
-        firstSourceChannel: 'crisps-app-one-home-page', // 一级来源渠道
-        secondSourceChannel: 'crisps-app-two-look-service', // 二级来源渠道
-        requireCode: localStorage.getItem('needCode'), // 需求编码
-        requireName: '交易委托', // 需求名称
+        firstSourceChannel: 'crisps-app-share', // 一级来源渠道
+        secondSourceChannel:
+          this.getShareChanel() || 'crisps-app-share-article', // 二级来源渠道
+        // requireCode: localStorage.getItem('needCode'), // 需求编码
+        // requireName: '交易委托', // 需求名称
       }
       this.$axios
         .post(BASE.formApi + formApi, params)
         .then((res) => {
           this.loading = false
           if (res.code === 200) {
-            this.$xToast.success('提交成功，请注意接听电话')
-            sessionStorage.removeItem('formData')
-            this.formData = {
-              type: 'gszc',
-              tel: '', // 电话
-              name: '', // 姓名
-              web: 'sp', // 归属（原网站类型）
-              place: 'all',
-              url: '',
-              content: {
-                备注: '',
-                是否允许电话联系: '是',
-              },
-            }
-            this.$router.go(-2)
+            this.$xToast.success('委托成功，请静候规划师与您电话联系！')
+            this.visible = false
           } else {
-            this.$xToast.show({
-              message: res.message || '提交失败，请稍后再试！',
-              duration: 1000,
-              icon: 'toast_ic_error',
-              forbidClick: true,
-            })
+            this.$xToast.error(res.message || '委托失败')
+            this.visible = true
           }
         })
         .catch((error) => {
-          this.loading = false
-          this.$xToast.show({
-            message: error.message || '提交失败，请稍后再试！',
-            duration: 1000,
-            icon: 'toast_ic_error',
-            forbidClick: true,
-          })
+          this.$xToast.error(error.message || '委托失败')
+          this.visible = true
         })
     },
     // 获取合伙人信息 明文
@@ -289,6 +270,21 @@ export default {
               })
             }
           })
+      }
+    },
+    // 选择二级渠道
+    getShareChanel() {
+      const path = this.$route.path
+      if (path.match('share/article')) {
+        return 'crisps-app-share-article'
+      } else if (path.match('share/answer')) {
+        return 'crisps-app-share-answer'
+      } else if (path.match('share/smallVideo/materialShare')) {
+        return 'crisps-app-share-small-video'
+      } else if (path.match('share/originalVideo/materialShare')) {
+        return 'crisps-app-share-video'
+      } else {
+        return 'crisps-app-share-video'
       }
     },
   },

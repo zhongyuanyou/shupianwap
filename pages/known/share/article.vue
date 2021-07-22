@@ -1,10 +1,6 @@
 <template>
   <section>
-    <ShareModal
-      v-show="articleDetails.title"
-      :mch-id="articleDetails.createrId"
-      @setPlannerInfo="setPlannerInfo"
-    />
+    <ShareModal />
     <HeaderSlot>
       <div class="flex">
         <div class="nav-back">
