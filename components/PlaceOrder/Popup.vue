@@ -28,9 +28,9 @@
             <i class="icon"></i>
           </p>
         </div>
-        <div v-if="tablist[tabAct].is" class="calculation">
-          {{ num ? '已选中优惠券，可抵扣' : '请选择优惠券' }}
-          <span v-if="num" class="red">{{ num }}元</span>
+        <div v-if="disPrice" class="calculation">
+          {{ disPrice ? '已选中优惠券，可抵扣' : '请选择优惠券' }}
+          <span v-if="disPrice" class="red">{{ disPrice }}元</span>
         </div>
         <div v-if="tablist[tabAct].is">
           <div class="databox">
@@ -114,7 +114,7 @@
               <p>暂无优惠券</p>
             </div>
             <div v-if="datalist.length > 0" class="btn">
-              <p @click="sum">确定</p>
+              <p @click="close()">确定</p>
             </div>
           </div>
         </div>
@@ -325,12 +325,10 @@ export default {
           Number(originPrice) -
           this.selectedCoupon.marketingCouponVO.reducePrice
       }
-      this.lastPrice = price
-      this.disPrice = originPrice - price
-      console.log('lastPrice', price)
+      this.disPrice =
+        (Number(originPrice) * 10000 - Number(price) * 10000) / 10000
       this.$emit('change', price, -this.disPrice, this.checkarr)
 
-      this.close()
       // order
       //   .getcalculation(
       //     { axios: this.$axios },
@@ -358,8 +356,6 @@ export default {
     },
     checkitem(item, index) {
       this.selectedCoupon = item
-      console.log('this.selectedCoupon', this.selectedCoupon)
-      console.log('item', item)
       if (this.radio === index) {
         this.checkarr = ''
         this.radio = -1
@@ -367,6 +363,7 @@ export default {
         this.checkarr = item
         this.radio = index
       }
+      this.sum()
     },
     close(data) {
       this.$emit('close', data)
@@ -557,7 +554,7 @@ export default {
                   padding-bottom: 2px;
                   width: 84px;
                   text-align: center;
-                  top: 10px;
+                  top: 2px;
                   left: 0;
                   font-weight: normal;
                   transform: scale(0.83);
@@ -728,7 +725,7 @@ export default {
                     padding-bottom: 2px;
                     width: 84px;
                     left: 0;
-                    top: 10px;
+                    top: 2px;
                     font-weight: normal;
                     transform: scale(0.83);
                     transform-origin: 0 0;
