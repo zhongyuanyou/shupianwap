@@ -60,7 +60,7 @@
       </div>
     </div>
     <div class="body">
-      <div v-if="tabsListData.length>0" class="body-content recommended">
+      <div v-if="detailData.goodsRecommend.length>0" class="body-content recommended">
         <div class="tabs">
           <ul>
             <li
