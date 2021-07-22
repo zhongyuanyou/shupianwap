@@ -49,7 +49,11 @@
       :list="tabBarData"
       @handelClick="handelFooterClick"
     >
-      <div slot="header" class="rules_and_invalid">
+      <div
+        slot="header"
+        class="rules_and_invalid"
+        :style="{ rules_and_invalid_bk: list.length > 0 }"
+      >
         <span class="" @click="TipsShow = true">
           通用规则
           <my-icon
@@ -407,7 +411,9 @@ export default {
 
     font-size: 24px;
     color: #999999;
-    background: #f5f5f5;
+
+    border-bottom: 1px solid #f5f5f5;
+
     padding: 32px 0;
     letter-spacing: 0;
 
@@ -420,6 +426,9 @@ export default {
       margin-right: 18px;
       font-weight: 500;
     }
+  }
+  .rules_and_invalid_bk {
+    background: #f5f5f5;
   }
 
   ::v-deep .sp-overlay {

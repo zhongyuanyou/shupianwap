@@ -67,6 +67,9 @@
                       {{ item.marketingCouponVO.couponName }}
                     </h1>
                     <div class="goods-types">
+                      <p v-if="item.marketingCouponVO.useType === 1">
+                        全场通用
+                      </p>
                       <p v-if="item.marketingCouponVO.useType === 2">
                         仅限指定品类使用
                       </p>
@@ -75,7 +78,7 @@
                       </p>
                     </div>
                     <!-- <p v-if="item.marketingCouponVO.useType === 1">
-                      全品类通用
+                      全场通用
                     </p> -->
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
@@ -133,9 +136,9 @@
                       {{ item.marketingCouponVO.couponName }}
                     </h1>
                     <div class="goods-types">
-                      <!-- <p v-if="item.marketingCouponVO.useType === 1">
-                      全品类通用
-                    </p> -->
+                      <p v-if="item.marketingCouponVO.useType === 1">
+                        全场通用
+                      </p>
                       <p v-if="item.marketingCouponVO.useType === 2">
                         仅限指定品类使用
                       </p>
@@ -409,6 +412,7 @@ export default {
     box-sizing: border-box;
     > span {
       color: #ec5330;
+      font-weight: bold;
     }
   }
   .databox {
@@ -500,7 +504,7 @@ export default {
               font-size: 32px;
               color: #222222;
               line-height: 40px;
-              margin: 20px 0 12px 0;
+              margin: 5px 0 12px 0;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
@@ -531,14 +535,14 @@ export default {
             .goods-types {
               height: 20px;
             }
-            > p {
+            p {
               font-size: 24px;
               font-weight: 400;
               color: #555555;
-              margin-top: 18px;
+              margin-top: 9px;
             }
             > .date {
-              margin-top: 13px;
+              margin-top: 36px;
             }
           }
           > .right {
@@ -596,7 +600,7 @@ export default {
         background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png)
           no-repeat;
         background-size: 100%;
-        box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+        // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
         box-sizing: border-box;
         > .top {
           display: flex;
@@ -664,7 +668,7 @@ export default {
                 font-size: 32px;
                 color: #222222;
                 line-height: 40px;
-                margin: 30px 0 12px 0;
+                margin: 5px 0 12px 0;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
@@ -697,10 +701,10 @@ export default {
                 font-size: 24px;
                 font-weight: 400;
                 color: #555555;
-                margin-top: 18px;
+                margin-top: 9px;
               }
               > .date {
-                margin-top: 13px;
+                margin-top: 36px;
               }
             }
             > .right {
