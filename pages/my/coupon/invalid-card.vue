@@ -1,5 +1,5 @@
 <template>
-  <div class="invoice" :style="{ paddingBottom: FooterNavHeight + 'px' }">
+  <div class="invoice">
     <sp-sticky>
       <Header class="my-header" title="失效卡"></Header>
     </sp-sticky>
@@ -51,7 +51,6 @@ import Header from '@/components/common/head/header.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import ActCardItem from '~/components/my/coupon/index/ActCardItem.vue'
 
-
 import { coupon, actCard } from '@/api/index'
 
 export default {
@@ -75,7 +74,7 @@ export default {
     return {
       imgAddress: 'https://cdn.shupian.cn/sp-pt/wap/1d02v37qg6gw000.png',
 
-      tabActive: 0,
+      tabActive: 1,
       tabActiveIndex: 0, // 激活的tab
 
       loading: true, // 加载效果状态
