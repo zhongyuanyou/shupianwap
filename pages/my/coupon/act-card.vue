@@ -1,5 +1,5 @@
 <template>
-  <div class="invoice">
+  <div class="act_card">
     <HeaderSlot>
       <Header class="my-header" title="活动卡专区"></Header>
     </HeaderSlot>
@@ -92,7 +92,7 @@ import { actCard, coupon, activityApi } from '@/api/index'
 
 export default {
   layout: 'keepAlive',
-  name: 'Invoice',
+  name: 'act_card',
   components: {
     LoadingCenter,
     Header,
@@ -213,7 +213,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.invoice {
+.act_card {
   min-height: 100%;
 
   padding-top: constant(safe-area-inset-top);

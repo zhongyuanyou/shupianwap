@@ -29,8 +29,8 @@
           </p>
         </div>
         <div v-if="tablist[tabAct].is" class="calculation">
-          {{ calculation }}
-          <span class="red">{{ disPrice }}元</span>
+          {{ num ? '已选中优惠券，可抵扣' : '请选择优惠券' }}
+          <span v-if="num" class="red">{{ num }}元</span>
         </div>
         <div v-if="tablist[tabAct].is">
           <div class="databox">
@@ -67,6 +67,9 @@
                       {{ item.marketingCouponVO.couponName }}
                     </h1>
                     <div class="goods-types">
+                      <p v-if="item.marketingCouponVO.useType === 1">
+                        全场通用
+                      </p>
                       <p v-if="item.marketingCouponVO.useType === 2">
                         仅限指定品类使用
                       </p>
@@ -75,7 +78,7 @@
                       </p>
                     </div>
                     <!-- <p v-if="item.marketingCouponVO.useType === 1">
-                      全品类通用
+                      全场通用
                     </p> -->
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
@@ -133,9 +136,9 @@
                       {{ item.marketingCouponVO.couponName }}
                     </h1>
                     <div class="goods-types">
-                      <!-- <p v-if="item.marketingCouponVO.useType === 1">
-                      全品类通用
-                    </p> -->
+                      <p v-if="item.marketingCouponVO.useType === 1">
+                        全场通用
+                      </p>
                       <p v-if="item.marketingCouponVO.useType === 2">
                         仅限指定品类使用
                       </p>
@@ -218,12 +221,6 @@ export default {
         return []
       },
     },
-    calculation: {
-      type: String,
-      default() {
-        return '请选择优惠券'
-      },
-    },
     datalist: {
       type: Array,
       default() {
@@ -247,26 +244,26 @@ export default {
       // num: 0,
     }
   },
-  // computed: {
-  //   num() {
-  //     if (this.checkarr.marketingCouponVO) {
-  //       if (this.checkarr.marketingCouponVO.couponType === 1) {
-  //         return this.checkarr.marketingCouponVO.reducePrice
-  //       } else {
-  //         const price =
-  //           this.$route.query.type === 'shopcar'
-  //             ? this.$parent.order.skuTotalPrice
-  //             : this.$parent.order.salesPrice
-  //         const discount =
-  //           parseFloat(this.checkarr.marketingCouponVO.discount) / 100
+  computed: {
+    num() {
+      if (this.checkarr.marketingCouponVO) {
+        if (this.checkarr.marketingCouponVO.couponType === 1) {
+          return this.checkarr.marketingCouponVO.reducePrice
+        } else {
+          const price =
+            this.$route.query.type === 'shopcar'
+              ? this.$parent.order.skuTotalPrice
+              : this.$parent.order.salesPrice
+          const discount =
+            parseFloat(this.checkarr.marketingCouponVO.discount) / 100
 
-  //         const discountNum = ((10 - discount) / 10) * price
-  //         return Math.ceil(discountNum * 100) / 100
-  //       }
-  //     }
-  //     return 0
-  //   },
-  // },
+          const discountNum = ((10 - discount) / 10) * price
+          return Math.ceil(discountNum * 100) / 100
+        }
+      }
+      return 0
+    },
+  },
 
   mounted() {},
   methods: {
@@ -415,6 +412,7 @@ export default {
     box-sizing: border-box;
     > span {
       color: #ec5330;
+      font-weight: bold;
     }
   }
   .databox {
@@ -506,7 +504,7 @@ export default {
               font-size: 32px;
               color: #222222;
               line-height: 40px;
-              margin: 20px 0 12px 0;
+              margin: 5px 0 12px 0;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
@@ -537,14 +535,14 @@ export default {
             .goods-types {
               height: 20px;
             }
-            > p {
+            p {
               font-size: 24px;
               font-weight: 400;
               color: #555555;
-              margin-top: 18px;
+              margin-top: 9px;
             }
             > .date {
-              margin-top: 13px;
+              margin-top: 36px;
             }
           }
           > .right {
@@ -602,7 +600,7 @@ export default {
         background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png)
           no-repeat;
         background-size: 100%;
-        box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+        // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
         box-sizing: border-box;
         > .top {
           display: flex;
@@ -670,7 +668,7 @@ export default {
                 font-size: 32px;
                 color: #222222;
                 line-height: 40px;
-                margin: 30px 0 12px 0;
+                margin: 5px 0 12px 0;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
@@ -703,10 +701,10 @@ export default {
                 font-size: 24px;
                 font-weight: 400;
                 color: #555555;
-                margin-top: 18px;
+                margin-top: 9px;
               }
               > .date {
-                margin-top: 13px;
+                margin-top: 36px;
               }
             }
             > .right {

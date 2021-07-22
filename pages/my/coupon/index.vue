@@ -4,10 +4,10 @@
       <div ref="couponHeaderWarpper" class="coupon-header-warpper">
         <Header class="my-header" title="我的优惠券"></Header>
 
-        <sp-tabs v-model="tabActive" line-width="0.28rem" @click="onClickTab">
+        <!-- <sp-tabs v-model="tabActive" line-width="0.28rem" @click="onClickTab">
           <sp-tab title="券包"></sp-tab>
           <sp-tab title="卡包"></sp-tab>
-        </sp-tabs>
+        </sp-tabs> -->
       </div>
     </div>
 
@@ -49,7 +49,11 @@
       :list="tabBarData"
       @handelClick="handelFooterClick"
     >
-      <div slot="header" class="rules_and_invalid">
+      <div
+        slot="header"
+        class="rules_and_invalid"
+        :style="{ rules_and_invalid_bk: list.length > 0 }"
+      >
         <span class="" @click="TipsShow = true">
           通用规则
           <my-icon
@@ -157,17 +161,15 @@ export default {
         {
           name: '领券',
           iconName: 'lingquan',
-          // path: '/my/coupon/coupons-list',
           path: '/activity/coupon',
         },
-        {
-          name: '购卡',
-          iconName: 'gouka',
-          path: '/my/coupon/act-card',
-        },
+        // {
+        //   name: '购卡',
+        //   iconName: 'gouka',
+        //   path: '/my/coupon/act-card',
+        // },
       ],
       HeaderHeight: '',
-      // FooterNavHeight: 150,
     }
   },
   computed: {
@@ -409,7 +411,9 @@ export default {
 
     font-size: 24px;
     color: #999999;
-    background: #f5f5f5;
+
+    border-bottom: 1px solid #f5f5f5;
+
     padding: 32px 0;
     letter-spacing: 0;
 
@@ -422,6 +426,9 @@ export default {
       margin-right: 18px;
       font-weight: 500;
     }
+  }
+  .rules_and_invalid_bk {
+    background: #f5f5f5;
   }
 
   ::v-deep .sp-overlay {

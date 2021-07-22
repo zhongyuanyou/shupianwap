@@ -48,7 +48,7 @@ export default {
       DefaultColor: '#222222',
       ActiveColor: '#4974F5',
 
-      footerNavHeight: 117,
+      footerNavHeight: 0,
     }
   },
 
