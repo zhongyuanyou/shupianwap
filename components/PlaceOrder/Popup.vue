@@ -325,9 +325,10 @@ export default {
           Number(originPrice) -
           this.selectedCoupon.marketingCouponVO.reducePrice
       }
-      this.disPrice = Math.ceil(
-        (Number(originPrice) * 1000000 - Number(price) * 1000000) / 1000000
-      )
+      1000101
+      this.disPrice =
+        Math.ceil(Number(originPrice) * 100 - Number(price) * 100) / 100
+
       this.$emit('change', price, -this.disPrice, this.checkarr)
 
       // order
