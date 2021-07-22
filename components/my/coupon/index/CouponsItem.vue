@@ -216,7 +216,7 @@ export default {
         color: #ffffff;
         text-align: center;
         display: inline-block;
-        transform: scale(0.8);
+        transform: scale(0.83);
         transform-origin: left center;
       }
       .coupon_type_name.invalid {

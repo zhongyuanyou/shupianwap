@@ -284,6 +284,13 @@ export default {
     margin: 24px auto 0;
     width: 670px;
   }
+
+  ::v-deep .sp-overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  ::v-deep .sp-dialog {
+    width: 540px;
+  }
   .dialog {
     padding: 48px 0 0 0;
     > .head {

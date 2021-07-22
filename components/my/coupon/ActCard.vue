@@ -8,8 +8,10 @@
           {{ item.type == 2 ? getDiscount(item.discount) : item.rebatePrice }}
           <span v-if="item.type == 2" class="coupon_price_unit">折</span>
         </div>
-        <div v-if="item.rebateNeedPrice" class="can_use">
-          满{{ item.rebateNeedPrice }}元可用
+        <div class="can_use">
+          <span v-if="item.rebateNeedPrice">
+            满{{ item.rebateNeedPrice }}元可用
+          </span>
         </div>
         <div v-if="item.stock && showProgress" class="coupon_progress">
           <sp-progress
@@ -17,7 +19,7 @@
             :percentage="parseInt((item.leftStock / item.stock) * 100)"
             :show-pivot="false"
             stroke-width="0.08rem"
-            color="#ffffff"
+            color=""
             track-color="rgba(255,255,255,0.4)"
           />
           <span>剩余{{ parseInt((item.leftStock / item.stock) * 100) }}%</span>
@@ -43,7 +45,7 @@
               <!-- item.useType === 1? '全品类通用': item.useType === 2? '限定部分类别产品使用': '指定产品使用' -->
             </div>
 
-            <div class="surplus warn">可使用{{ item.availableTimes }}次</div>
+            <div class="surplus">可使用{{ item.availableTimes }}次</div>
 
             <div class="date-container">
               <span class="date" :class="item.showColorTime ? 'warn' : ''">
@@ -113,9 +115,9 @@ export default {
     getuseTypeName(useType) {
       let useTypeName = ''
       switch (useType) {
-        // case 1:
-        //   useTypeName = '全品类通用'
-        //   break
+        case 1:
+          useTypeName = '全场通用'
+          break
         case 2:
           useTypeName = '仅限指定品类使用'
           break
@@ -183,6 +185,7 @@ export default {
       }
     }
     .can_use {
+      height: 33px;
       font-size: 24px;
       font-family: PingFang SC;
       font-weight: 400;
@@ -191,26 +194,40 @@ export default {
       // padding-top: 10px;
     }
     .coupon_progress {
-      display: flex;
-      align-items: center;
-      padding-left: 12px;
+      // display: flex;
+      // align-items: center;
+      // padding-left: 12px;
+      white-space: nowrap;
+      font-size: 0px;
+      text-align: center;
+      margin-left: 12px;
+      margin-top: 12px;
       .sp-progress {
-        // width: 98px;
-        flex: 1;
-        flex-shrink: 0.5;
+        display: inline-block;
+        vertical-align: middle;
+        width: 90px;
+        // flex: 1;
+        // flex-shrink: 0.5;
+
+        ::v-deep .sp-progress__portion {
+          background: linear-gradient(270deg, #fff166 0%, #fffab6 100%);
+        }
       }
       & > span {
-        flex: 1;
-        flex-shrink: 1;
+        // flex: 1;
+        // flex-shrink: 1;
+        display: inline-block;
+        vertical-align: middle;
         white-space: nowrap;
         opacity: 0.8;
         font-family: PingFangSC-Medium;
-        font-size: 12px;
+        font-size: 24px;
+        line-height: 24px;
         color: #fffcd6;
         letter-spacing: 0;
         text-align: right;
-
-        transform-origin: center center;
+        padding-left: 3px;
+        transform-origin: left center;
         transform: scale(0.75);
       }
     }
@@ -219,6 +236,7 @@ export default {
     padding-left: 24px;
     height: auto;
     flex: 1;
+    overflow: hidden;
 
     .sign {
       position: absolute;
@@ -233,7 +251,7 @@ export default {
       font-weight: bold;
       color: #222222;
 
-      margin: 26px 0 15px 0;
+      margin: 26px 24px 15px 0;
       word-break: break-all;
       display: -webkit-box;
       -webkit-line-clamp: 1;
@@ -258,6 +276,8 @@ export default {
       display: flex;
       // justify-content: center;
       align-items: center;
+      overflow: hidden;
+
       .item-rt-content-left {
         flex: 1;
       }
@@ -276,6 +296,7 @@ export default {
           color: #ffffff;
           letter-spacing: 0;
           text-align: center;
+          white-space: nowrap;
         }
       }
       .content {
@@ -296,6 +317,8 @@ export default {
       .date-container {
         display: flex;
         font-size: 0;
+        max-width: 257px;
+        overflow: hidden;
         .date {
           flex: 1;
           font-size: 20px;
@@ -319,6 +342,7 @@ export default {
         margin-right: 30px;
         margin-bottom: 10px;
         background: #fff3e9;
+        color: #fe8c29;
         border-radius: 4px;
         padding: 0 6px;
       }
