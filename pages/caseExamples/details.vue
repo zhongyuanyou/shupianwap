@@ -71,7 +71,7 @@
     />
 
     <!-- 专家点评 -->
-    <ExpertComments :info="expertEvaluation"></ExpertComments>
+    <ExpertComments :details-id="id" :info="expertEvaluation"></ExpertComments>
 
     <!--E 评论-->
     <CommentBox v-if="commentdata.length > 0" :list="commentdata" />
@@ -135,6 +135,7 @@ export default {
 
   data() {
     return {
+      id: '',
       caseDetail: {}, // 信息，包含详情
       caseDetailInfo: {}, // 详情
 
@@ -180,7 +181,6 @@ export default {
       plannerPage: 1, // 推荐规划师当前页
       tcPlannerBooth: {},
       deviceId: null, // 设备唯一码
-      imgFileIdPaths: [], // 产品图片
 
       isShare: false,
 
@@ -199,7 +199,7 @@ export default {
   computed: {
     sellingDetail() {
       // 获取客户端展示信息
-      return this.$store.state.sellingGoodsDetail.sellingGoodsData
+      return this.$store.state.sellingGoodsDetail?.sellingGoodsData || {}
     },
     city() {
       return this.$store.state.city.currentCity
@@ -286,6 +286,7 @@ export default {
 
   created() {},
   mounted() {
+    this.id = this.$route.query.id
     this.getDetails()
     this.getRecPlanner()
   },
@@ -432,19 +433,19 @@ export default {
         params: {
           limit: 1,
           page: 1,
-          area: this.$store.state.city.currentCity.code || '510100',
+          area: this.$store.state?.city?.currentCity?.code || '510100',
           deviceId, // 设备ID
-          level_2_ID: this.sellingDetail.classCodeLevel
-            ? this.sellingDetail.classCodeLevel.split(',')[1]
+          level_2_ID: this.sellingDetail?.classCodeLevel
+            ? this.sellingDetail?.classCodeLevel.split(',')[1]
             : null, // 二级产品分类
           login_name: null, // 规划师ID(选填)
           productType: 'PRO_CLASS_TYPE_SERVICE', // 产品类型
           sceneId: 'app-cpxqye-02', // 场景ID
           user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
           platform: 'm', // 平台（app,m,pc）
-          productId: this.sellingDetail.id, // 产品id
-          firstTypeCode: this.sellingDetail.classCodeLevel
-            ? this.sellingDetail.classCodeLevel.split(',')[0]
+          productId: this.sellingDetail?.id, // 产品id
+          firstTypeCode: this.sellingDetail?.classCodeLevel
+            ? this.sellingDetail?.classCodeLevel.split(',')[0]
             : null,
         },
       })

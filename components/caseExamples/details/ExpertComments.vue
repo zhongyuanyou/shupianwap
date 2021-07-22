@@ -34,7 +34,7 @@
             round
             fit="cover"
             lazy-load
-            :src="getImg()"
+            :src="headImg"
           ></sp-image>
         </div>
         <div class="report_user_info_name">专家评语</div>
@@ -48,6 +48,7 @@
 
 <script>
 import { Progress, Image } from '@chipspc/vant-dgg'
+import { number } from 'echarts'
 export default {
   name: 'ExpertComments',
   components: {
@@ -55,6 +56,10 @@ export default {
     [Image.name]: Image,
   },
   props: {
+    detailsId: {
+      type: [Number, String],
+      default: '',
+    },
     info: {
       type: Array,
       default: () => {
@@ -64,7 +69,7 @@ export default {
   },
   data() {
     return {
-      num: 99,
+      headImg: '',
       imgs: [
         '5kh95r57rl00000.jpg',
         'dw46uviu8kg0000.jpg',
@@ -98,11 +103,25 @@ export default {
       return { content, fraction, dimension }
     },
   },
-  mounted() {},
+  mounted() {
+    this.headImg = this.getImg()
+  },
   methods: {
     getImg() {
-      const index = parseInt(Math.random() * this.imgs.length)
-      return this.$ossImgSetV2(this.imgs[index])
+      if (!this.detailsId) {
+        return
+      }
+      const name = 'caseExamplesExpertComments:' + this.detailsId
+
+      const val = window.sessionStorage.getItem(name)
+      if (val === null || parseInt(val) > this.imgs.length) {
+        const index = parseInt(Math.random() * this.imgs.length)
+        window.sessionStorage.setItem(name, index)
+
+        return this.$ossImgSetV2(this.imgs[index])
+      } else {
+        return this.$ossImgSetV2(this.imgs[parseInt(val)])
+      }
     },
   },
 }
