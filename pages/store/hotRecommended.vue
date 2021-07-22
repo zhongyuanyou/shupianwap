@@ -381,6 +381,7 @@ export default {
       }
     },
     tabsActive(item) {
+      this.refresh.pageIndex = 0
       this.active = item
       this.getList()
     },
