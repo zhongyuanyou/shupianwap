@@ -325,7 +325,6 @@ export default {
           Number(originPrice) -
           this.selectedCoupon.marketingCouponVO.reducePrice
       }
-      1000101
       this.disPrice =
         Math.ceil(Number(originPrice) * 100 - Number(price) * 100) / 100
 
