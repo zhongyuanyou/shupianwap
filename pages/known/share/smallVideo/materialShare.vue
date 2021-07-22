@@ -1,5 +1,6 @@
 <template>
   <div class="m-known-share smallVideo materialShare">
+    <ShareModal />
     <img class="bg" :src="vDetail.image" />
     <my-icon
       name="bofang_mian"
@@ -86,6 +87,7 @@ import { Image, Button, Swipe, SwipeItem, Toast } from '@chipspc/vant-dgg'
 import knownApi from '@/api/known'
 import { planner } from '~/api'
 import imHandle from '~/mixins/imHandle'
+import ShareModal from '@/components/common/ShareModal.vue'
 
 export default {
   name: 'KnownSmallVideo',
@@ -94,12 +96,12 @@ export default {
     [Button.name]: Button,
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
+    ShareModal,
   },
   mixins: [imHandle],
   data() {
     return {
       id: '', // 分享id
-      categoryId: '', // 种类id
       vurl: '', // 视频url
       vDetail: {},
       videoType: '',
@@ -123,9 +125,17 @@ export default {
     },
   },
   mounted() {
-    this.id = this.$route.query.shareId || '8106374534213206016'
-    this.plannerId = this.$route.query.plannerId || '758742052284024473'
+    this.id = this.$route.query.shareId
+    this.plannerId = this.$route.query.plannerId
+    if (this.id && this.id === '') {
+      this.$xToast.error('获取分享数据失败')
+      return
+    }
     this.getShareInfoApi()
+    if (this.plannerId && this.plannerId === '') {
+      this.$xToast.error('获取规划师数据失败')
+      return
+    }
     this.getPlannerInfoApi()
   },
   methods: {
@@ -140,10 +150,13 @@ export default {
           if (res.code !== 200) {
             throw new Error('查询视频失败')
           }
+          if (res.data.status === 0) {
+            this.$xToast.error('分享的视频已下架')
+            return
+          }
           this.vDetail = res.data
           this.vurl = this.vDetail.videoUrl
           this.goods = res.data.goodsList
-          console.log(`output goods: ${JSON.stringify(this.goods[0])}`)
         })
         .catch((e) => {
           this.$xToast.error(e.message)
@@ -219,7 +232,7 @@ export default {
           areaName: this.city.name,
           customerUserId: this.$store.state.user.userId,
           plannerId: mchUserId,
-          customerPhone: this.topPlannerInfo.phone || this.planerInfo.phone,
+          customerPhone: this.planerInfo.phone,
           requireCode: '',
           requireName: '',
         }
