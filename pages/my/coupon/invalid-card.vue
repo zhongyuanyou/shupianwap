@@ -1,8 +1,8 @@
 <template>
   <div class="invoice">
-    <sp-sticky>
+    <HeaderSlot>
       <Header class="my-header" title="失效卡"></Header>
-    </sp-sticky>
+    </HeaderSlot>
 
     <sp-list
       v-if="list.length > 0"
@@ -45,7 +45,7 @@ import {
   Dialog,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-
+import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
 import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
@@ -67,7 +67,7 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [Dialog.Component.name]: Dialog.Component,
     [List.name]: List,
-
+    HeaderSlot,
     ActCardItem,
   },
   data() {
