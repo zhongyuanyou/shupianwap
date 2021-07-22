@@ -64,6 +64,7 @@
 
     <!--S 服务团队-->
     <ServiceTeam
+      v-if="planner.mchUserId || teamMmembers.length > 0"
       :info="caseDetail"
       :planner="planner"
       :team-mmembers="teamMmembers"
@@ -71,7 +72,11 @@
     />
 
     <!-- 专家点评 -->
-    <ExpertComments :details-id="id" :info="expertEvaluation"></ExpertComments>
+    <ExpertComments
+      v-if="id"
+      :details-id="id"
+      :info="expertEvaluation"
+    ></ExpertComments>
 
     <!--E 评论-->
     <CommentBox v-if="commentdata.length > 0" :list="commentdata" />
