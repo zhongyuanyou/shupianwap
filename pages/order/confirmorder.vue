@@ -174,7 +174,7 @@
             title="优惠券"
             :value="
               couponInfo.couponPrice
-                ? couponInfo.couponPrice
+                ? couponInfo.couponPrice + '元'
                 : couponInfo.datalist.length > 0
                 ? couponInfo.datalist.length + '个优惠券'
                 : '无可用'
@@ -769,6 +769,10 @@ export default {
   .sp-skeleton__title {
     background: #fff;
   }
+  ::v-deep .sp-cell__right-icon {
+    color: #cccccc;
+  }
+
   > .allbox {
     padding-bottom: 24px;
     overflow-y: auto;
@@ -887,6 +891,7 @@ export default {
       }
       .red {
         color: #ec5330;
+        font-weight: bold;
       }
       > .money {
         padding: 15px 30px;
