@@ -1,5 +1,6 @@
 <template>
   <div class="m-known-share originalVideo materialShare">
+    <ShareModal />
     <client-only>
       <sp-video
         :options="playerOptions"
@@ -14,70 +15,244 @@
           height="0.84rem"
           round
           fit="cover"
-          src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+          :src="vDetail.custavatar"
         />
         <div class="info-brand-tile">
-          <div class="name">乐享创业帮</div>
-          <div class="desc">已关注 · 商业因服务更美好</div>
+          <div
+            class="name"
+            :class="[
+              vDetail.custbriefIntroduction === '' ? 'z-nontebuttom' : '',
+            ]"
+          >
+            {{ vDetail.authorName }}
+          </div>
+          <div class="desc">{{ vDetail.custbriefIntroduction }}</div>
         </div>
       </div>
-      <div class="info-tile">领导干部MPA必读核心课程之公共部门经济学</div>
-      <div class="info-desc">10.5万次播放 · 发布于2021-11-01</div>
+      <div class="info-tile">{{ vDetail.videoName }}</div>
+      <div class="info-desc">
+        {{ vDetail.custTotalViewCount }}次播放 · 发布于{{
+          vDetail.custUpdateTime
+        }}
+      </div>
     </div>
+    <div v-if="goods.length > 0" class="recommend">
+      <div class="recommend-title">推荐商品</div>
+      <div v-for="item of goods" :key="item.id">
+        <ShareGoods
+          :info="item"
+          :type="
+            item.productType === 'PRO_CLASS_TYPE_SALES' ? 'Service' : 'Trading'
+          "
+        ></ShareGoods>
+      </div>
+    </div>
+    <div class="holderplace"></div>
     <div class="planner-info">
       <div class="flex-left">
-        <sp-image
-          class="img"
-          round
-          src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-        />
+        <sp-image class="img" round :src="planerInfo.portrait" />
         <div class="infos">
-          <div class="infos-name">我是规划师</div>
-          <div class="infos-desc">金牌规213划师</div>
+          <div class="infos-name">{{ planerInfo.userName }}</div>
+          <div class="infos-desc">{{ planerInfo.postName }}</div>
         </div>
       </div>
       <!-- && planerInfo.mchUserId -->
       <div class="flex-right">
-        <sp-button size="small" type="primary">在线问</sp-button>
-        <sp-button size="small" type="info">打电话</sp-button>
+        <sp-button
+          size="small"
+          type="primary"
+          @click="sendTextMessage(planerInfo.mchUserId)"
+          >在线问</sp-button
+        >
+        <sp-button
+          size="small"
+          type="info"
+          @click="handleTel(planerInfo.mchUserId)"
+          >打电话</sp-button
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Image, Button } from '@chipspc/vant-dgg'
+import { Image, Button, Toast } from '@chipspc/vant-dgg'
 import knownApi from '@/api/known'
+import { planner } from '~/api'
+import imHandle from '~/mixins/imHandle'
+// 推荐商品组件
+import ShareGoods from '@/components/mustKnown/share/ShareGoods.vue'
+import ShareModal from '@/components/common/ShareModal.vue'
+import { numChangeW } from '@/utils/common'
 
 export default {
   name: 'KnownOriginalVideo',
   components: {
     [Image.name]: Image,
     [Button.name]: Button,
+    ShareGoods,
+    ShareModal,
   },
+  mixins: [imHandle],
   data() {
     return {
-      vId: '',
-      categoryId: '', // 种类id
-      vurl: 'https://video.dgg.net/118146ee86b145c697bb6a6f9c8ea9c6/04aad615e77f4ae5818e46c372ff316c-c5fedc61ccdc5b58f0171620cdacd346-od-S00000001-200000.mp4', // 视频url
+      id: '', // 分享id
+      vurl: '', // 视频url
       vDetail: {},
       // videojs options
       playerOptions: {
         poster: '',
       },
-      vType: 'original',
+      goods: [],
+      plannerId: '',
+      planerInfo: {},
     }
+  },
+  computed: {
+    userInfo() {
+      return this.$store.state.user
+    },
+    city() {
+      return this.$store.state.city.currentCity
+    },
+    isInApp() {
+      return this.$store.state.app.isInApp
+    },
+    appInfo() {
+      return this.$store.state.app.appInfo
+    },
   },
   mounted() {
-    /*
-    if (!this.$route.query.id) {
-      this.$xToast.error('获取视频信息失败')
-      return
-    }
-    */
-    this.vId = this.$route.query.id || '8088997202200690688'
+    this.id = this.$route.query.shareId || '8106374534213206016'
+    this.plannerId = this.$route.query.plannerId || '758742052284024473'
+    this.getShareInfoApi()
+    this.getPlannerInfoApi()
   },
   methods: {
+    // 分享信息
+    getShareInfoApi() {
+      const params = {
+        id: this.id,
+      }
+      this.$axios
+        .post(knownApi.video.materialVideoShare, params)
+        .then((res) => {
+          if (res.code !== 200) {
+            throw new Error('查询视频失败')
+          }
+          this.vDetail = res.data
+          this.vurl = this.vDetail.videoUrl
+          this.goods = res.data.goodsList
+          this.playerOptions.post = res.data.image
+          this.buildDetail()
+        })
+        .catch((e) => {
+          this.$xToast.error(e.message)
+        })
+    },
+    buildDetail() {
+      this.vDetail.custUpdateTime = this.vDetail.updateTime.split(' ')[0]
+      this.vDetail.custTotalViewCount = numChangeW(this.vDetail.totalViewCount)
+    },
+    getPlannerInfoApi() {
+      planner.detail({ id: this.plannerId }).then((res) => {
+        const obj = {
+          mchUserId: res.id,
+          portrait:
+            res.img ||
+            'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png',
+          userName: res.name,
+          postName: res.zwName,
+          type: res.mchClass,
+        }
+        this.planerInfo = {
+          ...obj,
+          ...res,
+        }
+      })
+    },
+    goodLink(item) {
+      if (item.productType === 'PRO_CLASS_TYPE_SALES') {
+        this.$router.push({
+          path: '/detail',
+          query: {
+            productId: item.id,
+          },
+        })
+      } else {
+        this.$router.push({
+          path: '/detail/transactionDetails',
+          query: {
+            productId: item.id,
+          },
+        })
+      }
+    },
+    // 拨打电话
+    async handleTel(mchUserId) {
+      console.log('mchUserId', mchUserId)
+      try {
+        if (this.isInApp) {
+          this.$appFn.dggBindHiddenPhone({ plannerId: mchUserId }, (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '拨号失败！',
+                duration: 1000,
+                forbidClick: true,
+                icon: 'toast_ic_remind',
+              })
+            }
+          })
+          return
+        }
+        const params = {
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          plannerId: mchUserId,
+          customerPhone: this.topPlannerInfo.phone || this.planerInfo.phone,
+          requireCode: '',
+          requireName: '',
+        }
+
+        try {
+          const telData = await planner.newtel(params)
+          // 解密电话
+          if (telData.status === 1) {
+            const tel = telData.phone
+            window.location.href = `tel:${tel}`
+          } else if (telData.status === 0) {
+            Toast({
+              message: '当前人员已禁用，无法拨打电话',
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_fail',
+            })
+          } else if (telData.status === 3) {
+            Toast({
+              message: '当前人员已离职，无法拨打电话',
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_fail',
+            })
+          }
+        } catch (error) {
+          Toast({
+            message: error.message || '无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+          console.error('getTel:', error)
+          return Promise.reject(error)
+        }
+      } catch (err) {
+        console.log(err)
+        Toast({
+          message: '未获取到划师联系方式',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
+      }
+    },
     errorBtnHandle() {
       console.log('error')
     },
@@ -211,6 +386,22 @@ export default {
         border: 1px solid #24ae68;
       }
     }
+  }
+  .recommend {
+    margin-top: 38px;
+    padding: 0 40px;
+    margin-bottom: 200px;
+    &-title {
+      font-size: 32px;
+      line-height: 32px;
+      font-weight: bold;
+      counter-reset: #222;
+      margin-bottom: 16px;
+    }
+  }
+  .holderplace {
+    height: 1px;
+    width: 100%;
   }
 }
 </style>
