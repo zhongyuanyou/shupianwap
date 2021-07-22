@@ -6,7 +6,7 @@
         >查看全部 <my-icon name="you" size="0.2rem"></my-icon
       ></span>
     </h1>
-    <div @click="toDetail" class="case-box">
+    <div class="case-box" @click="toDetail">
       <div class="case-img">
         <sp-image :src="caseData.caseImg" alt=""></sp-image>
       </div>
@@ -24,8 +24,8 @@
         caseData.caseIntro.show &&
         caseData.caseIntro.show[0].content
       "
-      @click="toDetail"
       class="case-des"
+      @click="toDetail"
     >
       <p
         v-if="
@@ -138,13 +138,18 @@ export default {
       this.$router.push('/caseExamples/details?id=' + this.caseData.id)
     },
     toALL() {
-      this.$router.push({
-        path: '/caseExamples',
-        query: {
+      let query = {}
+      console.log('classCodeLevelList', this.classCodeLevelList)
+      if (this.classCodeLevelList && this.classCodeLevelList.length > 0) {
+        query = {
           classCode1: this.classCodeLevelList[0],
           classCode2: this.classCodeLevelList[1],
           classCode3: this.classCodeLevelList[2],
-        },
+        }
+      }
+      this.$router.push({
+        path: '/caseExamples',
+        query,
       })
     },
   },

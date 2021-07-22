@@ -13,7 +13,9 @@
       </div>
       <div class="title_tags_right">
         <my-icon name="login_ic_look" size="0.24rem" color="#4974F5" />
-        <span class="view">{{ info.caseDefaultRead }}</span>
+        <span class="view">{{
+          (info.caseDefaultRead || 0) + (info.caseRealReadNum || 0)
+        }}</span>
       </div>
     </div>
 

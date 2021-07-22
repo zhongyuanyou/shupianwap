@@ -5,8 +5,11 @@
     </p>
     <div class="planners">
       <sp-skeleton :row="3" :loading="caseMember.length == 0">
-        <!-- v-if="planner.mchUserId" -->
-        <div class="planners_item" :style="{ marginTop: '0.42rem' }">
+        <div
+          v-if="planner.mchUserId"
+          class="planners_item"
+          :style="{ marginTop: '0.42rem' }"
+        >
           <div class="planners_item_lf">
             <a
               href="javascript:void(0);"

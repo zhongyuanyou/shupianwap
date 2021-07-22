@@ -157,7 +157,7 @@ export default {
 
 <style lang="less" scoped>
 .commodityConsult {
-  width: 100vw;
+  // width: 100vw;
   background-color: #fff;
   padding-top: 148px;
   padding-bottom: constant(safe-area-inset-bottom);

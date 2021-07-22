@@ -132,6 +132,9 @@ export default {
     }),
   },
   mounted() {
+    this.search.productOneBelongCode = this.$route.query.classCode1
+    // this.search.productTwoBelongCode = this.$route.query.classCode2
+
     this.initData()
     this.getHeaderHeight()
   },
