@@ -1,12 +1,7 @@
 <template>
   <div class="plannerShop">
-    <div
-      v-if="urlData.platform === 'mpaas'"
-      style="width: 100%; background: #fff"
-      :style="{ height: urlData.top + 'px' }"
-    ></div>
     <div v-if="titleStatus" class="head">
-      <Header title="规划师店铺" :fixed="true">
+      <Header title="规划师店铺" :custom-safe-top="urlData.platform === 'mpass'?Number(urlData.top):0">
         <template #left>
           <div v-if="urlData.isShare !== '1'">
             <sp-icon
@@ -321,6 +316,7 @@ export default {
     },
   },
   mounted() {
+    console.log(JSON.stringify(this.urlData),'页面参数')
     if (this.isInApp) {
       if (this.userInfo.userId && this.userInfo.token) {
         this.getDetail().finally(() => {
@@ -361,7 +357,7 @@ export default {
     },
     linkGood(item) {
       if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
-        this.urlData.platform !== 'mpaas' &&
+        this.urlData.platform !== 'mpass' &&
           this.$router.push({
             path: '/detail/transactionDetails',
             query: {
@@ -370,7 +366,7 @@ export default {
             },
           })
       } else {
-        this.urlData.platform !== 'mpaas' &&
+        this.urlData.platform !== 'mpass' &&
           this.$router.push({
             path: '/detail',
             query: {
@@ -482,7 +478,7 @@ export default {
       }
     },
     handleCall() {
-      if(this.urlData.platform === 'mpaas'){return}
+      if(this.urlData.platform === 'mpass'){return}
       // 如果当前页面在app中，则调用原生拨打电话的方法
       if (this.isInApp) {
         this.$appFn.dggBindHiddenPhone(
@@ -502,7 +498,7 @@ export default {
     },
     // 跳转团队
     goGroup() {
-      this.urlData.platform !== 'mpaas' &&
+      this.urlData.platform !== 'mpass' &&
         this.$router.push({
           path: '/store/groupStore',
           query: {
@@ -614,7 +610,7 @@ export default {
       }
     },
     handleIM() {
-      if(this.urlData.platform === 'mpaas'){return}
+      if(this.urlData.platform === 'mpass'){return}
       // const isLogin = await this.judgeLoginMixin()
       // if (isLogin) {
       this.uPIM({
@@ -681,7 +677,7 @@ export default {
       }
     },
     goShop() {
-      this.urlData.platform !== 'mpaas' &&
+      this.urlData.platform !== 'mpass' &&
         this.$router.push({
           path: '/store/merchantsStore',
           query: {
@@ -696,7 +692,12 @@ export default {
       callPhone(telNumber.phone)
     },
     onClickLeft() {
-      this.$router.back(-1)
+      if(this.urlData.platform === 'mpass'){
+        window.history.back();
+      }else{
+        this.$router.back(-1)
+      }
+      
     },
     onClickRight() {
       console.log('nav onClickRight')
@@ -784,6 +785,7 @@ export default {
   ::v-deep .sp-skeleton {
     margin: 16px 0 0 0;
     padding: 0;
+    
   }
   .bg-group {
     padding: 60px 40px 24px;
