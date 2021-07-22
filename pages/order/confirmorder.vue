@@ -23,7 +23,7 @@
     <div v-if="!skeletonloading" class="allbox">
       <div class="data-content">
         <div v-for="(item, index) in order.list" :key="index" class="list">
-          <div class="left">
+          <!-- <div class="left">
             <img
               :src="
                 item.salesGoodsOperatings
@@ -36,9 +36,29 @@
               "
               alt=""
             />
-          </div>
+          </div> -->
           <div class="right">
-            <h1 class="tit">{{ item.name }}</h1>
+            <h1 class="tit">
+              {{
+                item.salesGoodsSubVos && item.salesGoodsSubVos.length
+                  ? item.salesGoodsSubVos[0].goodsSubName
+                  : item.name
+              }}
+            </h1>
+            <p v-if="item.salesGoodsSubVos" class="goods-sku">
+              {{
+                item.salesGoodsSubVos.length
+                  ? item.salesGoodsSubVos[0].goodsSubDetailsName
+                  : ''
+              }}
+            </p>
+            <p v-if="item.saleGoodsSubs" class="goods-sku">
+              {{
+                item.saleGoodsSubs.length
+                  ? item.saleGoodsSubs[0].goodsSubDetailsName
+                  : ''
+              }}
+            </p>
             <!-- <p class="tag">{{ item.classCodeName }}</p> -->
             <p class="price">
               <span
@@ -49,13 +69,14 @@
                 $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
               }}</i>
             </p>
+            <!--
             <div v-if="$route.query.type === 'shopcar'" class="list">
               <div
                 v-for="(listitem, listindex) in item.saleGoodsSubs"
                 :key="listindex"
               >
-                <p class="name">{{ listitem.goodsSubName }}</p>
-                <p class="data">{{ listitem.goodsSubDetailsName }}</p>
+                <p class="name">{{ listitem.goodsSubName || '-' }}</p>
+                <p class="data">{{ listitem.goodsSubDetailsName || '-' }}</p>
                 <p class="price">
                   {{ `x1` }}
                 </p>
@@ -92,11 +113,12 @@
                 </p>
                 <p class="data">{{ listitem.goodsSubName }}</p>
                 <p class="price">
-                  <!-- {{ listitem.settlementPriceEdit }}  -->
+                  {{ listitem.settlementPriceEdit }}
                   {{ `x1` }}
                 </p>
               </div>
             </div>
+             -->
           </div>
         </div>
         <div class="inpbox">
@@ -140,32 +162,54 @@
         <CellGroup>
           <Cell
             title="商品及服务总数"
-            :value="order.num || order.goodsTotal + '件'"
+            :value="order.num || order.goodsTotal || 0 + '件'"
             value-class="black"
           />
           <Cell
             title="商品金额"
-            :value="order.salesPrice || order.skuTotalPrice + '元'"
+            :value="order.salesPrice || order.skuTotalPrice || 0 + '元'"
             value-class="black"
           />
           <Cell
             title="优惠券"
             :value="
-              coupon
-                ? coupon
-                : datalist.length > 0
-                ? datalist.length + '个优惠券'
+              couponInfo.couponPrice
+                ? couponInfo.couponPrice + '元'
+                : couponInfo.datalist.length > 0
+                ? couponInfo.datalist.length + '个优惠券'
                 : '无可用'
             "
             is-link
-            :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
-            @click="popupfn()"
+            :value-class="
+              couponInfo.couponPrice
+                ? 'red'
+                : couponInfo.datalist.length > 0
+                ? 'black'
+                : ''
+            "
+            @click="openPopupfn()"
           />
+          <!-- <Cell
+            title="活动卡"
+            :value="
+              card.cardPrice
+                ? card.cardPrice
+                : card.datalist.length > 0
+                ? card.datalist.length + '个优惠券'
+                : '无可用'
+            "
+            is-link
+            :value-class="
+              card.cardPrice ? 'red' : card.datalist.length > 0 ? 'black' : ''
+            "
+            @click="openCardFn()"
+          /> -->
         </CellGroup>
         <p class="money">
           合计：
           <span>
-            <b>{{ order.salesPrice || order.skuTotalPrice }}</b> 元
+            <!-- <b>{{ order.salesPrice || order.skuTotalPrice }}</b> 元 -->
+            <b>{{ price }}</b> 元
           </span>
         </p>
       </div>
@@ -210,16 +254,30 @@
     <LoadingCenter v-show="loading" />
     <Popup
       ref="conpon"
-      :show="popupshow"
+      :show="couponInfo.popupshow"
       :height="75"
       title="优惠"
       help="使用说明"
-      :tablist="tablist"
-      calculation="已选中推荐优惠券，可抵扣"
-      :datalist="datalist"
-      :nolist="nolist"
+      :tablist="couponInfo.tablist"
+      :datalist="couponInfo.datalist"
+      :nolist="couponInfo.nolist"
+      @change="conponChange"
       @close="close"
     ></Popup>
+
+    <CardPopup
+      ref="cardPopup"
+      :show="card.show"
+      :height="75"
+      title="活动卡"
+      help="使用说明"
+      :tablist="card.tablist"
+      calculation="已选中活动卡，可抵扣"
+      :datalist="card.datalist"
+      :nolist="card.nolist"
+      @change="cardChange"
+      @close="closeCard"
+    ></CardPopup>
   </div>
 </template>
 
@@ -233,12 +291,14 @@ import {
   Skeleton,
   // CheckboxGroup,
 } from '@chipspc/vant-dgg'
-import Head from '@/components/common/head/header'
-import Popup from '@/components/PlaceOrder/Popup'
-import Contract from '@/components/PlaceOrder/contract'
-import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import Head from '@/components/common/head/header.vue'
+import Popup from '@/components/PlaceOrder/Popup.vue'
+import CardPopup from '@/components/PlaceOrder/CardPopup.vue'
+import Contract from '@/components/PlaceOrder/contract.vue'
+import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { productDetailsApi, auth, shopCart } from '@/api'
-import { coupon, order } from '@/api/index'
+import cardApi from '@/api/card'
+import { coupon, order, actCard } from '@/api/index'
 export default {
   name: 'PlaceOrder',
   components: {
@@ -248,26 +308,46 @@ export default {
     CellGroup,
     Checkbox,
     Popup,
+    CardPopup,
     [Skeleton.name]: Skeleton,
     LoadingCenter,
     Contract,
   },
   data() {
     return {
-      popupshow: false,
-      allboxHeight: '100vh',
       money: '1232',
-      radio: '',
-      coupon: '',
+
+      radio: '', // 选中协议
+
       message: '',
       order: '',
-      num: 0,
-      tablist: [
-        { name: '可用优惠券', num: '12', is: true },
-        { name: '不可用优惠券' },
-      ],
-      datalist: [],
-      nolist: [],
+      // num: 0,
+
+      couponInfo: {
+        popupshow: false,
+
+        selectedItem: {}, // 选择的对象
+        couponPrice: '', // 选择的优惠券对象
+
+        tablist: [
+          { name: '可用优惠券', num: '12', is: true },
+          { name: '不可用优惠券' },
+        ],
+        datalist: [],
+        nolist: [],
+      },
+      card: {
+        show: false,
+        selectedItem: {}, // 选择的对象
+        cardPrice: '', // 选择的card对象立减金额
+        tablist: [
+          { name: '可用活动卡', num: '12', is: true },
+          { name: '不可用活动卡' },
+        ],
+        datalist: [], // 支持的列表
+        nolist: [], // 不支持的列表
+      },
+
       contaract: '',
       productId: this.$route.query.productId,
       formData: {
@@ -294,6 +374,7 @@ export default {
       loading: false,
       skeletonloading: true,
       editShow: false,
+      productList: [],
     }
   },
   mounted() {
@@ -309,12 +390,14 @@ export default {
     onLeftClick() {
       this.$router.back()
     },
+    // 打开《薯片平台用户交易下单协议》
     goagr() {
       this.$router.push({
         name: 'login-protocol',
         query: { categoryCode: 'protocol100008' },
       })
     },
+    // 购物车结算
     getcart() {
       const that = this
       shopCart
@@ -327,6 +410,7 @@ export default {
           this.order = result
           this.order.list = this.order.productVo
           this.price = this.order.skuTotalPrice
+          this.skeletonloading = false
           this.getInitData(5)
           this.getInitData(6)
         })
@@ -342,6 +426,7 @@ export default {
     },
     async asyncData() {
       const that = this
+      this.skeletonloading = false
       try {
         const { code, message, data } = await this.$axios.post(
           productDetailsApi.sellingGoodsDetail,
@@ -373,6 +458,16 @@ export default {
           this.price = this.order.salesPrice
           this.getInitData(5)
           this.getInitData(6)
+
+          this.productList = new Array(1).fill({
+            categoryCode: data.classCodeLevel.split(',')[0],
+            productId: data.id,
+            productPrice: data.salesPrice,
+          })
+
+          // this.getCardList()
+
+          console.log('productList', this.productList)
         } else {
           this.$xToast.show('服务器异常,请然后再试')
           setTimeout(function () {
@@ -407,6 +502,8 @@ export default {
         return Promise.reject(error)
       }
     },
+
+    // 提交订单
     placeOrder() {
       if (!this.radio) {
         Toast({
@@ -445,22 +542,37 @@ export default {
           isFromCart = true
           this.Orderform.cartIds = this.$route.query.cartIdsStr
           cusOrderPayType = this.order.list[0].refConfig.payType
-          // cusOrderPayType = cusOrderPayType.toString()
         } else {
           cusOrderPayType = this.order.refConfig.payType
           isFromCart = false
         }
+
         if (
-          this.$refs.conpon.checkarr &&
-          this.$refs.conpon.checkarr.marketingCouponVO.id
+          this.couponInfo.couponPrice &&
+          this.couponInfo.selectedItem &&
+          this.couponInfo.selectedItem.marketingCouponVO.id
         ) {
           const arr = {
             code: 'ORDER_DISCOUNT_DISCOUNT',
             value: this.$refs.conpon.checkarr.marketingCouponVO.id,
             couponUseCode: this.$refs.conpon.checkarr.couponUseCode,
             no: this.$refs.conpon.checkarr.marketingCouponVO.id,
+            couponName: this.$refs.conpon.checkarr.marketingCouponVO.couponName,
           }
-          this.Orderform.discount.push(arr)
+          this.Orderform.discount = new Array(1).fill(arr)
+        } else if (
+          this.card.cardPrice &&
+          this.card.selectedItem &&
+          this.card.selectedItem.id
+        ) {
+          const arr = {
+            code: 'ORDER_DISCOUNT_DISCOUNT',
+            value: this.card.selectedItem.id,
+            couponUseCode: this.card.selectedItem.couponUseCode,
+            no: this.card.selectedItem.id,
+            couponName: this.card.selectedItem.cardName,
+          }
+          this.Orderform.discount = new Array(1).fill(arr)
         }
         this.Orderform.cusOrderPayType = cusOrderPayType
         this.Orderform.isFromCart = isFromCart
@@ -486,7 +598,7 @@ export default {
               overlay: true,
             })
             setTimeout(() => {
-              this.$router.replace({
+              this.$router.push({
                 path: '/pay/payType',
                 query: {
                   cusOrderId: result.cusOrderId,
@@ -507,9 +619,20 @@ export default {
           })
       }
     },
-    sortData(a, b) {
-      return b.marketingCouponVO.reducePrice - a.marketingCouponVO.reducePrice
+
+    // 对优惠金额进行排序
+    getDisPrice(arr, price) {
+      arr.forEach((element) => {
+        if (element.marketingCouponVO.couponType === 2) {
+          element.marketingCouponVO.reducePrice = (
+            (1 - Number(element.marketingCouponVO.discount) / 1000) *
+            price
+          ).toFixed('2')
+        }
+      })
+      return arr
     },
+    //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
       const arr = this.order.list.map((x) => {
         return x.id
@@ -539,35 +662,62 @@ export default {
             actionId: arr,
             orderPrice: price,
             orderByWhere: 'createTime=desc',
-            limit: 10,
+            limit: 50,
             page: 1,
             commodityList: list,
           }
         )
         .then((result) => {
           if (index === 5) {
-            this.datalist = result.marketingCouponLogList
-            this.datalist = this.datalist.sort(this.sortData)
-            if (this.datalist.length > 0) {
-              this.conpon = this.datalist[0]
-              this.$refs.conpon.radio = 0
-              this.$refs.conpon.checkarr = this.datalist[0]
-              this.$refs.conpon.num =
-                this.$refs.conpon.checkarr.marketingCouponVO.reducePrice
-              this.$refs.conpon.sum()
-            } else {
-              this.skeletonloading = false
-            }
+            this.couponInfo.datalist = result.marketingCouponLogList
+            const sortList1 = this.getDisPrice(
+              result.marketingCouponLogList,
+              this.order.salesPrice || this.order.skuTotalPrice
+            )
+            const sortList = sortList1.sort((a, b) => {
+              return (
+                b.marketingCouponVO.reducePrice -
+                a.marketingCouponVO.reducePrice
+              )
+            })
+            this.couponInfo.datalist = sortList
+            // if (sortList.length > 0) {
+            //   this.datalist = sortList
+            //   this.conpon = this.datalist[0]
+            //   this.$refs.conpon.radio = 0
+            //   this.$refs.conpon.checkarr = this.datalist[0]
+            //   this.$refs.conpon.num =
+            //     this.$refs.conpon.checkarr.marketingCouponVO.reducePrice
+            //   this.$refs.conpon.sum()
+            // } else {
+            // }
           } else {
-            this.nolist = result.marketingCouponLogList
-            this.skeletonloading = false
+            this.couponInfo.nolist = result.marketingCouponLogList
           }
         })
         .catch((e) => {
           if (e.code !== 200) {
             this.$xToast.show(e)
-            this.skeletonloading = false
           }
+        })
+    },
+
+    getCardList() {
+      actCard
+        .goods_card_list({
+          condition: 1, // 查询条件 1 查询可用 2查询不可用
+          productList: this.productList,
+        })
+        .then((res) => {
+          this.card.datalist = res || []
+        })
+      actCard
+        .goods_card_list({
+          condition: 2, // 查询条件 1 查询可用 2查询不可用
+          productList: this.productList,
+        })
+        .then((res) => {
+          this.card.nolist = res || []
         })
     },
     contractback() {
@@ -580,13 +730,32 @@ export default {
     gocontractedit() {
       this.editShow = true
     },
-    popupfn() {
-      this.popupshow = true
+
+    conponChange(price, num, item) {
+      this.price = price
+      this.couponInfo.couponPrice = num
+      this.couponInfo.selectedItem = item || {}
+      this.card.cardPrice = ''
+      this.card.selectedItem = {}
+    },
+    cardChange(price, num, item) {
+      this.price = price
+      this.couponInfo.couponPrice = ''
+      this.couponInfo.selectedItem = {}
+      this.card.cardPrice = num
+      this.card.selectedItem = item || {}
+    },
+    openPopupfn() {
+      this.couponInfo.popupshow = true
+    },
+    openCardFn() {
+      this.card.show = true
     },
     close(data) {
-      this.popupshow = data
-      this.$refs.conpon.checkarr = ''
-      this.$refs.conpon.radio = null
+      this.couponInfo.popupshow = false
+    },
+    closeCard() {
+      this.card.show = false
     },
   },
 }
@@ -600,6 +769,10 @@ export default {
   .sp-skeleton__title {
     background: #fff;
   }
+  ::v-deep .sp-cell__right-icon {
+    color: #cccccc;
+  }
+
   > .allbox {
     padding-bottom: 24px;
     overflow-y: auto;
@@ -622,8 +795,9 @@ export default {
           }
         }
         > .right {
-          margin-left: 32px;
-          width: calc(100% - 192px);
+          // margin-left: 32px;
+          // width: calc(100% - 192px);
+          width: 100%;
           > h1 {
             width: 100%;
             font-size: 32px;
@@ -717,6 +891,7 @@ export default {
       }
       .red {
         color: #ec5330;
+        font-weight: bold;
       }
       > .money {
         padding: 15px 30px;
@@ -796,5 +971,10 @@ export default {
     width: 100vw;
     height: 100vh;
   }
+}
+.goods-sku {
+  color: #666;
+  font-size: 24px;
+  margin-top: 4px;
 }
 </style>

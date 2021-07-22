@@ -173,6 +173,7 @@ export default {
         ? this.$cookies.get('cityHistory')
         : []
     } catch (e) {}
+    
   },
   methods: {
     ...mapActions({

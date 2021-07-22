@@ -1,6 +1,9 @@
 <template>
   <section>
-    <ShareModal />
+    <ShareModal
+      v-show="articleDetails.title"
+      @setPlannerInfo="setPlannerInfo"
+    />
     <HeaderSlot>
       <div class="flex">
         <div class="nav-back">
