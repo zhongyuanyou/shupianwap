@@ -48,7 +48,6 @@
 
 <script>
 import { Progress, Image } from '@chipspc/vant-dgg'
-import { number } from 'echarts'
 export default {
   name: 'ExpertComments',
   components: {
