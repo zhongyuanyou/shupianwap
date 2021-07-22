@@ -641,11 +641,9 @@ export default {
     }
   }
   .bg-group-fixed {
-    position: fixed;
-    top: 48px;
     width: 100%;
     min-height: 238px;
-    padding: 60px 40px 20px;
+    padding: 37px 40px 20px;
     background: #fff;
     background-size: 100% 100%;
     font-family: PingFangSC-Regular;
@@ -734,7 +732,7 @@ export default {
   .body {
     position: relative;
     margin: -24px 0 0 0;
-    padding: 280px 40px 64px;
+    padding: 38px 40px 64px;
     background-color: #fff;
     border-top-right-radius: 24px;
     border-top-left-radius: 24px;
