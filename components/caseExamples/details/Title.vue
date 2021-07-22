@@ -38,7 +38,10 @@
       </div>
     </div>
 
-    <div v-if="priceData.length > 0" class="title_bottom">
+    <div
+      v-if="priceData.length > 0 && info.caseType === 'CASE_TYPE_1'"
+      class="title_bottom"
+    >
       <QuotationScheme :info="priceData || []"></QuotationScheme>
       <!-- <div class="title_bottom_button">报价方案</div> -->
     </div>

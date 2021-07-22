@@ -17,7 +17,7 @@
         >
           <p class="title">{{ item.name }}</p>
           <div class="process_item_line no_margin">
-            <sp-progress :show-pivot="false" :percentage="item.fraction" />
+            <sp-progress :show-pivot="false" :percentage="item.fraction * 10" />
           </div>
           <p class="process_item_score">{{ item.fraction }}</p>
         </div>
@@ -34,7 +34,7 @@
             round
             fit="cover"
             lazy-load
-            src="https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0"
+            :src="getImg()"
           ></sp-image>
         </div>
         <div class="report_user_info_name">专家评语</div>
@@ -65,6 +65,13 @@ export default {
   data() {
     return {
       num: 99,
+      imgs: [
+        '5kh95r57rl00000.jpg',
+        'dw46uviu8kg0000.jpg',
+        '5u7gygwxzsg0000.jpg',
+        'ehczc451lpk0000.jpg',
+        '6e5rze76buc0000.jpg',
+      ],
     }
   },
   computed: {
@@ -92,7 +99,12 @@ export default {
     },
   },
   mounted() {},
-  methods: {},
+  methods: {
+    getImg() {
+      const index = parseInt(Math.random() * this.imgs.length)
+      return this.$ossImgSetV2(this.imgs[index])
+    },
+  },
 }
 </script>
 
@@ -167,7 +179,7 @@ export default {
         margin-top: 27px;
 
         .title {
-          margin-right: 20px;
+          margin-right: 10px;
           min-width: 120px;
         }
         &_line {

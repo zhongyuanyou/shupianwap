@@ -32,13 +32,6 @@
     <!--S 第一板块-->
     <Title :info="caseDetail" />
 
-    <!--S 服务团队-->
-    <!--       v-if="planner.mchUserId || teamMmembers.length > 0" -->
-    <ServiceTeam
-      :planner="planner"
-      :team-mmembers="teamMmembers"
-      :case-member="caseDetailInfo.members"
-    />
     <!--E 服务团队-->
 
     <!-- 案件简介 -->
@@ -49,13 +42,32 @@
     />
 
     <!--S  办理经过-->
-    <HandlingProcess :info="processing"></HandlingProcess>
+
+    <HandlingProcess
+      v-if="processing.length > 0 && caseDetail.caseType === 'CASE_TYPE_1'"
+      :info="processing"
+    ></HandlingProcess>
+    <CaseIntroduction
+      v-if="processing.length > 0 && caseDetail.caseType === 'CASE_TYPE_2'"
+      title="办理经过"
+      :text="processing[0].content || processing[0].name"
+      :images="processing[0].imgs"
+    />
 
     <!-- 办理结果 -->
     <CaseIntroduction
+      v-if="caseDetail.caseType === 'CASE_TYPE_1'"
       title="办理结果"
       :text="caseResult.content"
       :images="caseResult.imgs"
+    />
+
+    <!--S 服务团队-->
+    <ServiceTeam
+      :info="caseDetail"
+      :planner="planner"
+      :team-mmembers="teamMmembers"
+      :case-member="caseDetailInfo.members"
     />
 
     <!-- 专家点评 -->
@@ -65,6 +77,8 @@
     <CommentBox v-if="commentdata.length > 0" :list="commentdata" />
     <!-- tcPlannerBooth -->
     <bottomBar :im-jump-query="imJumpQuery" :planner-info="tcPlannerBooth" />
+
+    <Loading-center v-show="loading" />
   </div>
 </template>
 
@@ -87,10 +101,12 @@ import getUserSign from '@/utils/fingerprint'
 import { productDetailsApi, caseApi, planner, storeApi } from '@/api'
 import contractApi from '@/api/contract'
 
-// import imHandle from '@/mixins/imHandle'
+import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
+
 export default {
   name: 'CaseExamplesdetails',
   components: {
+    LoadingCenter,
     [TopNavBar.name]: TopNavBar,
     [Sticky.name]: Sticky,
     [List.name]: List,
@@ -99,8 +115,6 @@ export default {
     Title,
     CaseIntroduction,
 
-    // ContainProject,
-    // ContainContent,
     ServiceTeam,
     bottomBar,
 
@@ -225,7 +239,7 @@ export default {
             name: item.name,
             time: this.getExperience(item.show, 'BaseDate').value,
             content: this.getExperience(item.show, 'BaseText').value,
-            images: this.getExperience(item.show, 'BaseUpload').imgs || [],
+            imgs: this.getExperience(item.show, 'BaseUpload').imgs || [],
           }
 
           newExperience.push(newExperienceItem)
@@ -360,11 +374,13 @@ export default {
       })
     },
     getDetails() {
+      this.loading = true
       caseApi
         .case_detail({
           id: this.$route.query.id,
         })
         .then((res) => {
+          this.loading = false
           if (!res) {
             return this.$xToast.error('未获取到数据')
           }

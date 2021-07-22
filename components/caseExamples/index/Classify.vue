@@ -1,29 +1,31 @@
 <template>
   <!-- 分类 -->
-  <sp-dropdown-menu>
-    <sp-dropdown-item
-      v-model="tab1.value"
-      :title="tab1.title"
-      :options="tab1.options"
-      @change="change($event)"
-    />
+  <div class="classify">
+    <sp-dropdown-menu active-color="#4974F5">
+      <sp-dropdown-item
+        v-model="tab1.value"
+        :title="tab1.title"
+        :options="tab1.options"
+        @change="change($event)"
+      />
 
-    <!--v-model="tab2.value" :options="tab2.options" -->
-    <sp-dropdown-item ref="tab2" :title="tab2.title">
-      <TreeSelect
-        :list="tab2.options"
-        :level="3"
-        @select="ServerSelect"
-      ></TreeSelect>
-    </sp-dropdown-item>
-    <sp-dropdown-item ref="tab3" :title="tab3.title">
-      <TreeSelect
-        :list="tab3.options"
-        :level="3"
-        @select="AreaSelect"
-      ></TreeSelect>
-    </sp-dropdown-item>
-  </sp-dropdown-menu>
+      <!--v-model="tab2.value" :options="tab2.options" -->
+      <sp-dropdown-item ref="tab2" :title="tab2.title">
+        <TreeSelect
+          :list="tab2.options"
+          :level="3"
+          @select="ServerSelect"
+        ></TreeSelect>
+      </sp-dropdown-item>
+      <sp-dropdown-item ref="tab3" :title="tab3.title">
+        <TreeSelect
+          :list="tab3.options"
+          :level="3"
+          @select="AreaSelect"
+        ></TreeSelect>
+      </sp-dropdown-item>
+    </sp-dropdown-menu>
+  </div>
 </template>
 
 <script>
@@ -278,7 +280,7 @@ export default {
       this.tab2.title = '分类'
       const arr = [item1, item2, item3]
       arr.map((item) => {
-        if (item?.code) {
+        if (item?.code && item?.code !== -1) {
           this.tab2.title = item.name || '分类'
         }
       })
@@ -307,56 +309,68 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.custom {
-  // padding: 56px 40px 56px;
-  padding: 56px 40px 32px;
-  overflow: hidden;
-  font-size: 0px;
-  line-height: 0px;
-  border-top: 1px solid #f5f5f5;
+.classify {
+  .custom {
+    // padding: 56px 40px 56px;
+    padding: 56px 40px 32px;
+    overflow: hidden;
+    font-size: 0px;
+    line-height: 0px;
+    border-top: 1px solid #f5f5f5;
 
-  .custom-container {
-    margin: 0 -12px;
-    & > div {
-      display: inline-block;
-      min-width: 140px;
-      // min-width: 20%;
-      text-align: center;
-      background: #f8f8f8;
-      border-radius: 4px;
-      word-break: normal;
-      white-space: nowrap;
+    .custom-container {
+      margin: 0 -12px;
+      & > div {
+        display: inline-block;
+        min-width: 140px;
+        // min-width: 20%;
+        text-align: center;
+        background: #f8f8f8;
+        border-radius: 4px;
+        word-break: normal;
+        white-space: nowrap;
 
-      padding: 20px 12px;
-      margin: 0 12px 24px;
-      font-family: PingFangSC-Regular;
-      font-size: 24px;
-      line-height: 24px;
-      color: #222222;
-    }
-    .active {
-      background: #f2f5ff;
-      color: #4974f5;
+        padding: 20px 12px;
+        margin: 0 12px 24px;
+        font-family: PingFangSC-Regular;
+        font-size: 24px;
+        line-height: 24px;
+        color: #222222;
+      }
+      .active {
+        background: #f2f5ff;
+        color: #4974f5;
+      }
     }
   }
-}
-::v-deep .sp-overlay {
-  background-color: rgba(0, 0, 0, 0.4);
-}
-::v-deep .sp-cell::after {
-  border: 0;
-}
-::v-deep .sp-dropdown-menu__bar {
-  box-shadow: none;
-}
-::v-deep .sp-dropdown-menu__title {
-  font-family: PingFangSC-Regular;
-  font-size: 28px;
-  color: #222222;
-  letter-spacing: 0;
-  text-align: center;
-}
-::v-deep .sp-dropdown-menu__title::after {
-  right: -12px;
+  ::v-deep .sp-overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  ::v-deep .sp-cell::after {
+    border: 0;
+  }
+  ::v-deep .sp-dropdown-menu__bar {
+    box-shadow: none;
+  }
+  ::v-deep .sp-dropdown-menu__title {
+    font-family: PingFangSC-Regular;
+    font-size: 28px;
+    color: #222222;
+    letter-spacing: 0;
+    text-align: center;
+  }
+  ::v-deep .sp-dropdown-menu__title::after {
+    right: -12px;
+  }
+  ::v-deep .sp-dropdown-item__option {
+    font-family: PingFangSC-Regular;
+    font-size: 28px;
+
+    letter-spacing: 0;
+    color: #222222;
+  }
+  ::v-deep .sp-dropdown-item__option--active {
+    font-weight: bold;
+  }
 }
 </style>
