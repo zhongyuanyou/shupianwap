@@ -28,7 +28,7 @@
             <i class="icon"></i>
           </p>
         </div>
-        <div v-if="disPrice" class="calculation">
+        <div class="calculation">
           {{ disPrice ? '已选中优惠券，可抵扣' : '请选择优惠券' }}
           <span v-if="disPrice" class="red">{{ disPrice }}元</span>
         </div>
@@ -325,8 +325,9 @@ export default {
           Number(originPrice) -
           this.selectedCoupon.marketingCouponVO.reducePrice
       }
-      this.disPrice =
-        (Number(originPrice) * 10000 - Number(price) * 10000) / 10000
+      this.disPrice = Math.ceil(
+        (Number(originPrice) * 1000000 - Number(price) * 1000000) / 1000000
+      )
       this.$emit('change', price, -this.disPrice, this.checkarr)
 
       // order
