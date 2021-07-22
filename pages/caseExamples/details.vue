@@ -1,5 +1,9 @@
 <template>
-  <div class="template">
+  <!-- caseType
+  服务产品类型 CASE_TYPE_1
+  交易产品类型 CASE_TYPE_2
+ -->
+  <div class="case_examples_details">
     <!--S 导航栏-->
     <sp-sticky
       z-index="5"
@@ -28,13 +32,6 @@
     <!--S 第一板块-->
     <Title :info="caseDetail" />
 
-    <!--S 服务团队-->
-    <!--       v-if="planner.mchUserId || teamMmembers.length > 0" -->
-    <ServiceTeam
-      :planner="planner"
-      :team-mmembers="teamMmembers"
-      :case-member="caseDetailInfo.members"
-    />
     <!--E 服务团队-->
 
     <!-- 案件简介 -->
@@ -45,13 +42,32 @@
     />
 
     <!--S  办理经过-->
-    <HandlingProcess :info="processing"></HandlingProcess>
+
+    <HandlingProcess
+      v-if="processing.length > 0 && caseDetail.caseType === 'CASE_TYPE_1'"
+      :info="processing"
+    ></HandlingProcess>
+    <CaseIntroduction
+      v-if="processing.length > 0 && caseDetail.caseType === 'CASE_TYPE_2'"
+      title="办理经过"
+      :text="processing[0].content || processing[0].name"
+      :images="processing[0].imgs"
+    />
 
     <!-- 办理结果 -->
     <CaseIntroduction
+      v-if="caseDetail.caseType === 'CASE_TYPE_1'"
       title="办理结果"
       :text="caseResult.content"
       :images="caseResult.imgs"
+    />
+
+    <!--S 服务团队-->
+    <ServiceTeam
+      :info="caseDetail"
+      :planner="planner"
+      :team-mmembers="teamMmembers"
+      :case-member="caseDetailInfo.members"
     />
 
     <!-- 专家点评 -->
@@ -61,6 +77,8 @@
     <CommentBox v-if="commentdata.length > 0" :list="commentdata" />
     <!-- tcPlannerBooth -->
     <bottomBar :im-jump-query="imJumpQuery" :planner-info="tcPlannerBooth" />
+
+    <Loading-center v-show="loading" />
   </div>
 </template>
 
@@ -77,15 +95,18 @@ import HandlingProcess from '@/components/caseExamples/details/HandlingProcess.v
 import ServiceTeam from '@/components/caseExamples/details/ServiceTeam.vue'
 import ExpertComments from '@/components/caseExamples/details/ExpertComments.vue'
 
-import bottomBar from '@/components/detail/bottomBar/index.vue'
+import bottomBar from '@/components/caseExamples/details/BottomBar.vue'
 
 import getUserSign from '@/utils/fingerprint'
 import { productDetailsApi, caseApi, planner, storeApi } from '@/api'
+import contractApi from '@/api/contract'
 
-import imHandle from '@/mixins/imHandle'
+import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
+
 export default {
   name: 'CaseExamplesdetails',
   components: {
+    LoadingCenter,
     [TopNavBar.name]: TopNavBar,
     [Sticky.name]: Sticky,
     [List.name]: List,
@@ -94,8 +115,6 @@ export default {
     Title,
     CaseIntroduction,
 
-    // ContainProject,
-    // ContainContent,
     ServiceTeam,
     bottomBar,
 
@@ -104,7 +123,7 @@ export default {
 
     ExpertComments,
   },
-  mixins: [imHandle],
+  // mixins: [imHandle],
   props: {
     imJumpQuery: {
       type: Object,
@@ -220,7 +239,7 @@ export default {
             name: item.name,
             time: this.getExperience(item.show, 'BaseDate').value,
             content: this.getExperience(item.show, 'BaseText').value,
-            images: this.getExperience(item.show, 'BaseUpload').imgs || [],
+            imgs: this.getExperience(item.show, 'BaseUpload').imgs || [],
           }
 
           newExperience.push(newExperienceItem)
@@ -268,10 +287,41 @@ export default {
   created() {},
   mounted() {
     this.getDetails()
-
-    // this.getRecommendPlanner()
+    this.getRecPlanner()
   },
   methods: {
+    async handleTel(phoneFull) {
+      if (!phoneFull) {
+        return this.$xToast.error('未获取到电话')
+      }
+      const phone = await this.decryptionPhone(phoneFull)
+      console.log(phone)
+      if (phone) {
+        window.location.href = `tel://${phone}`
+      }
+    },
+    // 解密电话
+    decryptionPhone(phone) {
+      return new Promise((resolve, reject) => {
+        if (!phone) {
+          console.log('没有电话')
+          return resolve('')
+        }
+        contractApi
+          .decryptionPhone({ axios: this.axios }, { phoneList: [phone] })
+          .then((res) => {
+            console.log(res)
+            if (res && res.length > 0) {
+              return resolve(res[0])
+            }
+            resolve('')
+          })
+          .catch(() => {
+            resolve('')
+          })
+      })
+    },
+
     handelPlannerData(key) {
       if (this.caseDetailInfo.members) {
         const info = this.caseDetailInfo.members.find((item) => {
@@ -324,11 +374,16 @@ export default {
       })
     },
     getDetails() {
+      this.loading = true
       caseApi
         .case_detail({
           id: this.$route.query.id,
         })
         .then((res) => {
+          this.loading = false
+          if (!res) {
+            return this.$xToast.error('未获取到数据')
+          }
           if (res && res.detailInfo) {
             this.handelData(res.detailInfo, this.keys)
           }
@@ -368,33 +423,67 @@ export default {
         return Promise.reject(error)
       }
     },
+
+    // 获取钻展规划师
+    async getRecPlanner() {
+      // 获取用户唯一标识
+      const deviceId = await getUserSign()
+      const plannerRes = await this.$axios.get(productDetailsApi.recPlanner, {
+        params: {
+          limit: 1,
+          page: 1,
+          area: this.$store.state.city.currentCity.code || '510100',
+          deviceId, // 设备ID
+          level_2_ID: this.sellingDetail.classCodeLevel
+            ? this.sellingDetail.classCodeLevel.split(',')[1]
+            : null, // 二级产品分类
+          login_name: null, // 规划师ID(选填)
+          productType: 'PRO_CLASS_TYPE_SERVICE', // 产品类型
+          sceneId: 'app-cpxqye-02', // 场景ID
+          user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
+          platform: 'm', // 平台（app,m,pc）
+          productId: this.sellingDetail.id, // 产品id
+          firstTypeCode: this.sellingDetail.classCodeLevel
+            ? this.sellingDetail.classCodeLevel.split(',')[0]
+            : null,
+        },
+      })
+      if (plannerRes.code === 200) {
+        this.tcPlannerBooth = plannerRes.data.records[0]
+        console.log('tcPlannerBooth', this.tcPlannerBooth)
+      }
+    },
   },
 }
 </script>
 
 <style lang="less" scoped>
-.scroTopStyle {
-  ::v-deep.sp-sticky {
-    border: 1px solid #f4f4f4;
-    .sp-top-nav-bar {
-      background-color: #fff !important;
-      .spiconfont {
-        color: #1a1a1a !important;
-      }
-      // #icon-red {
-      //   color: #4974f5 !important;
-      // }
-      .icon-red {
-        color: #ec5330 !important;
+.case_examples_details {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+  .scroTopStyle {
+    ::v-deep.sp-sticky {
+      border: 1px solid #f4f4f4;
+      .sp-top-nav-bar {
+        background-color: #fff !important;
+        .spiconfont {
+          color: #1a1a1a !important;
+        }
+        // #icon-red {
+        //   color: #4974f5 !important;
+        // }
+        .icon-red {
+          color: #ec5330 !important;
+        }
       }
     }
   }
-}
-::v-deep .sp-hairline--bottom::after {
-  border-bottom: none;
-}
-::v-deep .sp-top-nav-bar__left,
-::v-deep .sp-top-nav-bar__right {
-  font-weight: initial;
+  ::v-deep .sp-hairline--bottom::after {
+    border-bottom: none;
+  }
+  ::v-deep .sp-top-nav-bar__left,
+  ::v-deep .sp-top-nav-bar__right {
+    font-weight: initial;
+  }
 }
 </style>

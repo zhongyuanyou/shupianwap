@@ -1,24 +1,33 @@
 <template>
   <div class="plannerShop">
+    <div
+      v-if="urlData.platform === 'mpass'"
+      style="width: 100%; background: #fff"
+      :style="{ height: urlData.top + 'px' }"
+    ></div>
     <div v-if="titleStatus" class="head">
       <Header title="规划师店铺" :fixed="true">
         <template #left>
-          <sp-icon
-            class-prefix="spiconfont"
-            name="nav_ic_back"
-            size="0.4rem"
-            color="#1A1A1A"
-            style="margin-left: 0.32rem"
-            @click.native="onClickLeft"
-          />
-          <!-- <sp-icon
-            class-prefix="spiconfont"
-            name="guanbi"
-            size="0.4rem"
-            color="#1A1A1A"
-            style="margin-left: 0.36rem"
-            @click.native="onClickLeft"
-          /> -->
+          <div v-if="urlData.isShare !== '1'">
+            <sp-icon
+              class-prefix="spiconfont"
+              name="nav_ic_back"
+              size="0.4rem"
+              color="#1A1A1A"
+              style="margin-left: 0.32rem"
+              @click.native="onClickLeft"
+            />
+          </div>
+          <div v-if="urlData.isShare === '1'">
+            <sp-icon
+              class-prefix="spiconfont"
+              name="xiaochengxuzhuye"
+              size="0.4rem"
+              color="#1A1A1A"
+              style="margin-left: 0.36rem"
+              @click.native="gohome"
+            />
+          </div>
         </template>
         <template v-if="isInApp" #right>
           <sp-icon
@@ -33,7 +42,7 @@
         </template>
       </Header>
     </div>
-    
+
     <div class="bg-group">
       <sp-skeleton
         title
@@ -67,7 +76,7 @@
             >{{ item }}</span
           >
         </div>
-        </sp-skeleton>
+      </sp-skeleton>
       <div
         v-if="detailData.mchStoreId"
         class="bg-group__footer"
@@ -87,7 +96,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="body">
       <div class="sp-score">
         <p class="sp-score__title">
@@ -110,11 +119,7 @@
           <span @click="goScoreDetail">查看详情</span>
         </p>
       </div>
-      <sp-skeleton
-        title
-        :row="formatShowPoint ? 10 : 7"
-        :loading="loading"
-      >
+      <sp-skeleton title :row="formatShowPoint ? 10 : 7" :loading="loading">
         <div
           v-if="
             detailData.modules.length > 0 &&
@@ -124,56 +129,54 @@
           :class="titleStatus ? '' : 'tabs'"
         >
           <p class="title">为您推荐</p>
-          
-            <sp-tabs
-              v-model="active"
-              sticky
-              @scroll="stickyScroll"
-              @click="tabsClick"
-            >
-              <sp-tab
+          <div class="tabs">
+            <ul>
+              <li
                 v-for="(item, index) in detailData.modules.filter(
                   (item) => item.code === 'GOODS_RECOMMEND'
                 )[0].data"
                 :key="index"
-                :title="item.name"
-                :name="item.id"
+                :class="active === item.id ? 'tab_active' : ''"
+                @click="tabsActive(item.id)"
               >
-                <ul class="list-data">
-                  <li
-                    v-for="(data, dataIndex) in detailData.goods"
-                    :key="dataIndex"
+                <span>{{ item.name }}</span>
+                <span v-if="active === item.id" class="tabs_line"></span>
+              </li>
+            </ul>
+          </div>
+          <ul class="list-data">
+            <li
+              v-for="(data, dataIndex) in detailData.goods"
+              :key="dataIndex"
+              @click="linkGood(data)"
+            >
+              <img :src="data.img" alt="" />
+              <div>
+                <p class="recommendedtitle">
+                  <span>{{ data.name }}</span>
+                </p>
+                <p class="label">
+                  <span
+                    v-for="(ta, taindex) in data.tags"
+                    v-show="taindex > 2"
+                    :key="taindex"
+                    >{{ ta }}</span
                   >
-                    <img :src="data.img" alt="" />
-                    <div>
-                      <p class="title">
-                        <span>{{ data.name }}</span>
-                      </p>
-                      <p class="label">
-                        <span
-                          v-for="(ta, taindex) in data.tags"
-                          v-show="taindex > 2"
-                          :key="taindex"
-                          >{{ ta }}</span
-                        >
-                      </p>
-                      <p class="type">
-                        <span
-                          v-for="(de, deindex) in data.desc.split('|')"
-                          :key="deindex"
-                          >{{ de }}</span
-                        >
-                      </p>
-                      <p class="moneysee">
-                        <span>{{ data.price }}</span>
-                        <span>元</span>
-                      </p>
-                    </div>
-                  </li>
-                </ul>
-              </sp-tab>
-            </sp-tabs>
-          
+                </p>
+                <p class="type">
+                  <span
+                    v-for="(de, deindex) in data.desc.split('|')"
+                    :key="deindex"
+                    >{{ de }}</span
+                  >
+                </p>
+                <p class="moneysee">
+                  <span>{{ data.price }}</span>
+                  <span>元</span>
+                </p>
+              </div>
+            </li>
+          </ul>
         </div>
       </sp-skeleton>
     </div>
@@ -189,7 +192,7 @@
           type="primary"
           text="电话联系"
           :disabled="!IMDetailData.id"
-          @click="handleCall"
+          @click="urlData.platform !== 'mpass' && handleCall"
         />
         <sp-bottombar-button
           v-md:p_IMClick
@@ -201,7 +204,7 @@
           type="info"
           text="在线联系"
           :disabled="!IMDetailData.id"
-          @click="handleIM"
+          @click="urlData.platform !== 'mpass' && handleIM"
         />
       </sp-bottombar>
     </div>
@@ -221,10 +224,8 @@ import {
   BottombarButton,
   ShareSheet,
   Icon,
-  Tabs,
   Toast,
-  Tab,
-  Skeleton
+  Skeleton,
 } from '@chipspc/vant-dgg'
 import { planner } from '@/api'
 import { storeApi } from '@/api/store'
@@ -242,14 +243,13 @@ export default {
     [Skeleton.name]: Skeleton,
     Header,
     SpToast,
-    SpTabs: Tabs,
-    SpTab: Tab,
   },
   mixins: [imHandle],
   data() {
     return {
-      loading:true,
+      loading: true,
       hideIM: this.$route.query.imUserId === this.$route.query.mchUserId,
+      urlData: this.$route.query,
       titleStatus: true, // 粘性布局触发时去掉头部
       active: '', // tab状态
       detailData: {
@@ -356,6 +356,29 @@ export default {
         path: '/store/spScoreDetail',
       })
     },
+    gohome() {
+      this.$router.push('/')
+    },
+    linkGood(item) {
+      if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
+        this.urlData.platform !== 'mpass' &&
+          this.$router.push({
+            path: '/detail/transactionDetails',
+            query: {
+              type: item.typeCode,
+              productId: item.id,
+            },
+          })
+      } else {
+        this.urlData.platform !== 'mpass' &&
+          this.$router.push({
+            path: '/detail',
+            query: {
+              productId: item.id,
+            },
+          })
+      }
+    },
     handlePoint() {
       this.$refs.spToast.show({
         message: '薯片分是对规划师的综合衡量，薯片分越高综合表现越好',
@@ -393,7 +416,11 @@ export default {
         if (code !== 200) {
           throw new Error(message)
         }
-        this.active = (data.modules.length > 0 && data.modules[0].id) || ''
+        this.active =
+          (data.modules.length > 0 &&
+            data.modules[0].data.length > 0 &&
+            data.modules[0].data[0].id) ||
+          ''
         this.detailData = data || {}
         // 推荐商品
         this.detailData.goods = this.detailData.goods.filter(
@@ -404,7 +431,7 @@ export default {
         // IM数据
         const IMData = await planner.detail(IMParams)
         this.IMDetailData = IMData || {}
-        
+
         return data
       } catch (error) {
         console.error('getDetail:', error)
@@ -474,12 +501,17 @@ export default {
     },
     // 跳转团队
     goGroup() {
-      this.$router.push({
-        path: '/store/groupStore',
-        query: {
-          storeId: this.detailData.teamStoreId,
-        },
-      })
+      this.urlData.platform !== 'mpass' &&
+        this.$router.push({
+          path: '/store/groupStore',
+          query: {
+            storeId: this.detailData.teamStoreId,
+          },
+        })
+    },
+    tabsActive(item) {
+      this.active = item
+      this.getList()
     },
     // app获取用户信息
     getUserInfo() {
@@ -646,40 +678,15 @@ export default {
         })
       }
     },
-    // async goShop(){
-    //     try {
-    //         const isLogin = await this.judgeLoginMixin()
-    //         if (isLogin) {
-    //             this.$router.push({
-    //                 path:"/store/merchantsStore",
-    //                 query:{
-    //                   storeId:this.detailData.mchStoreId,
-    //                   isShare:"0"
-    //                 }
-    //             })
-    //         } else {
-    //             Toast({
-    //                 message: '请先登录账号',
-    //                 iconPrefix: 'sp-iconfont',
-    //                 icon: 'popup_ic_fail',
-    //             })
-    //         }
-    //     } catch (err) {
-    //         Toast({
-    //             message: '未获取到划师联系方式',
-    //             iconPrefix: 'sp-iconfont',
-    //             icon: 'popup_ic_fail',
-    //         })
-    //     }
-    // },
     goShop() {
-      this.$router.push({
-        path: '/store/merchantsStore',
-        query: {
-          storeId: this.detailData.mchStoreId,
-          isShare: '0',
-        },
-      })
+      this.urlData.platform !== 'mpass' &&
+        this.$router.push({
+          path: '/store/merchantsStore',
+          query: {
+            storeId: this.detailData.mchStoreId,
+            isShare: '0',
+          },
+        })
     },
     // 拨打电话号码
     uPCall(telNumber) {
@@ -754,9 +761,6 @@ export default {
         this.titleStatus = true
       }
     },
-    tabsClick(title, name) {
-      this.getList()
-    },
   },
   head() {
     return {
@@ -775,9 +779,9 @@ export default {
 .plannerShop {
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
-  ::v-deep .sp-skeleton{
-    margin:16px 0 0 0;
-    padding:0;
+  ::v-deep .sp-skeleton {
+    margin: 16px 0 0 0;
+    padding: 0;
   }
   .bg-group {
     padding: 60px 40px 24px;
@@ -788,9 +792,9 @@ export default {
     color: #ffffff;
     letter-spacing: 0;
     line-height: 28px;
-    ::v-deep .sp-skeleton{
-      margin:0 0 16px 0;
-      padding:0;
+    ::v-deep .sp-skeleton {
+      margin: 0 0 16px 0;
+      padding: 0;
     }
     &__head {
       display: flex;
@@ -938,9 +942,9 @@ export default {
     border-top-right-radius: 24px;
     border-top-left-radius: 24px;
     z-index: 1;
-    ::v-deep .sp-skeleton{
-      margin:56px 0 0 0;
-      padding:0;
+    ::v-deep .sp-skeleton {
+      margin: 56px 0 0 0;
+      padding: 0;
     }
     .sp-score {
       width: 100%;
@@ -999,35 +1003,68 @@ export default {
         }
       }
     }
-    .tabs {
-      ::v-deep .sp-tabs__wrap {
-        margin: 0 !important;
-        width: 80vw;
-      }
-    }
     .recommended {
-      padding: 56px 0;
+      padding: 0 0 75px;
       .title {
+        margin: 56px 0 8px;
         font-family: PingFangSC-Medium;
         font-size: 40px;
         color: #222222;
       }
+      .tabs {
+        margin: 8px 0 12px 0;
+        font-family: PingFangSC-Regular;
+        font-size: 30px;
+        color: #999999;
+        line-height: 30px;
+        ul {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          height: 80px;
+          line-height: 80px;
+          li {
+            position: relative;
+            margin: 0 56px 0 0;
+            .tabs_line {
+              position: absolute;
+              bottom: 8px;
+              left: 0;
+              right: 0;
+              margin: 0 auto;
+              display: block;
+              width: 28px;
+              height: 6px;
+              background: #4974f5;
+              border-radius: 3px;
+            }
+          }
+          .tab_active {
+            font-weight: bold;
+            font-family: PingFangSC-Medium;
+            font-size: 32px;
+            color: #222222;
+          }
+        }
+      }
       .list-data {
+        margin: 12px 0 0 0;
         li {
           display: flex;
           justify-content: flex-start;
           align-items: flex-start;
-          padding: 32px 0;
+          padding: 22px 0 28px;
           img {
             width: 160px;
             height: 160px;
             margin: 0 36px 0 0;
-            border-radius: 5px;
+            border-radius: 15px;
           }
           div {
-            .title {
+            .recommendedtitle {
               font-family: PingFangSC-Medium;
               font-size: 32px;
+              font-weight: bold;
               color: #222222;
               line-height: 42px;
             }
@@ -1071,12 +1108,15 @@ export default {
                 &:first-of-type {
                   font-family: PingFangSC-Medium;
                   font-size: 36px;
+                  font-weight: bold;
                   color: #ec5330;
                   line-height: 36px;
                 }
                 &:last-of-type {
+                  margin: 0 0 0 -10px;
                   font-family: PingFangSC-Regular;
                   font-size: 22px;
+                  font-weight: bold;
                   color: #ec5330;
                   letter-spacing: 0;
                   line-height: 22px;
@@ -1086,9 +1126,9 @@ export default {
           }
         }
       }
-      ::v-deep .sp-skeleton{
-        margin:16px 0 0 0;
-        padding:0;
+      ::v-deep .sp-skeleton {
+        margin: 16px 0 0 0;
+        padding: 0;
       }
       ::v-deep .sp-sticky {
         background: #fff;
@@ -1123,6 +1163,8 @@ export default {
     }
     ::v-deep .sp-bottombar {
       z-index: 100;
+      padding-bottom: constant(safe-area-inset-bottom);
+      padding-bottom: env(safe-area-inset-bottom);
     }
     ::v-deep .sp-button--info {
       background-color: #24ae68;
