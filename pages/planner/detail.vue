@@ -469,7 +469,6 @@ export default {
     }
   },
   async mounted() {
-    console.log(navigator)
     if (!this.city.code) {
       await this.POSITION_CITY({ type: 'init' })
     }
@@ -849,10 +848,8 @@ export default {
       
       if (this.isInApp) {
         const iOSRouterPath = {
-          path: '/live/PlayBackActivity',
-          parameter: {
-            id:this.newDetailData.live.roomId
-          },
+          roomId:this.newDetailData.live.roomId,
+          liveRoleType:"3"
         }
         const androidRouterPath = {
           path: '/live/PlayBackActivity',
@@ -886,10 +883,7 @@ export default {
         if(isIOS){
           // ios方法
           this.$appFn.dggLiveOnline(
-            {
-              iOSRouter: iOSRouterPath,
-              androidRouter: androidRouterPath,
-            },
+            iOSRouterPath,
             (res) => {
               const { code } = res || {}
               if (code !== 200) {

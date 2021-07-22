@@ -133,7 +133,7 @@ const appHandler = {
   },
   // IOS跳转直播视频页面
   dggLiveOnline: (
-    data = { iOSRouter: '', androidRouter: '', miniRouter: '' },
+    data = { roomId: '', liveRoleType: ''},
     fn = () => { }
   ) => {
     if (miniProgram && data.miniRouter) {

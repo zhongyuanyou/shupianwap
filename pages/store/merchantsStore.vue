@@ -62,7 +62,7 @@
       </sp-skeleton>
     </div>
 
-    <div class="bg-group-fixed" :style="floatview ? 'opacity:1' : 'opacity:0'">
+    <div class="bg-group-fixed" :style="floatview ? {opacity:'1',top:this.isInApp?(48+this.appInfo.statusBarHeight)/100+'rem':'0.48rem'} : {opacity:'0',top:this.isInApp?(48+this.appInfo.statusBarHeight)/100+'rem':'0.48rem'}">
       <div class="footer">
         <img :src="detailData.mchBaseInfo.logo" alt="" />
         <div class="footertext">
@@ -604,8 +604,8 @@ export default {
         console.log('sharedUrl:', sharedUrl)
         this.$appFn.dggShare(
           {
-            image: this.detailData.img,
-            title: '规划师',
+            image: this.detailData.mchBaseInfo.logo,
+            title: '商户店铺',
             subTitle: '',
             url: sharedUrl,
           },

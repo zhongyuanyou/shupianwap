@@ -67,7 +67,9 @@
         <div class="bg-group__label">
           <span
             v-for="(item, index) in detailData.personal.categories"
+            v-show="index<3"
             :key="index"
+            
             >{{ item }}</span
           >
         </div>
