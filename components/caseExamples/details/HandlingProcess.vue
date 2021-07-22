@@ -19,10 +19,10 @@
             <TwoLine fontsize="0.26rem" :text="item.content"></TwoLine>
           </div>
 
-          <div v-if="item.images && item.images.length > 0" class="images">
+          <div v-if="item.imgs && item.imgs.length > 0" class="images">
             <div class="images_container">
               <sp-image
-                v-for="(image, imageIndex) in item.images"
+                v-for="(image, imageIndex) in item.imgs"
                 :key="imageIndex"
                 class="image"
                 :src="image"
@@ -169,6 +169,7 @@ export default {
     > .item:last-child {
       border: none;
       margin-left: 16px;
+      padding: 0 0 0px 40px;
     }
   }
 }

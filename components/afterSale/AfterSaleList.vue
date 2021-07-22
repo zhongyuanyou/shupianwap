@@ -168,7 +168,7 @@
 
         <div class="detail-btn">
           <button
-            v-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_4'"
+            v-if="item.afterSaleStatusNo === 'AFTERSALE_STATUS_4' && item.refundSheetId"
             @click="
               $router.push(
                 `/my/afterSale/refundDetails?id=${item.refundSheetId}`

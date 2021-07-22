@@ -491,8 +491,9 @@ export default {
     // 判断展示合同按钮 false不展示  1签署合同 2查看合同 515 版本 仅用于展示合同按钮判断
     checkContractStatus(orderData) {
       const data = orderData || this.orderData
-      // 当客户订单状态为已取消时不展示按钮
-      if (data.cusOrderStatusNo === ORDERSTATUSCODE[4]) return false
+      // 当客户订单状态为已取消时或是融资生成订单时不展示按钮
+      if (data.cusOrderStatusNo === ORDERSTATUSCODE[4] || data.orderApplyInfoId)
+        return false
       if (this.fromPage === 'orderList') {
         // if (
         //   (data.contractStatus &&
@@ -595,6 +596,10 @@ export default {
     // 判断订单售后状态 是否展示售后按钮 展示何种售后按钮 0不售后 1退款售后 可售后 2 售后中 3售后完成 4 部分锁定 5已锁定
     checkAfterSaleStatus(orderData) {
       orderData = orderData || this.orderData || this.orderDetail
+      // 售后延期
+      if (orderData) {
+        return 0
+      }
       // 1.意向单、担保交易订单不展示售后按钮，
       if (
         orderData.orderType === 0 ||

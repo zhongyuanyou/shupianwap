@@ -69,7 +69,6 @@ export default {
       }
     },
     jumpPage() {
-      debugger
       switch (this.billDetails.orderType) {
         case 'BANK_ORDER_TYPE_3':
           this.$router.push(

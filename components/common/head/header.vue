@@ -47,6 +47,7 @@
 import { mapState } from 'vuex'
 
 import safeAreaInsets from 'safe-area-insets'
+import { number } from 'echarts'
 
 export default {
   name: 'Header',
@@ -98,6 +99,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    customSafeTop:{
+      type: Number,
+      default: 0,
+    }
   },
   data() {
     return {
@@ -134,6 +139,7 @@ export default {
     if (process && process.server && !this.isInApp) {
       this.safeTop = 0
       this.useSafeAreaClass = true
+      
     }
   },
   mounted() {
@@ -152,8 +158,13 @@ export default {
     getTopMargin() {
       if (process && process.client) {
         let safeTop = safeAreaInsets.top
+        
         if (this.isInApp) safeTop = this.appInfo.statusBarHeight
         this.safeTop = safeTop
+        if(this.customSafeTop>0){
+          this.safeTop = this.customSafeTop
+          this.useSafeAreaClass = false
+        }
       }
     },
   },

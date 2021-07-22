@@ -3,22 +3,26 @@
     <div class="head">
       <Header title="商户店铺" :fixed="true">
         <template #left>
-          <sp-icon
-            class-prefix="spiconfont"
-            name="nav_ic_back"
-            size="0.4rem"
-            color="#1A1A1A"
-            style="margin-left: 0.32rem"
-            @click.native="onClickLeft"
-          />
-          <!-- <sp-icon
-            class-prefix="spiconfont"
-            name="guanbi"
-            size="0.4rem"
-            color="#1A1A1A"
-            style="margin-left: 0.36rem"
-            @click.native="onClickLeft"
-          /> -->
+          <div v-if="urlData.isShare !== '1'">
+            <sp-icon
+              class-prefix="spiconfont"
+              name="nav_ic_back"
+              size="0.4rem"
+              color="#1A1A1A"
+              style="margin-left: 0.32rem"
+              @click.native="onClickLeft"
+            />
+          </div>
+          <div v-if="urlData.isShare === '1'">
+            <sp-icon
+              class-prefix="spiconfont"
+              name="xiaochengxuzhuye"
+              size="0.4rem"
+              color="#1A1A1A"
+              style="margin-left: 0.36rem"
+              @click.native="gohome"
+            />
+          </div>
         </template>
         <template v-if="isInApp" #right>
           <sp-icon
@@ -33,21 +37,31 @@
         </template>
       </Header>
     </div>
+
     <div id="group" class="bg-group">
-      <div class="footer">
-        <img :src="detailData.mchBaseInfo.logo" alt="" />
-        <div class="footertext">
-          <p>{{ detailData.mchBaseInfo.name }}</p>
-          <p v-show="false">
-            <img
-              src="https://cdn.shupian.cn/sp-pt/wap/images/7mruoa3go2c0000.png"
-              alt=""
-            />
-            <span>2级商户</span>
-          </p>
+      <sp-skeleton
+        title
+        avatar
+        avatar-size="1.2rem"
+        :row="2"
+        :loading="loading"
+      >
+        <div class="footer">
+          <img :src="detailData.mchBaseInfo.logo" alt="" />
+          <div class="footertext">
+            <p>{{ detailData.mchBaseInfo.name }}</p>
+            <p v-show="false">
+              <img
+                src="https://cdn.shupian.cn/sp-pt/wap/images/7mruoa3go2c0000.png"
+                alt=""
+              />
+              <span>2级商户</span>
+            </p>
+          </div>
         </div>
-      </div>
+      </sp-skeleton>
     </div>
+
     <div class="bg-group-fixed" :style="floatview ? 'opacity:1' : 'opacity:0'">
       <div class="footer">
         <img :src="detailData.mchBaseInfo.logo" alt="" />
@@ -86,98 +100,105 @@
         </sp-swipe>
       </div>
       <div class="body-content">
-        <p class="title">商户服务</p>
-        <div class="sp-score">
-          <div class="sp-score__score">
-            <div>
-              <p class="sp-score__title">
-                <span>{{ detailData.mchService.personNum }}</span>
-                <span>人</span>
-              </p>
-              <p>
-                <span>团队人数</span>
-              </p>
+        <sp-skeleton title :row="4" :loading="loading">
+          <p class="title">商户服务</p>
+          <div class="sp-score">
+            <div class="sp-score__score">
+              <div>
+                <p class="sp-score__title">
+                  <span>{{ detailData.mchService.personNum }}</span>
+                  <span>人</span>
+                </p>
+                <p>
+                  <span>团队人数</span>
+                </p>
+              </div>
+              <div>
+                <p class="sp-score__title">
+                  <span>{{ detailData.mchService.customerNum }}</span>
+                  <span>位</span>
+                </p>
+                <p>
+                  <span>服务客户</span>
+                </p>
+              </div>
+              <div>
+                <p class="sp-score__title">
+                  <span>{{ detailData.mchService.maintenanceNum }}</span>
+                  <span>个</span>
+                </p>
+                <p>
+                  <span>维护商品</span>
+                </p>
+              </div>
             </div>
-            <div>
-              <p class="sp-score__title">
-                <span>{{ detailData.mchService.customerNum }}</span>
-                <span>位</span>
-              </p>
-              <p>
-                <span>服务客户</span>
-              </p>
-            </div>
-            <div>
-              <p class="sp-score__title">
-                <span>{{ detailData.mchService.maintenanceNum }}</span>
-                <span>个</span>
-              </p>
-              <p>
-                <span>维护商品</span>
-              </p>
+            <div class="sp-score__satisfaction">
+              <p>客户满意</p>
+              <div class="satisfactiontext">
+                <p>3分钟响应率：{{ detailData.mchService.consultResponse }}</p>
+                <p>电话接通率：{{ detailData.mchService.callThroughRate }}</p>
+              </div>
             </div>
           </div>
-          <div class="sp-score__satisfaction">
-            <p>客户满意</p>
-            <div class="satisfactiontext">
-              <p>3分钟响应率：{{ detailData.mchService.consultResponse }}</p>
-              <p>电话接通率：{{ detailData.mchService.callThroughRate }}</p>
-            </div>
-          </div>
-        </div>
+        </sp-skeleton>
       </div>
+      <sp-skeleton title :row="12" :loading="loading"> </sp-skeleton>
       <div
         v-if="detailData.goodsRecommend.length > 0"
         class="body-content recommended"
       >
         <p class="title">为您推荐</p>
-        <sp-tabs v-model="active" @click="tabsClick">
-          <sp-tab
-            v-for="(item, index) in detailData.goodsRecommend"
-            :key="index"
-            :title="item.name"
-            :name="item.id"
+        <div class="tabs">
+          <ul>
+            <li
+              v-for="(item, index) in detailData.goodsRecommend"
+              :key="index"
+              :class="active === item.id ? 'tab_active' : ''"
+              @click="tabsActive(item.id)"
+            >
+              <span>{{ item.name }}</span>
+              <span v-if="active === item.id" class="tabs_line"></span>
+            </li>
+          </ul>
+        </div>
+        <ul class="list-data">
+          <li
+            v-for="(data, dataIndex) in detailData.goods"
+            :key="dataIndex"
+            @click="linkGood(data)"
           >
-            <ul class="list-data">
-              <li
-                v-for="(data, dataIndex) in detailData.goods"
-                :key="dataIndex"
-                @click="linkGood(data)"
-              >
-                <img :src="data.img" alt="" />
-                <div>
-                  <p class="title" style="margin: 0">
-                    <span>{{ data.name }}</span>
-                  </p>
-                  <p class="label">
-                    <span
-                      v-for="(ta, taindex) in data.tags"
-                      v-show="taindex > 2"
-                      :key="taindex"
-                      >{{ ta }}</span
-                    >
-                  </p>
-                  <p class="type">
-                    <span
-                      v-for="(de, deindex) in data.desc && data.desc.split('|')"
-                      :key="deindex"
-                      >{{ de }}</span
-                    >
-                  </p>
-                  <p class="moneysee">
-                    <span>{{ data.price }}</span>
-                    <span>元</span>
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </sp-tab>
-        </sp-tabs>
+            <img :src="data.img" alt="" />
+            <div>
+              <p class="title" style="margin: 0">
+                <span>{{ data.name }}</span>
+              </p>
+              <p class="label">
+                <span
+                  v-for="(ta, taindex) in data.tags"
+                  v-show="taindex > 2"
+                  :key="taindex"
+                  >{{ ta }}</span
+                >
+              </p>
+              <p class="type">
+                <span
+                  v-for="(de, deindex) in data.desc && data.desc.split('|')"
+                  :key="deindex"
+                  >{{ de }}</span
+                >
+              </p>
+              <p class="moneysee">
+                <span>{{ data.price }}</span>
+                <span>元</span>
+              </p>
+            </div>
+          </li>
+        </ul>
         <button v-if="detailData.goods.length > 0" @click="moreRem">
           更多优惠
         </button>
       </div>
-      <div class="body-content recommendedPlanner">
+      <div v-if="!loading" class="body-content recommendedPlanner">
         <p class="title">推荐规划师</p>
         <div class="planner">
           <ul>
@@ -231,6 +252,7 @@ import {
   Tab,
   Swipe,
   SwipeItem,
+  Skeleton,
 } from '@chipspc/vant-dgg'
 import { planner } from '@/api'
 import { storeApi } from '@/api/store'
@@ -245,6 +267,7 @@ export default {
     [ShareSheet.name]: ShareSheet,
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
+    [Skeleton.name]: Skeleton,
     Header,
     SpToast,
     SpTabs: Tabs,
@@ -252,7 +275,9 @@ export default {
   },
   data() {
     return {
+      loading: true,
       active: '', // tab状态
+      urlData: this.$route.query,
       headActive: 'index',
       detailData: {
         goodsRecommend: [],
@@ -333,7 +358,9 @@ export default {
       // 但是在app中登录等，登录信息cookie中的没有更新，导致直接从store中获取到的信息无效
       // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
       this.isInApp && this.clearUserInfo()
-      this.getDetail()
+      this.getDetail().finally(() => {
+        this.loading = false
+      })
     }
   },
   async mounted() {
@@ -366,7 +393,10 @@ export default {
         this.floatview = false
       }
     },
-
+    tabsActive(item) {
+      this.active = item
+      this.getList()
+    },
     // 获取详情数据
     async getDetail() {
       try {
@@ -393,6 +423,8 @@ export default {
         data.data.goods = data.data.goods.filter(
           (item) => Number(item.state) === 1
         )
+        
+        this.active = data.data.goodsRecommend.length>0 && data.data.goodsRecommend[0].id
         this.detailData = data.data || {}
 
         return data
@@ -595,16 +627,12 @@ export default {
       this.shareOptions = [{ name: '复制链接', icon: 'link' }]
       this.showShare = true
     },
-    tabsClick(title, name) {
-      console.log(this.active)
-      this.getList()
-    },
     headTabsClick() {
       if (this.headActive === 'rememded') {
         this.$router.push({
           path: '/store/hotRecommended',
           query: {
-            active: '',
+            active: this.active,
             storeId: this.detailData.id,
           },
         })
@@ -636,6 +664,9 @@ export default {
         })
       }
     },
+    gohome() {
+      this.$router.push('/')
+    },
     moreRem() {
       this.$router.push({
         path: '/store/hotRecommended',
@@ -663,6 +694,10 @@ export default {
 .merchantsShop {
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
+  ::v-deep .sp-skeleton {
+    margin: 16px 0 0 0;
+    padding: 0;
+  }
   .bg-group {
     padding: 60px 40px 84px;
     background: url('https://cdn.shupian.cn/sp-pt/wap/images/aicz8hyty0c0000.png')
@@ -897,12 +932,6 @@ export default {
         }
       }
     }
-    .tabs {
-      ::v-deep .sp-tabs__wrap {
-        margin: 0 !important;
-        width: 80vw;
-      }
-    }
     .body-content {
       .title {
         margin: 32px 0;
@@ -918,20 +947,57 @@ export default {
         font-size: 40px;
         color: #222222;
       }
+      .tabs {
+        margin: 8px 0 12px 0;
+        font-family: PingFangSC-Regular;
+        font-size: 30px;
+        color: #999999;
+        line-height: 30px;
+        ul {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          height: 80px;
+          line-height: 80px;
+          li {
+            position: relative;
+            margin: 0 56px 0 0;
+            .tabs_line {
+              position: absolute;
+              bottom: 8px;
+              left: 0;
+              right: 0;
+              margin: 0 auto;
+              display: block;
+              width: 28px;
+              height: 6px;
+              background: #4974f5;
+              border-radius: 3px;
+            }
+          }
+          .tab_active {
+            font-weight: bold;
+            font-family: PingFangSC-Medium;
+            font-size: 32px;
+            color: #222222;
+          }
+        }
+      }
       .list-data {
         li {
           display: flex;
           justify-content: flex-start;
           align-items: flex-start;
-          padding: 32px 0;
+          padding: 22px 0 28px;
           img {
             width: 160px;
             height: 160px;
             margin: 0 36px 0 0;
-            border-radius: 5px;
+            border-radius: 15px;
           }
           div {
             .recommendedtitle {
+              font-weight: bold;
               font-family: PingFangSC-Medium;
               font-size: 32px;
               color: #222222;
@@ -977,12 +1043,15 @@ export default {
                 &:first-of-type {
                   font-family: PingFangSC-Medium;
                   font-size: 36px;
+                  font-weight: bold;
                   color: #ec5330;
                   line-height: 36px;
                 }
                 &:last-of-type {
+                  margin: 0 0 0 -10px;
                   font-family: PingFangSC-Regular;
                   font-size: 22px;
+                  font-weight: bold;
                   color: #ec5330;
                   letter-spacing: 0;
                   line-height: 22px;
@@ -1035,6 +1104,7 @@ export default {
         border: 1px solid #dddddd;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
         border-radius: 12px;
+
         ul {
           display: flex;
           align-items: center;

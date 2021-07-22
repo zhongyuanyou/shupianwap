@@ -45,6 +45,9 @@ const infoList = [
   'order-invoice-headEdit',
   'order-invoice-invoiceApply',
   'order-invoice-preview',
+  'NeedCard',
+  'my-coupon',
+  'myDemandCard',
 ]
 // const getInfo = function () {
 //   return new Promise(function (resolve, reject) {
@@ -63,6 +66,7 @@ export default ({ app, store }) => {
     })
   })
   app.router.beforeEach((to, from, next) => {
+    console.log('to.name', to.name)
     if (process.client) {
       const loginRoutePath = '/login' // 登录路由
       const defaultRoutePath = '/' // 首页路由

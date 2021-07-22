@@ -158,8 +158,8 @@ export default {
     float: left;
   }
   .fuhao {
-    padding-left: 15px;
-    padding-right: 90px;
+    padding-left: 20px;
+    padding-right: 85px;
     background: linear-gradient(to right, rgba(255, 255, 255, 0.4), #fff 15px);
   }
   .btn {

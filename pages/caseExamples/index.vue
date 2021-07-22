@@ -29,7 +29,7 @@
       </div>
     </sp-list>
 
-    <div v-if="list.length == 0 && loading == false">
+    <div v-if="list.length == 0 && loading == false" class="empty-container">
       <sp-empty
         class="empty-text"
         :description="'暂无数据'"
@@ -99,7 +99,7 @@ export default {
       error: false,
       finished: false,
       page: 1,
-      limit: 7,
+      limit: 15,
 
       list: [],
       search: {
@@ -132,6 +132,9 @@ export default {
     }),
   },
   mounted() {
+    this.search.productOneBelongCode = this.$route.query.classCode1
+    // this.search.productTwoBelongCode = this.$route.query.classCode2
+
     this.initData()
     this.getHeaderHeight()
   },
@@ -143,8 +146,8 @@ export default {
       })
     },
     // 分类选择
-    selectClassify(tab1, tab2, tabs) {
-      console.log(tab1, tab2, tabs)
+    selectClassify(tab1, tab2, tab3) {
+      console.log(tab1, tab2, tab3)
       if (tab1.value === 2) {
         this.search.orderItems = [
           {
@@ -166,6 +169,39 @@ export default {
       }
 
       if (tab2.value && tab2.value.length > 0) {
+        if (tab2.value[0] && tab2.value[0] !== -1) {
+          this.search.productTypeCode = tab2.value[0]
+        } else {
+          this.search.productTypeCode = ''
+        }
+        if (tab2.value[1] && tab2.value[1] !== -1) {
+          this.search.productOneBelongCode = tab2.value[1]
+        } else {
+          this.search.productOneBelongCode = ''
+        }
+        if (tab2.value[2] && tab2.value[2] !== -1) {
+          this.search.productTwoBelongCode = tab2.value[2]
+        } else {
+          this.search.productTwoBelongCode = ''
+        }
+      }
+
+      if (tab3.value && tab3.value.length > 0) {
+        if (tab3.value[0] && tab3.value[0] !== -1) {
+          this.search.dealProvince = tab3.value[0]
+        } else {
+          this.search.dealProvince = ''
+        }
+        if (tab3.value[1] && tab3.value[1] !== -1) {
+          this.search.dealCity = tab3.value[1]
+        } else {
+          this.search.dealCity = ''
+        }
+        if (tab3.value[2] && tab3.value[2] !== -1) {
+          this.search.dealArea = tab3.value[2]
+        } else {
+          this.search.dealArea = ''
+        }
       }
       this.initData()
       // this.search.orderItems = {}
@@ -225,39 +261,6 @@ export default {
       this.getCaseList()
     },
 
-    getDataFromDetailInfo(detailInfo, key) {
-      // ['1',"processing",'caseInfo',"hHauR8vs78n2brXYuBia1G","caseResult", "expertEvaluation","UserReviews"]
-      let info = {}
-      if (detailInfo?.infos) {
-        info = detailInfo.infos.find((infosItem) => {
-          return infosItem.key === key
-        })
-      }
-      if (info) {
-        return info
-      }
-      console.log(key, info)
-      return {}
-    },
-    handelData(detailInfo, keys) {
-      keys.map((key) => {
-        const info = this.getDataFromDetailInfo(detailInfo, key)
-        if (info.show && info.show.length > 0) {
-          detailInfo[key] = info.show[0]
-        }
-      })
-    },
-    caseInfo(item) {
-      const caseInfo = this.getDataFromDetailInfo(item, 'caseInfo')
-
-      if (caseInfo && caseInfo.show && caseInfo.show[0]) {
-        return {
-          content: caseInfo.show[0].content,
-          picture: [caseInfo.show[0].picture],
-        }
-      }
-      return {}
-    },
     getCaseList() {
       const params = {
         limit: this.limit,
@@ -267,23 +270,6 @@ export default {
       caseApi
         .case_list(search)
         .then((res) => {
-          if (res.records && res.records.length > 0) {
-            const keys = Object.keys({
-              1: '案例列表图',
-              hHauR8vs78n2brXYuBia1G: '案例头图',
-              caseInfo: '案例简介',
-              processing: '办理经过',
-
-              caseResult: '案例结果',
-              expertEvaluation: '专家评价',
-              UserReviews: '用户评价',
-            })
-
-            res.records.map((item) => {
-              this.handelData(item.detailInfo, keys)
-            })
-          }
-
           if (params.page === 1) {
             this.list = res.records
           } else {
@@ -345,12 +331,18 @@ export default {
   ::v-deep .sp-work-tabs__line {
     background-color: #4974f5;
   }
-  .empty-text ::v-deep .sp-empty__description {
-    font-size: 30px;
-    font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
-    color: #222222;
-    line-height: 30px;
+
+  .empty-container {
+    height: 100vh;
+    background-color: #ffffff;
+
+    .empty-text ::v-deep .sp-empty__description {
+      font-size: 30px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 600;
+      color: #222222;
+      line-height: 30px;
+    }
   }
 }
 </style>
