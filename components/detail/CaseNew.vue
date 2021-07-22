@@ -150,8 +150,8 @@ export default {
         }
       }
       query.goodsType = this.$route.path.match('transactionDetails')
-        ? 'trans'
-        : 'serve'
+        ? 'PRO_CLASS_TYPE_TRANSACTION'
+        : 'PRO_CLASS_TYPE_SERVICE'
       this.$router.push({
         path: '/caseExamples',
         query,

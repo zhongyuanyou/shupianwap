@@ -61,7 +61,12 @@ export default {
       type: Number || String,
       default: 2,
     },
-
+    value: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
     list: {
       type: Array,
       default: () => {
@@ -93,6 +98,14 @@ export default {
   //   },
   // },
   watch: {
+    // value: {
+    //   immediate: true,
+    //   deep: true,
+    //   handler(newVal) {
+
+    //     this.find()
+    //   },
+    // },
     list: {
       immediate: true,
       deep: true,
@@ -102,11 +115,33 @@ export default {
         this.formatList = this.setData(cloneItem)
 
         this.init()
+        this.find()
       },
     },
   },
 
   methods: {
+    find() {
+      if (this.value && this.value.length > 0) {
+        this.value.map((val, index) => {
+          const key = 'col_' + (index + 1)
+          const nextKey = 'col_' + (index + 2)
+
+          const activeKey = 'active_' + (index + 1)
+
+          if (this[key]) {
+            this[key].map((item) => {
+              if (item.code === val) {
+                this[activeKey] = item
+                if (item.children) {
+                  this[nextKey] = item.children
+                }
+              }
+            })
+          }
+        })
+      }
+    },
     rowClick(num, row, index) {
       if (num === 1) {
         this.active_1 = row
