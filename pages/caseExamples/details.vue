@@ -267,7 +267,7 @@ export default {
             username: this.getExperience(item.value, 'BaseInput').value,
             time: this.getExperience(item.value, 'BaseDateTime').value,
             content: this.getExperience(item.value, 'BaseText').value,
-            imgs: this.getExperience(item.value, 'BaseUpload').value,
+            imgs: item.imgs,
           }
 
           list.push(newItem)
