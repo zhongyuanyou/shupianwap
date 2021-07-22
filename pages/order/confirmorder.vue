@@ -259,7 +259,6 @@
       title="优惠"
       help="使用说明"
       :tablist="couponInfo.tablist"
-      calculation="已选中优惠券，可抵扣"
       :datalist="couponInfo.datalist"
       :nolist="couponInfo.nolist"
       @change="conponChange"

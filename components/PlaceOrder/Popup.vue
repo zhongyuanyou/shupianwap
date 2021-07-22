@@ -29,8 +29,8 @@
           </p>
         </div>
         <div v-if="tablist[tabAct].is" class="calculation">
-          {{ calculation }}
-          <span class="red">{{ disPrice }}元</span>
+          {{ num ? '已选中优惠券，可抵扣' : '请选择优惠券' }}
+          <span v-if="num" class="red">{{ num }}元</span>
         </div>
         <div v-if="tablist[tabAct].is">
           <div class="databox">
@@ -218,12 +218,6 @@ export default {
         return []
       },
     },
-    calculation: {
-      type: String,
-      default() {
-        return '请选择优惠券'
-      },
-    },
     datalist: {
       type: Array,
       default() {
@@ -247,26 +241,26 @@ export default {
       // num: 0,
     }
   },
-  // computed: {
-  //   num() {
-  //     if (this.checkarr.marketingCouponVO) {
-  //       if (this.checkarr.marketingCouponVO.couponType === 1) {
-  //         return this.checkarr.marketingCouponVO.reducePrice
-  //       } else {
-  //         const price =
-  //           this.$route.query.type === 'shopcar'
-  //             ? this.$parent.order.skuTotalPrice
-  //             : this.$parent.order.salesPrice
-  //         const discount =
-  //           parseFloat(this.checkarr.marketingCouponVO.discount) / 100
+  computed: {
+    num() {
+      if (this.checkarr.marketingCouponVO) {
+        if (this.checkarr.marketingCouponVO.couponType === 1) {
+          return this.checkarr.marketingCouponVO.reducePrice
+        } else {
+          const price =
+            this.$route.query.type === 'shopcar'
+              ? this.$parent.order.skuTotalPrice
+              : this.$parent.order.salesPrice
+          const discount =
+            parseFloat(this.checkarr.marketingCouponVO.discount) / 100
 
-  //         const discountNum = ((10 - discount) / 10) * price
-  //         return Math.ceil(discountNum * 100) / 100
-  //       }
-  //     }
-  //     return 0
-  //   },
-  // },
+          const discountNum = ((10 - discount) / 10) * price
+          return Math.ceil(discountNum * 100) / 100
+        }
+      }
+      return 0
+    },
+  },
 
   mounted() {},
   methods: {
