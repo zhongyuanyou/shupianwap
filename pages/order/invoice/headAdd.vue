@@ -148,7 +148,7 @@
       </sp-field>
     </div>
 
-    <div class="paddingBottom160" v-show="!focusState"></div>
+    <div v-show="!focusState" class="paddingBottom160"></div>
 
     <sp-bottombar
       class="sp-bottombar"
