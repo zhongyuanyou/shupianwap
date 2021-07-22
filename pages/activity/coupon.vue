@@ -155,7 +155,7 @@ export default {
       indexNum: 0,
       couponType: 0, // 优惠券类型 未使用 已使用 已失效
       isShow: false, // 控制显示气泡
-      advertCode: 'ad100501',
+      advertCode: 'ad113304',
       productAdvertData: [],
       isNoData: false,
       page: 1,
