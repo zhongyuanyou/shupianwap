@@ -30,7 +30,7 @@ export const mutations = {
     this.$cookies.set('userId', String(data.userId), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn'
+       domain: 'shupian.cn',
     })
     this.$cookies.set('userType', String(data.userType || data.type), {
       path: '/',
@@ -127,7 +127,7 @@ export const mutations = {
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       domain: 'shupian.cn'
     })
-    this.$cookies.set('userType', String(data.type || data.userType), {
+    this.$cookies.set('use rType', String(data.type || data.userType), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       domain: 'shupian.cn'
