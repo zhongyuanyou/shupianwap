@@ -340,7 +340,7 @@ export default {
     color: #222222;
   }
 
-  .sp-work-tabs__line {
+  ::v-deep .sp-work-tabs__line {
     background-color: #4974f5;
   }
   &-header {
@@ -359,7 +359,7 @@ export default {
   }
   .empty-container {
     min-height: 100vh;
-    background-color: #fff;
+    background-color: #ffffff;
     .empty-text ::v-deep .sp-empty__description {
       font-size: 30px;
       font-family: PingFangSC-Medium, PingFang SC;

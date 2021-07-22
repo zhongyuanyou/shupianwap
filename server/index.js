@@ -27,20 +27,20 @@ async function start() {
   app.use(nuxt.render)
 
   // 非正式环境启动https服务
-  //   if (config.dev) {
-  //     // 新增 https 設定
-  //     const https_options = {
-  //       key: fs.readFileSync(`${__dirname}/example.com+5-key.pem`),
-  //       cert: fs.readFileSync(`${__dirname}/example.com+5.pem`),
-  //     }
-  //     // 開啟 https server
-  //     https.createServer(https_options, app).listen(port)
-  //     consola.ready({
-  //       message: `App running at: \n\n  - Local:   https://${host}:${port} \n  - Network:   https://${getIPAdress()}:${port}`,
-  //       badge: true,
-  //     })
-  //     return
-  //   }
+    // if (config.dev) {
+    //   // 新增 https 設定
+    //   const https_options = {
+    //     key: fs.readFileSync(`${__dirname}/example.com+5-key.pem`),
+    //     cert: fs.readFileSync(`${__dirname}/example.com+5.pem`),
+    //   }
+    //   // 開啟 https server
+    //   https.createServer(https_options, app).listen(port)
+    //   consola.ready({
+    //     message: `App running at: \n\n  - Local:   https://${host}:${port} \n  - Network:   https://${getIPAdress()}:${port}`,
+    //     badge: true,
+    //   })
+    //   return
+    // }
 
   // Listen the server
   app.listen(port)

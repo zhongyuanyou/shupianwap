@@ -2249,6 +2249,11 @@
   resolved "https://registry.nlark.com/@vant/icons/download/@vant/icons-1.6.0.tgz#3db7eb7f963f51a2a08676720d5af9c4c3512feb"
   integrity sha1-Pbfrf5Y/UaKghnZyDVr5xMNRL+s=
 
+"@vant/icons@^1.5.3":
+  version "1.6.0"
+  resolved "https://registry.nlark.com/@vant/icons/download/@vant/icons-1.6.0.tgz#3db7eb7f963f51a2a08676720d5af9c4c3512feb"
+  integrity sha1-Pbfrf5Y/UaKghnZyDVr5xMNRL+s=
+
 "@vant/popperjs@^1.0.0":
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/@vant/popperjs/download/@vant/popperjs-1.1.0.tgz?cache=0&sync_timestamp=1617713442527&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40vant%2Fpopperjs%2Fdownload%2F%40vant%2Fpopperjs-1.1.0.tgz#b4edee5bbfa6fb18705986e313d4fd5f17942a0f"
@@ -14747,6 +14752,17 @@ vant@^2.12.1, vant@^2.12.19:
   version "2.12.21"
   resolved "https://registry.nlark.com/vant/download/vant-2.12.21.tgz?cache=0&sync_timestamp=1622701359978&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fvant%2Fdownload%2Fvant-2.12.21.tgz#a5160a1358627a7a02c5a7bb6a911bcc2c0e717e"
   integrity sha1-pRYKE1hienoCxae7apEbzCwOcX4=
+  dependencies:
+    "@babel/runtime" "7.x"
+    "@vant/icons" "^1.5.3"
+    "@vant/popperjs" "^1.0.0"
+    "@vue/babel-helper-vue-jsx-merge-props" "^1.0.0"
+    vue-lazyload "1.2.3"
+
+vant@^2.12.19:
+  version "2.12.20"
+  resolved "https://registry.nlark.com/vant/download/vant-2.12.20.tgz#d4ebd91c3d88a7cbe4c910edc250286cc3a273c2"
+  integrity sha1-1OvZHD2Ip8vkyRDtwlAobMOic8I=
   dependencies:
     "@babel/runtime" "7.x"
     "@vant/icons" "^1.5.3"

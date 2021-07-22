@@ -78,6 +78,8 @@
         resultLoading ? '正在查询支付结果' : '加载中'
       }}</sp-loading>
     </div>
+
+    <div v-html="resultFormData"></div>
     <!-- E 下载app弹框 -->
   </div>
 </template>
@@ -111,6 +113,7 @@ export default {
     Checkbox,
     DownloadApp,
   },
+
   data() {
     return {
       closeAppOpen: true,
@@ -131,14 +134,28 @@ export default {
         payCusId: '',
         batchIds: [],
       },
+
+      resultFormData: '',
+      // 请求数据
+      // getPayParamsFormData: {
+      //   cusOrderId: '',
+      //   payPlatform: 'CRISPS_C_ZFFS_ALI',
+      //   payTerminal: 'COMDIC_TERMINAL_WAP', // 支付终端 当前为wap
+      //   sourcePlatform: 'COMDIC_PLATFORM_CRISPS', // 操作系统来源
+      //   // userId: this.$cookies.get('userId', { path: '/' }), // 用户ID
+      //   // userName: this.$cookies.get('userName'), // 用户姓名
+      //   userCode: this.$store.state.user.userId,
+      //   orderAgreementIds: '',
+      // },
       // 请求数据
       getPayParamsFormData: {
         cusOrderId: '',
-        payPlatform: 'CRISPS_C_ZFFS_ALI',
+        payPlatform: 'CRISPS_C_ZFFS_ALI_4_0',
         payTerminal: 'COMDIC_TERMINAL_WAP', // 支付终端 当前为wap
         sourcePlatform: 'COMDIC_PLATFORM_CRISPS', // 操作系统来源
         // userId: this.$cookies.get('userId', { path: '/' }), // 用户ID
         // userName: this.$cookies.get('userName'), // 用户姓名
+        userCode: this.$store.state.user.userId,
         orderAgreementIds: '',
       },
       orderData: {},
@@ -182,41 +199,47 @@ export default {
       this.formData.batchIds = this.$route.query.batchIds
       this.getPayParamsFormData.cusOrderId = this.$route.query.cusOrderId
       this.payCallBackData.cusOrderId = this.$route.query.cusOrderId // cusOrderId获取
+
+      localStorage.setItem(
+        'cusOrderIdType:' + this.formData.cusOrderId,
+        this.$route.query.fromPage // 'act_card'活动卡,'orderList'订单
+      )
       this.enablePayMoney()
     } else {
       this.goBack()
     }
     const startTime = localStorage.getItem('startTime')
     // 暂时隐藏付款功能
-    // if (
-    //   localStorage.getItem('cusOrderId') &&
-    //   localStorage.getItem('serialNumber')
-    // ) {
-    //   if (startTime) {
-    //     const nowTime = this.getNowTime()
-    //     console.log('startTime', startTime)
-    //     console.log('nowTime', nowTime)
-    //     console.log('diff', nowTime - startTime)
-    //     if (nowTime - startTime < 3 * 60 * 1000) {
-    //       this.resultLoading = true
-    //       payResultTimer = setInterval(() => {
-    //         this.number++
-    //         this.getPayResult()
-    //       }, 2000)
-    //     } else {
-    //       this.clearLocalStorage()
-    //       // this.$router.replace({
-    //       //   path: '/pay/payResult',
-    //       //   query: {
-    //       //     payStatus: 2,
-    //       //     orderId: this.$route.query.orderId,
-    //       //     cusOrderId: this.formData.cusOrderId,
-    //       //     batchIds: this.$route.query.batchIds,
-    //       //   },
-    //       // })
-    //     }
-    //   }
-    // }
+
+    if (
+      localStorage.getItem('cusOrderId') &&
+      localStorage.getItem('serialNumber')
+    ) {
+      if (startTime) {
+        const nowTime = this.getNowTime()
+        console.log('startTime', startTime)
+        console.log('nowTime', nowTime)
+        console.log('diff', nowTime - startTime)
+        if (nowTime - startTime < 3 * 60 * 1000) {
+          this.resultLoading = true
+          payResultTimer = setInterval(() => {
+            this.number++
+            this.getPayResult()
+          }, 2000)
+        } else {
+          this.clearLocalStorage()
+          // this.$router.replace({
+          //   path: '/pay/payResult',
+          //   query: {
+          //     payStatus: 2,
+          //     orderId: this.$route.query.orderId,
+          //     cusOrderId: this.formData.cusOrderId,
+          //     batchIds: this.$route.query.batchIds,
+          //   },
+          // })
+        }
+      }
+    }
   },
 
   methods: {
@@ -343,10 +366,13 @@ export default {
     getPayResult() {
       this.payCallBackData.cusOrderId = localStorage.getItem('cusOrderId')
       this.payCallBackData.serialNumber = localStorage.getItem('serialNumber')
+      if (!this.payCallBackData.serialNumber) {
+        return console.log('没有订单')
+      }
       pay
         .getPayResult(this.payCallBackData)
         .then((result) => {
-          if (result.data === 1) {
+          if (result === 1 || result === '1') {
             this.resultLoading = false
             this.$router.replace({
               path: '/pay/payResult',
@@ -362,17 +388,17 @@ export default {
           } else if (this.number > 5) {
             this.resultLoading = false
             clearInterval(payResultTimer)
-            this.clearLocalStorage()
-            this.$router.replace({
-              path: '/pay/payResult',
-              query: {
-                payStatus: 2,
-                orderId: this.$route.query.orderId,
-                cusOrderId: this.formData.cusOrderId,
-                batchIds: this.$route.query.batchIds,
-                payMoney: this.responseData.currentPayMoney,
-              },
-            })
+            // this.clearLocalStorage()
+            // this.$router.replace({
+            //   path: '/pay/payResult',
+            //   query: {
+            //     payStatus: 2,
+            //     orderId: this.$route.query.orderId,
+            //     cusOrderId: this.formData.cusOrderId,
+            //     batchIds: this.$route.query.batchIds,
+            //     payMoney: this.responseData.currentPayMoney,
+            //   },
+            // })
           }
         })
         .catch((e) => {
@@ -394,19 +420,28 @@ export default {
         pay
           .getPayParams(this.getPayParamsFormData)
           .then((result) => {
-            if (result.code === '0') {
-              const payUrl = result.payParam
-              // window.location.href = payUrl
-              this.payCallBackData.serialNumber = result.guaguaPayPartyNo
-              localStorage.setItem(
-                'serialNumber',
-                this.payCallBackData.serialNumber
-              )
-              localStorage.setItem('startTime', new Date().getTime())
-              window.location.href = payUrl
-            } else {
-              this.$xToast.error('支付发起失败，请稍后重试。')
-            }
+            console.log(result)
+            this.resultFormData = result.formData
+            this.payCallBackData.serialNumber = result.billNo
+            localStorage.setItem('serialNumber', result.billNo)
+            localStorage.setItem('startTime', new Date().getTime())
+
+            this.$nextTick(() => {
+              document.forms[0].submit()
+            })
+            // if (result.code === '0') {
+            //   const payUrl = result.payParam
+            //   // window.location.href = payUrl
+            //   this.payCallBackData.serialNumber = result.guaguaPayPartyNo
+            //   localStorage.setItem(
+            //     'serialNumber',
+            //     this.payCallBackData.serialNumber
+            //   )
+            //   localStorage.setItem('startTime', new Date().getTime())
+            //   window.location.href = payUrl
+            // } else {
+            //   this.$xToast.error('支付发起失败，请稍后重试。')
+            // }
           })
           .catch((e) => {
             if (e.code !== 200) {

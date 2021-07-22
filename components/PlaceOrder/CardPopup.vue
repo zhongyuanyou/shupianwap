@@ -29,7 +29,7 @@
           </p>
         </div>
         <div v-if="tablist[tabAct].is" class="calculation">
-          {{ num ? '已选中优惠券，可抵扣' : '请选择优惠券' }}
+           {{ num ? '已选中优惠券，可抵扣' : '请选择优惠券' }}
           <span v-if="num" class="red">{{ num }}元</span>
         </div>
         <div v-if="tablist[tabAct].is">
@@ -42,18 +42,20 @@
                 @click="checkitem(item, index)"
               >
                 <div class="left">
-                  <div v-if="item.marketingCouponVO.couponType === 1">
+                  <div v-if="item.cardType === 1">
                     <div class="coupon_price">
-                      {{ item.marketingCouponVO.reducePrice }}
+                      {{ item.rebatePrice }}
                     </div>
-                    <div v-if="item.useType === 1" class="can_use">无门槛</div>
+                    <div v-if="item.rebateNeedPrice === 0" class="can_use">
+                      无门槛
+                    </div>
                     <div v-else class="can_use">
-                      满{{ item.marketingCouponVO.fullPrice }}元可用
+                      满{{ item.rebateNeedPrice }}元可用
                     </div>
                   </div>
                   <div v-else>
                     <div class="coupon_discount">
-                      {{ getDiscount(item.marketingCouponVO.discount) }}
+                      {{ item.discount }}
                       <span>折</span>
                     </div>
                   </div>
@@ -61,26 +63,19 @@
                 <div class="right">
                   <div class="data">
                     <h1 class="title">
-                      <span class="type-name type-name1">{{
-                        item.marketingCouponVO.typeName
+                      <span class="type-name">{{
+                        item.cardType == 1 ? '满减卡' : '折扣卡'
                       }}</span>
-                      {{ item.marketingCouponVO.couponName }}
+                      {{ item.cardName }}
                     </h1>
-                    <div class="goods-types">
-                      <p v-if="item.marketingCouponVO.useType === 1">
-                        全场通用
-                      </p>
-                      <p v-if="item.marketingCouponVO.useType === 2">
-                        仅限指定品类使用
-                      </p>
-                      <p v-if="item.marketingCouponVO.useType === 3">
-                        仅限指定商品使用
-                      </p>
-                    </div>
-                    <!-- <p v-if="item.marketingCouponVO.useType === 1">
-                      全场通用
-                    </p> -->
-                    <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
+                    <!-- <p v-if="item.useLimit === 1">全品类通用</p> -->
+                    <p v-if="item.useLimit === 2">仅限指定品类使用</p>
+                    <p v-else-if="item.useLimit === 3">仅限指定商品使用</p>
+                    <p class="date">
+                      {{ formatTime(item.validateDateStart) }}-{{
+                        formatTime(item.validateDateEnd)
+                      }}
+                    </p>
                   </div>
                   <div class="right">
                     <sp-radio-group v-model="radio">
@@ -108,21 +103,29 @@
         </div>
         <div v-else class="databox nodatabox">
           <div v-if="nolist.length > 0" class="listbox">
+            <!-- {"id":"8101730035742867456","cardName":"满减活动卡1",
+            "cardId":"8101719748410933248","cardType":1,
+            "rebateNeedPrice":"2.00","rebatePrice":"1.00",
+            "validateDate":999,
+            "validateDateStart":"2021-07-09 14:46:17","validateDateEnd":"2024-04-03 14:46:17"}]} -->
+
             <div v-for="(item, index) in nolist" :key="index" class="nolist">
               <div class="top">
                 <div class="left">
-                  <div v-if="item.marketingCouponVO.couponType === 1">
+                  <div v-if="item.cardType === 1">
                     <div class="coupon_price">
-                      {{ item.marketingCouponVO.reducePrice }}
+                      {{ item.rebatePrice }}
                     </div>
-                    <div v-if="item.useType === 1" class="can_use">无门槛</div>
+                    <div v-if="item.rebateNeedPrice === 0" class="can_use">
+                      无门槛
+                    </div>
                     <div v-else class="can_use">
-                      满{{ item.marketingCouponVO.fullPrice }}元可用
+                      满{{ item.rebateNeedPrice }}元可用
                     </div>
                   </div>
                   <div v-else>
                     <div class="coupon_discount">
-                      {{ getDiscount(item.marketingCouponVO.discount) }}
+                      {{ item.discount }}
                       <span>折</span>
                     </div>
                   </div>
@@ -130,26 +133,26 @@
                 <div class="right">
                   <div class="data">
                     <h1 class="title">
-                      <span class="type-name type-name2">{{
-                        item.marketingCouponVO.typeName
+                      <span class="type-name">{{
+                        item.cardType == 1 ? '满减卡' : '折扣卡'
                       }}</span>
-                      {{ item.marketingCouponVO.couponName }}
+                      {{ item.cardName }}
                     </h1>
-                    <div class="goods-types">
-                      <p v-if="item.marketingCouponVO.useType === 1">
-                        全场通用
-                      </p>
-                      <p v-if="item.marketingCouponVO.useType === 2">
-                        仅限指定品类使用
-                      </p>
-                      <p v-else-if="item.marketingCouponVO.useType === 3">
-                        仅限指定商品使用
-                      </p>
-                    </div>
-                    <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
+                    <p v-if="item.marketingCouponVO.useType === 2">
+                      仅限指定品类使用
+                    </p>
+                    <p v-if="item.marketingCouponVO.useType === 3">
+                      仅限指定商品使用
+                    </p>
+                    <p class="date">
+                      {{ formatTime(item.validateDateStart) }}-{{
+                        formatTime(item.validateDateEnd)
+                      }}
+                    </p>
                   </div>
                 </div>
               </div>
+              <p>订单金额不符合使用条件</p>
             </div>
           </div>
           <div v-else class="none">
@@ -166,14 +169,7 @@
 </template>
 
 <script>
-import {
-  Popup,
-  Icon,
-  RadioGroup,
-  Radio,
-  Toast,
-  Button,
-} from '@chipspc/vant-dgg'
+import { Popup, Icon, RadioGroup, Radio, Toast } from '@chipspc/vant-dgg'
 import { order } from '@/api/index'
 export default {
   name: 'PlaceOrderPopup',
@@ -182,7 +178,6 @@ export default {
     Icon,
     [RadioGroup.name]: RadioGroup,
     [Radio.name]: Radio,
-    [Button.name]: Button,
   },
   props: {
     show: {
@@ -239,93 +234,67 @@ export default {
       tabAct: 0,
       checkarr: '',
       radio: null,
-      selectedCoupon: {},
-      disPrice: 0,
       // num: 0,
     }
   },
   computed: {
     num() {
-      if (this.checkarr.marketingCouponVO) {
-        if (this.checkarr.marketingCouponVO.couponType === 1) {
-          return this.checkarr.marketingCouponVO.reducePrice
+      if (this.checkarr) {
+        if (this.checkarr.cardType === 1) {
+          return this.checkarr.rebatePrice
         } else {
           const price =
             this.$route.query.type === 'shopcar'
               ? this.$parent.order.skuTotalPrice
               : this.$parent.order.salesPrice
-          const discount =
-            parseFloat(this.checkarr.marketingCouponVO.discount) / 100
 
+          const discount = parseFloat(this.checkarr.discount) / 10
           const discountNum = ((10 - discount) / 10) * price
+
           return Math.ceil(discountNum * 100) / 100
         }
       }
       return 0
     },
   },
-
   mounted() {},
   methods: {
-    getDiscount(count) {
-      return Number(count) / 100
+    formatTime(time) {
+      if (time) {
+        return time.replaceAll('-', '.').split(' ')[0]
+      }
+      return ''
     },
     sum() {
-      const originPrice =
-        this.$route.query.type === 'shopcar'
-          ? this.$parent.order.skuTotalPrice
-          : this.$parent.order.salesPrice
-      let price = 0
-      if (this.selectedCoupon.marketingCouponVO.discount) {
-        price =
-          Number(originPrice) *
-          10000 *
-          (this.selectedCoupon.marketingCouponVO.discount / 1000)
-        if (price % 100 === 0) {
-          price = price / 10000
-        } else {
-          price = (Math.floor(price / 100) + 1) / 100
-        }
-      } else {
-        price =
-          Number(originPrice) -
-          this.selectedCoupon.marketingCouponVO.reducePrice
-      }
-      this.lastPrice = price
-      this.disPrice = originPrice - price
-      console.log('lastPrice', price)
-      this.$emit('change', price, -this.disPrice, this.checkarr)
+      // 在后台进行精度计算
+      order
+        .getcalculation(
+          { axios: this.$axios },
+          {
+            price:
+              this.$route.query.type === 'shopcar'
+                ? this.$parent.order.skuTotalPrice
+                : this.$parent.order.salesPrice,
+            culation: this.num,
+          }
+        )
+        .then((result) => {
+          // this.$parent.price = result
 
-      this.close()
-      // order
-      //   .getcalculation(
-      //     { axios: this.$axios },
-      //     {
-      //       price:
-      //         this.$route.query.type === 'shopcar'
-      //           ? this.$parent.order.skuTotalPrice
-      //           : this.$parent.order.salesPrice,
-      //       culation: this.num,
-      //     }
-      //   )
-      //   .then((result) => {
-      //     this.$emit('change', result, -this.num, this.checkarr)
+          this.$emit('change', result, -this.num, this.checkarr)
 
-      //     this.close()
-      //   })
-      //   .catch((e) => {
-      //     Toast({
-      //       message: e.data.error,
-      //       iconPrefix: 'sp-iconfont',
-      //       icon: 'popup_ic_fail',
-      //       overlay: true,
-      //     })
-      //   })
+          this.close()
+        })
+        .catch((e) => {
+          Toast({
+            message: e.data.error,
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+            overlay: true,
+          })
+        })
     },
     checkitem(item, index) {
-      this.selectedCoupon = item
-      console.log('this.selectedCoupon', this.selectedCoupon)
-      console.log('item', item)
       if (this.radio === index) {
         this.checkarr = ''
         this.radio = -1
@@ -397,7 +366,6 @@ export default {
     }
     > .act {
       color: #4974f5;
-      font-weight: 600;
       i {
         display: block;
       }
@@ -412,7 +380,6 @@ export default {
     box-sizing: border-box;
     > span {
       color: #ec5330;
-      font-weight: bold;
     }
   }
   .databox {
@@ -504,26 +471,16 @@ export default {
               font-size: 32px;
               color: #222222;
               line-height: 40px;
-              margin: 5px 0 12px 0;
+              margin: 30px 0 12px 0;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
-              position: relative;
-              padding-left: 80px;
+              span {
+                border-radius: 4px;
+                padding: 2px;
+                font-size: 20px;
+              }
               .type-name {
-                border-radius: 8px;
-                overflow: hidden;
-                font-size: 24px;
-                position: absolute;
-                height: 36px;
-                padding-bottom: 2px;
-                width: 84px;
-                text-align: center;
-                top: 2px;
-                left: 0;
-                font-weight: normal;
-                transform: scale(0.9);
-                transform-origin: 0 0;
                 color: #ffffff;
                 background-image: linear-gradient(
                   90deg,
@@ -532,17 +489,14 @@ export default {
                 );
               }
             }
-            .goods-types {
-              height: 20px;
-            }
-            p {
+            > p {
               font-size: 24px;
               font-weight: 400;
               color: #555555;
-              margin-top: 9px;
+              margin-top: 18px;
             }
             > .date {
-              margin-top: 36px;
+              margin-top: 13px;
             }
           }
           > .right {
@@ -594,13 +548,13 @@ export default {
     .listbox {
       height: 100%;
       > .nolist {
-        height: 220px;
+        height: 271px;
         margin: 24px auto 0;
         width: 670px;
         background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png)
           no-repeat;
         background-size: 100%;
-        // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+        box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
         box-sizing: border-box;
         > .top {
           display: flex;
@@ -668,43 +622,28 @@ export default {
                 font-size: 32px;
                 color: #222222;
                 line-height: 40px;
-                margin: 5px 0 12px 0;
+                margin: 30px 0 12px 0;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-                font-weight: normal;
-                position: relative;
-                padding-left: 80px;
+                span {
+                  border-radius: 4px;
+                  padding: 2px;
+                  font-size: 20px;
+                }
                 .type-name {
-                  text-align: center;
-                  border-radius: 8px;
-                  overflow: hidden;
-                  font-size: 24px;
-                  position: absolute;
-                  height: 36px;
-                  padding-bottom: 2px;
-                  width: 84px;
-                  left: 0;
-                  top: 2px;
-                  font-weight: normal;
-                  transform: scale(0.9);
-                  transform-origin: 0 0;
                   background: #cccccc;
                   color: #ffffff;
-                  text-align: center;
                 }
               }
-              .goods-types {
-                min-height: 20px;
-              }
-              p {
+              > p {
                 font-size: 24px;
                 font-weight: 400;
                 color: #555555;
-                margin-top: 9px;
+                margin-top: 18px;
               }
               > .date {
-                margin-top: 36px;
+                margin-top: 13px;
               }
             }
             > .right {

@@ -25,32 +25,65 @@
         </sp-swipe-item>
       </sp-swipe>
     </div>
-    <div v-if="responseData.length > 0">
+    <div ref="scrollView" class="page-list" @scroll="scollChange">
       <div class="coupon_list">
         <div
           v-for="(item, index) in responseData"
           :key="index"
           class="coupon_item"
+          :class="item.couponStatus === 1 ? 'haveUse' : 'notUse'"
         >
-          <div
-            :class="item.couponStatus === 1 ? 'haveUse' : 'notUse'"
-            class="item-lf"
-          >
-            <div class="coupon_price">{{ item.reducePrice }}</div>
-            <div v-if="item.useType === 1" class="can_use">无门槛</div>
-            <div v-else class="can_use">满{{ item.fullPrice }}元可用</div>
+          <div class="item-lf">
+            <div v-if="item.couponType === 1">
+              <div class="coupon_price">{{ item.reducePrice }}</div>
+              <div v-if="item.fullPrice == 0" class="can_use">无门槛</div>
+              <div v-else class="can_use">满{{ item.fullPrice }}元可用</div>
+            </div>
+            <div v-else>
+              <div class="coupon_discount">
+                {{ getDiscount(item.discount) }}
+                <span>折</span>
+              </div>
+            </div>
+            <div
+              v-if="item.couponStatus !== 1 && item.countSum !== -1"
+              class="coupon_remain"
+            >
+              <div class="in_box">
+                <div class="remain_bar">
+                  <div
+                    class="bar_inner"
+                    :style="{ width: getRemainPercent(item) + '%' }"
+                  ></div>
+                </div>
+                <div class="remain_num">剩余{{ getRemainPercent(item) }}%</div>
+              </div>
+            </div>
+            <div
+              v-if="item.couponStatus !== 1 && item.countSum === -1"
+              class="coupon_remain"
+            >
+              <span class="no-num">不限量</span>
+            </div>
           </div>
           <div class="item-rt">
             <!-- 气泡组件 start -->
-            <Popover @closepop="closeBox" />
+            <Popover
+              :ref="'myPop' + index"
+              :text="item.remark"
+              @closepop="closeBox"
+            />
             <!-- 气泡组件 end-->
-            <div class="title" @click="goDetailPage(item)">
-              {{ item.couponName }}
+            <div class="title">
+              <span
+                :class="item.couponStatus === 1 ? 'no-coupon' : 'type-name'"
+                >{{ item.couponType === 1 ? '满减券' : '折扣券' }}</span
+              >{{ item.couponName }}
             </div>
             <div ref="textpro" class="content" @click="popOver(index)">
               <span v-if="item.useType === 1">全场通用</span>
-              <span v-if="item.useType === 2">限制分类</span>
-              <span v-if="item.useType === 3">限制商品</span>
+              <span v-if="item.useType === 2">仅限指定品类使用</span>
+              <span v-if="item.useType === 3">仅限指定商品使用</span>
             </div>
             <div class="date">{{ item.serviceLife }}</div>
             <!-- 右侧显示 end-->
@@ -122,9 +155,13 @@ export default {
       indexNum: 0,
       couponType: 0, // 优惠券类型 未使用 已使用 已失效
       isShow: false, // 控制显示气泡
-      advertCode: 'ad100043',
+      advertCode: 'ad100501',
       productAdvertData: [],
       isNoData: false,
+      page: 1,
+      limit: 20,
+      nomore: false,
+      isLogin: '',
     }
   },
   computed: {
@@ -136,10 +173,43 @@ export default {
     }),
   },
   mounted() {
-    this.getInitCouponData()
     this.getAdvertisingData()
+    this.getInitCouponData()
+    // this.getInitCouponData()
+    // if (this.isInApp) {
+    //   if (this.userInfo.userId && this.userInfo.token) {
+    //     console.log('无token')
+    //     this.getInitCouponData()
+    //   } else {
+    //     this.$appFn.dggGetUserInfo((res) => {
+    //       console.log('调用app获取信息', res)
+    //       if (res.code === 200) {
+    //         // 兼容启大顺参数返回
+    //         this.$store.dispatch(
+    //           'user/setUser',
+    //           typeof res.data === 'string' ? JSON.parse(res.data) : res.data
+    //         )
+    //         this.getInitCouponData()
+    //       } else {
+    //         this.getInitCouponData()
+    //       }
+    //     })
+    //   }
+    // } else {
+    //   this.getInitCouponData()
+    // }
   },
   methods: {
+    getRemainPercent(data) {
+      if (data.countSum > 0 && data.countSur > 0) {
+        return Math.ceil((Number(data.countSur) * 100) / Number(data.countSum))
+      } else {
+        return 0
+      }
+    },
+    getDiscount(count) {
+      return Number(count) / 100
+    },
     uPGoBack() {
       if (this.isInApp) {
         this.$appFn.dggWebGoBack((res) => {
@@ -162,7 +232,24 @@ export default {
       }
       this.$router.back(-1)
     },
+    scollChange() {
+      const scrollTop = this.$refs.scrollView.scrollTop
+      const scrollHeight = this.$refs.scrollView.scrollHeight
+      const windowHeight = window.innerHeight
+      // 提前100px拉取下页数据
+      if (scrollTop + windowHeight > scrollHeight - 100) {
+        if (!this.nomore && !this.loading) {
+          this.nomore = true
+          this.loading = true
+          this.page++
+          this.getInitCouponData()
+        }
+      }
+    },
     operation_coupon(item) {
+      if (item.countSur === 0) {
+        Toast('该优惠券已领完，请领取其他优惠券！')
+      }
       if (item.couponStatus === 0) {
         this.setCouponStatus(item)
       } else {
@@ -170,9 +257,14 @@ export default {
       }
     },
     async setCouponStatus(item) {
-      const result = await this.$isLogin()
-      if (result === 'app_login_success') {
-        return
+      console.log('loading', this.loading)
+      if (this.loading) return
+      if (!this.isLogin) {
+        this.isLogin = await this.$isLogin()
+        if (this.isLogin === 'app_login_success') {
+          this.getInitCouponData()
+          return
+        }
       }
       this.loading = true
       this.$axios
@@ -180,39 +272,31 @@ export default {
           couponId: item.id,
         })
         .then((res) => {
-          if (res.code === 200) {
-            this.responseData = []
+          this.loading = false
+          if (res && res.code === 200) {
             Toast('领取成功')
+            this.page = 1
             this.getInitCouponData()
-            this.loading = false
+            this.nomore = false
           } else {
-            this.loading = false
             Toast.fail({
               duration: 2000,
-              message: res.message,
+              message: res.message || '领取失败',
               forbidClick: true,
               className: 'my-toast-style',
             })
           }
         })
         .catch((err) => {
+          this.loading = false
           console.log(err)
+          Toast.fail({
+            duration: 2000,
+            message: err.message || err || '领取失败',
+            forbidClick: true,
+            className: 'my-toast-style',
+          })
         })
-      // coupon
-      //   .receiveCoupon({ axios: this.$axios }, { couponId: item.id })
-      //   .then((result) => {
-      //     if (result.code === 200) {
-      //       this.responseData = []
-      //       this.getInitCouponData()
-      //       this.loading = false
-      //     }
-      //   })
-      //   .catch((e) => {
-      //     if (e.code !== 200) {
-      //       this.responseData = []
-      //       console.log(e)
-      //     }
-      //   })
     },
     onChange(index) {
       this.current = index
@@ -226,7 +310,9 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.productAdvertData = res.data.sortMaterialList[0].materialList
+            this.productAdvertData = res.data.sortMaterialList
+              ? res.data.sortMaterialList[0].materialList
+              : []
           } else {
             Toast.fail({
               duration: 2000,
@@ -241,8 +327,8 @@ export default {
       const params = {
         orderByWhere: 'createTime=desc;',
         findType: 1,
-        limit: '10',
-        page: '1',
+        limit: this.limit,
+        page: this.page,
       }
       this.userId ? (params.userId = this.userId) : (params.userId = '')
       this.loading = true
@@ -250,36 +336,49 @@ export default {
         .findPage({ axios: this.$axios }, params)
         .then((result) => {
           this.loading = false
-          this.responseData = result
           this.isNoData = false
-          if (this.responseData.length === 0) {
+          if (result.length === 0 && this.page === 1) {
             this.isNoData = true
           }
-          for (let i = 0, length = this.responseData.length; i < length; i++) {
-            let useTime = this.responseData[i].serviceLife
+          for (let i = 0, length = result.length; i < length; i++) {
+            let useTime = result[i].serviceLife
             useTime = useTime.slice(11)
-            console.log('useTime', useTime)
             const thisTime = useTime.split('.').join('-')
             const time = new Date(thisTime).getTime()
             if (time - this.nowTimeStamp < 172800000) {
-              this.responseData[i].showColorTime = this.showColorTime
+              result[i].showColorTime = this.showColorTime
             }
           }
-          this.usedCount = result.usedCount
-          this.notUsedCount = result.notUsedCount
-          this.invalidCount = result.invalidCount
-          console.log('this.responseData', this.responseData)
+          let dataArr = []
+          if (this.page === 1) {
+            dataArr = result
+          } else {
+            const oldList = JSON.parse(JSON.stringify(this.responseData))
+            dataArr = oldList.concat(result)
+          }
+          // this.usedCount = result.usedCount
+          // this.notUsedCount = result.notUsedCount
+          // this.invalidCount = result.invalidCount
+          this.responseData = dataArr
           this.loading = false
+          if (result.length < this.limit) {
+            this.nomore = true
+          } else {
+            this.nomore = false
+          }
+          console.log('nomore', this.nomore)
         })
         .catch((e) => {
           if (e.code !== 200) {
-            this.responseData = []
             console.log(e)
           }
         })
     },
     popOver(index) {
-      console.log(index)
+      const l = this.responseData.length
+      for (let i = 0; i < l; i++) {
+        this.$refs['myPop' + i][0].isShow = false
+      }
       // if(index)
       this.$refs['myPop' + index][0].isShow = true
       this.$refs['myPop' + index][0].indexData = index
@@ -370,31 +469,96 @@ export default {
 }
 .coupon_list {
   width: 100%;
-  padding: 12px 40px 20px 40px;
+  padding: 12px 40px 20px 30px;
   height: auto;
   .coupon_item {
-    min-height: 212px;
-    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+    position: relative;
+    height: 212px;
+    // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
     // background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
     background-size: 100% 100%;
     margin: 24px 0;
-    display: flex;
     position: relative;
-    overflow: hidden;
     .item-lf {
-      width: 201px;
-      height: 212px;
+      width: 208px;
+      height: 100%;
+      padding-left: 6px;
+      float: left;
+      .coupon_discount {
+        font-size: 72px;
+        font-family: Bebas;
+        font-weight: 400;
+        color: #ffffff;
+        text-align: center;
+        padding-top: 44px;
+        position: relative;
+        padding-right: 20px;
+        margin-bottom: 10px;
+        span {
+          position: absolute;
+          font-size: 28px;
+          bottom: 0;
+        }
+      }
       .coupon_price {
         //   height: 67px;
-        font-size: 72px;
+        font-size: 62px;
         font-family: Bebas;
         font-weight: 400;
         color: #ffffff;
         text-align: center;
         padding-top: 27px;
         overflow: hidden;
+        position: relative;
         // text-overflow: ellipsis;
         // white-space: nowrap;
+      }
+      .coupon_remain {
+        margin-top: 10px;
+        width: 100%;
+        font-size: 24px;
+        .in_box {
+          display: inline-block;
+          height: 30px;
+          width: 300px;
+          margin: 0 auto;
+          .remain_bar {
+            margin-left: 20px;
+            width: 90px;
+            height: 8px;
+            border-radius: 4px;
+            background: #ff9467;
+            margin-top: 12px;
+            position: relative;
+            overflow: hidden;
+            float: left;
+            .bar_inner {
+              position: absolute;
+              left: 0;
+              bottom: 0;
+              height: 100%;
+              border-radius: 4px;
+              background: #fff166;
+            }
+          }
+          .remain_num {
+            width: 120px;
+            float: left;
+            opacity: 0.8;
+            font-size: 24px;
+            color: #fffcd6;
+            letter-spacing: 0;
+            transform: scale(0.7);
+            transform-origin: 14px 14px;
+            text-align: left;
+          }
+        }
+        .no-num {
+          text-align: center;
+          color: #ffffff;
+          width: 100%;
+          display: inline-block;
+        }
       }
       .can_use {
         font-size: 24px;
@@ -402,24 +566,52 @@ export default {
         font-weight: 400;
         color: #ffffff;
         text-align: center;
-        padding-top: 15px;
       }
     }
     .item-rt {
-      padding-left: 24px;
+      padding: 24px 0 0 24px;
       height: auto;
-      width: 290px;
       box-sizing: border-box;
+      width: auto;
+      padding-left: 236px;
+      position: relative;
       .title {
         font-size: 32px;
         font-family: PingFang SC;
         font-weight: bold;
         color: #222222;
         line-height: 40px;
-        margin: 30px 0 24px 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        padding-left: 80px;
+        padding-bottom: 12px;
+        margin-right: 30px;
+        position: relative;
+        span {
+          position: absolute;
+          border-radius: 4px;
+          font-size: 24px;
+          left: 0;
+          top: 2px;
+          line-height: 24px;
+        }
+        .type-name {
+          color: #ffffff;
+          background-image: linear-gradient(90deg, #fa6d5a 0%, #fa5741 100%);
+          transform: scale(0.8);
+          transform-origin: 0 4px;
+          line-height: 0;
+          padding: 20px 6px;
+        }
+        .no-coupon {
+          background: #cccccc;
+          color: #ffffff;
+          transform: scale(0.8);
+          transform-origin: 0 4px;
+          line-height: 0;
+          padding: 20px 6px;
+        }
       }
       .content {
         width: 404px;
@@ -436,10 +628,12 @@ export default {
         -webkit-box-orient: vertical;
       }
       .date {
-        font-size: 20px;
+        font-size: 24px;
         font-family: PingFang SC;
         font-weight: 400;
         color: #999999;
+        transform: scale(0.9);
+        transform-origin: 10px 0;
       }
       .expiredate {
         font-size: 20px;
@@ -460,7 +654,7 @@ export default {
     .receive {
       position: absolute;
       right: 0;
-      top: -30px;
+      top: 0;
       z-index: 1;
       width: 90px;
       height: 90px;
@@ -470,18 +664,17 @@ export default {
       }
     }
     .item-btn {
+      width: 150px;
+      height: 54px;
       font-size: 24px;
-      min-width: 150px;
-      margin-left: auto;
-      text-align: right;
-      align-items: center;
-      display: flex;
-      font-size: 24px;
-      margin-right: 32px;
+      position: absolute;
+      right: 40px;
+      top: 55%;
+      margin-top: -10px;
       button {
         display: block;
-        width: 150px;
-        height: 54px;
+        width: 100%;
+        height: 100%;
         font-size: 0.24rem;
         &.my-coupon {
           background: #ec5330;
@@ -523,5 +716,9 @@ export default {
   font-family: PingFang SC;
   font-weight: bold;
   color: #4974f5;
+}
+.page-list {
+  // height: calc(100vh - 120px);
+  // overflow-y: scroll;
 }
 </style>
