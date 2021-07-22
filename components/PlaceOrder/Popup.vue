@@ -580,7 +580,10 @@ export default {
                 margin-top: 9px;
               }
               > .date {
+                color: #999999;
                 margin-top: 36px;
+                transform: scale(0.83);
+                transform-origin: left center;
               }
             }
             > .right {
@@ -745,6 +748,9 @@ export default {
                 }
                 > .date {
                   margin-top: 36px;
+                  color: #999999;
+                  transform: scale(0.83);
+                  transform-origin: left center;
                 }
               }
               > .right {

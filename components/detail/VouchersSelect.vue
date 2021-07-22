@@ -835,7 +835,7 @@ export default {
                 transform: scale(0.8);
                 transform-origin: 0 0.04rem;
                 line-height: 0;
-                padding: 0.2rem 0.04rem;
+                padding: 0.2rem 0.08rem;
               }
               .no-coupon {
                 background: #cccccc;
@@ -843,7 +843,7 @@ export default {
                 transform: scale(0.8);
                 transform-origin: 0 0.04rem;
                 line-height: 0;
-                padding: 0.2rem 0.04rem;
+                padding: 0.2rem 0.08rem;
               }
             }
             .vouchers_desc {
