@@ -279,12 +279,12 @@ export default {
         for (let i = 0; i < couponList.length; i++) {
           const matchServiceLife = couponList[i].serviceLife.match('-')
           if (matchServiceLife) {
-            let time1 = couponList[i].serviceLife.slice(
-              matchServiceLife.index + 1
-            )
-            time1 = new Date(time1)
-            const time2 = new Date()
-            if (time1.getTime() >= time2.getTime()) {
+            const time0Obj = couponList[i].serviceLife.split('-')[0]
+            const time1Obj = couponList[i].serviceLife.split('-')[1]
+            const time0 = new Date(time0Obj).getTime()
+            const time1 = new Date(time1Obj).getTime() + 24 * 3600 * 1000
+            const time2 = new Date().getTime()
+            if (time0 <= time2 && time1 >= time2) {
               list.push(couponList[i])
             }
           } else {
