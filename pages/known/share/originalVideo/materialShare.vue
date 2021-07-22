@@ -11,6 +11,7 @@
     <div class="info">
       <div class="info-brand">
         <sp-image
+          v-show="vDetail.custavatar"
           width="0.84rem"
           height="0.84rem"
           round
@@ -30,7 +31,7 @@
         </div>
       </div>
       <div class="info-tile">{{ vDetail.videoName }}</div>
-      <div class="info-desc">
+      <div v-show="vDetail.videoName" class="info-desc">
         {{ vDetail.custTotalViewCount }}次播放 · 发布于{{
           vDetail.custUpdateTime
         }}
@@ -123,9 +124,17 @@ export default {
     },
   },
   mounted() {
-    this.id = this.$route.query.shareId || '8106374534213206016'
-    this.plannerId = this.$route.query.plannerId || '758742052284024473'
+    this.id = this.$route.query.shareId
+    this.plannerId = this.$route.query.plannerId
+    if (this.id && this.id === '') {
+      this.$xToast.error('获取分享数据失败')
+      return
+    }
     this.getShareInfoApi()
+    if (this.plannerId && this.plannerId === '') {
+      this.$xToast.error('获取规划师数据失败')
+      return
+    }
     this.getPlannerInfoApi()
   },
   methods: {
@@ -139,6 +148,10 @@ export default {
         .then((res) => {
           if (res.code !== 200) {
             throw new Error('查询视频失败')
+          }
+          if (res.data.status === 0) {
+            this.$xToast.error('分享的视频已下架')
+            return
           }
           this.vDetail = res.data
           this.vurl = this.vDetail.videoUrl
@@ -171,23 +184,6 @@ export default {
         }
       })
     },
-    goodLink(item) {
-      if (item.productType === 'PRO_CLASS_TYPE_SALES') {
-        this.$router.push({
-          path: '/detail',
-          query: {
-            productId: item.id,
-          },
-        })
-      } else {
-        this.$router.push({
-          path: '/detail/transactionDetails',
-          query: {
-            productId: item.id,
-          },
-        })
-      }
-    },
     // 拨打电话
     async handleTel(mchUserId) {
       console.log('mchUserId', mchUserId)
@@ -211,7 +207,7 @@ export default {
           areaName: this.city.name,
           customerUserId: this.$store.state.user.userId,
           plannerId: mchUserId,
-          customerPhone: this.topPlannerInfo.phone || this.planerInfo.phone,
+          customerPhone: this.planerInfo.phone,
           requireCode: '',
           requireName: '',
         }
@@ -254,7 +250,7 @@ export default {
       }
     },
     errorBtnHandle() {
-      console.log('error')
+      this.getShareInfoApi()
     },
   },
 }
