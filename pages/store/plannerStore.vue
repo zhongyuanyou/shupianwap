@@ -316,7 +316,6 @@ export default {
     },
   },
   mounted() {
-    console.log(JSON.stringify(this.urlData),'页面参数')
     if (this.isInApp) {
       if (this.userInfo.userId && this.userInfo.token) {
         this.getDetail().finally(() => {
@@ -693,7 +692,9 @@ export default {
     },
     onClickLeft() {
       if(this.urlData.platform === 'mpass'){
-        window.history.back();
+        if(window.AlipayJSBridge){
+          window.AlipayJSBridge.call('closeWebview')
+        }
       }else{
         this.$router.back(-1)
       }

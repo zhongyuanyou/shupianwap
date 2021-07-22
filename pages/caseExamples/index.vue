@@ -7,7 +7,7 @@
       <div ref="couponHeaderWarpper" class="case_examples_list-header-warpper">
         <Header class="my-header" title="案例"></Header>
         <client-only>
-          <Classify @select="selectClassify"></Classify>
+          <Classify :search="search" @select="selectClassify"></Classify>
         </client-only>
       </div>
     </div>
@@ -104,6 +104,8 @@ export default {
       list: [],
       search: {
         productTypeCode: '',
+        productOneBelongCode: '',
+        productTwoBelongCode: '',
         dealProvince: '',
         dealCity: '',
         dealArea: '',
@@ -132,6 +134,7 @@ export default {
     }),
   },
   mounted() {
+    this.search.productTypeCode = this.$route.query.goodsType
     this.search.productOneBelongCode = this.$route.query.classCode1
     // this.search.productTwoBelongCode = this.$route.query.classCode2
 

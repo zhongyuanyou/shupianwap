@@ -13,16 +13,12 @@
       <sp-dropdown-item ref="tab2" :title="tab2.title">
         <TreeSelect
           :list="tab2.options"
-          :level="3"
+          :value="tab2.value"
           @select="ServerSelect"
         ></TreeSelect>
       </sp-dropdown-item>
       <sp-dropdown-item ref="tab3" :title="tab3.title">
-        <TreeSelect
-          :list="tab3.options"
-          :level="3"
-          @select="AreaSelect"
-        ></TreeSelect>
+        <TreeSelect :list="tab3.options" @select="AreaSelect"></TreeSelect>
       </sp-dropdown-item>
     </sp-dropdown-menu>
   </div>
@@ -40,6 +36,14 @@ export default {
     [DropdownMenu.name]: DropdownMenu,
     [DropdownItem.name]: DropdownItem,
     TreeSelect,
+  },
+  props: {
+    search: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
   },
   data() {
     return {
@@ -89,6 +93,20 @@ export default {
         },
       ],
     }
+  },
+  watch: {
+    search: {
+      immediate: true,
+      deep: true,
+      handler(newValue, oldValue) {
+        this.tab2.value = [
+          newValue.productTypeCode,
+          newValue.productOneBelongCode,
+          newValue.productTwoBelongCode,
+        ]
+        console.log('watch search', newValue, this.tab2.value)
+      },
+    },
   },
   mounted() {
     this.getSearchServeGoodsList()
