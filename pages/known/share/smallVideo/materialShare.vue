@@ -1,5 +1,7 @@
 <template>
   <div class="m-known-share smallVideo materialShare">
+    <ShareModal
+    />
     <img class="bg" :src="vDetail.image" />
     <my-icon
       name="bofang_mian"
@@ -86,6 +88,7 @@ import { Image, Button, Swipe, SwipeItem, Toast } from '@chipspc/vant-dgg'
 import knownApi from '@/api/known'
 import { planner } from '~/api'
 import imHandle from '~/mixins/imHandle'
+import ShareModal from '@/components/common/ShareModal.vue'
 
 export default {
   name: 'KnownSmallVideo',
@@ -94,12 +97,12 @@ export default {
     [Button.name]: Button,
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
+    ShareModal,
   },
   mixins: [imHandle],
   data() {
     return {
       id: '', // 分享id
-      categoryId: '', // 种类id
       vurl: '', // 视频url
       vDetail: {},
       videoType: '',
@@ -143,7 +146,6 @@ export default {
           this.vDetail = res.data
           this.vurl = this.vDetail.videoUrl
           this.goods = res.data.goodsList
-          console.log(`output goods: ${JSON.stringify(this.goods[0])}`)
         })
         .catch((e) => {
           this.$xToast.error(e.message)
