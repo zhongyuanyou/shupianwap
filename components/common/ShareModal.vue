@@ -18,15 +18,19 @@
           </slot>
         </div>
         <div class="popup-banner__con">
-          <div class="img">
-            <img
-              class="avatar"
-              :src="
-                planerInfo.img ||
-                'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni-app-doc/6acec660-4f31-11eb-a16f-5b3e54966275.jpg'
-              "
-            />
-          </div>
+          <div
+            class="img"
+            :style="{
+              background: `url(
+                ${
+                  planerInfo.img ||
+                  'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni-app-doc/6acec660-4f31-11eb-a16f-5b3e54966275.jpg'
+                }
+              
+              ) no-repeat center center `,
+              backgroundSize: 'cover',
+            }"
+          ></div>
           <div class="planner-info">
             <span>您好，我是{{ planerInfo.name || '规划师' }}</span>
           </div>
@@ -410,14 +414,7 @@ export default {
           height: 160px;
           border-radius: 80px;
           overflow: hidden;
-          text-align: center;
-          align-items: middle;
-          background: #f5f5f5;
-          img {
-            width: auto;
-            min-height: 100%;
-            min-width: 100%;
-          }
+          background-size: cover;
         }
         .avatar {
           max-width: 160px;
