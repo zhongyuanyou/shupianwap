@@ -60,7 +60,7 @@
       </div>
     </div>
     <div class="body">
-      <div v-if="tabsListData.length>0" class="body-content recommended">
+      <div v-if="detailData.goodsRecommend.length>0" class="body-content recommended">
         <div class="tabs">
           <ul>
             <li
@@ -262,10 +262,6 @@ export default {
     }
   },
   async mounted() {
-    window.addEventListener('scroll', this.handleScroll)
-    if (!this.city.code) {
-      await this.POSITION_CITY({ type: 'init' })
-    }
   },
   methods: {
     ...mapActions({
@@ -385,6 +381,7 @@ export default {
       }
     },
     tabsActive(item) {
+      this.refresh.pageIndex = 0
       this.active = item
       this.getList()
     },
