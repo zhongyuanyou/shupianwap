@@ -316,14 +316,6 @@ export default {
     },
   },
   mounted() {
-    if(this.urlData.platform === 'mpass'){
-      if(window.AlipayJSBridge){
-        console.log(window.AlipayJSBridge,'mpass容器')
-        window.AlipayJSBridge.call('jumpRouter', 'http://172.16.132.163:3001/store/plannerStore?mchUserId=596126790305355933&isShare=0&platform=mpass&top=31');
-      }
-      
-    }
-    
     if (this.isInApp) {
       if (this.userInfo.userId && this.userInfo.token) {
         this.getDetail().finally(() => {
