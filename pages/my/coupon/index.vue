@@ -4,10 +4,10 @@
       <div ref="couponHeaderWarpper" class="coupon-header-warpper">
         <Header class="my-header" title="我的优惠券"></Header>
 
-        <sp-tabs v-model="tabActive" line-width="0.28rem" @click="onClickTab">
+        <!-- <sp-tabs v-model="tabActive" line-width="0.28rem" @click="onClickTab">
           <sp-tab title="券包"></sp-tab>
           <sp-tab title="卡包"></sp-tab>
-        </sp-tabs>
+        </sp-tabs> -->
       </div>
     </div>
 
@@ -157,17 +157,15 @@ export default {
         {
           name: '领券',
           iconName: 'lingquan',
-          // path: '/my/coupon/coupons-list',
           path: '/activity/coupon',
         },
-        {
-          name: '购卡',
-          iconName: 'gouka',
-          path: '/my/coupon/act-card',
-        },
+        // {
+        //   name: '购卡',
+        //   iconName: 'gouka',
+        //   path: '/my/coupon/act-card',
+        // },
       ],
       HeaderHeight: '',
-      // FooterNavHeight: 150,
     }
   },
   computed: {
