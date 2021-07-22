@@ -60,59 +60,66 @@
       </div>
     </div>
     <div class="body">
-      <div class="body-content recommended">
-        <sp-tabs v-model="active" @click="tabsClick">
-          <sp-tab
-            v-for="(item, index) in detailData.goodsRecommend"
-            :key="index"
-            :title="item.name"
-            :name="item.id"
+      <div class="body-content recommended" v-if="tabsListData.length>0">
+        <div class="tabs">
+          <ul>
+            <li
+              v-for="(item, index) in detailData.goodsRecommend"
+              :key="index"
+              :class="active === item.id ? 'tab_active' : ''"
+              @click="tabsActive(item.id)"
+            >
+              <span>{{ item.name }}</span>
+              <span v-if="active === item.id" class="tabs_line"></span>
+            </li>
+          </ul>
+        </div>
+        <ul class="list-data">
+          <sp-list
+            v-model="refresh.pullUp.status"
+            :finished="refresh.pullUp.finished"
+            @load="onLoad"
           >
-            <ul class="list-data">
-              <sp-list
-                v-model="refresh.pullUp.status"
-                :finished="refresh.pullUp.finished"
-                @load="onLoad"
-              >
-                <li
-                  v-for="(data, dataIndex) in tabsListData"
-                  :key="dataIndex"
-                  @click="linkGood(item)"
-                >
-                  <img :src="data.img" alt="" />
-                  <div>
-                    <p class="title">
-                      <span>{{ data.name }}</span>
-                    </p>
-                    <p class="label">
-                      <span
-                        v-for="(ta, taindex) in data.tags"
-                        v-show="taindex > 2"
-                        :key="taindex"
-                        >{{ ta }}</span
-                      >
-                    </p>
-                    <p class="type">
-                      <span
-                        v-for="(de, deindex) in data.desc &&
-                        data.desc.split('|')"
-                        :key="deindex"
-                        >{{ de }}</span
-                      >
-                    </p>
-                    <p class="moneysee">
-                      <span>{{ data.price }}</span>
-                      <span>元</span>
-                    </p>
-                  </div>
-                </li>
-              </sp-list>
-            </ul>
-            <p v-if="refresh.pullUp.finished" class="list-data-noinfo">
-              没有更多了
-            </p>
-          </sp-tab>
-        </sp-tabs>
+            <li
+              v-for="(data, dataIndex) in tabsListData"
+              :key="dataIndex"
+              @click="linkGood(item)"
+            >
+              <img :src="data.img" alt="" />
+              <div>
+                <p class="title">
+                  <span>{{ data.name }}</span>
+                </p>
+                <p class="label">
+                  <span
+                    v-for="(ta, taindex) in data.tags"
+                    v-show="taindex > 2"
+                    :key="taindex"
+                    >{{ ta }}</span
+                  >
+                </p>
+                <p class="type">
+                  <span
+                    v-for="(de, deindex) in data.desc && data.desc.split('|')"
+                    :key="deindex"
+                    >{{ de }}</span
+                  >
+                </p>
+                <p class="moneysee">
+                  <span>{{ data.price }}</span>
+                  <span>元</span>
+                </p>
+              </div>
+            </li>
+          </sp-list>
+        </ul>
+        <p v-if="refresh.pullUp.finished" class="list-data-noinfo">
+          没有更多了
+        </p>
+      </div>
+      <div class="no-info" v-else>
+        <img src="https://cdn.shupian.cn/sp-pt/wap/images/32lnvdx3omo0000.png" alt="">
+        <p>抱歉,未找到相关结果</p>
       </div>
     </div>
     <sp-share-sheet
@@ -377,6 +384,10 @@ export default {
         return Promise.reject(error)
       }
     },
+    tabsActive(item) {
+      this.active = item
+      this.getList()
+    },
     handleCall() {
       // 如果当前页面在app中，则调用原生拨打电话的方法
       if (this.isInApp) {
@@ -637,13 +648,14 @@ export default {
     top: 48px;
     width: 100%;
     min-height: 238px;
-    padding: 60px 40px 0;
+    padding: 60px 40px 20px;
     background: #fff;
     background-size: 100% 100%;
     font-family: PingFangSC-Regular;
     font-size: 28px;
     color: #000;
     letter-spacing: 0;
+    border-bottom: 1px solid #f2f2f2;
     line-height: 28px;
     z-index: 2;
     .footer {
@@ -790,7 +802,15 @@ export default {
         width: 80vw;
       }
     }
-    .body-content {
+    .no-info{
+      text-align: center;
+      font-size: 26px;
+      color: #999;
+      img{
+        width: 340px;
+        height: 340px;
+        margin:0 auto;
+      }
     }
     .recommended {
       .title {
@@ -799,8 +819,44 @@ export default {
         font-size: 40px;
         color: #222222;
       }
+      .tabs {
+        margin: 8px 0 12px 0;
+        font-family: PingFangSC-Regular;
+        font-size: 30px;
+        color: #999999;
+        line-height: 30px;
+        ul {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          height: 80px;
+          line-height: 80px;
+          li {
+            position: relative;
+            margin: 0 56px 0 0;
+            .tabs_line {
+              position: absolute;
+              bottom: 8px;
+              left: 0;
+              right: 0;
+              margin: 0 auto;
+              display: block;
+              width: 28px;
+              height: 6px;
+              background: #4974f5;
+              border-radius: 3px;
+            }
+          }
+          .tab_active {
+            font-weight: bold;
+            font-family: PingFangSC-Medium;
+            font-size: 32px;
+            color: #222222;
+          }
+        }
+      }
       .list-data-noinfo {
-        padding:36px 0;
+        padding: 36px 0;
         font-family: PingFangSC-Regular;
         font-size: 24px;
         color: #999999;
@@ -868,12 +924,15 @@ export default {
                 &:first-of-type {
                   font-family: PingFangSC-Medium;
                   font-size: 36px;
+                  font-weight: bold;
                   color: #ec5330;
                   line-height: 36px;
                 }
                 &:last-of-type {
+                  margin: 0 0 0 -10px;
                   font-family: PingFangSC-Regular;
                   font-size: 22px;
+                  font-weight: bold;
                   color: #ec5330;
                   letter-spacing: 0;
                   line-height: 22px;

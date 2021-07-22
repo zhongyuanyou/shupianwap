@@ -3,9 +3,8 @@
     <div class="head">
       <Header title="商户店铺" :fixed="true">
         <template #left>
-          <div v-if="urlData.isShare!=='1'">
+          <div v-if="urlData.isShare !== '1'">
             <sp-icon
-            
               class-prefix="spiconfont"
               name="nav_ic_back"
               size="0.4rem"
@@ -14,7 +13,7 @@
               @click.native="onClickLeft"
             />
           </div>
-          <div v-if="urlData.isShare==='1'">
+          <div v-if="urlData.isShare === '1'">
             <sp-icon
               class-prefix="spiconfont"
               name="xiaochengxuzhuye"
@@ -149,53 +148,57 @@
         class="body-content recommended"
       >
         <p class="title">为您推荐</p>
-        <sp-tabs v-model="active" @click="tabsClick">
-          <sp-tab
-            v-for="(item, index) in detailData.goodsRecommend"
-            :key="index"
-            :title="item.name"
-            :name="item.id"
+        <div class="tabs">
+          <ul>
+            <li
+              v-for="(item, index) in detailData.goodsRecommend"
+              :key="index"
+              :class="active === item.id ? 'tab_active' : ''"
+              @click="tabsActive(item.id)"
+            >
+              <span>{{ item.name }}</span>
+              <span v-if="active === item.id" class="tabs_line"></span>
+            </li>
+          </ul>
+        </div>
+        <ul class="list-data">
+          <li
+            v-for="(data, dataIndex) in detailData.goods"
+            :key="dataIndex"
+            @click="linkGood(data)"
           >
-            <ul class="list-data">
-              <li
-                v-for="(data, dataIndex) in detailData.goods"
-                :key="dataIndex"
-                @click="linkGood(data)"
-              >
-                <img :src="data.img" alt="" />
-                <div>
-                  <p class="title" style="margin: 0">
-                    <span>{{ data.name }}</span>
-                  </p>
-                  <p class="label">
-                    <span
-                      v-for="(ta, taindex) in data.tags"
-                      v-show="taindex > 2"
-                      :key="taindex"
-                      >{{ ta }}</span
-                    >
-                  </p>
-                  <p class="type">
-                    <span
-                      v-for="(de, deindex) in data.desc && data.desc.split('|')"
-                      :key="deindex"
-                      >{{ de }}</span
-                    >
-                  </p>
-                  <p class="moneysee">
-                    <span>{{ data.price }}</span>
-                    <span>元</span>
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </sp-tab>
-        </sp-tabs>
+            <img :src="data.img" alt="" />
+            <div>
+              <p class="title" style="margin: 0">
+                <span>{{ data.name }}</span>
+              </p>
+              <p class="label">
+                <span
+                  v-for="(ta, taindex) in data.tags"
+                  v-show="taindex > 2"
+                  :key="taindex"
+                  >{{ ta }}</span
+                >
+              </p>
+              <p class="type">
+                <span
+                  v-for="(de, deindex) in data.desc && data.desc.split('|')"
+                  :key="deindex"
+                  >{{ de }}</span
+                >
+              </p>
+              <p class="moneysee">
+                <span>{{ data.price }}</span>
+                <span>元</span>
+              </p>
+            </div>
+          </li>
+        </ul>
         <button v-if="detailData.goods.length > 0" @click="moreRem">
           更多优惠
         </button>
       </div>
-      <div v-if="!loading" class="body-content recommendedPlanner" >
+      <div v-if="!loading" class="body-content recommendedPlanner">
         <p class="title">推荐规划师</p>
         <div class="planner">
           <ul>
@@ -274,7 +277,7 @@ export default {
     return {
       loading: true,
       active: '', // tab状态
-      urlData:this.$route.query,
+      urlData: this.$route.query,
       headActive: 'index',
       detailData: {
         goodsRecommend: [],
@@ -390,7 +393,10 @@ export default {
         this.floatview = false
       }
     },
-
+    tabsActive(item) {
+      this.active = item
+      this.getList()
+    },
     // 获取详情数据
     async getDetail() {
       try {
@@ -417,6 +423,8 @@ export default {
         data.data.goods = data.data.goods.filter(
           (item) => Number(item.state) === 1
         )
+        
+        this.active = data.data.goodsRecommend.length>0 && data.data.goodsRecommend[0].id
         this.detailData = data.data || {}
 
         return data
@@ -619,10 +627,6 @@ export default {
       this.shareOptions = [{ name: '复制链接', icon: 'link' }]
       this.showShare = true
     },
-    tabsClick(title, name) {
-      console.log(this.active)
-      this.getList()
-    },
     headTabsClick() {
       if (this.headActive === 'rememded') {
         this.$router.push({
@@ -660,7 +664,7 @@ export default {
         })
       }
     },
-    gohome(){
+    gohome() {
       this.$router.push('/')
     },
     moreRem() {
@@ -928,12 +932,6 @@ export default {
         }
       }
     }
-    .tabs {
-      ::v-deep .sp-tabs__wrap {
-        margin: 0 !important;
-        width: 80vw;
-      }
-    }
     .body-content {
       .title {
         margin: 32px 0;
@@ -948,6 +946,42 @@ export default {
         font-family: PingFangSC-Medium;
         font-size: 40px;
         color: #222222;
+      }
+      .tabs {
+        margin: 8px 0 12px 0;
+        font-family: PingFangSC-Regular;
+        font-size: 30px;
+        color: #999999;
+        line-height: 30px;
+        ul {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          height: 80px;
+          line-height: 80px;
+          li {
+            position: relative;
+            margin: 0 56px 0 0;
+            .tabs_line {
+              position: absolute;
+              bottom: 8px;
+              left: 0;
+              right: 0;
+              margin: 0 auto;
+              display: block;
+              width: 28px;
+              height: 6px;
+              background: #4974f5;
+              border-radius: 3px;
+            }
+          }
+          .tab_active {
+            font-weight: bold;
+            font-family: PingFangSC-Medium;
+            font-size: 32px;
+            color: #222222;
+          }
+        }
       }
       .list-data {
         li {
@@ -1009,12 +1043,15 @@ export default {
                 &:first-of-type {
                   font-family: PingFangSC-Medium;
                   font-size: 36px;
+                  font-weight: bold;
                   color: #ec5330;
                   line-height: 36px;
                 }
                 &:last-of-type {
+                  margin: 0 0 0 -10px;
                   font-family: PingFangSC-Regular;
                   font-size: 22px;
+                  font-weight: bold;
                   color: #ec5330;
                   letter-spacing: 0;
                   line-height: 22px;
@@ -1067,6 +1104,7 @@ export default {
         border: 1px solid #dddddd;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
         border-radius: 12px;
+
         ul {
           display: flex;
           align-items: center;
