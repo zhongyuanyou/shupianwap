@@ -3,12 +3,11 @@
     <div class="coupon-header" :style="{ height: HeaderHeight + 'px' }">
       <div ref="couponHeaderWarpper" class="coupon-header-warpper">
         <Header class="my-header" title="我的优惠券"></Header>
-        <client-only>
-          <sp-work-tabs v-model="tabActive" @click="onClickTab">
-            <sp-work-tab title="券包"></sp-work-tab>
-            <sp-work-tab title="卡包"></sp-work-tab>
-          </sp-work-tabs>
-        </client-only>
+
+        <sp-tabs v-model="tabActive" line-width="0.28rem" @click="onClickTab">
+          <sp-tab title="券包"></sp-tab>
+          <sp-tab title="卡包"></sp-tab>
+        </sp-tabs>
       </div>
     </div>
 
@@ -37,7 +36,7 @@
       </div>
     </sp-list>
 
-    <div v-if="list.length == 0 && loading == false">
+    <div v-if="list.length == 0 && loading == false" class="empty-container">
       <sp-empty
         class="empty-text"
         :description="tabActive === 0 ? '暂无优惠券' : '暂无活动卡'"
@@ -94,6 +93,8 @@
 </template>
 <script>
 import {
+  Tabs,
+  Tab,
   Button,
   Toast,
   TopNavBar,
@@ -101,8 +102,6 @@ import {
   Bottombar,
   Sticky,
   BottombarButton,
-  WorkTab,
-  WorkTabs,
   Empty,
   List,
   Dialog,
@@ -126,8 +125,8 @@ export default {
     LoadingCenter,
     Header,
 
-    [WorkTab.name]: WorkTab,
-    [WorkTabs.name]: WorkTabs,
+    [Tab.name]: Tab,
+    [Tabs.name]: Tabs,
     [Sticky.name]: Sticky,
     [Empty.name]: Empty,
     [Bottombar.name]: Bottombar,
@@ -256,6 +255,7 @@ export default {
       if (this.tabActiveIndex === this.tabActive) {
         return
       }
+      this.list = []
       this.tabActiveIndex = this.tabActive
       this.$router.replace({
         query: {
@@ -387,14 +387,18 @@ export default {
   ::v-deep .sp-work-tabs__line {
     background-color: #4974f5;
   }
-  .empty-text ::v-deep .sp-empty__description {
-    font-size: 30px;
-    font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
-    color: #222222;
-    line-height: 30px;
-  }
+  .empty-container {
+    min-height: 100vh;
+    background-color: #fff;
 
+    .empty-text ::v-deep .sp-empty__description {
+      font-size: 30px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: bold;
+      color: #222222;
+      line-height: 30px;
+    }
+  }
   .coupon_list {
     width: 670px;
     margin: 24px auto 0;
@@ -402,7 +406,7 @@ export default {
 
   .rules_and_invalid {
     font-family: PingFangSC-Regular;
-    font-weight: bold;
+
     font-size: 24px;
     color: #999999;
     background: #f5f5f5;
@@ -418,6 +422,13 @@ export default {
       margin-right: 18px;
       font-weight: 500;
     }
+  }
+
+  ::v-deep .sp-overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  ::v-deep .sp-dialog {
+    width: 540px;
   }
   .dialog {
     padding: 48px 0 0 0;
@@ -463,7 +474,7 @@ export default {
     }
   }
 
-  ::v-deep .sp-work-tab__text {
+  ::v-deep .sp-tab__text {
     font-family: PingFang SC;
     font-size: 28px;
     font-weight: bold;

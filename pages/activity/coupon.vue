@@ -584,8 +584,9 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        padding-left: 74px;
+        padding-left: 80px;
         padding-bottom: 12px;
+        margin-right: 30px;
         position: relative;
         span {
           position: absolute;
