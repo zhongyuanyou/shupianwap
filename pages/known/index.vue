@@ -50,7 +50,7 @@
           name="fenlei"
           size="0.32rem"
           color="#1A1A1A"
-          class="my_icon"
+          class="fenlei_icon"
           @click.native="showPop = true"
         ></my-icon>
       </div>
@@ -247,23 +247,23 @@ export default {
     OrdinaryList,
     HeaderSlot,
   },
-  async asyncData({ store, $axios }) {
-    let tabs = []
-    try {
-      const { code, message, data } = await $axios.get(
-        knownApi.questionArticle.categoryList,
-        {
-          params: {
-            // type 1 获取企大顺导航
-            type: store.state.app.isInApp ? 1 : '',
-            // type: 1,
-          },
-        }
-      )
-      tabs = data
-    } catch (error) {}
-    return { tabs }
-  },
+  // async asyncData({ store, $axios }) {
+  //   let tabs = []
+  //   try {
+  //     const { code, message, data } = await $axios.get(
+  //       knownApi.questionArticle.categoryList,
+  //       {
+  //         params: {
+  //           type: 1, // 获取企大顺导航
+  //           // type: store.state.app.isInApp ? 1 : '',
+  //           // type: 1,
+  //         },
+  //       }
+  //     )
+  //     tabs = data
+  //   } catch (error) {}
+  //   return { tabs }
+  // },
   data() {
     return {
       loading: false, // 加载状态
@@ -276,6 +276,7 @@ export default {
       morePlate: [],
       active: 0,
       statusBarHeight: '',
+      tabs: [],
       appStyle: {
         'padding-left': '12px',
         'padding-right': '16px',
@@ -295,7 +296,8 @@ export default {
       return this.$store.state.user
     },
   },
-  mounted() {
+  async mounted() {
+    await this.getTabs()
     if (this.appInfo) {
       this.statusBarHeight = this.appInfo.statusBarHeight
     }
@@ -321,6 +323,21 @@ export default {
     next()
   },
   methods: {
+    async getTabs() {
+      try {
+        const { code, message, data } = await this.$axios.get(
+          knownApi.questionArticle.categoryList,
+          {
+            params: {
+              // type: 1, // 获取企大顺导航
+              type: this.$store.state.app.isInApp ? 1 : '',
+              // type: 1,
+            },
+          }
+        )
+        this.tabs = data
+      } catch (error) {}
+    },
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
@@ -348,6 +365,9 @@ export default {
             this.active = index
           }
         })
+      } else if (this.$store.state.app.isInApp) {
+        // 在企大顺app中默认显示推荐tab
+        this.active = 1
       } else {
         this.active = 2
       }
@@ -513,8 +533,10 @@ export default {
   .category_box {
     display: flex;
     align-items: center;
+    position: relative;
     .sp-tabs {
-      width: 670px;
+      width: 89.33vw;
+      overflow: hidden;
       ::v-deep.sp-tab {
         font-size: 32px;
         font-weight: bold;
@@ -528,6 +550,13 @@ export default {
     }
     .my_icon {
       margin-left: 10px;
+    }
+    .fenlei_icon {
+      position: absolute;
+      z-index: 9;
+      right: 30px;
+      background: #fff;
+      padding-left: 10px;
     }
   }
   .container_news_see {

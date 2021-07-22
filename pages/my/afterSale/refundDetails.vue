@@ -3,14 +3,14 @@
     <Header title="退款详情" />
     <div class="status-bar">
       <div class="status-bar_box">
-        <!-- <div class="icon-box">
+        <div class="icon-box">
           <sp-icon
             class-prefix="spiconfont"
             size="0.46rem"
             color="#00B365"
             name="commodity_ic_ttime"
           ></sp-icon>
-        </div> -->
+        </div>
         <div class="desc">
           <h3>{{ refundDetailData.reimburseStatusCodeName }}</h3>
           <p>{{ refundDetailData.reimburseCompleteTime }}</p>
@@ -181,9 +181,10 @@ export default {
       align-items: center;
       justify-content: center;
     }
+    
     .desc {
       color: #222222;
-      // margin-left: 28px;
+      margin-left: 28px;
       h3 {
         font-family: PingFangSC-Medium;
         font-size: 32px;

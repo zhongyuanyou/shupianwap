@@ -343,10 +343,10 @@ export default {
           name: '待评价',
           type: 'daipingjia',
         },
-        {
-          iconName: 'per_ic_tksh',
-          name: '退款/售后',
-        },
+        // {
+        //   iconName: 'per_ic_tksh',
+        //   name: '退款/售后',
+        // },
       ],
       imgList: {
         tx: '2exrifx8gxes000.png', // 头像

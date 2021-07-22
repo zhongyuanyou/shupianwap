@@ -584,7 +584,7 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        padding-left: 124px;
+        padding-left: 74px;
         padding-bottom: 12px;
         position: relative;
         span {
@@ -601,11 +601,15 @@ export default {
           transform: scale(0.8);
           transform-origin: 0 4px;
           line-height: 0;
-          padding: 20px 4px;
+          padding: 20px 6px;
         }
         .no-coupon {
           background: #cccccc;
           color: #ffffff;
+          transform: scale(0.8);
+          transform-origin: 0 4px;
+          line-height: 0;
+          padding: 20px 6px;
         }
       }
       .content {
@@ -623,11 +627,11 @@ export default {
         -webkit-box-orient: vertical;
       }
       .date {
-        font-size: 20px;
+        font-size: 24px;
         font-family: PingFang SC;
         font-weight: 400;
         color: #999999;
-        transform: scale(0.8);
+        transform: scale(0.9);
         transform-origin: 10px 0;
       }
       .expiredate {
@@ -663,7 +667,7 @@ export default {
       height: 54px;
       font-size: 24px;
       position: absolute;
-      right: 50px;
+      right: 40px;
       top: 55%;
       margin-top: -10px;
       button {
