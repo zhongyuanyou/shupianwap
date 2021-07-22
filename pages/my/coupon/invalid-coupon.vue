@@ -1,5 +1,5 @@
 <template>
-  <div class="invoice" :style="{ paddingBottom: FooterNavHeight + 'px' }">
+  <div class="invoice">
     <sp-sticky>
       <Header class="my-header" title="失效券"></Header>
     </sp-sticky>
@@ -23,7 +23,7 @@
       <div v-if="tabActive === 0" :list="list"></div>
     </sp-list> -->
 
-    <div v-if="list.length == 0 && loading == false">
+    <div v-if="list.length == 0 && loading == false" class="empty-container">
       <sp-empty
         class="empty-text"
         :description="tabActive === 0 ? '暂无优惠券卡' : '暂无活动卡'"
@@ -168,12 +168,17 @@ export default {
 
   background-color: #f5f5f5;
 
-  .empty-text ::v-deep .sp-empty__description {
-    font-size: 30px;
-    font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
-    color: #222222;
-    line-height: 30px;
+  .empty-container {
+    min-height: calc(100vh - 88px);
+    background-color: #fff;
+
+    .empty-text ::v-deep .sp-empty__description {
+      font-size: 30px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: bold;
+      color: #222222;
+      line-height: 30px;
+    }
   }
   .coupon_list {
     margin: 24px 40px 0;

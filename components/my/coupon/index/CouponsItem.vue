@@ -134,6 +134,10 @@ export default {
 // 已使用的背景
 .haveUse {
   background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/5cx1r4tc3js0000.png');
+  // background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/15vv9a0bvb1c000.png');
+  .coupon_price {
+    margin-left: 16px !important;
+  }
 }
 // 未使用的背景
 .notUse {
