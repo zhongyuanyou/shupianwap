@@ -6,7 +6,7 @@
       @submit="submit"
       @handleCancel="handleCancel"
     />
-    <div class="main">
+    <div class="main" :style="{ paddingTop: paddingTop + 'px' }">
       <TitleArea ref="myTitle" :title="formData.title" @setTitle="setTitle" />
       <!-- <div class="content-area"> -->
       <div class="content">

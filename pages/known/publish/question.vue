@@ -1,48 +1,53 @@
 <template>
-  <div class="question">
-    <PageHead
-      :has-val="hasVal"
-      :confirm-text="editType === '2' ? '修改问题' : '发布问题'"
-      :title="title"
-      @submit="submit"
-      @handleCancel="handleCancel"
-    />
-    <div class="main">
-      <TitleArea
-        ref="myTitle"
-        :max-length="50"
-        :title="formData.title"
-        :cust-placeholder="myPlaceholder"
-        @setTitle="setTitle"
+  <div>
+    <div class="question_page">
+      <PageHead
+        :has-val="hasVal"
+        :confirm-text="editType === '2' ? '修改问题' : '发布问题'"
+        :title="title"
+        @submit="submit"
+        @handleCancel="handleCancel"
       />
-      <div class="content">
-        <div v-if="showToast" class="toast-area">
-          <div class="btn" @click="handleClickCloseToast">
-            <my-icon
-              name="nav_ic_close"
-              size="0.28rem"
-              color="#999999"
-            ></my-icon>
+      <div class="main" :style="{ paddingTop: paddingTop + 'px' }">
+        <TitleArea
+          ref="myTitle"
+          :max-length="50"
+          :title="formData.title"
+          :cust-placeholder="myPlaceholder"
+          @setTitle="setTitle"
+        />
+        <div class="content">
+          <div v-if="showToast" class="toast-area">
+            <div class="btn" @click="handleClickCloseToast">
+              <my-icon
+                name="nav_ic_close"
+                size="0.28rem"
+                color="#999999"
+              ></my-icon>
+            </div>
+            <p class="p1">
+              <my-icon
+                name="per_ic_help"
+                size="0.32rem"
+                color="#999999"
+              ></my-icon>
+              让你的提问获得更多解答
+            </p>
+            <p>· 保持文字简练，表述清晰问题的关键点</p>
+            <p>· 添加合适的话题，让问题更好地流通</p>
+            <p>· 确保问题没有被提问过</p>
           </div>
-          <p class="p1">
-            <my-icon
-              name="per_ic_help"
-              size="0.32rem"
-              color="#999999"
-            ></my-icon>
-            让你的提问获得更多解答
-          </p>
-          <p>· 保持文字简练，表述清晰问题的关键点</p>
-          <p>· 添加合适的话题，让问题更好地流通</p>
-          <p>· 确保问题没有被提问过</p>
+          <Editor
+            :init-content="formData.content"
+            @editorChange="editorChange"
+          />
         </div>
-        <Editor :init-content="formData.content" @editorChange="editorChange" />
+        <ChooseTopic
+          ref="chooseTopic"
+          :topics-arr="mytopics"
+          @setTopic="setTopic"
+        />
       </div>
-      <ChooseTopic
-        ref="chooseTopic"
-        :topics-arr="mytopics"
-        @setTopic="setTopic"
-      />
     </div>
   </div>
 </template>
@@ -138,11 +143,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.question {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background: #fff;
+.tabbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  z-index: 1;
 }
 .main {
   flex: 1;

@@ -29,7 +29,7 @@
         价格
       </div>
       <div class="flex_1">
-        <div class="title_info_num">{{ info.dealTime }}天</div>
+        <div class="title_info_num">{{ info.dealTime || 0 }}天</div>
         办理周期
       </div>
       <div class="flex_1">

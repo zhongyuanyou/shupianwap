@@ -10,6 +10,7 @@
     "@dgg/oss": "^1.0.2",
     "@dgg/sp-im-sdk": "^1.0.0-beat39",
     "@fe/gateway-sign": "^1.0.2",
+    "@fe/sp-api-js": "0.0.7",
     "@fe/sp-ui-mobile": "0.0.21",
     "@nuxtjs/axios": "^5.13.1",
     "@nuxtjs/sentry": "^5.0.3",
