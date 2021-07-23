@@ -22,7 +22,9 @@
           <div class="process_item_line no_margin">
             <sp-progress :show-pivot="false" :percentage="item.fraction * 10" />
           </div>
-          <p class="process_item_score">{{ item.fraction }}</p>
+          <p class="process_item_score">
+            {{ parseFloat(item.fraction || 0).toFixed(1) }}
+          </p>
         </div>
       </div>
     </div>
