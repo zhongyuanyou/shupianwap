@@ -36,6 +36,7 @@
 
     <!-- 案件简介 -->
     <CaseIntroduction
+      v-if="caseInfo.content || caseInfo.imgs"
       title="案例简介"
       :text="caseInfo.content"
       :images="caseInfo.imgs"
@@ -56,7 +57,10 @@
 
     <!-- 办理结果 -->
     <CaseIntroduction
-      v-if="caseDetail.caseType === 'CASE_TYPE_1'"
+      v-if="
+        caseDetail.caseType === 'CASE_TYPE_1' &&
+        (caseResult.content || caseResult.imgs)
+      "
       title="办理结果"
       :text="caseResult.content"
       :images="caseResult.imgs"

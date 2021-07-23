@@ -74,13 +74,7 @@ export default {
       headImg: '',
       defaultImg:
         'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0',
-      imgs: [
-        '5kh95r57rl00000.jpg',
-        'dw46uviu8kg0000.jpg',
-        '5u7gygwxzsg0000.jpg',
-        'ehczc451lpk0000.jpg',
-        '6e5rze76buc0000.jpg',
-      ],
+      imgs: ['ehczc451lpk0000.jpg', '6e5rze76buc0000.jpg'],
     }
   },
   computed: {
@@ -121,7 +115,7 @@ export default {
 
       const val = window.sessionStorage.getItem(name)
 
-      if (val === null || parseInt(val) > this.imgs.length) {
+      if (val === null || parseInt(val) >= this.imgs.length) {
         const index = parseInt(Math.random() * this.imgs.length)
         window.sessionStorage.setItem(name, index)
 
