@@ -434,7 +434,7 @@ export default {
           })
           return
         }
-        const params = { storeId,type:pageStatus }
+        const params = { storeId,type:pageStatus,ignoreDataScope:'goods' }
         const data = await this.$axios.get(storeApi.mchStoreInfo, { params })
         if (data.code !== 200) {
           throw new Error(data.message)
