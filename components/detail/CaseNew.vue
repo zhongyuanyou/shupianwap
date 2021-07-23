@@ -89,7 +89,6 @@ export default {
   },
   methods: {
     getCase() {
-      console.log('classCodeLevelList', this.classCodeLevelList)
       const params = {
         orderItems: [
           {
@@ -112,11 +111,7 @@ export default {
         page: '1',
         limit: '10',
       }
-      if (this.classCodeLevelList.length > 2) {
-        params.productThreeBelongCode = this.classCodeLevelList[2]
-        params.productTwoBelongCode = this.classCodeLevelList[1]
-        params.productOneBelongCode = this.classCodeLevelList[0]
-      } else if (this.classCodeLevelList.length > 1) {
+      if (this.classCodeLevelList.length > 1) {
         params.productTwoBelongCode = this.classCodeLevelList[1]
         params.productOneBelongCode = this.classCodeLevelList[0]
       } else if (this.classCodeLevelList.length === 1) {
