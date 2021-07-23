@@ -87,7 +87,7 @@ export default {
   data() {
     return {
       evaluateTime: '',
-      avatar: '',
+      avatar: 'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png',
       avatarSize: '0.8rem',
       name: '规划师',
       starLevel: 1, // 星级
@@ -139,7 +139,7 @@ export default {
     } else {
       this.avatar =
         this.$route.query.plannerAvatar ||
-        'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
+        'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png'
     }
   },
   methods: {
@@ -187,9 +187,9 @@ export default {
       const res = await this.$axios.get(evaluateApi.getAvatar, { params })
       if (res.code === 200) {
         this.avatar =
-          res.data.length > 0
+          res.data.length > 0 && res.data[0].img !== ''
             ? res.data[0].img
-            : 'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
+            : 'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png'
       } else {
         this.$xToast.show({ message: '获取信息失败' })
       }

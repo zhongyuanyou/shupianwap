@@ -5,7 +5,7 @@ const path = require('path')
 const BASE = require('./config/index.js')
 const NODE_ENV = process.env.NODE_ENV
 const baseUrl = BASE.baseURL
-console.log('baseUrl', baseUrl)
+console.log('baseUrl1', baseUrl)
 const ossUrl = BASE.ossUrl
 const bablePlugin = [
   [
@@ -137,6 +137,7 @@ module.exports = {
     { src: '@/plugins/vue-quill-editor', ssr: false },
     { src: '@/plugins/vue-prototype', ssr: false },
     { src: '@/plugins/clear-emoij', ssr: false },
+    { src: '@/plugins/echarts', ssr:false },
   ],
   router: {
     middleware: 'appDock',
@@ -202,6 +203,7 @@ module.exports = {
   },
   build: {
     transpile: [/vant.*?less/],
+    vendor:['nativeshare'],
     postcss: {
       plugins: {
         'postcss-pxtorem': {

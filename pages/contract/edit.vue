@@ -87,6 +87,7 @@ export default {
       userName: '',
       partyName: '',
       phone: '',
+      encryptPhone: '',
       pattern: /^1[3456789]\d{9}$/,
       email: '',
       address: '',
@@ -144,7 +145,7 @@ export default {
       contractApi
         .encryptionPhone({ axios: this.axios }, { phone: this.phone })
         .then((res) => {
-          this.phone = res
+          this.encryptPhone = res
           this.applycontart()
         })
     },
@@ -195,7 +196,7 @@ export default {
             orderId: this.orderItem.id,
             contractFirstName: this.partyName,
             contractFirstContacts: this.userName,
-            contractFirstPhone: this.phone,
+            contractFirstPhone: this.encryptPhone,
             contractFirstEmail: this.email,
             contractFirstAddr: this.address,
           }
@@ -208,7 +209,7 @@ export default {
               contractId: res.contractId,
               contractNo: res.contractNo,
               signerName: this.partyName,
-              contactWay: this.phone,
+              contactWay: this.encryptPhone,
               type: 'qs',
               go: '-2',
               fromPage: this.orderItem.fromPage,

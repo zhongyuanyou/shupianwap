@@ -17,7 +17,7 @@
             width="100%"
             height="100%"
             fit="cover"
-            :src="item.indexImg || 'https://img.yzcdn.cn/vant/cat.jpeg'"
+            :src="item.indexImg"
           />
         </div>
         <div class="goods_info flex_1">

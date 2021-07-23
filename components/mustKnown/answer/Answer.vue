@@ -127,11 +127,12 @@ export default {
 <style lang="less" scoped>
 .list {
   background: #fff;
+  width: 100%;
+  padding: 40px 0;
 }
 ::v-deep .sp-cell {
-  width: 686px;
+  width: 100%;
   margin: 0 auto;
-  padding: 40px 0;
   position: relative;
   &::after {
     position: absolute;

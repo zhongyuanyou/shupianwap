@@ -18,17 +18,21 @@
           </slot>
         </div>
         <div class="popup-banner__con">
-          <img
-            class="avatar"
-            :src="
-              planerInfo.img ||
-              'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni-app-doc/6acec660-4f31-11eb-a16f-5b3e54966275.jpg'
-            "
-          />
+          <div
+            class="img"
+            :style="{
+              background: `url(
+                ${
+                  planerInfo.img ||
+                  'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni-app-doc/6acec660-4f31-11eb-a16f-5b3e54966275.jpg'
+                }
+
+              ) no-repeat center center `,
+              backgroundSize: 'cover',
+            }"
+          ></div>
           <div class="planner-info">
-            <span
-              >您好，我是{{ planerInfo.name || plannerName || '规划师' }}</span
-            >
+            <span>您好，我是{{ planerInfo.name || '规划师' }}</span>
           </div>
         </div>
       </div>
@@ -65,10 +69,6 @@ export default {
     [Icon.name]: Icon,
   },
   props: {
-    plannerName: {
-      type: String,
-      default: '',
-    },
     mchId: {
       type: String,
       default: '',
@@ -104,7 +104,11 @@ export default {
       this.getPlanerInfo(this.plannerId)
     }
     if (this.userInfo.userId) {
-      this.getUserIndo()
+      if (this.userInfo.userId !== this.partnerId) {
+        this.getUserIndo()
+      } else {
+        this.visible = false
+      }
     }
   },
   methods: {
@@ -112,7 +116,7 @@ export default {
       planner
         .detail({ id })
         .then((res) => {
-          console.log('获取规划师信息', res)
+          console.log('获取规划师信息res', res)
           const obj = {
             mchUserId: res.id,
             portrait: res.img,
@@ -124,8 +128,13 @@ export default {
             ...obj,
             ...res,
           }
-          this.$forceUpdate()
-          this.visible = true
+          if (this.userInfo.userId !== this.partnerId) {
+            this.visible = true
+          } else {
+            this.visible = false
+          }
+          this.$emit('setPlannerInfo', this.planerInfo)
+          // this.$forceUpdate()
         })
         .catch((err) => {
           this.visible = true
@@ -390,7 +399,7 @@ export default {
         width: 100%;
         height: 100%;
       }
-      &__con {
+      .popup-banner__con {
         position: absolute;
         left: 0;
         right: 0;
@@ -400,10 +409,17 @@ export default {
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        .avatar {
+        .img {
           width: 160px;
           height: 160px;
           border-radius: 80px;
+          overflow: hidden;
+          background-size: cover;
+        }
+        .avatar {
+          max-width: 160px;
+          max-height: 160px;
+          display: inline-block;
         }
         .planner-info {
           font-size: 36px;
