@@ -259,6 +259,7 @@ import { storeApi } from '@/api/store'
 import Header from '@/components/common/head/header'
 import SpToast from '@/components/common/spToast/SpToast'
 import { callPhone, copyToClipboard, setUrlParams } from '@/utils/common'
+import imHandle from '@/mixins/imHandle'
 export default {
   components: {
     [Icon.name]: Icon,
@@ -273,6 +274,7 @@ export default {
     SpTabs: Tabs,
     SpTab: Tab,
   },
+  mixins: [imHandle],
   data() {
     return {
       loading: true,
@@ -352,21 +354,42 @@ export default {
     },
   },
   created() {
-    if (process && process.client) {
-      // notice:
-      // store中的用户信息默认来自cookie，会从cookie中获取；因为在wap中， userInfo中的token与userId等 保存在cookie中，
-      // 但是在app中登录等，登录信息cookie中的没有更新，导致直接从store中获取到的信息无效
-      // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
-      this.isInApp && this.clearUserInfo()
+    // if (process && process.client) {
+    //   // notice:
+    //   // store中的用户信息默认来自cookie，会从cookie中获取；因为在wap中， userInfo中的token与userId等 保存在cookie中，
+    //   // 但是在app中登录等，登录信息cookie中的没有更新，导致直接从store中获取到的信息无效
+    //   // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
+    //   this.isInApp && this.clearUserInfo()
+    //   this.getDetail().finally(() => {
+    //     this.loading = false
+    //   })
+    // }
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll)
+    if (this.isInApp) {
+      if (this.userInfo.userId && this.userInfo.token) {
+        this.getDetail().finally(() => {
+          this.loading = false
+        })
+      } else {
+        this.$appFn.dggGetUserInfo((res) => {
+          if (res.code === 200) {
+            // 兼容启大顺参数返回
+            this.$store.dispatch(
+              'user/setUser',
+              typeof res.data === 'string' ? JSON.parse(res.data) : res.data
+            )
+          }
+          this.getDetail().finally(() => {
+            this.loading = false
+          })
+        })
+      }
+    } else {
       this.getDetail().finally(() => {
         this.loading = false
       })
-    }
-  },
-  async mounted() {
-    window.addEventListener('scroll', this.handleScroll)
-    if (!this.city.code) {
-      await this.POSITION_CITY({ type: 'init' })
     }
   },
   destroyed() {
