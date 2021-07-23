@@ -111,10 +111,10 @@ export default {
         dealArea: '',
 
         orderItems: [
-          // {
-          //   column: 'caseScore',
-          //   asc: false,
-          // },
+          {
+            column: 'caseScore',
+            asc: false,
+          },
           {
             column: 'isTop',
             asc: false,
@@ -168,6 +168,10 @@ export default {
         ]
       } else {
         this.search.orderItems = [
+          {
+            column: 'caseScore',
+            asc: false,
+          },
           {
             column: 'isTop',
             asc: false,

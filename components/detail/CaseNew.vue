@@ -93,15 +93,15 @@ export default {
         orderItems: [
           {
             column: 'isTop',
-            asc: true,
+            asc: false,
           },
           {
             column: 'caseScore',
-            asc: true,
+            asc: false,
           },
           {
             column: 'createTime',
-            asc: true,
+            asc: false,
           },
           // {
           //   column: 'isTop',
