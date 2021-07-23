@@ -72,8 +72,9 @@
     />
 
     <!-- 专家点评 -->
+
     <ExpertComments
-      v-if="id"
+      v-if="id && expertEvaluation.length > 0"
       :details-id="id"
       :info="expertEvaluation"
     ></ExpertComments>

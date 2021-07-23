@@ -3,10 +3,13 @@
     <div class="report_title">
       <p class="report_title_lf">专家点评</p>
     </div>
-    <div class="report_con">
+    <!--  -->
+    <div v-if="newInfo.dimension.length > 0" class="report_con">
       <div class="result">
         <p class="score">{{ newInfo.fraction }}</p>
-        <p class="txt">综合点评：<span>优秀</span></p>
+        <p class="txt">
+          综合点评：<span>{{ newInfo.fraction > 6 ? '优秀' : '良好' }}</span>
+        </p>
       </div>
 
       <div class="process">
@@ -170,13 +173,14 @@ export default {
         font-family: Bebas;
         font-weight: 400;
         color: #4974f5;
+        min-height: 78px;
       }
       .txt {
-        font-size: 24px;
+        font-size: 26px;
         font-family: PingFang SC;
         font-weight: bold;
         color: #1a1a1a;
-        margin-top: 32px;
+        margin-top: 16px;
         span {
           color: #4974f5;
         }
