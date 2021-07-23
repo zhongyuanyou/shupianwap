@@ -328,7 +328,7 @@ export default {
     handleScroll() {
       // 获得团队服务距离顶部高度
       const top = this.$refs.sticky.getBoundingClientRect().top
-      if (top < 20) {
+      if (top < 200) {
         this.stickyFlag = true
       } else {
         this.stickyFlag = false
