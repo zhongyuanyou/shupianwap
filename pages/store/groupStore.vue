@@ -270,6 +270,7 @@ export default {
         teamService: {},
         planners: [],
       }, // 详情数据
+      type: '', // 页面类型
     }
   },
   computed: {
@@ -285,6 +286,9 @@ export default {
       this.$xToast.error('获取团队店铺信息失败')
       setTimeout(this.$back(), 2000)
       return
+    }
+    if (query.pageStatus === 'preview') {
+      this.type = 'preview'
     }
     window.addEventListener('scroll', this.handleScroll)
 
@@ -317,6 +321,7 @@ export default {
           active: this.active,
           storeId: this.storeId,
           typeId,
+          type: this.type
         },
       })
     },
@@ -334,6 +339,7 @@ export default {
         const params = {
           storeId: this.storeId,
           ignoreDataScope: 'goods',
+          type: this.type
         }
         const { code, data, message } = await this.$axios.get(
           storeApi.mchStoreInfo,
@@ -361,7 +367,8 @@ export default {
           storeId: this.storeId,
           typeId,
           page: 1,
-          limit: 20,
+          limit: 4,
+          type: this.type
         }
         const { code, data, message } = await this.$axios.post(
           storeApi.recommendGoods,
