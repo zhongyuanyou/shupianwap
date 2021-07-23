@@ -1,5 +1,5 @@
 <template>
-  <div class="page-head" :style="{ top: top + 'px' }">
+  <div class="page-head" :class="showHead2 ? 'page-head2' : ''">
     <div class="btn-cancel" @click="handleCancel">取消</div>
     {{ title }}
     <div class="btn-submit" :class="hasVal ? 'blue' : ''" @click="submit">
@@ -27,6 +27,16 @@ export default {
       type: Number,
       default: 0,
     },
+  },
+  data() {
+    return {
+      showHead2: false,
+    }
+  },
+  mounted() {
+    if (window.AlipayJSBridge) {
+      this.showHead2 = true
+    }
   },
   methods: {
     handleCancel() {
@@ -82,5 +92,9 @@ export default {
   //   width: 100px;
   //   font-size: 32px;
   // }
+}
+.page-head2 {
+  height: 168px !important;
+  padding: 80px 32px 0 32px !important;
 }
 </style>

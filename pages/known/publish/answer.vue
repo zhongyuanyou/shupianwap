@@ -9,7 +9,7 @@
       @submit="submit"
       @handleCancel="handleCancel"
     />
-    <div class="main">
+    <div class="main" :style="{ paddingTop: paddingTop + 'px' }">
       <TitleArea ref="myTitle" :title="questionInfo.title" :can-edit="false" />
       <div class="content">
         <Editor

@@ -1,16 +1,14 @@
 <template>
   <div>
-    <div class="tabbar" :style="{ height: barHeight + 'px' }"></div>
-    <div class="question_page" :style="{ paddingTop: barHeight + 'px' }">
+    <div class="question_page">
       <PageHead
         :has-val="hasVal"
         :confirm-text="editType === '2' ? '修改问题' : '发布问题'"
         :title="title"
-        :top="barHeight - 40"
         @submit="submit"
         @handleCancel="handleCancel"
       />
-      <div class="main">
+      <div class="main" :style="{ paddingTop: paddingTop + 'px' }">
         <TitleArea
           ref="myTitle"
           :max-length="50"
@@ -74,7 +72,6 @@ export default {
   mixins: [EditorMinxin],
   data() {
     return {
-      barHeight: 44,
       fromPage: 'question',
       showToast: true,
       title: '',
@@ -92,12 +89,6 @@ export default {
     },
   },
   mounted() {
-    if (this.$route.query.platform && this.$route.query.platform === 'mpass') {
-      this.barHeight = 84
-      // this.$sp.isShowTitle((res) => {
-      //   console.log('res', res)
-      // })
-    }
     if (this.$route.query.editType === '2') {
       this.editType = this.$route.query.editType
       this.questionId = this.$route.query.id

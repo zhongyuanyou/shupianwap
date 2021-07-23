@@ -11,6 +11,7 @@ export default {
   },
   data() {
     return {
+      paddingTop: 44,
       editType: '', // 内容类型 1 新增 2编辑
       // 新增内容的表单数据
       formData: {
@@ -46,6 +47,9 @@ export default {
     }),
   },
   mounted() {
+    if (window.AlipayJSBridge) {
+      this.paddingTop = 84
+    }
     this.getUserInfo()
     // 获取参数
     this.editType = this.$route.query.editType
