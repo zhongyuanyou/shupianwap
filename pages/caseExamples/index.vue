@@ -5,7 +5,7 @@
       :style="{ height: HeaderHeight + 'px' }"
     >
       <div ref="couponHeaderWarpper" class="case_examples_list-header-warpper">
-        <Header class="my-header" title="案例"></Header>
+        <Header class="my-header" title="案例广场"></Header>
         <client-only>
           <Classify :search="search" @select="selectClassify"></Classify>
         </client-only>

@@ -3,10 +3,13 @@
     <div class="report_title">
       <p class="report_title_lf">专家点评</p>
     </div>
-    <div class="report_con">
+    <!--  -->
+    <div v-if="newInfo.dimension.length > 0" class="report_con">
       <div class="result">
         <p class="score">{{ newInfo.fraction }}</p>
-        <p class="txt">综合点评：<span>优秀</span></p>
+        <p class="txt">
+          综合点评：<span>{{ newInfo.fraction > 6 ? '优秀' : '良好' }}</span>
+        </p>
       </div>
 
       <div class="process">
@@ -71,13 +74,7 @@ export default {
       headImg: '',
       defaultImg:
         'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0',
-      imgs: [
-        '5kh95r57rl00000.jpg',
-        'dw46uviu8kg0000.jpg',
-        '5u7gygwxzsg0000.jpg',
-        'ehczc451lpk0000.jpg',
-        '6e5rze76buc0000.jpg',
-      ],
+      imgs: ['ehczc451lpk0000.jpg', '6e5rze76buc0000.jpg'],
     }
   },
   computed: {
@@ -118,7 +115,7 @@ export default {
 
       const val = window.sessionStorage.getItem(name)
 
-      if (val === null || parseInt(val) > this.imgs.length) {
+      if (val === null || parseInt(val) >= this.imgs.length) {
         const index = parseInt(Math.random() * this.imgs.length)
         window.sessionStorage.setItem(name, index)
 
@@ -170,13 +167,14 @@ export default {
         font-family: Bebas;
         font-weight: 400;
         color: #4974f5;
+        min-height: 78px;
       }
       .txt {
-        font-size: 24px;
+        font-size: 26px;
         font-family: PingFang SC;
         font-weight: bold;
         color: #1a1a1a;
-        margin-top: 32px;
+        margin-top: 16px;
         span {
           color: #4974f5;
         }

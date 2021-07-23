@@ -24,6 +24,7 @@
               <sp-image
                 v-for="(image, imageIndex) in item.imgs"
                 :key="imageIndex"
+                fit="cover"
                 class="image"
                 :src="image"
               ></sp-image>
@@ -151,8 +152,10 @@ export default {
           line-height: 40px;
         }
         .images {
+          margin-top: 24px;
           overflow: hidden;
           font-size: 0;
+
           .images_container {
             margin: 0 -5px;
           }

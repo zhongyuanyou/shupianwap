@@ -36,6 +36,7 @@
 
     <!-- 案件简介 -->
     <CaseIntroduction
+      v-if="caseInfo.content || caseInfo.imgs"
       title="案例简介"
       :text="caseInfo.content"
       :images="caseInfo.imgs"
@@ -56,7 +57,10 @@
 
     <!-- 办理结果 -->
     <CaseIntroduction
-      v-if="caseDetail.caseType === 'CASE_TYPE_1'"
+      v-if="
+        caseDetail.caseType === 'CASE_TYPE_1' &&
+        (caseResult.content || caseResult.imgs)
+      "
       title="办理结果"
       :text="caseResult.content"
       :images="caseResult.imgs"
@@ -72,8 +76,9 @@
     />
 
     <!-- 专家点评 -->
+
     <ExpertComments
-      v-if="id"
+      v-if="id && expertEvaluation.length > 0"
       :details-id="id"
       :info="expertEvaluation"
     ></ExpertComments>
@@ -243,7 +248,7 @@ export default {
           const newExperienceItem = {
             name: item.name,
             time: this.getExperience(item.show, 'BaseDate').value,
-            content: this.getExperience(item.show, 'BaseText').value,
+            content: this.getExperience(item.show, 'BaseText').content,
             imgs: this.getExperience(item.show, 'BaseUpload').imgs || [],
           }
 

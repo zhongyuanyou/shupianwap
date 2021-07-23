@@ -14,7 +14,7 @@
           <div class="name">{{ item.caseName }}</div>
           <div class="time">办理周期：{{ item.dealTime }}天</div>
         </div>
-        <div class="list_header_right">
+        <div v-if="item.caseScore" class="list_header_right">
           <span class="num">{{ (item.caseScore / 100 || 0).toFixed(1) }} </span>
           <span class="unit">分</span>
         </div>
@@ -22,7 +22,6 @@
       <!-- 服务产品类型 CASE_TYPE_1
       交易产品类型  CASE_TYPE_2 -->
       <div v-if="content" class="list_content">
-        <span class="san_jiao"></span>
         <div class="list_content_text">案例简介：{{ content }}</div>
       </div>
     </div>
@@ -49,7 +48,7 @@ export default {
         this.item?.caseIntro?.show &&
         this.item?.caseIntro?.show?.length > 0
       ) {
-        return this.item?.caseIntro?.show[0].content || ''
+        return this.item?.caseIntro?.show[0]?.content || ''
       }
       return ''
     },
@@ -121,17 +120,7 @@ export default {
       background: #f8f8f8;
       margin-top: 30px;
       border-radius: 12px;
-      .san_jiao {
-        position: absolute;
-        top: -16px;
-        left: 79px;
 
-        width: 0;
-        height: 0;
-        border-left: 12px solid transparent;
-        border-right: 12px solid transparent;
-        border-bottom: 16px solid #f8f8f8;
-      }
       .list_content_text {
         font-family: PingFangSC-Regular;
         font-size: 24px;
@@ -140,6 +129,18 @@ export default {
         line-height: 38px;
         .textOverflow(3);
       }
+    }
+    .list_content::after {
+      content: '';
+      position: absolute;
+      top: -16px;
+      left: 79px;
+
+      width: 0;
+      height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-bottom: 16px solid #f8f8f8;
     }
   }
 }
