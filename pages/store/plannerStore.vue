@@ -398,7 +398,7 @@ export default {
           return
         }
         // 详解接口请求数据
-        const params = { mchUserId }
+        const params = { mchUserId,ignoreDataScope:'goods' }
         // 详情接口
         const { data, code, message } = await this.$axios.get(
           storeApi.plannerStoreInfo,
@@ -419,16 +419,12 @@ export default {
             data.modules[0].data[0].id) ||
           ''
         this.detailData = data || {}
-        // 推荐商品
-        this.detailData.goods = this.detailData.goods.filter(
-          (item) => Number(item.state) === 1
-        )
         // IM接口请求数据
         const IMParams = { id: mchUserId }
         // IM数据
         const IMData = await planner.detail(IMParams)
         this.IMDetailData = IMData || {}
-
+        this.getList()
         return data
       } catch (error) {
         console.error('getDetail:', error)
