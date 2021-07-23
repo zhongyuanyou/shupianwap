@@ -62,7 +62,7 @@
       </sp-skeleton>
     </div>
 
-    <div class="bg-group-fixed" :style="floatview ? {opacity:'1',top:isInApp?(48+appInfo.statusBarHeight)/100+'rem':'0.48rem'} : {opacity:'0',top:isInApp?(48+appInfo.statusBarHeight)/100+'rem':'0.48rem'}">
+    <div class="bg-group-fixed" :style="floatview ? {opacity:'1'} : {opacity:'0'}">
       <div class="footer">
         <img :src="detailData.mchBaseInfo.logo" alt="" />
         <div class="footertext">
@@ -366,6 +366,7 @@ export default {
     // }
   },
   mounted() {
+   
     window.addEventListener('scroll', this.handleScroll)
     if (this.isInApp) {
       if (this.userInfo.userId && this.userInfo.token) {
@@ -398,7 +399,7 @@ export default {
   methods: {
     ...mapActions({
       POSITION_CITY: 'city/POSITION_CITY',
-    }),
+    }), 
     ...mapMutations({
       setUserInfo: 'user/SET_USER',
       clearUserInfo: 'user/CLEAR_USER',
@@ -446,10 +447,8 @@ export default {
         data.data.goods = data.data.goods.filter(
           (item) => Number(item.state) === 1
         )
-        
         this.active = data.data.goodsRecommend.length>0 && data.data.goodsRecommend[0].id
         this.detailData = data.data || {}
-
         return data
       } catch (error) {
         console.error('getDetail:', error)
