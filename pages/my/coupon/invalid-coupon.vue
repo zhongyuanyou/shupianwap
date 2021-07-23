@@ -1,8 +1,8 @@
 <template>
-  <div class="invoice" :style="{ paddingBottom: FooterNavHeight + 'px' }">
-    <sp-sticky>
+  <div class="invoice">
+    <HeaderSlot>
       <Header class="my-header" title="失效券"></Header>
-    </sp-sticky>
+    </HeaderSlot>
     <div v-for="(item, index) of list" :key="index" class="coupon_list">
       <CouponsItem
         :item="item.marketingCouponVO || {}"
@@ -23,7 +23,7 @@
       <div v-if="tabActive === 0" :list="list"></div>
     </sp-list> -->
 
-    <div v-if="list.length == 0 && loading == false">
+    <div v-if="list.length == 0 && loading == false" class="empty-container">
       <sp-empty
         class="empty-text"
         :description="tabActive === 0 ? '暂无优惠券卡' : '暂无活动卡'"
@@ -50,7 +50,7 @@ import {
   Dialog,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-
+import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
 import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
@@ -72,7 +72,7 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [Dialog.Component.name]: Dialog.Component,
     [List.name]: List,
-
+    HeaderSlot,
     CouponsItem,
   },
   data() {
@@ -168,12 +168,17 @@ export default {
 
   background-color: #f5f5f5;
 
-  .empty-text ::v-deep .sp-empty__description {
-    font-size: 30px;
-    font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
-    color: #222222;
-    line-height: 30px;
+  .empty-container {
+    min-height: calc(100vh - 88px);
+    background-color: #fff;
+
+    .empty-text ::v-deep .sp-empty__description {
+      font-size: 30px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: bold;
+      color: #222222;
+      line-height: 30px;
+    }
   }
   .coupon_list {
     margin: 24px 40px 0;
