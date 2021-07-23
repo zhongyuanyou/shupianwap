@@ -1,22 +1,15 @@
 <template>
-  <header-slot>
-    <div class="page-head">
-      <div class="btn-cancel" @click="handleCancel">取消</div>
-      {{ title }}
-      <div class="btn-submit" :class="hasVal ? 'blue' : ''" @click="submit">
-        {{ confirmText }}
-      </div>
+  <div class="page-head" :style="{ top: top + 'px' }">
+    <div class="btn-cancel" @click="handleCancel">取消</div>
+    {{ title }}
+    <div class="btn-submit" :class="hasVal ? 'blue' : ''" @click="submit">
+      {{ confirmText }}
     </div>
-  </header-slot>
+  </div>
 </template>
 
 <script>
-import HeaderSlot from '@/components/common/head/HeaderSlot'
-
 export default {
-  components: {
-    HeaderSlot,
-  },
   props: {
     title: {
       type: String,
@@ -29,6 +22,10 @@ export default {
     confirmText: {
       type: String,
       default: '发布',
+    },
+    top: {
+      type: Number,
+      default: 0,
     },
   },
   methods: {
@@ -48,6 +45,9 @@ export default {
 }
 
 .page-head {
+  position: fixed;
+  left: 0;
+  width: 100%;
   height: 88px;
   line-height: 88px;
   padding: 0 32px;

@@ -139,7 +139,6 @@
           </p>
           <span>金牌规划师</span>
         </div>
-        <!-- && planerInfo.mchUserId -->
         <div class="bottom_btn_area">
           <sp-button
             type="info"

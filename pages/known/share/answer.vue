@@ -63,7 +63,6 @@
           </div>
         </div>
         <!-- <div class="html_content" v-html="answerDetails.content"></div> -->
-        <p class="pub-time">编辑于 {{ answerDetails.createTime }}</p>
 
         <!-- 推荐文章 -->
         <!-- <DetailArticleList :article-list="answerDetails.relatedArticles" /> -->
@@ -83,6 +82,7 @@
           <div class="user_name">{{ answerDetails.userName }}</div>
         </div>
         <div class="html_content" v-html="answerDetails.content"></div>
+        <p class="pub-time">编辑于 {{ answerDetails.createTime }}</p>
       </div>
       <div
         v-if="
@@ -138,20 +138,22 @@
       />
       <p>内容失效</p>
     </div>
-    <div class="bottom-btn">
-      <div
-        v-if="topPlannerInfo.mchUserId || planerInfo.mchUserId"
-        ref="myPage"
-        class="user-info"
-      >
-        <sp-image
+    <div v-if="topPlannerInfo.id || planerInfo.id" class="bottom-btn">
+      <div class="user-info">
+        <div
+          :style="{
+            background: `url(
+                ${
+                  topPlannerInfo.img ||
+                  planerInfo.img ||
+                  'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni-app-doc/6acec660-4f31-11eb-a16f-5b3e54966275.jpg'
+                }
+              
+              ) no-repeat center center `,
+            backgroundSize: 'cover',
+          }"
           class="img"
-          :src="
-            topPlannerInfo.img ||
-            planerInfo.img ||
-            $ossImgSetV2('9zzzas17j8k0000.png')
-          "
-        />
+        ></div>
         <div class="infos">
           <p class="name">
             {{
@@ -162,7 +164,6 @@
           </p>
           <span>金牌规划师</span>
         </div>
-        <!-- && planerInfo.mchUserId -->
         <div class="bottom_btn_area">
           <sp-button
             type="info"
@@ -786,8 +787,6 @@ export default {
   }
 }
 .title-area {
-  // margin-top: 120px;
-  padding: 20px 40px;
   .title {
     font-size: 40px;
     font-family: PingFangSC-Medium, PingFang SC;

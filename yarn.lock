@@ -1217,6 +1217,17 @@
   resolved "http://tmobile.dgg188.cn/@fe/pdfjs-dist/download/@fe/pdfjs-dist-2.7.571.tgz#87224d05b347542c9acf9e6123e3a57dbbf2d0e5"
   integrity sha1-hyJNBbNHVCyaz55hI+Olfbvy0OU=
 
+"@fe/sp-api-js@0.0.7":
+  version "0.0.7"
+  resolved "http://tmobile.dgg188.cn/@fe/sp-api-js/download/@fe/sp-api-js-0.0.7.tgz#c8457777c5833a9eb071a2cf281495a567a22b9b"
+  integrity sha1-yEV3d8WDOp6wcaLPKBSVpWeiK5s=
+  dependencies:
+    rollup-plugin-filesize "^9.0.2"
+    rollup-plugin-serve "^1.0.4"
+    rollup-plugin-uglify "^6.0.4"
+    uglify-es "^3.3.9"
+    vconsole "^3.5.1"
+
 "@fe/sp-ui-mobile@0.0.21":
   version "0.0.21"
   resolved "http://tmobile.dgg188.cn/@fe/sp-ui-mobile/download/@fe/sp-ui-mobile-0.0.21.tgz#809470ebb7b138a9288f552f7b95e2ea9366b2b0"
@@ -1246,6 +1257,18 @@
     raw-loader "^4.0.1"
     vue-resize-sensor "^2.0.0"
     worker-loader "^2.0.0"
+
+"@fortawesome/fontawesome-common-types@^0.2.35":
+  version "0.2.35"
+  resolved "https://registry.npm.taobao.org/@fortawesome/fontawesome-common-types/download/@fortawesome/fontawesome-common-types-0.2.35.tgz?cache=0&sync_timestamp=1615925155753&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40fortawesome%2Ffontawesome-common-types%2Fdownload%2F%40fortawesome%2Ffontawesome-common-types-0.2.35.tgz#01dd3d054da07a00b764d78748df20daf2b317e9"
+  integrity sha1-Ad09BU2gegC3ZNeHSN8g2vKzF+k=
+
+"@fortawesome/free-solid-svg-icons@^5.15.3":
+  version "5.15.3"
+  resolved "https://registry.npm.taobao.org/@fortawesome/free-solid-svg-icons/download/@fortawesome/free-solid-svg-icons-5.15.3.tgz?cache=0&sync_timestamp=1615925153060&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40fortawesome%2Ffree-solid-svg-icons%2Fdownload%2F%40fortawesome%2Ffree-solid-svg-icons-5.15.3.tgz#52eebe354f60dc77e0bde934ffc5c75ffd04f9d8"
+  integrity sha1-Uu6+NU9g3Hfgvek0/8XHX/0E+dg=
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "^0.2.35"
 
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
@@ -2243,11 +2266,6 @@
   version "1.3.0"
   resolved "https://registry.nlark.com/@vant/icons/download/@vant/icons-1.3.0.tgz#94f4c93122fd7331e0e00df55804779aead8c9c2"
   integrity sha1-lPTJMSL9czHg4A31WAR3murYycI=
-
-"@vant/icons@^1.5.3":
-  version "1.6.0"
-  resolved "https://registry.nlark.com/@vant/icons/download/@vant/icons-1.6.0.tgz#3db7eb7f963f51a2a08676720d5af9c4c3512feb"
-  integrity sha1-Pbfrf5Y/UaKghnZyDVr5xMNRL+s=
 
 "@vant/icons@^1.5.3":
   version "1.6.0"
@@ -5065,6 +5083,11 @@ cookie-signature@1.0.6:
   version "1.0.6"
   resolved "https://registry.npm.taobao.org/cookie-signature/download/cookie-signature-1.0.6.tgz#e303a882b342cc3ee8ca513a79999734dab3ae2c"
   integrity sha1-4wOogrNCzD7oylE6eZmXNNqzriw=
+
+cookie-storage@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.nlark.com/cookie-storage/download/cookie-storage-6.1.0.tgz#291b2f662d961be44f999626593421cbfcf23790"
+  integrity sha1-KRsvZi2WG+RPmZYmWTQhy/zyN5A=
 
 cookie-universal-nuxt@^2.1.4:
   version "2.1.4"
@@ -13901,6 +13924,11 @@ supports-hyperlinks@^2.0.0:
     has-flag "^4.0.0"
     supports-color "^7.0.0"
 
+svelte-fa@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.nlark.com/svelte-fa/download/svelte-fa-2.2.1.tgz#743b5662ce594705bc8f16d99d84ebfa23f326dd"
+  integrity sha1-dDtWYs5ZRwW8jxbZnYTr+iPzJt0=
+
 svg-captcha@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npm.taobao.org/svg-captcha/download/svg-captcha-1.4.0.tgz#32ead3c6463936c218bb3bc9ed04fea4eeffe492"
@@ -14748,7 +14776,7 @@ validate-npm-package-name@^3.0.0:
   dependencies:
     builtins "^1.0.3"
 
-vant@^2.12.1, vant@^2.12.19:
+vant@^2.12.1:
   version "2.12.21"
   resolved "https://registry.nlark.com/vant/download/vant-2.12.21.tgz?cache=0&sync_timestamp=1622701359978&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fvant%2Fdownload%2Fvant-2.12.21.tgz#a5160a1358627a7a02c5a7bb6a911bcc2c0e717e"
   integrity sha1-pRYKE1hienoCxae7apEbzCwOcX4=
@@ -14783,6 +14811,18 @@ vconsole@^3.3.4:
     copy-text-to-clipboard "^3.0.1"
     core-js "^3.11.0"
     mutation-observer "^1.0.3"
+
+vconsole@^3.5.1:
+  version "3.9.0"
+  resolved "https://registry.nlark.com/vconsole/download/vconsole-3.9.0.tgz?cache=0&sync_timestamp=1626420160382&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fvconsole%2Fdownload%2Fvconsole-3.9.0.tgz#342933825caa484890635aeacfe72ffc2c72f60e"
+  integrity sha1-NCkzglyqSEiQY1rqz+cv/Cxy9g4=
+  dependencies:
+    "@fortawesome/free-solid-svg-icons" "^5.15.3"
+    cookie-storage "^6.1.0"
+    copy-text-to-clipboard "^3.0.1"
+    core-js "^3.11.0"
+    mutation-observer "^1.0.3"
+    svelte-fa "^2.2.1"
 
 vendors@^1.0.0:
   version "1.0.4"
