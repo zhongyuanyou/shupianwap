@@ -121,10 +121,11 @@ export default {
       storeId: '',
       info: {
         teamInfo: {},
-        goodsRecommend: []
+        goodsRecommend: [],
       },
       goods: [],
       typeId: '',
+      type: '',
     }
   },
   mounted() {
@@ -134,6 +135,7 @@ export default {
     }
     this.storeId = query.storeId
     this.typeId = query.typeId
+    this.type = query.type || ''
     this.getGroupInfoApi()
   },
   methods: {
@@ -202,6 +204,8 @@ export default {
       try {
         const params = {
           storeId: this.storeId,
+          type: this.type || '',
+          ignoreDataScope: 'goods',
         }
         const { code, data, message } = await this.$axios.get(
           storeApi.mchStoreInfo,

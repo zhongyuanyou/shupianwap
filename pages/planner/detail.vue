@@ -127,9 +127,13 @@
                           src="https://cdn.shupian.cn/sp-pt/wap/images/e90wl9dbyw00000.png"
                           alt=""
                         />
-                        <span style="overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;">{{ newDetailData.officeAddress }}</span
+                        <span
+                          style="
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                          "
+                          >{{ newDetailData.officeAddress }}</span
                         >
                       </div>
                     </li>
@@ -295,14 +299,14 @@
             <div>
               <i
                 class="spiconfont spiconfont-huida_mian"
-                style="font-size: 24px; color: #ff614e"
+                style="color: #ff614e"
               ></i>
               <span class="two_line">{{ data.title }}</span>
             </div>
             <div>
               <i
                 class="spiconfont spiconfont-wenti_mian"
-                style="font-size: 24px; color: #4974f5"
+                style="color: #4974f5"
               ></i>
               <p>
                 <span class="three_line">{{ data.contentText }}</span>
@@ -1109,6 +1113,13 @@ export default {
   padding-bottom: env(safe-area-inset-bottom);
   .body {
     .detail-content {
+      &__section-title-text {
+        font-size: 32px;
+        font-weight: bold;
+        color: #222222;
+        text-align: center;
+        line-height: 32px;
+      }
       &__bg {
         padding: 40px;
         position: relative;
@@ -1146,13 +1157,22 @@ export default {
       &__label {
         font-size: 24px;
         p {
+          height:50px;
+          overflow: hidden;
           margin: 23px 0 32px 0;
           span {
             display: inline-block;
             margin: 0 12px 0 0;
-            padding: 13px 16px;
+            padding:0 16px;
+            height: 50px;
+            max-width: 100%;
+            line-height: 50px;
+            text-align: center;
             background: #eadacd;
             border-radius: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
         }
         ul {
@@ -1180,8 +1200,7 @@ export default {
             &:last-of-type {
               margin: 0;
             }
-            .flex{
-
+            .flex {
             }
             div {
               img {
@@ -1466,9 +1485,22 @@ export default {
       }
       .myQuestion {
         li {
-          padding: 32px 0;
+          padding: 40px 0;
+          border-bottom: 1px solid #f4f4f4;
+          &:last-of-type{
+            border:none
+          }
           .spiconfont {
+            font-size: 35px !important;
             margin: 0 16px 0 0;
+            &-huida_mian{
+              background-image:-webkit-linear-gradient(bottom,#FA5741,#FA6D5A); 
+              -webkit-background-clip:text; 
+              -webkit-text-fill-color:transparent;
+            }
+            &-wenti_mian{
+              color: #ff614e;
+            }
           }
           div {
             display: flex;
@@ -1480,6 +1512,7 @@ export default {
               justify-content: space-between;
               align-items: normal;
               width: 100%;
+              
               img {
                 width: 190px;
                 height: 127px;
@@ -1489,7 +1522,6 @@ export default {
               }
             }
             &:first-of-type {
-              font-family: PingFangSC-Medium;
               font-size: 36px;
               color: #1a1a1a;
               font-weight: bold;
@@ -1512,7 +1544,7 @@ export default {
       .myBook {
         li {
           padding: 32px 0;
-          border-bottom: 1px solid #f2f2f2;
+          border-bottom: 1px solid #f4f4f4;
           .empty {
           }
           .spiconfont {
@@ -1559,7 +1591,7 @@ export default {
       .see {
         li {
           padding: 32px 0;
-          border-bottom: 1px solid #f2f2f2;
+          border-bottom: 1px solid #f4f4f4;
           .empty {
           }
           .spiconfont {
