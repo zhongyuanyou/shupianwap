@@ -72,8 +72,7 @@ export default {
   data() {
     return {
       headImg: '',
-      defaultImg:
-        'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0',
+      defaultImg: this.$ossImgSetV2('727ro8a1oa00000.jpg'),
       imgs: ['ehczc451lpk0000.jpg', '6e5rze76buc0000.jpg'],
     }
   },

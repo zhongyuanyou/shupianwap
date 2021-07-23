@@ -116,6 +116,10 @@ export default {
           //   asc: false,
           // },
           {
+            column: 'isTop',
+            asc: false,
+          },
+          {
             column: 'createTime',
             asc: false,
           },
@@ -164,6 +168,10 @@ export default {
         ]
       } else {
         this.search.orderItems = [
+          {
+            column: 'isTop',
+            asc: false,
+          },
           {
             column: 'createTime',
             asc: false,
