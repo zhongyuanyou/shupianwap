@@ -257,15 +257,24 @@ export default {
   }
   .case-des::after {
     content: '';
+    // position: absolute;
+    // left: 40px;
+    // top: -60px;
+    // width: 0;
+    // height: 0;
+    // border-top: 30px solid transparent;
+    // border-right: 30px solid transparent;
+    // border-bottom: 30px solid #f8f8f8;
+    // border-left: 30px solid transparent;
     position: absolute;
-    left: 40px;
-    top: -60px;
+    top: -16px;
+    left: 79px;
+
     width: 0;
     height: 0;
-    border-top: 30px solid transparent;
-    border-right: 30px solid transparent;
-    border-bottom: 30px solid #f8f8f8;
-    border-left: 30px solid transparent;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 16px solid #f8f8f8;
   }
 }
 </style>
