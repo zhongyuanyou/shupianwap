@@ -74,7 +74,7 @@ export default {
   mixins: [EditorMinxin],
   data() {
     return {
-      barHeight: 0,
+      barHeight: 44,
       fromPage: 'question',
       showToast: true,
       title: '',
@@ -93,7 +93,7 @@ export default {
   },
   mounted() {
     if (this.$route.query.platform && this.$route.query.platform === 'mpass') {
-      this.barHeight = 80
+      this.barHeight = 84
       // this.$sp.isShowTitle((res) => {
       //   console.log('res', res)
       // })
