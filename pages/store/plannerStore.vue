@@ -57,7 +57,7 @@
           <div class="bg-group__headtext">
             <p>
               <span class="title">{{ detailData.personal.name }}</span>
-              <span v-if="detailData.mchStoreId" class="label" @click="goGroup"
+              <span v-if="detailData.teamStoreId" class="label" @click="goGroup"
                 >我的团队></span
               >
             </p>

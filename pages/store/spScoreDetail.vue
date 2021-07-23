@@ -123,19 +123,20 @@ export default {
                 //     }],
                 //     globalCoord: false // 缺省为 false
                 // },
-                color: {
-                    type: 'linear',
-                    x: 0,
-                    y: 0,
-                    x2: 0,
-                    y2: 1,
-                    colorStops: [{
-                        offset: 0, color: '#fff' // 0% 处的颜色
-                    }, {
-                        offset: 1, color: 'rgba(73, 116, 245, 1)' // 100% 处的颜色
-                    }],
-                    globalCoord: false // 缺省为 false
-                },
+                // color: {
+                //     type: 'linear',
+                //     x: 0,
+                //     y: 0,
+                //     x2: 0,
+                //     y2: 1,
+                //     colorStops: [{
+                //         offset: 0, color: '#fff' // 0% 处的颜色
+                //     }, {
+                //         offset: 1, color: 'rgba(73, 116, 245, 1)' // 100% 处的颜色
+                //     }],
+                //     globalCoord: false // 缺省为 false
+                // },
+                color: [ 'rgba(148, 173, 247, 0.5)', 'red', 'red', 'red', 'red', 'red', 'red'],
                 textStyle:{
                     fontFamily: "PingFangSC-Medium",
                     fontSize: "0.2rem",
@@ -151,30 +152,35 @@ export default {
                         { name: '质量评价', max: 100},
                         { name: '平台合作', max: 100}
                     ],
-                    splitArea: {
-                        areaStyle: {
-                            color: ['#fff','#fff','#fff','#fff','#fff','rgba(148, 173, 247, 0.5)'],
-                            // color: ['rgba(148, 173, 247, 0.5)'],
-                        },
-                        show:true
-                    },
+                    center: ['50%', '50%'],
+                    splitNumber: 1,
+                    radius: 80,
+                    // splitArea: {
+                    //     areaStyle: {
+                    //     },
+                    // },
                     axisLine: {
                         lineStyle: {
                             color: 'rgba(73, 116, 245, 0.2)',
                             type:"dashed",
                         }
                     },
-                    splitLine: {
-                        lineStyle: {
-                            color: 'rgba(148, 173, 247, 0)',
-                        }
-                    }
+                    // splitLine: {
+                    //     lineStyle: {
+                    //         // color: 'rgba(148, 173, 247, 0)',
+                    //     }
+                    // }
                     
                 },
                 series: [
                     {
                         name: '薯片分',
                         type: 'radar',
+                        areaStyle: { // 单项区域填充样式
+                            normal: {
+                                color: '#fff' // 填充的颜色。[ default: "#000" ]
+                            }
+                        },
                         data: [
                             {
                                 value: [50, 60, 70, 80, 90, 100],
