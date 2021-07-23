@@ -111,13 +111,26 @@ export default {
         return{
             floatview:true,
             EchartOptions:{
+                // color: {
+                //     type: 'radial',
+                //     x: 0.5,
+                //     y: 0.3,
+                //     r: 0.6,
+                //     colorStops: [{
+                //         offset: 0, color: '#fff' // 0% 处的颜色
+                //     }, {
+                //         offset: 1, color: 'rgba(73, 116, 245, 1)' // 100% 处的颜色
+                //     }],
+                //     globalCoord: false // 缺省为 false
+                // },
                 color: {
-                    type: 'radial',
-                    x: 0.5,
-                    y: 0.5,
-                    r: 0.5,
+                    type: 'linear',
+                    x: 0,
+                    y: 0,
+                    x2: 0,
+                    y2: 1,
                     colorStops: [{
-                        offset: 0, color: 'rgba(73, 116, 245, 1)' // 0% 处的颜色
+                        offset: 0, color: '#fff' // 0% 处的颜色
                     }, {
                         offset: 1, color: 'rgba(73, 116, 245, 1)' // 100% 处的颜色
                     }],
@@ -125,7 +138,7 @@ export default {
                 },
                 textStyle:{
                     fontFamily: "PingFangSC-Medium",
-                    fontSize: "14px",
+                    fontSize: "0.2rem",
                     color: "#222222",
                     fontWeight:"bold"
                 },
@@ -140,8 +153,10 @@ export default {
                     ],
                     splitArea: {
                         areaStyle: {
-                            color: ['rgba(148, 173, 247, 0.5)'],
-                        }
+                            color: ['#fff','#fff','#fff','#fff','#fff','rgba(148, 173, 247, 0.5)'],
+                            // color: ['rgba(148, 173, 247, 0.5)'],
+                        },
+                        show:true
                     },
                     axisLine: {
                         lineStyle: {
@@ -151,7 +166,7 @@ export default {
                     },
                     splitLine: {
                         lineStyle: {
-                            color: 'rgba(148, 173, 247, 0)'
+                            color: 'rgba(148, 173, 247, 0)',
                         }
                     }
                     
