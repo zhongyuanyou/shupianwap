@@ -55,7 +55,6 @@ export default function ({ $axios, redirect, app, store }) {
         config.headers['X-Auth-Token'] = token
         config.headers['X-Req-UserId'] = userId
       }
-
       let userNo = store.state.user.userNo
       if (!userNo) {
         userNo = app.$cookies.get('userNo', {

@@ -31,11 +31,9 @@
           v-for="(item, index) in responseData"
           :key="index"
           class="coupon_item"
+          :class="item.couponStatus === 1 ? 'haveUse' : 'notUse'"
         >
-          <div
-            :class="item.couponStatus === 1 ? 'haveUse' : 'notUse'"
-            class="item-lf"
-          >
+          <div class="item-lf">
             <div v-if="item.couponType === 1">
               <div class="coupon_price">{{ item.reducePrice }}</div>
               <div v-if="item.fullPrice == 0" class="can_use">无门槛</div>
@@ -51,13 +49,15 @@
               v-if="item.couponStatus !== 1 && item.countSum !== -1"
               class="coupon_remain"
             >
-              <div class="remain_bar">
-                <div
-                  class="bar_inner"
-                  :style="{ width: getRemainPercent(item) + '%' }"
-                ></div>
+              <div class="in_box">
+                <div class="remain_bar">
+                  <div
+                    class="bar_inner"
+                    :style="{ width: getRemainPercent(item) + '%' }"
+                  ></div>
+                </div>
+                <div class="remain_num">剩余{{ getRemainPercent(item) }}%</div>
               </div>
-              <div class="remain_num">剩余{{ getRemainPercent(item) }}%</div>
             </div>
             <div
               v-if="item.couponStatus !== 1 && item.countSum === -1"
@@ -78,10 +78,10 @@
               <span
                 :class="item.couponStatus === 1 ? 'no-coupon' : 'type-name'"
                 >{{ item.couponType === 1 ? '满减券' : '折扣券' }}</span
-              >
-              {{ item.couponName }}
+              >{{ item.couponName }}
             </div>
             <div ref="textpro" class="content" @click="popOver(index)">
+              <span v-if="item.useType === 1">全场通用</span>
               <span v-if="item.useType === 2">仅限指定品类使用</span>
               <span v-if="item.useType === 3">仅限指定商品使用</span>
             </div>
@@ -155,12 +155,13 @@ export default {
       indexNum: 0,
       couponType: 0, // 优惠券类型 未使用 已使用 已失效
       isShow: false, // 控制显示气泡
-      advertCode: 'ad100501',
+      advertCode: 'ad113304',
       productAdvertData: [],
       isNoData: false,
       page: 1,
       limit: 20,
       nomore: false,
+      isLogin: '',
     }
   },
   computed: {
@@ -173,29 +174,30 @@ export default {
   },
   mounted() {
     this.getAdvertisingData()
+    this.getInitCouponData()
     // this.getInitCouponData()
-    if (this.isInApp) {
-      if (this.userInfo.userId && this.userInfo.token) {
-        console.log('无token')
-        this.getInitCouponData()
-      } else {
-        this.$appFn.dggGetUserInfo((res) => {
-          console.log('调用app获取信息', res)
-          if (res.code === 200) {
-            // 兼容启大顺参数返回
-            this.$store.dispatch(
-              'user/setUser',
-              typeof res.data === 'string' ? JSON.parse(res.data) : res.data
-            )
-            this.getInitCouponData()
-          } else {
-            this.getInitCouponData()
-          }
-        })
-      }
-    } else {
-      this.getInitCouponData()
-    }
+    // if (this.isInApp) {
+    //   if (this.userInfo.userId && this.userInfo.token) {
+    //     console.log('无token')
+    //     this.getInitCouponData()
+    //   } else {
+    //     this.$appFn.dggGetUserInfo((res) => {
+    //       console.log('调用app获取信息', res)
+    //       if (res.code === 200) {
+    //         // 兼容启大顺参数返回
+    //         this.$store.dispatch(
+    //           'user/setUser',
+    //           typeof res.data === 'string' ? JSON.parse(res.data) : res.data
+    //         )
+    //         this.getInitCouponData()
+    //       } else {
+    //         this.getInitCouponData()
+    //       }
+    //     })
+    //   }
+    // } else {
+    //   this.getInitCouponData()
+    // }
   },
   methods: {
     getRemainPercent(data) {
@@ -255,26 +257,28 @@ export default {
       }
     },
     async setCouponStatus(item) {
-      const isLogin = await this.$isLogin()
-      if (isLogin === 'app_login_success') {
-        this.getInitCouponData()
-        return
+      console.log('loading', this.loading)
+      if (this.loading) return
+      if (!this.isLogin) {
+        this.isLogin = await this.$isLogin()
+        if (this.isLogin === 'app_login_success') {
+          this.getInitCouponData()
+          return
+        }
       }
-      if (!isLogin) return
       this.loading = true
       this.$axios
         .post(`${CHIPS_WAP_BASE_URL}/yk/coupon/v2/receive_coupon.do`, {
           couponId: item.id,
         })
         .then((res) => {
+          this.loading = false
           if (res && res.code === 200) {
             Toast('领取成功')
             this.page = 1
             this.getInitCouponData()
-            this.loading = true
             this.nomore = false
           } else {
-            this.loading = false
             Toast.fail({
               duration: 2000,
               message: res.message || '领取失败',
@@ -284,6 +288,7 @@ export default {
           }
         })
         .catch((err) => {
+          this.loading = false
           console.log(err)
           Toast.fail({
             duration: 2000,
@@ -464,19 +469,20 @@ export default {
 }
 .coupon_list {
   width: 100%;
-  padding: 12px 40px 20px 40px;
+  padding: 12px 40px 20px 30px;
   height: auto;
   .coupon_item {
     position: relative;
-    min-height: 212px;
-    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+    height: 212px;
+    // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
     // background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
     background-size: 100% 100%;
     margin: 24px 0;
     position: relative;
     .item-lf {
-      width: 201px;
-      height: 212px;
+      width: 208px;
+      height: 100%;
+      padding-left: 6px;
       float: left;
       .coupon_discount {
         font-size: 72px;
@@ -508,36 +514,44 @@ export default {
         // white-space: nowrap;
       }
       .coupon_remain {
-        font-size: 24px;
-        height: 30px;
+        margin-top: 10px;
         width: 100%;
-        .remain_bar {
-          margin-left: 20px;
-          width: 66px;
-          height: 8px;
-          border-radius: 4px;
-          background: #ff9467;
-          margin-top: 12px;
-          position: relative;
-          overflow: hidden;
-          float: left;
-          .bar_inner {
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            height: 100%;
+        font-size: 24px;
+        .in_box {
+          display: inline-block;
+          height: 30px;
+          width: 300px;
+          margin: 0 auto;
+          .remain_bar {
+            margin-left: 20px;
+            width: 90px;
+            height: 8px;
             border-radius: 4px;
-            background: #fff166;
+            background: #ff9467;
+            margin-top: 12px;
+            position: relative;
+            overflow: hidden;
+            float: left;
+            .bar_inner {
+              position: absolute;
+              left: 0;
+              bottom: 0;
+              height: 100%;
+              border-radius: 4px;
+              background: #fff166;
+            }
           }
-        }
-        .remain_num {
-          float: left;
-          opacity: 0.8;
-          font-size: 24px;
-          color: #fffcd6;
-          letter-spacing: 0;
-          transform: scale(0.8);
-          transform-origin: 12px 50%;
+          .remain_num {
+            width: 120px;
+            float: left;
+            opacity: 0.8;
+            font-size: 24px;
+            color: #fffcd6;
+            letter-spacing: 0;
+            transform: scale(0.7);
+            transform-origin: 14px 14px;
+            text-align: left;
+          }
         }
         .no-num {
           text-align: center;
@@ -555,11 +569,11 @@ export default {
       }
     }
     .item-rt {
-      padding: 30px 0 0 24px;
+      padding: 24px 0 0 24px;
       height: auto;
       box-sizing: border-box;
       width: auto;
-      padding-left: 230px;
+      padding-left: 236px;
       position: relative;
       .title {
         font-size: 32px;
@@ -570,8 +584,9 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        padding-left: 84px;
+        padding-left: 80px;
         padding-bottom: 12px;
+        margin-right: 30px;
         position: relative;
         span {
           position: absolute;
@@ -580,15 +595,22 @@ export default {
           left: 0;
           top: 2px;
           line-height: 24px;
-          padding: 4px;
         }
         .type-name {
           color: #ffffff;
           background-image: linear-gradient(90deg, #fa6d5a 0%, #fa5741 100%);
+          transform: scale(0.8);
+          transform-origin: 0 4px;
+          line-height: 0;
+          padding: 20px 6px;
         }
         .no-coupon {
           background: #cccccc;
           color: #ffffff;
+          transform: scale(0.8);
+          transform-origin: 0 4px;
+          line-height: 0;
+          padding: 20px 6px;
         }
       }
       .content {
@@ -606,10 +628,12 @@ export default {
         -webkit-box-orient: vertical;
       }
       .date {
-        font-size: 20px;
+        font-size: 24px;
         font-family: PingFang SC;
         font-weight: 400;
         color: #999999;
+        transform: scale(0.9);
+        transform-origin: 10px 0;
       }
       .expiredate {
         font-size: 20px;
@@ -630,7 +654,7 @@ export default {
     .receive {
       position: absolute;
       right: 0;
-      top: -30px;
+      top: 0;
       z-index: 1;
       width: 90px;
       height: 90px;
@@ -644,8 +668,8 @@ export default {
       height: 54px;
       font-size: 24px;
       position: absolute;
-      right: 20px;
-      top: 50%;
+      right: 40px;
+      top: 55%;
       margin-top: -10px;
       button {
         display: block;

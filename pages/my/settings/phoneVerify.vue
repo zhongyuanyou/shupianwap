@@ -101,6 +101,17 @@ export default {
         this.tel = res.data.mainAccount
       }
     },
+    countDown() {
+      if (this.count === 0) {
+        this.count = 60
+        this.isSendSMS = false
+      } else {
+        this.count--
+        setTimeout(() => {
+          this.countDown()
+        }, 1000)
+      }
+    },
     getSMS() {
       if (!this.isSendSMS) {
         this.$xToast.showLoading({ message: '发送中' })
@@ -113,6 +124,7 @@ export default {
           .smsCode({ axios: this.$axios }, params)
           .then((res) => {
             this.isSendSMS = true
+             this.countDown()
             this.$xToast.hideLoading()
           })
           .catch((e) => {

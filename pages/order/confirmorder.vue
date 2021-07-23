@@ -174,7 +174,7 @@
             title="优惠券"
             :value="
               couponInfo.couponPrice
-                ? couponInfo.couponPrice
+                ? couponInfo.couponPrice + '元'
                 : couponInfo.datalist.length > 0
                 ? couponInfo.datalist.length + '个优惠券'
                 : '无可用'
@@ -189,7 +189,7 @@
             "
             @click="openPopupfn()"
           />
-          <Cell
+          <!-- <Cell
             title="活动卡"
             :value="
               card.cardPrice
@@ -203,7 +203,7 @@
               card.cardPrice ? 'red' : card.datalist.length > 0 ? 'black' : ''
             "
             @click="openCardFn()"
-          />
+          /> -->
         </CellGroup>
         <p class="money">
           合计：
@@ -259,7 +259,6 @@
       title="优惠"
       help="使用说明"
       :tablist="couponInfo.tablist"
-      calculation="已选中优惠券，可抵扣"
       :datalist="couponInfo.datalist"
       :nolist="couponInfo.nolist"
       @change="conponChange"
@@ -466,7 +465,7 @@ export default {
             productPrice: data.salesPrice,
           })
 
-          this.getCardList()
+          // this.getCardList()
 
           console.log('productList', this.productList)
         } else {
@@ -770,6 +769,10 @@ export default {
   .sp-skeleton__title {
     background: #fff;
   }
+  ::v-deep .sp-cell__right-icon {
+    color: #cccccc;
+  }
+
   > .allbox {
     padding-bottom: 24px;
     overflow-y: auto;
@@ -888,6 +891,7 @@ export default {
       }
       .red {
         color: #ec5330;
+        font-weight: bold;
       }
       > .money {
         padding: 15px 30px;

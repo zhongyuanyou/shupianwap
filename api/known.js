@@ -61,6 +61,7 @@ const knownApi = {
     videoUserDetail: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/video_user_detail.do`, // 查询视频详情,包含用户信息及头像
     courseList: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/course_list.do`, // 查询课程列表
     courseDetail: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/course_detail.do`, // 查询课程详情
+    materialVideoShare: `${CHIPS_WAP_BASE_URL}/nk/known_share/v1/material_video_share.do`, // 分享物料视频id
   },
 }
 export default knownApi

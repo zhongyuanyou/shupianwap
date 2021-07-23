@@ -4,7 +4,7 @@
       <sp-video :options="playerOptions" :vod-url="url" :v-type="videoType">
       </sp-video>
     </client-only>
-    <small-video-like :category-id="categoryId" />
+    <small-video-like v-if="vLikeFlag" :category-id="categoryId" />
   </div>
 </template>
 
@@ -29,11 +29,15 @@ export default {
         },
       },
       videoType: 'small',
+      vLikeFlag: true,
     }
   },
   mounted() {
     this.url = this.$route.query.vurl
     this.categoryId = this.$route.query.categoryId
+    if (this.$route.query.shareType === 'materialShare') {
+      this.vLikeFlag = false
+    }
   },
   methods: {},
 }

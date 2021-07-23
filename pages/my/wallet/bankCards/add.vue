@@ -1,6 +1,15 @@
 <template>
   <div>
     <Header title="新增银行卡" />
+    <div class="tips">
+      <sp-icon
+        class-prefix="spiconfont"
+        size="0.30rem"
+        color="#F86E21"
+        name="laba"
+      />
+      <p>请准确选择开户行，若开户行选择错误，提现将会失败哦！</p>
+    </div>
     <div class="form">
       <sp-form @submit="onSubmit">
         <sp-field
@@ -286,6 +295,23 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.tips {
+  display: flex;
+  background: #fff3e9;
+  padding: 17px 30px;
+  align-items: flex-start;
+  i {
+    position: relative;
+    top: 5px;
+  }
+  p {
+    font-family: PingFangSC-Regular;
+    font-size: 28px;
+    color: #f86e21;
+    line-height: 38px;
+    margin-left: 12px;
+  }
+}
 .textarea {
   display: flex;
   justify-content: space-between;
@@ -450,6 +476,7 @@ export default {
     }
   }
 }
+
 .submit {
   height: 160px;
   width: 100%;
