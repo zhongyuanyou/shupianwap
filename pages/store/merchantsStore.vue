@@ -424,7 +424,7 @@ export default {
     // 获取详情数据
     async getDetail() {
       try {
-        const { storeId } = this.$route.query
+        const { storeId , pageStatus=''} = this.$route.query
         if (storeId == null) {
           this.$xToast.show({
             message: '缺少店铺参数!',
@@ -434,7 +434,7 @@ export default {
           })
           return
         }
-        const params = { storeId }
+        const params = { storeId,type:pageStatus }
         const data = await this.$axios.get(storeApi.mchStoreInfo, { params })
         if (data.code !== 200) {
           throw new Error(data.message)
@@ -463,11 +463,12 @@ export default {
     },
     // 获取列表数据
     async getList() {
-      const { storeId } = this.$route.query
+      const { storeId , pageStatus='' } = this.$route.query
       try {
         const params = {
           storeId,
           typeId: this.active,
+          type:pageStatus,
           page: 1,
           limit: 10,
         }
@@ -690,11 +691,13 @@ export default {
       this.$router.push('/')
     },
     moreRem() {
+      const { pageStatus='' } = this.$route.query
       this.$router.push({
         path: '/store/hotRecommended',
         query: {
           active: this.active,
           storeId: this.detailData.id,
+          pageStatus
         },
       })
     },

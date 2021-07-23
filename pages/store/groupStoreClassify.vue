@@ -35,7 +35,7 @@
       </div>
       <div class="line"></div>
     </div>
-    <div class="goods-recommend-wrapper">
+    <div v-if="info.goodsRecommend.length > 0" class="goods-recommend-wrapper">
       <div class="tabs">
         <div
           v-for="(item, index) in info.goodsRecommend"
@@ -85,6 +85,10 @@
         >
       </div>
     </div>
+    <div v-else class="empty">
+      <img src="https://cdn.shupian.cn/sp-pt/wap/images/32lnvdx3omo0000.png" />
+      <p>抱歉,未找到相关结果</p>
+    </div>
     <div class="placeholder"></div>
   </div>
 </template>
@@ -117,6 +121,7 @@ export default {
       storeId: '',
       info: {
         teamInfo: {},
+        goodsRecommend: []
       },
       goods: [],
       typeId: '',
@@ -167,6 +172,7 @@ export default {
           typeId: this.typeId,
           page: this.page,
           limit: this.limit,
+          type: this.type || '',
         }
         const { code, data, message } = await this.$axios.post(
           storeApi.recommendGoods,
@@ -584,6 +590,16 @@ export default {
       width: 100%;
       background: #f4f4f4;
       height: 1px;
+    }
+  }
+  .empty {
+    text-align: center;
+    font-size: 26px;
+    color: #999;
+    img {
+      width: 340px;
+      height: 340px;
+      margin: 0 auto;
     }
   }
 }

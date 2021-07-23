@@ -26,9 +26,15 @@
       </sp-swipe>
       <div class="swiper-spaceholder"></div>
     </div>
-    <sp-skeleton title avatar avatar-size="1.2rem" :row="3" :loading="loading">
+    <sp-skeleton
+      title
+      avatar
+      avatar-size="1.2rem"
+      :row="3"
+      :loading="groupInfoLoading"
+    >
     </sp-skeleton>
-    <div v-if="!loading" class="group-tile">
+    <div v-if="!groupInfoLoading" class="group-tile">
       <sp-image
         :src="info.teamInfo.img"
         fit="cover"
@@ -60,109 +66,131 @@
       </div>
       <my-icon name="you" size="0.4rem" color="#BBBBBB"></my-icon>
     </div>
-    <sp-skeleton title :row="12" :loading="loading"> </sp-skeleton>
-    <div v-if="!loading">
-      <div class="group-server">
-        <div ref="sticky" class="tile">团队服务</div>
-        <div class="server-block">
-          <div class="server-block-line1">
-            <div class="item">
-              <div class="item-res">
-                <span>{{ info.teamService.personNum }}</span
-                ><span class="unit">人</span>
-              </div>
-              <div class="item-desc">团队人数</div>
+    <div class="group-server">
+      <div ref="sticky" class="tile">团队服务</div>
+      <sp-skeleton :row="3" :loading="groupInfoLoading"> </sp-skeleton>
+      <div v-if="!groupInfoLoading" class="server-block">
+        <div class="server-block-line1">
+          <div class="item">
+            <div class="item-res">
+              <span>{{ info.teamService.personNum }}</span
+              ><span class="unit">人</span>
             </div>
-            <div class="item">
-              <div class="item-res">
-                <span>{{ info.teamService.customerNum }}</span
-                ><span class="unit">位</span>
-              </div>
-              <div class="item-desc">服务客户</div>
-            </div>
-            <div class="item">
-              <div class="item-res">
-                <span>{{ info.teamService.maintenanceNum }}</span
-                ><span class="unit">人</span>
-              </div>
-              <div class="item-desc">维护商品</div>
-            </div>
+            <div class="item-desc">团队人数</div>
           </div>
-          <div class="server-block-tile">客户满意</div>
-          <div class="server-block-custinfo">
-            <div class="item">
-              3分钟响应率：{{ info.teamService.consultResponse }}
+          <div class="item">
+            <div class="item-res">
+              <span>{{ info.teamService.customerNum }}</span
+              ><span class="unit">位</span>
             </div>
-            <div class="item">
-              电话接通率：{{ info.teamService.callThroughRate }}
+            <div class="item-desc">服务客户</div>
+          </div>
+          <div class="item">
+            <div class="item-res">
+              <span>{{ info.teamService.maintenanceNum }}</span
+              ><span class="unit">人</span>
             </div>
+            <div class="item-desc">维护商品</div>
+          </div>
+        </div>
+        <div class="server-block-tile">客户满意</div>
+        <div class="server-block-custinfo">
+          <div class="item">
+            3分钟响应率：{{ info.teamService.consultResponse }}
+          </div>
+          <div class="item">
+            电话接通率：{{ info.teamService.callThroughRate }}
           </div>
         </div>
       </div>
-      <div class="goods-recommend-wrapper">
-        <div class="main-tile">为您推荐</div>
-        <div class="tabs">
-          <div
-            v-for="(item, index) in info.goodsRecommend"
-            :key="index"
-            class="tab"
-            :class="[active === index ? 'z-active' : '']"
-            @click="changeTab(index, item.id)"
-          >
-            {{ item.name }}
-          </div>
+    </div>
+    <div class="goods-recommend-wrapper">
+      <div class="main-tile">为您推荐</div>
+      <div v-if="info.goodsRecommend.length > 0" class="tabs">
+        <div
+          v-for="(item, index) in info.goodsRecommend"
+          :key="index"
+          class="tab"
+          :class="[active === index ? 'z-active' : '']"
+          @click="changeTab(index, item.id)"
+        >
+          {{ item.name }}
         </div>
-        <div v-if="info.goods.length > 0" class="recommend">
-          <div
-            v-for="(item, index) in info.goods"
-            :key="index"
-            class="recommend-item"
-            @click="linkGood(item)"
-          >
-            <img :src="item.img" class="image" />
+      </div>
+      <div v-else>
+        <div class="empty">
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/images/32lnvdx3omo0000.png"
+          />
+          <p>抱歉,未找到相关结果</p>
+        </div>
+      </div>
 
-            <div class="item-content">
-              <div class="tile">{{ item.name }}</div>
+      <div v-if="info.goods.length > 0 && !goodsLoading" class="recommend">
+        <div
+          v-for="(item, index) in info.goods"
+          :key="index"
+          class="recommend-item"
+          @click="linkGood(item)"
+        >
+          <img :src="item.img" class="image" />
+
+          <div class="item-content">
+            <div class="tile">{{ item.name }}</div>
+            <div
+              v-if="Array.isArray(item.tips) && item.tips.length > 0"
+              class="tips"
+            >
               <div
-                v-if="Array.isArray(item.tips) && item.tips.length > 0"
-                class="tips"
+                v-for="(itemTip, indexTip) in item.tips"
+                :key="indexTip"
+                class="tip"
               >
-                <div
-                  v-for="(itemTip, indexTip) in item.tips"
-                  :key="indexTip"
-                  class="tip"
-                >
-                  {{ itemTip }}
-                </div>
+                {{ itemTip }}
               </div>
-              <div class="desc">{{ item.desc }}</div>
-              <div class="amount">
-                <div>{{ item.price }}</div>
-                <div class="amount-unit">元</div>
-              </div>
+            </div>
+            <div class="desc">{{ item.desc }}</div>
+            <div class="amount">
+              <div>{{ item.price }}</div>
+              <div class="amount-unit">元</div>
             </div>
           </div>
         </div>
       </div>
-      <div class="more-recommend" @click="toClassifyPage">更多优惠</div>
-      <div class="recommend-planner-wrapper">
-        <div class="main-tile">推荐规划师</div>
-        <div class="recommend-content">
-          <div
-            v-for="(item, index) in info.planners"
-            :key="index"
-            class="recommend-item"
-            @click="linkPlanner(item)"
-          >
-            <img class="item-avatar" :src="item.img" />
-            <div class="name">{{ item.name }}</div>
-            <img
-              class="line"
-              src="https://cdn.shupian.cn/sp-pt/wap/images/fy75fih34c80000.png"
-            />
-            <div class="score">薯片分{{ item.score }}</div>
-            <div class="desc">{{ item.category }}</div>
-          </div>
+      <sp-skeleton
+        v-for="(item, index) of 4"
+        :key="index"
+        title
+        avatar
+        :row="3"
+        :loading="goodsLoading"
+      >
+      </sp-skeleton>
+    </div>
+    <div
+      v-if="info.goodsRecommend.length > 0"
+      class="more-recommend"
+      @click="toClassifyPage"
+    >
+      更多优惠
+    </div>
+    <div class="recommend-planner-wrapper">
+      <div class="main-tile">推荐规划师</div>
+      <div class="recommend-content">
+        <div
+          v-for="(item, index) in info.planners"
+          :key="index"
+          class="recommend-item"
+          @click="linkPlanner(item)"
+        >
+          <img class="item-avatar" :src="item.img" />
+          <div class="name">{{ item.name }}</div>
+          <img
+            class="line"
+            src="https://cdn.shupian.cn/sp-pt/wap/images/fy75fih34c80000.png"
+          />
+          <div class="score">薯片分{{ item.score }}</div>
+          <div class="desc">{{ item.category }}</div>
         </div>
       </div>
     </div>
@@ -224,7 +252,8 @@ export default {
   },
   data() {
     return {
-      loading: true, // 骨架屏状态
+      groupInfoLoading: true, // 团队信息loading
+      goodsLoading: true, // 商品信息loading
       indicators: true, // 是否需要指示器
       autoplay: 5000,
       active: 0,
@@ -232,13 +261,16 @@ export default {
       stickyFlag: false,
       storeId: '', // 768006091074595352
       info: {
-        banners: [],
+        banners: [
+          'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg',
+        ],
         goodsRecommend: [],
         goods: [],
         teamInfo: {},
         teamService: {},
         planners: [],
       }, // 详情数据
+      type: '', // 页面类型
     }
   },
   computed: {
@@ -255,11 +287,12 @@ export default {
       setTimeout(this.$back(), 2000)
       return
     }
+    if (query.pageStatus === 'preview') {
+      this.type = 'preview'
+    }
     window.addEventListener('scroll', this.handleScroll)
 
-    this.getGroupInfoApi().finally(() => {
-      this.loading = false
-    })
+    this.getGroupInfoApi()
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
@@ -267,6 +300,7 @@ export default {
   methods: {
     changeTab(index, typeid) {
       this.active = index
+      this.goodsLoading = true
       // 查询推荐商品
       this.getGoodsApi(typeid)
     },
@@ -287,6 +321,7 @@ export default {
           active: this.active,
           storeId: this.storeId,
           typeId,
+          type: this.type
         },
       })
     },
@@ -303,6 +338,8 @@ export default {
       try {
         const params = {
           storeId: this.storeId,
+          ignoreDataScope: 'goods',
+          type: this.type
         }
         const { code, data, message } = await this.$axios.get(
           storeApi.mchStoreInfo,
@@ -312,8 +349,15 @@ export default {
           throw new Error(message)
         }
         this.info = data
-        return data
+        this.groupInfoLoading = false
+        if (data.goodsRecommend.length !== 0) {
+          const typeId = data.goodsRecommend[0].id
+          this.getGoodsApi(typeId)
+        } else {
+          this.goodsLoading = false
+        }
       } catch (e) {
+        this.groupInfoLoading = false
         this.$xToast.error(e.message)
       }
     },
@@ -323,7 +367,8 @@ export default {
           storeId: this.storeId,
           typeId,
           page: 1,
-          limit: 20,
+          limit: 4,
+          type: this.type
         }
         const { code, data, message } = await this.$axios.post(
           storeApi.recommendGoods,
@@ -337,9 +382,11 @@ export default {
         this.info.goods = goods.filter((item) => {
           return item.state === 1
         })
+        this.goodsLoading = false
       } catch (e) {
         this.$xToast.error(e.message)
         this.info.goods = []
+        this.goodsLoading = false
       }
     },
     linkMch() {
@@ -799,6 +846,16 @@ export default {
   .fade-enter,
   .fade-leave-active {
     opacity: 0;
+  }
+  .empty {
+    text-align: center;
+    font-size: 26px;
+    color: #999;
+    img {
+      width: 340px;
+      height: 340px;
+      margin: 0 auto;
+    }
   }
 }
 </style>

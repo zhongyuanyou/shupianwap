@@ -30,7 +30,7 @@
           :class="{ active: active_3.id == row.id }"
           @click.stop="rowClick(3, row, index)"
         >
-          <div>{{ row.text || row.name }}</div>
+          <div>{{ row.text }}</div>
           <div v-show="active_3.id === row.id">
             <my-icon name="yiguanzhu" color="#4974F5" size="0.28rem" />
           </div>
@@ -62,6 +62,7 @@ export default {
       default: 2,
     },
     value: {
+      // 选择的code
       type: Array,
       default: () => {
         return []
@@ -76,43 +77,36 @@ export default {
   },
   data() {
     return {
-      col_1: [], // 第一列的数据
-      col_2: [],
-      col_3: [],
+      // col_1: [], // 第一列的数据
+      // col_2: [],
+      // col_3: [],
+
+      formatList: [],
 
       active_1: {}, // 第一列激活的对象
       active_2: {},
       active_3: {},
-
-      selected_ids: [],
-
-      formatList: [],
     }
   },
-  // computed: {
-  //   formatList() {
-  //     if (!Array.isArray(this.list)) return []
-  //     const cloneItem = clone(this.list, true)
-  //     console.log(cloneItem)
-  //     return this.setData(cloneItem)
-  //   },
-  // },
+  computed: {
+    col_1() {
+      return this.formatList
+    },
+    col_2() {
+      return this.active_1?.children || []
+    },
+    col_3() {
+      return this.active_2?.children || []
+    },
+  },
   watch: {
-    // value: {
-    //   immediate: true,
-    //   deep: true,
-    //   handler(newVal) {
-
-    //     this.find()
-    //   },
-    // },
     list: {
       immediate: true,
       deep: true,
       handler(newVal) {
-        console.log('监听变化')
+        console.log('监听tree options变化')
         const cloneItem = clone(this.list, true)
-        this.formatList = this.setData(cloneItem)
+        this.formatList = cloneItem
 
         this.init()
         this.find()
@@ -125,7 +119,6 @@ export default {
       if (this.value && this.value.length > 0) {
         this.value.map((val, index) => {
           const key = 'col_' + (index + 1)
-          const nextKey = 'col_' + (index + 2)
 
           const activeKey = 'active_' + (index + 1)
 
@@ -135,9 +128,6 @@ export default {
                 this[activeKey] = item
 
                 this.rowClick(index + 1, item)
-                // if (item.children) {
-                //   this[nextKey] = item.children
-                // }
               }
             })
           }
@@ -155,37 +145,18 @@ export default {
           this.active_2.children && this.active_2.children.length > 0
             ? this.active_2.children[0]
             : {}
-
-        this.col_2 = this.active_1.children || []
-        this.col_3 = this.active_2.children || []
       } else if (num === 2) {
         this.active_2 = row
         this.active_3 =
           this.active_2.children && this.active_2.children.length > 0
             ? this.active_2.children[0]
             : {}
-
-        this.col_3 = this.active_2.children || []
       } else if (num === 3) {
         this.active_3 = row
       }
     },
     init() {
-      this.setData(this.formatList)
-
-      this.col_1 = this.formatList
-
       this.rowClick(1, this.formatList.length > 0 ? this.formatList[0] : [])
-    },
-    setData(formatList) {
-      return formatList.map((item) => {
-        item.text = item.name
-
-        if (item.children) {
-          item.children = this.setData(item.children)
-        }
-        return item
-      })
     },
 
     reset() {
@@ -230,9 +201,11 @@ export default {
       font-size: 28px;
       color: #222222;
       letter-spacing: 0;
-      line-height: 28px;
+      // line-height: px;
       overflow-y: auto;
       height: 100%;
+      box-sizing: border-box;
+      padding: 28px 0;
       > div {
         padding: 28px 12px 28px 40px;
       }
