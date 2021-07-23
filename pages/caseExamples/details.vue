@@ -248,7 +248,7 @@ export default {
           const newExperienceItem = {
             name: item.name,
             time: this.getExperience(item.show, 'BaseDate').value,
-            content: this.getExperience(item.show, 'BaseText').value,
+            content: this.getExperience(item.show, 'BaseText').content,
             imgs: this.getExperience(item.show, 'BaseUpload').imgs || [],
           }
 

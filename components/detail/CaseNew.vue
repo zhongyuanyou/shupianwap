@@ -35,7 +35,7 @@
         "
         class="text"
       >
-        {{ caseData.caseIntro && caseData.caseIntro.show[0].content }}
+        案例简介：{{ caseData.caseIntro && caseData.caseIntro.show[0].content }}
       </p>
       <!-- <div
         v-if="caseData.caseIntro && caseData.caseIntro.show[0].content.imgs"
