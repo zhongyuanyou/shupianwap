@@ -11,6 +11,7 @@ export default {
   },
   data() {
     return {
+      paddingTop: 44,
       editType: '', // 内容类型 1 新增 2编辑
       // 新增内容的表单数据
       formData: {
@@ -46,6 +47,9 @@ export default {
     }),
   },
   mounted() {
+    if (window.AlipayJSBridge) {
+      this.paddingTop = 84
+    }
     this.getUserInfo()
     // 获取参数
     this.editType = this.$route.query.editType
@@ -59,24 +63,47 @@ export default {
   },
   methods: {
     async getUserInfo() {
-      // 获取用户信息
-      try {
-        const params = {
-          // id: this.userId,
-          id: this.userId || this.$cookies.get('userId', { path: '/' }),
+      if (window.AlipayJSBridge) {
+        this.$sp.getLoginUserInfo((res) => {
+          let userData = {}
+          if (typeof res === 'string') {
+            res = JSON.parse(res)
+          }
+          if (res.code && res.code === 200) {
+            if (res.data) {
+              userData = res.data
+            } else {
+              userData = res
+            }
+            this.$store.dispatch('user/SET_USER', userData)
+            this.formData.userId = userData.id
+            this.formData.userType = util.getUserType(userData.type)
+            this.formData.userName = userData.nickName
+            this.formData.userCode = userData.no
+          } else {
+            this.$xToast.error('获取用户信息失败')
+          }
+        })
+      } else {
+        // 获取用户信息
+        try {
+          const params = {
+            // id: this.userId,
+            id: this.userId || this.$cookies.get('userId', { path: '/' }),
+          }
+          const res = await this.$axios.get(userinfoApi.info, { params })
+          this.loading = false
+          if (res.code === 200 && res.data && typeof res.data === 'object') {
+            // start: set userInfo
+            this.formData.userId = res.data.id
+            this.formData.userType = util.getUserType(res.data.type)
+            this.formData.userName = res.data.nickName
+            this.formData.userCode = res.data.no
+            // end: set userInfo
+          }
+        } catch (err) {
+          console.log(err)
         }
-        const res = await this.$axios.get(userinfoApi.info, { params })
-        this.loading = false
-        if (res.code === 200 && res.data && typeof res.data === 'object') {
-          // start: set userInfo
-          this.formData.userId = res.data.id
-          this.formData.userType = util.getUserType(res.data.type)
-          this.formData.userName = res.data.nickName
-          this.formData.userCode = res.data.no
-          // end: set userInfo
-        }
-      } catch (err) {
-        console.log(err)
       }
     },
     getImgSrc(richtext) {
