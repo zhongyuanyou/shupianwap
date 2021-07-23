@@ -58,7 +58,7 @@
             <p>
               <span class="title">{{ detailData.personal.name }}</span>
               <span v-if="detailData.teamStoreId" class="label" @click="goGroup"
-                >我的团队></span
+                >我的团队 ></span
               >
             </p>
             <p>服务年限：{{ formatServeAgeText }}</p>
