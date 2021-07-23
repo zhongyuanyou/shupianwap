@@ -387,7 +387,7 @@ export default {
     // 获取详情数据
     async getDetail() {
       try {
-        const { mchUserId } = this.$route.query
+        const { mchUserId,pageStatus='' } = this.$route.query
         if (mchUserId == null) {
           this.$xToast.show({
             message: '缺少规划师参数!',
@@ -398,7 +398,7 @@ export default {
           return
         }
         // 详解接口请求数据
-        const params = { mchUserId,ignoreDataScope:'goods' }
+        const params = { mchUserId,ignoreDataScope:'goods',type:pageStatus } 
         // 详情接口
         const { data, code, message } = await this.$axios.get(
           storeApi.plannerStoreInfo,
@@ -427,7 +427,6 @@ export default {
         this.getList()
         return data
       } catch (error) {
-        console.error('getDetail:', error)
         this.$xToast.show({
           message: error.message || '请求失败！',
           duration: 1000,
@@ -441,9 +440,11 @@ export default {
     async getList() {
       if (!this.active) return
       try {
+        const { pageStatus='' } = this.$route.query
         const params = {
           storeId: this.detailData.id,
           typeId: this.active,
+          type:pageStatus,
           page: 1,
           limit: 20,
         }
