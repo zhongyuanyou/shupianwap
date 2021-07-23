@@ -62,24 +62,24 @@ export default {
           {
             id: 1,
             code: 'PRO_CLASS_TYPE_TRANSACTION',
-            name: '交易商品',
+
             text: '交易商品',
+            treelevel: 2,
             children: [
               {
-                name: '不限',
                 text: '不限',
                 id: -1,
                 code: -1,
               },
               {
-                name: '公司交易',
+                text: '公司交易',
                 id: 'FL20201224136319',
                 code: 'FL20201224136319',
                 classCode: 'FL20201224136319',
                 dictCode: 'CONDITION-JY-GS',
               },
               {
-                name: '专利交易',
+                text: '专利交易',
                 id: 'FL20201224136341',
                 code: 'FL20201224136341',
                 classCode: 'FL20201224136341',
@@ -87,14 +87,14 @@ export default {
               },
 
               {
-                name: '商标交易',
+                text: '商标交易',
                 id: 'FL20201224136273',
                 code: 'FL20201224136273',
                 classCode: 'FL20201224136273',
                 dictCode: 'CONDITION-JY-SB',
               },
               {
-                name: '资质交易',
+                text: '资质交易',
                 id: 'FL20201224136348',
                 code: 'FL20201224136348',
                 classCode: 'FL20201224136348',
@@ -104,8 +104,8 @@ export default {
           },
           {
             id: 2,
+            treelevel: 3,
             code: 'PRO_CLASS_TYPE_SERVICE',
-            name: '服务商品',
             text: '服务商品',
             children: [],
           },
@@ -152,12 +152,11 @@ export default {
     setData(list) {
       list.unshift({
         id: -1,
-        name: '不限',
         text: '不限',
       })
 
       return list.map((item) => {
-        item.text = item.name
+        item.text = item.text || item.name
 
         if (item.children) {
           item.children = this.setData(item.children)
@@ -194,20 +193,20 @@ export default {
         })
       // const arr = [
       //   // {
-      //   //   name: '不限',
+      //   //   text: '不限',
       //   //   text: '不限',
       //   //   id: -1,
       //   //   code: -1,
       //   // },
       //   {
-      //     name: '公司交易',
+      //     text: '公司交易',
       //     id: 'FL20201224136319',
       //     code: 'FL20201224136319',
       //     classCode: 'FL20201224136319',
       //     dictCode: 'CONDITION-JY-GS',
       //   },
       //   {
-      //     name: '专利交易',
+      //     text: '专利交易',
       //     id: 'FL20201224136341',
       //     code: 'FL20201224136341',
       //     classCode: 'FL20201224136341',
@@ -215,14 +214,14 @@ export default {
       //   },
 
       //   {
-      //     name: '商标交易',
+      //     text: '商标交易',
       //     id: 'FL20201224136273',
       //     code: 'FL20201224136273',
       //     classCode: 'FL20201224136273',
       //     dictCode: 'CONDITION-JY-SB',
       //   },
       //   {
-      //     name: '资质交易',
+      //     text: '资质交易',
       //     id: 'FL20201224136348',
       //     code: 'FL20201224136348',
       //     classCode: 'FL20201224136348',
@@ -297,7 +296,6 @@ export default {
       //       this.$set(this.tab2.options, 1, {
       //         id: 2,
       //         code: 'PRO_CLASS_TYPE_TRANSACTION',
-      //         name: '交易商品',
       //         text: '交易商品',
       //         children: arr,
       //       })
@@ -322,7 +320,6 @@ export default {
             d[0].children = [
               {
                 id: -1,
-                name: '不限',
                 text: '不限',
               },
             ]
@@ -330,7 +327,6 @@ export default {
             this.tab2.options[1] = {
               id: 2,
               code: 'PRO_CLASS_TYPE_SERVICE',
-              name: '服务商品',
               text: '服务商品',
               children: d,
             }
@@ -341,9 +337,9 @@ export default {
     custom(item, option, index) {
       item.value = option.value
       item.title = option.text
-      // console.log(item, option, index)
+
       this.$refs.tabs[index].toggle()
-      this.$emit('select', this.tab1, this.tabs)
+      this.change()
     },
 
     change() {
@@ -365,7 +361,7 @@ export default {
       const arr = [item1, item2, item3]
       arr.map((item) => {
         if (item?.code && item?.code !== -1) {
-          this.tab2.title = item.name || '分类'
+          this.tab2.title = item.text
         }
       })
 
@@ -375,12 +371,11 @@ export default {
     },
     AreaSelect(item1, item2, item3) {
       console.log('AreaSelect', item1, item2, item3)
-      // this.tab3.title = item3.text || item2.text || item1.text || '区域'
       this.tab3.title = '区域'
       const arr = [item1, item2, item3]
       arr.map((item) => {
         if (item?.code) {
-          this.tab3.title = item.text || '区域'
+          this.tab3.title = item.text
         }
       })
       this.tab3.value = [item1?.code, item2?.code, item3?.code]
