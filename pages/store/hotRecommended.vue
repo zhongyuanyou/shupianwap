@@ -296,7 +296,7 @@ export default {
     // 获取详情数据
     async getDetail() {
       try {
-        const { storeId } = this.$route.query
+        const { storeId , pageStatus='' } = this.$route.query
         if (storeId == null) {
           this.$xToast.show({
             message: '缺少店铺参数!',
@@ -306,7 +306,7 @@ export default {
           })
           return
         }
-        const params = { storeId }
+        const params = { storeId , type:pageStatus }
         const { data, code, message } = await this.$axios.get(
           storeApi.mchStoreInfo,
           { params }
@@ -334,10 +334,11 @@ export default {
     },
     // 获取列表数据
     async getList(type) {
-      const { storeId } = this.$route.query
+      const { storeId , pageStatus='' } = this.$route.query
       try {
         const params = {
           storeId,
+          type:pageStatus,
           typeId: this.active,
           page: this.refresh.pageIndex,
           limit: this.refresh.pageSize,

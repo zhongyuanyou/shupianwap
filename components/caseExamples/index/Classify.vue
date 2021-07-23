@@ -1,7 +1,7 @@
 <template>
   <!-- 分类 -->
   <div class="classify">
-    <sp-dropdown-menu active-color="#4974F5">
+    <sp-dropdown-menu :lazy-render="false" active-color="#4974F5">
       <sp-dropdown-item
         v-model="tab1.value"
         :title="tab1.title"
@@ -14,11 +14,17 @@
         <TreeSelect
           :list="tab2.options"
           :value="tab2.value"
+          @onChangeName="ServerSelectChangeName"
           @select="ServerSelect"
         ></TreeSelect>
       </sp-dropdown-item>
       <sp-dropdown-item ref="tab3" :title="tab3.title">
-        <TreeSelect :list="tab3.options" @select="AreaSelect"></TreeSelect>
+        <TreeSelect
+          :list="tab3.options"
+          :value="tab3.value"
+          @onChangeName="areaChangeName"
+          @select="AreaSelect"
+        ></TreeSelect>
       </sp-dropdown-item>
     </sp-dropdown-menu>
   </div>
@@ -49,7 +55,7 @@ export default {
     return {
       tab1: {
         title: '默认排序',
-        value: '',
+        value: 1,
         options: [
           { text: '默认排序', value: 1 },
           { text: '评分由高到低', value: 2 },
@@ -61,32 +67,25 @@ export default {
         options: [
           {
             id: 1,
-            code: 'PRO_CLASS_TYPE_SERVICE',
-            name: '服务商品',
-            text: '服务商品',
-            children: [],
-          },
-          {
-            id: 2,
             code: 'PRO_CLASS_TYPE_TRANSACTION',
-            name: '交易商品',
+
             text: '交易商品',
+            treelevel: 2,
             children: [
               {
-                name: '不限',
                 text: '不限',
                 id: -1,
                 code: -1,
               },
               {
-                name: '公司交易',
+                text: '公司交易',
                 id: 'FL20201224136319',
                 code: 'FL20201224136319',
                 classCode: 'FL20201224136319',
                 dictCode: 'CONDITION-JY-GS',
               },
               {
-                name: '专利交易',
+                text: '专利交易',
                 id: 'FL20201224136341',
                 code: 'FL20201224136341',
                 classCode: 'FL20201224136341',
@@ -94,20 +93,27 @@ export default {
               },
 
               {
-                name: '商标交易',
+                text: '商标交易',
                 id: 'FL20201224136273',
                 code: 'FL20201224136273',
                 classCode: 'FL20201224136273',
                 dictCode: 'CONDITION-JY-SB',
               },
               {
-                name: '资质交易',
+                text: '资质交易',
                 id: 'FL20201224136348',
                 code: 'FL20201224136348',
                 classCode: 'FL20201224136348',
                 dictCode: 'CONDITION-JY-ZZ',
               },
             ],
+          },
+          {
+            id: 2,
+            treelevel: 3,
+            code: 'PRO_CLASS_TYPE_SERVICE',
+            text: '服务商品',
+            children: [],
           },
         ],
       },
@@ -152,12 +158,11 @@ export default {
     setData(list) {
       list.unshift({
         id: -1,
-        name: '不限',
         text: '不限',
       })
 
       return list.map((item) => {
-        item.text = item.name
+        item.text = item.text || item.name
 
         if (item.children) {
           item.children = this.setData(item.children)
@@ -194,20 +199,20 @@ export default {
         })
       // const arr = [
       //   // {
-      //   //   name: '不限',
+      //   //   text: '不限',
       //   //   text: '不限',
       //   //   id: -1,
       //   //   code: -1,
       //   // },
       //   {
-      //     name: '公司交易',
+      //     text: '公司交易',
       //     id: 'FL20201224136319',
       //     code: 'FL20201224136319',
       //     classCode: 'FL20201224136319',
       //     dictCode: 'CONDITION-JY-GS',
       //   },
       //   {
-      //     name: '专利交易',
+      //     text: '专利交易',
       //     id: 'FL20201224136341',
       //     code: 'FL20201224136341',
       //     classCode: 'FL20201224136341',
@@ -215,14 +220,14 @@ export default {
       //   },
 
       //   {
-      //     name: '商标交易',
+      //     text: '商标交易',
       //     id: 'FL20201224136273',
       //     code: 'FL20201224136273',
       //     classCode: 'FL20201224136273',
       //     dictCode: 'CONDITION-JY-SB',
       //   },
       //   {
-      //     name: '资质交易',
+      //     text: '资质交易',
       //     id: 'FL20201224136348',
       //     code: 'FL20201224136348',
       //     classCode: 'FL20201224136348',
@@ -297,7 +302,6 @@ export default {
       //       this.$set(this.tab2.options, 1, {
       //         id: 2,
       //         code: 'PRO_CLASS_TYPE_TRANSACTION',
-      //         name: '交易商品',
       //         text: '交易商品',
       //         children: arr,
       //       })
@@ -322,15 +326,13 @@ export default {
             d[0].children = [
               {
                 id: -1,
-                name: '不限',
                 text: '不限',
               },
             ]
 
-            this.tab2.options[0] = {
-              id: 1,
+            this.tab2.options[1] = {
+              id: 2,
               code: 'PRO_CLASS_TYPE_SERVICE',
-              name: '服务商品',
               text: '服务商品',
               children: d,
             }
@@ -341,9 +343,9 @@ export default {
     custom(item, option, index) {
       item.value = option.value
       item.title = option.text
-      // console.log(item, option, index)
+
       this.$refs.tabs[index].toggle()
-      this.$emit('select', this.tab1, this.tabs)
+      this.change()
     },
 
     change() {
@@ -358,31 +360,24 @@ export default {
       }
     },
 
+    ServerSelectChangeName(name) {
+      this.tab2.title = name || '分类'
+    },
+    areaChangeName(name) {
+      this.tab3.title = name || '区域'
+    },
     // 服务商品选择
     ServerSelect(item1, item2, item3) {
       console.log('ServerSelect', item1, item2, item3)
-      this.tab2.title = '分类'
-      const arr = [item1, item2, item3]
-      arr.map((item) => {
-        if (item?.code && item?.code !== -1) {
-          this.tab2.title = item.name || '分类'
-        }
-      })
 
       this.tab2.value = [item1?.code, item2?.code, item3?.code]
       this.change()
       this.$refs.tab2.toggle()
     },
+
     AreaSelect(item1, item2, item3) {
       console.log('AreaSelect', item1, item2, item3)
-      // this.tab3.title = item3.text || item2.text || item1.text || '区域'
-      this.tab3.title = '区域'
-      const arr = [item1, item2, item3]
-      arr.map((item) => {
-        if (item?.code) {
-          this.tab3.title = item.text || '区域'
-        }
-      })
+
       this.tab3.value = [item1?.code, item2?.code, item3?.code]
 
       this.change()
