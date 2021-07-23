@@ -211,7 +211,6 @@ export default {
           throw new Error(message)
         }
         this.info = data
-        this.info.goodsRecommend = []
       } catch (e) {
         this.$xToast.error(e.message)
         setTimeout(this.$back(), 2000)
