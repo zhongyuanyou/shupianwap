@@ -14,8 +14,8 @@
         <h3>{{ caseData.caseName || caseData.productName }}</h3>
         <p>办理周期:{{ caseData.dealTime }}天</p>
       </div>
-      <div class="case-score">
-        {{ caseData.caseScore / 100 || 9.9 }}<span class="case-text">分 </span>
+      <div v-if="caseData.caseScore" class="case-score">
+        {{ caseData.caseScore / 100 }}<span class="case-text">分 </span>
       </div>
     </div>
     <div
@@ -95,14 +95,14 @@ export default {
             column: 'isTop',
             asc: true,
           },
-          // {
-          //   column: 'createTime',
-          //   asc: false,
-          // },
-          // {
-          //   column: 'caseScore',
-          //   asc: false,
-          // },
+          {
+            column: 'caseScore',
+            asc: true,
+          },
+          {
+            column: 'createTime',
+            asc: true,
+          },
           // {
           //   column: 'isTop',
           //   asc: true,
