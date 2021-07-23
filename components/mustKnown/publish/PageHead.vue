@@ -23,10 +23,6 @@ export default {
       type: String,
       default: '发布',
     },
-    top: {
-      type: Number,
-      default: 0,
-    },
   },
   data() {
     return {

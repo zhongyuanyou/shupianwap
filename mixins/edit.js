@@ -64,26 +64,37 @@ export default {
   methods: {
     async getUserInfo() {
       if (window.AlipayJSBridge) {
-        this.$sp.getLoginUserInfo((res) => {
-          let userData = {}
-          if (typeof res === 'string') {
-            res = JSON.parse(res)
-          }
-          if (res.code && res.code === 200) {
-            if (res.data) {
-              userData = res.data
-            } else {
-              userData = res
+        try {
+          this.$sp.getLoginUserInfo((res) => {
+            console.log('mpass里获取用户信息', res)
+            let userData = {}
+            if (typeof res === 'string') {
+              res = JSON.parse(res)
             }
-            this.$store.dispatch('user/SET_USER', userData)
-            this.formData.userId = userData.id
-            this.formData.userType = util.getUserType(userData.type)
-            this.formData.userName = userData.nickName
-            this.formData.userCode = userData.no
-          } else {
-            this.$xToast.error('获取用户信息失败')
-          }
-        })
+            if (res.code && res.code === 200) {
+              if (res.data) {
+                userData = res.data
+              } else {
+                userData = res
+              }
+              this.$store.dispatch('user/SET_USER', userData)
+              this.formData.userId = userData.id
+              this.formData.userType = util.getUserType(userData.type)
+              this.formData.userName = userData.nickName
+              this.formData.userCode = userData.no
+            } else if (res.userId) {
+              this.$store.dispatch('user/SET_USER', userData)
+              this.formData.userId = userData.id
+              this.formData.userType = util.getUserType(userData.type)
+              this.formData.userName = userData.nickName
+              this.formData.userCode = userData.no
+            } else {
+              this.$xToast.error('获取用户信息失败')
+            }
+          })
+        } catch (error) {
+          console.log('mpass里获取用户信息失败', error)
+        }
       } else {
         // 获取用户信息
         try {
@@ -167,6 +178,10 @@ export default {
       }
     },
     handleCancel() {
+      if (window.AlipayJSBridge) {
+        window.AlipayJSBridge.call('closeWebview')
+        return
+      }
       let cancelFlag = false
       if (this.fromPage !== 'answer') {
         if (
