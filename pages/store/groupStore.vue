@@ -390,6 +390,9 @@ export default {
       }
     },
     linkMch() {
+      if (this.type === 'preview') {
+        return
+      }
       this.$router.push({
         path: '/store/merchantsStore',
         query: {
