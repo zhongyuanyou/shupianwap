@@ -104,9 +104,9 @@
         </div>
       </div>
     </div>
-    <div class="goods-recommend-wrapper">
+    <div v-if="info.goodsRecommend.length > 0" class="goods-recommend-wrapper">
       <div class="main-tile">为您推荐</div>
-      <div v-if="info.goodsRecommend.length > 0" class="tabs">
+      <div class="tabs">
         <div
           v-for="(item, index) in info.goodsRecommend"
           :key="index"
@@ -115,14 +115,6 @@
           @click="changeTab(index, item.id)"
         >
           {{ item.name }}
-        </div>
-      </div>
-      <div v-else>
-        <div class="empty">
-          <img
-            src="https://cdn.shupian.cn/sp-pt/wap/images/32lnvdx3omo0000.png"
-          />
-          <p>抱歉,未找到相关结果</p>
         </div>
       </div>
 
@@ -321,7 +313,7 @@ export default {
           active: this.active,
           storeId: this.storeId,
           typeId,
-          type: this.type
+          type: this.type,
         },
       })
     },
@@ -339,7 +331,7 @@ export default {
         const params = {
           storeId: this.storeId,
           ignoreDataScope: 'goods',
-          type: this.type
+          type: this.type,
         }
         const { code, data, message } = await this.$axios.get(
           storeApi.mchStoreInfo,
@@ -368,7 +360,7 @@ export default {
           typeId,
           page: 1,
           limit: 4,
-          type: this.type
+          type: this.type,
         }
         const { code, data, message } = await this.$axios.post(
           storeApi.recommendGoods,
