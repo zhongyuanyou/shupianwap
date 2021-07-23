@@ -61,13 +61,6 @@ export default {
         options: [
           {
             id: 1,
-            code: 'PRO_CLASS_TYPE_SERVICE',
-            name: '服务商品',
-            text: '服务商品',
-            children: [],
-          },
-          {
-            id: 2,
             code: 'PRO_CLASS_TYPE_TRANSACTION',
             name: '交易商品',
             text: '交易商品',
@@ -108,6 +101,13 @@ export default {
                 dictCode: 'CONDITION-JY-ZZ',
               },
             ],
+          },
+          {
+            id: 2,
+            code: 'PRO_CLASS_TYPE_SERVICE',
+            name: '服务商品',
+            text: '服务商品',
+            children: [],
           },
         ],
       },
@@ -327,8 +327,8 @@ export default {
               },
             ]
 
-            this.tab2.options[0] = {
-              id: 1,
+            this.tab2.options[1] = {
+              id: 2,
               code: 'PRO_CLASS_TYPE_SERVICE',
               name: '服务商品',
               text: '服务商品',
