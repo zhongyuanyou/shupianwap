@@ -331,10 +331,10 @@ export default {
               'user/setUser',
               typeof res.data === 'string' ? JSON.parse(res.data) : res.data
             )
-            this.getDetail().finally(() => {
-              this.loading = false
-            })
           }
+          this.getDetail().finally(() => {
+            this.loading = false
+          })
         })
       }
     } else {

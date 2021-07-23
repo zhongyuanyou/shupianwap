@@ -62,7 +62,7 @@
       </sp-skeleton>
     </div>
 
-    <div class="bg-group-fixed" :style="floatview ? {opacity:'1',top:this.isInApp?(48+this.appInfo.statusBarHeight)/100+'rem':'0.48rem'} : {opacity:'0',top:this.isInApp?(48+this.appInfo.statusBarHeight)/100+'rem':'0.48rem'}">
+    <div class="bg-group-fixed" :style="floatview ? {opacity:'1',top:isInApp?(48+appInfo.statusBarHeight)/100+'rem':'0.48rem'} : {opacity:'0',top:isInApp?(48+appInfo.statusBarHeight)/100+'rem':'0.48rem'}">
       <div class="footer">
         <img :src="detailData.mchBaseInfo.logo" alt="" />
         <div class="footertext">
