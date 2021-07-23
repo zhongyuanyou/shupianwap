@@ -15,7 +15,8 @@
         <p>办理周期:{{ caseData.dealTime }}天</p>
       </div>
       <div v-if="caseData.caseScore" class="case-score">
-        {{ caseData.caseScore / 100 }}<span class="case-text">分 </span>
+        {{ (caseData.caseScore / 100).toFixed('1')
+        }}<span class="case-text">分 </span>
       </div>
     </div>
     <div
@@ -93,15 +94,15 @@ export default {
         orderItems: [
           {
             column: 'isTop',
-            asc: true,
+            asc: false,
           },
           {
             column: 'caseScore',
-            asc: true,
+            asc: false,
           },
           {
             column: 'createTime',
-            asc: true,
+            asc: false,
           },
           // {
           //   column: 'isTop',

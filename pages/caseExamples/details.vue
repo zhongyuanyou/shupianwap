@@ -155,40 +155,6 @@ export default {
 
       planerInfo: {}, // 请求的规划师信息
 
-      planners: [
-        {
-          mchUserId: '728691677696664530',
-          mchDetailId: '728691574617454297',
-          officeAddressId: '728691574617454408',
-          userName: '王茂婕',
-          userCenterId: '607997598875151730',
-          userCenterNo: 'U2000431059',
-          phone:
-            '0E687EEE72F48183A2C6EFC593FC0A06*DGGJGZX*PH314Eo/oe71oSJobb0CE01mzKjRRSI1f61QbQ==',
-          point: '5',
-          registerTime: '2020-12-24 18:44:07',
-          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
-          status: 1,
-          statusName: '启用',
-          userCenterStatus: 1,
-          userCenterStatusName: '正常',
-          recentCompany: 'PCN测试服务商户',
-          type: 'MERCHANT_B',
-          mchNo: 'PBU2036000',
-          isAdmin: 0,
-          serveNum: 0,
-          serveAge: 7,
-          goodReputation: 95,
-          payNum: 0,
-          profilePhotoId: '',
-          dggPlannerRecomLog:
-            'productmap=[728694563914692664, 728691677696671018, 728691677696664530, 732284950661460939, 1076098595517908927, 767581610621041918, 767854117951796474, 767773578479304701, 1076098732956867488]&seqno=C306F8AD6FBAD6FDB9192946F8490AEA&recallno=44&ruleno=33&deviceId=deviceId&rankno=22',
-          portrait:
-            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
-        },
-      ], // 规划师列表
-      plannerLimit: 3, // 推荐规划师每页条数
-      plannerPage: 1, // 推荐规划师当前页
       tcPlannerBooth: {},
       deviceId: null, // 设备唯一码
 
@@ -474,7 +440,7 @@ export default {
   padding-bottom: env(safe-area-inset-bottom);
   .scroTopStyle {
     ::v-deep.sp-sticky {
-      border: 1px solid #f4f4f4;
+      border-bottom: 1px solid #f4f4f4;
       .sp-top-nav-bar {
         background-color: #fff !important;
         .spiconfont {

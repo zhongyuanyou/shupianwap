@@ -2,7 +2,7 @@
   <div class="list">
     <div class="list_item">
       <div class="flex list_header">
-        <div class="goods_img">
+        <div v-if="item.caseImg" class="goods_img">
           <sp-image
             width="100%"
             height="100%"
@@ -78,9 +78,10 @@ export default {
         background: #d8d8d8;
         border-radius: 4px;
         overflow: hidden;
+        margin-right: 24px;
       }
       .list_header_center {
-        padding: 0 35px 0 24px;
+        margin-right: 35px;
         .name {
           font-family: PingFangSC-Medium;
           font-weight: bold;

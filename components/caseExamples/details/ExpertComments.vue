@@ -22,7 +22,9 @@
           <div class="process_item_line no_margin">
             <sp-progress :show-pivot="false" :percentage="item.fraction * 10" />
           </div>
-          <p class="process_item_score">{{ item.fraction }}</p>
+          <p class="process_item_score">
+            {{ parseFloat(item.fraction || 0).toFixed(1) }}
+          </p>
         </div>
       </div>
     </div>
@@ -72,8 +74,7 @@ export default {
   data() {
     return {
       headImg: '',
-      defaultImg:
-        'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0',
+      defaultImg: this.$ossImgSetV2('727ro8a1oa00000.jpg'),
       imgs: ['ehczc451lpk0000.jpg', '6e5rze76buc0000.jpg'],
     }
   },
