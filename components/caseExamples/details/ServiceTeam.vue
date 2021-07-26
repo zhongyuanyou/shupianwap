@@ -6,7 +6,7 @@
     <div class="planners">
       <sp-skeleton :row="3" :loading="caseMember.length == 0">
         <div
-          v-if="planner.mchUserId"
+          v-if="planner.mchUserId || planner.merchantUserId"
           class="planners_item"
           :style="{ marginTop: '0.42rem' }"
         >
@@ -39,10 +39,10 @@
                 <i class="gold_icon">金牌规划师</i>
               </div>
               <div class="info_bot">
-                <span class="num">{{ planner.point }}</span
+                <span class="num">{{ planner.point || 100 }}</span
                 ><span class="txt"
                   >薯片分 |
-                  {{ planner.serveNum }}
+                  {{ planner.serveNum || 0 }}
                   服务次数</span
                 >
               </div>
@@ -80,7 +80,8 @@
         >
           <swiper class="swiper" :options="swiperOption">
             <swiper-slide v-for="item in teamMmembers" :key="item.id">
-              <div class="team_list_item" @click="plannerInfoUrlJump(item.id)">
+              <!--  @click="plannerInfoUrlJump(item.id)" -->
+              <div class="team_list_item">
                 <div>
                   <sp-image
                     width="0.85rem"
@@ -384,7 +385,7 @@ export default {
     font-size: 0;
 
     .swiper-slide {
-      width: 115px;
+      width: 145px;
     }
 
     .team_list_item {

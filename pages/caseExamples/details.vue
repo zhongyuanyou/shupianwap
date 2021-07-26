@@ -253,8 +253,11 @@ export default {
       return planner?.value || {}
     },
     teamMmembers() {
-      const mmembers = this.handelPlannerData('STAFF_MEMBER_DIGESTION')
-      return mmembers?.value || []
+      const LEADER =
+        this.handelPlannerData('STAFF_MEMBER_PROJECT_LEADER')?.value || []
+      const mmembers =
+        this.handelPlannerData('STAFF_MEMBER_DIGESTION')?.value || []
+      return [].concat(LEADER, mmembers)
     },
   },
 

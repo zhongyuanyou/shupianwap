@@ -833,6 +833,15 @@ export default {
           li {
             position: relative;
             margin: 0 56px 0 0;
+            span{
+              display: inline-block;
+              height: 32px;
+              line-height: 32px;
+              max-width: 128px;
+              white-space:nowrap;
+              overflow:hidden;
+              text-overflow:ellipsis;
+            }
             .tabs_line {
               position: absolute;
               bottom: 8px;
