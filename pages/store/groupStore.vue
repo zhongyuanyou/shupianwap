@@ -396,6 +396,9 @@ export default {
       })
     },
     linkGood(item) {
+      if (this.type === 'preview') {
+        return
+      }
       if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
         this.$router.push({
           path: '/detail/transactionDetails',
@@ -414,6 +417,9 @@ export default {
       }
     },
     linkPlanner(item) {
+      if (this.type === 'preview') {
+        return
+      }
       this.$router.push({
         path: '/planner/detail',
         query: {
@@ -422,6 +428,9 @@ export default {
       })
     },
     handleShare() {
+      if (this.type === 'preview') {
+        return
+      }
       if (this.isInApp) {
         const url = window && window.location.href
         const sharedUrl = setUrlParams(url, { isShare: 1 })
