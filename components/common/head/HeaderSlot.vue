@@ -65,13 +65,20 @@ export default {
     }
   },
   mounted() {
+    if (window.AlipayJSBridge) {
+      this.safeTop = 0
+      this.useSafeAreaClass = true
+    }
+    console.log('ddddd')
     this.getTopMargin()
   },
   methods: {
     getTopMargin() {
       if (process && process.client) {
         let safeTop = safeAreaInsets.top
-        if (this.isInApp) safeTop = this.appInfo.statusBarHeight
+        if (window.AlipayJSBridge) {
+          safeTop = 40
+        } else if (this.isInApp) safeTop = this.appInfo.statusBarHeight
         this.safeTop = safeTop
       }
     },
