@@ -64,37 +64,19 @@ export default {
   methods: {
     async getUserInfo() {
       if (window.AlipayJSBridge) {
-        try {
-          this.$sp.getLoginUserInfo((res) => {
-            console.log('mpass里获取用户信息', res)
-            let userData = {}
-            if (typeof res === 'string') {
-              res = JSON.parse(res)
-            }
-            if (res.code && res.code === 200) {
-              if (res.data) {
-                userData = res.data
-              } else {
-                userData = res
-              }
-              this.$store.dispatch('user/SET_USER', userData)
-              this.formData.userId = userData.id
-              this.formData.userType = util.getUserType(userData.type)
-              this.formData.userName = userData.nickName
-              this.formData.userCode = userData.no
-            } else if (res.userId) {
-              this.$store.dispatch('user/SET_USER', userData)
-              this.formData.userId = userData.id
-              this.formData.userType = util.getUserType(userData.type)
-              this.formData.userName = userData.nickName
-              this.formData.userCode = userData.no
-            } else {
-              this.$xToast.error('获取用户信息失败')
-            }
-          })
-        } catch (error) {
-          console.log('mpass里获取用户信息失败', error)
-        }
+        window.AlipayJSBridge.call('getLoginUserInfo', (res) => {
+          console.log('mpass里获取用户信息', res)
+          if (res.code && res.code === 200) {
+            const userData = JSON.parse(res.data)
+            this.$store.dispatch('user/SET_USER', userData)
+            this.formData.userId = userData.id
+            this.formData.userType = util.getUserType(userData.type)
+            this.formData.userName = userData.nickName
+            this.formData.userCode = userData.no
+          } else {
+            this.$xToast.error('获取用户信息失败')
+          }
+        })
       } else {
         // 获取用户信息
         try {
@@ -226,7 +208,7 @@ export default {
             this.$xToast.success('发布成功')
             this.switchUrl(res.data.id)
           } else {
-            this.$xToast.error(res.data.error)
+            this.$xToast.error(res.data.error || '发布失败')
           }
         })
         .catch((err) => {
