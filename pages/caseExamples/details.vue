@@ -161,11 +161,9 @@ export default {
       isShare: false,
 
       keys: Object.keys({
-        1: '案例列表图',
-        hHauR8vs78n2brXYuBia1G: '案例头图',
+        案例头图: '案例头图',
         caseInfo: '案例简介',
         processing: '办理经过',
-        // case1626678429069: '交易处理记录222222',
         caseResult: '案例结果',
         expertEvaluation: '专家评价',
         UserReviews: '用户评价',
@@ -182,7 +180,7 @@ export default {
     },
 
     imgs() {
-      return this.caseDetailInfo?.hHauR8vs78n2brXYuBia1G?.imgs || []
+      return this.caseDetailInfo?.案例头图?.imgs || []
     },
     // 案例简介
     caseInfo() {
@@ -331,7 +329,7 @@ export default {
       let info = {}
       if (detailInfo?.infos) {
         info = detailInfo.infos.find((infosItem) => {
-          return infosItem.key === key
+          return infosItem.key === key || infosItem.name === key
         })
       }
       if (info) {

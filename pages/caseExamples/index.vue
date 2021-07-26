@@ -341,6 +341,7 @@ export default {
 
   .empty-container {
     height: 100vh;
+    height: calc(100vh - 0.98rem);
     background-color: #ffffff;
 
     .empty-text ::v-deep .sp-empty__description {
