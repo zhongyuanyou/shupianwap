@@ -56,10 +56,10 @@ export default {
             column: 'isTop',
             asc: false,
           },
-          {
-            column: 'caseScore',
-            asc: false,
-          },
+          // {
+          //   column: 'caseScore',
+          //   asc: false,
+          // },
           {
             column: 'createTime',
             asc: false,
@@ -94,7 +94,7 @@ export default {
         })
     },
     toDetail() {
-      this.$router.push('/caseExamples/details?id=' + this.caseData.id)
+      this.$router.push('/caseexample/details?id=' + this.caseData.id)
     },
     toALL() {
       console.log('classCodeLevelList', this.classCodeLevelList)
@@ -109,7 +109,7 @@ export default {
         ? 'PRO_CLASS_TYPE_TRANSACTION'
         : 'PRO_CLASS_TYPE_SERVICE'
       this.$router.push({
-        path: '/caseExamples',
+        path: '/caseexample',
         query,
       })
     },

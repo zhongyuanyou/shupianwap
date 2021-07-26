@@ -24,7 +24,7 @@
       <div v-for="(item, index) of list" :key="index">
         <CaseExamplesList
           :item="item"
-          @click.native="toDetails('/caseExamples/details', item)"
+          @click.native="toDetails('/caseexample/details', item)"
         ></CaseExamplesList>
       </div>
     </sp-list>
@@ -58,7 +58,7 @@ import {
   List,
   Dialog,
 } from '@chipspc/vant-dgg'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
 import Header from '@/components/common/head/header.vue'
@@ -69,10 +69,9 @@ import CaseExamplesList from '@/components/caseExamples/index/List.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 
 import { caseApi } from '@/api/index'
-
 export default {
   layout: 'keepAlive',
-  name: 'CaseExamplesPage',
+  name: 'Caseexample',
   components: {
     LoadingCenter,
     Header,
@@ -133,7 +132,11 @@ export default {
       appInfo: (state) => state.app.appInfo, // app信息
     }),
   },
+  created() {
+    console.log('created')
+  },
   mounted() {
+    console.log('执行mounted ')
     this.search.productTypeCode = this.$route.query.goodsType
     this.search.productOneBelongCode = this.$route.query.classCode1
     // this.search.productTwoBelongCode = this.$route.query.classCode2
@@ -141,7 +144,21 @@ export default {
     this.initData()
     this.getHeaderHeight()
   },
+  // beforeRouteLeave(to, from, next) {
+  //   console.log(from.name, to.name)
+  //   if (['caseexample-details'].includes(to.name)) {
+  //     console.log('add keepalive')
+  //     this.SET_KEEP_ALIVE({ type: 'add', name: 'Caseexample' })
+  //   } else {
+  //     this.SET_KEEP_ALIVE({ type: 'remove', name: 'Caseexample' })
+  //   }
+  //   next()
+  // },
+
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     getHeaderHeight() {
       this.$nextTick(() => {
         this.HeaderHeight = this.$refs.couponHeaderWarpper.offsetHeight
@@ -150,7 +167,8 @@ export default {
     },
     // 分类选择
     selectClassify(tab1, tab2, tab3) {
-      console.log(tab1, tab2, tab3)
+      console.log('selectClassify', tab1, tab2, tab3)
+
       if (tab1.value === 2) {
         this.search.orderItems = [
           {
@@ -191,6 +209,12 @@ export default {
         } else {
           this.search.productTwoBelongCode = ''
         }
+        this.$router.replace({
+          query: {
+            goodsType: this.search.productTypeCode,
+            classCode1: this.search.productOneBelongCode,
+          },
+        })
       }
 
       if (tab3.value && tab3.value.length > 0) {
@@ -210,6 +234,7 @@ export default {
           this.search.dealArea = ''
         }
       }
+
       this.initData()
       // this.search.orderItems = {}
     },
@@ -337,6 +362,14 @@ export default {
 
   ::v-deep .sp-work-tabs__line {
     background-color: #4974f5;
+  }
+  ::v-deep .sp-dropdown-menu__title::after {
+    border: 0.05rem solid;
+
+    border-color: transparent transparent #dcdee0 #dcdee0;
+  }
+  ::v-deep .sp-dropdown-menu__title--active::after {
+    border-color: transparent transparent currentColor currentColor;
   }
 
   .empty-container {

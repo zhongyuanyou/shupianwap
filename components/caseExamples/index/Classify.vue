@@ -2,12 +2,27 @@
   <!-- 分类 -->
   <div class="classify">
     <sp-dropdown-menu :lazy-render="false" active-color="#4974F5">
-      <sp-dropdown-item
-        v-model="tab1.value"
-        :title="tab1.title"
-        :options="tab1.options"
-        @change="change($event)"
-      />
+      <sp-dropdown-item ref="tab1" :title="tab1.title" @change="change($event)">
+        <div>
+          <div
+            v-for="option of tab1.options"
+            :key="option.value"
+            class="dropdown_item"
+            :class="{ activeOption: option.value == tab1.value }"
+            @click="changeDropdownItem_1(option)"
+          >
+            <div>{{ option.text }}</div>
+            <div>
+              <my-icon
+                v-if="option.value == tab1.value"
+                name="tab_ic_check"
+                color="#4974F5"
+                size="0.28rem"
+              />
+            </div>
+          </div>
+        </div>
+      </sp-dropdown-item>
 
       <!--v-model="tab2.value" :options="tab2.options" -->
       <sp-dropdown-item ref="tab2" :title="tab2.title">
@@ -332,6 +347,7 @@ export default {
 
             this.tab2.options[1] = {
               id: 2,
+              treelevel: 3,
               code: 'PRO_CLASS_TYPE_SERVICE',
               text: '服务商品',
               children: d,
@@ -358,6 +374,11 @@ export default {
           this.tab1.title = item.text
         }
       }
+    },
+    changeDropdownItem_1(option) {
+      this.tab1.value = option.value
+      this.$refs.tab1.toggle()
+      this.change()
     },
 
     ServerSelectChangeName(name) {
@@ -389,6 +410,33 @@ export default {
 
 <style lang="less" scoped>
 .classify {
+  .dropdown_item {
+    padding: 0 40px;
+    height: 84px;
+    line-height: 84px;
+    background: #ffffff;
+
+    display: flex;
+
+    font-family: PingFangSC-Medium;
+
+    font-size: 28px;
+    color: #222222;
+    letter-spacing: 0;
+  }
+  .dropdown_item.activeOption {
+    color: #4974f5;
+    font-weight: bold;
+  }
+  .dropdown_item > div:nth-child(1) {
+    flex: 1;
+  }
+  .dropdown_item > div:nth-child(2) {
+    width: 28px;
+    height: 28px;
+    padding: 0 40px;
+  }
+
   .custom {
     // padding: 56px 40px 56px;
     padding: 56px 40px 32px;
@@ -449,6 +497,9 @@ export default {
     color: #222222;
   }
   ::v-deep .sp-dropdown-item__option--active {
+    font-weight: bold;
+  }
+  ::v-deep .sp-dropdown-menu__title--active {
     font-weight: bold;
   }
 }
