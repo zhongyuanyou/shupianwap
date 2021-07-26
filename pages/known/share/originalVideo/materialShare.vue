@@ -1,6 +1,6 @@
 <template>
   <div class="m-known-share originalVideo materialShare">
-    <ShareModal />
+    <ShareModal :source-id="vDetail.id" />
     <client-only>
       <sp-video
         :options="playerOptions"
