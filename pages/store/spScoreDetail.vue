@@ -40,7 +40,7 @@
     <div class="body">
       <div class="title">
         <p>700</p>
-        <span>超过90%规划师</span>
+        <span>超过<i>90%</i>规划师</span>
       </div>
       <div class="echart">
         <div id="main"></div>
@@ -223,10 +223,10 @@ export default {
                 color: '#fff',
                 borderColor: 'rgba(73, 116, 245, 1)',
                 borderWidth: 0.4,
-                lineStyle:{
-                  width:1,
-                  color:"rgba(73, 116, 245, 1)"
-                }
+                lineStyle: {
+                  width: 1,
+                  color: 'rgba(73, 116, 245, 1)',
+                },
               },
             },
 
@@ -241,15 +241,15 @@ export default {
                 name: '薯片分',
                 areaStyle: {
                   color: new echarts.graphic.RadialGradient(0.9, 0.7, 0.6, [
-                      {
-                          color: 'rgba(73, 116, 245, 1)',
-                          offset: 0
-                      },
-                      {
-                          color: 'rgba(117, 151, 255, 1)',
-                          offset: 1
-                      }
-                  ])
+                    {
+                      color: 'rgba(73, 116, 245, 1)',
+                      offset: 0,
+                    },
+                    {
+                      color: 'rgba(117, 151, 255, 1)',
+                      offset: 1,
+                    },
+                  ]),
                   // color: ['rgba(73, 116, 245, 1)', 'rgba(117, 151, 255, 1)'],
                 },
                 lineStyle: {
@@ -302,6 +302,17 @@ export default {
       this.$router.back(-1)
     },
   },
+  head() {
+    return {
+      title: '薯片分',
+      meta: [
+        {
+          name: 'spptmd-track_code',
+          content: this.isInApp ? 'SPP000019' : 'SPW000019',
+        },
+      ],
+    }
+  },
 }
 </script>
 <style lang="less" scoped>
@@ -340,8 +351,7 @@ export default {
   .body {
     position: relative;
     margin: -560px 0 0 0;
-    padding: 0 20px;
-
+    padding: 0 20px 20px;
     z-index: 2;
     > div {
       margin: 0 0 20px 0;
@@ -349,6 +359,14 @@ export default {
     .title {
       margin: 0 0 66px 0;
       text-align: center;
+      i{
+        font-style:normal;
+        font-family: Bebas;
+        font-size: 28px;
+        color: #ffffff;
+        letter-spacing: 1px;
+        line-height: 34px;
+      }
       p {
         font-family: Bebas;
         font-size: 74px;
@@ -409,6 +427,13 @@ export default {
         right: 0;
         bottom: 48px;
         margin: 0 auto;
+        i{
+          vertical-align: middle;
+
+        }
+        span{
+          vertical-align: middle;
+        }
       }
     }
     .instructions {
@@ -457,7 +482,7 @@ export default {
           justify-content: flex-start;
           align-items: center;
           padding: 24px 0;
-          border-bottom: 1px solid #f2f2f2;
+          border-bottom: 1px solid #f4f4f4;
           img {
             width: 80px;
             height: 80px;

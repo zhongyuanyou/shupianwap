@@ -616,7 +616,7 @@ export default {
           line-height: 45px;
           margin: 0 0 20px 0;
           font-family: PingFangSC-Regular;
-          font-size: 32px;
+          font-size: 44px;
           color: #ffffff;
           font-weight: bold;
           letter-spacing: 0;
@@ -654,7 +654,8 @@ export default {
     font-size: 28px;
     color: #000;
     letter-spacing: 0;
-    border-bottom: 1px solid #f2f2f2;
+    border-top: 1px solid #f4f4f4;
+    border-bottom: 1px solid #f4f4f4;
     line-height: 28px;
     z-index: 2;
     .footer {
@@ -672,14 +673,14 @@ export default {
       }
     }
     .footertext {
+      width: 100%;
       margin: 0 32px 0 20px;
       p {
         &:first-of-type {
-          max-width: 424px;
           line-height: 45px;
           margin: 0 0 20px 0;
           font-family: PingFangSC-Regular;
-          font-size: 32px;
+          font-size: 44px;
           color: #000;
           font-weight: bold;
           letter-spacing: 0;
@@ -735,8 +736,7 @@ export default {
   }
   .body {
     position: relative;
-    margin: -24px 0 0 0;
-    padding: 38px 40px 64px;
+    padding: 0 40px 64px;
     background-color: #fff;
     border-top-right-radius: 24px;
     border-top-left-radius: 24px;

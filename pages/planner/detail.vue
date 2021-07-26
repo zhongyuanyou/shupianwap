@@ -99,14 +99,14 @@
                     <li>
                       <div>
                         <img
-                          src="https://cdn.shupian.cn/sp-pt/wap/images/8uwqkc0j7lk0000.png"
+                          src="https://cdn.shupian.cn/sp-pt/wap/images/co0535d3gfk0000.png"
                           alt=""
                         />
                         <span>{{ newDetailData.phone }}</span>
                       </div>
                       <div v-if="newDetailData.baseInfo.wechat">
                         <img
-                          src="https://cdn.shupian.cn/sp-pt/wap/images/9283ol6moao0000.png"
+                          src="https://cdn.shupian.cn/sp-pt/wap/images/844q1xncy580000.png"
                           alt=""
                         />
                         <span>{{ newDetailData.baseInfo.wechat }}</span>
@@ -115,7 +115,7 @@
                     <li v-if="newDetailData.baseInfo.mailbox">
                       <div>
                         <img
-                          src="https://cdn.shupian.cn/sp-pt/wap/images/8a8y6ljrlvo0000.png"
+                          src="https://cdn.shupian.cn/sp-pt/wap/images/569rb93on880000.png"
                           alt=""
                         />
                         <span>{{ newDetailData.baseInfo.mailbox }}</span>
@@ -124,7 +124,7 @@
                     <li v-if="newDetailData.officeAddress">
                       <div class="pullstyle">
                         <img
-                          src="https://cdn.shupian.cn/sp-pt/wap/images/e90wl9dbyw00000.png"
+                          src="https://cdn.shupian.cn/sp-pt/wap/images/5huwcgk3ric0000.png"
                           alt=""
                         />
                         <span
@@ -140,7 +140,7 @@
                     <li v-if="newDetailData.baseInfo.lawyerIntro">
                       <div class="pullstyle">
                         <img
-                          src="https://cdn.shupian.cn/sp-pt/wap/images/5lywjoit1as0000.png"
+                          src="https://cdn.shupian.cn/sp-pt/wap/images/5mz72q9tl500000.png"
                           alt=""
                         />
                         <span
@@ -324,7 +324,7 @@
             <div>
               <i class="empty"></i>
               <span
-                >{{ data.disapplaudCount }} 万点赞 ·
+                >{{ numUntil(data.disapplaudCount)  }} 点赞 ·
                 {{ data.remarkCount }} 评论</span
               >
             </div>
@@ -348,7 +348,7 @@
             </div>
             <div>
               <span
-                >{{ data.totalBrowseCount }} 万浏览 ·
+                >{{ numUntil(data.totalBrowseCount) }} 浏览 ·
                 {{ data.disapplaudCount }} 点赞 ·
                 {{ timerUntil(data.createTime) }}</span
               >
@@ -365,8 +365,8 @@
               <p>
                 <span class="two_line">{{ data.title }}</span>
                 <img
-                  v-if="data.contentImageUrl"
-                  :src="data.contentImageUrl"
+                  v-if="data.imageUrl"
+                  :src="data.imageUrl"
                   alt=""
                 />
               </p>
@@ -582,6 +582,12 @@ export default {
       // } else {
       //   this.$xToast.error('获取视频信息失败')
       // }
+    },
+    // 超过10000以万显示
+    numUntil(num){
+      if (!num) return "";
+      const res = Number(num) > 10000 ? `${(Number(num) / 10000).toFixed(2)}万` : Number(num);
+      return res;
     },
     // 判定时间差值
     timerUntil(time) {
@@ -1621,10 +1627,15 @@ export default {
             justify-content: flex-start;
             align-items: normal;
             margin: 0 0 24px 0;
+            .two_line{
+              max-width: 440px;
+              -webkit-line-clamp: 3 !important;
+            }
             > p {
               display: flex;
               justify-content: space-between;
               align-items: normal;
+              width: 100%;
               img {
                 width: 190px;
                 height: 127px;
