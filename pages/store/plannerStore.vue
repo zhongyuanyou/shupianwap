@@ -140,7 +140,6 @@
                 v-for="(item, index) in detailData.modules.filter(
                   (item) => item.code === 'GOODS_RECOMMEND'
                 )[0].data"
-                
                 :key="index"
                 :class="active === item.id ? 'tab_active' : ''"
                 @click="tabsActive(item.id)"
@@ -194,30 +193,32 @@
     </div>
     <div class="footer">
       <sp-bottombar safe-area-inset-bottom>
-        <sp-bottombar-button
-          v-md:p_IMClick
-          data-im_type="售前"
-          :data-planner_number="IMDetailData.id"
-          :data-planner_name="IMDetailData.name"
-          :data-crisps_fraction="IMDetailData.point"
-          :data-track_code="isInApp ? 'SPP000040' : 'SPW000036'"
-          type="primary"
-          text="电话联系"
-          :disabled="!IMDetailData.id"
-          @click="handleCall"
-        />
-        <sp-bottombar-button
-          v-md:p_IMClick
-          data-im_type="售前"
-          :data-planner_number="IMDetailData.id"
-          :data-planner_name="IMDetailData.name"
-          :data-crisps_fraction="IMDetailData.point"
-          :data-track_code="isInApp ? 'SPP000040' : 'SPW000036'"
-          type="info"
-          text="在线联系"
-          :disabled="!IMDetailData.id"
-          @click="handleIM"
-        />
+        <div class="footer-body">
+          <sp-bottombar-button
+            v-md:p_IMClick
+            data-im_type="售前"
+            :data-planner_number="IMDetailData.id"
+            :data-planner_name="IMDetailData.name"
+            :data-crisps_fraction="IMDetailData.point"
+            :data-track_code="isInApp ? 'SPP000040' : 'SPW000036'"
+            type="primary"
+            text="电话联系"
+            :disabled="!IMDetailData.id"
+            @click="handleCall"
+          />
+          <sp-bottombar-button
+            v-md:p_IMClick
+            data-im_type="售前"
+            :data-planner_number="IMDetailData.id"
+            :data-planner_name="IMDetailData.name"
+            :data-crisps_fraction="IMDetailData.point"
+            :data-track_code="isInApp ? 'SPP000040' : 'SPW000036'"
+            type="info"
+            text="在线联系"
+            :disabled="!IMDetailData.id"
+            @click="handleIM"
+          />
+        </div>
       </sp-bottombar>
     </div>
     <sp-share-sheet
@@ -389,7 +390,6 @@ export default {
       this.$router.push('/')
     },
     onLoad() {
-      
       this.refresh.pageIndex++
       this.getList('onLoad')
     },
@@ -428,7 +428,6 @@ export default {
     // 获取详情数据
     async getDetail() {
       try {
-        
         const { mchUserId, pageStatus = '' } = this.$route.query
         if (mchUserId == null) {
           this.$xToast.show({
@@ -461,7 +460,7 @@ export default {
             data.modules[0].data[0].id) ||
           ''
         this.detailData = data || {}
-        this.getList('refull',10)
+        this.getList('refull', 10)
         // IM接口请求数据
         const IMParams = { id: mchUserId }
         // IM数据
@@ -479,7 +478,7 @@ export default {
       }
     },
     // 获取列表数据
-    async getList(type,pages) {
+    async getList(type, pages) {
       if (!this.active) return
       try {
         const { pageStatus = '' } = this.$route.query
@@ -488,7 +487,7 @@ export default {
           typeId: this.active,
           type: pageStatus,
           page: this.refresh.pageIndex,
-          limit: type==='onLoad'?this.refresh.pageSize:pages,
+          limit: type === 'onLoad' ? this.refresh.pageSize : pages,
         }
         const { data, code, message } = await this.$axios.post(
           storeApi.recommendGoods,
@@ -513,10 +512,10 @@ export default {
           this.detailData.goods = [...this.detailData.goods, ...data.records]
         } else {
           // 下拉刷新
-          this.refresh.pageIndex=2
+          this.refresh.pageIndex = 2
           this.detailData.goods = data.records
         }
-        
+
         return data
       } catch (error) {
         console.error('getDetail:', error)
@@ -563,7 +562,7 @@ export default {
     tabsActive(item) {
       this.refresh.pageIndex = 1
       this.active = item
-      this.getList('refull',10)
+      this.getList('refull', 10)
     },
     // app获取用户信息
     getUserInfo() {
@@ -792,7 +791,8 @@ export default {
         console.log('sharedUrl:', sharedUrl)
         this.$appFn.dggShare(
           {
-            image: 'https://cdn.shupian.cn/sp-pt/wap/images/cwxnvvtntxc0000.png',
+            image:
+              'https://cdn.shupian.cn/sp-pt/wap/images/cwxnvvtntxc0000.png',
             title: '薯片找人',
             subTitle: `优选规划师 - ${this.detailData.personal.name}的店铺`,
             url: sharedUrl,
@@ -1096,14 +1096,14 @@ export default {
           li {
             position: relative;
             margin: 0 56px 0 0;
-            span{
+            span {
               display: inline-block;
               height: 32px;
               line-height: 32px;
               max-width: 128px;
-              white-space:nowrap;
-              overflow:hidden;
-              text-overflow:ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
             .tabs_line {
               position: absolute;
@@ -1122,7 +1122,6 @@ export default {
             font-weight: bold;
             font-size: 32px;
             color: #222222;
-            
           }
         }
       }
@@ -1233,11 +1232,18 @@ export default {
     }
   }
   .footer {
+    &-body {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 0 0 28px;
+    }
     .phone {
       font-size: 24px;
       margin: 0 44px 0 0;
     }
     ::v-deep .sp-bottombar {
+      height: auto;
       z-index: 100;
       padding-bottom: constant(safe-area-inset-bottom);
       padding-bottom: env(safe-area-inset-bottom);

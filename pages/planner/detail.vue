@@ -381,36 +381,38 @@
         <!-- <RecommendList :mch-detail-id="detailData.mchDetailId" /> -->
       </div>
     </div>
-    <div class="footer">
+    <div class="footer" style="padding-bottom:0.12rem">
       <sp-bottombar safe-area-inset-bottom>
-        <div class="phone" @click="goShop">
-          <i class="spiconfont spiconfont-xiaodian" style="font-size: 24px"></i>
-          <p>小店</p>
+        <div class="footer-body">
+          <div class="phone" @click="goShop">
+            <i class="spiconfont spiconfont-xiaodian" style="font-size: 24px"></i>
+            <p>小店</p>
+          </div>
+          <div class="phone" @click="handleCall">
+            <i class="spiconfont spiconfont-dianhua" style="font-size: 24px"></i>
+            <p>电话</p>
+          </div>
+          <!-- <sp-bottombar-button
+            v-if="!hideIM"
+            type="primary"
+            text="电话联系"
+            :disabled="!detailData.phone"
+            @click="handleCall"
+          /> -->
+          <sp-bottombar-button
+            v-if="!hideIM"
+            v-md:p_IMClick
+            data-im_type="售前"
+            :data-planner_number="detailData.id"
+            :data-planner_name="detailData.name"
+            :data-crisps_fraction="detailData.point"
+            :data-track_code="isInApp ? 'SPP000040' : 'SPW000036'"
+            type="info"
+            text="在线咨询"
+            :disabled="!detailData.id"
+            @click="handleIM"
+          />
         </div>
-        <div class="phone" @click="handleCall">
-          <i class="spiconfont spiconfont-dianhua" style="font-size: 24px"></i>
-          <p>电话</p>
-        </div>
-        <!-- <sp-bottombar-button
-          v-if="!hideIM"
-          type="primary"
-          text="电话联系"
-          :disabled="!detailData.phone"
-          @click="handleCall"
-        /> -->
-        <sp-bottombar-button
-          v-if="!hideIM"
-          v-md:p_IMClick
-          data-im_type="售前"
-          :data-planner_number="detailData.id"
-          :data-planner_name="detailData.name"
-          :data-crisps_fraction="detailData.point"
-          :data-track_code="isInApp ? 'SPP000040' : 'SPW000036'"
-          type="info"
-          text="在线咨询"
-          :disabled="!detailData.id"
-          @click="handleIM"
-        />
       </sp-bottombar>
     </div>
     <sp-share-sheet
@@ -1690,12 +1692,19 @@ export default {
     }
   }
   .footer {
+    &-body{
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 0 0 28px;
+    }
     .phone {
       font-size: 24px;
       margin: 0 44px 0 0;
       text-align: center;
     }
-    ::v-deep.sp-bottombar {
+    ::v-deep .sp-bottombar {
+      height: auto;
       padding-bottom: constant(safe-area-inset-bottom);
       padding-bottom: env(safe-area-inset-bottom);
       z-index: 100;
