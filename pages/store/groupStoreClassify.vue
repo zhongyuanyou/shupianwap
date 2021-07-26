@@ -121,10 +121,11 @@ export default {
       storeId: '',
       info: {
         teamInfo: {},
-        goodsRecommend: []
+        goodsRecommend: [],
       },
       goods: [],
       typeId: '',
+      type: '',
     }
   },
   mounted() {
@@ -134,10 +135,15 @@ export default {
     }
     this.storeId = query.storeId
     this.typeId = query.typeId
+    this.type = query.type || ''
     this.getGroupInfoApi()
   },
   methods: {
     onLoad() {
+      if (!this.typeId || this.typeId === '') {
+        this.finished = true
+        return
+      }
       this.getGoodsApi()
     },
     changeTab(index, item) {
@@ -161,7 +167,7 @@ export default {
       if (index === 0) {
         this.$router.push({
           path: '/store/groupStore',
-          query: { storeId: this.storeId },
+          query: { storeId: this.storeId, pageStatus: this.type },
         })
       }
     },
@@ -202,6 +208,8 @@ export default {
       try {
         const params = {
           storeId: this.storeId,
+          type: this.type || '',
+          ignoreDataScope: 'goods',
         }
         const { code, data, message } = await this.$axios.get(
           storeApi.mchStoreInfo,
@@ -217,6 +225,9 @@ export default {
       }
     },
     linkGood(item) {
+      if (this.type === 'preview') {
+        return
+      }
       if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
         this.$router.push({
           path: '/detail/transactionDetails',

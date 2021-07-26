@@ -104,9 +104,9 @@
         </div>
       </div>
     </div>
-    <div class="goods-recommend-wrapper">
+    <div v-if="info.goodsRecommend.length > 0" class="goods-recommend-wrapper">
       <div class="main-tile">为您推荐</div>
-      <div v-if="info.goodsRecommend.length > 0" class="tabs">
+      <div class="tabs">
         <div
           v-for="(item, index) in info.goodsRecommend"
           :key="index"
@@ -115,14 +115,6 @@
           @click="changeTab(index, item.id)"
         >
           {{ item.name }}
-        </div>
-      </div>
-      <div v-else>
-        <div class="empty">
-          <img
-            src="https://cdn.shupian.cn/sp-pt/wap/images/32lnvdx3omo0000.png"
-          />
-          <p>抱歉,未找到相关结果</p>
         </div>
       </div>
 
@@ -314,21 +306,24 @@ export default {
     },
     toClassifyPage() {
       // 得到tpeid
-      const typeId = this.info.goodsRecommend[this.active].id
+      let typeId = ''
+      if (this.info.goodsRecommend.length > 0) {
+        typeId = this.info.goodsRecommend[this.active].id
+      }
       this.$router.push({
         path: '/store/groupStoreClassify',
         query: {
           active: this.active,
           storeId: this.storeId,
           typeId,
-          type: this.type
+          type: this.type,
         },
       })
     },
     handleScroll() {
       // 获得团队服务距离顶部高度
       const top = this.$refs.sticky.getBoundingClientRect().top
-      if (top < 200) {
+      if (top < 220) {
         this.stickyFlag = true
       } else {
         this.stickyFlag = false
@@ -339,7 +334,7 @@ export default {
         const params = {
           storeId: this.storeId,
           ignoreDataScope: 'goods',
-          type: this.type
+          type: this.type,
         }
         const { code, data, message } = await this.$axios.get(
           storeApi.mchStoreInfo,
@@ -368,7 +363,7 @@ export default {
           typeId,
           page: 1,
           limit: 4,
-          type: this.type
+          type: this.type,
         }
         const { code, data, message } = await this.$axios.post(
           storeApi.recommendGoods,
@@ -401,6 +396,9 @@ export default {
       })
     },
     linkGood(item) {
+      if (this.type === 'preview') {
+        return
+      }
       if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
         this.$router.push({
           path: '/detail/transactionDetails',
@@ -419,6 +417,9 @@ export default {
       }
     },
     linkPlanner(item) {
+      if (this.type === 'preview') {
+        return
+      }
       this.$router.push({
         path: '/planner/detail',
         query: {
@@ -427,6 +428,9 @@ export default {
       })
     },
     handleShare() {
+      if (this.type === 'preview') {
+        return
+      }
       if (this.isInApp) {
         const url = window && window.location.href
         const sharedUrl = setUrlParams(url, { isShare: 1 })

@@ -1,7 +1,7 @@
 <template>
   <!-- 分类 -->
   <div class="classify">
-    <sp-dropdown-menu active-color="#4974F5">
+    <sp-dropdown-menu :lazy-render="false" active-color="#4974F5">
       <sp-dropdown-item
         v-model="tab1.value"
         :title="tab1.title"
@@ -14,11 +14,17 @@
         <TreeSelect
           :list="tab2.options"
           :value="tab2.value"
+          @onChangeName="ServerSelectChangeName"
           @select="ServerSelect"
         ></TreeSelect>
       </sp-dropdown-item>
       <sp-dropdown-item ref="tab3" :title="tab3.title">
-        <TreeSelect :list="tab3.options" @select="AreaSelect"></TreeSelect>
+        <TreeSelect
+          :list="tab3.options"
+          :value="tab3.value"
+          @onChangeName="areaChangeName"
+          @select="AreaSelect"
+        ></TreeSelect>
       </sp-dropdown-item>
     </sp-dropdown-menu>
   </div>
@@ -49,7 +55,7 @@ export default {
     return {
       tab1: {
         title: '默认排序',
-        value: '',
+        value: 1,
         options: [
           { text: '默认排序', value: 1 },
           { text: '评分由高到低', value: 2 },
@@ -354,30 +360,24 @@ export default {
       }
     },
 
+    ServerSelectChangeName(name) {
+      this.tab2.title = name || '分类'
+    },
+    areaChangeName(name) {
+      this.tab3.title = name || '区域'
+    },
     // 服务商品选择
     ServerSelect(item1, item2, item3) {
       console.log('ServerSelect', item1, item2, item3)
-      this.tab2.title = '分类'
-      const arr = [item1, item2, item3]
-      arr.map((item) => {
-        if (item?.code && item?.code !== -1) {
-          this.tab2.title = item.text
-        }
-      })
 
       this.tab2.value = [item1?.code, item2?.code, item3?.code]
       this.change()
       this.$refs.tab2.toggle()
     },
+
     AreaSelect(item1, item2, item3) {
       console.log('AreaSelect', item1, item2, item3)
-      this.tab3.title = '区域'
-      const arr = [item1, item2, item3]
-      arr.map((item) => {
-        if (item?.code) {
-          this.tab3.title = item.text
-        }
-      })
+
       this.tab3.value = [item1?.code, item2?.code, item3?.code]
 
       this.change()
