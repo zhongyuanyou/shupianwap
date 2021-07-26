@@ -68,7 +68,7 @@ export default {
           console.log('mpass里获取用户信息', res)
           if (res.code && res.code === 200) {
             const userData = JSON.parse(res.data)
-            this.$store.dispatch('user/SET_USER', userData)
+            this.$store.dispatch('user/setUser', userData)
             this.formData.userId = userData.id
             this.formData.userType = util.getUserType(userData.type)
             this.formData.userName = userData.nickName
@@ -206,7 +206,9 @@ export default {
           const that = this
           if (res.code && res.code === 200) {
             this.$xToast.success('发布成功')
-            this.switchUrl(res.data.id)
+            if (window.AlipayJSBridge) {
+              window.AlipayJSBridge.call('closeWebview')
+            } else this.switchUrl(res.data.id)
           } else {
             this.$xToast.error(res.data.error || '发布失败')
           }
