@@ -158,7 +158,6 @@
             >
               <li
                 v-for="(data, dataIndex) in detailData.goods"
-                v-show="dataIndex<20"
                 :key="dataIndex"
                 @click="linkGood(data)"
               >
@@ -390,6 +389,7 @@ export default {
       this.$router.push('/')
     },
     onLoad() {
+      
       this.refresh.pageIndex++
       this.getList('onLoad')
     },
@@ -513,6 +513,7 @@ export default {
           this.detailData.goods = [...this.detailData.goods, ...data.records]
         } else {
           // 下拉刷新
+          this.refresh.pageIndex=2
           this.detailData.goods = data.records
         }
         
@@ -562,7 +563,7 @@ export default {
     tabsActive(item) {
       this.refresh.pageIndex = 1
       this.active = item
-      this.getList()
+      this.getList('refull',10)
     },
     // app获取用户信息
     getUserInfo() {
