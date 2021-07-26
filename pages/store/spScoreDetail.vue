@@ -113,6 +113,7 @@
 </template>
 <script>
 import * as echarts from 'echarts'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import { Bottombar, BottombarButton, Icon } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 export default {
@@ -215,6 +216,13 @@ export default {
       },
     }
   },
+  computed:{
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+      userInfo: (state) => state.user.userInfo,
+      isApplets: (state) => state.app.isApplets,
+    }),
+  },
   created() {
     if (process && process.client) {
       // notice:
@@ -228,7 +236,18 @@ export default {
     this.$nextTick(() => {
       this.EchartInit()
     })
+    if(this.isInApp){
+      this.$appFn.dggChangeTopColor(
+          {
+            flags: 'light',
+          },
+          (res) => {
+            console.log('DGGSetColorRes', res)
+          }
+        )
+    }
   },
+  
   methods: {
     EchartInit() {
       // 接下来的使用就跟之前一样，初始化图表，设置配置项
