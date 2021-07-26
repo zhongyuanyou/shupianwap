@@ -310,6 +310,7 @@ export default {
       }
     }
     .line {
+      margin-top: 10px;
       width: 100%;
       background: #f4f4f4;
       height: 1px;

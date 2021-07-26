@@ -113,6 +113,7 @@
 </template>
 <script>
 import * as echarts from 'echarts'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import { Bottombar, BottombarButton, Icon } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 export default {
@@ -126,55 +127,9 @@ export default {
     return {
       floatview: true,
       EchartOptions: {
-        // color: {
-        //     type: 'radial',
-        //     x: 0.5,
-        //     y: 0.5,
-        //     r: 0.4,
-        //     colorStops:  [{
-        //         offset: 0, color: 'rgba(73, 116, 245, 1)' // 0% 处的颜色
-        //     },{
-        //         offset: 0.5, color: '#fff' // 0% 处的颜色
-        //     }, {
-        //         offset: 0.6, color: '#fff' // 0% 处的颜色
-        //     },{
-        //         offset: 0.7, color: '#fff' // 0% 处的颜色
-        //     },{
-        //         offset: 0.8, color: '#fff' // 0% 处的颜色
-        //     },{
-        //         offset: 0.9, color: '#fff' // 0% 处的颜色
-        //     },{
-        //         offset: 1, color: 'rgba(73, 116, 245, 1)' // 100% 处的颜色
-        //     }],
-        //     globalCoord: true // 缺省为 false
-        // },
-        // color: {
-        //     type: 'linear',
-        //     x: 0.5,
-        //     y: 1,
-        //     x2: 0.5,
-        //     y2: 1,
-        //     colorStops: [{
-        //         offset: 0, color: 'rgba(73, 116, 245, 1)' // 0% 处的颜色
-        //     },{
-        //         offset: 0.5, color: '#fff' // 0% 处的颜色
-        //     }, {
-        //         offset: 0.6, color: '#fff' // 0% 处的颜色
-        //     },{
-        //         offset: 0.7, color: '#fff' // 0% 处的颜色
-        //     },{
-        //         offset: 0.8, color: '#fff' // 0% 处的颜色
-        //     },{
-        //         offset: 0.9, color: '#fff' // 0% 处的颜色
-        //     },{
-        //         offset: 1, color: 'rgba(73, 116, 245, 1)' // 100% 处的颜色
-        //     }],
-        //     globalCoord: false // 缺省为 false
-        // },
-
         textStyle: {
           fontFamily: 'PingFangSC-Medium',
-          fontSize: '0.2rem',
+          fontSize: '0.26rem',
           color: '#222222',
           fontWeight: 'bold',
         },
@@ -189,7 +144,7 @@ export default {
           ],
           center: ['50%', '50%'],
           splitNumber: 1,
-          radius: 80,
+          radius: 60,
           // splitArea: {
           //     areaStyle: {
           //         color: ['rgba(114, 172, 209, 0.1)',
@@ -200,6 +155,7 @@ export default {
           //         shadowBlur: 10
           //     }
           // },
+          
           axisLine: {
             lineStyle: {
               color: 'rgba(73, 116, 245, 0.2)',
@@ -217,24 +173,18 @@ export default {
             name: '薯片分',
             type: 'radar',
             symbol: 'circle',
-            symbolSize: 6,
+            symbolSize: 4,
             itemStyle: {
               normal: {
                 color: '#fff',
                 borderColor: 'rgba(73, 116, 245, 1)',
-                borderWidth: 0.4,
+                borderWidth: 0.3,
                 lineStyle: {
                   width: 1,
                   color: 'rgba(73, 116, 245, 1)',
                 },
               },
             },
-
-            // areaStyle: { // 单项区域填充样式
-            //     normal: {
-            //         color: '#fff' // 填充的颜色。[ default: "#000" ]
-            //     }
-            // },
             data: [
               {
                 value: [50, 60, 70, 80, 90, 100],
@@ -266,6 +216,13 @@ export default {
       },
     }
   },
+  computed:{
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+      userInfo: (state) => state.user.userInfo,
+      isApplets: (state) => state.app.isApplets,
+    }),
+  },
   created() {
     if (process && process.client) {
       // notice:
@@ -279,7 +236,18 @@ export default {
     this.$nextTick(() => {
       this.EchartInit()
     })
+    if(this.isInApp){
+      this.$appFn.dggChangeTopColor(
+          {
+            flags: 'light',
+          },
+          (res) => {
+            console.log('DGGSetColorRes', res)
+          }
+        )
+    }
   },
+  
   methods: {
     EchartInit() {
       // 接下来的使用就跟之前一样，初始化图表，设置配置项
