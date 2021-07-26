@@ -89,7 +89,7 @@
       </div>
     </div>
     <div class="body">
-      <div class="swipe">
+      <div v-if="detailData.banners && detailData.banners.length>0" class="swipe">
         <sp-swipe class="my-swipe" :autoplay="3000" indicator-color="#4974F5">
           <sp-swipe-item
             v-for="(item, index) in detailData.banners"
@@ -99,9 +99,9 @@
           </sp-swipe-item>
         </sp-swipe>
       </div>
-      <div class="body-content">
+      <div class="body-content" style="padding-top:0.56rem">
         <sp-skeleton title :row="4" :loading="loading">
-          <p class="title">商户服务</p>
+          <p class="title" style="margin-top:0">商户服务</p>
           <div class="sp-score">
             <div class="sp-score__score">
               <div>
@@ -147,7 +147,7 @@
         v-if="detailData.goodsRecommend.length > 0"
         class="body-content recommended"
       >
-        <p class="title">为您推荐</p>
+        <p class="title" style="margin-top:0.56rem;margin-bottom:0.08rem">为您推荐</p>
         <div class="tabs">
           <ul>
             <li
@@ -169,7 +169,7 @@
           >
             <img :src="data.img" alt="" />
             <div>
-              <p class="title" style="margin: 0">
+              <p class="title" style="margin: 0;font-size:0.32rem">
                 <span>{{ data.name }}</span>
               </p>
               <p class="label">
@@ -199,7 +199,7 @@
         </button>
       </div>
       <div v-if="!loading" class="body-content recommendedPlanner">
-        <p class="title">推荐规划师</p>
+        <p class="title" style="margin-top:0.56rem">推荐规划师</p>
         <div class="planner">
           <ul>
             <li
@@ -734,7 +734,7 @@ export default {
       no-repeat;
     background-size: 100% 100%;
     font-family: PingFangSC-Regular;
-    font-size: 28px;
+    font-size: 44px;
     color: #ffffff;
     letter-spacing: 0;
     line-height: 28px;
@@ -770,7 +770,7 @@ export default {
           padding: 5px 8px;
           background: rgba(255, 255, 255, 0.2);
           border-radius: 22px;
-          font-family: PingFangSC-Medium;
+          font-weight: bold;
           font-size: 22px;
           color: #ffffff;
           letter-spacing: 0;
@@ -835,7 +835,6 @@ export default {
           padding: 5px 8px;
           background: rgba(73, 116, 245, 0.1);
           border-radius: 22px;
-          font-family: PingFangSC-Medium;
           font-size: 22px;
           color: #4974f5;
           letter-spacing: 0;
@@ -866,7 +865,6 @@ export default {
       width: 40vw;
     }
     ::v-deep .sp-tab--active {
-      font-family: PingFangSC-Medium;
       font-size: 30px;
       color: #222222;
       font-weight: bold;
@@ -882,15 +880,17 @@ export default {
   .body {
     position: relative;
     margin: -24px 0 0 0;
-    padding: 64px 40px;
+    padding: 0 40px 64px;
 
     background-color: #fff;
     border-top-right-radius: 24px;
     border-top-left-radius: 24px;
     z-index: 1;
     .swipe {
+      margin:64px 0 0 0;
       border-radius: 8px;
       .my-swipe {
+        
         .sp-swipe-item {
           height: 214px;
           text-align: center;
@@ -910,8 +910,7 @@ export default {
     }
     .sp-score {
       width: 100%;
-      height: 314px;
-      padding: 50px 40px;
+      padding: 50px 54px;
       background: #ffffff;
       border: 1px solid #dddddd;
       box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
@@ -935,7 +934,6 @@ export default {
             letter-spacing: 0;
           }
           &:last-of-type {
-            font-family: PingFangSC-Medium;
             font-size: 24px;
             color: #222222;
             font-weight: bold;
@@ -945,7 +943,7 @@ export default {
       }
       &__satisfaction {
         > p {
-          font-family: PingFangSC-Medium;
+          font-weight: bold;
           font-size: 32px;
           color: #222222;
           letter-spacing: 0;
@@ -965,15 +963,15 @@ export default {
     .body-content {
       .title {
         margin: 32px 0;
-        font-family: PingFangSC-Medium;
+
         font-size: 40px;
         font-weight: bold;
         color: #222222;
       }
     }
     .recommended {
-      .title {
-        font-family: PingFangSC-Medium;
+      .recommendedtitle {
+        font-weight: bold;
         font-size: 40px;
         color: #222222;
       }
@@ -1007,7 +1005,6 @@ export default {
           }
           .tab_active {
             font-weight: bold;
-            font-family: PingFangSC-Medium;
             font-size: 32px;
             color: #222222;
           }
@@ -1022,20 +1019,19 @@ export default {
           img {
             width: 160px;
             height: 160px;
-            margin: 0 36px 0 0;
-            border-radius: 15px;
+            margin: 0 28px 0 0;
+            border-radius: 12px;
           }
           div {
             .recommendedtitle {
               font-weight: bold;
-              font-family: PingFangSC-Medium;
               font-size: 32px;
               color: #222222;
               line-height: 42px;
             }
             .label {
               margin: 12px 0 0 0;
-              font-family: PingFangSC-Regular;
+              font-weight: bold;
               font-size: 22px;
               color: #5c7499;
               line-height: 22px;
@@ -1071,7 +1067,6 @@ export default {
               span {
                 display: inline-block;
                 &:first-of-type {
-                  font-family: PingFangSC-Medium;
                   font-size: 36px;
                   font-weight: bold;
                   color: #ec5330;
@@ -1079,7 +1074,6 @@ export default {
                 }
                 &:last-of-type {
                   margin: 0 0 0 -10px;
-                  font-family: PingFangSC-Regular;
                   font-size: 22px;
                   font-weight: bold;
                   color: #ec5330;
@@ -1095,7 +1089,7 @@ export default {
         width: 100%;
         height: 96px;
         line-height: 96px;
-        font-family: PingFangSC-Medium;
+        font-weight: bold;
         font-size: 32px;
         color: #4974f5;
         text-align: center;
@@ -1114,7 +1108,6 @@ export default {
         color: #999999;
       }
       ::v-deep .sp-tab--active {
-        font-family: PingFangSC-Medium;
         font-size: 32px;
         font-weight: bold;
         color: #222222;
@@ -1129,7 +1122,7 @@ export default {
     .recommendedPlanner {
       .planner {
         width: 100%;
-        padding: 50px 40px;
+        padding: 40px 40px 37px;
         background: #ffffff;
         border: 1px solid #dddddd;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
@@ -1151,7 +1144,7 @@ export default {
             }
             .name {
               margin: 26px 0 8px 0;
-              font-family: PingFangSC-Medium;
+              font-weight: bold;
               font-size: 26px;
               color: #222222;
               text-align: center;
@@ -1194,13 +1187,13 @@ export default {
             }
             .score {
               margin: 11px 0 7px 0;
-              font-family: PingFangSC-Medium;
+              font-weight: bold;
               font-size: 24px;
               color: #222222;
               text-align: center;
             }
             .job {
-              font-family: PingFangSC-Medium;
+              font-weight: bold;
               font-size: 24px;
               color: #999999;
               text-align: center;

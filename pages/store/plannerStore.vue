@@ -1,7 +1,12 @@
 <template>
   <div class="plannerShop">
     <div v-if="titleStatus" class="head">
-      <Header title="规划师店铺" :custom-safe-top="urlData.platform === 'mpass'?Number(urlData.top):0">
+      <Header
+        title="规划师店铺"
+        :custom-safe-top="
+          urlData.platform === 'mpass' ? Number(urlData.top) : 0
+        "
+      >
         <template #left>
           <div v-if="urlData.isShare !== '1'">
             <sp-icon
@@ -57,9 +62,13 @@
           <div class="bg-group__headtext">
             <p>
               <span class="title">{{ detailData.personal.name }}</span>
-              <span v-if="detailData.teamStoreId" class="label" @click="goGroup"
-                >我的团队 ></span
+              <span
+                v-if="detailData.teamStoreId"
+                class="label"
+                @click="goGroup"
               >
+                <span>我的团队</span> <i class="spiconfont spiconfont-you"></i
+              ></span>
             </p>
             <p>服务年限：{{ formatServeAgeText }}</p>
           </div>
@@ -67,9 +76,8 @@
         <div class="bg-group__label">
           <span
             v-for="(item, index) in detailData.personal.categories"
-            v-show="index<3"
+            v-show="index < 3"
             :key="index"
-            
             >{{ item }}</span
           >
         </div>
@@ -132,6 +140,7 @@
                 v-for="(item, index) in detailData.modules.filter(
                   (item) => item.code === 'GOODS_RECOMMEND'
                 )[0].data"
+                
                 :key="index"
                 :class="active === item.id ? 'tab_active' : ''"
                 @click="tabsActive(item.id)"
@@ -142,37 +151,44 @@
             </ul>
           </div>
           <ul class="list-data">
-            <li
-              v-for="(data, dataIndex) in detailData.goods"
-              :key="dataIndex"
-              @click="linkGood(data)"
+            <sp-list
+              v-model="refresh.pullUp.status"
+              :finished="refresh.pullUp.finished"
+              @load="onLoad"
             >
-              <img :src="data.img" alt="" />
-              <div>
-                <p class="recommendedtitle">
-                  <span>{{ data.name }}</span>
-                </p>
-                <p class="label">
-                  <span
-                    v-for="(ta, taindex) in data.tags"
-                    v-show="taindex > 2"
-                    :key="taindex"
-                    >{{ ta }}</span
-                  >
-                </p>
-                <p class="type">
-                  <span
-                    v-for="(de, deindex) in data.desc.split('|')"
-                    :key="deindex"
-                    >{{ de }}</span
-                  >
-                </p>
-                <p class="moneysee">
-                  <span>{{ data.price }}</span>
-                  <span>元</span>
-                </p>
-              </div>
-            </li>
+              <li
+                v-for="(data, dataIndex) in detailData.goods"
+                v-show="dataIndex<20"
+                :key="dataIndex"
+                @click="linkGood(data)"
+              >
+                <img :src="data.img" alt="" />
+                <div>
+                  <p class="recommendedtitle">
+                    <span>{{ data.name }}</span>
+                  </p>
+                  <p class="label">
+                    <span
+                      v-for="(ta, taindex) in data.tags"
+                      v-show="taindex > 2"
+                      :key="taindex"
+                      >{{ ta }}</span
+                    >
+                  </p>
+                  <p class="type">
+                    <span
+                      v-for="(de, deindex) in data.desc.split('|')"
+                      :key="deindex"
+                      >{{ de }}</span
+                    >
+                  </p>
+                  <p class="moneysee">
+                    <span>{{ data.price }}</span>
+                    <span>元</span>
+                  </p>
+                </div>
+              </li>
+            </sp-list>
           </ul>
         </div>
       </sp-skeleton>
@@ -223,6 +239,7 @@ import {
   Icon,
   Toast,
   Skeleton,
+  List,
 } from '@chipspc/vant-dgg'
 import { planner } from '@/api'
 import { storeApi } from '@/api/store'
@@ -238,6 +255,7 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [ShareSheet.name]: ShareSheet,
     [Skeleton.name]: Skeleton,
+    [List.name]: List,
     Header,
     SpToast,
   },
@@ -265,6 +283,20 @@ export default {
         timestamp: '12313',
         nonceStr: '123123',
         signature: 'asdasda',
+      },
+      refresh: {
+        pageIndex: 1,
+        pageSize: 5,
+        // 下拉加载
+        pullRefresh: {
+          status: false,
+          count: 0,
+        },
+        // 上拉刷新
+        pullUp: {
+          status: false,
+          finished: false,
+        },
       },
     }
   },
@@ -318,6 +350,7 @@ export default {
     },
   },
   mounted() {
+    this.changePull(true)
     if (this.isInApp) {
       if (this.userInfo.userId && this.userInfo.token) {
         this.getDetail().finally(() => {
@@ -356,6 +389,14 @@ export default {
     gohome() {
       this.$router.push('/')
     },
+    onLoad() {
+      this.refresh.pageIndex++
+      this.getList('onLoad')
+    },
+    changePull(status) {
+      this.refresh.pullUp.status = status
+      this.refresh.pullUp.finished = status
+    },
     linkGood(item) {
       if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
         this.urlData.platform !== 'mpass' &&
@@ -387,7 +428,8 @@ export default {
     // 获取详情数据
     async getDetail() {
       try {
-        const { mchUserId,pageStatus='' } = this.$route.query
+        
+        const { mchUserId, pageStatus = '' } = this.$route.query
         if (mchUserId == null) {
           this.$xToast.show({
             message: '缺少规划师参数!',
@@ -398,7 +440,7 @@ export default {
           return
         }
         // 详解接口请求数据
-        const params = { mchUserId,ignoreDataScope:'goods',type:pageStatus } 
+        const params = { mchUserId, ignoreDataScope: 'goods', type: pageStatus }
         // 详情接口
         const { data, code, message } = await this.$axios.get(
           storeApi.plannerStoreInfo,
@@ -419,12 +461,12 @@ export default {
             data.modules[0].data[0].id) ||
           ''
         this.detailData = data || {}
+        this.getList('refull',10)
         // IM接口请求数据
         const IMParams = { id: mchUserId }
         // IM数据
         const IMData = await planner.detail(IMParams)
         this.IMDetailData = IMData || {}
-        this.getList()
         return data
       } catch (error) {
         this.$xToast.show({
@@ -437,16 +479,16 @@ export default {
       }
     },
     // 获取列表数据
-    async getList() {
+    async getList(type,pages) {
       if (!this.active) return
       try {
-        const { pageStatus='' } = this.$route.query
+        const { pageStatus = '' } = this.$route.query
         const params = {
           storeId: this.detailData.id,
           typeId: this.active,
-          type:pageStatus,
-          page: 1,
-          limit: 20,
+          type: pageStatus,
+          page: this.refresh.pageIndex,
+          limit: type==='onLoad'?this.refresh.pageSize:pages,
         }
         const { data, code, message } = await this.$axios.post(
           storeApi.recommendGoods,
@@ -461,8 +503,19 @@ export default {
           throw new Error(message)
         }
         // 推荐商品
-        this.detailData.goods =
-          data.records.filter((item) => Number(item.state) === 1) || []
+        if (data.records && data.records.length < this.refresh.pageSize) {
+          this.changePull(true)
+        } else {
+          this.changePull(false)
+        }
+        if (type === 'onLoad') {
+          // 上拉加载
+          this.detailData.goods = [...this.detailData.goods, ...data.records]
+        } else {
+          // 下拉刷新
+          this.detailData.goods = data.records
+        }
+        
         return data
       } catch (error) {
         console.error('getDetail:', error)
@@ -476,7 +529,9 @@ export default {
       }
     },
     handleCall() {
-      if(this.urlData.platform === 'mpass'){return}
+      if (this.urlData.platform === 'mpass') {
+        return
+      }
       // 如果当前页面在app中，则调用原生拨打电话的方法
       if (this.isInApp) {
         this.$appFn.dggBindHiddenPhone(
@@ -505,6 +560,7 @@ export default {
         })
     },
     tabsActive(item) {
+      this.refresh.pageIndex = 1
       this.active = item
       this.getList()
     },
@@ -608,7 +664,9 @@ export default {
       }
     },
     handleIM() {
-      if(this.urlData.platform === 'mpass'){return}
+      if (this.urlData.platform === 'mpass') {
+        return
+      }
       // const isLogin = await this.judgeLoginMixin()
       // if (isLogin) {
       this.uPIM({
@@ -690,14 +748,13 @@ export default {
       callPhone(telNumber.phone)
     },
     onClickLeft() {
-      if(this.urlData.platform === 'mpass'){
-        if(window.AlipayJSBridge){
+      if (this.urlData.platform === 'mpass') {
+        if (window.AlipayJSBridge) {
           window.AlipayJSBridge.call('closeWebview')
         }
-      }else{
+      } else {
         this.$router.back(-1)
       }
-      
     },
     onClickRight() {
       console.log('nav onClickRight')
@@ -785,7 +842,6 @@ export default {
   ::v-deep .sp-skeleton {
     margin: 16px 0 0 0;
     padding: 0;
-    
   }
   .bg-group {
     padding: 60px 40px 24px;
@@ -814,6 +870,14 @@ export default {
     }
     &__headtext {
       margin: 0 0 0 24px;
+      span {
+        vertical-align: middle;
+      }
+      i {
+        vertical-align: middle;
+      }
+      .spiconfont-you {
+      }
       p {
         &:first-of-type {
           margin: 0 0 24px 0;
@@ -829,7 +893,7 @@ export default {
       }
       .title {
         margin: 0 20px 0 0;
-        font-family: PingFangSC-Medium;
+        font-weight: bold;
         font-size: 48px;
         color: #ffffff;
         line-height: 48px;
@@ -843,7 +907,7 @@ export default {
         text-align: center;
         background: rgba(234, 218, 205, 0.22);
         border-radius: 24px;
-        font-family: PingFangSC-Medium;
+        font-weight: bold;
         font-size: 24px;
         color: #ffe7d2;
         vertical-align: middle;
@@ -854,7 +918,7 @@ export default {
       span {
         box-sizing: border-box;
         display: inline-block;
-        min-width: 176px;
+        min-width: 128px;
         max-width: 200px;
         height: 48px;
         line-height: 48px;
@@ -919,7 +983,7 @@ export default {
           padding: 5px 8px;
           background: rgba(255, 255, 255, 0.2);
           border-radius: 22px;
-          font-family: PingFangSC-Medium;
+          font-weight: bold;
           font-size: 22px;
           color: #ffffff;
           letter-spacing: 0;
@@ -962,7 +1026,7 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-family: PingFangSC-Medium;
+        font-weight: bold;
         font-size: 32px;
         color: #222222;
         text-align: center;
@@ -981,6 +1045,7 @@ export default {
         }
       }
       &__score {
+        margin: 11px 0 0 0;
         font-family: Bebas;
         font-size: 58px;
         color: #222222;
@@ -1011,7 +1076,7 @@ export default {
       padding: 0 0 75px;
       .title {
         margin: 56px 0 8px;
-        font-family: PingFangSC-Medium;
+        font-weight: bold;
         font-size: 40px;
         color: #222222;
       }
@@ -1045,7 +1110,6 @@ export default {
           }
           .tab_active {
             font-weight: bold;
-            font-family: PingFangSC-Medium;
             font-size: 32px;
             color: #222222;
           }
@@ -1061,12 +1125,11 @@ export default {
           img {
             width: 160px;
             height: 160px;
-            margin: 0 36px 0 0;
-            border-radius: 15px;
+            margin: 0 28px 0 0;
+            border-radius: 12px;
           }
           div {
             .recommendedtitle {
-              font-family: PingFangSC-Medium;
               font-size: 32px;
               font-weight: bold;
               color: #222222;
@@ -1110,7 +1173,6 @@ export default {
               span {
                 display: inline-block;
                 &:first-of-type {
-                  font-family: PingFangSC-Medium;
                   font-size: 36px;
                   font-weight: bold;
                   color: #ec5330;
@@ -1147,7 +1209,6 @@ export default {
         color: #999999;
       }
       ::v-deep .sp-tab--active {
-        font-family: PingFangSC-Medium;
         font-size: 32px;
         font-weight: bold;
         color: #222222;
