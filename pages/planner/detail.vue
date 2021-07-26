@@ -249,7 +249,7 @@
           </div>
         </div>
       </div>
-      <div v-if="newDetailData.live.id" class="video-content" @click="seeVideo">
+      <div v-if="newDetailData.live.id && isInApp" class="video-content" @click="seeVideo">
         <div
           class="video"
           :style="{ 'background-image': `url(${newDetailData.live.coverUrl})` }"
@@ -297,17 +297,20 @@
             @click="linkKnownDetailQuestion(data)"
           >
             <div>
-              <i
+              <!-- <i
                 class="spiconfont spiconfont-huida_mian"
                 style="color: #ff614e"
-              ></i>
+              ></i> -->
+              <embed class="huida" src="https://cdn.shupian.cn/sp-pt/wap/images/df1rr3m6pzs0000.svg" type="image/svg+xml" pluginspage="https://cdn.shupian.cn/sp-pt/wap/images/df1rr3m6pzs0000.svg" />
               <span class="two_line">{{ data.title }}</span>
+              
             </div>
             <div>
-              <i
+              <!-- <i
                 class="spiconfont spiconfont-wenti_mian"
                 style="color: #4974f5"
-              ></i>
+              ></i> -->
+              <embed class="wenti" src="https://cdn.shupian.cn/sp-pt/wap/images/28hztm48mx8g000.svg" type="image/svg+xml" pluginspage="https://cdn.shupian.cn/sp-pt/wap/images/28hztm48mx8g000.svg" />
               <p>
                 <span class="three_line">{{ data.contentText }}</span>
                 <img
@@ -316,6 +319,7 @@
                   alt=""
                 />
               </p>
+              
             </div>
             <div>
               <i class="empty"></i>
@@ -1490,6 +1494,21 @@ export default {
           &:last-of-type{
             border:none
           }
+          .huida{
+            width: 32px;
+            height: 32px;
+            margin: 0 16px 0 0;
+            vertical-align: middle;
+          }
+          .wenti{
+            width: 32px;
+            height: 32px;
+            margin: 0 16px 0 0;
+            vertical-align: middle;
+          }
+          span{
+            vertical-align: middle;
+          }
           .spiconfont {
             font-size: 35px !important;
             margin: 0 16px 0 0;
@@ -1499,7 +1518,7 @@ export default {
               -webkit-text-fill-color:transparent;
             }
             &-wenti_mian{
-              color: #ff614e;
+              background:linear-gradient(90deg, #4974F5 0%, #80ACFB 100%);
             }
           }
           div {
@@ -1666,7 +1685,13 @@ export default {
       text-align: center;
     }
     ::v-deep.sp-bottombar {
+      padding-bottom: constant(safe-area-inset-bottom);
+      padding-bottom: env(safe-area-inset-bottom);
       z-index: 100;
+    }
+    ::v-deep .sp-button--info{
+      border: 1px solid #24AE68;
+      background-color: #24AE68;
     }
   }
   .item-wrap {

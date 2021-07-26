@@ -470,7 +470,7 @@ export default {
           typeId: this.active,
           type:pageStatus,
           page: 1,
-          limit: 10,
+          limit: 4,
         }
         const { data, code, message } = await this.$axios.post(
           storeApi.recommendGoods,
@@ -652,16 +652,19 @@ export default {
     },
     headTabsClick() {
       if (this.headActive === 'rememded') {
+        const { pageStatus='' } = this.$route.query
         this.$router.push({
           path: '/store/hotRecommended',
           query: {
             active: this.active,
             storeId: this.detailData.id,
+            pageStatus
           },
         })
       }
     },
     linkPlanner(item) {
+      this.urlData.pageStatus!=='preview'&&
       this.$router.push({
         path: '/planner/detail',
         query: {
@@ -671,6 +674,7 @@ export default {
     },
     linkGood(item) {
       if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
+        this.urlData.pageStatus!=='preview'&&
         this.$router.push({
           path: '/detail/transactionDetails',
           query: {
@@ -679,6 +683,7 @@ export default {
           },
         })
       } else {
+        this.urlData.pageStatus!=='preview'&&
         this.$router.push({
           path: '/detail',
           query: {
