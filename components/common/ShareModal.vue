@@ -69,7 +69,7 @@ export default {
     [Icon.name]: Icon,
   },
   props: {
-    mchId: {
+    sourceId: {
       type: String,
       default: '',
     },
@@ -183,7 +183,7 @@ export default {
       }
       if (!this.partnerId) {
         console.log('ddd')
-        this.consultForm()
+        this.addClue()
       } else {
         planner
           .bindCustomer({
@@ -208,6 +208,40 @@ export default {
             this.visible = true
           })
       }
+    },
+    // 只生成线索
+    addClue() {
+      const path = this.$route.path
+      let materialType = 1 // 物料类型：1、文章 2、问答 3、海报 4、视频
+      if (path.match('share/article')) {
+        materialType = 1
+      } else if (path.match('share/answer')) {
+        materialType = 2
+      } else if (path.match('share/smallVideo/materialShare')) {
+        materialType = 4
+      } else if (path.match('share/originalVideo/materialShare')) {
+        materialType = 4
+      }
+      planner
+        .addClue({
+          userId: this.userInfoData.id, // 用户id
+          plannerId: this.plannerId, // 用户id
+          shareId: this.$route.query.shareId, // 分享Id
+          sourceId: this.sourceId, // 物料id
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.$xToast.success('委托成功，请静候规划师与您电话联系！')
+            this.visible = false
+          } else {
+            this.$xToast.error(res.message || '委托失败')
+          }
+        })
+        .catch((error) => {
+          console.log('error', error)
+          this.$xToast.error(error.message || '委托失败')
+          this.visible = true
+        })
     },
     // 生成客户资源并分配
     consultForm() {

@@ -2,7 +2,7 @@
   <section>
     <ShareModal
       v-show="answerDetails.title"
-      :mch-id="answerDetails.createrId"
+      :sourceId="answerDetails.id"
       @setPlannerInfo="setPlannerInfo"
     />
     <HeaderSlot>
