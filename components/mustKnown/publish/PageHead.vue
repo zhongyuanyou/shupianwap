@@ -1,15 +1,22 @@
 <template>
-  <div class="page-head" :class="showHead2 ? 'page-head2' : ''">
-    <div class="btn-cancel" @click="handleCancel">取消</div>
-    {{ title }}
-    <div class="btn-submit" :class="hasVal ? 'blue' : ''" @click="submit">
-      {{ confirmText }}
+  <header-slot>
+    <div class="page-head">
+      <div class="btn-cancel" @click="handleCancel">取消</div>
+      {{ title }}
+      <div class="btn-submit" :class="hasVal ? 'blue' : ''" @click="submit">
+        {{ confirmText }}
+      </div>
     </div>
-  </div>
+  </header-slot>
 </template>
 
 <script>
+import HeaderSlot from '@/components/common/head/HeaderSlot'
+
 export default {
+  components: {
+    HeaderSlot,
+  },
   props: {
     title: {
       type: String,
@@ -23,16 +30,6 @@ export default {
       type: String,
       default: '发布',
     },
-  },
-  data() {
-    return {
-      showHead2: false,
-    }
-  },
-  mounted() {
-    if (window.AlipayJSBridge) {
-      this.showHead2 = true
-    }
   },
   methods: {
     handleCancel() {
@@ -51,9 +48,6 @@ export default {
 }
 
 .page-head {
-  position: fixed;
-  left: 0;
-  width: 100%;
   height: 88px;
   line-height: 88px;
   padding: 0 32px;
@@ -88,9 +82,5 @@ export default {
   //   width: 100px;
   //   font-size: 32px;
   // }
-}
-.page-head2 {
-  height: 168px !important;
-  padding: 80px 32px 0 32px !important;
 }
 </style>

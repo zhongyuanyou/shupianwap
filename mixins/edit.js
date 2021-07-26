@@ -73,6 +73,8 @@ export default {
             this.formData.userType = util.getUserType(userData.type)
             this.formData.userName = userData.nickName
             this.formData.userCode = userData.no
+          } else {
+            this.$xToast.error('获取用户信息失败')
           }
         })
       } else {
