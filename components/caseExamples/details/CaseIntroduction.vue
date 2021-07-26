@@ -94,6 +94,8 @@ export default {
       width: calc(33% - 10px);
       max-width: 216px;
       height: 144px;
+      border-radius: 12px;
+      overflow: hidden;
     }
   }
 }
