@@ -1,6 +1,28 @@
 <template>
   <div class="m-store group-store">
     <Header title="团队店铺" :fixed="true" :head-style="styleObject">
+      <template #left>
+        <div v-if="urlData.isShare !== '1'">
+          <my-icon
+            class-prefix="spiconfont"
+            name="nav_ic_back"
+            size="0.4rem"
+            color="#1A1A1A"
+            style="margin-left: 0.32rem"
+            @click.native="onClickLeft"
+          />
+        </div>
+        <div v-else>
+          <my-icon
+            class-prefix="spiconfont"
+            name="xiaochengxuzhuye"
+            size="0.4rem"
+            color="#1A1A1A"
+            style="margin-left: 0.36rem"
+            @click.native="gohome"
+          />
+        </div>
+      </template>
       <template v-if="isInApp" #right>
         <my-icon
           class-prefix="spiconfont"
@@ -268,6 +290,7 @@ export default {
       styleObject: {
         'box-shadow': '0px 1px 0px 0px #f4f4f4',
       },
+      urlData: this.$route.query,
     }
   },
   computed: {
@@ -308,6 +331,12 @@ export default {
       if (index === 1) {
         this.toClassifyPage()
       }
+    },
+    onClickLeft() {
+      this.$router.back(-1)
+    },
+    gohome() {
+      this.$router.push('/')
     },
     toClassifyPage() {
       // 得到tpeid
