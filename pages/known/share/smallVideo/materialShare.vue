@@ -1,6 +1,6 @@
 <template>
   <div class="m-known-share smallVideo materialShare">
-    <ShareModal />
+    <ShareModal :source-id="vDetail.id" />
     <img class="bg" :src="vDetail.image" />
     <my-icon
       name="bofang_mian"
