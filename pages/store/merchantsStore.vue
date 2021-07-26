@@ -198,7 +198,7 @@
           更多优惠
         </button>
       </div>
-      <div v-if="!loading" class="body-content recommendedPlanner">
+      <div v-if="!loading && detailData.planners.length>0" class="body-content recommendedPlanner">
         <p class="title" style="margin-top:0.56rem">推荐规划师</p>
         <div class="planner">
           <ul>
@@ -627,9 +627,9 @@ export default {
         console.log('sharedUrl:', sharedUrl)
         this.$appFn.dggShare(
           {
-            image: this.detailData.mchBaseInfo.logo,
-            title: '商户店铺',
-            subTitle: '',
+            image: 'https://cdn.shupian.cn/sp-pt/wap/images/2cjrp1v1q8sg000.png',
+            title: '薯片找人',
+            subTitle: `商户店铺 - ${this.detailData.mchBaseInfo.name}的店铺`,
             url: sharedUrl,
           },
           (res) => {
@@ -756,11 +756,10 @@ export default {
       margin: 0 32px 0 20px;
       p {
         &:first-of-type {
-          max-width: 424px;
           line-height: 45px;
           margin: 0 0 20px 0;
           font-family: PingFangSC-Regular;
-          font-size: 32px;
+          font-size: 44px;
           color: #ffffff;
           font-weight: bold;
           letter-spacing: 0;
@@ -821,11 +820,10 @@ export default {
       margin: 0 32px 0 20px;
       p {
         &:first-of-type {
-          max-width: 424px;
           line-height: 45px;
           margin: 0 0 20px 0;
           font-family: PingFangSC-Regular;
-          font-size: 32px;
+          font-size: 44px;
           color: #000;
           font-weight: bold;
           letter-spacing: 0;
@@ -891,13 +889,14 @@ export default {
       border-radius: 8px;
       .my-swipe {
         
-        .sp-swipe-item {
+        ::v-deep .sp-swipe-item {
+          width: 670px;
           height: 214px;
           text-align: center;
           background: #dddddd;
           border-radius: 8px;
           img {
-            width: 100%;
+            width: 670px;
             height: 100%;
             border-radius: 8px;
           }
@@ -990,6 +989,15 @@ export default {
           li {
             position: relative;
             margin: 0 56px 0 0;
+            span{
+              display: inline-block;
+              height: 32px;
+              line-height: 32px;
+              max-width: 128px;
+              white-space:nowrap;
+              overflow:hidden;
+              text-overflow:ellipsis;
+            }
             .tabs_line {
               position: absolute;
               bottom: 8px;

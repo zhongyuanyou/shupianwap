@@ -792,9 +792,9 @@ export default {
         console.log('sharedUrl:', sharedUrl)
         this.$appFn.dggShare(
           {
-            image: this.IMDetailData.img,
-            title: '规划师店铺',
-            subTitle: '',
+            image: 'https://cdn.shupian.cn/sp-pt/wap/images/cwxnvvtntxc0000.png',
+            title: '薯片找人',
+            subTitle: `优选规划师 - ${this.detailData.personal.name}的店铺`,
             url: sharedUrl,
           },
           (res) => {
@@ -1096,6 +1096,15 @@ export default {
           li {
             position: relative;
             margin: 0 56px 0 0;
+            span{
+              display: inline-block;
+              height: 32px;
+              line-height: 32px;
+              max-width: 128px;
+              white-space:nowrap;
+              overflow:hidden;
+              text-overflow:ellipsis;
+            }
             .tabs_line {
               position: absolute;
               bottom: 8px;
@@ -1113,6 +1122,7 @@ export default {
             font-weight: bold;
             font-size: 32px;
             color: #222222;
+            
           }
         }
       }
