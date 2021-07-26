@@ -1082,7 +1082,7 @@ export default {
   },
   head() {
     return {
-      title: '规划师',
+      title: '',
       meta: [
         {
           name: 'spptmd-track_code',
