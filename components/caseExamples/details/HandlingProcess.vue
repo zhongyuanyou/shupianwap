@@ -137,6 +137,7 @@ export default {
         }
         > .item_num_right_time {
           font-family: PingFangSC-Medium;
+          font-weight: bold;
           font-size: 26px;
           line-height: 26px;
           color: #555555;
