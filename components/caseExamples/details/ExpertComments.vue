@@ -194,7 +194,7 @@ export default {
         justify-content: flex-end;
         align-items: center;
         flex-direction: row;
-        font-size: 24px;
+        font-size: 22px;
         font-family: PingFang SC;
         font-weight: 400;
         color: #1a1a1a;
@@ -209,7 +209,7 @@ export default {
           margin-right: 22px;
         }
         &_score {
-          min-width: 40px;
+          min-width: 45px;
           color: #999999;
           letter-spacing: 0;
           text-align: center;
