@@ -57,9 +57,12 @@
       <div class="area area1">
         <div class="title-area">
           <div class="title">{{ answerDetails.title }}</div>
-          <div class="nums-area">
-            {{ answerDetails.answerCount }} 个回答 ·
-            {{ answerDetails.collectCount }} 收藏
+          <div class="nums_area">
+            <p v-if="quesDetail.answerCount">
+              {{ quesDetail.browseCount || 0 }}浏览
+              {{ quesDetail.answerCount || 0 }}个回答 ·
+              {{ quesDetail.collectCount || 0 }}收藏
+            </p>
           </div>
         </div>
         <!-- <div class="html_content" v-html="answerDetails.content"></div> -->
@@ -83,6 +86,11 @@
         </div>
         <div class="html_content" v-html="answerDetails.content"></div>
         <p class="pub-time">编辑于 {{ answerDetails.createTime }}</p>
+        <div class="nums_area">
+          {{ answerDetails.applaudCount || 0 }}赞同
+          {{ answerDetails.collectCount || 0 }}个收藏 ·
+          {{ answerDetails.remarkCount || 0 }}评论
+        </div>
       </div>
       <div
         v-if="
@@ -278,6 +286,7 @@ export default {
       iosLink: 'cpsccustomer://',
       androdLink: 'cpsccustomer://',
       answerDetails: {},
+      quesDetail: {},
     }
   },
   computed: {
@@ -314,6 +323,18 @@ export default {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    getQuesDetail(id) {
+      this.$axios
+        .get(knownApi.questionArticle.detail, {
+          params: {
+            id,
+          },
+        })
+        .then((res) => {
+          this.quesDetail = res.data
+          console.log('this.quesDetail', this.quesDetail)
+        })
+    },
     setPlannerInfo(data) {
       console.log('设置规划师', data)
       if (data.mchUserId && data.name) {
@@ -341,6 +362,7 @@ export default {
             this.iosLink = this.prefixPath + JSON.stringify(this.iosPath)
             this.androdPath.parameter.id = this.answerDetails.id
             this.androdLink = this.prefixPath + JSON.stringify(this.androdPath)
+            this.getQuesDetail(this.answerDetails.sourceId)
             // if (this.shareId) {
             //   this.iosLink = `cpsccustomer://{"path":"CPSCustomer:CPSCustomer/CPSCSharePlaceholderViewController///push/animation","parameter":{"selectedIndex":0,"type":2,"cid":${this.answerDetails.id}}}`
             //   this.androdLink = `cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":1,"isLogin":"0","secondLink":"/known/detail/article","id":${this.answerDetails.id}}}`
@@ -795,14 +817,14 @@ export default {
     line-height: 56px;
     font-weight: bold;
   }
-  .nums-area {
-    font-size: 26px;
-    font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: bold;
-    color: #999999;
-    margin: 20px 0;
-    font-weight: bold;
-  }
+}
+.nums_area {
+  font-size: 26px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: bold;
+  color: #999999;
+  margin: 20px 0;
+  font-weight: bold;
 }
 .area {
   background: white;
