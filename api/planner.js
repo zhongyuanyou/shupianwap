@@ -84,5 +84,13 @@ const planner = {
       url: '/crisps-marketing-web/yk/branchsell/copartner/v1/add_copartner_customer_bind.do',
     })
   },
+  // 生成线索
+  addClue(params) {
+    return request({
+      params,
+      method: 'post',
+      url: '/crisps-marketing-web/nk/customer/share/v1/add_marketing_center_share.do',
+    })
+  },
 }
 export default planner

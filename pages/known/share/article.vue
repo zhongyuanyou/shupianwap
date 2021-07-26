@@ -2,6 +2,7 @@
   <section>
     <ShareModal
       v-show="articleDetails.title"
+      :sourceId="articleDetails.id"
       @setPlannerInfo="setPlannerInfo"
     />
     <HeaderSlot>
