@@ -6,7 +6,7 @@
       </div>
       <div class="flex_1 list_header_center">
         <div class="name">{{ item.caseName }}</div>
-        <div class="time">办理周期：{{ item.dealTime }}天</div>
+        <div class="time">办理周期：{{ item.dealTime || 0 }}天</div>
       </div>
       <div v-if="item.caseScore" class="list_header_right">
         <span class="num">{{ (item.caseScore / 100 || 0).toFixed(1) }} </span>

@@ -140,6 +140,10 @@ export default {
   },
   methods: {
     onLoad() {
+      if (!this.typeId || this.typeId === '') {
+        this.finished = true
+        return
+      }
       this.getGoodsApi()
     },
     changeTab(index, item) {
@@ -163,7 +167,7 @@ export default {
       if (index === 0) {
         this.$router.push({
           path: '/store/groupStore',
-          query: { storeId: this.storeId },
+          query: { storeId: this.storeId, pageStatus: this.type },
         })
       }
     },
@@ -221,6 +225,9 @@ export default {
       }
     },
     linkGood(item) {
+      if (this.type === 'preview') {
+        return
+      }
       if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
         this.$router.push({
           path: '/detail/transactionDetails',

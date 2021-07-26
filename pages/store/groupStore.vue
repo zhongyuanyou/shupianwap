@@ -306,7 +306,10 @@ export default {
     },
     toClassifyPage() {
       // 得到tpeid
-      const typeId = this.info.goodsRecommend[this.active].id
+      let typeId = ''
+      if (this.info.goodsRecommend.length > 0) {
+        typeId = this.info.goodsRecommend[this.active].id
+      }
       this.$router.push({
         path: '/store/groupStoreClassify',
         query: {
@@ -320,7 +323,7 @@ export default {
     handleScroll() {
       // 获得团队服务距离顶部高度
       const top = this.$refs.sticky.getBoundingClientRect().top
-      if (top < 200) {
+      if (top < 220) {
         this.stickyFlag = true
       } else {
         this.stickyFlag = false
@@ -393,6 +396,9 @@ export default {
       })
     },
     linkGood(item) {
+      if (this.type === 'preview') {
+        return
+      }
       if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
         this.$router.push({
           path: '/detail/transactionDetails',
@@ -411,6 +417,9 @@ export default {
       }
     },
     linkPlanner(item) {
+      if (this.type === 'preview') {
+        return
+      }
       this.$router.push({
         path: '/planner/detail',
         query: {
@@ -419,6 +428,9 @@ export default {
       })
     },
     handleShare() {
+      if (this.type === 'preview') {
+        return
+      }
       if (this.isInApp) {
         const url = window && window.location.href
         const sharedUrl = setUrlParams(url, { isShare: 1 })

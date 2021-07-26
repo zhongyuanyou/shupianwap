@@ -83,7 +83,7 @@
             <li
               v-for="(data, dataIndex) in tabsListData"
               :key="dataIndex"
-              @click="linkGood(item)"
+              @click="linkGood(data)"
             >
               <img :src="data.img" alt="" />
               <div>
@@ -162,6 +162,7 @@ export default {
   },
   data() {
     return {
+      urlData:this.$route.query,
       active: this.$route.query.active, // tab状态
       headActive: 'rememded',
       detailData: {
@@ -538,7 +539,9 @@ export default {
       this.showShare = true
     },
     linkGood(item) {
+      if(this.urlData.pageStatus==='preview'){return}
       if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
+        
         this.$router.push({
           path: '/detail/transactionDetails',
           query: {
