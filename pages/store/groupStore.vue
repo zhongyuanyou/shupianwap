@@ -1,6 +1,6 @@
 <template>
   <div class="m-store group-store">
-    <Header title="团队店铺" :fixed="true">
+    <Header title="团队店铺" :fixed="true" :head-style="styleObject">
       <template v-if="isInApp" #right>
         <my-icon
           class-prefix="spiconfont"
@@ -114,7 +114,7 @@
           :class="[active === index ? 'z-active' : '']"
           @click="changeTab(index, item.id)"
         >
-          {{ item.name }}
+          <div class="tab-name">{{ item.name }}</div>
         </div>
       </div>
 
@@ -143,8 +143,8 @@
             </div>
             <div class="desc">{{ item.desc }}</div>
             <div class="amount">
-              <div>{{ item.price }}</div>
-              <div class="amount-unit">元</div>
+              <span>{{ item.price }}</span>
+              <span class="amount-unit">元</span>
             </div>
           </div>
         </div>
@@ -166,7 +166,7 @@
     >
       更多优惠
     </div>
-    <div class="recommend-planner-wrapper">
+    <div v-if="info.planners.length > 0" class="recommend-planner-wrapper">
       <div class="main-tile">推荐规划师</div>
       <div class="recommend-content">
         <div
@@ -182,7 +182,9 @@
             src="https://cdn.shupian.cn/sp-pt/wap/images/fy75fih34c80000.png"
           />
           <div class="score">薯片分{{ item.score }}</div>
-          <div class="desc">{{ item.category }}</div>
+          <div v-if="item.category !== ''" class="desc">
+            {{ item.category }}
+          </div>
         </div>
       </div>
     </div>
@@ -263,6 +265,9 @@ export default {
         planners: [],
       }, // 详情数据
       type: '', // 页面类型
+      styleObject: {
+        'box-shadow': '0px 1px 0px 0px #f4f4f4',
+      },
     }
   },
   computed: {
@@ -460,6 +465,17 @@ export default {
       this.showShare = true
     },
   },
+  head() {
+    return {
+      title: '',
+      meta: [
+        {
+          name: 'spptmd-track_code',
+          content: this.isInApp ? 'SPP000019' : 'SPW000019',
+        },
+      ],
+    }
+  },
 }
 </script>
 
@@ -532,7 +548,8 @@ export default {
     display: flex;
     align-items: center;
     background: #f8f8f8;
-    border-radius: 12px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
     .content-left {
       margin-right: 20px;
     }
@@ -570,10 +587,10 @@ export default {
         justify-content: space-between;
         .item {
           &-res {
-            font: 56px/74px bold Bebas;
+            font: bold 56px/74px Bebas;
             color: #222222;
             .unit {
-              font: 24px/33px bold PingFangSC;
+              font: bold 24px/33px PingFangSC;
             }
             margin-bottom: 3px;
           }
@@ -623,6 +640,11 @@ export default {
         line-height: 30px;
         color: #999999;
         margin-right: 56px;
+        max-width: 30%;
+        &-name {
+          text-align: center;
+          .mixin-text-oneoverflow();
+        }
         &.z-active {
           color: #222222;
           font-weight: bold;
@@ -653,7 +675,7 @@ export default {
           height: 160px;
           width: 160px;
           margin-right: 28px;
-          border-radius: 8px;
+          border-radius: 12px;
           object-fit: cover;
         }
 
@@ -694,13 +716,12 @@ export default {
             color: #ec5330;
             font-size: 36px;
             font-weight: bold;
-            div {
+            span {
               display: inline-block;
             }
             &-unit {
-              margin-left: 2px;
+              margin-left: -10px;
               font-size: 22px;
-              font-weight: normal;
             }
           }
         }
@@ -736,7 +757,6 @@ export default {
       padding: 40px 40px 35px 40px;
       box-sizing: border-box;
       display: flex;
-      align-items: center;
       overflow-y: auto;
       .recommend-item {
         display: flex;
