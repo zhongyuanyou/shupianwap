@@ -306,7 +306,10 @@ export default {
     },
     toClassifyPage() {
       // 得到tpeid
-      const typeId = this.info.goodsRecommend[this.active].id
+      let typeId = ''
+      if (this.info.goodsRecommend.length > 0) {
+        typeId = this.info.goodsRecommend[this.active].id
+      }
       this.$router.push({
         path: '/store/groupStoreClassify',
         query: {
@@ -320,7 +323,7 @@ export default {
     handleScroll() {
       // 获得团队服务距离顶部高度
       const top = this.$refs.sticky.getBoundingClientRect().top
-      if (top < 200) {
+      if (top < 220) {
         this.stickyFlag = true
       } else {
         this.stickyFlag = false

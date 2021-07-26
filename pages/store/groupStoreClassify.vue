@@ -140,6 +140,10 @@ export default {
   },
   methods: {
     onLoad() {
+      if (!this.typeId || this.typeId === '') {
+        this.finished = true
+        return
+      }
       this.getGoodsApi()
     },
     changeTab(index, item) {
