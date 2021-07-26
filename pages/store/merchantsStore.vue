@@ -444,11 +444,9 @@ export default {
         // MCH_BASE_INFO 商户基础信息
         // GOODS_RECOMMEND 商品推荐
         // SWIPER_IMAGE 轮播图
-        data.data.goods = data.data.goods.filter(
-          (item) => Number(item.state) === 1
-        )
         this.active = data.data.goodsRecommend.length>0 && data.data.goodsRecommend[0].id
         this.detailData = data.data || {}
+        this.getList()
         return data
       } catch (error) {
         console.error('getDetail:', error)
