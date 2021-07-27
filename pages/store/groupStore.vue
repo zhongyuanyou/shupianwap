@@ -378,6 +378,9 @@ export default {
           throw new Error(message)
         }
         this.info = data
+        if (this.info.banners.length === 0) {
+          this.info.banners.push('https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg');
+        }
         this.groupInfoLoading = false
         if (data.goodsRecommend.length !== 0) {
           const typeId = data.goodsRecommend[0].id
