@@ -222,8 +222,8 @@ export default {
       } else if (path.match('share/originalVideo/materialShare')) {
         materialType = 4
       }
-      planner
-        .addClue({
+      this.$axios
+        .post(planner.addClue, {
           userId: this.userInfoData.id, // 用户id
           plannerId: this.plannerId, // 用户id
           shareId: this.$route.query.shareId, // 分享Id
@@ -232,10 +232,8 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.$xToast.success('委托成功，请静候规划师与您电话联系！')
+            this.$xToast.success('委托成功！')
             this.visible = false
-          } else {
-            this.$xToast.error(res.message || '委托失败')
           }
         })
         .catch((error) => {
