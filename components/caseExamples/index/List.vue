@@ -9,8 +9,16 @@
         <div class="time">办理周期：{{ item.dealTime || 0 }}天</div>
       </div>
       <div v-if="item.caseScore" class="list_header_right">
-        <span class="num">{{ (item.caseScore / 100 || 0).toFixed(1) }} </span>
-        <span class="unit">分</span>
+        <span
+          class="score"
+          :class="{ low_score: (item.caseScore / 100 || 0) < 8 }"
+          >{{ (item.caseScore / 100 || 0).toFixed(1) }}
+        </span>
+        <span
+          class="unit"
+          :class="{ low_score: (item.caseScore / 100 || 0) < 8 }"
+          >分</span
+        >
       </div>
     </div>
     <!-- 服务产品类型 CASE_TYPE_1
@@ -88,12 +96,13 @@ export default {
       }
     }
     .list_header_right {
-      .num {
+      .score {
         font-family: Bebas;
         font-size: 46px;
         color: #4975f5;
         letter-spacing: 0;
       }
+
       .unit {
         font-family: PingFangSC-Medium;
         font-weight: bold;
@@ -101,6 +110,9 @@ export default {
         color: #4974f5;
         letter-spacing: 0;
         line-height: 24px;
+      }
+      .low_score {
+        color: #7a9bff;
       }
     }
   }
