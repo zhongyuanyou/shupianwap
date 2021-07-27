@@ -471,9 +471,9 @@ export default {
         console.log('sharedUrl:', sharedUrl)
         this.$appFn.dggShare(
           {
-            image: this.info.teamInfo.img,
-            title: '规划师',
-            subTitle: '',
+            image: 'https://cdn.shupian.cn/sp-pt/wap/images/2tmwcm165ma0000.png',
+            title: '薯片找人',
+            subTitle: `团队店铺 - ${this.info.teamInfo.name}的团队店铺`,
             url: sharedUrl,
           },
           (res) => {
