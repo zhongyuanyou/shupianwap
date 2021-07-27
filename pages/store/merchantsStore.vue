@@ -707,7 +707,7 @@ export default {
   },
   head() {
     return {
-      title: '规划师店铺',
+      title: '',
       meta: [
         {
           name: 'spptmd-track_code',
