@@ -40,6 +40,7 @@
       title="案例简介"
       :text="caseInfo.content"
       :images="caseInfo.imgs"
+      @preview="previewImg"
     />
 
     <!--S  办理经过-->
@@ -47,6 +48,7 @@
     <HandlingProcess
       v-if="processing.length > 0 && caseDetail.caseType === 'CASE_TYPE_1'"
       :info="processing"
+      @preview="previewImg"
     ></HandlingProcess>
     <CaseIntroduction
       v-if="
@@ -57,22 +59,24 @@
       title="办理经过"
       :text="processing[0].content"
       :images="processing[0].imgs"
+      @preview="previewImg"
     />
 
     <!-- 办理结果 -->
+    <!-- caseDetail.caseType === 'CASE_TYPE_1' && (caseResult.content ||
+    caseResult.imgs) -->
     <CaseIntroduction
-      v-if="
-        caseDetail.caseType === 'CASE_TYPE_1' &&
-        (caseResult.content || caseResult.imgs)
-      "
+      v-if="caseResult.content || caseResult.imgs"
       title="办理结果"
       :text="caseResult.content"
       :images="caseResult.imgs"
+      @preview="previewImg"
     />
-
+    <!-- merchantId
+      merchantUserId -->
     <!--S 服务团队-->
     <ServiceTeam
-      v-if="planner.mchUserId || teamMmembers.length > 0"
+      v-if="planner.merchantUserId || teamMmembers.length > 0"
       :info="caseDetail"
       :planner="planner"
       :team-mmembers="teamMmembers"
@@ -80,7 +84,6 @@
     />
 
     <!-- 专家点评 -->
-
     <ExpertComments
       v-if="id && expertEvaluation.length > 0"
       :details-id="id"
@@ -88,11 +91,19 @@
     ></ExpertComments>
 
     <!--E 评论-->
-    <CommentBox v-if="commentdata.length > 0" :list="commentdata" />
+    <CommentBox
+      v-if="commentdata.length > 0"
+      :list="commentdata"
+      @preview="previewImg"
+    />
     <!-- tcPlannerBooth -->
     <bottomBar :im-jump-query="imJumpQuery" :planner-info="tcPlannerBooth" />
 
     <Loading-center v-show="loading" />
+
+    <div v-if="imgurl" class="imgbox" @click="imgurl = ''">
+      <img class="img-circle" :src="imgurl" mode="" />
+    </div>
   </div>
 </template>
 
@@ -174,6 +185,8 @@ export default {
         expertEvaluation: '专家评价',
         UserReviews: '用户评价',
       }),
+
+      imgurl: '',
     }
   },
   computed: {
@@ -274,6 +287,10 @@ export default {
     this.getRecPlanner()
   },
   methods: {
+    previewImg(img) {
+      this.imgurl = img
+    },
+
     async handleTel(phoneFull) {
       if (!phoneFull) {
         return this.$xToast.error('未获取到电话')
@@ -468,6 +485,22 @@ export default {
   ::v-deep .sp-top-nav-bar__left,
   ::v-deep .sp-top-nav-bar__right {
     font-weight: initial;
+  }
+
+  .imgbox {
+    z-index: 10;
+    height: 100vh;
+    width: 100%;
+    background: #000000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    > img {
+      max-width: 70%;
+    }
   }
 }
 </style>
