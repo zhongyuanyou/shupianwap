@@ -132,11 +132,8 @@ export default {
       appInfo: (state) => state.app.appInfo, // app信息
     }),
   },
-  created() {
-    console.log('created')
-  },
+
   mounted() {
-    console.log('执行mounted ')
     this.search.productTypeCode = this.$route.query.goodsType
     this.search.productOneBelongCode = this.$route.query.classCode1
     // this.search.productTwoBelongCode = this.$route.query.classCode2

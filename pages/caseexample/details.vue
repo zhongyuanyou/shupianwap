@@ -49,9 +49,13 @@
       :info="processing"
     ></HandlingProcess>
     <CaseIntroduction
-      v-if="processing.length > 0 && caseDetail.caseType === 'CASE_TYPE_2'"
+      v-if="
+        processing.length > 0 &&
+        caseDetail.caseType === 'CASE_TYPE_2' &&
+        (processing[0].content || processing[0].imgs.length > 0)
+      "
       title="办理经过"
-      :text="processing[0].content || processing[0].name"
+      :text="processing[0].content"
       :images="processing[0].imgs"
     />
 
@@ -114,7 +118,9 @@ import contractApi from '@/api/contract'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 
 export default {
+  layout: 'keepAlive',
   name: 'CaseExamplesdetails',
+
   components: {
     LoadingCenter,
     [TopNavBar.name]: TopNavBar,
