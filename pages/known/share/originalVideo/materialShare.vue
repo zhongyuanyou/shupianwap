@@ -5,6 +5,7 @@
       <sp-video
         :options="playerOptions"
         :vod-url="vurl"
+        :error-flag="vodError"
         @errorBtnHandle="errorBtnHandle"
       />
     </client-only>
@@ -107,6 +108,7 @@ export default {
       goods: [],
       plannerId: '',
       planerInfo: {},
+      vodError: false,
     }
   },
   computed: {
@@ -140,6 +142,7 @@ export default {
   methods: {
     // 分享信息
     getShareInfoApi() {
+      this.vodError = false
       const params = {
         id: this.id,
       }
@@ -160,6 +163,7 @@ export default {
           this.buildDetail()
         })
         .catch((e) => {
+          this.vodError = true
           this.$xToast.error(e.message)
         })
     },
@@ -175,7 +179,7 @@ export default {
             res.img ||
             'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png',
           userName: res.name,
-          postName: res.zwName,
+          postName: res.zwName || '规划师',
           type: res.mchClass,
         }
         this.planerInfo = {

@@ -1,7 +1,7 @@
 <template>
   <div class="sp-video">
     <div v-if="reseted" class="video-player">
-      <div v-show="!videoError">
+      <div v-show="!loading && !videoError">
         <video
           ref="spVideo"
           class="video-js vjs-default-skin vjs-big-play-centered vjs-16-9"
@@ -11,6 +11,22 @@
             height: options.height,
           }"
         ></video>
+      </div>
+      <div
+        v-show="!videoError && loading"
+        class="video-error"
+        :style="{
+          width: options.width,
+          height: options.height,
+        }"
+      >
+        <div class="content">
+          <sp-loading
+            size="0.39rem"
+            color="#ffffff"
+            text-size="0.32rem"
+          ></sp-loading>
+        </div>
       </div>
       <div
         v-show="videoError"
@@ -36,7 +52,7 @@
 <script>
 // lib
 import videojs from 'video.js'
-import { Button } from '@chipspc/vant-dgg'
+import { Button, Loading } from '@chipspc/vant-dgg'
 import { deepCopy, custTypeOf } from '@/utils/common'
 
 // video.js 默认配置
@@ -62,12 +78,18 @@ export default {
   name: 'SpVideo',
   components: {
     [Button.name]: Button,
+    [Loading.name]: Loading,
   },
   props: {
     vodUrl: {
       // 视频源
       type: String,
       default: '',
+    },
+    errorFlag: {
+      // 视频错误标识
+      type: Boolean,
+      default: false,
     },
     options: {
       // video视频配置
@@ -77,6 +99,7 @@ export default {
       },
     },
     errorCofing: {
+      // 错误的配置选项
       type: Object,
       default() {
         return {
@@ -97,15 +120,23 @@ export default {
     return {
       reseted: true,
       player: null,
-      videoError: false, // 判断视频是否异常
       videoErrorConfig: this.errorCofing,
       isAndroid: false, // 安卓机器会出现适配问题,这里需要特殊处理
+      loading: true, // 视频加载中
     }
+  },
+  computed: {
+    videoError() {
+      return this.errorFlag
+    },
   },
   watch: {
     vodUrl(val) {
-      if (!this.player) {
+      if (!this.player && custTypeOf(val) === 'String' && val.trim() !== '') {
+        this.loading = false
         this.initialize()
+      } else {
+        this.loading = true
       }
     },
   },
@@ -114,7 +145,12 @@ export default {
     this.isAndroid =
       userAgent.indexOf('Android') > -1 || userAgent.indexOf('Adr') > -1 // android终端
 
-    if (!this.player) {
+    if (
+      !this.player &&
+      custTypeOf(this.vodUrl) === 'String' &&
+      this.vodUrl.trim() !== ''
+    ) {
+      this.loading = false
       this.initialize()
     }
   },
@@ -128,11 +164,6 @@ export default {
     initialize() {
       // videojs options
       const videoOptions = deepCopy(defaultOptions, this.options)
-      if (custTypeOf(this.vodUrl) !== 'String' || this.vodUrl.trim() === '') {
-        this.videoError = true
-        return
-      }
-      this.videoError = false
       // build video url
       videoOptions.sources[0].src = this.vodUrl
 
@@ -201,6 +232,7 @@ export default {
       }
     },
     errorBtnHandle() {
+      // 错误的回调函数
       this.$emit('errorBtnHandle', this)
     },
   },
