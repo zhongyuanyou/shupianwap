@@ -59,8 +59,8 @@
           <div class="title">{{ answerDetails.title }}</div>
           <div class="nums_area">
             <p v-if="quesDetail.answerCount">
-              {{ quesDetail.browseCount || 0 }}浏览
-              {{ quesDetail.answerCount || 0 }}个回答
+              {{ quesDetail.browseCount || 0 }}浏览 ·
+              {{ quesDetail.answerCount || 0 }}个回答 ·
               {{ quesDetail.collectCount || 0 }}收藏
             </p>
           </div>
@@ -87,8 +87,8 @@
         <div class="html_content" v-html="answerDetails.content"></div>
         <p class="pub-time">编辑于 {{ answerDetails.createTime }}</p>
         <div class="nums_area">
-          {{ answerDetails.applaudCount || 0 }}赞同
-          {{ answerDetails.collectCount || 0 }}个收藏
+          {{ answerDetails.applaudCount || 0 }}赞同 ·
+          {{ answerDetails.collectCount || 0 }}个收藏 ·
           {{ answerDetails.remarkCount || 0 }}评论
         </div>
       </div>
