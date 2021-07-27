@@ -110,7 +110,7 @@
                   <span>人</span>
                 </p>
                 <p>
-                  <span>团队人数</span>
+                  <span>商户人数</span>
                 </p>
               </div>
               <div>
@@ -122,7 +122,7 @@
                   <span>服务客户</span>
                 </p>
               </div>
-              <div>
+              <!-- <div>
                 <p class="sp-score__title">
                   <span>{{ detailData.mchService.maintenanceNum }}</span>
                   <span>个</span>
@@ -130,7 +130,7 @@
                 <p>
                   <span>维护商品</span>
                 </p>
-              </div>
+              </div> -->
             </div>
             <div class="sp-score__satisfaction">
               <p>客户满意</p>
@@ -908,7 +908,7 @@ export default {
     }
     .sp-score {
       width: 100%;
-      padding: 50px 54px;
+      padding: 40px 40px 34px;
       background: #ffffff;
       border: 1px solid #dddddd;
       box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
@@ -921,6 +921,26 @@ export default {
         font-size: 24px;
         color: #999999;
         letter-spacing: 0;
+        >div{
+          box-sizing: border-box;
+          width: 285px;
+          height: 140px;
+          padding:14px 32px;
+          background: #F8F8F8;
+          border-radius: 8px;
+          &:first-of-type{
+            background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/65ie49d8a8o0000.png');
+            background-repeat: no-repeat;
+            background-size: 80px 80px;
+            background-position: center right 20px;
+          }
+          &:last-of-type{
+            background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/7lc1ert8stg0000.png');
+            background-repeat: no-repeat;
+            background-size: 80px 80px;
+            background-position: center right 20px;
+          }
+        }
       }
       &__title {
         span {
