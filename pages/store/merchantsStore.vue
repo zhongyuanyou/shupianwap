@@ -589,7 +589,7 @@ export default {
       callPhone(telNumber.phone)
     },
     onClickLeft() {
-      this.$router.back(-1)
+      this.$back()
     },
     onClickRight() {
       console.log('nav onClickRight')
@@ -1003,7 +1003,6 @@ export default {
           display: flex;
           justify-content: flex-start;
           align-items: center;
-          height: 80px;
           line-height: 80px;
           li {
             position: relative;
