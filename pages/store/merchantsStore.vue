@@ -756,7 +756,7 @@ export default {
       p {
         &:first-of-type {
           line-height: 45px;
-          margin: 0 0 20px 0;
+          
           font-family: PingFangSC-Regular;
           font-size: 44px;
           color: #ffffff;
@@ -766,6 +766,7 @@ export default {
         &:last-of-type {
           display: inline-block;
           padding: 5px 8px;
+          margin: 20px 0 0 0;
           background: rgba(255, 255, 255, 0.2);
           border-radius: 22px;
           font-weight: bold;
@@ -820,7 +821,7 @@ export default {
       p {
         &:first-of-type {
           line-height: 45px;
-          margin: 0 0 20px 0;
+          
           font-family: PingFangSC-Regular;
           font-size: 44px;
           color: #000;
@@ -830,6 +831,7 @@ export default {
         &:last-of-type {
           display: inline-block;
           padding: 5px 8px;
+          margin: 20px 0 0 0;
           background: rgba(73, 116, 245, 0.1);
           border-radius: 22px;
           font-size: 22px;
