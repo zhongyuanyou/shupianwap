@@ -60,7 +60,7 @@
           <div class="nums_area">
             <p v-if="quesDetail.answerCount">
               {{ quesDetail.browseCount || 0 }}浏览
-              {{ quesDetail.answerCount || 0 }}个回答 ·
+              {{ quesDetail.answerCount || 0 }}个回答
               {{ quesDetail.collectCount || 0 }}收藏
             </p>
           </div>
@@ -88,7 +88,7 @@
         <p class="pub-time">编辑于 {{ answerDetails.createTime }}</p>
         <div class="nums_area">
           {{ answerDetails.applaudCount || 0 }}赞同
-          {{ answerDetails.collectCount || 0 }}个收藏 ·
+          {{ answerDetails.collectCount || 0 }}个收藏
           {{ answerDetails.remarkCount || 0 }}评论
         </div>
       </div>
@@ -328,6 +328,7 @@ export default {
         .get(knownApi.questionArticle.detail, {
           params: {
             id,
+            platForm: 'chips-wap',
           },
         })
         .then((res) => {
