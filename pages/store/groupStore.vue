@@ -42,7 +42,7 @@
       >
         <sp-swipe-item v-for="(item, index) in info.banners" :key="index">
           <a href="javascript:void(0)" class="swiper-box">
-            <img :src="item + $ossImgSet(750, 552)" alt="" />
+            <img :src="item" alt="" />
           </a>
         </sp-swipe-item>
       </sp-swipe>
@@ -525,6 +525,7 @@ export default {
       img {
         width: 100%;
         height: 100%;
+        object-fit: cover;
       }
     }
     .my-swiper {
