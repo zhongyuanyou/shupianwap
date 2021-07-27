@@ -118,7 +118,7 @@
         <div class="server-block-tile">客户满意</div>
         <div class="server-block-custinfo">
           <div class="item">
-            3分钟响应率：{{ info.teamService.consultResponse }}
+            1分钟响应率：{{ info.teamService.consultResponse }}
           </div>
           <div class="item">
             电话接通率：{{ info.teamService.callThroughRate }}

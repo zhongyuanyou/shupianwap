@@ -135,7 +135,7 @@
             <div class="sp-score__satisfaction">
               <p>客户满意</p>
               <div class="satisfactiontext">
-                <p>3分钟响应率：{{ detailData.mchService.consultResponse }}</p>
+                <p>1分钟响应率：{{ detailData.mchService.consultResponse }}</p>
                 <p>电话接通率：{{ detailData.mchService.callThroughRate }}</p>
               </div>
             </div>
