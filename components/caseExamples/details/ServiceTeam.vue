@@ -8,7 +8,6 @@
         <div
           v-if="planner.mchUserId || planner.merchantUserId"
           class="planners_item"
-          :style="{ marginTop: '0.42rem' }"
         >
           <div class="planners_item_lf">
             <a
@@ -245,7 +244,8 @@ export default {
   padding: 44px 0 0px;
 
   .planners {
-    padding: 0 40px 64px 40px;
+    padding: 0 40px 48px 40px;
+    overflow: hidden;
     /*border-bottom: 1px solid #f4f4f4;*/
     ::v-deep.sp-skeleton {
       margin-top: 48px;
@@ -294,7 +294,7 @@ export default {
       font-weight: bold;
       color: #1a1a1a;
       line-height: 52px;
-      padding: 0 40px;
+      padding: 0 40px 42px;
     }
     &_item {
       display: flex;

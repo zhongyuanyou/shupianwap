@@ -27,6 +27,7 @@
                 fit="cover"
                 class="image"
                 :src="image"
+                @click="$emit('preview', item)"
               ></sp-image>
             </div>
           </div>
