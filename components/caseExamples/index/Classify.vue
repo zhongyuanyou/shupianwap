@@ -50,7 +50,7 @@ import { DropdownMenu, DropdownItem } from '@chipspc/vant-dgg'
 
 import TreeSelect from './TreeSelect.vue'
 
-import { goods } from '@/api/index'
+import { goods, dict } from '@/api/index'
 
 export default {
   components: {
@@ -187,31 +187,44 @@ export default {
     },
 
     getCity() {
-      goods
-        .searchJyGoodsList(
-          { axios: this.$axios },
+      dict
+        .findCmsTier(
+          {},
           {
-            start: 1,
-            limit: 1,
-            needTypes: 1,
-            classCode: 'FL20201224136319',
-            dictCode: 'CONDITION-JY-GS',
-            searchKey: '',
-            statusList: ['PRO_STATUS_LOCKED', 'PRO_STATUS_PUT_AWAY'],
-            fieldList: [],
-            platformPriceStart: '',
-            platformPriceEnd: '',
+            code: '2147483647',
           }
         )
-        .then((data) => {
-          if (
-            data.filters &&
-            data.filters.length > 0 &&
-            data.filters[0].code === 'CONDITION-JY-GS-DQ'
-          ) {
-            this.tab3.options = this.setData(data.filters[0].children)
-          }
+        .then((res) => {
+          console.log(res)
+          this.tab3.options = this.setData(res)
         })
+
+      // goods
+      //   .searchJyGoodsList(
+      //     { axios: this.$axios },
+      //     {
+      //       start: 1,
+      //       limit: 1,
+      //       needTypes: 1,
+      //       classCode: 'FL20201224136319',
+      //       dictCode: 'CONDITION-JY-GS',
+      //       searchKey: '',
+      //       statusList: ['PRO_STATUS_LOCKED', 'PRO_STATUS_PUT_AWAY'],
+      //       fieldList: [],
+      //       platformPriceStart: '',
+      //       platformPriceEnd: '',
+      //     }
+      //   )
+      //   .then((data) => {
+      //     if (
+      //       data.filters &&
+      //       data.filters.length > 0 &&
+      //       data.filters[0].code === 'CONDITION-JY-GS-DQ'
+      //     ) {
+      //       this.tab3.options = this.setData(data.filters[0].children)
+      //     }
+      //   })
+
       // const arr = [
       //   // {
       //   //   text: '不限',

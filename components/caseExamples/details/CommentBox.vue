@@ -7,9 +7,11 @@
         <img :src="item.img || $ossImgSetV2('727ro8a1oa00000.jpg')" alt="" />
         <div>
           <div class="phone">
-            <p>{{ item.username }}</p>
+            <p>{{ item.username || '匿名用户' }}</p>
           </div>
-          <div v-if="item.time" class="date">{{ formatDate(item.time) }}</div>
+          <div v-if="item.time" class="date">
+            {{ formatDate(item.time) }}
+          </div>
         </div>
       </div>
       <p class="tit">
@@ -22,6 +24,7 @@
             :key="imageIndex"
             class="image"
             :src="image"
+            @click="$emit('preview', item)"
           ></sp-image>
         </div>
       </div>
@@ -76,6 +79,7 @@ export default {
     padding: 0 40px 0px;
     .head {
       display: flex;
+      align-items: center;
       > img {
         width: 80px;
         height: 80px;
@@ -85,6 +89,7 @@ export default {
       > div {
         margin-left: 20px;
         width: 100%;
+        font-size: 0;
         > .phone {
           font-size: 32px;
           font-family: PingFangSC-Medium, PingFang SC;
