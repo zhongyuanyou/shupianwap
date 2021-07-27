@@ -52,11 +52,11 @@
     <div
       class="page-list"
       style="background: #f5f5f5"
-      v-show="answerDetails.title"
+      v-show="quesDetail.title"
     >
       <div class="area area1">
         <div class="title-area">
-          <div class="title">{{ answerDetails.title }}</div>
+          <div class="title">{{ quesDetail.title }}</div>
           <div class="nums_area">
             <p v-if="quesDetail.answerCount">
               {{ quesDetail.browseCount || 0 }}浏览 ·
@@ -138,7 +138,10 @@
         </div>
       </sp-popup>
     </div>
-    <div v-if="!answerDetails.title && isLoaded" class="no-data">
+    <div
+      v-if="!(quesDetail.title || !answerDetails.content) && isLoaded"
+      class="no-data"
+    >
       <img
         src="https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png"
         alt=""
@@ -146,7 +149,10 @@
       />
       <p>内容失效</p>
     </div>
-    <div v-if="topPlannerInfo.id || planerInfo.id" class="bottom-btn">
+    <div
+      v-if="(topPlannerInfo.id || planerInfo.id) && articleDetails.title"
+      class="bottom-btn"
+    >
       <div class="user-info">
         <div
           :style="{
@@ -333,7 +339,6 @@ export default {
         })
         .then((res) => {
           this.quesDetail = res.data
-          console.log('this.quesDetail', this.quesDetail)
         })
     },
     setPlannerInfo(data) {

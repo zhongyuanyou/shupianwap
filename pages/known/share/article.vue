@@ -114,7 +114,10 @@
       />
       <p>内容失效</p>
     </div>
-    <div v-if="topPlannerInfo.id || planerInfo.id" class="bottom-btn">
+    <div
+      v-if="(topPlannerInfo.id || planerInfo.id) && articleDetails.title"
+      class="bottom-btn"
+    >
       <div class="user-info">
         <div
           :style="{
