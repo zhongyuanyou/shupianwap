@@ -753,7 +753,7 @@ export default {
           window.AlipayJSBridge.call('closeWebview')
         }
       } else {
-        this.$router.back(-1)
+        this.$back()
       }
     },
     onClickRight() {
@@ -903,8 +903,7 @@ export default {
       .label {
         display: inline-block;
         width: 152px;
-        height: 48px;
-        line-height: 48px;
+        padding:8px 0;
         text-align: center;
         background: rgba(234, 218, 205, 0.22);
         border-radius: 24px;
@@ -1091,7 +1090,6 @@ export default {
           display: flex;
           justify-content: flex-start;
           align-items: center;
-          height: 80px;
           line-height: 80px;
           li {
             position: relative;

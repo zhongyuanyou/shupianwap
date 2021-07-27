@@ -117,7 +117,7 @@
           没有更多了
         </p>
       </div>
-      <div v-else class="no-info">
+      <div v-if="requestStatus && detailData.goodsRecommend.length<=0" class="no-info">
         <img src="https://cdn.shupian.cn/sp-pt/wap/images/32lnvdx3omo0000.png" alt="">
         <p>抱歉,未找到相关结果</p>
       </div>
@@ -201,6 +201,7 @@ export default {
       },
       shareOptions: [],
       showShare: false,
+      requestStatus:false,
     }
   },
   computed: {
@@ -321,6 +322,9 @@ export default {
           throw new Error(message)
         }
         this.detailData = data || {}
+        if(!this.requestStatus){
+          this.requestStatus = true
+        }
         return data
       } catch (error) {
         console.error('getDetail:', error)
@@ -369,6 +373,9 @@ export default {
         } else {
           // 下拉刷新
           this.tabsListData = data.records
+        }
+        if(!this.requestStatus){
+          this.requestStatus = true
         }
         return data
       } catch (error) {
@@ -478,7 +485,7 @@ export default {
       callPhone(telNumber.phone)
     },
     onClickLeft() {
-      this.$router.back(-1)
+      this.$back()
     },
     onClickRight() {
       console.log('nav onClickRight')
@@ -828,7 +835,6 @@ export default {
           display: flex;
           justify-content: flex-start;
           align-items: center;
-          height: 80px;
           line-height: 80px;
           li {
             position: relative;
