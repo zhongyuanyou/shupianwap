@@ -1,7 +1,7 @@
 <template>
   <div class="m-known-share originalVideo materialShare">
     <ShareModal v-show="showShareModal" :source-id="vDetail.id" />
-    <template v-if="showShareModal && !loading">
+    <template v-if="showContent">
       <client-only>
         <sp-video
           :options="playerOptions"
@@ -54,7 +54,7 @@
         </div>
       </div>
       <div class="holderplace"></div> </template
-    ><template v-else>
+    ><template v-if="vodError && !loading">
       <div class="no-data">
         <img
           src="https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png"
@@ -105,6 +105,7 @@ export default {
         desc: '内容失效',
       },
       showShareModal: false,
+      showContent: true,
       plannerId: '',
       loading: true,
     }
@@ -145,6 +146,7 @@ export default {
         .catch((e) => {
           this.loading = false
           this.vodError = true
+          this.showContent = false
           // this.$xToast.error(e.message)
         })
     },

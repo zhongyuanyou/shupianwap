@@ -185,6 +185,7 @@ export default {
       display: flex;
       align-items: center;
       padding: 0 20px;
+      padding-top: 22px;
       .info {
         margin-left: 24px;
         flex: 1;
@@ -220,6 +221,7 @@ export default {
           .btn {
             background: #ec5330;
             height: 54px;
+            line-height: 54px;
             font-size: 28px;
             font-weight: bold;
             border-radius: 8px;
