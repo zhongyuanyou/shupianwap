@@ -9,7 +9,7 @@
     <CaseExamplesList
       class="case_examples"
       :item="caseData"
-      @click.native="toDetail('/caseExamples/details', item)"
+      @click.native="toDetail('/caseExamples/details')"
     ></CaseExamplesList>
   </div>
 </template>
@@ -56,10 +56,10 @@ export default {
             column: 'isTop',
             asc: false,
           },
-          // {
-          //   column: 'caseScore',
-          //   asc: false,
-          // },
+          {
+            column: 'caseScore',
+            asc: false,
+          },
           {
             column: 'createTime',
             asc: false,
