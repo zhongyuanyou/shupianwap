@@ -461,6 +461,7 @@ export default {
     },
     // 获取列表数据
     async getList() {
+      if(!this.active){return}
       const { storeId , pageStatus='' } = this.$route.query
       try {
         const params = {
@@ -894,7 +895,7 @@ export default {
           background: #dddddd;
           border-radius: 8px;
           img {
-            width: 670px;
+            width: 710px;
             height: 100%;
             border-radius: 8px;
           }
@@ -1131,6 +1132,7 @@ export default {
         padding: 40px 40px 37px;
         background: #ffffff;
         border: 1px solid #dddddd;
+        overflow: scroll;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
         border-radius: 12px;
 
