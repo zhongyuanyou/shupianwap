@@ -9,7 +9,7 @@
     <CaseExamplesList
       class="case_examples"
       :item="caseData"
-      @click.native="toDetail('/caseExamples/details', item)"
+      @click.native="toDetail('/caseExamples/details')"
     ></CaseExamplesList>
   </div>
 </template>
@@ -94,7 +94,7 @@ export default {
         })
     },
     toDetail() {
-      this.$router.push('/caseExamples/details?id=' + this.caseData.id)
+      this.$router.push('/caseexample/details?id=' + this.caseData.id)
     },
     toALL() {
       console.log('classCodeLevelList', this.classCodeLevelList)
@@ -109,7 +109,7 @@ export default {
         ? 'PRO_CLASS_TYPE_TRANSACTION'
         : 'PRO_CLASS_TYPE_SERVICE'
       this.$router.push({
-        path: '/caseExamples',
+        path: '/caseexample',
         query,
       })
     },
