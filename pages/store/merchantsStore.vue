@@ -707,7 +707,7 @@ export default {
   },
   head() {
     return {
-      title: '规划师店铺',
+      title: '',
       meta: [
         {
           name: 'spptmd-track_code',
@@ -991,7 +991,7 @@ export default {
               display: inline-block;
               height: 32px;
               line-height: 32px;
-              max-width: 128px;
+              max-width: 192px;
               white-space:nowrap;
               overflow:hidden;
               text-overflow:ellipsis;

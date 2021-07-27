@@ -37,7 +37,6 @@
   </div>
 </template>
 <script>
-import { Swipe, SwipeItem, Rate } from '@chipspc/vant-dgg'
 export default {
   name: 'TwoLine',
   components: {},

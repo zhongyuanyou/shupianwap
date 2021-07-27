@@ -837,7 +837,7 @@ export default {
               display: inline-block;
               height: 32px;
               line-height: 32px;
-              max-width: 128px;
+              max-width: 192px;
               white-space:nowrap;
               overflow:hidden;
               text-overflow:ellipsis;

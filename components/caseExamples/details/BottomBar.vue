@@ -165,6 +165,7 @@ export default {
   transition: all 0.3s;
   &-containner {
     position: fixed;
+    z-index: 2;
     bottom: 0px;
     left: 0px;
     width: 100vw;

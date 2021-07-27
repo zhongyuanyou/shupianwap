@@ -1,7 +1,10 @@
 <template>
   <div class="tree_select">
     <div class="col_container">
-      <div class="col_1">
+      <div
+        class="col_1"
+        :style="{ background: colNum == 2 ? '#f8f8f8' : '#f0f0f0' }"
+      >
         <div
           v-for="(row, index) of col_1"
           :key="index"
@@ -20,8 +23,13 @@
           @click.stop="rowClick(2, row, index)"
         >
           <div>{{ row.text }}</div>
-          <div v-if="colNum == 2 && active_2.id === row.id">
-            <my-icon name="yiguanzhu" color="#4974F5" size="0.28rem" />
+          <div v-if="colNum == 2">
+            <my-icon
+              v-if="active_2.id === row.id"
+              name="tab_ic_check"
+              color="#4974F5"
+              size="0.28rem"
+            />
           </div>
         </div>
       </div>
@@ -34,8 +42,13 @@
           @click.stop="rowClick(3, row, index)"
         >
           <div>{{ row.text }}</div>
-          <div v-if="active_3.id === row.id">
-            <my-icon name="yiguanzhu" color="#4974F5" size="0.28rem" />
+          <div>
+            <my-icon
+              v-if="active_3.id === row.id"
+              name="tab_ic_check"
+              color="#4974F5"
+              size="0.28rem"
+            />
           </div>
         </div>
       </div>
