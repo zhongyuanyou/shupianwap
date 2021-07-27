@@ -1,61 +1,76 @@
 <template>
   <div class="m-known-share originalVideo materialShare">
     <ShareModal v-show="showShareModal" :source-id="vDetail.id" />
-    <client-only>
-      <sp-video
-        :options="playerOptions"
-        :vod-url="vurl"
-        :error-flag="vodError"
-        :error-cofing="errorCofing"
-        @errorBtnHandle="errorBtnHandle"
-      />
-    </client-only>
-    <div class="info">
-      <div class="info-brand">
-        <sp-image
-          v-show="vDetail.custavatar"
-          width="0.84rem"
-          height="0.84rem"
-          round
-          fit="cover"
-          :src="vDetail.custavatar"
+    <template v-if="showShareModal && !loading">
+      <client-only>
+        <sp-video
+          :options="playerOptions"
+          :vod-url="vurl"
+          :error-flag="vodError"
+          :error-cofing="errorCofing"
+          @errorBtnHandle="errorBtnHandle"
         />
-        <div class="info-brand-tile">
-          <div
-            class="name"
-            :class="[
-              vDetail.custbriefIntroduction === '' ? 'z-nontebuttom' : '',
-            ]"
-          >
-            {{ vDetail.authorName }}
+      </client-only>
+      <div class="info">
+        <div class="info-brand">
+          <sp-image
+            v-show="vDetail.custavatar"
+            width="0.84rem"
+            height="0.84rem"
+            round
+            fit="cover"
+            :src="vDetail.custavatar"
+          />
+          <div class="info-brand-tile">
+            <div
+              class="name"
+              :class="[
+                vDetail.custbriefIntroduction === '' ? 'z-nontebuttom' : '',
+              ]"
+            >
+              {{ vDetail.authorName }}
+            </div>
+            <div class="desc">{{ vDetail.custbriefIntroduction }}</div>
           </div>
-          <div class="desc">{{ vDetail.custbriefIntroduction }}</div>
+        </div>
+        <div class="info-tile">{{ vDetail.videoName }}</div>
+        <div v-show="vDetail.videoName" class="info-desc">
+          {{ vDetail.custTotalViewCount }}次播放 · 发布于{{
+            vDetail.custUpdateTime
+          }}
         </div>
       </div>
-      <div class="info-tile">{{ vDetail.videoName }}</div>
-      <div v-show="vDetail.videoName" class="info-desc">
-        {{ vDetail.custTotalViewCount }}次播放 · 发布于{{
-          vDetail.custUpdateTime
-        }}
+      <div v-if="goods.length > 0" class="recommend">
+        <div class="recommend-title">推荐商品</div>
+        <div v-for="item of goods" :key="item.id">
+          <ShareGoods
+            :info="item"
+            :type="
+              item.productType === 'PRO_CLASS_TYPE_SALES'
+                ? 'Service'
+                : 'Trading'
+            "
+          ></ShareGoods>
+        </div>
       </div>
-    </div>
-    <div v-if="goods.length > 0" class="recommend">
-      <div class="recommend-title">推荐商品</div>
-      <div v-for="item of goods" :key="item.id">
-        <ShareGoods
-          :info="item"
-          :type="
-            item.productType === 'PRO_CLASS_TYPE_SALES' ? 'Service' : 'Trading'
-          "
-        ></ShareGoods>
+      <div class="holderplace"></div> </template
+    ><template v-else>
+      <div class="no-data">
+        <img
+          src="https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png"
+          alt=""
+          srcset=""
+        />
+        <p>内容失效</p>
       </div>
-    </div>
-    <div class="holderplace"></div>
+    </template>
+
     <planner-bottom :planner-id="plannerId"></planner-bottom>
   </div>
 </template>
 
 <script>
+import { Image, Button } from '@chipspc/vant-dgg'
 import knownApi from '@/api/known'
 // 推荐商品组件
 import ShareGoods from '@/components/mustKnown/share/ShareGoods.vue'
@@ -69,6 +84,8 @@ export default {
     ShareGoods,
     ShareModal,
     PlannerBottom,
+    [Image.name]: Image,
+    [Button.name]: Button,
   },
   data() {
     return {
@@ -89,6 +106,7 @@ export default {
       },
       showShareModal: false,
       plannerId: '',
+      loading: true,
     }
   },
   mounted() {
@@ -117,6 +135,7 @@ export default {
             throw new Error('分享的视频已下架')
           }
           this.showShareModal = true
+          this.loading = false
           this.vDetail = res.data
           this.vurl = this.vDetail.videoUrl
           this.goods = res.data.goodsList
@@ -124,6 +143,7 @@ export default {
           this.buildDetail()
         })
         .catch((e) => {
+          this.loading = false
           this.vodError = true
           // this.$xToast.error(e.message)
         })
@@ -220,6 +240,20 @@ export default {
   .holderplace {
     height: 1px;
     width: 100%;
+  }
+  .no-data {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 24px;
+    color: #666;
+    img {
+      width: 400px;
+      height: 400px;
+      margin: 0 auto;
+    }
   }
 }
 </style>
