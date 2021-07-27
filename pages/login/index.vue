@@ -229,7 +229,6 @@ export default {
         return
       }
       this.login().then((data) => {
-        this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
         this.getUserInfo(data)
       })
     },
@@ -416,6 +415,7 @@ export default {
             } else {
               this.$router.back(-1)
             }
+            this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
           }, 1500)
         } else {
           // 清除用户缓存信息
