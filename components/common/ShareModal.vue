@@ -228,6 +228,7 @@ export default {
           plannerId: this.plannerId, // 用户id
           shareId: this.$route.query.shareId, // 分享Id
           sourceId: this.sourceId, // 物料id
+          materialType,
         })
         .then((res) => {
           if (res.code === 200) {
