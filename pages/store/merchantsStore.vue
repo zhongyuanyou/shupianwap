@@ -889,14 +889,12 @@ export default {
       .my-swipe {
         
         ::v-deep .sp-swipe-item {
-          width: 670px;
-          height: 214px;
           text-align: center;
           background: #dddddd;
           border-radius: 8px;
           img {
-            width: 710px;
-            height: 100%;
+            width: 670px;
+            height: 214px;
             border-radius: 8px;
           }
         }
