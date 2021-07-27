@@ -85,7 +85,7 @@
         >
       </div>
     </div>
-    <div v-else class="empty">
+    <div  v-if="requestStatus && info.goodsRecommend.length<=0" class="empty">
       <img src="https://cdn.shupian.cn/sp-pt/wap/images/32lnvdx3omo0000.png" />
       <p>抱歉,未找到相关结果</p>
     </div>
@@ -126,6 +126,7 @@ export default {
       goods: [],
       typeId: '',
       type: '',
+      requestStatus:false,
     }
   },
   mounted() {
@@ -197,6 +198,9 @@ export default {
           this.finished = true
         }
         this.loading = false
+        if(!this.requestStatus){
+          this.requestStatus = true
+        }
       } catch (e) {
         this.$xToast.error(e.message)
         this.error = true
@@ -219,6 +223,9 @@ export default {
           throw new Error(message)
         }
         this.info = data
+        if(!this.requestStatus){
+          this.requestStatus = true
+        }
       } catch (e) {
         this.$xToast.error(e.message)
         setTimeout(this.$back(), 2000)
