@@ -903,8 +903,7 @@ export default {
       .label {
         display: inline-block;
         width: 152px;
-        height: 48px;
-        line-height: 48px;
+        padding:8px 0;
         text-align: center;
         background: rgba(234, 218, 205, 0.22);
         border-radius: 24px;

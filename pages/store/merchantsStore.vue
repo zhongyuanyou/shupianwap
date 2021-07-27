@@ -135,7 +135,7 @@
             <div class="sp-score__satisfaction">
               <p>客户满意</p>
               <div class="satisfactiontext">
-                <p>3分钟响应率：{{ detailData.mchService.consultResponse }}</p>
+                <p>1分钟响应率：{{ detailData.mchService.consultResponse }}</p>
                 <p>电话接通率：{{ detailData.mchService.callThroughRate }}</p>
               </div>
             </div>
@@ -461,6 +461,7 @@ export default {
     },
     // 获取列表数据
     async getList() {
+      if(!this.active){return}
       const { storeId , pageStatus='' } = this.$route.query
       try {
         const params = {
@@ -755,7 +756,7 @@ export default {
       p {
         &:first-of-type {
           line-height: 45px;
-          margin: 0 0 20px 0;
+          
           font-family: PingFangSC-Regular;
           font-size: 44px;
           color: #ffffff;
@@ -765,6 +766,7 @@ export default {
         &:last-of-type {
           display: inline-block;
           padding: 5px 8px;
+          margin: 20px 0 0 0;
           background: rgba(255, 255, 255, 0.2);
           border-radius: 22px;
           font-weight: bold;
@@ -819,7 +821,7 @@ export default {
       p {
         &:first-of-type {
           line-height: 45px;
-          margin: 0 0 20px 0;
+          
           font-family: PingFangSC-Regular;
           font-size: 44px;
           color: #000;
@@ -829,6 +831,7 @@ export default {
         &:last-of-type {
           display: inline-block;
           padding: 5px 8px;
+          margin: 20px 0 0 0;
           background: rgba(73, 116, 245, 0.1);
           border-radius: 22px;
           font-size: 22px;
@@ -888,14 +891,12 @@ export default {
       .my-swipe {
         
         ::v-deep .sp-swipe-item {
-          width: 670px;
-          height: 214px;
           text-align: center;
           background: #dddddd;
           border-radius: 8px;
           img {
             width: 670px;
-            height: 100%;
+            height: 214px;
             border-radius: 8px;
           }
         }
@@ -1131,6 +1132,7 @@ export default {
         padding: 40px 40px 37px;
         background: #ffffff;
         border: 1px solid #dddddd;
+        overflow: scroll;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
         border-radius: 12px;
 

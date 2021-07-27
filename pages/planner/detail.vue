@@ -69,7 +69,7 @@
                       height="1.2rem"
                       fit="cover"
                       :src="
-                        (newDetailData.photo && newDetailData.photo[0]) ||
+                        (newDetailData.image) ||
                         'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
                       "
                     />
