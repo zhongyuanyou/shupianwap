@@ -69,7 +69,7 @@
                       height="1.2rem"
                       fit="cover"
                       :src="
-                        (newDetailData.photo && newDetailData.photo[0]) ||
+                        (newDetailData.image) ||
                         'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
                       "
                     />
@@ -122,7 +122,7 @@
                       </div>
                     </li>
                     <li v-if="newDetailData.officeAddress">
-                      <div class="pullstyle">
+                      <div class="pullstyle" style="align-items: center;">
                         <img
                           src="https://cdn.shupian.cn/sp-pt/wap/images/5huwcgk3ric0000.png"
                           alt=""
@@ -142,6 +142,7 @@
                         <img
                           src="https://cdn.shupian.cn/sp-pt/wap/images/5mz72q9tl500000.png"
                           alt=""
+                          style="margin:0.05rem 0.24rem 0 0;"
                         />
                         <span
                           :class="ownerInfo ? 'textshow' : 'textoverflow'"
@@ -385,11 +386,11 @@
       <sp-bottombar safe-area-inset-bottom>
         <div class="footer-body">
           <div class="phone" @click="goShop">
-            <i class="spiconfont spiconfont-xiaodian" style="font-size: 24px"></i>
+            <i class="spiconfont spiconfont-xiaodian" style="font-size: 19px"></i>
             <p>小店</p>
           </div>
           <div class="phone" @click="handleCall">
-            <i class="spiconfont spiconfont-dianhua" style="font-size: 24px"></i>
+            <i class="spiconfont spiconfont-dianhua" style="font-size: 19px"></i>
             <p>电话</p>
           </div>
           <!-- <sp-bottombar-button
@@ -1197,7 +1198,7 @@ export default {
           .pullImg {
             position: absolute;
             right: 32px;
-            bottom: 38px;
+            top: 215px;
             &::before {
               display: block;
               width: 12px;
@@ -1228,6 +1229,7 @@ export default {
             .pullstyle {
               display: flex;
               justify-content: space-between;
+              
               img {
                 margin: 0 24px 0 0;
               }
@@ -1505,13 +1507,13 @@ export default {
           .huida{
             width: 32px;
             height: 32px;
-            margin: 0 16px 0 0;
+            margin: 5px 16px 0 0;
             vertical-align: middle;
           }
           .wenti{
             width: 32px;
             height: 32px;
-            margin: 0 16px 0 0;
+            margin: 5px 16px 0 0;
             vertical-align: middle;
           }
           span{

@@ -110,7 +110,7 @@
                   <span>人</span>
                 </p>
                 <p>
-                  <span>团队人数</span>
+                  <span>商户人数</span>
                 </p>
               </div>
               <div>
@@ -122,7 +122,7 @@
                   <span>服务客户</span>
                 </p>
               </div>
-              <div>
+              <!-- <div>
                 <p class="sp-score__title">
                   <span>{{ detailData.mchService.maintenanceNum }}</span>
                   <span>个</span>
@@ -130,12 +130,12 @@
                 <p>
                   <span>维护商品</span>
                 </p>
-              </div>
+              </div> -->
             </div>
             <div class="sp-score__satisfaction">
               <p>客户满意</p>
               <div class="satisfactiontext">
-                <p>3分钟响应率：{{ detailData.mchService.consultResponse }}</p>
+                <p>1分钟响应率：{{ detailData.mchService.consultResponse }}</p>
                 <p>电话接通率：{{ detailData.mchService.callThroughRate }}</p>
               </div>
             </div>
@@ -461,6 +461,7 @@ export default {
     },
     // 获取列表数据
     async getList() {
+      if(!this.active){return}
       const { storeId , pageStatus='' } = this.$route.query
       try {
         const params = {
@@ -588,7 +589,7 @@ export default {
       callPhone(telNumber.phone)
     },
     onClickLeft() {
-      this.$router.back(-1)
+      this.$back()
     },
     onClickRight() {
       console.log('nav onClickRight')
@@ -755,7 +756,7 @@ export default {
       p {
         &:first-of-type {
           line-height: 45px;
-          margin: 0 0 20px 0;
+          
           font-family: PingFangSC-Regular;
           font-size: 44px;
           color: #ffffff;
@@ -765,6 +766,7 @@ export default {
         &:last-of-type {
           display: inline-block;
           padding: 5px 8px;
+          margin: 20px 0 0 0;
           background: rgba(255, 255, 255, 0.2);
           border-radius: 22px;
           font-weight: bold;
@@ -819,7 +821,7 @@ export default {
       p {
         &:first-of-type {
           line-height: 45px;
-          margin: 0 0 20px 0;
+          
           font-family: PingFangSC-Regular;
           font-size: 44px;
           color: #000;
@@ -829,6 +831,7 @@ export default {
         &:last-of-type {
           display: inline-block;
           padding: 5px 8px;
+          margin: 20px 0 0 0;
           background: rgba(73, 116, 245, 0.1);
           border-radius: 22px;
           font-size: 22px;
@@ -888,14 +891,12 @@ export default {
       .my-swipe {
         
         ::v-deep .sp-swipe-item {
-          width: 670px;
-          height: 214px;
           text-align: center;
           background: #dddddd;
           border-radius: 8px;
           img {
             width: 670px;
-            height: 100%;
+            height: 214px;
             border-radius: 8px;
           }
         }
@@ -907,7 +908,7 @@ export default {
     }
     .sp-score {
       width: 100%;
-      padding: 50px 54px;
+      padding: 40px 40px 34px;
       background: #ffffff;
       border: 1px solid #dddddd;
       box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
@@ -920,6 +921,26 @@ export default {
         font-size: 24px;
         color: #999999;
         letter-spacing: 0;
+        >div{
+          box-sizing: border-box;
+          width: 285px;
+          height: 140px;
+          padding:14px 32px;
+          background: #F8F8F8;
+          border-radius: 8px;
+          &:first-of-type{
+            background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/65ie49d8a8o0000.png');
+            background-repeat: no-repeat;
+            background-size: 80px 80px;
+            background-position: center right 20px;
+          }
+          &:last-of-type{
+            background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/7lc1ert8stg0000.png');
+            background-repeat: no-repeat;
+            background-size: 80px 80px;
+            background-position: center right 20px;
+          }
+        }
       }
       &__title {
         span {
@@ -982,7 +1003,6 @@ export default {
           display: flex;
           justify-content: flex-start;
           align-items: center;
-          height: 80px;
           line-height: 80px;
           li {
             position: relative;
@@ -1131,6 +1151,7 @@ export default {
         padding: 40px 40px 37px;
         background: #ffffff;
         border: 1px solid #dddddd;
+        overflow: scroll;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
         border-radius: 12px;
 
