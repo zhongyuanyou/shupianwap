@@ -185,8 +185,8 @@ export default {
         console.log('ddd')
         this.addClue()
       } else {
-        planner
-          .bindCustomer({
+        this.$axios
+          .post(planner.bindCustomer, {
             copartnerId: this.partnerId,
             customerId: this.userInfoData.id,
             customerPhone: this.userInfoData.mainAccount,
@@ -198,9 +198,12 @@ export default {
             copartnerUserType: 'ORDINARY_USER',
           })
           .then((res) => {
-            console.log('res', res)
-            this.$xToast.success('委托成功，请静候规划师与您电话联系！')
-            this.visible = false
+            if (res.code === 200) {
+              this.$xToast.success('委托成功！')
+              this.visible = false
+            } else {
+              this.$xToast.error(res.message || '委托失败')
+            }
           })
           .catch((error) => {
             console.log('error', error)
@@ -234,6 +237,8 @@ export default {
           if (res.code === 200) {
             this.$xToast.success('委托成功！')
             this.visible = false
+          } else {
+            this.$xToast.error(res.message || '委托失败')
           }
         })
         .catch((error) => {
@@ -268,7 +273,7 @@ export default {
         .then((res) => {
           this.loading = false
           if (res.code === 200) {
-            this.$xToast.success('委托成功，请静候规划师与您电话联系！')
+            this.$xToast.success('委托成功！')
             this.visible = false
           } else {
             this.$xToast.error(res.message || '委托失败')
@@ -494,7 +499,7 @@ export default {
           width: 50%;
           color: #222222;
           text-align: center;
-          font-size: 28px;
+          font-size: 32px;
           margin-top: 44px;
         }
       }

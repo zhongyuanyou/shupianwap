@@ -1,7 +1,19 @@
 <template>
   <div class="planner-info">
     <div class="flex-left">
-      <sp-image class="img" round :src="planerInfo.portrait" />
+      <div
+        class="img sp-img"
+        :style="{
+          background: `url(
+                ${
+                  planerInfo.portrait ||
+                  'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni-app-doc/6acec660-4f31-11eb-a16f-5b3e54966275.jpg'
+                }
+              
+              ) no-repeat center center `,
+          backgroundSize: 'cover',
+        }"
+      ></div>
       <div class="infos">
         <div class="infos-name">{{ planerInfo.userName }}</div>
         <div class="infos-desc">{{ planerInfo.postName }}</div>
@@ -177,6 +189,8 @@ export default {
       height: 80px;
       background: #f5f5f5;
       margin-right: 24px;
+      border-radius: 50%;
+      background-size: cover;
     }
     .infos {
       display: flex;
