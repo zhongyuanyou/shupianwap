@@ -118,51 +118,9 @@
       v-if="(topPlannerInfo.id || planerInfo.id) && articleDetails.title"
       class="bottom-btn"
     >
-      <div class="user-info">
-        <div
-          :style="{
-            background: `url(
-                ${
-                  topPlannerInfo.img ||
-                  planerInfo.img ||
-                  'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni-app-doc/6acec660-4f31-11eb-a16f-5b3e54966275.jpg'
-                }
-              
-              ) no-repeat center center `,
-            backgroundSize: 'cover',
-          }"
-          class="img"
-        ></div>
-        <div class="infos">
-          <p class="name">
-            {{
-              topPlannerInfo.userName ||
-              topPlannerInfo.name ||
-              planerInfo.userName
-            }}
-          </p>
-          <span>金牌规划师</span>
-        </div>
-        <div class="bottom_btn_area">
-          <sp-button
-            type="info"
-            class="btn1"
-            @click="
-              sendTextMessage(topPlannerInfo.mchUserId || planerInfo.mchUserId)
-            "
-            >在线问</sp-button
-          >
-          <sp-button
-            v-if="
-              (topPlannerInfo.mchUserId && topPlannerInfo.phone) ||
-              (planerInfo.mchUserId && planerInfo.phone)
-            "
-            type="primary"
-            @click="handleTel(topPlannerInfo.mchUserId || planerInfo.mchUserId)"
-            >打电话</sp-button
-          >
-        </div>
-      </div>
+      <planner-bottom
+        :planner-id="topPlannerInfo.id || planerInfo.id"
+      ></planner-bottom>
     </div>
   </section>
 </template>
@@ -196,7 +154,7 @@ import { callPhone } from '@/utils/common'
 
 import { planner, userinfoApi } from '~/api'
 import imHandle from '~/mixins/imHandle'
-
+import PlannerBottom from '@/components/mustKnown/share/PlannerBottom.vue'
 export default {
   layout: 'keepAlive',
   components: {
@@ -207,7 +165,7 @@ export default {
     [Field.name]: Field,
     [Dialog.name]: Dialog,
     [Bottombar.name]: Bottombar,
-
+    PlannerBottom,
     HeaderSlot,
     // PageHead,
     // PageHead2,
