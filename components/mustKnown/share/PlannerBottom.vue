@@ -9,14 +9,16 @@
                   planerInfo.portrait ||
                   'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni-app-doc/6acec660-4f31-11eb-a16f-5b3e54966275.jpg'
                 }
-              
+
               ) no-repeat center center `,
           backgroundSize: 'cover',
         }"
       ></div>
       <div class="infos">
         <div class="infos-name">{{ planerInfo.userName }}</div>
-        <div class="infos-desc">{{ planerInfo.postName }}</div>
+        <div v-if="planerInfo.postName" class="infos-desc">
+          {{ planerInfo.postName }}
+        </div>
       </div>
     </div>
     <!-- && planerInfo.mchUserId -->
@@ -196,20 +198,25 @@ export default {
       display: flex;
       flex-direction: column;
       &-name {
+        max-width: 180px;
         color: #222222;
         font-size: 32px;
         line-height: 45px;
         font-weight: bold;
         margin-bottom: 3px;
+        .mixin-text-oneoverflow();
       }
       &-desc {
+        max-width: 180px;
         padding: 5px 8px;
         border: 2px solid #dac79a;
         border-radius: 4px;
         background: #ffefc5;
         color: #7b6225;
         font-size: 22px;
+        width: fit-content;
         line-height: 1;
+        .mixin-text-oneoverflow();
       }
     }
   }
