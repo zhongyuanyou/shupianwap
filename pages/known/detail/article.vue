@@ -1,6 +1,10 @@
 <template>
   <section>
-    <ShareModal />
+    <ShareModal
+      :mch-id="shareValue.businessId"
+      :source-id="articleDetails.id"
+      :share-id="shareValue.commonId"
+    />
     <div class="article">
       <HeaderSlot>
         <div v-if="!showHead" class="flex">
@@ -175,7 +179,7 @@ import {
   Dialog,
   Bottombar,
 } from '@chipspc/vant-dgg'
-import { knownApi } from '@/api'
+import { knownApi, planner } from '@/api'
 import PageHead from '@/components/common/head/header'
 import PageHead2 from '@/components/mustKnown/DetailHeaderUser'
 // 推荐文章列表
@@ -207,10 +211,23 @@ export default {
   },
   async asyncData({ $axios, query, store }) {
     let articleDetails = {}
+    let shareValue = {}
     try {
+      if (query.redisKey) {
+        const cacheValueRes = await $axios
+          .get(planner.getShareId, {
+            params: { cacheKey: query.redisKey },
+          })
+          .then((res) => {
+            console.log('cacheRes', res)
+            if (res.code === 200) {
+              shareValue = JSON.parse(res.data.cacheValue)
+            }
+          })
+      }
       const res = await $axios.get(knownApi.questionArticle.detail, {
         params: {
-          id: query.id,
+          id: query.id || shareValue.commonId,
           userId: store.state.user.userId,
           userHandleFlag: store.state.user.userId ? 1 : 0,
         },
@@ -221,6 +238,7 @@ export default {
     } catch (error) {}
 
     return {
+      shareValue,
       articleDetails,
     }
   },

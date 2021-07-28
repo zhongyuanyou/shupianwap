@@ -73,6 +73,10 @@ export default {
       type: String,
       default: '',
     },
+    mchId: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
@@ -107,8 +111,25 @@ export default {
         this.visible = false
       }
     }
+    if (this.$route.query.redisKey) {
+      this.getShareId(this.$route.query.redisKey)
+    }
   },
   methods: {
+    getShareId(cacheKey) {
+      this.$axios
+        .get(planner.getShareId, {
+          params: { cacheKey },
+        })
+        .then((res) => {
+          console.log('res', res)
+          if (res.code === 200) {
+            const cacheValue = JSON.parse(res.data.cacheValue)
+            console.log('cacheValue', cacheValue)
+            this.shareId = cacheValue.shareId
+          }
+        })
+    },
     getPlanerInfo(id) {
       planner
         .detail({ id })
@@ -196,6 +217,9 @@ export default {
             bindType: 'CUSTOMER_BDLX_FXBD',
             requestPlatform: 'COMDIC_PLATFORM_CRISPS',
             copartnerUserType: 'ORDINARY_USER',
+            shareId: this.$route.query.shareId, // 分享Id
+            sourceId: this.sourceId || this.$route.query.id, // 物料id
+            materialType: this.getType(),
           })
           .then((res) => {
             if (res.code === 200) {
@@ -212,8 +236,7 @@ export default {
           })
       }
     },
-    // 只生成线索
-    addClue() {
+    getType() {
       const path = this.$route.path
       let materialType = 1 // 物料类型：1、文章 2、问答 3、海报 4、视频
       if (path.match('share/article')) {
@@ -223,15 +246,19 @@ export default {
       } else if (path.match('share/smallVideo/materialShare')) {
         materialType = 4
       } else if (path.match('share/originalVideo/materialShare')) {
-        materialType = 4
+        materialType = 3
       }
+      return materialType
+    },
+    // 只生成线索
+    addClue() {
       this.$axios
         .post(planner.addClue, {
           userId: this.userInfoData.id, // 用户id
           plannerId: this.plannerId, // 用户id
           shareId: this.$route.query.shareId, // 分享Id
           sourceId: this.sourceId || this.$route.query.id, // 物料id
-          materialType,
+          materialType: this.getType(),
         })
         .then((res) => {
           if (res.code === 200) {
