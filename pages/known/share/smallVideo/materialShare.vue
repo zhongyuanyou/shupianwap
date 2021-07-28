@@ -1,6 +1,11 @@
 <template>
   <div class="m-known-share smallVideo materialShare">
-    <ShareModal v-show="showShareModal" :source-id="vDetail.id" />
+    <ShareModal
+      v-show="showShareModal"
+      :source-id="vDetail.id"
+      :mch-id="shareValue.businessId"
+      :share-id="shareValue.shareId"
+    />
     <template v-if="showContent">
       <img class="bg" :src="vDetail.image" />
       <my-icon
@@ -76,6 +81,7 @@
 <script>
 import { Image, Button, Swipe, SwipeItem, Toast } from '@chipspc/vant-dgg'
 import knownApi from '@/api/known'
+import { planner } from '@/api'
 import ShareModal from '@/components/common/ShareModal.vue'
 import PlannerBottom from '@/components/mustKnown/share/PlannerBottom.vue'
 
@@ -99,18 +105,43 @@ export default {
       plannerId: '',
       showShareModal: false,
       showContent: true,
+      shareValue: {},
     }
   },
   mounted() {
-    this.id = this.$route.query.shareId
-    this.plannerId = this.$route.query.plannerId
-    if (this.id && this.id === '') {
-      this.$xToast.error('获取分享数据失败')
-      return
+    if (this.$route.query.redisKey) {
+      this.getShareId(this.$route.query.redisKey)
+    } else {
+      this.id = this.$route.query.shareId
+      this.plannerId = this.$route.query.plannerId
+      if (this.id && this.id === '') {
+        this.$xToast.error('获取分享数据失败')
+        return
+      }
+      this.getShareInfoApi()
     }
-    this.getShareInfoApi()
   },
   methods: {
+    getShareId(cacheKey) {
+      this.$axios
+        .get(planner.getShareId, {
+          params: { cacheKey },
+        })
+        .then((res) => {
+          console.log('res', res)
+          if (res.code === 200) {
+            const cacheValue = JSON.parse(res.data.cacheValue)
+            this.shareValue = cacheValue
+            this.id = cacheValue.shareId
+            this.getShareInfoApi()
+          } else {
+            this.isLoaded = true
+          }
+        })
+        .catch(() => {
+          this.isLoaded = true
+        })
+    },
     // 分享信息
     getShareInfoApi() {
       const params = {

@@ -1,9 +1,9 @@
 <template>
   <section>
     <ShareModal
-      v-show="answerDetails.title"
-      :sourceId="answerDetails.id"
-      @setPlannerInfo="setPlannerInfo"
+      :mch-id="shareValue.businessId"
+      :source-id="shareValue.commonId"
+      :share-id="shareValue.shareId"
     />
     <HeaderSlot>
       <div class="flex">
@@ -256,6 +256,7 @@ export default {
       androdLink: 'cpsccustomer://',
       answerDetails: {},
       quesDetail: {},
+      shareValue: {},
     }
   },
   computed: {
@@ -283,15 +284,37 @@ export default {
     }
     this.isShare = this.$route.query.isShare
     this.shareId = this.$route.query.shareId
-    console.log('androdLink', this.androdLink)
     window.addEventListener('scroll', this.handleScroll)
-    this.getDetail()
-    console.log('userInfo', this.userInfo)
+    if (this.$route.query.redisKey) {
+      this.getShareId(this.$route.query.redisKey)
+    } else {
+      this.getDetail()
+    }
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    getShareId(cacheKey) {
+      this.$axios
+        .get(planner.getShareId, {
+          params: { cacheKey },
+        })
+        .then((res) => {
+          console.log('res', res)
+          if (res.code === 200) {
+            const cacheValue = JSON.parse(res.data.cacheValue)
+            this.shareValue = cacheValue
+            this.shareId = cacheValue.shareId
+            this.getDetail(this.shareId)
+          } else {
+            this.isLoaded = true
+          }
+        })
+        .catch(() => {
+          this.isLoaded = true
+        })
+    },
     getQuesDetail(id) {
       this.$axios
         .get(knownApi.questionArticle.detail, {
@@ -310,11 +333,11 @@ export default {
         this.topPlannerInfo = data
       }
     },
-    getDetail() {
+    getDetail(shareId) {
       this.$axios
         .get(knownApi.questionArticle.anserShareDetail, {
           params: {
-            shareId: this.$route.query.shareId,
+            shareId: this.$route.query.shareId || shareId,
           },
         })
         .then((res) => {
