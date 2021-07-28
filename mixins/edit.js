@@ -11,6 +11,7 @@ export default {
   },
   data() {
     return {
+      platForm: '',
       paddingTop: 44,
       editType: '', // 内容类型 1 新增 2编辑
       // 新增内容的表单数据
@@ -77,6 +78,25 @@ export default {
             this.$xToast.error('获取用户信息失败')
           }
         })
+      } else if (
+        this.$route.query.platForm === 'mpass' &&
+        !window.AlipayJSBridge
+      ) {
+        const userData = {
+          token: this.$route.query.token,
+          id: this.$route.query.userId,
+        }
+        this.$store.dispatch('user/setUser', userData)
+        const res = await this.$axios.get(userinfoApi.info, { params })
+        this.loading = false
+        if (res.code === 200 && res.data) {
+          // start: set userInfo
+          this.formData.userId = res.data.id
+          this.formData.userType = util.getUserType(res.data.type)
+          this.formData.userName = res.data.nickName
+          this.formData.userCode = res.data.no
+          // end: set userInfo
+        }
       } else {
         // 获取用户信息
         try {
@@ -208,6 +228,8 @@ export default {
             this.$xToast.success('发布成功')
             if (window.AlipayJSBridge) {
               window.AlipayJSBridge.call('closeWebview')
+            } else if (this.$route.query.platForm === 'mpass') {
+              window.history.back(-1)
             } else this.switchUrl(res.data.id)
           } else {
             this.$xToast.error(res.data.error || '发布失败')

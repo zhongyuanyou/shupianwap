@@ -65,7 +65,7 @@ export default {
     }
   },
   mounted() {
-    if (window.AlipayJSBridge) {
+    if (window.AlipayJSBridge || this.$route.query.platForm === 'mpass') {
       this.safeTop = 0
       this.useSafeAreaClass = true
     }
@@ -76,7 +76,7 @@ export default {
     getTopMargin() {
       if (process && process.client) {
         let safeTop = safeAreaInsets.top
-        if (window.AlipayJSBridge) {
+        if (window.AlipayJSBridge || this.$route.query.platForm === 'mpass') {
           safeTop = 40
         } else if (this.isInApp) safeTop = this.appInfo.statusBarHeight
         this.safeTop = safeTop
