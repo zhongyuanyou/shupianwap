@@ -2,8 +2,9 @@
   <section>
     <ShareModal
       v-show="articleDetails.title"
-      :sourceId="articleDetails.id"
-      @setPlannerInfo="setPlannerInfo"
+      :mch-id="shareValue.businessId"
+      :source-id="shareValue.commonId"
+      :share-id="shareValue.shareId"
     />
     <HeaderSlot>
       <div class="flex">
@@ -179,6 +180,7 @@ export default {
 
   data() {
     return {
+      shareValue: {},
       isLoaded: false,
       isShare: false,
       popupShow: false,
@@ -242,15 +244,36 @@ export default {
     }
     this.isShare = this.$route.query.isShare
     this.shareId = this.$route.query.shareId
-    console.log('androdLink', this.androdLink)
     window.addEventListener('scroll', this.handleScroll)
-    this.getDetail()
-    console.log('userInfo', this.userInfo)
+    if (this.$route.query.redisKey) {
+      this.getShareId(this.$route.query.redisKey)
+    } else {
+      this.getDetail()
+    }
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    getShareId(cacheKey) {
+      this.$axios
+        .get(planner.getShareId, {
+          params: { cacheKey },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            const cacheValue = JSON.parse(res.data.cacheValue)
+            this.shareValue = cacheValue
+            this.shareId = cacheValue.shareId
+            this.getDetail(this.shareId)
+          } else {
+            this.isLoaded = true
+          }
+        })
+        .catch(() => {
+          this.isLoaded = true
+        })
+    },
     setPlannerInfo(data) {
       console.log('设置规划师', data)
       if (data.mchUserId && data.name) {
