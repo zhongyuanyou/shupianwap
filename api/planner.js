@@ -80,5 +80,6 @@ const planner = {
     '/crisps-marketing-web/yk/branchsell/copartner/v1/add_copartner_customer_bind.do',
   addClue:
     '/crisps-marketing-web/nk/customer/share/v1/add_marketing_center_share.do',
+  getShareId: '/crisps-cms-web-api/nk/api/cmsCacheMemory/find',
 }
 export default planner
