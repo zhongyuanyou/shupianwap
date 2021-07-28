@@ -1,19 +1,7 @@
 <template>
   <div class="planner-info">
     <div class="flex-left">
-      <div
-        class="img sp-img"
-        :style="{
-          background: `url(
-                ${
-                  planerInfo.portrait ||
-                  'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni-app-doc/6acec660-4f31-11eb-a16f-5b3e54966275.jpg'
-                }
-
-              ) no-repeat center center `,
-          backgroundSize: 'cover',
-        }"
-      ></div>
+      <img class="img" :src="planerInfo.portrait" />
       <div class="infos">
         <div class="infos-name">{{ planerInfo.userName }}</div>
         <div v-if="planerInfo.postName" class="infos-desc">
@@ -57,7 +45,9 @@ export default {
   },
   data() {
     return {
-      planerInfo: {},
+      planerInfo: {
+        portrait: 'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png',
+      },
     }
   },
   computed: {
@@ -189,10 +179,9 @@ export default {
     .img {
       width: 80px;
       height: 80px;
-      background: #f5f5f5;
       margin-right: 24px;
       border-radius: 50%;
-      background-size: cover;
+      object-fit: cover;
     }
     .infos {
       display: flex;
