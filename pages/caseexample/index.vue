@@ -62,11 +62,11 @@ import {
 import { mapState, mapMutations } from 'vuex'
 
 import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
+import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 import Header from '@/components/common/head/header.vue'
 
 import Classify from '@/components/caseExamples/index/Classify.vue'
 import CaseExamplesList from '@/components/caseExamples/index/List.vue'
-import HeadWrapper from '@/components/caseExamples/index/HeadWrapper.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 
