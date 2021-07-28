@@ -139,17 +139,6 @@
       </sp-popup>
     </div>
     <div
-      v-if="!(quesDetail.title || !answerDetails.content) && isLoaded"
-      class="no-data"
-    >
-      <img
-        src="https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png"
-        alt=""
-        srcset=""
-      />
-      <p>内容失效</p>
-    </div>
-    <div
       v-if="(topPlannerInfo.id || planerInfo.id) && answerDetails.content"
       class="bottom-btn"
     >
@@ -161,6 +150,17 @@
           :planner-id="topPlannerInfo.id || planerInfo.id"
         ></planner-bottom>
       </div>
+    </div>
+    <div
+      v-if="(!quesDetail.title || !answerDetails.content) && isLoaded"
+      class="no-data"
+    >
+      <img
+        src="https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png"
+        alt=""
+        srcset=""
+      />
+      <p>内容失效</p>
     </div>
   </section>
 </template>
@@ -318,8 +318,8 @@ export default {
           },
         })
         .then((res) => {
-          this.isLoaded = true
           if (res.code === 200) {
+            this.isLoaded = true
             if (res.data.goodsList) {
               const goods = res.data.goodsList.filter((item) => {
                 return item.status === 'PRO_STATUS_PUT_AWAY'
@@ -339,11 +339,14 @@ export default {
             if (this.answerDetails.userId) {
               this.getPlanerInfo(this.answerDetails.userId)
             }
+          } else {
+            this.isLoaded = true
           }
         })
         .catch((err) => {
           this.isLoaded = true
           console.error(err)
+          this.isLoaded = true
         })
     },
     getPlanerInfo(id) {

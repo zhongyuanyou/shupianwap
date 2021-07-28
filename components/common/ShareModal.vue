@@ -246,9 +246,12 @@ export default {
         materialType = 1
       } else if (path.match('share/answer')) {
         materialType = 2
-      } else if (path.match('share/smallVideo/materialShare')) {
+      } else if (
+        path.match('share/smallVideo/materialShare') ||
+        path.match('share/originalVideo/materialShare')
+      ) {
         materialType = 4
-      } else if (path.match('share/originalVideo/materialShare')) {
+      } else {
         materialType = 3
       }
       return materialType
