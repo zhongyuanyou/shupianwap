@@ -87,6 +87,10 @@ export default {
           id: this.$route.query.userId,
         }
         this.$store.dispatch('user/setUser', userData)
+        const params = {
+          // id: this.userId,
+          id: this.userId || this.$cookies.get('userId', { path: '/' }),
+        }
         const res = await this.$axios.get(userinfoApi.info, { params })
         this.loading = false
         if (res.code === 200 && res.data) {
