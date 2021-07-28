@@ -282,9 +282,7 @@ export default {
       stickyFlag: false,
       storeId: '', // 768006091074595352
       info: {
-        banners: [
-          'https://cdn.shupian.cn/sp-pt/wap/images/29nq2m9p6pno000.jpg',
-        ],
+        banners: [],
         goodsRecommend: [],
         goods: [],
         teamInfo: {},
@@ -396,6 +394,11 @@ export default {
           this.goodsLoading = false
         }
       } catch (e) {
+        if (this.info.banners.length === 0) {
+          this.info.banners.push(
+            'https://cdn.shupian.cn/sp-pt/wap/images/29nq2m9p6pno000.jpg'
+          )
+        }
         this.groupInfoLoading = false
         this.$xToast.error(e.message)
       }
@@ -637,7 +640,7 @@ export default {
             display: flex;
             flex-direction: column;
             .res {
-              font: bold 56px/74px Bebas;
+              font: 56px/74px Bebas;
               color: #222222;
               .unit {
                 font: bold 24px/33px PingFangSC;
@@ -769,6 +772,7 @@ export default {
             margin-top: 11px;
             font-size: 22px;
             color: #1a1a1a;
+            .mixin-text-oneoverflow();
           }
           .amount {
             margin-top: 20px;

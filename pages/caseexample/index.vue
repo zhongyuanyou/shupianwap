@@ -1,16 +1,20 @@
 <template>
   <div class="case_examples_list">
-    <div
+    <HeadWrapper>
+      <Header class="my-header" title="案例广场"></Header>
+      <client-only>
+        <Classify :search="search" @select="selectClassify"></Classify>
+      </client-only>
+    </HeadWrapper>
+    <!-- <div
       class="case_examples_list-header"
       :style="{ height: HeaderHeight + 'px' }"
     >
-      <div ref="couponHeaderWarpper" class="case_examples_list-header-warpper">
-        <Header class="my-header" title="案例广场"></Header>
-        <client-only>
-          <Classify :search="search" @select="selectClassify"></Classify>
-        </client-only>
-      </div>
-    </div>
+      <div
+        ref="couponHeaderWarpper"
+        class="case_examples_list-header-warpper"
+      ></div>
+    </div> -->
 
     <sp-list
       v-if="list.length > 0"
@@ -37,9 +41,6 @@
       />
     </div>
 
-    <FooterNav ref="FooterNav">
-      <div slot="header" class="rules_and_invalid"></div>
-    </FooterNav>
     <Loading-center v-show="loading" />
   </div>
 </template>
@@ -61,11 +62,12 @@ import {
 import { mapState, mapMutations } from 'vuex'
 
 import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
+import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 import Header from '@/components/common/head/header.vue'
-import FooterNav from '@/components/my/coupon/FooterNav.vue'
 
 import Classify from '@/components/caseExamples/index/Classify.vue'
 import CaseExamplesList from '@/components/caseExamples/index/List.vue'
+
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 
 import { caseApi } from '@/api/index'
@@ -85,8 +87,8 @@ export default {
     [Dialog.Component.name]: Dialog.Component,
     [List.name]: List,
     CaseExamplesList,
+    HeadWrapper,
     Classify,
-    FooterNav,
   },
   data() {
     return {
@@ -139,7 +141,7 @@ export default {
     // this.search.productTwoBelongCode = this.$route.query.classCode2
 
     this.initData()
-    this.getHeaderHeight()
+    // this.getHeaderHeight()
   },
   // beforeRouteLeave(to, from, next) {
   //   console.log(from.name, to.name)
@@ -329,17 +331,17 @@ export default {
 
   background-color: #f5f5f5;
 
-  &-header {
-    &-warpper {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background-color: #ffffff;
-      z-index: 999;
-      border-bottom: 1px solid #f5f5f5;
-    }
-  }
+  // &-header {
+  //   &-warpper {
+  //     position: fixed;
+  //     top: 0;
+  //     left: 0;
+  //     width: 100%;
+  //     background-color: #ffffff;
+  //     z-index: 999;
+  //     border-bottom: 1px solid #f5f5f5;
+  //   }
+  // }
 
   ::v-deep .sp-work-tab {
     font-family: PingFangSC-Regular;
