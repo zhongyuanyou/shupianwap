@@ -1,45 +1,54 @@
 <template>
   <div class="m-known-share smallVideo materialShare">
-    <ShareModal
-      v-show="showShareModal"
-      :source-id="vDetail.id || shareValue.commonId"
-      :mch-id="shareValue.businessId"
-      :share-id="shareValue.shareId"
-    />
     <template v-if="showContent">
-      <img class="bg" :src="vDetail.image" />
-      <my-icon
-        name="bofang_mian"
-        size="1.28rem"
-        color="rgba(0,0,0,0.40)"
-        class="my-icon"
-        @click.native="link"
-      ></my-icon>
-      <div class="info-content">
-        <div class="tile">{{ vDetail.videoName }}</div>
-        <div class="desc">
-          {{ vDetail.videoDesc }}
+      <div
+        class="m-known-share smallVideo materialShare"
+        :style="{
+          background: vDetail.image
+            ? `url(
+                ${vDetail.image}
+              ) no-repeat`
+            : '#1a1a1a',
+        }"
+      >
+        <ShareModal
+          v-show="showShareModal"
+          :source-id="vDetail.id || shareValue.commonId"
+          :mch-id="shareValue.businessId"
+          :share-id="shareValue.shareId"
+        />
+        <my-icon
+          name="bofang_mian"
+          size="1.28rem"
+          color="rgba(0,0,0,0.40)"
+          class="my-icon"
+          @click.native="link"
+        ></my-icon>
+        <div class="info-content">
+          <div class="tile">{{ vDetail.videoName }}</div>
+          <div class="desc">
+            {{ vDetail.videoDesc }}
+          </div>
         </div>
-      </div>
-      <div v-show="goods.length > 0" class="goods-swipe">
-        <sp-swipe :autoplay="3000" :show-indicators="true">
-          <sp-swipe-item v-for="(info, index) in goods" :key="index">
-            <div class="good-content">
-              <sp-image
-                fit="cover"
-                width="1.4rem"
-                height="1.4rem"
-                radius="0.24rem"
-                :src="
-                  info.img ||
-                  (info.productImgArr && info.productImgArr[0]) ||
-                  ''
-                "
-              />
-              <div class="info">
-                <div class="info-tile">{{ info.name || '' }}</div>
-                <div class="info-desc">
-                  <div class="price">
+        <div v-show="goods.length > 0" class="goods-swipe">
+          <sp-swipe :autoplay="3000" :show-indicators="true">
+            <sp-swipe-item v-for="(info, index) in goods" :key="index">
+              <div class="good-content">
+                <sp-image
+                  fit="cover"
+                  width="1.4rem"
+                  height="1.4rem"
+                  radius="0.24rem"
+                  class="sp-image"
+                  :src="
+                    info.img ||
+                    (info.productImgArr && info.productImgArr[0]) ||
+                    ''
+                  "
+                />
+                <div class="info">
+                  <div class="info-tile">{{ info.name || '' }}</div>
+                  <div class="info-desc">
                     <template
                       v-if="
                         info.price == 0 ||
@@ -47,21 +56,23 @@
                         info.price === '0.0' ||
                         info.price === '0'
                       "
-                    ></template>
-                    <template v-else></template>
-                    <span>{{
-                      info.price || info.salesPrice || info.platformPrice
-                    }}</span
-                    ><span class="unit">元</span>
+                    >
+                      <div class="price">面议</div>
+                    </template>
+                    <template v-else>
+                      <div class="price">
+                        {{ info.price || info.salesPrice || info.platformPrice
+                        }}<span class="unit">元</span>
+                      </div>
+                    </template>
+                    <div class="btn" @click="goodLink(info)">立即抢购</div>
                   </div>
-                  <sp-button class="btn" @click="goodLink(info)"
-                    >立即抢购</sp-button
-                  >
                 </div>
               </div>
-            </div>
-          </sp-swipe-item>
-        </sp-swipe>
+            </sp-swipe-item>
+          </sp-swipe>
+        </div>
+        <planner-bottom :planner-id="plannerId"></planner-bottom>
       </div>
     </template>
     <template v-else>
@@ -73,8 +84,8 @@
         />
         <p>内容失效</p>
       </div>
+      <planner-bottom :planner-id="plannerId"></planner-bottom>
     </template>
-    <planner-bottom :planner-id="plannerId"></planner-bottom>
   </div>
 </template>
 
@@ -92,7 +103,6 @@ export default {
     [Button.name]: Button,
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
-    ShareModal,
     PlannerBottom,
   },
   data() {
@@ -202,12 +212,9 @@ export default {
 
 <style lang="less" scoped>
 .m-known-share.smallVideo.materialShare {
-  background: #1a1a1a;
-  .bg {
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover;
-  }
+  height: 100%;
+  width: 100%;
+  background-size: cover !important;
   .my-icon {
     position: absolute;
     left: 50%;
@@ -220,26 +227,24 @@ export default {
     width: 100%;
     padding: 0 40px;
     height: 214px;
+    z-index: 99;
     ::v-deep.sp-swipe {
+      z-index: 66;
+      border-radius: 12px;
       width: 100%;
       height: inherit;
-    }
-    ::v-deep.sp-swipe-item {
       background: #fff;
-      border-radius: 12px;
     }
     .good-content {
       height: 160px;
       display: flex;
-      align-items: center;
       padding: 0 20px;
       padding-top: 22px;
       .info {
-        margin-left: 24px;
         flex: 1;
+        margin-left: 24px;
         display: flex;
         flex-direction: column;
-        align-items: center;
         &-tile {
           width: 100%;
           height: 84px;
@@ -252,21 +257,22 @@ export default {
         &-desc {
           width: 100%;
           display: flex;
-          align-items: flex-end;
           justify-content: space-between;
+          align-items: flex-end;
           .price {
-            display: flex;
-            align-items: center;
+            flex: 1;
+            width: 240px;
+            word-break: break-word;
             .unit {
               font-size: 24px;
-              line-height: 24px;
             }
             color: #ec5330;
             font-weight: bold;
             font-size: 32px;
-            line-height: 40px;
+            margin-left: 10px;
           }
           .btn {
+            width: 160px;
             background: #ec5330;
             height: 54px;
             line-height: 54px;
@@ -274,6 +280,7 @@ export default {
             font-weight: bold;
             border-radius: 8px;
             color: #fff;
+            text-align: center;
           }
         }
       }
