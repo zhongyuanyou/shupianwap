@@ -1,60 +1,74 @@
 <template>
   <div class="m-known-share smallVideo materialShare">
-    <ShareModal :source-id="vDetail.id" />
-    <img class="bg" :src="vDetail.image" />
-    <my-icon
-      name="bofang_mian"
-      size="1.28rem"
-      color="rgba(0,0,0,0.40)"
-      class="my-icon"
-      @click.native="link"
-    ></my-icon>
-    <div class="info-content">
-      <div class="tile">{{ vDetail.videoName }}</div>
-      <div class="desc">
-        {{ vDetail.videoDesc }}
+    <ShareModal v-show="showShareModal" :source-id="vDetail.id" />
+    <template v-if="showContent">
+      <img class="bg" :src="vDetail.image" />
+      <my-icon
+        name="bofang_mian"
+        size="1.28rem"
+        color="rgba(0,0,0,0.40)"
+        class="my-icon"
+        @click.native="link"
+      ></my-icon>
+      <div class="info-content">
+        <div class="tile">{{ vDetail.videoName }}</div>
+        <div class="desc">
+          {{ vDetail.videoDesc }}
+        </div>
       </div>
-    </div>
-    <div v-show="goods.length > 0" class="goods-swipe">
-      <sp-swipe :autoplay="3000" :show-indicators="true">
-        <sp-swipe-item v-for="(info, index) in goods" :key="index">
-          <div class="good-content">
-            <sp-image
-              fit="cover"
-              width="1.4rem"
-              height="1.4rem"
-              radius="0.24rem"
-              :src="
-                info.img || (info.productImgArr && info.productImgArr[0]) || ''
-              "
-            />
-            <div class="info">
-              <div class="info-tile">{{ info.name || '' }}</div>
-              <div class="info-desc">
-                <div class="price">
-                  <template
-                    v-if="
-                      info.price == 0 ||
-                      info.price === '0.00' ||
-                      info.price === '0.0' ||
-                      info.price === '0'
-                    "
-                  ></template>
-                  <template v-else></template>
-                  <span>{{
-                    info.price || info.salesPrice || info.platformPrice
-                  }}</span
-                  ><span class="unit">元</span>
+      <div v-show="goods.length > 0" class="goods-swipe">
+        <sp-swipe :autoplay="3000" :show-indicators="true">
+          <sp-swipe-item v-for="(info, index) in goods" :key="index">
+            <div class="good-content">
+              <sp-image
+                fit="cover"
+                width="1.4rem"
+                height="1.4rem"
+                radius="0.24rem"
+                :src="
+                  info.img ||
+                  (info.productImgArr && info.productImgArr[0]) ||
+                  ''
+                "
+              />
+              <div class="info">
+                <div class="info-tile">{{ info.name || '' }}</div>
+                <div class="info-desc">
+                  <div class="price">
+                    <template
+                      v-if="
+                        info.price == 0 ||
+                        info.price === '0.00' ||
+                        info.price === '0.0' ||
+                        info.price === '0'
+                      "
+                    ></template>
+                    <template v-else></template>
+                    <span>{{
+                      info.price || info.salesPrice || info.platformPrice
+                    }}</span
+                    ><span class="unit">元</span>
+                  </div>
+                  <sp-button class="btn" @click="goodLink(info)"
+                    >立即抢购</sp-button
+                  >
                 </div>
-                <sp-button class="btn" @click="goodLink(info)"
-                  >立即抢购</sp-button
-                >
               </div>
             </div>
-          </div>
-        </sp-swipe-item>
-      </sp-swipe>
-    </div>
+          </sp-swipe-item>
+        </sp-swipe>
+      </div>
+    </template>
+    <template v-else>
+      <div class="no-data">
+        <img
+          src="https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png"
+          alt=""
+          srcset=""
+        />
+        <p>内容失效</p>
+      </div>
+    </template>
     <planner-bottom :planner-id="plannerId"></planner-bottom>
   </div>
 </template>
@@ -83,6 +97,8 @@ export default {
       videoType: '',
       goods: [],
       plannerId: '',
+      showShareModal: false,
+      showContent: true,
     }
   },
   mounted() {
@@ -107,15 +123,16 @@ export default {
             throw new Error('查询视频失败')
           }
           if (res.data.status === 0) {
-            this.$xToast.error('分享的视频已下架')
-            return
+            throw new Error('分享的视频已下架')
           }
+          this.showShareModal = true
           this.vDetail = res.data
           this.vurl = this.vDetail.videoUrl
           this.goods = res.data.goodsList
         })
         .catch((e) => {
-          this.$xToast.error(e.message)
+          // this.$xToast.error(e.message)
+          this.showContent = false
         })
     },
     link() {
@@ -250,6 +267,20 @@ export default {
       color: #fff;
       font-weight: bold;
       .textOverflow(2);
+    }
+  }
+  .no-data {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 24px;
+    color: #666;
+    img {
+      width: 400px;
+      height: 400px;
+      margin: 0 auto;
     }
   }
 }
