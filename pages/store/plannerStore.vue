@@ -485,7 +485,6 @@ export default {
         const params = {
           storeId: this.detailData.id,
           typeId: this.active,
-          type: pageStatus,
           page: this.refresh.pageIndex,
           limit: type === 'onLoad' ? this.refresh.pageSize : pages,
         }
@@ -864,7 +863,6 @@ export default {
       img {
         width: 120px;
         height: 120px;
-        opacity: 0.5;
         border: 1px solid #ffffff;
         border-radius: 50%;
       }
@@ -932,7 +930,7 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        border: 1px solid #eadacd;
+        border: 1px solid rgba(234, 218, 205, 0.5);
         border-radius: 4px;
       }
     }
@@ -1166,8 +1164,12 @@ export default {
               line-height: 22px;
               span {
                 display: inline-block;
+                width:450px;
                 padding: 0 8px;
                 border-right: 1px solid #1a1a1a;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
                 &:first-of-type {
                   padding: 0 8px 0 0;
                 }

@@ -628,7 +628,7 @@ export default {
           {
             image: 'https://cdn.shupian.cn/sp-pt/wap/images/2cjrp1v1q8sg000.png',
             title: '薯片找人',
-            subTitle: `商户店铺 - ${this.detailData.mchBaseInfo.name}的店铺`,
+            subTitle: `优选商户 - ${this.detailData.mchBaseInfo.name}的店铺`,
             url: sharedUrl,
           },
           (res) => {
@@ -755,7 +755,7 @@ export default {
       margin: 0 32px 0 20px;
       p {
         &:first-of-type {
-          line-height: 45px;
+          line-height: 62px;
           
           font-family: PingFangSC-Regular;
           font-size: 44px;
@@ -820,7 +820,7 @@ export default {
       margin: 0 32px 0 20px;
       p {
         &:first-of-type {
-          line-height: 45px;
+          line-height: 62px;
           
           font-family: PingFangSC-Regular;
           font-size: 44px;
@@ -1078,8 +1078,12 @@ export default {
               line-height: 22px;
               span {
                 display: inline-block;
+                width:450px;
                 padding: 0 8px 0 8px;
                 border-right: 1px solid #1a1a1a;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
                 &:first-of-type {
                   padding-left: 0;
                 }
