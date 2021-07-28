@@ -69,7 +69,7 @@
                       height="1.2rem"
                       fit="cover"
                       :src="
-                        (newDetailData.image) ||
+                        newDetailData.image ||
                         'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
                       "
                     />
@@ -122,7 +122,7 @@
                       </div>
                     </li>
                     <li v-if="newDetailData.officeAddress">
-                      <div class="pullstyle" style="align-items: center;">
+                      <div class="pullstyle" style="align-items: center">
                         <img
                           src="https://cdn.shupian.cn/sp-pt/wap/images/5huwcgk3ric0000.png"
                           alt=""
@@ -142,7 +142,7 @@
                         <img
                           src="https://cdn.shupian.cn/sp-pt/wap/images/5mz72q9tl500000.png"
                           alt=""
-                          style="margin:0.05rem 0.24rem 0 0;"
+                          style="margin: 0.05rem 0.24rem 0 0"
                         />
                         <span
                           :class="ownerInfo ? 'textshow' : 'textoverflow'"
@@ -250,7 +250,11 @@
           </div>
         </div>
       </div>
-      <div v-if="newDetailData.live.id && isInApp" class="video-content" @click="seeVideo">
+      <div
+        v-if="newDetailData.live.id && isInApp"
+        class="video-content"
+        @click="seeVideo"
+      >
         <div
           class="video"
           :style="{ 'background-image': `url(${newDetailData.live.coverUrl})` }"
@@ -302,16 +306,25 @@
                 class="spiconfont spiconfont-huida_mian"
                 style="color: #ff614e"
               ></i> -->
-              <embed class="huida" src="https://cdn.shupian.cn/sp-pt/wap/images/df1rr3m6pzs0000.svg" type="image/svg+xml" pluginspage="https://cdn.shupian.cn/sp-pt/wap/images/df1rr3m6pzs0000.svg" />
+              <embed
+                class="huida"
+                src="https://cdn.shupian.cn/sp-pt/wap/images/df1rr3m6pzs0000.svg"
+                type="image/svg+xml"
+                pluginspage="https://cdn.shupian.cn/sp-pt/wap/images/df1rr3m6pzs0000.svg"
+              />
               <span class="two_line">{{ data.title }}</span>
-              
             </div>
             <div>
               <!-- <i
                 class="spiconfont spiconfont-wenti_mian"
                 style="color: #4974f5"
               ></i> -->
-              <embed class="wenti" src="https://cdn.shupian.cn/sp-pt/wap/images/28hztm48mx8g000.svg" type="image/svg+xml" pluginspage="https://cdn.shupian.cn/sp-pt/wap/images/28hztm48mx8g000.svg" />
+              <embed
+                class="wenti"
+                src="https://cdn.shupian.cn/sp-pt/wap/images/28hztm48mx8g000.svg"
+                type="image/svg+xml"
+                pluginspage="https://cdn.shupian.cn/sp-pt/wap/images/28hztm48mx8g000.svg"
+              />
               <p>
                 <span class="three_line">{{ data.contentText }}</span>
                 <img
@@ -320,12 +333,11 @@
                   alt=""
                 />
               </p>
-              
             </div>
             <div>
               <i class="empty"></i>
               <span
-                >{{ numUntil(data.disapplaudCount)  }} 点赞 ·
+                >{{ numUntil(data.disapplaudCount) }} 点赞 ·
                 {{ data.remarkCount }} 评论</span
               >
             </div>
@@ -365,11 +377,7 @@
             <div>
               <p>
                 <span class="two_line">{{ data.title }}</span>
-                <img
-                  v-if="data.imageUrl"
-                  :src="data.imageUrl"
-                  alt=""
-                />
+                <img v-if="data.imageUrl" :src="data.imageUrl" alt="" />
               </p>
             </div>
             <div>
@@ -382,15 +390,21 @@
         <!-- <RecommendList :mch-detail-id="detailData.mchDetailId" /> -->
       </div>
     </div>
-    <div class="footer" style="padding-bottom:0.12rem">
+    <div class="footer" style="padding-bottom: 0.12rem">
       <sp-bottombar safe-area-inset-bottom>
         <div class="footer-body">
           <div class="phone" @click="goShop">
-            <i class="spiconfont spiconfont-xiaodian" style="font-size: 19px"></i>
+            <i
+              class="spiconfont spiconfont-xiaodian"
+              style="font-size: 19px"
+            ></i>
             <p>小店</p>
           </div>
           <div class="phone" @click="handleCall">
-            <i class="spiconfont spiconfont-dianhua" style="font-size: 19px"></i>
+            <i
+              class="spiconfont spiconfont-dianhua"
+              style="font-size: 19px"
+            ></i>
             <p>电话</p>
           </div>
           <!-- <sp-bottombar-button
@@ -939,13 +953,14 @@ export default {
     seeVideo() {
       if (this.isInApp) {
         const iOSRouterPath = {
-          roomId: this.newDetailData.live.roomId,
+          roomId: this.newDetailData.live.id,
           liveRoleType: '3',
         }
+        
         const androidRouterPath = {
           path: '/live/PlayBackActivity',
           parameter: {
-            id: this.newDetailData.live.roomId,
+            id: this.newDetailData.live.id,
           },
         }
         const userAgent = window.navigator.userAgent
@@ -954,11 +969,13 @@ export default {
         const isIOS = userAgent.match(/iPhone|iPad|iPod/i) // ios终端
         // 安卓方法
         if (isAndroid) {
+          
           this.$appFn.dggJumpRoute(
             {
-              iOSRouter: iOSRouterPath,
-              androidRouter: androidRouterPath,
-            },
+              iOSRouter: JSON.stringify(iOSRouterPath),
+              androidRouter: JSON.stringify(androidRouterPath),
+            }
+            ,
             (res) => {
               const { code } = res || {}
               if (code !== 200) {
@@ -1170,13 +1187,13 @@ export default {
       &__label {
         font-size: 24px;
         p {
-          height:50px;
+          height: 50px;
           overflow: hidden;
           margin: 23px 0 32px 0;
           span {
             display: inline-block;
             margin: 0 12px 0 0;
-            padding:0 16px;
+            padding: 0 16px;
             height: 50px;
             max-width: 100%;
             line-height: 50px;
@@ -1229,7 +1246,7 @@ export default {
             .pullstyle {
               display: flex;
               justify-content: space-between;
-              
+
               img {
                 margin: 0 24px 0 0;
               }
@@ -1501,34 +1518,38 @@ export default {
         li {
           padding: 40px 0;
           border-bottom: 1px solid #f4f4f4;
-          &:last-of-type{
-            border:none
+          &:last-of-type {
+            border: none;
           }
-          .huida{
+          .huida {
             width: 32px;
             height: 32px;
             margin: 5px 16px 0 0;
             vertical-align: middle;
           }
-          .wenti{
+          .wenti {
             width: 32px;
             height: 32px;
             margin: 5px 16px 0 0;
             vertical-align: middle;
           }
-          span{
+          span {
             vertical-align: middle;
           }
           .spiconfont {
             font-size: 35px !important;
             margin: 0 16px 0 0;
-            &-huida_mian{
-              background-image:-webkit-linear-gradient(bottom,#FA5741,#FA6D5A); 
-              -webkit-background-clip:text; 
-              -webkit-text-fill-color:transparent;
+            &-huida_mian {
+              background-image: -webkit-linear-gradient(
+                bottom,
+                #fa5741,
+                #fa6d5a
+              );
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
             }
-            &-wenti_mian{
-              background:linear-gradient(90deg, #4974F5 0%, #80ACFB 100%);
+            &-wenti_mian {
+              background: linear-gradient(90deg, #4974f5 0%, #80acfb 100%);
             }
           }
           div {
@@ -1541,7 +1562,7 @@ export default {
               justify-content: space-between;
               align-items: normal;
               width: 100%;
-              
+
               img {
                 width: 190px;
                 height: 127px;
@@ -1631,7 +1652,7 @@ export default {
             justify-content: flex-start;
             align-items: normal;
             margin: 0 0 24px 0;
-            .two_line{
+            .two_line {
               max-width: 440px;
               -webkit-line-clamp: 3 !important;
             }
@@ -1694,7 +1715,7 @@ export default {
     }
   }
   .footer {
-    &-body{
+    &-body {
       display: flex;
       align-items: center;
       width: 100%;
@@ -1711,9 +1732,9 @@ export default {
       padding-bottom: env(safe-area-inset-bottom);
       z-index: 100;
     }
-    ::v-deep .sp-button--info{
-      border: 1px solid #24AE68;
-      background-color: #24AE68;
+    ::v-deep .sp-button--info {
+      border: 1px solid #24ae68;
+      background-color: #24ae68;
     }
   }
   .item-wrap {
