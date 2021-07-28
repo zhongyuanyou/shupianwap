@@ -2,7 +2,7 @@
   <div class="m-known-share smallVideo materialShare">
     <ShareModal
       v-show="showShareModal"
-      :source-id="vDetail.id"
+      :source-id="vDetail.id || shareValue.commonId"
       :mch-id="shareValue.businessId"
       :share-id="shareValue.shareId"
     />

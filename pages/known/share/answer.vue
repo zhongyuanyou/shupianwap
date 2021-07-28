@@ -2,7 +2,7 @@
   <section>
     <ShareModal
       :mch-id="shareValue.businessId"
-      :source-id="shareValue.commonId"
+      :source-id="shareValue.commonId || anserShareDetail.id"
       :share-id="shareValue.shareId"
     />
     <HeaderSlot>
