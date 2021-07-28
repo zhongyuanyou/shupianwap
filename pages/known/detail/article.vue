@@ -2,8 +2,8 @@
   <section>
     <ShareModal
       :mch-id="shareValue.businessId"
-      :source-id="articleDetails.id"
-      :share-id="shareValue.commonId"
+      :source-id="shareValue.commonId"
+      :share-id="shareValue.shareId"
     />
     <div class="article">
       <HeaderSlot>

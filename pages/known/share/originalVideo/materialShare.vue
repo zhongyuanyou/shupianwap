@@ -1,6 +1,11 @@
 <template>
   <div class="m-known-share originalVideo materialShare">
-    <ShareModal v-show="showShareModal" :source-id="vDetail.id" />
+    <ShareModal
+      v-show="showShareModal"
+      :mch-id="shareValue.businessId"
+      :source-id="shareValue.commonId || vDetail.id"
+      :share-id="shareValue.shareId"
+    />
     <template v-if="showContent">
       <client-only>
         <sp-video
@@ -72,6 +77,7 @@
 <script>
 import { Image, Button } from '@chipspc/vant-dgg'
 import knownApi from '@/api/known'
+import { planner } from '@/api'
 // 推荐商品组件
 import ShareGoods from '@/components/mustKnown/share/ShareGoods.vue'
 import ShareModal from '@/components/common/ShareModal.vue'
@@ -108,18 +114,44 @@ export default {
       showContent: true,
       plannerId: '',
       loading: true,
+      shareValue: {},
+      shareId: '',
     }
   },
   mounted() {
-    this.id = this.$route.query.shareId
-    this.plannerId = this.$route.query.plannerId
-    if (this.id && this.id === '') {
-      this.$xToast.error('获取分享数据失败')
-      return
+    if (this.$route.query.redisKey) {
+      this.getShareId(this.$route.query.redisKey)
+    } else {
+      this.id = this.$route.query.shareId
+      this.plannerId = this.$route.query.plannerId
+      if (this.id && this.id === '') {
+        this.$xToast.error('获取分享数据失败')
+        return
+      }
+      this.getShareInfoApi()
     }
-    this.getShareInfoApi()
   },
   methods: {
+    getShareId(cacheKey) {
+      this.$axios
+        .get(planner.getShareId, {
+          params: { cacheKey },
+        })
+        .then((res) => {
+          console.log('res', res)
+          if (res.code === 200) {
+            const cacheValue = JSON.parse(res.data.cacheValue)
+            this.shareValue = cacheValue
+            this.id = cacheValue.shareId
+            this.getShareInfoApi()
+          } else {
+            this.isLoaded = true
+          }
+        })
+        .catch(() => {
+          this.isLoaded = true
+        })
+    },
     // 分享信息
     getShareInfoApi() {
       this.vodError = false
