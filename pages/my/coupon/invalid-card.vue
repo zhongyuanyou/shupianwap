@@ -1,8 +1,8 @@
 <template>
-  <div class="invoice" :style="{ paddingBottom: FooterNavHeight + 'px' }">
-    <sp-sticky>
+  <div class="invoice">
+    <HeaderSlot>
       <Header class="my-header" title="失效卡"></Header>
-    </sp-sticky>
+    </HeaderSlot>
 
     <sp-list
       v-if="list.length > 0"
@@ -45,12 +45,11 @@ import {
   Dialog,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-
+import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
 import Header from '@/components/common/head/header.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import ActCardItem from '~/components/my/coupon/index/ActCardItem.vue'
-
 
 import { coupon, actCard } from '@/api/index'
 
@@ -68,14 +67,14 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [Dialog.Component.name]: Dialog.Component,
     [List.name]: List,
-
+    HeaderSlot,
     ActCardItem,
   },
   data() {
     return {
       imgAddress: 'https://cdn.shupian.cn/sp-pt/wap/1d02v37qg6gw000.png',
 
-      tabActive: 0,
+      tabActive: 1,
       tabActiveIndex: 0, // 激活的tab
 
       loading: true, // 加载效果状态

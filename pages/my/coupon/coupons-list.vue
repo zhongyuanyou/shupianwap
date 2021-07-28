@@ -145,7 +145,7 @@ export default {
         orderByWhere: 'log_receive_time=desc;',
         findType: 2,
         userId: this.$store.state.user.userId,
-        limit: '100',
+        limit: 100,
         page: this.page,
       }
       coupon
