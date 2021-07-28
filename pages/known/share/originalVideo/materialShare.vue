@@ -3,7 +3,7 @@
     <ShareModal
       v-show="showShareModal"
       :mch-id="shareValue.businessId"
-      :source-id="shareValue.commonId"
+      :source-id="shareValue.commonId || vDetail.id"
       :share-id="shareValue.shareId"
     />
     <template v-if="showContent">
