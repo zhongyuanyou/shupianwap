@@ -63,7 +63,7 @@
             <sp-button
               round
               class="contact-btn"
-              @click="handleTel(planner.phone)"
+              @click="handleTel(planner.mchUserId, planner.phone)"
               ><my-icon
                 class=""
                 name="notify_ic_tel"
@@ -166,7 +166,11 @@ export default {
       },
     }
   },
-  computed: {},
+  computed: {
+    city() {
+      return this.$store.state.city.currentCity
+    },
+  },
   methods: {
     // 规划师详情跳转
     plannerInfoUrlJump(mchUserId) {
@@ -202,37 +206,79 @@ export default {
       })
     },
 
-    // 规划师拨号
-    async handleTel(phoneFull) {
-      // 规划师拨号需要先登录
+    // 拨打电话
+    async handleTel(mchUserId, phone) {
       try {
-        if (!phoneFull) {
-          return this.$xToast.error('未获取到电话')
-        }
-
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          const phone = await this.decryptionPhone(phoneFull)
-          console.log(phone)
-          if (phone) {
-            window.location.href = `tel://${phone}`
-          }
-        } else {
+        const telData = await planner.newtel({
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          plannerId: mchUserId,
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }),
+          requireCode: '',
+          requireName: '',
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+        })
+        // 解密电话
+        if (telData.status === 1) {
+          const tel = telData.phone
+          window.location.href = `tel://${tel}`
+        } else if (telData.status === 0) {
           Toast({
-            message: '请先登录账号',
+            message: '当前人员已禁用，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+        } else if (telData.status === 3) {
+          Toast({
+            message: '当前人员已离职，无法拨打电话',
             iconPrefix: 'sp-iconfont',
             icon: 'popup_ic_fail',
           })
         }
       } catch (err) {
-        console.log(err)
-        Toast({
-          message: '未获取到划师联系方式',
-          iconPrefix: 'sp-iconfont',
-          icon: 'popup_ic_fail',
-        })
+        // Toast({
+        //   message: '未获取到划师联系方式',
+        //   iconPrefix: 'sp-iconfont',
+        //   icon: 'popup_ic_fail',
+        // })
       }
     },
+
+    // // 规划师拨号
+    // async handleTel(phoneFull) {
+    //   // 规划师拨号需要先登录
+    //   try {
+    //     if (!phoneFull) {
+    //       return this.$xToast.error('未获取到电话')
+    //     }
+
+    //     const isLogin = await this.judgeLoginMixin()
+    //     if (isLogin) {
+    //       const phone = await this.decryptionPhone(phoneFull)
+    //       console.log(phone)
+    //       if (phone) {
+    //         window.location.href = `tel://${phone}`
+    //       }
+    //     } else {
+    //       Toast({
+    //         message: '请先登录账号',
+    //         iconPrefix: 'sp-iconfont',
+    //         icon: 'popup_ic_fail',
+    //       })
+    //     }
+    //   } catch (err) {
+    //     console.log(err)
+    //     Toast({
+    //       message: '未获取到划师联系方式',
+    //       iconPrefix: 'sp-iconfont',
+    //       icon: 'popup_ic_fail',
+    //     })
+    //   }
+    // },
   },
 }
 </script>
