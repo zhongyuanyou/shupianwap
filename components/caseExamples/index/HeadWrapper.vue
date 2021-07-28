@@ -1,0 +1,54 @@
+<template>
+  <!-- 功能：获取子组件高度，并浮动子组件到顶部，并自动占位子组件的高度 -->
+  <!-- 使用示例 -->
+  <!--
+    <HeadWrapper>
+      <Header class="my-header" title="案例广场"></Header>
+      <client-only>
+        <Classify @select="selectClassify"></Classify>
+      </client-only>
+    </HeadWrapper>
+   -->
+  <header class="head-wrapper" :style="{ height: HeaderHeight + 'px' }">
+    <div ref="couponHeaderWarpper" class="head-wrapper-warpper">
+      <slot></slot>
+    </div>
+  </header>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      HeaderHeight: 88,
+    }
+  },
+  mounted() {
+    this.getHeaderHeight()
+    window.addEventListener('resize', this.getHeaderHeight)
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.getHeaderHeight)
+  },
+  methods: {
+    getHeaderHeight() {
+      this.$nextTick(() => {
+        this.HeaderHeight = this.$refs.couponHeaderWarpper.offsetHeight
+        console.log(this.HeaderHeight)
+      })
+    },
+  },
+}
+</script>
+<style lang="less">
+.head-wrapper {
+  .head-wrapper-warpper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    z-index: 999;
+    border-bottom: 1px solid #f5f5f5;
+  }
+}
+</style>
