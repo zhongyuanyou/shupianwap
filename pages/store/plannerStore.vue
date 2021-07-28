@@ -671,7 +671,7 @@ export default {
       this.uPIM({
         mchUserId: this.IMDetailData.id,
         userName: this.IMDetailData.userName,
-        type: this.IMDetailData.mchClass,
+        type: this.IMDetailData.mchClass || 'MERCHANT_B',
       })
       // } else {
       //   Toast({
@@ -792,7 +792,7 @@ export default {
           {
             image:
               'https://cdn.shupian.cn/sp-pt/wap/images/cwxnvvtntxc0000.png',
-            title: '薯片找人',
+            title: '个人店铺',
             subTitle: `优选规划师 - ${this.detailData.personal.name}的店铺`,
             url: sharedUrl,
           },

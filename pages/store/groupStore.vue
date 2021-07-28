@@ -483,7 +483,7 @@ export default {
           {
             image:
               'https://cdn.shupian.cn/sp-pt/wap/images/2tmwcm165ma0000.png',
-            title: '薯片找人',
+            title: '团队店铺',
             subTitle: `优选团队 - ${this.info.teamInfo.name}的团队店铺`,
             url: sharedUrl,
           },
