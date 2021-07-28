@@ -92,7 +92,7 @@ export default {
             res.img ||
             'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png',
           userName: res.name,
-          postName: '金牌规划师',
+          postName: res.zwName || '金牌规划师',
           type: res.mchClass,
         }
         this.planerInfo = {
