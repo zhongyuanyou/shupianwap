@@ -1094,7 +1094,6 @@ export default {
             margin: 0 56px 0 0;
             span {
               display: inline-block;
-              height: 32px;
               line-height: 32px;
               max-width: 192px;
               white-space: nowrap;
