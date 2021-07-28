@@ -1,7 +1,7 @@
 <template>
   <!-- 团队店铺二级分类 -->
   <div class="m-store group-store">
-    <Header title="团队店铺" :fixed="true" />
+    <Header title="团队店铺" :fixed="true" :head-style="styleObject" />
     <div class="group-tile">
       <sp-image
         :src="info.teamInfo.img"
@@ -85,7 +85,7 @@
         >
       </div>
     </div>
-    <div  v-if="requestStatus && info.goodsRecommend.length<=0" class="empty">
+    <div v-if="requestStatus && info.goodsRecommend.length <= 0" class="empty">
       <img src="https://cdn.shupian.cn/sp-pt/wap/images/32lnvdx3omo0000.png" />
       <p>抱歉,未找到相关结果</p>
     </div>
@@ -126,7 +126,10 @@ export default {
       goods: [],
       typeId: '',
       type: '',
-      requestStatus:false,
+      requestStatus: false,
+      styleObject: {
+        'box-shadow': '0px 1px 0px 0px #f4f4f4',
+      },
     }
   },
   mounted() {
@@ -198,7 +201,7 @@ export default {
           this.finished = true
         }
         this.loading = false
-        if(!this.requestStatus){
+        if (!this.requestStatus) {
           this.requestStatus = true
         }
       } catch (e) {
@@ -223,7 +226,7 @@ export default {
           throw new Error(message)
         }
         this.info = data
-        if(!this.requestStatus){
+        if (!this.requestStatus) {
           this.requestStatus = true
         }
       } catch (e) {
