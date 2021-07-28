@@ -94,25 +94,30 @@
       <div v-if="!groupInfoLoading" class="server-block">
         <div class="server-block-line1">
           <div class="item">
-            <div class="item-res">
-              <span>{{ info.teamService.personNum }}</span
-              ><span class="unit">人</span>
+            <div class="item-content">
+              <div class="res">
+                <span>{{ info.teamService.personNum }}</span
+                ><span class="unit">人</span>
+              </div>
+              <div class="desc">团队人数</div>
             </div>
-            <div class="item-desc">团队人数</div>
+            <img
+              class="item-img"
+              src="https://cdn.shupian.cn/sp-pt/wap/images/20vfp3gnwpfk000.png	"
+            />
           </div>
           <div class="item">
-            <div class="item-res">
-              <span>{{ info.teamService.customerNum }}</span
-              ><span class="unit">位</span>
+            <div class="item-content">
+              <div class="res">
+                <span>{{ info.teamService.customerNum }}</span
+                ><span class="unit">位</span>
+              </div>
+              <div class="desc">服务客户</div>
             </div>
-            <div class="item-desc">服务客户</div>
-          </div>
-          <div class="item">
-            <div class="item-res">
-              <span>{{ info.teamService.maintenanceNum }}</span
-              ><span class="unit">人</span>
-            </div>
-            <div class="item-desc">维护商品</div>
+            <img
+              class="item-img"
+              src="https://cdn.shupian.cn/sp-pt/wap/images/7lc1ert8stg0000.png"
+            />
           </div>
         </div>
         <div class="server-block-tile">客户满意</div>
@@ -278,7 +283,7 @@ export default {
       storeId: '', // 768006091074595352
       info: {
         banners: [
-          'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg',
+          'https://cdn.shupian.cn/sp-pt/wap/images/29nq2m9p6pno000.jpg',
         ],
         goodsRecommend: [],
         goods: [],
@@ -379,7 +384,9 @@ export default {
         }
         this.info = data
         if (this.info.banners.length === 0) {
-          this.info.banners.push('https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg');
+          this.info.banners.push(
+            'https://cdn.shupian.cn/sp-pt/wap/images/29nq2m9p6pno000.jpg'
+          )
         }
         this.groupInfoLoading = false
         if (data.goodsRecommend.length !== 0) {
@@ -474,7 +481,8 @@ export default {
         console.log('sharedUrl:', sharedUrl)
         this.$appFn.dggShare(
           {
-            image: 'https://cdn.shupian.cn/sp-pt/wap/images/2tmwcm165ma0000.png',
+            image:
+              'https://cdn.shupian.cn/sp-pt/wap/images/2tmwcm165ma0000.png',
             title: '薯片找人',
             subTitle: `团队店铺 - ${this.info.teamInfo.name}的团队店铺`,
             url: sharedUrl,
@@ -613,24 +621,42 @@ export default {
       border: 1px solid #dddddd;
       box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
       border-radius: 12px;
-      padding: 50px 40px 54px 40px;
+      padding: 40px 40px 34px 40px;
       &-line1 {
         display: flex;
         align-items: center;
         justify-content: space-between;
         .item {
-          &-res {
-            font: bold 56px/74px Bebas;
-            color: #222222;
-            .unit {
-              font: bold 24px/33px PingFangSC;
+          width: 285px;
+          height: 140px;
+          padding: 14px 22px 19px 32px;
+          background: #f8f8f8;
+          border-radius: 8px;
+          position: relative;
+          &-content {
+            display: flex;
+            flex-direction: column;
+            .res {
+              font: bold 56px/74px Bebas;
+              color: #222222;
+              .unit {
+                font: bold 24px/33px PingFangSC;
+                color: #999;
+              }
             }
-            margin-bottom: 3px;
+            .desc {
+              color: #999999;
+              font-size: 24px;
+              line-height: 33px;
+            }
           }
-          &-desc {
-            color: #999999;
-            font-size: 24px;
-            line-height: 33px;
+          &-img {
+            position: absolute;
+            bottom: 22px;
+            right: 22px;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
           }
         }
       }
