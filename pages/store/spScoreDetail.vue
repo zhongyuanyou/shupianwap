@@ -128,13 +128,11 @@ export default {
       floatview: true,
       EchartOptions: {
         textStyle: {
-          fontFamily: 'PingFangSC-Medium',
-          fontSize: '0.26rem',
+          // fontSize: '0.26rem',
           color: '#222222',
           fontWeight: 'bold',
         },
         radar: {
-          // shape: 'circle',
           indicator: [
             { name: '基础素质', max: 100 },
             { name: '行业影响', max: 100 },
@@ -155,7 +153,7 @@ export default {
           //         shadowBlur: 10
           //     }
           // },
-          
+
           axisLine: {
             lineStyle: {
               color: 'rgba(73, 116, 245, 0.2)',
@@ -216,7 +214,7 @@ export default {
       },
     }
   },
-  computed:{
+  computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
       userInfo: (state) => state.user.userInfo,
@@ -233,21 +231,25 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
-    this.$nextTick(() => {
-      this.EchartInit()
-    })
-    if(this.isInApp){
+
+    if (this.isInApp) {
       this.$appFn.dggChangeTopColor(
-          {
-            flags: 'light',
-          },
-          (res) => {
-            console.log('DGGSetColorRes', res)
-          }
-        )
+        {
+          flags: 'light',
+        },
+        (res) => {
+          console.log('DGGSetColorRes', res)
+        }
+      )
     }
+    setTimeout(() => {
+      this.EchartInit()
+    }, 1000)
+    // this.$nextTick(() => {
+    //   this.EchartInit()
+    // })
   },
-  
+
   methods: {
     EchartInit() {
       // 接下来的使用就跟之前一样，初始化图表，设置配置项
@@ -327,8 +329,8 @@ export default {
     .title {
       margin: 0 0 66px 0;
       text-align: center;
-      i{
-        font-style:normal;
+      i {
+        font-style: normal;
         font-family: Bebas;
         font-size: 28px;
         color: #ffffff;
@@ -394,11 +396,10 @@ export default {
         right: 0;
         bottom: 48px;
         margin: 0 auto;
-        i{
+        i {
           vertical-align: middle;
-
         }
-        span{
+        span {
           vertical-align: middle;
         }
       }
