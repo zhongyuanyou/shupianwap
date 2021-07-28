@@ -485,7 +485,6 @@ export default {
         const params = {
           storeId: this.detailData.id,
           typeId: this.active,
-          type: pageStatus,
           page: this.refresh.pageIndex,
           limit: type === 'onLoad' ? this.refresh.pageSize : pages,
         }
@@ -1165,8 +1164,12 @@ export default {
               line-height: 22px;
               span {
                 display: inline-block;
+                width:450px;
                 padding: 0 8px;
                 border-right: 1px solid #1a1a1a;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
                 &:first-of-type {
                   padding: 0 8px 0 0;
                 }
