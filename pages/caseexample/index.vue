@@ -331,17 +331,17 @@ export default {
 
   background-color: #f5f5f5;
 
-  &-header {
-    &-warpper {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background-color: #ffffff;
-      z-index: 999;
-      border-bottom: 1px solid #f5f5f5;
-    }
-  }
+  // &-header {
+  //   &-warpper {
+  //     position: fixed;
+  //     top: 0;
+  //     left: 0;
+  //     width: 100%;
+  //     background-color: #ffffff;
+  //     z-index: 999;
+  //     border-bottom: 1px solid #f5f5f5;
+  //   }
+  // }
 
   ::v-deep .sp-work-tab {
     font-family: PingFangSC-Regular;
