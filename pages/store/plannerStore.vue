@@ -930,7 +930,7 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        border: 1px solid #eadacd;
+        border: 1px solid rgba(234, 218, 205, 0.5);
         border-radius: 4px;
       }
     }
