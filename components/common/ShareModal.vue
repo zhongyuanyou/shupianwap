@@ -230,7 +230,7 @@ export default {
           userId: this.userInfoData.id, // 用户id
           plannerId: this.plannerId, // 用户id
           shareId: this.$route.query.shareId, // 分享Id
-          sourceId: this.sourceId, // 物料id
+          sourceId: this.sourceId || this.$route.query.id, // 物料id
           materialType,
         })
         .then((res) => {
