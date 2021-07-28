@@ -77,12 +77,15 @@ export default {
       type: String,
       default: '',
     },
+    shareId: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
       visible: false, // 是否最大化显示 true为最大化显示 false为最小化显示
       plannerId: '',
-      shareId: '',
       partnerId: '',
       planerInfo: {},
       userInfoData: {},
@@ -217,7 +220,7 @@ export default {
             bindType: 'CUSTOMER_BDLX_FXBD',
             requestPlatform: 'COMDIC_PLATFORM_CRISPS',
             copartnerUserType: 'ORDINARY_USER',
-            shareId: this.$route.query.shareId, // 分享Id
+            shareId: this.$route.query.shareId || this.shareId, // 分享Id
             sourceId: this.sourceId || this.$route.query.id, // 物料id
             materialType: this.getType(),
           })
@@ -256,7 +259,7 @@ export default {
         .post(planner.addClue, {
           userId: this.userInfoData.id, // 用户id
           plannerId: this.plannerId, // 用户id
-          shareId: this.$route.query.shareId, // 分享Id
+          shareId: this.$route.query.shareId || this.shareId, // 分享Id
           sourceId: this.sourceId || this.$route.query.id, // 物料id
           materialType: this.getType(),
         })
