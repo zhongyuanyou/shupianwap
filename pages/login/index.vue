@@ -229,7 +229,6 @@ export default {
         return
       }
       this.login().then((data) => {
-        this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
         this.getUserInfo(data)
       })
     },
@@ -399,16 +398,20 @@ export default {
             // 跳转外连接
             if (this.sourcePlatform) {
               const keyList = SOURCE_PLATFROM_PARAMS[this.sourcePlatform]
-              const query = Array.isArray(keyList)
-                ? keyList.reduce((accumulator, key) => {
-                    data = data || {}
-                    if (data[key]) {
-                      accumulator[key] = data[key]
-                    }
-                    return accumulator
-                  }, {})
-                : {}
-              openLink(this.redirect, query)
+              if (keyList) {
+                const query = Array.isArray(keyList)
+                  ? keyList.reduce((accumulator, key) => {
+                      data = data || {}
+                      if (data[key]) {
+                        accumulator[key] = data[key]
+                      }
+                      return accumulator
+                    }, {})
+                  : {}
+                openLink(this.redirect, query)
+              } else {
+                this.$router.back(-1)
+              }
               return
             }
             if (this.redirect) {
@@ -416,6 +419,7 @@ export default {
             } else {
               this.$router.back(-1)
             }
+            this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
           }, 1500)
         } else {
           // 清除用户缓存信息
