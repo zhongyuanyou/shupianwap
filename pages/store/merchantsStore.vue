@@ -627,7 +627,7 @@ export default {
         this.$appFn.dggShare(
           {
             image: 'https://cdn.shupian.cn/sp-pt/wap/images/2cjrp1v1q8sg000.png',
-            title: '薯片找人',
+            title: '商户店铺',
             subTitle: `优选商户 - ${this.detailData.mchBaseInfo.name}的店铺`,
             url: sharedUrl,
           },
