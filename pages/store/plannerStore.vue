@@ -864,7 +864,6 @@ export default {
       img {
         width: 120px;
         height: 120px;
-        opacity: 0.5;
         border: 1px solid #ffffff;
         border-radius: 50%;
       }
