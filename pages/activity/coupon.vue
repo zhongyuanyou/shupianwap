@@ -159,7 +159,7 @@ export default {
       productAdvertData: [],
       isNoData: false,
       page: 1,
-      limit: 20,
+      limit: 100,
       nomore: false,
       isLogin: '',
     }

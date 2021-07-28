@@ -62,11 +62,11 @@ import {
 import { mapState, mapMutations } from 'vuex'
 
 import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
+import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 import Header from '@/components/common/head/header.vue'
 
 import Classify from '@/components/caseExamples/index/Classify.vue'
 import CaseExamplesList from '@/components/caseExamples/index/List.vue'
-import HeadWrapper from '@/components/caseExamples/index/HeadWrapper.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 
@@ -331,17 +331,17 @@ export default {
 
   background-color: #f5f5f5;
 
-  &-header {
-    &-warpper {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background-color: #ffffff;
-      z-index: 999;
-      border-bottom: 1px solid #f5f5f5;
-    }
-  }
+  // &-header {
+  //   &-warpper {
+  //     position: fixed;
+  //     top: 0;
+  //     left: 0;
+  //     width: 100%;
+  //     background-color: #ffffff;
+  //     z-index: 999;
+  //     border-bottom: 1px solid #f5f5f5;
+  //   }
+  // }
 
   ::v-deep .sp-work-tab {
     font-family: PingFangSC-Regular;

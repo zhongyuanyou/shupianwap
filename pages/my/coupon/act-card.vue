@@ -92,7 +92,7 @@ import { actCard, coupon, activityApi } from '@/api/index'
 
 export default {
   layout: 'keepAlive',
-  name: 'act_card',
+  name: 'ActCard',
   components: {
     LoadingCenter,
     Header,
