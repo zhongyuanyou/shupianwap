@@ -344,7 +344,6 @@
               </p>
             </div>
             <div>
-              <i class="empty"></i>
               <span
                 >{{ numUntil(data.applaudCount) }} 点赞 ·
                 {{ data.remarkCount }} 评论</span
