@@ -33,7 +33,15 @@
         </template> -->
       </Header>
     </div>
-    <div id="group" class="bg-group-fixed" :style=" {top:isInApp?`${(Number(appInfo.statusBarHeight)/100)+1.18}rem`:'0.88rem'}">
+    <div
+      id="group"
+      class="bg-group-fixed"
+      :style="{
+        top: isInApp
+          ? `${Number(appInfo.statusBarHeight) / 100 + 1.18}rem`
+          : '0.88rem',
+      }"
+    >
       <div class="footer">
         <img :src="detailData.mchBaseInfo.logo" alt="" />
         <div class="footertext">
@@ -60,11 +68,11 @@
       </div>
     </div>
     <div class="body">
-      <div v-if="detailData.goodsRecommend.length>0" class="body-content recommended">
+      <div v-if="goodsRecommend.length > 0" class="body-content recommended">
         <div class="tabs">
           <ul>
             <li
-              v-for="(item, index) in detailData.goodsRecommend"
+              v-for="(item, index) in goodsRecommend"
               :key="index"
               :class="active === item.id ? 'tab_active' : ''"
               @click="tabsActive(item.id)"
@@ -117,8 +125,11 @@
           没有更多了
         </p>
       </div>
-      <div v-if="requestStatus && detailData.goodsRecommend.length<=0" class="no-info">
-        <img src="https://cdn.shupian.cn/sp-pt/wap/images/32lnvdx3omo0000.png" alt="">
+      <div v-if="requestStatus && goodsRecommend.length <= 0" class="no-info">
+        <img
+          src="https://cdn.shupian.cn/sp-pt/wap/images/32lnvdx3omo0000.png"
+          alt=""
+        />
         <p>抱歉,未找到相关结果</p>
       </div>
     </div>
@@ -162,11 +173,10 @@ export default {
   },
   data() {
     return {
-      urlData:this.$route.query,
+      urlData: this.$route.query,
       active: this.$route.query.active, // tab状态
       headActive: 'rememded',
       detailData: {
-        goodsRecommend: [],
         mchService: {},
         mchBaseInfo: {},
       },
@@ -201,13 +211,14 @@ export default {
       },
       shareOptions: [],
       showShare: false,
-      requestStatus:false,
+      requestStatus: false,
+      goodsRecommend: [],
     }
   },
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
-            appInfo: (state) => state.app.appInfo, // app信息
+      appInfo: (state) => state.app.appInfo, // app信息
       userInfo: (state) => state.user.userInfo,
       isApplets: (state) => state.app.isApplets,
     }),
@@ -264,8 +275,7 @@ export default {
       this.getDetail()
     }
   },
-  async mounted() {
-  },
+  async mounted() {},
   methods: {
     ...mapActions({
       POSITION_CITY: 'city/POSITION_CITY',
@@ -299,7 +309,7 @@ export default {
     // 获取详情数据
     async getDetail() {
       try {
-        const { storeId , pageStatus='' } = this.$route.query
+        const { storeId, pageStatus = '' } = this.$route.query
         if (storeId == null) {
           this.$xToast.show({
             message: '缺少店铺参数!',
@@ -309,7 +319,7 @@ export default {
           })
           return
         }
-        const params = { storeId , type:pageStatus }
+        const params = { storeId, type: pageStatus }
         const { data, code, message } = await this.$axios.get(
           storeApi.mchStoreInfo,
           { params }
@@ -323,7 +333,16 @@ export default {
           throw new Error(message)
         }
         this.detailData = data || {}
-        if(!this.requestStatus){
+        const res = await this.$axios.post(storeApi.recommendGoodsClassify, {
+          goodsRecommend: data.goodsRecommend,
+          storeId,
+          type: pageStatus,
+        })
+        if (res.code === 200) {
+          this.goodsRecommend = res.data
+        }
+
+        if (!this.requestStatus) {
           this.requestStatus = true
         }
         return data
@@ -340,11 +359,11 @@ export default {
     },
     // 获取列表数据
     async getList(type) {
-      const { storeId , pageStatus='' } = this.$route.query
+      const { storeId, pageStatus = '' } = this.$route.query
       try {
         const params = {
           storeId,
-          type:pageStatus,
+          type: pageStatus,
           typeId: this.active,
           page: this.refresh.pageIndex,
           limit: this.refresh.pageSize,
@@ -375,7 +394,7 @@ export default {
           // 下拉刷新
           this.tabsListData = data.records
         }
-        if(!this.requestStatus){
+        if (!this.requestStatus) {
           this.requestStatus = true
         }
         return data
@@ -547,9 +566,10 @@ export default {
       this.showShare = true
     },
     linkGood(item) {
-      if(this.urlData.pageStatus==='preview'){return}
+      if (this.urlData.pageStatus === 'preview') {
+        return
+      }
       if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
-        
         this.$router.push({
           path: '/detail/transactionDetails',
           query: {
@@ -739,7 +759,7 @@ export default {
       height: 6px;
       background: #4974f5;
       border-radius: 3px;
-      bottom:40px
+      bottom: 40px;
     }
   }
   .body {
@@ -809,14 +829,14 @@ export default {
         width: 80vw;
       }
     }
-    .no-info{
+    .no-info {
       text-align: center;
       font-size: 26px;
       color: #999;
-      img{
+      img {
         width: 340px;
         height: 340px;
-        margin:0 auto;
+        margin: 0 auto;
       }
     }
     .recommended {
@@ -827,7 +847,7 @@ export default {
         color: #222222;
       }
       .tabs {
-        padding:300px 0 0;
+        padding: 300px 0 0;
         font-family: PingFangSC-Regular;
         font-size: 30px;
         color: #999999;
@@ -839,11 +859,11 @@ export default {
           li {
             position: relative;
             margin: 0 56px 0 0;
-            span{
+            span {
               max-width: 192px;
-              white-space:nowrap;
-              overflow:hidden;
-              text-overflow:ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
             .tabs_line {
               position: absolute;
@@ -918,7 +938,7 @@ export default {
               line-height: 22px;
               span {
                 display: inline-block;
-                width:450px;
+                width: 450px;
                 padding: 0 8px 0 8px;
                 border-right: 1px solid #1a1a1a;
                 overflow: hidden;
