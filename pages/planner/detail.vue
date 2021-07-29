@@ -553,7 +553,10 @@ export default {
           newDetailData.label = newDetailData.label.splice(0, 2)
         }
         newDetailData.content.hotNews.forEach((item) => {
-          item.createTime = item.createTime.split(' ')[0] || ''
+          if(item.createTime){
+            item.createTime = item.createTime.split(' ')[0] || ''
+          }
+          
         })
       } else {
         // $xToast.show({
@@ -1583,7 +1586,7 @@ export default {
         padding-bottom: env(safe-area-inset-bottom);
         .three_line {
           max-height: 86px;
-           .textOverflow(2)
+          .textOverflow(2)
         }
         .two_line {
           max-height: 96px;
