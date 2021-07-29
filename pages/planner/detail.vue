@@ -344,7 +344,6 @@
               </p>
             </div>
             <div>
-              <i class="empty"></i>
               <span
                 >{{ numUntil(data.applaudCount) }} 点赞 ·
                 {{ data.remarkCount }} 评论</span
@@ -371,7 +370,7 @@
             <div>
               <span
                 >{{ numUntil(data.totalBrowseCount) }} 浏览 ·
-                {{ data.disapplaudCount }} 点赞 ·
+                {{ numUntil(data.applaudCount)}} 点赞 ·
                 {{ timerUntil(data.createTime) }}</span
               >
             </div>
@@ -1772,7 +1771,7 @@ export default {
             align-items: normal;
             margin: 0 0 24px 0;
             .two_line {
-              -webkit-line-clamp: 3 !important;
+              -webkit-line-clamp: 2 !important;
             }
             > p {
               display: flex;
