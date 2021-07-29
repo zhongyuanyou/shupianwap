@@ -157,11 +157,11 @@
           <div class="item-content">
             <div class="tile">{{ item.name }}</div>
             <div
-              v-if="Array.isArray(item.tips) && item.tips.length > 0"
+              v-if="Array.isArray(item.tags) && item.tags.length > 0"
               class="tips"
             >
               <div
-                v-for="(itemTip, indexTip) in item.tips"
+                v-for="(itemTip, indexTip) in item.tags"
                 :key="indexTip"
                 class="tip"
               >
