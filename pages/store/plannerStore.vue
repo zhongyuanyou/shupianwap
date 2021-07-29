@@ -384,6 +384,9 @@ export default {
     goScoreDetail() {
       this.$router.push({
         path: '/store/spScoreDetail',
+        query:{
+          score:this.detailData.personal.point
+        }
       })
     },
     gohome() {
@@ -1014,7 +1017,6 @@ export default {
     }
     .sp-score {
       width: 100%;
-      height: 314px;
       padding: 42px 40px;
       background: #ffffff;
       border: 1px solid #dddddd;
@@ -1043,7 +1045,7 @@ export default {
         }
       }
       &__score {
-        margin: 11px 0 0 0;
+        margin: 20px 0 20px 0;
         font-family: Bebas;
         font-size: 58px;
         color: #222222;
