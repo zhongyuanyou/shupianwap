@@ -79,17 +79,19 @@ export default {
           }
         })
       } else if (
+        this.$route.query.platForm &&
         this.$route.query.platForm === 'mpass' &&
         !window.AlipayJSBridge
       ) {
         const userData = {
           token: this.$route.query.token,
           id: this.$route.query.userId,
+          userId: this.$route.query.userId,
         }
         this.$store.dispatch('user/setUser', userData)
         const params = {
           // id: this.userId,
-          id: this.userId || this.$cookies.get('userId', { path: '/' }),
+          id: this.$route.query.userId,
         }
         const res = await this.$axios.get(userinfoApi.info, { params })
         this.loading = false

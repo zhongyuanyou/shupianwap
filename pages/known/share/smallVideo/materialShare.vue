@@ -104,6 +104,7 @@ export default {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
     PlannerBottom,
+    ShareModal,
   },
   data() {
     return {
