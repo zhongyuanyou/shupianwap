@@ -467,7 +467,11 @@ export default {
         if (res.code === 200) {
           this.goodsRecommend = res.data
         }
-        this.active = this.goodsRecommend[0].id || ''
+        if (this.goodsRecommend.length > 0) {
+          this.active = this.goodsRecommend[0].id
+        } else {
+          this.active = ''
+        }
 
         this.getList()
         return data
