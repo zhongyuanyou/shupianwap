@@ -103,6 +103,27 @@
           {{ answerDetails.remarkCount || 0 }}评论
         </div>
       </div>
+      <div v-if="quesList.length > 0" class="area area3 list3">
+        <div class="recommend">
+          <div class="recommend-title">相关问题</div>
+          <div
+            v-for="(item, index) in quesList"
+            :key="index"
+            class="item"
+            :class="'item' + index"
+            @click="toDetail(item.id)"
+          >
+            <p class="ques-title">
+              {{ item.title }}
+            </p>
+            <p>
+              <span> {{ item.applaudCount }} 赞同 </span>·
+              <span> {{ item.remarkCount }} 评论 </span>·
+              <span>{{ item.createTime }}</span>
+            </p>
+          </div>
+        </div>
+      </div>
       <div
         v-if="
           answerDetails &&
@@ -267,6 +288,7 @@ export default {
       answerDetails: {},
       quesDetail: {},
       shareValue: {},
+      quesList: [],
     }
   },
   computed: {
@@ -306,6 +328,14 @@ export default {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    toDetail(id) {
+      this.$router.push({
+        path: '/known/detail/answer',
+        query: {
+          id,
+        },
+      })
+    },
     getShareId(cacheKey) {
       this.$axios
         .get(planner.getShareId, {
@@ -366,6 +396,9 @@ export default {
               res.data.goodsList = goods
             }
             this.answerDetails = res.data
+            if (res.data.relatedQuestion) {
+              this.getQuesList(res.data.relatedQuestion)
+            }
             this.iosPath.parameter.cid = this.answerDetails.id
             this.iosLink = this.prefixPath + JSON.stringify(this.iosPath)
             this.androdPath.parameter.id = this.answerDetails.id
@@ -383,6 +416,19 @@ export default {
           this.isLoaded = true
           console.error(err)
           this.isLoaded = true
+        })
+    },
+    getQuesList(ids) {
+      ids = ids.split(',')
+      this.$axios
+        .post(knownApi.questionArticle.webList, {
+          ids,
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            console.log('相关问题', res.data.rows)
+            this.quesList = res.data.rows || []
+          }
         })
     },
     getPlanerInfo(id) {
@@ -746,6 +792,27 @@ export default {
 }
 .article {
   background: #f5f5f5;
+}
+.list3 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  .item {
+    padding: 24px 0;
+    border-top: 1px solid #f0f0f0;
+    .ques-title {
+      font-size: 32px;
+      margin-bottom: 8px;
+      color: #222;
+      font-weight: 600;
+    }
+  }
+  .item0 {
+    border: none !important;
+  }
+  p {
+    margin-top: 10px;
+    color: #666;
+  }
 }
 // 推荐标题
 .recommend-title {

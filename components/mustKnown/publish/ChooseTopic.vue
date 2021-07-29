@@ -3,6 +3,7 @@
     <div
       class="choose-topic"
       @click="openModal"
+      :key="bottomHeight > 90 ? 'choose-topic2' : ''"
       :style="{ bottom: bottomHeight + 'px' }"
     >
       <p v-if="!topics.length">
@@ -146,7 +147,7 @@ export default {
   mounted() {
     this.topicApi()
     if (this.$route.query.platForm === 'mpass' && !window.AlipayJSBridge) {
-      this.bottomHeight = 110
+      this.bottomHeight = 96
     }
   },
   /*
@@ -288,6 +289,9 @@ export default {
   p {
     line-height: 44px;
   }
+}
+.choose-topic2 {
+  height: 90px !important;
 }
 .sp-popup--bottom {
   border-radius: 24px 24px 0px 0px;
