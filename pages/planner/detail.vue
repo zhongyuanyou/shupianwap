@@ -506,6 +506,7 @@ export default {
       },
       live: {},
     }
+    let showPlannerDetail = false
     let detailData = {}
     let active = ''
     let loading = true
@@ -537,6 +538,10 @@ export default {
         }
       )
       if (newData.code === 200) {
+        if (newData.data.status === 'BUSINESS_CARD_STATUS_ON_SHELF') {
+          console.log(`***************************************************************`)
+          showPlannerDetail = true
+        }
         newDetailData = newData.data || {}
         active = newDetailData.titleNavs[0]
         newDetailData.label =
@@ -568,6 +573,7 @@ export default {
         active,
         loading,
         detailData,
+        showPlannerDetail,
       }
     } catch (error) {
       // console.error('getDetail:', error)
@@ -607,7 +613,6 @@ export default {
       ownerInfo: false, // 个人信息展开
       titleStatus: true, // 粘性布局触发时去掉头部
       active: '', // tab状态
-      showPlannerDetail: false,
     }
   },
 
@@ -1151,9 +1156,6 @@ export default {
           }
         )
         if (newData.code === 200) {
-          if (newData.data.status === 'BUSINESS_CARD_STATUS_ON_SHELF') {
-            this.showPlannerDetail = true
-          }
           this.newDetailData = newData.data || {}
           this.active = this.newDetailData.titleNavs[0]
           this.newDetailData.label =
