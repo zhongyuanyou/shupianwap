@@ -336,7 +336,7 @@
                 pluginspage="https://cdn.shupian.cn/sp-pt/wap/images/28hztm48mx8g000.svg"
               />
               <p>
-                <span class="three_line">{{ data.contentText }}</span>
+                <span :class="data.contentImageUrl?'three_line_img':'three_line'">{{ data.contentText }}</span>
                 <img
                   v-if="data.contentImageUrl"
                   :src="data.contentImageUrl"
@@ -360,7 +360,7 @@
           >
             <div>
               <p>
-                <span class="two_line">{{ data.title }}</span>
+                <span :class="data.contentImageUrl?'two_line_img':'two_line'">{{ data.title }}</span>
                 <img
                   v-if="data.contentImageUrl"
                   :src="data.contentImageUrl"
@@ -385,7 +385,7 @@
           >
             <div>
               <p>
-                <span class="two_line">{{ data.title }}</span>
+                <span :class="data.imageUrl?'two_line_img':'two_line'">{{ data.title }}</span>
                 <img v-if="data.imageUrl" :src="data.imageUrl" alt="" />
               </p>
             </div>
@@ -1617,9 +1617,16 @@ export default {
           max-height: 86px;
           .textOverflow(2);
         }
+        .three_line_img{
+          max-width: 600px;
+          .textOverflow(3);
+        }
         .two_line {
           max-height: 96px;
           .textOverflow(2);
+        }
+        .two_line_img{
+          .textOverflow(3);
         }
       }
       .tabs {
