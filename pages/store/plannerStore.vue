@@ -126,10 +126,7 @@
       </div>
       <sp-skeleton title :row="formatShowPoint ? 10 : 7" :loading="loading">
         <div
-          v-if="
-            detailData.modules.length > 0 &&
-            detailData.modules.some((item) => item.code === 'GOODS_RECOMMEND')
-          "
+          v-if="goodsRecommend.length > 0"
           class="recommended"
           :class="titleStatus ? '' : 'tabs'"
         >
@@ -137,9 +134,7 @@
           <div class="tabs">
             <ul>
               <li
-                v-for="(item, index) in detailData.modules.filter(
-                  (item) => item.code === 'GOODS_RECOMMEND'
-                )[0].data"
+                v-for="(item, index) in goodsRecommend"
                 :key="index"
                 :class="active === item.id ? 'tab_active' : ''"
                 @click="tabsActive(item.id)"
@@ -298,6 +293,7 @@ export default {
           finished: false,
         },
       },
+      goodsRecommend: [],
     }
   },
   computed: {
@@ -384,9 +380,9 @@ export default {
     goScoreDetail() {
       this.$router.push({
         path: '/store/spScoreDetail',
-        query:{
-          score:this.detailData.personal.point
-        }
+        query: {
+          score: this.detailData.personal.point,
+        },
       })
     },
     gohome() {
@@ -463,6 +459,15 @@ export default {
             data.modules[0].data[0].id) ||
           ''
         this.detailData = data || {}
+
+        // 添加处理商品分类逻辑
+        const res = await this.$axios.post(storeApi.recommendGoodsClassify, {
+          goodsRecommend: data.goodsRecommend,
+          storeId: data.id,
+        })
+        if (res.code === 200) {
+          this.goodsRecommend = res.data
+        }
         this.getList('refull', 10)
         // IM接口请求数据
         const IMParams = { id: mchUserId }
