@@ -370,7 +370,7 @@
             <div>
               <span
                 >{{ numUntil(data.totalBrowseCount) }} 浏览 ·
-                {{ numUntil(data.applaudCount)}} 点赞 ·
+                {{ numUntil(data.applaudCount) }} 点赞 ·
                 {{ timerUntil(data.createTime) }}</span
               >
             </div>
@@ -540,7 +540,9 @@ export default {
       )
       if (newData.code === 200) {
         if (newData.data.status === 'BUSINESS_CARD_STATUS_ON_SHELF') {
-          console.log(`***************************************************************`)
+          console.log(
+            `***************************************************************`
+          )
           showPlannerDetail = true
         }
         newDetailData = newData.data || {}
@@ -551,7 +553,7 @@ export default {
           newDetailData.label = newDetailData.label.splice(0, 2)
         }
         newDetailData.content.hotNews.forEach((item) => {
-          item.createTime = item.createTime.split(' ')[0] || ""
+          item.createTime = item.createTime.split(' ')[0] || ''
         })
       } else {
         // $xToast.show({
@@ -1574,27 +1576,18 @@ export default {
       }
     }
     .recommend {
-      padding:87px 0 0 0;
+      padding: 87px 0 0 0;
       .list-data {
         padding: 41px 40px 0;
         padding-bottom: constant(safe-area-inset-bottom);
         padding-bottom: env(safe-area-inset-bottom);
         .three_line {
-          height: 0.8rem;
-          -webkit-line-clamp: 2;
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          text-overflow: ellipsis;
-          word-break: break-all;
-          overflow: hidden;
+          max-height: 86px;
+           .textOverflow(2)
         }
         .two_line {
-          height: 1rem;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
+          max-height: 96px;
+          .textOverflow(2)
         }
       }
       .tabs {
