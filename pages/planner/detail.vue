@@ -148,16 +148,18 @@
                           :class="ownerInfo ? 'textshow' : 'textoverflow'"
                           >{{ newDetailData.baseInfo.lawyerIntro }}</span
                         >
+                        <i
+                          class="spiconfont pullImg"
+                          :class="
+                            ownerInfo
+                              ? 'spiconfont-shangla'
+                              : 'spiconfont-xiala'
+                          "
+                          style="font-size: 8px"
+                          @click="ownerInfo = !ownerInfo"
+                        ></i>
                       </div>
                     </li>
-                    <i
-                      class="spiconfont pullImg"
-                      :class="
-                        ownerInfo ? 'spiconfont-shangla' : 'spiconfont-xiala'
-                      "
-                      style="font-size: 8px"
-                      @click="ownerInfo = !ownerInfo"
-                    ></i>
                   </ul>
                 </div>
                 <!-- <div class="detail-content__tag-list">
@@ -342,10 +344,9 @@
               </p>
             </div>
             <div>
-              <i class="empty"></i>
               <span
                 >{{ numUntil(data.applaudCount) }} 点赞 ·
-                {{ data.remarkCount }} 评论</span
+                {{ numUntil(data.remarkCount) }} 评论</span
               >
             </div>
           </li>
@@ -369,7 +370,7 @@
             <div>
               <span
                 >{{ numUntil(data.totalBrowseCount) }} 浏览 ·
-                {{ data.disapplaudCount }} 点赞 ·
+                {{ numUntil(data.applaudCount)}} 点赞 ·
                 {{ timerUntil(data.createTime) }}</span
               >
             </div>
@@ -506,6 +507,7 @@ export default {
       },
       live: {},
     }
+    let showPlannerDetail = false
     let detailData = {}
     let active = ''
     let loading = true
@@ -537,6 +539,10 @@ export default {
         }
       )
       if (newData.code === 200) {
+        if (newData.data.status === 'BUSINESS_CARD_STATUS_ON_SHELF') {
+          console.log(`***************************************************************`)
+          showPlannerDetail = true
+        }
         newDetailData = newData.data || {}
         active = newDetailData.titleNavs[0]
         newDetailData.label =
@@ -564,6 +570,7 @@ export default {
         active,
         loading,
         detailData,
+        showPlannerDetail,
       }
     } catch (error) {
       // console.error('getDetail:', error)
@@ -603,7 +610,6 @@ export default {
       ownerInfo: false, // 个人信息展开
       titleStatus: true, // 粘性布局触发时去掉头部
       active: '', // tab状态
-      showPlannerDetail: false,
     }
   },
 
@@ -1147,9 +1153,6 @@ export default {
           }
         )
         if (newData.code === 200) {
-          if (newData.data.status === 'BUSINESS_CARD_STATUS_ON_SHELF') {
-            this.showPlannerDetail = true
-          }
           this.newDetailData = newData.data || {}
           this.active = this.newDetailData.titleNavs[0]
           this.newDetailData.label =
@@ -1259,7 +1262,7 @@ export default {
         line-height: 32px;
       }
       &__bg {
-        padding: 40px;
+        padding: 40px 40px 0;
         position: relative;
         background: url(https://cdn.shupian.cn/sp-pt/wap/images/cfu3wwitnuw0000.png)
           top center/100% auto no-repeat;
@@ -1323,7 +1326,7 @@ export default {
           .pullImg {
             position: absolute;
             right: 32px;
-            top: 215px;
+            bottom: 43px;
             &::before {
               display: block;
               width: 12px;
@@ -1571,6 +1574,7 @@ export default {
       }
     }
     .recommend {
+      padding:87px 0 0 0;
       .list-data {
         padding: 41px 40px 0;
         padding-bottom: constant(safe-area-inset-bottom);
@@ -1768,7 +1772,7 @@ export default {
             align-items: normal;
             margin: 0 0 24px 0;
             .two_line {
-              -webkit-line-clamp: 3 !important;
+              -webkit-line-clamp: 2 !important;
             }
             > p {
               display: flex;

@@ -212,7 +212,7 @@
         v-if="!loading && detailData.planners.length > 0"
         class="body-content recommendedPlanner"
       >
-        <p class="title" style="margin-top: 0.56rem">推荐规划师</p>
+        <p class="title">推荐规划师</p>
         <div class="planner">
           <ul>
             <li
@@ -222,7 +222,17 @@
             >
               <img :src="item.img" alt="" />
               <p class="name">
-                <span>
+                <span
+                  style="
+                display:inline-block
+            margin-top: 0.56rem;
+            width: 1.64rem;
+            overflow: hidden;
+            white-space: normal;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          "
+                >
                   {{ item.name }}
                 </span>
               </p>
