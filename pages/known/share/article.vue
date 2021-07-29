@@ -50,7 +50,14 @@
       :ios-link="iosLink"
       :androd-link="androdLink"
     />
-    <div v-if="articleDetails.title">
+    <div
+      v-if="
+        articleDetails.title &&
+        articleDetails.flag == 1 &&
+        articleDetails.status == 1 &&
+        articleDetails.materialStatus == 1
+      "
+    >
       <div class="title-area">
         <div class="title">{{ articleDetails.title }}</div>
       </div>

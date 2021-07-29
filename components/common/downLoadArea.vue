@@ -1,5 +1,5 @@
 <template>
-  <div class="download-area">
+  <div class="download-area" v-if="!isInApp">
     <img :src="$ossImgSetV2('g6trabnxtg80000.png')" class="logo" />
     <div class="desc">
       <div class="desc-name">薯片APP</div>
@@ -50,6 +50,9 @@ export default {
     },
     myAndrodLink() {
       return this.androdLink || 'cpsccustomer://'
+    },
+    isInApp() {
+      return this.$store.state.app.isInApp
     },
   },
   mounted() {
