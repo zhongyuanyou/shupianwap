@@ -800,7 +800,7 @@ export default {
     padding: 24px 0;
     border-top: 1px solid #f0f0f0;
     .ques-title {
-      font-size: 32px;
+      font-size: 28px;
       margin-bottom: 8px;
       color: #222;
       font-weight: 600;
@@ -821,7 +821,7 @@ export default {
   font-weight: bold;
   color: #222222;
   line-height: 32px;
-  padding: 40px 0;
+  padding: 30px 0;
 }
 
 // .fixed-head {
