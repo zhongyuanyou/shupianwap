@@ -112,7 +112,7 @@
         <p class="sp-score__score">
           <span>{{ detailData.personal.point }}</span>
         </p>
-        <p class="sp-score__statistical">
+        <p v-show="false" class="sp-score__statistical">
           <span>打败{{ detailData.personal.beatProp }}的规划师</span>
         </p>
         <p class="sp-score__detail">
@@ -312,7 +312,10 @@ export default {
       const serveAge = this.detailData.personal.serveAge
       if (serveAge == null) {
         return '--'
+      } else {
+        return serveAge
       }
+      /*
       if (serveAge < 1) {
         return '小于1年'
       }
@@ -332,6 +335,7 @@ export default {
         return '5年以上'
       }
       return ''
+      */
     },
     formatShowPoint() {
       const { show } = this.IMDetailData || {}
