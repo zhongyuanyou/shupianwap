@@ -60,8 +60,7 @@ export default {
 <style lang="less" scoped>
 .quotation_scheme {
   .title_bottom_button {
-    height: 96px;
-    line-height: 96px;
+    padding-bottom: 20px;
     background: #4974f5;
     border-radius: 8px;
 
@@ -71,8 +70,11 @@ export default {
     color: #ffffff;
     text-align: center;
   }
+  ::v-deep .sp-action-sheet__header {
+    line-height: 40px;
+    padding-top: 48px;
+  }
   ::v-deep .sp-action-sheet__header--title {
-    font-family: PingFangSC-Medium;
     font-weight: bold;
     font-size: 40px;
     color: #222222;
@@ -85,7 +87,6 @@ export default {
     background-color: rgba(0, 0, 0, 0.4);
   }
   .content {
-    font-family: PingFangSC-Regular;
     padding: 30px 40px 40px;
     font-size: 0;
     max-height: 60vh;
@@ -102,7 +103,6 @@ export default {
         font-size: 34px;
         color: #1a1a1a;
         line-height: 34px;
-        margin: 0 14px;
       }
       .price {
         font-weight: bold;
