@@ -74,7 +74,8 @@
     <TcPlanners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
     <!--E 第五板块 推荐规划师-->
     <!--S  精选案例-->
-    <OrderCase></OrderCase>
+    <!-- <OrderCase></OrderCase> -->
+    <CaseNew />
     <!--E  精选案例-->
     <!--S 第十板块 服务详情-->
     <ServiceDetail
@@ -118,6 +119,8 @@ import TcPlanners from '~/components/detail/TcPlanners1.vue'
 import ServiceDetail from '~/components/detail/ServiceDetail.vue'
 import RelatedRecommend from '~/components/detail/RelatedRecommend.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
+import CaseNew from '~/components/detail/CaseNew'
+
 import getUserSign from '~/utils/fingerprint'
 import { productDetailsApi, recommendApi, shopApi } from '~/api'
 import MyIcon from '~/components/common/myIcon/MyIcon'
@@ -141,8 +144,9 @@ export default {
     bottomBar,
     MyIcon,
     CommentBox,
-    OrderCase,
+    // OrderCase,
     OrderDynamic,
+    CaseNew,
   },
   mixins: [imHandle],
   props: {
