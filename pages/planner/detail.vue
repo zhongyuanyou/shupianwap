@@ -1748,7 +1748,6 @@ export default {
             align-items: normal;
             margin: 0 0 24px 0;
             .two_line {
-              max-width: 440px;
               -webkit-line-clamp: 3 !important;
             }
             > p {
