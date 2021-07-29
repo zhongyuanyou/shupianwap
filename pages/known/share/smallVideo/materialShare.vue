@@ -1,6 +1,6 @@
 <template>
   <div class="m-known-share smallVideo materialShare">
-    <template v-if="showContent && vDetail.status == 1 && vDetail.flag == 1">
+    <template v-if="showContent">
       <div
         class="m-known-share smallVideo materialShare"
         :style="{

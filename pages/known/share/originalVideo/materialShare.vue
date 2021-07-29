@@ -6,7 +6,7 @@
       :source-id="shareValue.commonId || vDetail.id"
       :share-id="shareValue.shareId"
     />
-    <template v-if="showContent && vDetail.status == 1 && vDetail.flag == 1">
+    <template v-if="showContent">
       <client-only>
         <sp-video
           :options="playerOptions"
