@@ -217,7 +217,15 @@
     </div>
 
     <transition name="fade">
-      <div v-if="stickyFlag" class="group-sticky">
+      <div
+        v-if="stickyFlag"
+        class="group-sticky"
+        :style="{
+          top: isInApp
+            ? `${Number(appInfo.statusBarHeight) / 100 + 1.18}rem`
+            : '0.88rem',
+        }"
+      >
         <div v-if="Object.keys(info.teamInfo).length > 0" class="group-tile">
           <sp-image
             :src="info.teamInfo.img"
@@ -299,6 +307,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
     }),
   },
   mounted() {
@@ -573,7 +582,7 @@ export default {
   .group-tile {
     margin-top: 30px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     padding: 0 40px;
     .content-left {
       margin-right: 32px;
@@ -591,7 +600,6 @@ export default {
         color: #999999;
         font-size: 26px;
         line-height: 37px;
-        .textOverflow(2);
       }
     }
   }
@@ -896,7 +904,6 @@ export default {
     position: fixed;
     width: 100%;
     left: 0;
-    top: 88px;
     z-index: 99;
     background: #fff;
     .group-tile {
