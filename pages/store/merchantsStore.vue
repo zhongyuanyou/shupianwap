@@ -62,7 +62,15 @@
       </sp-skeleton>
     </div>
 
-    <div class="bg-group-fixed" :style=" {opacity:floatview ?'1':'0',top:isInApp?`${(Number(appInfo.statusBarHeight)/100)+1.18}rem`:'0.88rem'}">
+    <div
+      class="bg-group-fixed"
+      :style="{
+        opacity: floatview ? '1' : '0',
+        top: isInApp
+          ? `${Number(appInfo.statusBarHeight) / 100 + 1.18}rem`
+          : '0.88rem',
+      }"
+    >
       <div class="footer">
         <img :src="detailData.mchBaseInfo.logo" alt="" />
         <div class="footertext">
@@ -89,7 +97,10 @@
       </div>
     </div>
     <div class="body">
-      <div v-if="detailData.banners && detailData.banners.length>0" class="swipe">
+      <div
+        v-if="detailData.banners && detailData.banners.length > 0"
+        class="swipe"
+      >
         <sp-swipe class="my-swipe" :autoplay="3000" indicator-color="#4974F5">
           <sp-swipe-item
             v-for="(item, index) in detailData.banners"
@@ -99,9 +110,9 @@
           </sp-swipe-item>
         </sp-swipe>
       </div>
-      <div class="body-content" style="padding-top:0.56rem">
+      <div class="body-content" style="padding-top: 0.56rem">
         <sp-skeleton title :row="4" :loading="loading">
-          <p class="title" style="margin-top:0">商户服务</p>
+          <p class="title" style="margin-top: 0">商户服务</p>
           <div class="sp-score">
             <div class="sp-score__score">
               <div>
@@ -143,15 +154,14 @@
         </sp-skeleton>
       </div>
       <sp-skeleton title :row="12" :loading="loading"> </sp-skeleton>
-      <div
-        v-if="detailData.goodsRecommend.length > 0"
-        class="body-content recommended"
-      >
-        <p class="title" style="margin-top:0.56rem;margin-bottom:0.08rem">为您推荐</p>
+      <div v-if="goodsRecommend.length > 0" class="body-content recommended">
+        <p class="title" style="margin-top: 0.56rem; margin-bottom: 0.08rem">
+          为您推荐
+        </p>
         <div class="tabs">
           <ul>
             <li
-              v-for="(item, index) in detailData.goodsRecommend"
+              v-for="(item, index) in goodsRecommend"
               :key="index"
               :class="active === item.id ? 'tab_active' : ''"
               @click="tabsActive(item.id)"
@@ -169,7 +179,7 @@
           >
             <img :src="data.img" alt="" />
             <div>
-              <p class="title" style="margin: 0;font-size:0.32rem">
+              <p class="title" style="margin: 0; font-size: 0.32rem">
                 <span>{{ data.name }}</span>
               </p>
               <p class="label">
@@ -198,8 +208,11 @@
           更多优惠
         </button>
       </div>
-      <div v-if="!loading && detailData.planners.length>0" class="body-content recommendedPlanner">
-        <p class="title" style="margin-top:0.56rem">推荐规划师</p>
+      <div
+        v-if="!loading && detailData.planners.length > 0"
+        class="body-content recommendedPlanner"
+      >
+        <p class="title" style="margin-top: 0.56rem">推荐规划师</p>
         <div class="planner">
           <ul>
             <li
@@ -282,7 +295,6 @@ export default {
       urlData: this.$route.query,
       headActive: 'index',
       detailData: {
-        goodsRecommend: [],
         mchService: {},
         mchBaseInfo: {},
       },
@@ -302,6 +314,7 @@ export default {
       tabsListData: [],
       shareOptions: [],
       showShare: false,
+      goodsRecommend: [],
     }
   },
   computed: {
@@ -400,7 +413,7 @@ export default {
   methods: {
     ...mapActions({
       POSITION_CITY: 'city/POSITION_CITY',
-    }), 
+    }),
     ...mapMutations({
       setUserInfo: 'user/SET_USER',
       clearUserInfo: 'user/CLEAR_USER',
@@ -425,7 +438,7 @@ export default {
     // 获取详情数据
     async getDetail() {
       try {
-        const { storeId , pageStatus=''} = this.$route.query
+        const { storeId, pageStatus = '' } = this.$route.query
         if (storeId == null) {
           this.$xToast.show({
             message: '缺少店铺参数!',
@@ -435,7 +448,7 @@ export default {
           })
           return
         }
-        const params = { storeId,type:pageStatus,ignoreDataScope:'goods' }
+        const params = { storeId, type: pageStatus, ignoreDataScope: 'goods' }
         const data = await this.$axios.get(storeApi.mchStoreInfo, { params })
         if (data.code !== 200) {
           throw new Error(data.message)
@@ -445,8 +458,21 @@ export default {
         // MCH_BASE_INFO 商户基础信息
         // GOODS_RECOMMEND 商品推荐
         // SWIPER_IMAGE 轮播图
-        this.active = data.data.goodsRecommend.length>0 && data.data.goodsRecommend[0].id
         this.detailData = data.data || {}
+        const res = await this.$axios.post(storeApi.recommendGoodsClassify, {
+          goodsRecommend: data.data.goodsRecommend,
+          storeId,
+          type: pageStatus,
+        })
+        if (res.code === 200) {
+          this.goodsRecommend = res.data
+        }
+        if (this.goodsRecommend.length > 0) {
+          this.active = this.goodsRecommend[0].id
+        } else {
+          this.active = ''
+        }
+
         this.getList()
         return data
       } catch (error) {
@@ -462,13 +488,15 @@ export default {
     },
     // 获取列表数据
     async getList() {
-      if(!this.active){return}
-      const { storeId , pageStatus='' } = this.$route.query
+      if (!this.active) {
+        return
+      }
+      const { storeId, pageStatus = '' } = this.$route.query
       try {
         const params = {
           storeId,
           typeId: this.active,
-          type:pageStatus,
+          type: pageStatus,
           page: 1,
           limit: 4,
         }
@@ -627,7 +655,8 @@ export default {
         console.log('sharedUrl:', sharedUrl)
         this.$appFn.dggShare(
           {
-            image: 'https://cdn.shupian.cn/sp-pt/wap/images/2cjrp1v1q8sg000.png',
+            image:
+              'https://cdn.shupian.cn/sp-pt/wap/images/2cjrp1v1q8sg000.png',
             title: '商户店铺',
             subTitle: `优选商户 - ${this.detailData.mchBaseInfo.name}的店铺`,
             url: sharedUrl,
@@ -652,57 +681,57 @@ export default {
     },
     headTabsClick() {
       if (this.headActive === 'rememded') {
-        const { pageStatus='' } = this.$route.query
+        const { pageStatus = '' } = this.$route.query
         this.$router.push({
           path: '/store/hotRecommended',
           query: {
             active: this.active,
             storeId: this.detailData.id,
-            pageStatus
+            pageStatus,
           },
         })
       }
     },
     linkPlanner(item) {
-      this.urlData.pageStatus!=='preview'&&
-      this.$router.push({
-        path: '/planner/detail',
-        query: {
-          mchUserId: item.plannerId,
-        },
-      })
+      this.urlData.pageStatus !== 'preview' &&
+        this.$router.push({
+          path: '/planner/detail',
+          query: {
+            mchUserId: item.plannerId,
+          },
+        })
     },
     linkGood(item) {
       if (item.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
-        this.urlData.pageStatus!=='preview'&&
-        this.$router.push({
-          path: '/detail/transactionDetails',
-          query: {
-            type: item.typeCode,
-            productId: item.id,
-          },
-        })
+        this.urlData.pageStatus !== 'preview' &&
+          this.$router.push({
+            path: '/detail/transactionDetails',
+            query: {
+              type: item.typeCode,
+              productId: item.id,
+            },
+          })
       } else {
-        this.urlData.pageStatus!=='preview'&&
-        this.$router.push({
-          path: '/detail',
-          query: {
-            productId: item.id,
-          },
-        })
+        this.urlData.pageStatus !== 'preview' &&
+          this.$router.push({
+            path: '/detail',
+            query: {
+              productId: item.id,
+            },
+          })
       }
     },
     gohome() {
       this.$router.push('/')
     },
     moreRem() {
-      const { pageStatus='' } = this.$route.query
+      const { pageStatus = '' } = this.$route.query
       this.$router.push({
         path: '/store/hotRecommended',
         query: {
           active: this.active,
           storeId: this.detailData.id,
-          pageStatus
+          pageStatus,
         },
       })
     },
@@ -757,7 +786,7 @@ export default {
       p {
         &:first-of-type {
           line-height: 62px;
-          
+
           font-family: PingFangSC-Regular;
           font-size: 44px;
           color: #ffffff;
@@ -824,7 +853,7 @@ export default {
       p {
         &:first-of-type {
           line-height: 62px;
-          
+
           font-family: PingFangSC-Regular;
           font-size: 44px;
           color: #000;
@@ -875,7 +904,7 @@ export default {
       height: 6px;
       background: #4974f5;
       border-radius: 3px;
-      bottom:40px
+      bottom: 40px;
     }
   }
   .body {
@@ -888,10 +917,9 @@ export default {
     border-top-left-radius: 24px;
     z-index: 1;
     .swipe {
-      margin:64px 0 0 0;
+      margin: 64px 0 0 0;
       border-radius: 8px;
       .my-swipe {
-        
         ::v-deep .sp-swipe-item {
           text-align: center;
           background: #dddddd;
@@ -923,20 +951,20 @@ export default {
         font-size: 24px;
         color: #999999;
         letter-spacing: 0;
-        >div{
+        > div {
           box-sizing: border-box;
           width: 285px;
           height: 140px;
-          padding:14px 32px;
-          background: #F8F8F8;
+          padding: 14px 32px;
+          background: #f8f8f8;
           border-radius: 8px;
-          &:first-of-type{
+          &:first-of-type {
             background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/65ie49d8a8o0000.png');
             background-repeat: no-repeat;
             background-size: 80px 80px;
             background-position: center right 20px;
           }
-          &:last-of-type{
+          &:last-of-type {
             background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/7lc1ert8stg0000.png');
             background-repeat: no-repeat;
             background-size: 80px 80px;
@@ -1007,11 +1035,11 @@ export default {
           li {
             position: relative;
             margin: 0 56px 0 0;
-            span{
+            span {
               max-width: 192px;
-              white-space:nowrap;
-              overflow:hidden;
-              text-overflow:ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
             .tabs_line {
               position: absolute;
@@ -1075,7 +1103,7 @@ export default {
               line-height: 22px;
               span {
                 display: inline-block;
-                width:450px;
+                width: 450px;
                 padding: 0 8px 0 8px;
                 border-right: 1px solid #1a1a1a;
                 overflow: hidden;

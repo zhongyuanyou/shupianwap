@@ -112,7 +112,7 @@
         <p class="sp-score__score">
           <span>{{ detailData.personal.point }}</span>
         </p>
-        <p class="sp-score__statistical">
+        <p v-show="false" class="sp-score__statistical">
           <span>打败{{ detailData.personal.beatProp }}的规划师</span>
         </p>
         <p class="sp-score__detail">
@@ -126,10 +126,7 @@
       </div>
       <sp-skeleton title :row="formatShowPoint ? 10 : 7" :loading="loading">
         <div
-          v-if="
-            detailData.modules.length > 0 &&
-            detailData.modules.some((item) => item.code === 'GOODS_RECOMMEND')
-          "
+          v-if="goodsRecommend.length > 0"
           class="recommended"
           :class="titleStatus ? '' : 'tabs'"
         >
@@ -137,9 +134,7 @@
           <div class="tabs">
             <ul>
               <li
-                v-for="(item, index) in detailData.modules.filter(
-                  (item) => item.code === 'GOODS_RECOMMEND'
-                )[0].data"
+                v-for="(item, index) in goodsRecommend"
                 :key="index"
                 :class="active === item.id ? 'tab_active' : ''"
                 @click="tabsActive(item.id)"
@@ -298,6 +293,7 @@ export default {
           finished: false,
         },
       },
+      goodsRecommend: [],
     }
   },
   computed: {
@@ -316,7 +312,10 @@ export default {
       const serveAge = this.detailData.personal.serveAge
       if (serveAge == null) {
         return '--'
+      } else {
+        return serveAge
       }
+      /*
       if (serveAge < 1) {
         return '小于1年'
       }
@@ -336,6 +335,7 @@ export default {
         return '5年以上'
       }
       return ''
+      */
     },
     formatShowPoint() {
       const { show } = this.IMDetailData || {}
@@ -384,6 +384,9 @@ export default {
     goScoreDetail() {
       this.$router.push({
         path: '/store/spScoreDetail',
+        query: {
+          score: this.detailData.personal.point,
+        },
       })
     },
     gohome() {
@@ -460,6 +463,15 @@ export default {
             data.modules[0].data[0].id) ||
           ''
         this.detailData = data || {}
+
+        // 添加处理商品分类逻辑
+        const res = await this.$axios.post(storeApi.recommendGoodsClassify, {
+          goodsRecommend: data.goodsRecommend,
+          storeId: data.id,
+        })
+        if (res.code === 200) {
+          this.goodsRecommend = res.data
+        }
         this.getList('refull', 10)
         // IM接口请求数据
         const IMParams = { id: mchUserId }
@@ -1014,7 +1026,6 @@ export default {
     }
     .sp-score {
       width: 100%;
-      height: 314px;
       padding: 42px 40px;
       background: #ffffff;
       border: 1px solid #dddddd;
@@ -1043,7 +1054,7 @@ export default {
         }
       }
       &__score {
-        margin: 11px 0 0 0;
+        margin: 20px 0 20px 0;
         font-family: Bebas;
         font-size: 58px;
         color: #222222;

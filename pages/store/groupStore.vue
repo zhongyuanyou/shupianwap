@@ -131,11 +131,11 @@
         </div>
       </div>
     </div>
-    <div v-if="info.goodsRecommend.length > 0" class="goods-recommend-wrapper">
+    <div v-if="goodsRecommend.length > 0" class="goods-recommend-wrapper">
       <div class="main-tile">为您推荐</div>
       <div class="tabs">
         <div
-          v-for="(item, index) in info.goodsRecommend"
+          v-for="(item, index) in goodsRecommend"
           :key="index"
           class="tab"
           :class="[active === index ? 'z-active' : '']"
@@ -187,7 +187,7 @@
       </sp-skeleton>
     </div>
     <div
-      v-if="info.goodsRecommend.length > 0"
+      v-if="goodsRecommend.length > 0"
       class="more-recommend"
       @click="toClassifyPage"
     >
@@ -217,7 +217,15 @@
     </div>
 
     <transition name="fade">
-      <div v-if="stickyFlag" class="group-sticky">
+      <div
+        v-if="stickyFlag"
+        class="group-sticky"
+        :style="{
+          top: isInApp
+            ? `${Number(appInfo.statusBarHeight) / 100 + 1.18}rem`
+            : '0.88rem',
+        }"
+      >
         <div v-if="Object.keys(info.teamInfo).length > 0" class="group-tile">
           <sp-image
             :src="info.teamInfo.img"
@@ -283,12 +291,12 @@ export default {
       storeId: '', // 768006091074595352
       info: {
         banners: [],
-        goodsRecommend: [],
         goods: [],
         teamInfo: {},
         teamService: {},
         planners: [],
       }, // 详情数据
+      goodsRecommend: [],
       type: '', // 页面类型
       styleObject: {
         'box-shadow': '0px 1px 0px 0px #f4f4f4',
@@ -299,6 +307,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
     }),
   },
   mounted() {
@@ -344,8 +353,8 @@ export default {
     toClassifyPage() {
       // 得到tpeid
       let typeId = ''
-      if (this.info.goodsRecommend.length > 0) {
-        typeId = this.info.goodsRecommend[this.active].id
+      if (this.goodsRecommend.length > 0) {
+        typeId = this.goodsRecommend[this.active].id
       }
       this.$router.push({
         path: '/store/groupStoreClassify',
@@ -380,15 +389,26 @@ export default {
         if (code !== 200) {
           throw new Error(message)
         }
+        // 赋值查询团队信息
         this.info = data
+        // 处理 bannber 为空情况
         if (this.info.banners.length === 0) {
           this.info.banners.push(
             'https://cdn.shupian.cn/sp-pt/wap/images/29nq2m9p6pno000.jpg'
           )
         }
         this.groupInfoLoading = false
-        if (data.goodsRecommend.length !== 0) {
-          const typeId = data.goodsRecommend[0].id
+        const res = await this.$axios.post(storeApi.recommendGoodsClassify, {
+          goodsRecommend: data.goodsRecommend,
+          storeId: this.storeId,
+          type: this.type,
+        })
+        if (res.code === 200) {
+          this.goodsRecommend = res.data
+        }
+        // 这里添加查询商品分类接口
+        if (this.goodsRecommend.length !== 0) {
+          const typeId = this.goodsRecommend[0].id
           this.getGoodsApi(typeId)
         } else {
           this.goodsLoading = false
@@ -562,7 +582,7 @@ export default {
   .group-tile {
     margin-top: 30px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     padding: 0 40px;
     .content-left {
       margin-right: 32px;
@@ -580,7 +600,6 @@ export default {
         color: #999999;
         font-size: 26px;
         line-height: 37px;
-        .textOverflow(2);
       }
     }
   }
@@ -885,7 +904,6 @@ export default {
     position: fixed;
     width: 100%;
     left: 0;
-    top: 88px;
     z-index: 99;
     background: #fff;
     .group-tile {
