@@ -35,10 +35,10 @@
       </div>
       <div class="line"></div>
     </div>
-    <div v-if="info.goodsRecommend.length > 0" class="goods-recommend-wrapper">
+    <div v-if="goodsRecommend.length > 0" class="goods-recommend-wrapper">
       <div class="tabs">
         <div
-          v-for="(item, index) in info.goodsRecommend"
+          v-for="(item, index) in goodsRecommend"
           :key="index"
           class="tab"
           :class="[active === index ? 'z-active' : '']"
@@ -85,7 +85,7 @@
         >
       </div>
     </div>
-    <div v-if="requestStatus && info.goodsRecommend.length <= 0" class="empty">
+    <div v-if="requestStatus && goodsRecommend.length <= 0" class="empty">
       <img src="https://cdn.shupian.cn/sp-pt/wap/images/32lnvdx3omo0000.png" />
       <p>抱歉,未找到相关结果</p>
     </div>
@@ -121,8 +121,8 @@ export default {
       storeId: '',
       info: {
         teamInfo: {},
-        goodsRecommend: [],
       },
+      goodsRecommend: [],
       goods: [],
       typeId: '',
       type: '',
@@ -225,7 +225,17 @@ export default {
         if (code !== 200) {
           throw new Error(message)
         }
+        // 赋值查询团队信息
         this.info = data
+        // 处理 商品分类
+        const res = await this.$axios.post(storeApi.recommendGoodsClassify, {
+          goodsRecommend: data.goodsRecommend,
+          storeId: this.storeId,
+          type: this.type,
+        })
+        if (res.code === 200) {
+          this.goodsRecommend = res.data
+        }
         if (!this.requestStatus) {
           this.requestStatus = true
         }
