@@ -316,6 +316,7 @@ export default {
             const cacheValue = JSON.parse(res.data.cacheValue)
             this.shareValue = cacheValue
             this.shareId = cacheValue.shareId
+            this.plannerId = this.shareValue.businessId
             console.log('shareValue', this.shareValue)
             this.getDetail(this.shareId)
             this.$refs.myPlanner.getPlannerInfoApi(this.shareValue.businessId)
