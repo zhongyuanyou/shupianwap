@@ -305,7 +305,7 @@ export default {
             this.list = res.records
           } else {
             const oldArr = JSON.parse(JSON.stringify(this.list))
-            const newArr = oldArr.concat(oldArr)
+            const newArr = oldArr.concat(res.records)
             this.list = newArr
           }
 
