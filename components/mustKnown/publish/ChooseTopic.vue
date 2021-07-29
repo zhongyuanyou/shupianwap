@@ -1,6 +1,10 @@
 <template>
-  <section>
-    <div class="choose-topic" @click="openModal">
+  <div>
+    <div
+      class="choose-topic"
+      @click="openModal"
+      :style="{ bottom: bottomHeight + 'px' }"
+    >
       <p v-if="!topics.length">
         <my-icon
           name="spiconfont-nav_ic_abb"
@@ -59,7 +63,7 @@
         </div>
       </div>
     </sp-popup>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -114,6 +118,7 @@ export default {
       submitFlag: false, // 设置是否更新result数据
       backupResult: [],
       backupId: '',
+      bottomHeight: 65,
     }
   },
   watch: {
@@ -140,6 +145,9 @@ export default {
   */
   mounted() {
     this.topicApi()
+    if (this.$route.query.platForm === 'mpass' && !window.AlipayJSBridge) {
+      this.bottomHeight = 110
+    }
   },
   /*
   beforeDestroy() {
