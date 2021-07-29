@@ -359,7 +359,7 @@ export default {
   }
   .empty-container {
     min-height: 100vh;
-    background-color: #fff;
+    background-color: #ffffff;
     .empty-text ::v-deep .sp-empty__description {
       font-size: 30px;
       font-family: PingFangSC-Medium, PingFang SC;

@@ -7,8 +7,9 @@
         <div class="coupon_price">
           <span v-if="item.cardType === 2">
             {{ getDiscount(item.discount) }}
-            <span class="coupon_price_unit">折</span>
           </span>
+          <span v-if="item.cardType === 2" class="coupon_price_unit">折</span>
+
           <span v-else-if="item.cardType === 1">{{ item.rebatePrice }}</span>
         </div>
         <div v-if="item.rebateNeedPrice == 0" class="can_use">无门槛</div>
@@ -24,7 +25,9 @@
             :class="{ invalid: couponType != 0 }"
             >{{ item.cardType == 1 ? '满减卡' : '折扣卡' }}</span
           >
-          {{ item.cardName }}
+          <span class="coupon_name">
+            {{ item.cardName }}满减卡满减卡满减卡满减卡
+          </span>
         </div>
         <div ref="textpro" class="content">
           {{ getuseTypeName(item.useLimit) }}
@@ -40,7 +43,7 @@
               formatTime(item.validateDateEnd)
             }}
           </span>
-          <span class="surplus" :class="{ warn: couponType === 0 }">
+          <span class="surplus" :class="{ surplus_warn: couponType === 0 }">
             剩余{{ item.availableTimes }}次
           </span>
         </div>
@@ -95,9 +98,9 @@ export default {
     getuseTypeName(useType) {
       let useTypeName = ''
       switch (useType) {
-        // case 1:
-        //   useTypeName = '全品类通用'
-        //   break
+        case 1:
+          useTypeName = '全场通用'
+          break
         case 2:
           useTypeName = '仅限指定品类使用'
           break
@@ -164,6 +167,7 @@ export default {
 
     .coupon_price {
       //   height: 67px;
+      white-space: nowrap;
       font-size: 72px;
       font-family: Bebas;
       font-weight: 400;
@@ -172,6 +176,7 @@ export default {
       // padding-top: 27px;
       .coupon_price_unit {
         font-size: 36px;
+        margin-left: -6px;
       }
     }
     .can_use {
@@ -180,7 +185,7 @@ export default {
       font-weight: 400;
       color: #ffffff;
       text-align: center;
-      padding-top: 23px;
+      padding-top: 12px;
     }
   }
   .item-rt {
@@ -194,7 +199,7 @@ export default {
       font-weight: bold;
       color: #222222;
       // line-height: 32px;
-      margin: 36px 0 23px 0;
+      margin: 34px 24px 12px 0;
       word-break: break-all;
       display: -webkit-box;
       -webkit-line-clamp: 1;
@@ -202,15 +207,21 @@ export default {
       word-break: break-all;
       overflow: hidden;
 
+      .coupon_name {
+        margin-left: -12px;
+      }
       .coupon_type_name {
         background-image: linear-gradient(90deg, #fa6d5a 0%, #fa5741 100%);
         border-radius: 4px;
         padding: 1px 6px;
-        margin-right: 5px;
+        // margin-right: 5px;
 
         font-family: PingFangSC-Medium;
-        font-size: 20px;
+        font-size: 24px;
         color: #ffffff;
+        display: inline-block;
+        transform: scale(0.83);
+        transform-origin: left center;
       }
       .coupon_type_name.invalid {
         background-image: none;
@@ -225,7 +236,7 @@ export default {
       font-weight: 400;
       color: #555555;
       line-height: 32px;
-      margin-bottom: 13px;
+      // margin-bottom: 13px;
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
@@ -244,6 +255,7 @@ export default {
       top: 0px;
     }
     .date-container {
+      margin-top: 36px;
       display: flex;
       font-size: 0;
       align-items: flex-start;
@@ -280,6 +292,10 @@ export default {
         display: inline-block;
         transform-origin: right center;
         transform: scale(0.83);
+      }
+      .surplus_warn {
+        background-color: #fff3e9;
+        color: #fe8c29;
       }
       .warn {
         font-size: 20px;

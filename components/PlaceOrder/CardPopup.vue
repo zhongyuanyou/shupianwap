@@ -29,8 +29,8 @@
           </p>
         </div>
         <div v-if="tablist[tabAct].is" class="calculation">
-          {{ calculation }}
-          <span class="red">{{ num }}元</span>
+           {{ num ? '已选中优惠券，可抵扣' : '请选择优惠券' }}
+          <span v-if="num" class="red">{{ num }}元</span>
         </div>
         <div v-if="tablist[tabAct].is">
           <div class="databox">
@@ -214,12 +214,6 @@ export default {
       type: Array,
       default() {
         return []
-      },
-    },
-    calculation: {
-      type: String,
-      default() {
-        return '请选择优惠券'
       },
     },
     datalist: {

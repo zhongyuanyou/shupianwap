@@ -149,8 +149,7 @@ export default {
   },
   data() {
     return {
-      defaultImg:
-        'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0',
+      defaultImg: 'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png',
       swiperOption: {
         slidesPerView: 'auto',
         // centeredSlides: true,

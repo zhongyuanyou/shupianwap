@@ -133,7 +133,7 @@
                   </div>
                   <div class="right-content">
                     <div class="rc-span">
-                      <span>好品</span>
+                      <!-- <span>好品</span> -->
                       <span>千万补贴</span>
                     </div>
                     <div class="rc-top">
@@ -177,13 +177,13 @@
                             <div>面议</div>
                           </div>
                         </template>
-                        <div
+                        <!-- <div
                           v-if="parsePrice(item.skuPrice) !== '面议'"
                           class="bf-my"
                         >
                           {{ item.skuUnit ? item.skuNewPrice : item.skuPrice }}
                           <span>{{ item.skuUnit || '元' }}</span>
-                        </div>
+                        </div> -->
                       </div>
                       <div class="rc-bottom-rt">
                         <div>立即购买</div>
@@ -538,10 +538,7 @@ html::-webkit-scrollbar {
           display: inline-flex;
           align-items: center;
           position: absolute;
-          top: 3px;
-          span:nth-child(1) {
-            margin-right: 8px;
-          }
+          top: 5px;
           span {
             line-height: 22px;
             height: 32px;
@@ -571,7 +568,7 @@ html::-webkit-scrollbar {
           white-space: normal;
           max-height: 84px;
           line-height: 42px;
-          text-indent: 172px;
+          text-indent: 104px;
           .multiRowOverflowDot();
 
           .span3 {
@@ -621,6 +618,7 @@ html::-webkit-scrollbar {
                 font-weight: bold;
                 line-height: 32px;
                 font-family: PingFangSC-Medium, PingFang SC;
+                margin-top: 13px;
               }
               div:nth-of-type(2) {
                 font-size: 22px;
