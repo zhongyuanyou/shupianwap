@@ -671,7 +671,7 @@ export default {
       this.uPIM({
         mchUserId: this.IMDetailData.id,
         userName: this.IMDetailData.userName,
-        type: this.IMDetailData.mchClass,
+        type: this.IMDetailData.mchClass || 'MERCHANT_B',
       })
       // } else {
       //   Toast({
@@ -792,7 +792,7 @@ export default {
           {
             image:
               'https://cdn.shupian.cn/sp-pt/wap/images/cwxnvvtntxc0000.png',
-            title: '薯片找人',
+            title: '个人店铺',
             subTitle: `优选规划师 - ${this.detailData.personal.name}的店铺`,
             url: sharedUrl,
           },
@@ -901,7 +901,7 @@ export default {
       .label {
         display: inline-block;
         width: 152px;
-        padding:8px 0;
+        padding: 8px 0;
         text-align: center;
         background: rgba(234, 218, 205, 0.22);
         border-radius: 24px;
@@ -1087,14 +1087,11 @@ export default {
         ul {
           display: flex;
           justify-content: flex-start;
-          align-items: center;
           line-height: 80px;
           li {
             position: relative;
             margin: 0 56px 0 0;
             span {
-              display: inline-block;
-              line-height: 32px;
               max-width: 192px;
               white-space: nowrap;
               overflow: hidden;
@@ -1163,7 +1160,7 @@ export default {
               line-height: 22px;
               span {
                 display: inline-block;
-                width:450px;
+                width: 450px;
                 padding: 0 8px;
                 border-right: 1px solid #1a1a1a;
                 overflow: hidden;

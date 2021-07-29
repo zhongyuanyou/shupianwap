@@ -337,7 +337,7 @@
             <div>
               <i class="empty"></i>
               <span
-                >{{ numUntil(data.disapplaudCount) }} 点赞 ·
+                >{{ numUntil(data.applaudCount) }} 点赞 ·
                 {{ data.remarkCount }} 评论</span
               >
             </div>
@@ -477,7 +477,94 @@ export default {
     SpToast,
     // RecommendList,
   },
+
   mixins: [imHandle],
+  async asyncData({ $axios, query, store }) {
+    let newDetailData = {
+      photo: [],
+      baseInfo: {},
+      baseData: {},
+      content: {
+        wenda: [],
+        article: [],
+        hotNews: [],
+      },
+      live: {},
+    }
+    let detailData = {}
+    let active = ''
+    let loading = true
+    try {
+      const { mchUserId } = query
+      if (mchUserId == null) {
+        this.$xToast.show({
+          message: '缺少规划师参数!',
+          duration: 1000,
+          forbidClick: false,
+          icon: 'toast_ic_error',
+        })
+        return
+      }
+      const params = { id: mchUserId }
+      const newData = await $axios.get(
+        storeApi.plannerDetail,
+        {
+          params: {
+            mchUserId,
+            dataFlg: '1',
+            cardType: 'plannerCode',
+          },
+        },
+        {
+          headers: {
+            'x-cache-control': 'cache',
+          },
+        }
+      )
+      if (newData.code === 200) {
+        newDetailData = newData.data || {}
+        active = newDetailData.titleNavs[0]
+        newDetailData.label =
+          newDetailData.label && newDetailData.label.split('|')
+        if (newDetailData.label && newDetailData.label.length > 3) {
+          newDetailData.label = newDetailData.label.splice(0, 2)
+        }
+        newDetailData.content.hotNews.forEach((item) => {
+          item.createTime &&
+            (item.createTime = formatDate(
+              new Date(item.createTime),
+              'yyyy-MM-dd'
+            ))
+        })
+      } else {
+        // $xToast.show({
+        //   message: newData.message || '请求失败！',
+        //   duration: 1000,
+        //   forbidClick: false,
+        //   icon: 'toast_ic_error',
+        // })
+      }
+
+      const data = await planner.detail(params)
+      detailData = data || {}
+      loading = false
+      return{
+        newDetailData,
+        active,
+        loading,
+        detailData
+      }
+    } catch (error) {
+      // console.error('getDetail:', error)
+      // this.$xToast.show({
+      //   message: error.message || '请求失败！',
+      //   duration: 1000,
+      //   forbidClick: false,
+      //   icon: 'toast_ic_error',
+      // })
+      return Promise.reject(error)
+    }
+  },
   data() {
     return {
       loading: true,
@@ -557,6 +644,7 @@ export default {
       return this.$store.state.city.currentCity
     },
   },
+
   created() {
     if (process && process.client) {
       // notice:
@@ -564,9 +652,9 @@ export default {
       // 但是在app中登录等，登录信息cookie中的没有更新，导致直接从store中获取到的信息无效
       // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
       this.isInApp && this.clearUserInfo()
-      this.getDetail().finally(() => {
-        this.loading = false
-      })
+      // this.getDetail().finally(() => {
+      //   this.loading = false
+      // })
     }
   },
   async mounted() {
@@ -601,10 +689,13 @@ export default {
       // }
     },
     // 超过10000以万显示
-    numUntil(num){
-      if (!num) return "";
-      const res = Number(num) > 10000 ? `${(Number(num) / 10000).toFixed(2)}万` : Number(num);
-      return res;
+    numUntil(num) {
+      if (!num) return ''
+      const res =
+        Number(num) > 10000
+          ? `${(Number(num) / 10000).toFixed(2)}万`
+          : Number(num)
+      return res
     },
     // 判定时间差值
     timerUntil(time) {
@@ -796,8 +887,9 @@ export default {
         console.log('sharedUrl:', sharedUrl)
         this.$appFn.dggShare(
           {
-            image: 'https://cdn.shupian.cn/sp-pt/wap/images/cwxnvvtntxc0000.png',
-            title: '薯片找人',
+            image:
+              'https://cdn.shupian.cn/sp-pt/wap/images/cwxnvvtntxc0000.png',
+            title: '个人店铺',
             subTitle: `优选规划师 - ${this.newDetailData.userName}的名片`,
             url: sharedUrl,
           },
@@ -956,7 +1048,7 @@ export default {
           roomId: this.newDetailData.live.id,
           liveRoleType: '3',
         }
-        
+
         const androidRouterPath = {
           path: '/live/PlayBackActivity',
           parameter: {
@@ -969,13 +1061,11 @@ export default {
         const isIOS = userAgent.match(/iPhone|iPad|iPod/i) // ios终端
         // 安卓方法
         if (isAndroid) {
-          
           this.$appFn.dggJumpRoute(
             {
               iOSRouter: JSON.stringify(iOSRouterPath),
               androidRouter: JSON.stringify(androidRouterPath),
-            }
-            ,
+            },
             (res) => {
               const { code } = res || {}
               if (code !== 200) {

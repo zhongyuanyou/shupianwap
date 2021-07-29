@@ -62,7 +62,7 @@
       </sp-skeleton>
     </div>
 
-    <div class="bg-group-fixed" :style="floatview ? {opacity:'1'} : {opacity:'0'}">
+    <div class="bg-group-fixed" :style=" {opacity:floatview ?'1':'0',top:isInApp?`${(Number(appInfo.statusBarHeight)/100)+1.18}rem`:'0.88rem'}">
       <div class="footer">
         <img :src="detailData.mchBaseInfo.logo" alt="" />
         <div class="footertext">
@@ -307,6 +307,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
       userInfo: (state) => state.user.userInfo,
       isApplets: (state) => state.app.isApplets,
     }),
@@ -366,7 +367,7 @@ export default {
     // }
   },
   mounted() {
-   
+    console.log(this.appInfo.statusBarHeight, '4444444444444')
     window.addEventListener('scroll', this.handleScroll)
     if (this.isInApp) {
       if (this.userInfo.userId && this.userInfo.token) {
@@ -627,7 +628,7 @@ export default {
         this.$appFn.dggShare(
           {
             image: 'https://cdn.shupian.cn/sp-pt/wap/images/2cjrp1v1q8sg000.png',
-            title: '薯片找人',
+            title: '商户店铺',
             subTitle: `优选商户 - ${this.detailData.mchBaseInfo.name}的店铺`,
             url: sharedUrl,
           },
@@ -791,7 +792,7 @@ export default {
     position: fixed;
     top: 48px;
     width: 100%;
-    padding: 60px 40px 0;
+    padding: 40px 40px 10px;
     background: #fff;
     background-size: 100% 100%;
     font-family: PingFangSC-Regular;
@@ -802,6 +803,8 @@ export default {
     z-index: 2;
     opacity: 0;
     transition: opacity 0.5s;
+    border-top: 1px solid #f4f4f4;
+    border-bottom: 1px solid #f4f4f4;
     .footer {
       display: flex;
       justify-content: flex-start;
@@ -857,7 +860,6 @@ export default {
     ::v-deep .sp-tab__text {
       font-family: PingFangSC-Regular;
       font-size: 32px;
-      line-height: 32px;
     }
     ::v-deep .sp-tabs__wrap {
       margin: 0 0 0 -40px;
@@ -867,13 +869,13 @@ export default {
       font-size: 30px;
       color: #222222;
       font-weight: bold;
-      line-height: 30px;
     }
     ::v-deep .sp-tabs__line {
       width: 24px;
-      height: 6.1px;
+      height: 6px;
       background: #4974f5;
       border-radius: 3px;
+      bottom:40px
     }
   }
   .body {
@@ -998,19 +1000,14 @@ export default {
         font-family: PingFangSC-Regular;
         font-size: 30px;
         color: #999999;
-        line-height: 30px;
         ul {
           display: flex;
           justify-content: flex-start;
-          align-items: center;
           line-height: 80px;
           li {
             position: relative;
             margin: 0 56px 0 0;
             span{
-              display: inline-block;
-              height: 32px;
-              line-height: 32px;
               max-width: 192px;
               white-space:nowrap;
               overflow:hidden;
@@ -1152,7 +1149,7 @@ export default {
     .recommendedPlanner {
       .planner {
         width: 100%;
-        padding: 40px 40px 37px;
+        padding: 40px 40px;
         background: #ffffff;
         border: 1px solid #dddddd;
         overflow: scroll;

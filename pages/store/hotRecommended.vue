@@ -33,7 +33,7 @@
         </template> -->
       </Header>
     </div>
-    <div id="group" class="bg-group-fixed">
+    <div id="group" class="bg-group-fixed" :style=" {top:isInApp?`${(Number(appInfo.statusBarHeight)/100)+1.18}rem`:'0.88rem'}">
       <div class="footer">
         <img :src="detailData.mchBaseInfo.logo" alt="" />
         <div class="footertext">
@@ -207,6 +207,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+            appInfo: (state) => state.app.appInfo, // app信息
       userInfo: (state) => state.user.userInfo,
       isApplets: (state) => state.app.isApplets,
     }),
@@ -620,7 +621,7 @@ export default {
       p {
         &:first-of-type {
           max-width: 424px;
-          line-height: 45px;
+          line-height: 62px;
           margin: 0 0 20px 0;
           font-family: PingFangSC-Regular;
           font-size: 44px;
@@ -652,9 +653,10 @@ export default {
     }
   }
   .bg-group-fixed {
+    position: fixed;
     width: 100%;
     min-height: 238px;
-    padding: 37px 40px 20px;
+    padding: 37px 40px 10px;
     background: #fff;
     background-size: 100% 100%;
     font-family: PingFangSC-Regular;
@@ -684,7 +686,7 @@ export default {
       margin: 0 32px 0 20px;
       p {
         &:first-of-type {
-          line-height: 45px;
+          line-height: 62px;
           margin: 0 0 20px 0;
           font-family: PingFangSC-Regular;
           font-size: 44px;
@@ -721,7 +723,6 @@ export default {
     ::v-deep .sp-tab__text {
       font-family: PingFangSC-Regular;
       font-size: 32px;
-      line-height: 32px;
     }
     ::v-deep .sp-tabs__wrap {
       margin: 0 0 0 -40px;
@@ -732,13 +733,13 @@ export default {
       font-size: 30px;
       color: #222222;
       font-weight: bold;
-      line-height: 30px;
     }
     ::v-deep .sp-tabs__line {
       width: 24px;
-      height: 6.1px;
+      height: 6px;
       background: #4974f5;
       border-radius: 3px;
+      bottom:40px
     }
   }
   .body {
@@ -826,7 +827,7 @@ export default {
         color: #222222;
       }
       .tabs {
-        margin: 8px 0 12px 0;
+        padding:300px 0 0;
         font-family: PingFangSC-Regular;
         font-size: 30px;
         color: #999999;
@@ -834,15 +835,11 @@ export default {
         ul {
           display: flex;
           justify-content: flex-start;
-          align-items: center;
           line-height: 80px;
           li {
             position: relative;
             margin: 0 56px 0 0;
             span{
-              display: inline-block;
-              height: 32px;
-              line-height: 32px;
               max-width: 192px;
               white-space:nowrap;
               overflow:hidden;
