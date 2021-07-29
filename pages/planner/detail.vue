@@ -175,8 +175,6 @@
               <div class="detail-content__wrap-body">
                 <div class="detail-content__section-title">个人信息</div>
                 <ul class="detail-content__section-content">
-                  
-
                   <li>
                     <span class="label">服务经验：</span>
                     <span class="content">{{
@@ -203,7 +201,9 @@
                     <span class="label">平均响应时长：</span>
                     <span class="content">{{
                       newDetailData.baseData.responseTime
-                        ? `${newDetailData.baseData.responseTime}s`
+                        ? `${formatSeconds(
+                            newDetailData.baseData.responseTime
+                          )} `
                         : '--'
                     }}</span>
                   </li>
@@ -554,10 +554,9 @@ export default {
           newDetailData.label = newDetailData.label.splice(0, 2)
         }
         newDetailData.content.hotNews.forEach((item) => {
-          if(item.createTime){
+          if (item.createTime) {
             item.createTime = item.createTime.split(' ')[0] || ''
           }
-          
         })
       } else {
         // $xToast.show({
@@ -698,6 +697,34 @@ export default {
       const oldTime = s.split(' ')[0]
       const time = oldTime.split('-')
       return `${time[1]}月${time[2]}日`
+    },
+    formatSeconds(value) {
+      if (!value) {
+        return '--'
+      }
+      let theTime = parseInt(value) // 秒
+      if (value < 60) {
+        return value + 's'
+      } else {
+        let middle = 0 // 分
+        let hour = 0 // 小时
+        if (theTime > 60) {
+          middle = parseInt(theTime / 60)
+          theTime = parseInt(theTime % 60)
+          if (middle > 60) {
+            hour = parseInt(middle / 60)
+            middle = parseInt(middle % 60)
+          }
+        }
+        let result = '' + parseInt(theTime) + '秒'
+        if (middle > 0) {
+          result = '' + parseInt(middle) + '分' + result
+        }
+        if (hour > 0) {
+          result = '' + parseInt(hour) + '小时' + result
+        }
+        return result
+      }
     },
     goScoreDetail() {
       this.$router.push({
@@ -1586,12 +1613,13 @@ export default {
         padding-bottom: constant(safe-area-inset-bottom);
         padding-bottom: env(safe-area-inset-bottom);
         .three_line {
+          max-width: 600px;
           max-height: 86px;
-          .textOverflow(2)
+          .textOverflow(2);
         }
         .two_line {
           max-height: 96px;
-          .textOverflow(2)
+          .textOverflow(2);
         }
       }
       .tabs {
