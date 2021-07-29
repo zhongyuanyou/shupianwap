@@ -175,19 +175,20 @@
               <div class="detail-content__wrap-body">
                 <div class="detail-content__section-title">个人信息</div>
                 <ul class="detail-content__section-content">
-                  <li>
-                    <span class="label">服务次数：</span>
-                    <span class="content">{{
-                      newDetailData.baseData.peopleServed
-                        ? `${newDetailData.baseData.peopleServed}次`
-                        : '--'
-                    }}</span>
-                  </li>
+                  
 
                   <li>
                     <span class="label">服务经验：</span>
                     <span class="content">{{
                       newDetailData.baseData.serviceExperience
+                    }}</span>
+                  </li>
+                  <li>
+                    <span class="label">服务人数：</span>
+                    <span class="content">{{
+                      newDetailData.baseData.peopleServed
+                        ? `${newDetailData.baseData.peopleServed}人`
+                        : '--'
                     }}</span>
                   </li>
                   <li>
@@ -199,7 +200,7 @@
                     }}</span>
                   </li>
                   <li>
-                    <span class="label">平均响应时间：</span>
+                    <span class="label">平均响应时长：</span>
                     <span class="content">{{
                       newDetailData.baseData.responseTime
                         ? `${newDetailData.baseData.responseTime}s`
