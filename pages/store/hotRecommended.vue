@@ -96,7 +96,7 @@
               <img :src="data.img" alt="" />
               <div>
                 <p class="title">
-                  <span>{{ data.name }}</span>
+                  <span class="good-tile">{{ data.name }}</span>
                 </p>
                 <p class="label">
                   <span
@@ -901,6 +901,12 @@ export default {
           justify-content: flex-start;
           align-items: flex-start;
           padding: 22px 0 28px;
+          .good-tile {
+            font-size: 32px;
+            line-height: 42px;
+            font-weight: bold;
+            color: #222222;
+          }
           img {
             width: 160px;
             height: 160px;

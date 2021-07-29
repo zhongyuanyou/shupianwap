@@ -1657,6 +1657,7 @@ export default {
               width: 100%;
 
               img {
+                flex-shrink: 0;
                 width: 190px;
                 height: 127px;
                 margin: 0 0 0 40px;
@@ -1704,6 +1705,7 @@ export default {
               align-items: normal;
               width: 100%;
               img {
+                flex-shrink: 0;
                 width: 190px;
                 height: 127px;
                 margin: 0 0 0 40px;
@@ -1755,6 +1757,7 @@ export default {
               align-items: normal;
               width: 100%;
               img {
+                flex-shrink: 0;
                 width: 190px;
                 height: 127px;
                 margin: 0 0 0 40px;
