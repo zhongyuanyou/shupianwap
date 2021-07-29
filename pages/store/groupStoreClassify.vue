@@ -38,7 +38,7 @@
       </div>
     </sp-sticky>
     <div v-if="goodsRecommend.length > 0" class="goods-recommend-wrapper">
-      <div class="tabs">
+      <div class="tabs" :style="`margin-top:${headtopHeight/100}rem`">
         <div
           v-for="(item, index) in goodsRecommend"
           :key="index"
@@ -133,6 +133,7 @@ export default {
       styleObject: {
         'box-shadow': '0px 1px 0px 0px #f4f4f4',
       },
+      headtopHeight:0,
     }
   },
   mounted() {
@@ -278,7 +279,9 @@ export default {
     background: #fff;
     }
   .group-tile {
+
     margin-top: 37px;
+
     display: flex;
     align-items: flex-start;
     padding: 0 40px;
@@ -430,7 +433,7 @@ export default {
       height: 56px;
     }
     .tabs {
-      margin-top: 8px;
+      margin-top: 580px;
       height: 80px;
       display: flex;
       align-items: center;
