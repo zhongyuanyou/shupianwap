@@ -1,42 +1,44 @@
 <template>
   <!-- 团队店铺二级分类 -->
   <div class="m-store group-store">
-    <Header title="团队店铺" :fixed="true" :head-style="styleObject" />
-    <div class="group-tile">
-      <sp-image
-        :src="info.teamInfo.img"
-        fit="cover"
-        round
-        height="1.2rem"
-        width="1.2rem"
-        class="content-left"
-      ></sp-image>
-      <div class="content-right">
-        <div class="tile">{{ info.teamInfo.name }}</div>
-        <div class="desc">团队口号：{{ info.teamInfo.profile }}</div>
-      </div>
-    </div>
-    <div class="tabs-wrapper">
-      <div class="tabs">
-        <div
-          class="tab"
-          :class="[activeMain === 0 ? 'z-active' : '']"
-          @click="changeMainTab(0)"
-        >
-          主页
-        </div>
-        <div
-          class="tab"
-          :class="[activeMain === 1 ? 'z-active' : '']"
-          @click="changeMainTab(1)"
-        >
-          热门推荐
+    <sp-sticky>
+      <Header title="团队店铺" :fixed="true" :head-style="styleObject" />
+      <div class="group-tile">
+        <sp-image
+          :src="info.teamInfo.img"
+          fit="cover"
+          round
+          height="1.2rem"
+          width="1.2rem"
+          class="content-left"
+        ></sp-image>
+        <div class="content-right">
+          <div class="tile">{{ info.teamInfo.name }}</div>
+          <div class="desc">团队口号：{{ info.teamInfo.profile }}</div>
         </div>
       </div>
-      <div class="line"></div>
-    </div>
+      <div class="tabs-wrapper">
+        <div class="tabs">
+          <div
+            class="tab"
+            :class="[activeMain === 0 ? 'z-active' : '']"
+            @click="changeMainTab(0)"
+          >
+            主页
+          </div>
+          <div
+            class="tab"
+            :class="[activeMain === 1 ? 'z-active' : '']"
+            @click="changeMainTab(1)"
+          >
+            热门推荐
+          </div>
+        </div>
+        <div class="line"></div>
+      </div>
+    </sp-sticky>
     <div v-if="goodsRecommend.length > 0" class="goods-recommend-wrapper">
-      <div class="tabs">
+      <div class="tabs" :style="`margin-top:${headtopHeight/100}rem`">
         <div
           v-for="(item, index) in goodsRecommend"
           :key="index"
@@ -94,7 +96,7 @@
 </template>
 
 <script>
-import { Swipe, swipeItem, Image, List } from '@chipspc/vant-dgg'
+import { Swipe, swipeItem, Image, List, Sticky } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import { storeApi } from '@/api'
 
@@ -106,6 +108,7 @@ export default {
     [swipeItem.name]: swipeItem,
     [Image.name]: Image,
     [List.name]: List,
+    [Sticky.name]: Sticky,
   },
   data() {
     return {
@@ -130,6 +133,7 @@ export default {
       styleObject: {
         'box-shadow': '0px 1px 0px 0px #f4f4f4',
       },
+      headtopHeight:0,
     }
   },
   mounted() {
@@ -271,8 +275,13 @@ export default {
 
 <style lang="less" scoped>
 .m-store.group-store {
+  ::v-deep.sp-sticky {
+    background: #fff;
+    }
   .group-tile {
+
     margin-top: 37px;
+
     display: flex;
     align-items: flex-start;
     padding: 0 40px;
@@ -424,7 +433,7 @@ export default {
       height: 56px;
     }
     .tabs {
-      margin-top: 8px;
+      margin-top: 580px;
       height: 80px;
       display: flex;
       align-items: center;
