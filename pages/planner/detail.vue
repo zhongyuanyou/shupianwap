@@ -148,16 +148,18 @@
                           :class="ownerInfo ? 'textshow' : 'textoverflow'"
                           >{{ newDetailData.baseInfo.lawyerIntro }}</span
                         >
+                        <i
+                          class="spiconfont pullImg"
+                          :class="
+                            ownerInfo
+                              ? 'spiconfont-shangla'
+                              : 'spiconfont-xiala'
+                          "
+                          style="font-size: 8px"
+                          @click="ownerInfo = !ownerInfo"
+                        ></i>
                       </div>
                     </li>
-                    <i
-                      class="spiconfont pullImg"
-                      :class="
-                        ownerInfo ? 'spiconfont-shangla' : 'spiconfont-xiala'
-                      "
-                      style="font-size: 8px"
-                      @click="ownerInfo = !ownerInfo"
-                    ></i>
                   </ul>
                 </div>
                 <!-- <div class="detail-content__tag-list">
@@ -206,11 +208,18 @@
                   </li>
                   <li>
                     <span class="label">好评率：</span>
-                    <span class="content">{{
-                      newDetailData.baseData.favComRate
-                        ? `${newDetailData.baseData.favComRate}%`
-                        : '--'
-                    }} <span v-if="newDetailData.baseData.Evaluator">({{ newDetailData.baseData.Evaluator }}人参与了评价)</span></span>
+                    <span class="content"
+                      >{{
+                        newDetailData.baseData.favComRate
+                          ? `${newDetailData.baseData.favComRate}%`
+                          : '--'
+                      }}
+                      <span v-if="newDetailData.baseData.Evaluator"
+                        >({{
+                          newDetailData.baseData.Evaluator
+                        }}人参与了评价)</span
+                      ></span
+                    >
                   </li>
                 </ul>
               </div>
@@ -548,11 +557,11 @@ export default {
       const data = await planner.detail(params)
       detailData = data || {}
       loading = false
-      return{
+      return {
         newDetailData,
         active,
         loading,
-        detailData
+        detailData,
       }
     } catch (error) {
       // console.error('getDetail:', error)
@@ -678,9 +687,9 @@ export default {
     goScoreDetail() {
       this.$router.push({
         path: '/store/spScoreDetail',
-        query:{
-          score:this.newDetailData.point
-        }
+        query: {
+          score: this.newDetailData.point,
+        },
       })
     },
     // 定义视频
