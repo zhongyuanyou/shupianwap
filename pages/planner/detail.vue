@@ -678,6 +678,9 @@ export default {
     goScoreDetail() {
       this.$router.push({
         path: '/store/spScoreDetail',
+        query:{
+          score:this.newDetailData.point
+        }
       })
     },
     // 定义视频

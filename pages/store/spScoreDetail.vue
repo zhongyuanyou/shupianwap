@@ -39,7 +39,7 @@
     <div class="bgImg"></div>
     <div class="body">
       <div class="title">
-        <p>700</p>
+        <p>{{urlData.score || "--"}}</p>
         <span>超过<i>90%</i>规划师</span>
       </div>
       <div class="echart">
@@ -212,6 +212,7 @@ export default {
           },
         ],
       },
+      urlData:this.$route.query
     }
   },
   computed: {
