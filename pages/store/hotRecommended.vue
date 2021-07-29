@@ -101,7 +101,6 @@
                 <p class="label">
                   <span
                     v-for="(ta, taindex) in data.tags"
-                    v-show="taindex < 3"
                     :key="taindex"
                     >{{ ta }}</span
                   >
