@@ -1,8 +1,9 @@
 <template>
   <section>
     <ShareModal
+      v-show="answerDetails.content"
       :mch-id="shareValue.businessId"
-      :source-id="shareValue.commonId || anserShareDetail.id"
+      :source-id="shareValue.commonId || answerDetails.id || ''"
       :share-id="shareValue.shareId"
     />
     <HeaderSlot>

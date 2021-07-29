@@ -83,12 +83,14 @@ export default {
         this.$route.query.platForm === 'mpass' &&
         !window.AlipayJSBridge
       ) {
-        const userData = {
-          token: this.$route.query.token,
-          id: this.$route.query.userId,
-          userId: this.$route.query.userId,
+        if (!this.userId) {
+          const userData = {
+            token: this.$route.query.token,
+            id: this.$route.query.userId,
+            userId: this.$route.query.userId,
+          }
+          this.$store.dispatch('user/setUser', userData)
         }
-        this.$store.dispatch('user/setUser', userData)
         const params = {
           // id: this.userId,
           id: this.$route.query.userId || this.userId,
@@ -229,7 +231,6 @@ export default {
         .post(knownApi.content.add, this.formData)
         .then((res) => {
           this.apiLock = false
-          const that = this
           if (res.code && res.code === 200) {
             this.$xToast.success('发布成功')
             if (window.AlipayJSBridge) {
@@ -239,6 +240,7 @@ export default {
             } else this.switchUrl(res.data.id)
           } else {
             this.$xToast.error(res.data.error || '发布失败')
+            this.apiLock = false
           }
         })
         .catch((err) => {

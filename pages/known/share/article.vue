@@ -3,7 +3,7 @@
     <ShareModal
       v-show="articleDetails.title"
       :mch-id="shareValue.businessId"
-      :source-id="shareValue.commonId || articleDetails.id"
+      :source-id="shareValue.commonId || articleDetails.id || ''"
       :share-id="shareValue.shareId"
     />
     <HeaderSlot>
@@ -265,6 +265,7 @@ export default {
             const cacheValue = JSON.parse(res.data.cacheValue)
             this.shareValue = cacheValue
             this.shareId = cacheValue.shareId
+            console.log('this.shareId', this.shareId)
             this.getDetail(this.shareId)
           } else {
             this.isLoaded = true
@@ -280,11 +281,11 @@ export default {
         this.topPlannerInfo = data
       }
     },
-    getDetail() {
+    getDetail(shareId) {
       this.$axios
         .get(knownApi.questionArticle.articleDetail, {
           params: {
-            shareId: this.$route.query.shareId,
+            shareId: this.$route.query.shareId || shareId,
           },
         })
         .then((res) => {
