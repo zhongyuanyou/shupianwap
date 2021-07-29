@@ -12,7 +12,7 @@ export default {
   data() {
     return {
       platForm: '',
-      paddingTop: 44,
+      paddingTop: 0,
       editType: '', // 内容类型 1 新增 2编辑
       // 新增内容的表单数据
       formData: {
@@ -91,7 +91,7 @@ export default {
         this.$store.dispatch('user/setUser', userData)
         const params = {
           // id: this.userId,
-          id: this.$route.query.userId,
+          id: this.$route.query.userId || this.userId,
         }
         const res = await this.$axios.get(userinfoApi.info, { params })
         this.loading = false
