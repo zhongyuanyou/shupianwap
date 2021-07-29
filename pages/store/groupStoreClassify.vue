@@ -274,7 +274,7 @@ export default {
   .group-tile {
     margin-top: 37px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     padding: 0 40px;
     .content-left {
       margin-right: 32px;
@@ -292,7 +292,6 @@ export default {
         color: #999999;
         font-size: 26px;
         line-height: 37px;
-        .textOverflow(2);
       }
     }
   }
