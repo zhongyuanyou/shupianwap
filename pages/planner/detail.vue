@@ -74,9 +74,9 @@
                       "
                     />
                     <span
-                      v-if="!!detailData.title"
+                      v-if="!!newDetailData.title"
                       class="detail-content__title"
-                      >{{ detailData.title }}</span
+                      >{{ newDetailData.title }}</span
                     >
                   </div>
 
@@ -210,7 +210,7 @@
                       newDetailData.baseData.favComRate
                         ? `${newDetailData.baseData.favComRate}%`
                         : '--'
-                    }}</span>
+                    }} <span v-if="newDetailData.baseData.Evaluator">({{ newDetailData.baseData.Evaluator }}人参与了评价)</span></span>
                   </li>
                 </ul>
               </div>
