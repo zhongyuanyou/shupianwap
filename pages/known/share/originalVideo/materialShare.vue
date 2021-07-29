@@ -143,6 +143,7 @@ export default {
             const cacheValue = JSON.parse(res.data.cacheValue)
             this.shareValue = cacheValue
             this.id = cacheValue.shareId
+            this.plannerId = this.shareValue.businessId
             this.getShareInfoApi()
           } else {
             this.isLoaded = true

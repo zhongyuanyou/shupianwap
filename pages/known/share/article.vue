@@ -1,12 +1,7 @@
 <template>
   <section>
     <ShareModal
-      v-show="
-        articleDetails.title &&
-        articleDetails.flag == 1 &&
-        articleDetails.status == 1 &&
-        articleDetails.materialStatus == 1
-      "
+      v-show="articleDetails.title && isLoaded"
       :mch-id="shareValue.businessId"
       :source-id="shareValue.commonId || articleDetails.id || ''"
       :share-id="shareValue.shareId"
@@ -276,6 +271,7 @@ export default {
             const cacheValue = JSON.parse(res.data.cacheValue)
             this.shareValue = cacheValue
             this.shareId = cacheValue.shareId
+            this.plannerId = this.shareValue.businessId
             this.getDetail(this.shareId)
             this.$refs.myPlanner.getPlannerInfoApi(this.shareValue.businessId)
           } else {
