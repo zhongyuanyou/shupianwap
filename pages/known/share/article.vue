@@ -134,7 +134,7 @@
       class="bottom-btn"
     >
       <planner-bottom
-        :planner-id="topPlannerInfo.id || shareValue.businessId"
+        :planner-id="topPlannerInfo.id || shareValue.businessId || plannerId"
         ref="myPlanner"
       ></planner-bottom>
     </div>
@@ -195,6 +195,7 @@ export default {
 
   data() {
     return {
+      plannerId: '',
       shareValue: {},
       isLoaded: false,
       isShare: false,
@@ -259,6 +260,7 @@ export default {
     }
     this.isShare = this.$route.query.isShare
     this.shareId = this.$route.query.shareId
+    this.plannerId = this.$route.query.plannerId
     window.addEventListener('scroll', this.handleScroll)
     if (this.$route.query.redisKey) {
       this.getShareId(this.$route.query.redisKey)

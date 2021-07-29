@@ -126,6 +126,7 @@ export default {
             const cacheValue = JSON.parse(res.data.cacheValue)
             console.log('cacheValue', cacheValue)
             this.shareId = cacheValue.shareId
+            this.plannerId = cacheValue.businessId
             this.getPlanerInfo(cacheValue.businessId || cacheValue.mchUserId)
           }
         })
