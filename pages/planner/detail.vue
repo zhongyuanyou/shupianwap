@@ -337,7 +337,7 @@
             <div>
               <i class="empty"></i>
               <span
-                >{{ numUntil(data.disapplaudCount) }} 点赞 ·
+                >{{ numUntil(data.applaudCount) }} 点赞 ·
                 {{ data.remarkCount }} 评论</span
               >
             </div>
