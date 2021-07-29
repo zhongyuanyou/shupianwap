@@ -1,7 +1,12 @@
 <template>
   <section>
     <ShareModal
-      v-show="articleDetails.title"
+      v-show="
+        articleDetails.title &&
+        articleDetails.flag == 1 &&
+        articleDetails.status == 1 &&
+        articleDetails.materialStatus == 1
+      "
       :mch-id="shareValue.businessId"
       :source-id="shareValue.commonId || articleDetails.id || ''"
       :share-id="shareValue.shareId"
@@ -123,11 +128,14 @@
       <p>内容失效</p>
     </div>
     <div
-      v-if="(topPlannerInfo.id || planerInfo.id) && articleDetails.title"
+      v-show="
+        (topPlannerInfo.id || shareValue.businessId) && articleDetails.content
+      "
       class="bottom-btn"
     >
       <planner-bottom
-        :planner-id="topPlannerInfo.id || planerInfo.id"
+        :planner-id="topPlannerInfo.id || shareValue.businessId"
+        ref="myPlanner"
       ></planner-bottom>
     </div>
   </section>
@@ -272,8 +280,8 @@ export default {
             const cacheValue = JSON.parse(res.data.cacheValue)
             this.shareValue = cacheValue
             this.shareId = cacheValue.shareId
-            console.log('this.shareId', this.shareId)
             this.getDetail(this.shareId)
+            this.$refs.myPlanner.getPlannerInfoApi(this.shareValue.businessId)
           } else {
             this.isLoaded = true
           }
@@ -313,9 +321,6 @@ export default {
             //   this.iosLink = `cpsccustomer://{"path":"CPSCustomer:CPSCustomer/CPSCSharePlaceholderViewController///push/animation","parameter":{"selectedIndex":0,"type":2,"cid":${this.articleDetails.id}}}`
             //   this.androdLink = `cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":1,"isLogin":"0","secondLink":"/known/detail/article","id":${this.articleDetails.id}}}`
             // }
-            if (this.articleDetails.userId) {
-              this.getPlanerInfo(this.articleDetails.userId)
-            }
           }
         })
         .catch((err) => {
@@ -653,6 +658,10 @@ export default {
 <style lang="less" scoped>
 .article {
   background: #fff;
+  min-height: 100%;
+}
+.page-list {
+  min-height: calc(100vh - 250px);
 }
 // 推荐标题
 .recommend-title {

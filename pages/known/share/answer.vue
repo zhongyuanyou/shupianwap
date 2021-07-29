@@ -1,10 +1,15 @@
 <template>
   <section>
     <ShareModal
-      v-show="answerDetails.content"
+      v-show="
+        answerDetails.title &&
+        answerDetails.flag == 1 &&
+        answerDetails.status == 1 &&
+        answerDetails.materialStatus == 1
+      "
       :mch-id="shareValue.businessId"
       :source-id="shareValue.commonId || answerDetails.id || ''"
-      :share-id="shareValue.shareId"
+      @setPlannerInfo="setPlannerInfo"
     />
     <HeaderSlot>
       <div class="flex">
@@ -65,7 +70,7 @@
           <div class="title">{{ quesDetail.title }}</div>
           <div class="nums_area">
             <p v-if="quesDetail.answerCount">
-              {{ quesDetail.browseCount || 0 }}浏览 ·
+              {{ quesDetail.totalBrowseCount || 0 }}浏览 ·
               {{ quesDetail.answerCount || 0 }}个回答 ·
               {{ quesDetail.collectCount || 0 }}收藏
             </p>
@@ -144,18 +149,20 @@
         </div>
       </sp-popup>
     </div>
+
     <div
-      v-if="(topPlannerInfo.id || planerInfo.id) && answerDetails.content"
+      v-show="
+        (topPlannerInfo.id || shareValue.businessId) &&
+        answerDetails.content &&
+        isLoaded
+      "
       class="bottom-btn"
     >
-      <div
-        v-if="(topPlannerInfo.id || planerInfo.id) && answerDetails.content"
-        class="bottom-btn"
-      >
-        <planner-bottom
-          :planner-id="topPlannerInfo.id || planerInfo.id"
-        ></planner-bottom>
-      </div>
+      <planner-bottom
+        :planner-id="topPlannerInfo.id || shareValue.businessId"
+        :head-url="topPlannerInfo.headUrl"
+        ref="myPlanner"
+      ></planner-bottom>
     </div>
     <div
       v-if="(!quesDetail.title || !answerDetails.content) && isLoaded"
@@ -307,12 +314,13 @@ export default {
           params: { cacheKey },
         })
         .then((res) => {
-          console.log('res', res)
           if (res.code === 200) {
             const cacheValue = JSON.parse(res.data.cacheValue)
             this.shareValue = cacheValue
             this.shareId = cacheValue.shareId
+            console.log('shareValue', this.shareValue)
             this.getDetail(this.shareId)
+            this.$refs.myPlanner.getPlannerInfoApi(this.shareValue.businessId)
           } else {
             this.isLoaded = true
           }
@@ -330,7 +338,11 @@ export default {
           },
         })
         .then((res) => {
-          this.quesDetail = res.data
+          if (res.code === 200) {
+            this.quesDetail = res.data
+            console.log('问题详情', this.quesDetail)
+          }
+          this.isLoaded = true
         })
     },
     setPlannerInfo(data) {
@@ -348,7 +360,6 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.isLoaded = true
             if (res.data.goodsList) {
               const goods = res.data.goodsList.filter((item) => {
                 return item.status === 'PRO_STATUS_PUT_AWAY'
@@ -365,9 +376,6 @@ export default {
             //   this.iosLink = `cpsccustomer://{"path":"CPSCustomer:CPSCustomer/CPSCSharePlaceholderViewController///push/animation","parameter":{"selectedIndex":0,"type":2,"cid":${this.answerDetails.id}}}`
             //   this.androdLink = `cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":1,"isLogin":"0","secondLink":"/known/detail/article","id":${this.answerDetails.id}}}`
             // }
-            if (this.answerDetails.userId) {
-              this.getPlanerInfo(this.answerDetails.userId)
-            }
           } else {
             this.isLoaded = true
           }
@@ -706,6 +714,7 @@ export default {
 <style lang="less" scoped>
 .page-list {
   padding-bottom: 140px;
+  min-height: calc(100vh - 250px);
 }
 .area1 {
   margin-bottom: 40px;

@@ -24,7 +24,7 @@
               background: `url(
                 ${
                   planerInfo.img ||
-                  'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni-app-doc/6acec660-4f31-11eb-a16f-5b3e54966275.jpg'
+                  'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png'
                 }
 
               ) no-repeat center center `,
@@ -77,10 +77,6 @@ export default {
       type: String,
       default: '',
     },
-    shareId: {
-      type: String,
-      default: '',
-    },
   },
   data() {
     return {
@@ -130,6 +126,7 @@ export default {
             const cacheValue = JSON.parse(res.data.cacheValue)
             console.log('cacheValue', cacheValue)
             this.shareId = cacheValue.shareId
+            this.getPlanerInfo(cacheValue.businessId || cacheValue.mchUserId)
           }
         })
     },
@@ -154,7 +151,7 @@ export default {
           } else {
             this.visible = false
           }
-          this.$emit('setPlannerInfo', this.planerInfo)
+          // this.$emit('setPlannerInfo', this.planerInfo)
           // this.$forceUpdate()
         })
         .catch((err) => {
