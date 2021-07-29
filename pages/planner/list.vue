@@ -443,12 +443,7 @@ export default {
             this.error = false
             const { limit, currentPage = 1, totalCount = 0, records = [] } = res
             this.pageOption = { limit, totalCount, page: currentPage }
-            this.pageOption.page++
-
-            if (this.pageOption.page > res.totalPage || !res.totalPage) {
-              this.finished = true
-            }
-
+            this.pageOption.page = currentPage + 1
             // 第一页面请求提示
             if (currentPage === 1) {
               this.$xToast.show({

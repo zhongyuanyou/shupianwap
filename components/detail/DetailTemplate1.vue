@@ -74,7 +74,8 @@
     <TcPlanners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
     <!--E 第五板块 推荐规划师-->
     <!--S  精选案例-->
-    <OrderCase></OrderCase>
+    <!-- <OrderCase></OrderCase> -->
+    <CaseNew />
     <!--E  精选案例-->
     <!--S 第十板块 服务详情-->
     <ServiceDetail
@@ -106,18 +107,19 @@
 <script>
 import { TopNavBar, Sticky, List, ShareSheet } from '@chipspc/vant-dgg'
 import { mapActions } from 'vuex'
-import Banner from '~/components/detail/Banner.vue'
-import Title from '~/components/detail/Title1.vue'
-import CommentBox from '~/components/detail/CommentBox.vue'
-import OrderCase from '~/components/detail/OrderCase.vue'
-import OrderDynamic from '~/components/detail/OrderDynamic.vue'
-import VouchersSelect from '~/components/detail/VouchersSelect.vue'
-import ContainProject from '~/components/detail/ContainProject.vue'
-import ContainContent from '~/components/detail/ContainContent.vue'
-import TcPlanners from '~/components/detail/TcPlanners1.vue'
-import ServiceDetail from '~/components/detail/ServiceDetail.vue'
-import RelatedRecommend from '~/components/detail/RelatedRecommend.vue'
-import bottomBar from '@/components/detail/bottomBar/index.vue'
+import Banner from '~/components/detail/Banner'
+import Title from '~/components/detail/Title1'
+import CommentBox from '~/components/detail/CommentBox'
+// import OrderCase from '~/components/detail/OrderCase'
+import CaseNew from '~/components/detail/CaseNew'
+import OrderDynamic from '~/components/detail/OrderDynamic'
+import VouchersSelect from '~/components/detail/VouchersSelect'
+import ContainProject from '~/components/detail/ContainProject'
+import ContainContent from '~/components/detail/ContainContent'
+import TcPlanners from '~/components/detail/TcPlanners1'
+import ServiceDetail from '~/components/detail/ServiceDetail'
+import RelatedRecommend from '~/components/detail/RelatedRecommend'
+import bottomBar from '@/components/detail/bottomBar/index'
 import getUserSign from '~/utils/fingerprint'
 import { productDetailsApi, recommendApi, shopApi } from '~/api'
 import MyIcon from '~/components/common/myIcon/MyIcon'
@@ -141,8 +143,9 @@ export default {
     bottomBar,
     MyIcon,
     CommentBox,
-    OrderCase,
+    // OrderCase,
     OrderDynamic,
+    CaseNew,
   },
   mixins: [imHandle],
   props: {

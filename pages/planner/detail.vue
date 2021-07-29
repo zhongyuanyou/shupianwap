@@ -9,23 +9,35 @@
 
 <template>
   <div class="detail">
-    <div v-if="!hideHeader && !isApplets" class="head">
+    <div v-if="!hideHeader && !isApplets && titleStatus" class="head">
       <Header title="规划师">
         <template #left>
-          <sp-icon
-            class-prefix="spiconfont"
-            name="nav_ic_back"
-            size="0.4rem"
-            color="#1A1A1A"
-            style="margin-left: 0.4rem"
-            @click.native="onClickLeft"
-          />
+          <div v-if="urlData.isShare !== '1'">
+            <sp-icon
+              class-prefix="spiconfont"
+              name="nav_ic_back"
+              size="0.4rem"
+              color="#1A1A1A"
+              style="margin-left: 0.32rem"
+              @click.native="onClickLeft"
+            />
+          </div>
+          <div v-if="urlData.isShare === '1'">
+            <sp-icon
+              class-prefix="spiconfont"
+              name="xiaochengxuzhuye"
+              size="0.4rem"
+              color="#1A1A1A"
+              style="margin-left: 0.36rem"
+              @click.native="gohome"
+            />
+          </div>
         </template>
-        <template #right>
+        <template v-if="isInApp" #right>
           <sp-icon
             class-prefix="spiconfont"
             class="head__icon-share"
-            name="nav_ic_share"
+            name="fenxiang"
             size="0.4rem"
             color="#1A1A1A"
             style="margin-right: 0.4rem"
@@ -34,7 +46,7 @@
         </template>
       </Header>
     </div>
-    <div class="body">
+    <div v-if="showPlannerDetail" class="body">
       <div class="detail-content">
         <div
           class="detail-content__bg"
@@ -57,32 +69,108 @@
                       height="1.2rem"
                       fit="cover"
                       :src="
-                        detailData.img ||
+                        newDetailData.image ||
                         'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
                       "
                     />
                     <span
-                      v-if="!!detailData.title"
+                      v-if="!!newDetailData.title"
                       class="detail-content__title"
-                      >{{ detailData.title }}</span
+                      >{{ newDetailData.title }}</span
                     >
                   </div>
+
                   <div>
-                    <h4 class="detail-content__name">{{ detailData.name }}</h4>
+                    <h4 class="detail-content__name">
+                      {{ newDetailData.userName }}
+                    </h4>
                     <p class="detail-content__discript">
-                      {{ detailData.synopsis }}
+                      {{ newDetailData.merchantName }}
                     </p>
                   </div>
                 </div>
-
-                <div class="detail-content__tag-list">
+                <div class="detail-content__label">
+                  <p>
+                    <span v-for="tag of newDetailData.label" :key="tag">
+                      {{ tag }}
+                    </span>
+                  </p>
+                  <ul>
+                    <li>
+                      <div>
+                        <img
+                          src="https://cdn.shupian.cn/sp-pt/wap/images/co0535d3gfk0000.png"
+                          alt=""
+                        />
+                        <span>{{ newDetailData.phone }}</span>
+                      </div>
+                      <div v-if="newDetailData.baseInfo.wechat">
+                        <img
+                          src="https://cdn.shupian.cn/sp-pt/wap/images/844q1xncy580000.png"
+                          alt=""
+                        />
+                        <span>{{ newDetailData.baseInfo.wechat }}</span>
+                      </div>
+                    </li>
+                    <li v-if="newDetailData.baseInfo.mailbox">
+                      <div>
+                        <img
+                          src="https://cdn.shupian.cn/sp-pt/wap/images/569rb93on880000.png"
+                          alt=""
+                        />
+                        <span>{{ newDetailData.baseInfo.mailbox }}</span>
+                      </div>
+                    </li>
+                    <li v-if="newDetailData.officeAddress">
+                      <div class="pullstyle" style="align-items: center">
+                        <img
+                          src="https://cdn.shupian.cn/sp-pt/wap/images/5huwcgk3ric0000.png"
+                          alt=""
+                        />
+                        <span
+                          style="
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                          "
+                          >{{ newDetailData.officeAddress }}</span
+                        >
+                      </div>
+                    </li>
+                    <li v-if="newDetailData.baseInfo.lawyerIntro">
+                      <div class="pullstyle">
+                        <img
+                          src="https://cdn.shupian.cn/sp-pt/wap/images/5mz72q9tl500000.png"
+                          alt=""
+                          style="margin: 0.05rem 0.24rem 0 0"
+                        />
+                        <span
+                          :class="ownerInfo ? 'textshow' : 'textoverflow'"
+                          >{{ newDetailData.baseInfo.lawyerIntro }}</span
+                        >
+                        <i
+                          class="spiconfont pullImg"
+                          :class="
+                            ownerInfo
+                              ? 'spiconfont-shangla'
+                              : 'spiconfont-xiala'
+                          "
+                          style="font-size: 8px"
+                          @click="ownerInfo = !ownerInfo"
+                        ></i>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <!-- <div class="detail-content__tag-list">
                   <sp-tag
                     v-for="tag of formatTagList"
                     :key="tag"
                     class="detail-content__tag-list-item"
                     >{{ tag }}</sp-tag
                   >
-                </div>
+
+                </div> -->
               </div>
               <div class="detail-content__wrap-body">
                 <div class="detail-content__section-title">个人信息</div>
@@ -90,34 +178,48 @@
                   <li>
                     <span class="label">服务次数：</span>
                     <span class="content">{{
-                      detailData.serveNum ? `${detailData.serveNum}次` : '--'
-                    }}</span>
-                  </li>
-                  <li>
-                    <span class="label">好评率：</span>
-                    <span class="content">{{
-                      detailData.goodReputation
-                        ? `${detailData.goodReputation}%`
+                      newDetailData.baseData.peopleServed
+                        ? `${newDetailData.baseData.peopleServed}次`
                         : '--'
                     }}</span>
                   </li>
+
                   <li>
                     <span class="label">服务经验：</span>
-                    <span class="content">{{ formatServeAgeText }}</span>
+                    <span class="content">{{
+                      newDetailData.baseData.serviceExperience
+                    }}</span>
                   </li>
                   <li>
-                    <span class="label">成交记录：</span>
+                    <span class="label">成交次数：</span>
                     <span class="content">{{
-                      detailData.payNum ? `${detailData.payNum}次` : '--'
+                      newDetailData.baseData.dealNumber
+                        ? `${newDetailData.baseData.dealNumber}次`
+                        : '--'
                     }}</span>
                   </li>
                   <li>
                     <span class="label">平均响应时间：</span>
                     <span class="content">{{
-                      detailData.averageResponseTime
-                        ? `${detailData.averageResponseTime}s`
+                      newDetailData.baseData.responseTime
+                        ? `${newDetailData.baseData.responseTime}s`
                         : '--'
                     }}</span>
+                  </li>
+                  <li>
+                    <span class="label">好评率：</span>
+                    <span class="content"
+                      >{{
+                        newDetailData.baseData.favComRate
+                          ? `${newDetailData.baseData.favComRate}%`
+                          : '--'
+                      }}
+                      <span v-if="newDetailData.baseData.Evaluator"
+                        >({{
+                          newDetailData.baseData.Evaluator
+                        }}人参与了评价)</span
+                      ></span
+                    >
                   </li>
                 </ul>
               </div>
@@ -128,20 +230,22 @@
                   <i class="horizontal-line"></i>
                 </div>
                 <div class="detail-content__sp-score">
-                  {{ detailData.point || '--' }}
+                  {{ newDetailData.point || '--' }}
                 </div>
                 <div v-if="detailData.prop" class="detail-content__level">
                   打败{{ detailData.prop }}的规划师
                 </div>
                 <div class="detail-content__explain">
                   <span>
-                    什么是薯片分
+                    {{ newDetailData.pointLevelName }}
                     <my-icon
                       name="plan_ic_explain"
                       size="0.24rem"
                       color="#666666"
                       @click.native="handlePoint"
                     />
+                    <!-- handlePoint -->
+                    <span @click="goScoreDetail">查看详情</span>
                   </span>
                   <!-- 一期没有 详情页面只能影藏掉 -->
                   <!-- <sp-button
@@ -155,33 +259,193 @@
           </div>
         </div>
       </div>
-      <div class="recommend" style="padding-bottom: 75px">
-        <RecommendList :mch-detail-id="detailData.mchDetailId" />
+      <div
+        v-if="newDetailData.live.id && isInApp"
+        class="video-content"
+        @click="seeVideo"
+      >
+        <div
+          class="video"
+          :style="{ 'background-image': `url(${newDetailData.live.coverUrl})` }"
+        >
+          <div class="video-title">
+            <span v-show="newDetailData.live.createTime"
+              >{{ s_to_ym(newDetailData.live.createTime) }}直播回放</span
+            >
+            <span v-show="newDetailData.live.viewCount"
+              >{{ newDetailData.live.viewCount }}人看过</span
+            >
+          </div>
+          <div class="video-player">
+            <i class="spiconfont spiconfont-bofang" style=""></i>
+          </div>
+          <div class="video-footer">
+            <span>{{ newDetailData.live.studioName }}</span>
+          </div>
+        </div>
+      </div>
+      <div
+        v-if="newDetailData.titleNavs"
+        class="recommend"
+        style="padding-bottom: 75px"
+      >
+        <div class="tabs">
+          <ul>
+            <li
+              v-for="(item, index) in newDetailData.titleNavs"
+              :key="index"
+              :class="active === item ? 'tab_active' : ''"
+              @click="tabsActive(item)"
+            >
+              <span>{{ item }}</span>
+              <span v-if="active === item" class="tabs_line"></span>
+            </li>
+          </ul>
+        </div>
+        <!-- <sp-tabs v-model="active" sticky @scroll="stickyScroll" @click="tabsClick">
+          <sp-tab v-for="(item,index) in newDetailData.titleNavs" :key="index" :title="item" :name="item" > -->
+        <ul v-if="active === '我的问答'" class="list-data myQuestion">
+          <li
+            v-for="(data, dataIndex) in newDetailData.content.wenda"
+            :key="dataIndex"
+            @click="linkKnownDetailQuestion(data)"
+          >
+            <div>
+              <!-- <i
+                class="spiconfont spiconfont-huida_mian"
+                style="color: #ff614e"
+              ></i> -->
+              <embed
+                class="huida"
+                src="https://cdn.shupian.cn/sp-pt/wap/images/df1rr3m6pzs0000.svg"
+                type="image/svg+xml"
+                pluginspage="https://cdn.shupian.cn/sp-pt/wap/images/df1rr3m6pzs0000.svg"
+              />
+              <span class="two_line">{{ data.title }}</span>
+            </div>
+            <div>
+              <!-- <i
+                class="spiconfont spiconfont-wenti_mian"
+                style="color: #4974f5"
+              ></i> -->
+              <embed
+                class="wenti"
+                src="https://cdn.shupian.cn/sp-pt/wap/images/28hztm48mx8g000.svg"
+                type="image/svg+xml"
+                pluginspage="https://cdn.shupian.cn/sp-pt/wap/images/28hztm48mx8g000.svg"
+              />
+              <p>
+                <span class="three_line">{{ data.contentText }}</span>
+                <img
+                  v-if="data.contentImageUrl"
+                  :src="data.contentImageUrl"
+                  alt=""
+                />
+              </p>
+            </div>
+            <div>
+              <i class="empty"></i>
+              <span
+                >{{ numUntil(data.applaudCount) }} 点赞 ·
+                {{ data.remarkCount }} 评论</span
+              >
+            </div>
+          </li>
+        </ul>
+        <ul v-if="active === '我的文章'" class="list-data myBook">
+          <li
+            v-for="(data, dataIndex) in newDetailData.content.article"
+            :key="dataIndex"
+            @click="linkKnownDetailArticle(data)"
+          >
+            <div>
+              <p>
+                <span class="two_line">{{ data.title }}</span>
+                <img
+                  v-if="data.contentImageUrl"
+                  :src="data.contentImageUrl"
+                  alt=""
+                />
+              </p>
+            </div>
+            <div>
+              <span
+                >{{ numUntil(data.totalBrowseCount) }} 浏览 ·
+                {{ data.disapplaudCount }} 点赞 ·
+                {{ timerUntil(data.createTime) }}</span
+              >
+            </div>
+          </li>
+        </ul>
+        <ul v-if="active === '热门资讯'" class="list-data see">
+          <li
+            v-for="(data, dataIndex) in newDetailData.content.hotNews"
+            :key="dataIndex"
+            @click="linkFoundDetail(data)"
+          >
+            <div>
+              <p>
+                <span class="two_line">{{ data.title }}</span>
+                <img v-if="data.imageUrl" :src="data.imageUrl" alt="" />
+              </p>
+            </div>
+            <div>
+              <span>行业资讯 · {{ data.createTime }}</span>
+            </div>
+          </li>
+        </ul>
+        <!-- </sp-tab>
+        </sp-tabs> -->
+        <!-- <RecommendList :mch-detail-id="detailData.mchDetailId" /> -->
       </div>
     </div>
-    <div class="footer">
+    <div
+      v-if="showPlannerDetail"
+      class="footer"
+      style="padding-bottom: 0.12rem"
+    >
       <sp-bottombar safe-area-inset-bottom>
-        <sp-bottombar-button
-          v-if="!hideIM"
-          type="primary"
-          text="电话联系"
-          :disabled="!detailData.phone"
-          @click="handleCall"
-        />
-        <sp-bottombar-button
-          v-if="!hideIM"
-          v-md:p_IMClick
-          data-im_type="售前"
-          :data-planner_number="detailData.id"
-          :data-planner_name="detailData.name"
-          :data-crisps_fraction="detailData.point"
-          :data-track_code="isInApp ? 'SPP000040' : 'SPW000036'"
-          type="info"
-          text="在线联系"
-          :disabled="!detailData.id"
-          @click="handleIM"
-        />
+        <div class="footer-body">
+          <div class="phone" @click="goShop">
+            <i
+              class="spiconfont spiconfont-xiaodian"
+              style="font-size: 19px"
+            ></i>
+            <p>小店</p>
+          </div>
+          <div class="phone" @click="handleCall">
+            <i
+              class="spiconfont spiconfont-dianhua"
+              style="font-size: 19px"
+            ></i>
+            <p>电话</p>
+          </div>
+          <!-- <sp-bottombar-button
+            v-if="!hideIM"
+            type="primary"
+            text="电话联系"
+            :disabled="!detailData.phone"
+            @click="handleCall"
+          /> -->
+          <sp-bottombar-button
+            v-if="!hideIM"
+            v-md:p_IMClick
+            data-im_type="售前"
+            :data-planner_number="detailData.id"
+            :data-planner_name="detailData.name"
+            :data-crisps_fraction="detailData.point"
+            :data-track_code="isInApp ? 'SPP000040' : 'SPW000036'"
+            type="info"
+            text="在线咨询"
+            :disabled="!detailData.id"
+            @click="handleIM"
+          />
+        </div>
       </sp-bottombar>
+    </div>
+    <div v-if="!showPlannerDetail" class="empty">
+      <img src="https://cdn.shupian.cn/sp-pt/wap/images/32lnvdx3omo0000.png" />
+      <p>抱歉,当前规划师名片未上架</p>
     </div>
     <sp-share-sheet
       v-model="showShare"
@@ -207,15 +471,14 @@ import {
   ShareSheet,
   Toast,
 } from '@chipspc/vant-dgg'
-
 import Header from '@/components/common/head/header'
 import SpToast from '@/components/common/spToast/SpToast'
-import RecommendList from '@/components/planner/RecommendList'
-
+// import RecommendList from '@/components/planner/RecommendList'
+import { formatDate } from '@/static/js/date'
 import { planner } from '@/api'
 import imHandle from '@/mixins/imHandle'
 import { callPhone, copyToClipboard, setUrlParams } from '@/utils/common'
-
+import { storeApi } from '@/api/store'
 export default {
   name: 'Detail',
   components: {
@@ -228,14 +491,115 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [ShareSheet.name]: ShareSheet,
     Header,
-    RecommendList,
     SpToast,
+    // RecommendList,
   },
+
   mixins: [imHandle],
+  async asyncData({ $axios, query, store }) {
+    let newDetailData = {
+      photo: [],
+      baseInfo: {},
+      baseData: {},
+      content: {
+        wenda: [],
+        article: [],
+        hotNews: [],
+      },
+      live: {},
+    }
+    let showPlannerDetail = false
+    let detailData = {}
+    let active = ''
+    let loading = true
+    try {
+      const { mchUserId } = query
+      if (mchUserId == null) {
+        this.$xToast.show({
+          message: '缺少规划师参数!',
+          duration: 1000,
+          forbidClick: false,
+          icon: 'toast_ic_error',
+        })
+        return
+      }
+      const params = { id: mchUserId }
+      const newData = await $axios.get(
+        storeApi.plannerDetail,
+        {
+          params: {
+            mchUserId,
+            dataFlg: '1',
+            cardType: 'plannerCode',
+          },
+        },
+        {
+          headers: {
+            'x-cache-control': 'cache',
+          },
+        }
+      )
+      if (newData.code === 200) {
+        if (newData.data.status === 'BUSINESS_CARD_STATUS_ON_SHELF') {
+          console.log(`***************************************************************`)
+          showPlannerDetail = true
+        }
+        newDetailData = newData.data || {}
+        active = newDetailData.titleNavs[0]
+        newDetailData.label =
+          newDetailData.label && newDetailData.label.split('|')
+        if (newDetailData.label && newDetailData.label.length > 3) {
+          newDetailData.label = newDetailData.label.splice(0, 2)
+        }
+        newDetailData.content.hotNews.forEach((item) => {
+          item.createTime = item.createTime.split(' ')[0] || ""
+        })
+      } else {
+        // $xToast.show({
+        //   message: newData.message || '请求失败！',
+        //   duration: 1000,
+        //   forbidClick: false,
+        //   icon: 'toast_ic_error',
+        // })
+      }
+
+      const data = await planner.detail(params)
+      detailData = data || {}
+      loading = false
+      return {
+        newDetailData,
+        active,
+        loading,
+        detailData,
+        showPlannerDetail,
+      }
+    } catch (error) {
+      // console.error('getDetail:', error)
+      // this.$xToast.show({
+      //   message: error.message || '请求失败！',
+      //   duration: 1000,
+      //   forbidClick: false,
+      //   icon: 'toast_ic_error',
+      // })
+      return Promise.reject(error)
+    }
+  },
   data() {
     return {
       loading: true,
+      urlData: this.$route.query,
       detailData: {},
+      newDetailData: {
+        photo: [],
+        baseInfo: {},
+        baseData: {},
+        content: {
+          wenda: [],
+          article: [],
+          hotNews: [],
+        },
+        live: {},
+      },
       shareOptions: [],
       showShare: false,
       isShare: Number(this.$route.query.isShare) === 1, // 默认不是分享页面，从规划师列表进来就不是分享
@@ -244,8 +608,12 @@ export default {
       redirectType: this.$route.query.redirectType || 'wap', // 跳转的到 wap里面还是app里面去
       requireCode: this.$route.query.requireCode || '', // 隐号拨打需要
       requireName: this.$route.query.requireName || '', // 隐号拨打需要
+      ownerInfo: false, // 个人信息展开
+      titleStatus: true, // 粘性布局触发时去掉头部
+      active: '', // tab状态
     }
   },
+
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
@@ -295,6 +663,7 @@ export default {
       return this.$store.state.city.currentCity
     },
   },
+
   created() {
     if (process && process.client) {
       // notice:
@@ -302,10 +671,9 @@ export default {
       // 但是在app中登录等，登录信息cookie中的没有更新，导致直接从store中获取到的信息无效
       // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
       this.isInApp && this.clearUserInfo()
-
-      this.getDetail().finally(() => {
-        this.loading = false
-      })
+      // this.getDetail().finally(() => {
+      //   this.loading = false
+      // })
     }
   },
   async mounted() {
@@ -321,6 +689,82 @@ export default {
       setUserInfo: 'user/SET_USER',
       clearUserInfo: 'user/CLEAR_USER',
     }),
+    s_to_ym(s) {
+      const oldTime = s.split(' ')[0]
+      const time = oldTime.split('-')
+      return `${time[1]}月${time[2]}日`
+    },
+    goScoreDetail() {
+      this.$router.push({
+        path: '/store/spScoreDetail',
+        query: {
+          score: this.newDetailData.point,
+        },
+      })
+    },
+    // 定义视频
+    errorBtnHandle() {
+      // if (this.vId) {
+      //   this.getVideoApi()
+      // } else {
+      //   this.$xToast.error('获取视频信息失败')
+      // }
+    },
+    // 超过10000以万显示
+    numUntil(num) {
+      if (!num) return ''
+      const res =
+        Number(num) > 10000
+          ? `${(Number(num) / 10000).toFixed(1)}万`
+          : Number(num)
+      return res
+    },
+    // 判定时间差值
+    timerUntil(time) {
+      let data = ''
+      const today = new Date().getTime()
+      // 变为秒
+      const difference = (Number(today) - Number(time)) / 1000
+      // 1分钟内发布
+      if (difference < 60) {
+        data = '刚刚'
+      }
+      // 一小时内发布的
+      else if (difference >= 60 && difference < 3600) {
+        data = `${Math.floor(difference / 60)}分钟前`
+      }
+      // 超过一小时小于24小时
+      else if (difference >= 3600 && difference < 86400) {
+        if (formatDate(new Date(time), 'dd') === formatDate(new Date(), 'dd')) {
+          // 仍在当天
+          data = `${Math.floor(difference / 3600)}小时前`
+        } else {
+          // 跨天
+          data = `昨天${formatDate(new Date(time), 'hh:mm')}`
+        }
+      }
+      // 超过24小时
+      else if (difference >= 86400) {
+        data = `${formatDate(new Date(time), 'yyyy-MM-dd')}`
+      } else {
+        data = '未知时间'
+      }
+      return data
+    },
+    // 当粘粘属性出发时
+    stickyScroll(e) {
+      if (e.isFixed) {
+        this.titleStatus = false
+      } else {
+        this.titleStatus = true
+      }
+    },
+    tabsClick(title, name) {
+      console.log(this.active)
+    },
+    tabsActive(item) {
+      this.active = item
+    },
     onClickLeft() {
       console.log('nav onClickLeft')
       this.uPGoBack()
@@ -328,6 +772,15 @@ export default {
     onClickRight() {
       console.log('nav onClickRight')
       this.uPShareOption()
+    },
+    goShop() {
+      this.$router.push({
+        path: '/store/plannerStore',
+        query: {
+          mchUserId: this.$route.query.mchUserId,
+          isShare: '0',
+        },
+      })
     },
     handleCall() {
       // 如果当前页面在app中，则调用原生拨打电话的方法
@@ -456,9 +909,10 @@ export default {
         console.log('sharedUrl:', sharedUrl)
         this.$appFn.dggShare(
           {
-            image: this.detailData.img,
-            title: '规划师',
-            subTitle: '',
+            image:
+              'https://cdn.shupian.cn/sp-pt/wap/images/cwxnvvtntxc0000.png',
+            title: '个人店铺',
+            subTitle: `优选规划师 - ${this.newDetailData.userName}的名片`,
             url: sharedUrl,
           },
           (res) => {
@@ -609,7 +1063,67 @@ export default {
         })
       })
     },
+    // 跳转播放视频
+    seeVideo() {
+      if (this.isInApp) {
+        const iOSRouterPath = {
+          roomId: this.newDetailData.live.id,
+          liveRoleType: '3',
+        }
 
+        const androidRouterPath = {
+          path: '/live/PlayBackActivity',
+          parameter: {
+            id: this.newDetailData.live.id,
+          },
+        }
+        const userAgent = window.navigator.userAgent
+        const isAndroid =
+          userAgent.indexOf('Android') > -1 || userAgent.indexOf('Adr') > -1 // android终端
+        const isIOS = userAgent.match(/iPhone|iPad|iPod/i) // ios终端
+        // 安卓方法
+        if (isAndroid) {
+          this.$appFn.dggJumpRoute(
+            {
+              iOSRouter: JSON.stringify(iOSRouterPath),
+              androidRouter: JSON.stringify(androidRouterPath),
+            },
+            (res) => {
+              const { code } = res || {}
+              if (code !== 200) {
+                this.$xToast.show({
+                  message: '打开视频失败！',
+                  duration: 1500,
+                  forbidClick: false,
+                  icon: 'toast_ic_remind',
+                })
+              }
+            }
+          )
+        }
+        if (isIOS) {
+          // ios方法
+          this.$appFn.dggLiveOnline(iOSRouterPath, (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '打开视频失败！',
+                duration: 1500,
+                forbidClick: false,
+                icon: 'toast_ic_remind',
+              })
+            }
+          })
+        }
+      } else {
+        this.$refs.spToast.show({
+          message: '请在薯片APP中查看',
+          duration: 1500,
+          forbidClick: false,
+          // icon: 'spiconfont-tab_ic_check',
+        })
+      }
+    },
     // 获取详情数据
     async getDetail() {
       try {
@@ -624,6 +1138,45 @@ export default {
           return
         }
         const params = { id: mchUserId }
+        const newData = await this.$axios.get(
+          storeApi.plannerDetail,
+          {
+            params: {
+              mchUserId,
+              dataFlg: '1',
+              cardType: 'plannerCode',
+            },
+          },
+          {
+            headers: {
+              'x-cache-control': 'cache',
+            },
+          }
+        )
+        if (newData.code === 200) {
+          this.newDetailData = newData.data || {}
+          this.active = this.newDetailData.titleNavs[0]
+          this.newDetailData.label =
+            this.newDetailData.label && this.newDetailData.label.split('|')
+          if (this.newDetailData.label && this.newDetailData.label.length > 3) {
+            this.newDetailData.label = this.newDetailData.label.splice(0, 2)
+          }
+          this.newDetailData.content.hotNews.forEach((item) => {
+            item.createTime &&
+              (item.createTime = formatDate(
+                new Date(item.createTime),
+                'yyyy-MM-dd'
+              ))
+          })
+        } else {
+          this.$xToast.show({
+            message: newData.message || '请求失败！',
+            duration: 1000,
+            forbidClick: false,
+            icon: 'toast_ic_error',
+          })
+        }
+
         const data = await planner.detail(params)
         this.detailData = data || {}
         return data
@@ -638,10 +1191,28 @@ export default {
         return Promise.reject(error)
       }
     },
+    linkFoundDetail(item) {
+      this.$router.push({
+        path: `/found/detail/${item.id}`,
+      })
+    },
+    linkKnownDetailQuestion(item) {
+      this.$router.push({
+        path: `/known/detail/question?id=${item.id}`,
+      })
+    },
+    linkKnownDetailArticle(item) {
+      this.$router.push({
+        path: `/known/detail/article?id=${item.id}`,
+      })
+    },
+    gohome() {
+      this.$router.push('/')
+    },
   },
   head() {
     return {
-      title: '规划师',
+      title: '',
       meta: [
         {
           name: 'spptmd-track_code',
@@ -680,13 +1251,21 @@ export default {
 .detail {
   height: 100%;
   background-color: #ffffff;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
   .body {
-    padding: 0;
     .detail-content {
+      &__section-title-text {
+        font-size: 32px;
+        font-weight: bold;
+        color: #222222;
+        text-align: center;
+        line-height: 32px;
+      }
       &__bg {
         padding: 40px;
         position: relative;
-        background: url(https://cdn.shupian.cn/sp-pt/wap/images/fmyco4fucsg0000.png)
+        background: url(https://cdn.shupian.cn/sp-pt/wap/images/cfu3wwitnuw0000.png)
           top center/100% auto no-repeat;
         background-position-y: -286px;
       }
@@ -695,7 +1274,12 @@ export default {
       }
       &__wrap {
         // height: 768px;
-        background: linear-gradient(135deg, #f9f1e8, #f9f1e8, #e3d1c3);
+        background-image: linear-gradient(
+          134deg,
+          #f9f1e8 0%,
+          #f9f1e8 50%,
+          #e3d1c3 100%
+        );
         border-radius: 8px;
         padding: 48px 40px;
         box-sizing: border-box;
@@ -711,6 +1295,90 @@ export default {
         height: 120px;
         margin-right: 24px;
         position: relative;
+      }
+      &__label {
+        font-size: 24px;
+        p {
+          height: 50px;
+          overflow: hidden;
+          margin: 23px 0 32px 0;
+          span {
+            display: inline-block;
+            margin: 0 12px 0 0;
+            padding: 0 16px;
+            height: 50px;
+            max-width: 100%;
+            line-height: 50px;
+            text-align: center;
+            background: #eadacd;
+            border-radius: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+        ul {
+          position: relative;
+          box-sizing: border-box;
+          opacity: 0.8;
+          background: #eadacd;
+          border-radius: 12px;
+          padding: 29.2px 35.6px;
+          .pullImg {
+            position: absolute;
+            right: 32px;
+            bottom: 43px;
+            &::before {
+              display: block;
+              width: 12px;
+              height: 6.7px;
+            }
+          }
+          li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0 0 28px 0;
+            &:last-of-type {
+              margin: 0;
+            }
+            .flex {
+            }
+            div {
+              img {
+                width: 24px;
+                height: 24px;
+                margin: 0 14px 0 0;
+                vertical-align: middle;
+              }
+              span {
+                vertical-align: middle;
+              }
+            }
+            .pullstyle {
+              display: flex;
+              justify-content: space-between;
+
+              img {
+                margin: 0 24px 0 0;
+              }
+              span {
+                display: inline-block;
+                transition: all 0.3s;
+                width: 468px;
+              }
+              .textshow {
+                max-height: 200px;
+              }
+              .textoverflow {
+                max-height: 50px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              }
+            }
+          }
+        }
       }
       &__title {
         content: '';
@@ -838,14 +1506,354 @@ export default {
         width: auto;
       }
     }
+    .video-content {
+      width: 100%;
+      padding: 0 40px;
+    }
+    .video {
+      height: 375.2px;
+      background: #cccccc no-repeat;
+      background-size: 100% 100%;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 0 0 90px 0;
+      .video-title {
+        display: flex;
+        span {
+          display: inline-block;
+          font-family: PingFangSC-Medium;
+          font-size: 22px;
+          color: #ffffff;
+          letter-spacing: 0;
+          line-height: 40px;
+          &:first-of-type {
+            width: 209px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            background: #4974f5;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+          }
+          &:last-of-type {
+            width: 145px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+          }
+        }
+      }
+      .video-player {
+        position: relative;
+        width: 96px;
+        height: 96px;
+        margin: 61px auto 36px;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 50%;
+        .spiconfont-bofang {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          width: 27.4px;
+          height: 33.7px;
+          margin: auto;
+          font-size: 30px;
+          color: #ffffff;
+        }
+      }
+      .video-footer {
+        font-family: PingFangSC-Medium;
+        font-size: 36px;
+        color: #ffffff;
+        line-height: 48px;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+      }
+    }
+    .recommend {
+      .list-data {
+        padding: 41px 40px 0;
+        padding-bottom: constant(safe-area-inset-bottom);
+        padding-bottom: env(safe-area-inset-bottom);
+        .three_line {
+          height: 0.8rem;
+          -webkit-line-clamp: 2;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          text-overflow: ellipsis;
+          word-break: break-all;
+          overflow: hidden;
+        }
+        .two_line {
+          height: 1rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+        }
+      }
+      .tabs {
+        padding: 0 40px;
+        font-family: PingFangSC-Regular;
+        font-size: 30px;
+        color: #999999;
+        line-height: 30px;
+        ul {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          li {
+            position: relative;
+            margin: 0 56px 0 0;
+            .tabs_line {
+              position: absolute;
+              bottom: -22px;
+              left: 0;
+              right: 0;
+              margin: 0 auto;
+              display: block;
+              width: 28px;
+              height: 6px;
+              background: #4974f5;
+              border-radius: 3px;
+            }
+          }
+          .tab_active {
+            font-weight: bold;
+            font-family: PingFangSC-Medium;
+            font-size: 32px;
+            color: #222222;
+          }
+        }
+      }
+      .myQuestion {
+        li {
+          padding: 40px 0;
+          border-bottom: 1px solid #f4f4f4;
+          &:last-of-type {
+            border: none;
+          }
+          .huida {
+            width: 32px;
+            height: 32px;
+            margin: 5px 16px 0 0;
+            vertical-align: middle;
+          }
+          .wenti {
+            width: 32px;
+            height: 32px;
+            margin: 5px 16px 0 0;
+            vertical-align: middle;
+          }
+          span {
+            vertical-align: middle;
+          }
+          .spiconfont {
+            font-size: 35px !important;
+            margin: 0 16px 0 0;
+            &-huida_mian {
+              background-image: -webkit-linear-gradient(
+                bottom,
+                #fa5741,
+                #fa6d5a
+              );
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+            }
+            &-wenti_mian {
+              background: linear-gradient(90deg, #4974f5 0%, #80acfb 100%);
+            }
+          }
+          div {
+            display: flex;
+            justify-content: flex-start;
+            align-items: normal;
+            margin: 0 0 24px 0;
+            > p {
+              display: flex;
+              justify-content: space-between;
+              align-items: normal;
+              width: 100%;
+
+              img {
+                flex-shrink: 0;
+                width: 190px;
+                height: 127px;
+                margin: 0 0 0 40px;
+                background: #f0f0f0;
+                border-radius: 12px;
+              }
+            }
+            &:first-of-type {
+              font-size: 36px;
+              color: #1a1a1a;
+              font-weight: bold;
+            }
+            &:nth-of-type(2) {
+              font-family: PingFangSC-Regular;
+              font-size: 30px;
+              color: #555555;
+            }
+            &:last-of-type {
+              margin: 0 0 0 55px;
+              font-family: PingFangSC-Regular;
+              font-size: 24px;
+              color: #999999;
+              letter-spacing: 0;
+            }
+          }
+        }
+      }
+      .myBook {
+        li {
+          padding: 32px 0;
+          border-bottom: 1px solid #f4f4f4;
+          .empty {
+          }
+          .spiconfont {
+            margin: 0 16px 0 0;
+          }
+          div {
+            display: flex;
+            justify-content: flex-start;
+            align-items: normal;
+            margin: 0 0 24px 0;
+            > p {
+              display: flex;
+              justify-content: space-between;
+              align-items: normal;
+              width: 100%;
+              img {
+                flex-shrink: 0;
+                width: 190px;
+                height: 127px;
+                margin: 0 0 0 40px;
+                background: #f0f0f0;
+                border-radius: 12px;
+              }
+            }
+            &:first-of-type {
+              font-family: PingFangSC-Medium;
+              font-size: 36px;
+              color: #1a1a1a;
+              font-weight: bold;
+            }
+            &:nth-of-type(2) {
+              font-family: PingFangSC-Regular;
+              font-size: 30px;
+              color: #555555;
+            }
+            &:last-of-type {
+              font-family: PingFangSC-Regular;
+              font-size: 24px;
+              color: #999999;
+              letter-spacing: 0;
+            }
+          }
+        }
+      }
+      .see {
+        li {
+          padding: 32px 0;
+          border-bottom: 1px solid #f4f4f4;
+          .empty {
+          }
+          .spiconfont {
+            margin: 0 16px 0 0;
+          }
+          div {
+            display: flex;
+            justify-content: flex-start;
+            align-items: normal;
+            margin: 0 0 24px 0;
+            .two_line {
+              -webkit-line-clamp: 3 !important;
+            }
+            > p {
+              display: flex;
+              justify-content: space-between;
+              align-items: normal;
+              width: 100%;
+              img {
+                flex-shrink: 0;
+                width: 190px;
+                height: 127px;
+                margin: 0 0 0 40px;
+                background: #f0f0f0;
+                border-radius: 12px;
+              }
+            }
+            &:first-of-type {
+              font-family: PingFangSC-Medium;
+              font-size: 36px;
+              color: #1a1a1a;
+              font-weight: bold;
+            }
+            &:nth-of-type(2) {
+              font-family: PingFangSC-Regular;
+              font-size: 30px;
+              color: #555555;
+            }
+            &:last-of-type {
+              font-family: PingFangSC-Regular;
+              font-size: 24px;
+              color: #999999;
+              letter-spacing: 0;
+            }
+          }
+        }
+      }
+      ::v-deep .sp-sticky {
+        background: #fff;
+      }
+      ::v-deep .sp-tabs__wrap {
+        padding: 0 40px;
+      }
+      ::v-deep .sp-tab {
+        justify-content: flex-start;
+        font-family: PingFangSC-Regular;
+        font-size: 30px;
+        color: #999999;
+      }
+      ::v-deep .sp-tab--active {
+        font-family: PingFangSC-Medium;
+        font-size: 32px;
+        color: #222222;
+      }
+      ::v-deep .sp-tabs__line {
+        width: 28px;
+        height: 6px;
+        background: #4974f5;
+        border-radius: 3px;
+      }
+    }
   }
   .footer {
-    ::v-deep.sp-bottombar {
+    &-body {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 0 0 28px;
+    }
+    .phone {
+      font-size: 24px;
+      margin: 0 44px 0 0;
+      text-align: center;
+    }
+    ::v-deep .sp-bottombar {
+      height: auto;
+      padding-bottom: constant(safe-area-inset-bottom);
+      padding-bottom: env(safe-area-inset-bottom);
       z-index: 100;
-      .sp-button--info {
-        background-color: #24ae68;
-        border: 1px solid #24ae68;
-      }
+    }
+    ::v-deep .sp-button--info {
+      border: 1px solid #24ae68;
+      background-color: #24ae68;
     }
   }
   .item-wrap {
@@ -854,6 +1862,17 @@ export default {
   &-toast {
     ::v-deep.my-toast__content {
       transform: translateY(-100%);
+    }
+  }
+  .empty {
+    padding-top: 200px;
+    text-align: center;
+    font-size: 26px;
+    color: #999;
+    img {
+      width: 340px;
+      height: 340px;
+      margin: 0 auto;
     }
   }
 }

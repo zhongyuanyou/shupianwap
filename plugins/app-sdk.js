@@ -131,6 +131,21 @@ const appHandler = {
       handleRequest(res, fn)
     })
   },
+  // IOS跳转直播视频页面
+  dggLiveOnline: (
+    data = { roomId: '', liveRoleType: ''},
+    fn = () => { }
+  ) => {
+    if (miniProgram && data.miniRouter) {
+      uni.navigateTo({
+        url: data.miniRouter,
+      })
+      return
+    }
+    Bridge.callHandler('dgg_live_online', data, (res) => {
+      handleRequest(res, fn)
+    })
+  },
   // 调用App登录
   dggLogin: (fn = () => { }) => {
     Bridge.callHandler('dgg_login', {}, (res) => {
