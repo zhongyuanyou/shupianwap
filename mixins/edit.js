@@ -234,9 +234,13 @@ export default {
           if (res.code && res.code === 200) {
             this.$xToast.success('发布成功')
             if (window.AlipayJSBridge) {
-              window.AlipayJSBridge.call('closeWebview')
+              setTimeout(() => {
+                window.AlipayJSBridge.call('closeWebview')
+              }, 2000)
             } else if (this.$route.query.platForm === 'mpass') {
-              window.history.back(-1)
+              setTimeout(() => {
+                window.history.back(-1)
+              })
             } else this.switchUrl(res.data.id)
           } else {
             this.$xToast.error(res.data.error || '发布失败')
