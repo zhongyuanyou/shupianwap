@@ -1,7 +1,9 @@
 <template>
   <div class="quotation_scheme">
     <div class="title_bottom">
-      <div class="title_bottom_button" @click="show = true">报价方案</div>
+      <sp-button class="title_bottom_button" @click="show = true"
+        >报价方案</sp-button
+      >
     </div>
     <sp-action-sheet v-model="show" safe-area-inset-bottom title="报价方案">
       <div class="content">
@@ -23,10 +25,11 @@
 </template>
 
 <script>
-import { ActionSheet } from '@chipspc/vant-dgg'
+import { ActionSheet, Button } from '@chipspc/vant-dgg'
 export default {
   components: {
     [ActionSheet.name]: ActionSheet,
+    [Button.name]: Button,
     // SpIcon: Icon,
   },
   props: {
@@ -60,15 +63,18 @@ export default {
 <style lang="less" scoped>
 .quotation_scheme {
   .title_bottom_button {
-    padding-bottom: 20px;
     background: #4974f5;
     border-radius: 8px;
-
-    font-family: PingFangSC-Medium;
+    height: 96px;
+    width: 100%;
     font-weight: bold;
     font-size: 32px;
     color: #ffffff;
     text-align: center;
+    margin-bottom: 20px;
+  }
+  ::v-deep .sp-action-sheet__close {
+    top: 48px;
   }
   ::v-deep .sp-action-sheet__header {
     line-height: 40px;

@@ -39,12 +39,12 @@
     <div class="bgImg"></div>
     <div class="body">
       <div class="title">
-        <p>{{urlData.score || "--"}}</p>
+        <p>{{ urlData.score || '--' }}</p>
         <span>超过<i>90%</i>规划师</span>
       </div>
       <div class="echart">
         <div id="main"></div>
-        <p>
+        <p class="score-toast">
           <i class="spiconfont spiconfont-tixing"></i>
           <span>各项指标对比同行</span>
         </p>
@@ -212,7 +212,7 @@ export default {
           },
         ],
       },
-      urlData:this.$route.query
+      urlData: this.$route.query,
     }
   },
   computed: {
@@ -374,7 +374,7 @@ export default {
     .echart {
       position: relative;
       width: 100%;
-      height: 525px;
+      height: 500px;
       background: #ffffff;
       border-radius: 24px;
       font-family: PingFangSC-Regular;
@@ -385,7 +385,7 @@ export default {
       line-height: 22px;
       #main {
         position: absolute;
-        top: 40px;
+        top: 30px;
         left: 0;
         right: 0;
         margin: 0 auto;
@@ -395,7 +395,7 @@ export default {
         position: absolute;
         left: 0;
         right: 0;
-        bottom: 48px;
+        bottom: 50px;
         margin: 0 auto;
         i {
           vertical-align: middle;

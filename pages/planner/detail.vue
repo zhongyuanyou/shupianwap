@@ -46,7 +46,7 @@
         </template>
       </Header>
     </div>
-    <div class="body">
+    <div v-if="showPlannerDetail" class="body">
       <div class="detail-content">
         <div
           class="detail-content__bg"
@@ -148,16 +148,18 @@
                           :class="ownerInfo ? 'textshow' : 'textoverflow'"
                           >{{ newDetailData.baseInfo.lawyerIntro }}</span
                         >
+                        <i
+                          class="spiconfont pullImg"
+                          :class="
+                            ownerInfo
+                              ? 'spiconfont-shangla'
+                              : 'spiconfont-xiala'
+                          "
+                          style="font-size: 8px"
+                          @click="ownerInfo = !ownerInfo"
+                        ></i>
                       </div>
                     </li>
-                    <i
-                      class="spiconfont pullImg"
-                      :class="
-                        ownerInfo ? 'spiconfont-shangla' : 'spiconfont-xiala'
-                      "
-                      style="font-size: 8px"
-                      @click="ownerInfo = !ownerInfo"
-                    ></i>
                   </ul>
                 </div>
                 <!-- <div class="detail-content__tag-list">
@@ -167,7 +169,7 @@
                     class="detail-content__tag-list-item"
                     >{{ tag }}</sp-tag
                   >
-                  
+
                 </div> -->
               </div>
               <div class="detail-content__wrap-body">
@@ -206,11 +208,18 @@
                   </li>
                   <li>
                     <span class="label">好评率：</span>
-                    <span class="content">{{
-                      newDetailData.baseData.favComRate
-                        ? `${newDetailData.baseData.favComRate}%`
-                        : '--'
-                    }} <span v-if="newDetailData.baseData.Evaluator">({{ newDetailData.baseData.Evaluator }}人参与了评价)</span></span>
+                    <span class="content"
+                      >{{
+                        newDetailData.baseData.favComRate
+                          ? `${newDetailData.baseData.favComRate}%`
+                          : '--'
+                      }}
+                      <span v-if="newDetailData.baseData.Evaluator"
+                        >({{
+                          newDetailData.baseData.Evaluator
+                        }}人参与了评价)</span
+                      ></span
+                    >
                   </li>
                 </ul>
               </div>
@@ -390,7 +399,11 @@
         <!-- <RecommendList :mch-detail-id="detailData.mchDetailId" /> -->
       </div>
     </div>
-    <div class="footer" style="padding-bottom: 0.12rem">
+    <div
+      v-if="showPlannerDetail"
+      class="footer"
+      style="padding-bottom: 0.12rem"
+    >
       <sp-bottombar safe-area-inset-bottom>
         <div class="footer-body">
           <div class="phone" @click="goShop">
@@ -429,6 +442,10 @@
           />
         </div>
       </sp-bottombar>
+    </div>
+    <div v-if="!showPlannerDetail" class="empty">
+      <img src="https://cdn.shupian.cn/sp-pt/wap/images/32lnvdx3omo0000.png" />
+      <p>抱歉,当前规划师名片未上架</p>
     </div>
     <sp-share-sheet
       v-model="showShare"
@@ -491,6 +508,7 @@ export default {
       },
       live: {},
     }
+    let showPlannerDetail = false
     let detailData = {}
     let active = ''
     let loading = true
@@ -522,6 +540,10 @@ export default {
         }
       )
       if (newData.code === 200) {
+        if (newData.data.status === 'BUSINESS_CARD_STATUS_ON_SHELF') {
+          console.log(`***************************************************************`)
+          showPlannerDetail = true
+        }
         newDetailData = newData.data || {}
         active = newDetailData.titleNavs[0]
         newDetailData.label =
@@ -530,11 +552,7 @@ export default {
           newDetailData.label = newDetailData.label.splice(0, 2)
         }
         newDetailData.content.hotNews.forEach((item) => {
-          item.createTime &&
-            (item.createTime = formatDate(
-              new Date(item.createTime),
-              'yyyy-MM-dd'
-            ))
+          item.createTime = item.createTime.split(' ')[0] || ""
         })
       } else {
         // $xToast.show({
@@ -548,11 +566,12 @@ export default {
       const data = await planner.detail(params)
       detailData = data || {}
       loading = false
-      return{
+      return {
         newDetailData,
         active,
         loading,
-        detailData
+        detailData,
+        showPlannerDetail,
       }
     } catch (error) {
       // console.error('getDetail:', error)
@@ -678,9 +697,9 @@ export default {
     goScoreDetail() {
       this.$router.push({
         path: '/store/spScoreDetail',
-        query:{
-          score:this.newDetailData.point
-        }
+        query: {
+          score: this.newDetailData.point,
+        },
       })
     },
     // 定义视频
@@ -696,7 +715,7 @@ export default {
       if (!num) return ''
       const res =
         Number(num) > 10000
-          ? `${(Number(num) / 10000).toFixed(2)}万`
+          ? `${(Number(num) / 10000).toFixed(1)}万`
           : Number(num)
       return res
     },
@@ -1308,7 +1327,7 @@ export default {
           .pullImg {
             position: absolute;
             right: 32px;
-            top: 215px;
+            bottom: 43px;
             &::before {
               display: block;
               width: 12px;
@@ -1558,14 +1577,19 @@ export default {
     .recommend {
       .list-data {
         padding: 41px 40px 0;
+        padding-bottom: constant(safe-area-inset-bottom);
+        padding-bottom: env(safe-area-inset-bottom);
         .three_line {
-          overflow: hidden;
-          text-overflow: ellipsis;
+          height: 0.8rem;
+          -webkit-line-clamp: 2;
           display: -webkit-box;
-          -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
+          text-overflow: ellipsis;
+          word-break: break-all;
+          overflow: hidden;
         }
         .two_line {
+          height: 1rem;
           overflow: hidden;
           text-overflow: ellipsis;
           display: -webkit-box;
@@ -1748,7 +1772,6 @@ export default {
             align-items: normal;
             margin: 0 0 24px 0;
             .two_line {
-              max-width: 440px;
               -webkit-line-clamp: 3 !important;
             }
             > p {
@@ -1839,6 +1862,17 @@ export default {
   &-toast {
     ::v-deep.my-toast__content {
       transform: translateY(-100%);
+    }
+  }
+  .empty {
+    padding-top: 200px;
+    text-align: center;
+    font-size: 26px;
+    color: #999;
+    img {
+      width: 340px;
+      height: 340px;
+      margin: 0 auto;
     }
   }
 }
