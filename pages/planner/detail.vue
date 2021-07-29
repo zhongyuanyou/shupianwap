@@ -346,7 +346,7 @@
             <div>
               <span
                 >{{ numUntil(data.applaudCount) }} 点赞 ·
-                {{ data.remarkCount }} 评论</span
+                {{ numUntil(data.remarkCount) }} 评论</span
               >
             </div>
           </li>
@@ -1262,7 +1262,7 @@ export default {
         line-height: 32px;
       }
       &__bg {
-        padding: 40px;
+        padding: 40px 40px 0;
         position: relative;
         background: url(https://cdn.shupian.cn/sp-pt/wap/images/cfu3wwitnuw0000.png)
           top center/100% auto no-repeat;
@@ -1574,6 +1574,7 @@ export default {
       }
     }
     .recommend {
+      padding:87px 0 0 0;
       .list-data {
         padding: 41px 40px 0;
         padding-bottom: constant(safe-area-inset-bottom);
