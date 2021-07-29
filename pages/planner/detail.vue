@@ -1325,7 +1325,7 @@ export default {
           .pullImg {
             position: absolute;
             right: 32px;
-            bottom: 40px;
+            bottom: 43px;
             &::before {
               display: block;
               width: 12px;
