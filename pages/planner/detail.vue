@@ -46,7 +46,7 @@
         </template>
       </Header>
     </div>
-    <div class="body">
+    <div v-if="showPlannerDetail" class="body">
       <div class="detail-content">
         <div
           class="detail-content__bg"
@@ -167,7 +167,7 @@
                     class="detail-content__tag-list-item"
                     >{{ tag }}</sp-tag
                   >
-                  
+
                 </div> -->
               </div>
               <div class="detail-content__wrap-body">
@@ -206,11 +206,18 @@
                   </li>
                   <li>
                     <span class="label">好评率：</span>
-                    <span class="content">{{
-                      newDetailData.baseData.favComRate
-                        ? `${newDetailData.baseData.favComRate}%`
-                        : '--'
-                    }} <span v-if="newDetailData.baseData.Evaluator">({{ newDetailData.baseData.Evaluator }}人参与了评价)</span></span>
+                    <span class="content"
+                      >{{
+                        newDetailData.baseData.favComRate
+                          ? `${newDetailData.baseData.favComRate}%`
+                          : '--'
+                      }}
+                      <span v-if="newDetailData.baseData.Evaluator"
+                        >({{
+                          newDetailData.baseData.Evaluator
+                        }}人参与了评价)</span
+                      ></span
+                    >
                   </li>
                 </ul>
               </div>
@@ -390,7 +397,11 @@
         <!-- <RecommendList :mch-detail-id="detailData.mchDetailId" /> -->
       </div>
     </div>
-    <div class="footer" style="padding-bottom: 0.12rem">
+    <div
+      v-if="showPlannerDetail"
+      class="footer"
+      style="padding-bottom: 0.12rem"
+    >
       <sp-bottombar safe-area-inset-bottom>
         <div class="footer-body">
           <div class="phone" @click="goShop">
@@ -429,6 +440,10 @@
           />
         </div>
       </sp-bottombar>
+    </div>
+    <div v-if="!showPlannerDetail" class="empty">
+      <img src="https://cdn.shupian.cn/sp-pt/wap/images/32lnvdx3omo0000.png" />
+      <p>抱歉,当前规划师名片未上架</p>
     </div>
     <sp-share-sheet
       v-model="showShare"
@@ -548,11 +563,11 @@ export default {
       const data = await planner.detail(params)
       detailData = data || {}
       loading = false
-      return{
+      return {
         newDetailData,
         active,
         loading,
-        detailData
+        detailData,
       }
     } catch (error) {
       // console.error('getDetail:', error)
@@ -592,6 +607,7 @@ export default {
       ownerInfo: false, // 个人信息展开
       titleStatus: true, // 粘性布局触发时去掉头部
       active: '', // tab状态
+      showPlannerDetail: false,
     }
   },
 
@@ -678,9 +694,9 @@ export default {
     goScoreDetail() {
       this.$router.push({
         path: '/store/spScoreDetail',
-        query:{
-          score:this.newDetailData.point
-        }
+        query: {
+          score: this.newDetailData.point,
+        },
       })
     },
     // 定义视频
@@ -1135,6 +1151,9 @@ export default {
           }
         )
         if (newData.code === 200) {
+          if (newData.data.status === 'BUSINESS_CARD_STATUS_ON_SHELF') {
+            this.showPlannerDetail = true
+          }
           this.newDetailData = newData.data || {}
           this.active = this.newDetailData.titleNavs[0]
           this.newDetailData.label =
@@ -1839,6 +1858,17 @@ export default {
   &-toast {
     ::v-deep.my-toast__content {
       transform: translateY(-100%);
+    }
+  }
+  .empty {
+    padding-top: 200px;
+    text-align: center;
+    font-size: 26px;
+    color: #999;
+    img {
+      width: 340px;
+      height: 340px;
+      margin: 0 auto;
     }
   }
 }
