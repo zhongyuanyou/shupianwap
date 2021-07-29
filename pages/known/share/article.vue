@@ -3,7 +3,7 @@
     <ShareModal
       v-show="articleDetails.title"
       :mch-id="shareValue.businessId"
-      :source-id="shareValue.commonId || articleDetails.id"
+      :source-id="shareValue.commonId || articleDetails.id || ''"
       :share-id="shareValue.shareId"
     />
     <HeaderSlot>
