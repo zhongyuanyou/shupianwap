@@ -162,7 +162,9 @@ export default {
     this.typeId = query.typeId
     this.type = query.type || ''
     this.getGroupInfoApi()
+    
     const headtop = document.getElementById('headtop')
+    console.log(headtop.offsetHeight)
     this.headtopHeight = 450 + headtop.offsetHeight
   },
   methods: {
