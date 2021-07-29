@@ -1,7 +1,7 @@
 <template>
   <div class="title">
-    <div class="flex title_tags">
-      <div class="flex_1 title_tags_left">
+    <div class="title_tags">
+      <div class="title_tags_left">
         <div v-if="info.detailInfo && info.detailInfo.caseLabel">
           <span
             v-for="item of info.detailInfo.caseLabel"
@@ -98,15 +98,22 @@ export default {
   }
 
   .title_tags {
+    position: relative;
+    height: 42px;
     .title_tags_left {
+      div {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding-right: 150px;
+      }
       .title_tags_item {
         background: #f0f2f5;
         border-radius: 4px;
         display: inline-block;
         margin-right: 12px;
         padding: 5px 8px;
-
-        font-family: PingFangSC-Regular;
+        margin-right: 10px;
         font-size: 22px;
         color: #5c7499;
         letter-spacing: 0;
@@ -114,12 +121,14 @@ export default {
       }
     }
     .title_tags_right {
-      font-family: PingFangSC-Regular;
+      position: absolute;
+      right: 0;
+      top: 8px;
       font-size: 24px;
       color: #222222;
       letter-spacing: 0;
       line-height: 24px;
-
+      width: 140px;
       .view {
         margin-left: 12px;
       }

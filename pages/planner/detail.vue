@@ -148,16 +148,18 @@
                           :class="ownerInfo ? 'textshow' : 'textoverflow'"
                           >{{ newDetailData.baseInfo.lawyerIntro }}</span
                         >
+                        <i
+                          class="spiconfont pullImg"
+                          :class="
+                            ownerInfo
+                              ? 'spiconfont-shangla'
+                              : 'spiconfont-xiala'
+                          "
+                          style="font-size: 8px"
+                          @click="ownerInfo = !ownerInfo"
+                        ></i>
                       </div>
                     </li>
-                    <i
-                      class="spiconfont pullImg"
-                      :class="
-                        ownerInfo ? 'spiconfont-shangla' : 'spiconfont-xiala'
-                      "
-                      style="font-size: 8px"
-                      @click="ownerInfo = !ownerInfo"
-                    ></i>
                   </ul>
                 </div>
                 <!-- <div class="detail-content__tag-list">
