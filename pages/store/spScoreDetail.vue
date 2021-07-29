@@ -128,7 +128,7 @@ export default {
       floatview: true,
       EchartOptions: {
         textStyle: {
-          // fontSize: '0.26rem',
+          fontSize: '15px',
           color: '#222222',
           fontWeight: 'bold',
         },
@@ -384,7 +384,7 @@ export default {
       line-height: 22px;
       #main {
         position: absolute;
-        top: 47px;
+        top: 40px;
         left: 0;
         right: 0;
         margin: 0 auto;

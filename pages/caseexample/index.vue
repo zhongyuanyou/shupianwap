@@ -304,7 +304,9 @@ export default {
           if (params.page === 1) {
             this.list = res.records
           } else {
-            this.list.concat(res.records)
+            const oldArr = JSON.parse(JSON.stringify(this.list))
+            const newArr = oldArr.concat(oldArr)
+            this.list = newArr
           }
 
           this.loading = false
