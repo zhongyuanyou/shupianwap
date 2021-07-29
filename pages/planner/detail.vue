@@ -33,7 +33,7 @@
             />
           </div>
         </template>
-        <template v-if="isInApp" #right>
+        <template v-if="isInApp && showPlannerDetail" #right>
           <sp-icon
             class-prefix="spiconfont"
             class="head__icon-share"
