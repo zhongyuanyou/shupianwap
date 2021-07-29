@@ -66,7 +66,7 @@
 
             <div class="item-content">
               <div class="tile">{{ item.name }}</div>
-              <div class="tips">
+              <div v-if="item.tags.length > 0" class="tips">
                 <div
                   v-for="(itemTip, indexTip) in item.tags"
                   :key="indexTip"
@@ -500,6 +500,7 @@ export default {
             margin-top: 11px;
             font-size: 22px;
             color: #1a1a1a;
+            .mixin-text-oneoverflow();
           }
           .amount {
             margin-top: 20px;
@@ -510,9 +511,8 @@ export default {
               display: inline-block;
             }
             &-unit {
-              margin-left: 2px;
+              margin-left: -10px;
               font-size: 22px;
-              font-weight: normal;
             }
           }
         }
