@@ -22,7 +22,6 @@ export const CHIPS_RESOURCE_URL = 'crisps-resource-house'
 export const CHIPS_MERCHANT_URL = 'merchant-center-manager'
 export const CHIPS_PC_URL = `/${CHIPS_PC_INSTANCE_NAME}/${CHIPS_WAP_SERVICE_PREFIX}`
 
-
 export const GOODSDETAIL =
   'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg' // 产品详情默认图片
 export const GOODSLIST =
