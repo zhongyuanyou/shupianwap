@@ -530,11 +530,7 @@ export default {
           newDetailData.label = newDetailData.label.splice(0, 2)
         }
         newDetailData.content.hotNews.forEach((item) => {
-          item.createTime &&
-            (item.createTime = formatDate(
-              new Date(item.createTime),
-              'yyyy-MM-dd'
-            ))
+          item.createTime = item.createTime.split(' ')[0] || ""
         })
       } else {
         // $xToast.show({
@@ -696,7 +692,7 @@ export default {
       if (!num) return ''
       const res =
         Number(num) > 10000
-          ? `${(Number(num) / 10000).toFixed(2)}万`
+          ? `${(Number(num) / 10000).toFixed(1)}万`
           : Number(num)
       return res
     },
@@ -1558,14 +1554,19 @@ export default {
     .recommend {
       .list-data {
         padding: 41px 40px 0;
+        padding-bottom: constant(safe-area-inset-bottom);
+        padding-bottom: env(safe-area-inset-bottom);
         .three_line {
-          overflow: hidden;
-          text-overflow: ellipsis;
+          height: 0.8rem;
+          -webkit-line-clamp: 2;
           display: -webkit-box;
-          -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
+          text-overflow: ellipsis;
+          word-break: break-all;
+          overflow: hidden;
         }
         .two_line {
+          height: 1rem;
           overflow: hidden;
           text-overflow: ellipsis;
           display: -webkit-box;
