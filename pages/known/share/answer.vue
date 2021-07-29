@@ -149,23 +149,13 @@
         </div>
       </sp-popup>
     </div>
-
     <div
-      v-show="
-        (topPlannerInfo.id || shareValue.businessId) &&
-        answerDetails.content &&
+      v-if="
+        (answerDetails.flag !== 1 ||
+          answerDetails.status !== 1 ||
+          answerDetails.materialStatus !== 1) &&
         isLoaded
       "
-      class="bottom-btn"
-    >
-      <planner-bottom
-        :planner-id="topPlannerInfo.id || shareValue.businessId"
-        :head-url="topPlannerInfo.headUrl"
-        ref="myPlanner"
-      ></planner-bottom>
-    </div>
-    <div
-      v-if="(!quesDetail.title || !answerDetails.content) && isLoaded"
       class="no-data"
     >
       <img
@@ -174,6 +164,12 @@
         srcset=""
       />
       <p>内容失效</p>
+    </div>
+    <div v-show="isLoaded" class="bottom-btn">
+      <planner-bottom
+        :planner-id="topPlannerInfo.id || shareValue.businessId || plannerId"
+        ref="myPlanner"
+      ></planner-bottom>
     </div>
   </section>
 </template>
@@ -232,6 +228,7 @@ export default {
 
   data() {
     return {
+      plannerId: '',
       isLoaded: false,
       isShare: false,
       popupShow: false,
@@ -297,6 +294,7 @@ export default {
     }
     this.isShare = this.$route.query.isShare
     this.shareId = this.$route.query.shareId
+    this.plannerId = this.$route.query.plannerId
     window.addEventListener('scroll', this.handleScroll)
     if (this.$route.query.redisKey) {
       this.getShareId(this.$route.query.redisKey)
@@ -318,6 +316,7 @@ export default {
             const cacheValue = JSON.parse(res.data.cacheValue)
             this.shareValue = cacheValue
             this.shareId = cacheValue.shareId
+            this.plannerId = this.shareValue.businessId
             console.log('shareValue', this.shareValue)
             this.getDetail(this.shareId)
             this.$refs.myPlanner.getPlannerInfoApi(this.shareValue.businessId)

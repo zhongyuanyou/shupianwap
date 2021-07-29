@@ -1,6 +1,6 @@
 <template>
   <div class="m-known-share smallVideo materialShare">
-    <template v-if="showContent && vDetail.status == 1 && vDetail.flag == 1">
+    <template v-if="showContent">
       <div
         class="m-known-share smallVideo materialShare"
         :style="{
@@ -144,6 +144,7 @@ export default {
             const cacheValue = JSON.parse(res.data.cacheValue)
             this.shareValue = cacheValue
             this.id = cacheValue.shareId
+            this.plannerId = this.shareValue.businessId
             this.getShareInfoApi()
           } else {
             this.isLoaded = true

@@ -1,12 +1,7 @@
 <template>
   <section>
     <ShareModal
-      v-show="
-        articleDetails.title &&
-        articleDetails.flag == 1 &&
-        articleDetails.status == 1 &&
-        articleDetails.materialStatus == 1
-      "
+      v-show="articleDetails.title && isLoaded"
       :mch-id="shareValue.businessId"
       :source-id="shareValue.commonId || articleDetails.id || ''"
       :share-id="shareValue.shareId"
@@ -55,14 +50,7 @@
       :ios-link="iosLink"
       :androd-link="androdLink"
     />
-    <div
-      v-if="
-        articleDetails.title &&
-        articleDetails.flag == 1 &&
-        articleDetails.status == 1 &&
-        articleDetails.materialStatus == 1
-      "
-    >
+    <div v-if="articleDetails.title && isLoaded">
       <div class="title-area">
         <div class="title">{{ articleDetails.title }}</div>
       </div>
@@ -129,12 +117,13 @@
     </div>
     <div
       v-show="
-        (topPlannerInfo.id || shareValue.businessId) && articleDetails.content
+        (topPlannerInfo.id || shareValue.businessId || plannerId) &&
+        articleDetails.content
       "
       class="bottom-btn"
     >
       <planner-bottom
-        :planner-id="topPlannerInfo.id || shareValue.businessId"
+        :planner-id="topPlannerInfo.id || shareValue.businessId || plannerId"
         ref="myPlanner"
       ></planner-bottom>
     </div>
@@ -195,6 +184,7 @@ export default {
 
   data() {
     return {
+      plannerId: '',
       shareValue: {},
       isLoaded: false,
       isShare: false,
@@ -259,6 +249,7 @@ export default {
     }
     this.isShare = this.$route.query.isShare
     this.shareId = this.$route.query.shareId
+    this.plannerId = this.$route.query.plannerId
     window.addEventListener('scroll', this.handleScroll)
     if (this.$route.query.redisKey) {
       this.getShareId(this.$route.query.redisKey)
@@ -280,6 +271,7 @@ export default {
             const cacheValue = JSON.parse(res.data.cacheValue)
             this.shareValue = cacheValue
             this.shareId = cacheValue.shareId
+            this.plannerId = this.shareValue.businessId
             this.getDetail(this.shareId)
             this.$refs.myPlanner.getPlannerInfoApi(this.shareValue.businessId)
           } else {
