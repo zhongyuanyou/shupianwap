@@ -9,7 +9,7 @@
       </client-only>
     </HeadWrapper>
    -->
-  <header class="head-wrapper" :style="{ height: HeaderHeight + 'px' }">
+  <header class="head-wrapper" :style="{ height: fillHeaderHeight + 'px' }">
     <div ref="couponHeaderWarpper" class="head-wrapper-warpper">
       <slot></slot>
     </div>
@@ -17,10 +17,22 @@
 </template>
 <script>
 export default {
+  props: {
+    // 是否占位
+    fill: {
+      type: Boolean,
+      default: true,
+    },
+  },
   data() {
     return {
       HeaderHeight: 88,
     }
+  },
+  computed: {
+    fillHeaderHeight() {
+      return this.fill ? this.HeaderHeight : 0
+    },
   },
   mounted() {
     this.getHeaderHeight()
@@ -33,7 +45,6 @@ export default {
     getHeaderHeight() {
       this.$nextTick(() => {
         this.HeaderHeight = this.$refs.couponHeaderWarpper.offsetHeight
-        console.log(this.HeaderHeight)
       })
     },
   },
