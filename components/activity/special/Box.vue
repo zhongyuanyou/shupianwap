@@ -4,7 +4,12 @@
 
     <div v-if="list.length > 0" class="list">
       <div class="list_container">
-        <div class="list_item" v-for="(item, index) in list" :key="index">
+        <div
+          v-for="(item, index) in list"
+          :key="index"
+          class="list_item"
+          @click="jump(item)"
+        >
           <div class="img_container">
             <img
               src="https://cdn.shupian.cn/sp-pt/wap/images/snvfwuqf4rk000.png"
@@ -13,12 +18,19 @@
             <sp-image
               class="picture"
               fit="cover"
-              :src="item"
+              :src="item.imageUrl"
               @click="$emit('preview', item)"
             ></sp-image>
           </div>
-          <div class="title">aaaaaaaaaaaaaaaaaa</div>
-          <div class="price">ddddd元</div>
+          <div class="skuName">{{ item.skuName }}aaaaaaaaaaaaaaaaaaaaaaaaa</div>
+          <div v-if="parsePrice(item.specialPrice) !== '面议'" class="price">
+            <span>低至</span
+            ><span class="unit">
+              {{ item.specialUnit ? item.specialNewPrice : item.specialPrice
+              }}{{ item.specialUnit || '元' }}
+            </span>
+          </div>
+          <div v-else class="price unit">面议</div>
         </div>
       </div>
     </div>
@@ -45,6 +57,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    parsePrice: {
+      type: Function,
+      default() {},
+    },
   },
   data() {
     return {}
@@ -54,6 +70,9 @@ export default {
     commentfn() {
       this.$emit('onComment')
     },
+    jump(item) {
+      this.$emit('jump', item)
+    },
   },
 }
 </script>
@@ -61,7 +80,7 @@ export default {
 <style lang="less" scoped>
 .case_introduction {
   font-family: PingFangSC;
-  margin: 24px 20px;
+  margin: 24px 20px 0;
   padding: 24px 20px;
   background: #ffffff;
   border-radius: 24px;
@@ -80,7 +99,6 @@ export default {
     font-weight: bold;
     font-size: 32px;
     color: #222222;
-    margin-bottom: 21px;
   }
 
   .list {
@@ -96,17 +114,16 @@ export default {
 
       width: calc(33% - 10px);
 
-      height: 144px;
-
       overflow: hidden;
 
       max-width: 215px;
-      height: 260px;
+
       background: #f7f7f7;
       border-radius: 12px;
       text-align: center;
 
-      .title {
+      .skuName {
+        font-weight: bold;
         font-size: 24px;
         color: #222222;
         text-align: center;
@@ -116,21 +133,33 @@ export default {
         .textOverflow(2);
       }
       .price {
-        color: #ec5330;
+        font-size: 20px;
+        color: #555555;
+        text-align: center;
+        line-height: 28px;
+
         letter-spacing: 0;
+        margin: 12px;
+        & > span {
+          display: inline-block;
+        }
+      }
+      .unit {
+        color: #ec5330;
       }
       .img_container {
         position: relative;
         .hot {
           position: absolute;
+          z-index: 1;
           left: 17px;
           top: 0;
 
           width: 30px;
         }
         .picture {
-          margin: 24px auto;
-          height: 112px;
+          margin: 0px auto 24px;
+          height: 136px;
         }
       }
     }

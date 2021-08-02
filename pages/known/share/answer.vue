@@ -56,14 +56,14 @@
       :androd-link="androdLink"
     />
     <div
-      class="page-list"
-      style="background: #f5f5f5"
       v-show="
         quesDetail.title &&
         answerDetails.flag == 1 &&
         answerDetails.status == 1 &&
         answerDetails.materialStatus === 1
       "
+      class="page-list"
+      style="background: #f5f5f5"
     >
       <div class="area area1">
         <div class="title-area">
@@ -188,8 +188,8 @@
     </div>
     <div v-show="isLoaded" class="bottom-btn">
       <planner-bottom
-        :planner-id="topPlannerInfo.id || shareValue.businessId || plannerId"
         ref="myPlanner"
+        :planner-id="topPlannerInfo.id || shareValue.businessId || plannerId"
       ></planner-bottom>
     </div>
   </section>

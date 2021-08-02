@@ -339,7 +339,7 @@ export default {
       ) {
         const params = {
           specCode: this.specCode,
-          page: this.page,
+          page:  this.page,
           limit: 15,
           terminalCode: this.terminalCode,
         }
@@ -366,15 +366,23 @@ export default {
       }
     },
     async productMethod(param) {
+
       await this.$axios
         .get(activityApi.activityProductList, {
           params: param,
         })
         .then((res) => {
+          console.log('productMethod',param,res);
           if (res.code === 200) {
             if (
               this.isInit &&
-              location.href.match('activity/special') &&
+             ( location.href.match('activity/special') ||
+              location.href.match('activity/new/special')||
+              location.href.match('activity/exclusive')||
+              location.href.match('activity/new/exclusive')
+              ) &&
+
+
               !this.recommendProductList.length
             ) {
               this.initList = res.data.rows
@@ -424,10 +432,11 @@ export default {
       // })
     },
     getRecommendProductList() {
+
       if (this.specCode) {
         const params = {
           specCode: this.specCode,
-          isReco: 1,
+          isReco: 1,// 是否需要推荐商品
           page: 1,
           limit: 10000,
           terminalCode: this.terminalCode,
@@ -442,6 +451,8 @@ export default {
         this.$axios
           .get(activityApi.activityProductList, { params })
           .then((res) => {
+            console.log('getRecommendProductList',params,res);
+
             if (res.code === 200) {
               if (res.data.rows.length) {
                 this.recommendProductList = res.data.rows
@@ -593,8 +604,9 @@ export default {
       return (px / this.screenWidth) * 100
     },
     parsePrice(priceStr) {
-      priceStr = priceStr.toString()
-      if (priceStr > 0) {
+
+      if (priceStr&&priceStr > 0) {
+        priceStr = priceStr.toString()
         return {
           yuan: priceStr.split('.')[0],
           jiao: priceStr.split('.')[1],

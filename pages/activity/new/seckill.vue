@@ -35,34 +35,11 @@
 
     <div class="img_container">
       <img width="100%" :src="imageHead" alt="" />
-
-      <div v-if="isTimerShow" class="count-down">
-        <div class="down-time">
-          <div>距本场结束还剩</div>
-          <div class="time">{{ time.day }}</div>
-          <div>天</div>
-          <div class="time">{{ time.hour }}</div>
-          <div>:</div>
-          <div class="time">{{ time.min }}</div>
-          <div>:</div>
-          <div class="time">{{ time.sec }}</div>
-        </div>
-      </div>
     </div>
 
     <div class="content_container">
-      <Box
-        title="爆款单品"
-        :parse-price="parsePrice"
-        :list="recommendProductList"
-        @jump="
-          (item) => {
-            jumpProductDetail(item)
-          }
-        "
-      ></Box>
-
-      <sp-sticky class="tabs-box" :offset-top="headerHeight">
+      <Time :time="time"></Time>
+      <!-- <sp-sticky class="tabs-box" :offset-top="headerHeight">
         <ul class="tabs-box-items">
           <li
             v-for="(item, index) in activityTypeOptions"
@@ -74,9 +51,8 @@
             {{ item.labelName }}
           </li>
         </ul>
-        <!-- <div>
-        </div> -->
-      </sp-sticky>
+
+      </sp-sticky> -->
       <div class="container-body">
         <div class="body-content">
           <sp-pull-refresh
@@ -97,7 +73,6 @@
                   @click="jumpProductDetail(item)"
                 >
                   <Card
-                    :end-time="endTime"
                     :item="item"
                     :overflow-dot="overflowDot"
                     :parse-price="parsePrice"
@@ -118,11 +93,12 @@ import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
 import activityMixin from './activityMixin'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
-import Box from '@/components/activity/special/Box.vue'
+import Time from '@/components/activity/seckill/Time.vue'
 import Card from '@/components/activity/special/Card.vue'
 import NoData from '@/components/activity/NoData.vue'
+
 export default {
-  name: 'Subsidy',
+  name: 'Exclusive',
   components: {
     // Header,
     HeadWrapper,
@@ -132,17 +108,19 @@ export default {
     [List.name]: List,
     [PullRefresh.name]: PullRefresh,
 
-    Box,
     Card,
     NoData,
+    Time,
   },
   mixins: [activityMixin],
   data() {
     return {
-      specType: 'HDZT_ZTTYPE_TM',
+      specType: 'HDZT_ZTTYPE_DJZS',
 
-      hasCity: true,
-      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/6kfpkqxmcv00000.png',
+      hasCity: false,
+
+      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/57zm6tubgjo0000.jpg',
+
       headerHeight: '',
     }
   },
@@ -161,7 +139,7 @@ export default {
     },
   },
   head() {
-    return { title: '99特卖' }
+    return { title: '限时直降' }
   },
 }
 </script>
@@ -173,7 +151,7 @@ export default {
 }
 .container {
   font-family: PingFangSC;
-
+  background: #f8f8f8;
   .search_container {
     padding-top: constant(safe-area-inset-top);
     padding-top: env(safe-area-inset-top);
@@ -183,7 +161,7 @@ export default {
       padding: 16px 0;
 
       background-size: 100% auto;
-
+      -moz-background-size: 100% auto;
       .left-back {
         display: flex;
         justify-content: center;

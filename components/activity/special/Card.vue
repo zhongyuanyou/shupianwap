@@ -1,12 +1,12 @@
 <template>
   <div class="body-content-items">
-    <div class="left-content" :style="{ 'background-image': item.imageUrl }">
-      <div class="left-countdown">
-        距离结束{{ endTime.hour }}:{{ endTime.min }}:{{ endTime.sec }}
+    <div class="left-content">
+      <div v-if="endTime && endTime.sec" class="left-countdown">
+        距结束{{ endTime.hour }}:{{ endTime.min }}:{{ endTime.sec }}
       </div>
-      <img
-        height="100%"
-        width="100%"
+      <sp-image
+        class="picture"
+        fit="cover"
         :src="
           item.imageUrl ||
           'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
@@ -16,42 +16,50 @@
     </div>
     <div class="right-content">
       <div class="goods-name">
-        <span class="rc-span">特卖</span>
-        <span class="rc-span">千万补贴</span>{{ item.skuName }}
+        <!-- <span class="rc-span">特卖</span>
+        <span class="rc-span">千万补贴</span> -->
+        {{ item.skuName }}
       </div>
       <div class="rc-middle">
-        <div v-for="tag in item.tags.split(',').slice(0, 2)" :key="tag">
+        <div v-for="tag in tags" :key="tag">
           {{ overflowDot(tag, 6) }}
         </div>
       </div>
       <div class="rc-bottom">
         <div class="rc-bottom-lf">
-          <div
+          <span
             v-if="parsePrice(item.specialPrice) !== '面议'"
             class="rc-bottom-lf-my"
           >
-            <div>
+            <span class="rc-bottom-lf-my-price">
               {{ item.specialUnit ? item.specialNewPrice : item.specialPrice }}
-            </div>
-            <div>{{ item.specialUnit || '元' }}</div>
-          </div>
-          <div v-else class="rc-bottom-lf-my">
-            <div>面议</div>
-          </div>
+            </span>
+            <span class="rc-bottom-lf-my-price-unit">{{
+              item.specialUnit || '元'
+            }}</span>
+          </span>
+          <span v-else class="rc-bottom-lf-my-price-unit">
+            <span>面议</span>
+          </span>
 
-          <div v-if="parsePrice(item.specialPrice) !== '面议'" class="bf-my">
-            原价{{ item.skuUnit ? item.skuNewPrice : item.skuPrice
+          <span v-if="parsePrice(item.specialPrice) !== '面议'" class="bf-my">
+            {{ item.skuUnit ? item.skuNewPrice : item.skuPrice
             }}{{ item.skuUnit || '元' }}
-          </div>
+          </span>
         </div>
-        <div class="rc-bottom-rt">去抢购</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { Image, Icon } from '@chipspc/vant-dgg'
 export default {
+  components: {
+    [Image.name]: Image,
+
+    // SpIcon: Icon,
+  },
   props: {
     endTime: {
       type: [Object, String],
@@ -74,6 +82,12 @@ export default {
       default() {},
     },
   },
+  computed: {
+    tags() {
+      const tag = this?.item?.tags?.split(',') || []
+      return tag.slice(0, 2)
+    },
+  },
 }
 </script>
 <style lang="less">
@@ -85,35 +99,45 @@ export default {
   -webkit-box-orient: vertical;
 }
 .body-content-items {
+  background: #fff;
   display: flex;
   justify-content: space-between;
-  height: 332px;
+  height: 276px;
   width: 100%;
-  padding: 32px 0;
+  padding: 28px 20px;
+  margin-bottom: 20px;
+  border-radius: 24px;
 }
 .left-content {
   position: relative;
   margin-right: 32px;
-  width: 260px;
+  width: 220px;
+  height: 220px;
   overflow: hidden;
-  height: 260px;
-  background: linear-gradient(180deg, #46494d 0%, #797d83 0%, #414347 100%);
+
   border-radius: 12px;
-  background-size: 100% 100%;
-  -moz-background-size: 100% 100%;
+
+  .picture {
+    height: 100%;
+    width: 100%;
+    border-radius: 12px;
+  }
+
   .left-countdown {
-    height: 40px;
-    font-size: 22px;
+    font-size: 20px;
+    padding: 6px 10px;
+
     font-weight: 400;
     color: #ffffff;
-    line-height: 40px;
-    padding: 0 23px 0 12px;
+
     position: absolute;
-    top: 0px;
-    left: 0px;
+    z-index: 1;
+    top: 8px;
+    left: 8px;
     word-break: break-all;
+
     background: #ec5330;
-    border-radius: 24px 0px 98px 0px;
+    border-radius: 4px;
     font-family: PingFangSC-Regular, PingFang SC;
   }
 }
@@ -123,14 +147,16 @@ export default {
   display: flex;
   align-content: flex-start;
   position: relative;
-  height: 260px;
+  height: 220px;
   flex-direction: column;
+
   .goods-name {
     font-size: 32px;
-    height: 92px;
+    line-height: 42px;
+    height: 84px;
     font-weight: bold;
     color: #222222;
-    line-height: 0.42rem;
+
     padding-bottom: 24px;
     .multiRowOverflowDot();
     span {
@@ -189,55 +215,33 @@ export default {
     width: 100%;
     justify-content: space-between;
     .rc-bottom-lf {
-      .rc-bottom-lf-my {
-        display: flex;
-        flex-direction: row;
-        align-content: flex-start;
-        padding-top: 0.05rem;
-        align-items: center;
-        div {
-          color: #ec5330;
-        }
-        div:nth-of-type(1) {
-          font-size: 40px;
-          height: 40px;
-          font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: bold;
-          line-height: 40px;
-        }
-        div:nth-of-type(2) {
-          font-size: 22px;
-          font-weight: bold;
-          margin: 13px 0 0 2px;
-          line-height: 22px;
-        }
+      font-size: 0;
+      span {
+        display: inline-block;
+      }
+      .rc-bottom-lf-my-price {
+        font-family: PingFangSC-Medium;
+        font-weight: bold;
+        font-size: 36px;
+        color: #ec5330;
+        letter-spacing: 0;
+        line-height: 36px;
+      }
+      .rc-bottom-lf-my-price-unit {
+        font-family: PingFangSC-Medium;
+        font-weight: bold;
+        font-size: 22px;
+        color: #ec5330;
+        letter-spacing: 0;
+        line-height: 22px;
       }
       .bf-my {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        margin-top: 8px;
+        margin-left: 16px;
         font-size: 22px;
-        font-weight: 400;
         color: #999999;
+        letter-spacing: 0;
         line-height: 22px;
-        margin-left: 2px;
       }
-    }
-    .rc-bottom-rt {
-      width: 100px;
-      //height: 100px;
-      background: yellow;
-      width: 176px;
-      //height: 80px;
-      font-family: PingFangSC-Medium, PingFang SC;
-      background: linear-gradient(139deg, #fe525d 0%, #fd3543 100%);
-      border-radius: 8px;
-      text-align: center;
-      font-size: 30px;
-      font-weight: bold;
-      color: #ffffff;
-      line-height: 80px;
     }
   }
 }

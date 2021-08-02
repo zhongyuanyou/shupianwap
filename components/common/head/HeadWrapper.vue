@@ -30,6 +30,7 @@ export default {
     }
   },
   computed: {
+    // 填充占位的高度
     fillHeaderHeight() {
       return this.fill ? this.HeaderHeight : 0
     },
@@ -45,6 +46,7 @@ export default {
     getHeaderHeight() {
       this.$nextTick(() => {
         this.HeaderHeight = this.$refs.couponHeaderWarpper.offsetHeight
+        this.$emit('onHeightChange', this.HeaderHeight)
       })
     },
   },

@@ -97,7 +97,6 @@
                   @click="jumpProductDetail(item)"
                 >
                   <Card
-                    :end-time="endTime"
                     :item="item"
                     :overflow-dot="overflowDot"
                     :parse-price="parsePrice"
@@ -121,8 +120,9 @@ import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 import Box from '@/components/activity/special/Box.vue'
 import Card from '@/components/activity/special/Card.vue'
 import NoData from '@/components/activity/NoData.vue'
+
 export default {
-  name: 'Subsidy',
+  name: 'Exclusive',
   components: {
     // Header,
     HeadWrapper,
@@ -139,10 +139,12 @@ export default {
   mixins: [activityMixin],
   data() {
     return {
-      specType: 'HDZT_ZTTYPE_TM',
+      specType: 'HDZT_ZTTYPE_DJZS',
 
-      hasCity: true,
-      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/6kfpkqxmcv00000.png',
+      hasCity: false,
+
+      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/dfnawx8oxnc0000.jpg',
+
       headerHeight: '',
     }
   },
@@ -161,7 +163,7 @@ export default {
     },
   },
   head() {
-    return { title: '99特卖' }
+    return { title: '独家专售' }
   },
 }
 </script>
@@ -183,7 +185,7 @@ export default {
       padding: 16px 0;
 
       background-size: 100% auto;
-
+      -moz-background-size: 100% auto;
       .left-back {
         display: flex;
         justify-content: center;
