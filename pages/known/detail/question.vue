@@ -40,7 +40,7 @@
           </div>
         </div>
       </HeaderSlot>
-      <DownLoadArea :ios-link="iosLink" :androd-link="androdLink" />
+      <DownLoadArea v-if="!isInApp" :ios-link="iosLink" :androd-link="androdLink" />
       <div class="problem">
         <div class="tag">
           <ul class="box">
