@@ -27,7 +27,7 @@
                   answerDetails && answerDetails.createrId !== userInfo.userId
                 "
               >
-                <div class="content" style="margin-right: 0.32rem">
+                <div class="content" style="margin-right: 0.2rem">
                   <my-icon name="xiehuida" size="0.36rem"></my-icon>
                   <span>写回答</span>
                 </div>
