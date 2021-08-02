@@ -173,6 +173,12 @@
           <div class="cancel" @click="popupShow = false">取消</div>
         </div>
       </sp-popup>
+      <sp-share-sheet
+        v-model="showShare"
+        title="分享"
+        :options="shareOptions"
+        @select="onSelect"
+      />
     </div>
   </section>
 </template>
@@ -189,6 +195,7 @@ import {
   Popup,
   Dialog,
   Bottombar,
+  ShareSheet,
 } from '@chipspc/vant-dgg'
 import { knownApi, planner } from '@/api'
 import PageHead from '@/components/common/head/header'
@@ -200,6 +207,7 @@ import Comment from '~/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import DownLoadArea from '@/components/common/downLoadArea'
 import ShareModal from '@/components/common/ShareModal'
+import { copyToClipboard, setUrlParams } from '@/utils/common'
 // import SpBottom from '@/components/common/spBottom/SpBottom'
 export default {
   layout: 'keepAlive',
@@ -211,6 +219,7 @@ export default {
     [Field.name]: Field,
     [Dialog.name]: Dialog,
     [Bottombar.name]: Bottombar,
+    [ShareSheet.name]: ShareSheet,
     Comment,
     HeaderSlot,
     // PageHead,
@@ -266,6 +275,8 @@ export default {
       handleType: '',
       isFollow: false,
       releaseFlag: false, // 是否发布的新文章
+      shareOptions: [],
+      showShare: false,
     }
   },
   computed: {
@@ -534,6 +545,55 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+    },
+    onSelect() {
+      if (this.isInApp) {
+        this.showShare = false
+        return
+      }
+      const url = window && window.location.href
+      const sharedUrl = setUrlParams(url, { isShare: 1 })
+      console.log('sharedUrl:', sharedUrl)
+
+      const isSuccess = copyToClipboard(sharedUrl)
+      if (isSuccess) {
+        this.$xToast.show({
+          message: '复制成功',
+          duration: 1500,
+          icon: 'toast_ic_comp',
+          forbidClick: true,
+        })
+      }
+      this.showShare = false
+    },
+    shareHandle() {
+      if (this.isInApp) {
+        const url = window && window.location.href
+        const sharedUrl = setUrlParams(url, { isShare: 1 })
+        this.$appFn.dggShare(
+          {
+            image:
+              'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png',
+            title: '商户店铺',
+            subTitle: `优选商户 - ${this.detailData.mchBaseInfo.name}的店铺`,
+            url: sharedUrl,
+          },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '分享失败！',
+                duration: 1500,
+                forbidClick: false,
+                icon: 'toast_ic_remind',
+              })
+            }
+          }
+        )
+        return
+      }
+      this.shareOptions = [{ name: '复制链接', icon: 'link' }]
+      this.showShare = true
     },
   },
 }

@@ -16,7 +16,7 @@
             <div class="btn-area">
               <div
                 class="content"
-                style="margin-right: 0.2rem"
+                style="margin-right: 0.32rem"
                 @click="onInvite"
               >
                 <my-icon name="yaoqinghuida_mian" size="0.36rem"></my-icon>
@@ -27,7 +27,7 @@
                   answerDetails && answerDetails.createrId !== userInfo.userId
                 "
               >
-                <div class="content" style="margin-right: 0.2rem">
+                <div class="content" style="margin-right: 0.32rem">
                   <my-icon name="xiehuida" size="0.36rem"></my-icon>
                   <span>写回答</span>
                 </div>
