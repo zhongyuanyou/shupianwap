@@ -14,27 +14,48 @@
               @click.native="$back()"
             ></my-icon>
             <div class="btn-area">
-              <p @click="onInvite">
+              <div
+                class="content"
+                style="margin-right: 0.32rem"
+                @click="onInvite"
+              >
                 <my-icon name="yaoqinghuida_mian" size="0.36rem"></my-icon>
                 <span>邀请</span>
-              </p>
-              <p
+              </div>
+              <template
                 v-if="
                   answerDetails && answerDetails.createrId !== userInfo.userId
                 "
-                @click.stop="writeAnswer"
               >
-                <my-icon name="xiehuida" size="0.36rem"></my-icon>
-                <span>写回答</span>
-              </p>
-              <p v-else>
+                <div class="content" style="margin-right: 0.32rem">
+                  <my-icon name="xiehuida" size="0.36rem"></my-icon>
+                  <span>写回答</span>
+                </div>
+                <my-icon
+                  style="margin-top: 0.06rem"
+                  name="fenxiang"
+                  size="0.32rem"
+                  color="#1a1a1a"
+                  class="my_icon"
+                  @click.native="shareHandle"
+                ></my-icon>
+              </template>
+              <template v-else>
+                <my-icon
+                  style="margin-right: 0.32rem; margin-top: 0.06rem"
+                  name="fenxiang"
+                  size="0.32rem"
+                  color="#1a1a1a"
+                  class="my_icon"
+                  @click.native="shareHandle"
+                ></my-icon>
                 <my-icon
                   name="gengduo"
                   size="0.4rem"
                   color="#000000"
                   @click.native="more"
                 ></my-icon>
-              </p>
+              </template>
             </div>
           </div>
           <div v-show="showHead2" class="head2">
@@ -69,7 +90,7 @@
         </header-slot>
       </div>
       <DownLoadArea
-        v-if="isShare"
+        v-if="!isInApp"
         :ios-link="iosLink"
         :androd-link="androdLink"
       />
@@ -606,6 +627,12 @@ export default {
     display: flex;
     align-items: center;
     height: 100%;
+    .content {
+      color: #4974f5;
+      span {
+        font-weight: bold;
+      }
+    }
     p {
       color: #4974f5;
       padding: 0 20px;
