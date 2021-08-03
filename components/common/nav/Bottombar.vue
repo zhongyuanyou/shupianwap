@@ -53,16 +53,18 @@ export default {
           iconName: 'shouye1',
           path: '/',
         },
+        /*
         {
           name: '发现',
           iconName: 'dongtai',
           path: '/found',
         },
-        // {
-        //   name: '必懂',
-        //   iconName: 'bidong',
-        //   path: '/known',
-        // },
+        */
+        {
+          name: '必懂',
+          iconName: 'bidong',
+          path: '/known',
+        },
         {
           name: '消息',
           iconName: 'xiaoxi1',

@@ -337,9 +337,9 @@ export default {
       this.getPayParamsFormData.payPlatform = item.code
     },
     startPay() {
-      this.showMydialog = true
+      // this.showMydialog = true
       // this.$router.replace('/pay/payResult')
-      // this.getPayParams()
+      this.getPayParams()
     },
     // 查询订单应付金额
     enablePayMoney() {
