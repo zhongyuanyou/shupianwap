@@ -35,19 +35,6 @@
 
     <div class="img_container">
       <img width="100%" :src="imageHead" alt="" />
-
-      <div v-if="isTimerShow" class="count-down">
-        <div class="down-time">
-          <div>距本场结束还剩</div>
-          <div class="time">{{ time.day }}</div>
-          <div>天</div>
-          <div class="time">{{ time.hour }}</div>
-          <div>:</div>
-          <div class="time">{{ time.min }}</div>
-          <div>:</div>
-          <div class="time">{{ time.sec }}</div>
-        </div>
-      </div>
     </div>
 
     <div class="content_container">
@@ -63,6 +50,13 @@
       ></Box>
 
       <sp-sticky class="tabs-box" :offset-top="headerHeight">
+        <div v-if="isService" class="drop_down">
+          <div class="drop_down_title" @click="swichCityHandle">
+            {{ cityName ? cityName : '定位中' }}
+          </div>
+          <div class="drop_down_icon"></div>
+        </div>
+
         <ul class="tabs-box-items">
           <li
             v-for="(item, index) in activityTypeOptions"
@@ -97,6 +91,7 @@
                   @click="jumpProductDetail(item)"
                 >
                   <Card
+                    :end-time="endTime"
                     :item="item"
                     :overflow-dot="overflowDot"
                     :parse-price="parsePrice"
@@ -120,9 +115,8 @@ import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 import Box from '@/components/activity/special/Box.vue'
 import Card from '@/components/activity/special/Card.vue'
 import NoData from '@/components/activity/NoData.vue'
-
 export default {
-  name: 'Exclusive',
+  name: 'Subsidy',
   components: {
     // Header,
     HeadWrapper,
@@ -139,13 +133,13 @@ export default {
   mixins: [activityMixin],
   data() {
     return {
-      specType: 'HDZT_ZTTYPE_DJZS',
+      specType: 'HDZT_ZTTYPE_XTSF',
 
-      hasCity: false,
-
-      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/dfnawx8oxnc0000.jpg',
-
+      hasCity: true,
+      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/c3uw9dpx8vk0000.jpg',
       headerHeight: '',
+
+      advertCode: 'ad100033', // 广告code
     }
   },
   computed: {
@@ -163,7 +157,7 @@ export default {
     },
   },
   head() {
-    return { title: '独家专售' }
+    return { title: '新品首发' }
   },
 }
 </script>
@@ -185,7 +179,7 @@ export default {
       padding: 16px 0;
 
       background-size: 100% auto;
-      -moz-background-size: 100% auto;
+
       .left-back {
         display: flex;
         justify-content: center;
@@ -226,49 +220,6 @@ export default {
 
   .img_container {
     position: relative;
-    .count-down {
-      position: absolute;
-      top: 68.5%;
-      width: 100%;
-
-      font-size: 24px;
-      color: #ffedcb;
-      letter-spacing: 0;
-      line-height: 24px;
-
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-
-      .down-time {
-        font-size: 24px;
-        font-family: PingFangSC-Medium, PingFang SC;
-
-        color: #ffedcb;
-        line-height: 24px;
-
-        letter-spacing: 2px;
-        display: flex;
-        align-items: center;
-
-        .time {
-          font-weight: bold;
-          // min-width: 36px;
-          padding: 0 5px;
-          height: 36px;
-          line-height: 36px;
-          background-image: linear-gradient(139deg, #7e9fff 0%, #4974f5 100%);
-          border-radius: 4px;
-
-          font-family: Bebas;
-          font-size: 24px;
-          color: #fff;
-          text-align: center;
-          margin: 0 8px;
-        }
-      }
-    }
   }
 
   .content_container {
@@ -284,22 +235,57 @@ export default {
       font-size: 0;
 
       ::v-deep .sp-sticky {
-        background-color: #fff;
         overflow: hidden;
+        background: #f8f8f8;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 0px 20px;
 
         &.sp-sticky--fixed {
           border-radius: 0 0 0 0;
         }
       }
 
+      .drop_down {
+        height: 56px;
+
+        border: 1px solid #4974f5;
+        border-radius: 32px;
+
+        display: flex;
+        align-items: center;
+        margin-right: 40px;
+        padding: 0 24px;
+        .drop_down_title {
+          white-space: nowrap;
+
+          font-weight: bold;
+          color: #ffffff;
+          line-height: 56px;
+
+          font-family: PingFangSC-Medium;
+          font-size: 30px;
+          color: #4974f5;
+          letter-spacing: 0;
+        }
+        .drop_down_icon {
+          background: url('https://cdn.shupian.cn/sp-pt/wap/images/3obtk0xjgos0000.png');
+          width: 15px;
+          height: 10px;
+          margin-left: 8px;
+          background-size: 100% 100%;
+          -moz-background-size: 100% 100%;
+        }
+      }
+
       .tabs-box-items {
         display: flex;
-        background: #f8f8f8;
+
         overflow-x: scroll;
 
         // height: 96px;
         // line-height: 96px;
-        padding: 0px 40px;
 
         &::-webkit-scrollbar {
           width: 0 !important;

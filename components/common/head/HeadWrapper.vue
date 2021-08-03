@@ -45,7 +45,9 @@ export default {
   methods: {
     getHeaderHeight() {
       this.$nextTick(() => {
-        this.HeaderHeight = this.$refs.couponHeaderWarpper.offsetHeight
+        this.HeaderHeight = parseInt(
+          this.$refs.couponHeaderWarpper.offsetHeight
+        )
         this.$emit('onHeightChange', this.HeaderHeight)
       })
     },

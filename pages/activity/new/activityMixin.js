@@ -64,6 +64,8 @@ export default {
       iconLeft: 0.35,
       loading: false,
       finished: false,
+
+
       refreshDisabled: false,
       refreshing: false,
       activityTypeOptions: [],
@@ -373,6 +375,7 @@ export default {
         })
         .then((res) => {
           console.log('productMethod',param,res);
+          this.refreshing = false
           if (res.code === 200) {
             if (
               this.isInit &&
@@ -380,10 +383,7 @@ export default {
               location.href.match('activity/new/special')||
               location.href.match('activity/exclusive')||
               location.href.match('activity/new/exclusive')
-              ) &&
-
-
-              !this.recommendProductList.length
+              ) &&!this.recommendProductList.length
             ) {
               this.initList = res.data.rows
               this.recommendProductList = JSON.parse(
@@ -406,9 +406,12 @@ export default {
             if (this.page > res.data.totalPage) {
               this.finished = true
             }
-            this.refreshing = false
+
           } else {
             this.loading = false
+            this.finished = true
+            this.refreshDisabled = true
+
             throw new Error('服务异常，请刷新重试！')
             // Toast.fail({
             //   duration: 2000,
@@ -419,6 +422,9 @@ export default {
           }
         })
         .catch((err) => {
+          this.loading = false
+          this.finished = true
+          this.refreshDisabled = true
           this.refreshing = false
           Toast.fail({
             duration: 2000,
