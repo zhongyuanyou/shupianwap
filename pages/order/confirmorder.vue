@@ -534,7 +534,7 @@ export default {
             saleSkuPrice: this.order.salesPrice,
             saleSkuCount: 1,
           }
-          this.Orderform.needSplitProPackageDataParam.push(sku)
+          this.Orderform.needSplitProPackageDataParam = new Array(1).fill(sku)
         }
         let isFromCart = false
         let cusOrderPayType
