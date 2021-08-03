@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <HeadWrapper :fill="false" @onHeightChange="onHeightChange">
+    <HeadWrapper :fill="true" @onHeightChange="onHeightChange">
       <div class="search_container">
         <div class="search">
           <!-- @click="uPGoBack" -->
@@ -22,28 +22,12 @@
           <div class="right"></div>
         </div>
       </div>
+      <div><Sum :state="ClassState"></Sum></div>
     </HeadWrapper>
 
-    <div class="img_container">
-      <img width="100%" :src="imageHead" alt="" />
-    </div>
+    <div ref="fill_container" class="fill_container"></div>
 
     <div class="content_container">
-      <Time :time="time"></Time>
-      <!-- <sp-sticky class="tabs-box" :offset-top="headerHeight">
-        <ul class="tabs-box-items">
-          <li
-            v-for="(item, index) in activityTypeOptions"
-            :key="index"
-            class="li-tab"
-            :class="{ active: index == currentIndex }"
-            @click="menuTab(item, index)"
-          >
-            {{ item.labelName }}
-          </li>
-        </ul>
-
-      </sp-sticky> -->
       <div class="container-body">
         <div class="body-content">
           <sp-pull-refresh
@@ -84,9 +68,10 @@ import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
 import activityMixin from './activityMixin'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
-import Time from '@/components/activity/seckill/Time.vue'
+
 import Card from '@/components/activity/special/Card.vue'
 import NoData from '@/components/activity/NoData.vue'
+import Sum from '@/components/activity/seckill2/Sum.vue'
 
 export default {
   name: 'Exclusive',
@@ -101,18 +86,20 @@ export default {
 
     Card,
     NoData,
-    Time,
+    Sum,
   },
   mixins: [activityMixin],
   data() {
     return {
-      specType: 'HDZT_ZTTYPE_XSQG',
+      specType: 'HDZT_ZTTYPE_DJZS',
 
       hasCity: false,
 
       imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/57zm6tubgjo0000.jpg',
 
       headerHeight: '',
+
+      ClassState: 1,
     }
   },
   computed: {
@@ -124,7 +111,23 @@ export default {
       return this.$store.state.user
     },
   },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll) // 监听（绑定）滚轮滚动事件
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
   methods: {
+    handleScroll() {
+      const scrollHeight =
+        document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
+      const boxHeight = this.$refs.fill_container.clientHeight // 盒子高度
+      if (scrollHeight > boxHeight) {
+        this.ClassState = 0
+      } else {
+        this.ClassState = 1
+      }
+    },
     onHeightChange(height) {
       this.headerHeight = height
     },
@@ -168,11 +171,10 @@ export default {
       .search-box {
         margin-right: 40px;
         height: 88px;
-
-        // display: flex;
-        // align-items: center;
         flex: 1;
-        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         .header_img {
           height: 39px;
         }
@@ -196,57 +198,15 @@ export default {
     }
   }
 
-  .img_container {
-    position: relative;
-    .count-down {
-      position: absolute;
-      top: 68.5%;
-      width: 100%;
-
-      font-size: 24px;
-      color: #ffedcb;
-      letter-spacing: 0;
-      line-height: 24px;
-
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-
-      .down-time {
-        font-size: 24px;
-        font-family: PingFangSC-Medium, PingFang SC;
-
-        color: #ffedcb;
-        line-height: 24px;
-
-        letter-spacing: 2px;
-        display: flex;
-        align-items: center;
-
-        .time {
-          // min-width: 36px;
-          font-weight: bold;
-          padding: 0 5px;
-          height: 36px;
-          line-height: 36px;
-          background-image: linear-gradient(139deg, #7e9fff 0%, #4974f5 100%);
-          border-radius: 4px;
-
-          font-family: Bebas;
-          font-size: 24px;
-          color: #fff;
-          text-align: center;
-          margin: 0 8px;
-        }
-      }
-    }
+  .fill_container {
+    background: #4974f5;
+    height: 220px;
   }
 
   .content_container {
     position: relative;
-    margin-top: -24px;
-    background: #f8f8f8;
+    margin-top: -184px;
+
     border-radius: 24px;
     overflow: hidden;
 
@@ -313,7 +273,6 @@ export default {
       }
     }
     .container-body {
-      background: #f8f8f8;
       z-index: 1;
       padding: 0 20px;
       &::after {
