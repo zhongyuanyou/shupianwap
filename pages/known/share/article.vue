@@ -123,8 +123,8 @@
       class="bottom-btn"
     >
       <planner-bottom
-        :planner-id="topPlannerInfo.id || shareValue.businessId || plannerId"
         ref="myPlanner"
+        :planner-id="topPlannerInfo.id || shareValue.businessId || plannerId"
       ></planner-bottom>
     </div>
   </section>
