@@ -2,9 +2,9 @@
   <div class="container">
     <HeadWrapper :fill="false" @onHeightChange="onHeightChange">
       <div class="search_container">
-        <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
+        <div class="search">
           <!-- @click="uPGoBack" -->
-          <div class="left-back">
+          <div class="left-back" @click="uPGoBack">
             <my-icon
               name="nav_ic_back"
               class="back_icon"
@@ -12,23 +12,14 @@
               color="#FFFFFF"
             ></my-icon>
           </div>
-          <div class="search-box"></div>
-          <div class="right">
-            <my-icon
-              class="search-icon"
-              name="sear_ic_sear"
-              size="0.4rem"
-              color="#FFFFFF"
-              @click.native="clickInputHandle"
-            ></my-icon>
-            <span
-              class="rule"
-              @click="
-                $router.push('/login/protocol?categoryCode=protocol100034')
-              "
-              >规则</span
-            >
+          <div class="search-box">
+            <img
+              class="header_img"
+              src="https://cdn.shupian.cn/sp-pt/wap/images/6pkx5baf85s0000.png"
+              alt=""
+            />
           </div>
+          <div class="right"></div>
         </div>
       </div>
     </HeadWrapper>
@@ -158,10 +149,11 @@ export default {
     .search {
       display: flex;
       align-items: center;
+
       padding: 16px 0;
 
-      background-size: 100% auto;
-      -moz-background-size: 100% auto;
+      background: #4974f5;
+
       .left-back {
         display: flex;
         justify-content: center;
@@ -177,9 +169,13 @@ export default {
         margin-right: 40px;
         height: 88px;
 
-        display: flex;
-        align-items: center;
+        // display: flex;
+        // align-items: center;
         flex: 1;
+        text-align: center;
+        .header_img {
+          height: 39px;
+        }
       }
       .right {
         display: flex;
