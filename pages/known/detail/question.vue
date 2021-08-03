@@ -22,12 +22,25 @@
           <p class="title">{{ title }}</p>
           <div class="right-area">
             <my-icon
-              style="margin-right: 0.15rem"
+              style="margin-right: 0.32rem"
               name="nav_ic_searchbig"
               size="0.40rem"
               color="#1a1a1a"
               class="my_icon"
               @click.native="$router.push('/known/search')"
+            ></my-icon>
+            <my-icon
+              :style="{
+                'margin-right':
+                  questionDetails.createrId === userInfo.userId
+                    ? '0.32rem'
+                    : '',
+              }"
+              name="fenxiang"
+              size="0.36rem"
+              color="#1a1a1a"
+              class="my_icon"
+              @click.native="shareHandle"
             ></my-icon>
             <sp-icon
               v-if="questionDetails.createrId === userInfo.userId"
@@ -40,7 +53,11 @@
           </div>
         </div>
       </HeaderSlot>
-      <DownLoadArea :ios-link="iosLink" :androd-link="androdLink" />
+      <DownLoadArea
+        v-if="!isInApp"
+        :ios-link="iosLink"
+        :androd-link="androdLink"
+      />
       <div class="problem">
         <div class="tag">
           <ul class="box">
