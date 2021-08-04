@@ -720,7 +720,6 @@ export default {
           const url = window && window.location.href
           const sharedUrl = setUrlParams(url, { isShare: 1 })
           const tile = this.questionDetails.title
-          const buildTile = tile.length > 10 ? tile.slice(0, 10) + '...' : tile
 
           this.$appFn.dggShare(
             {
@@ -728,7 +727,7 @@ export default {
                 'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png',
               title: `${
                 this.userInfo.userName || '薯片用户'
-              }邀请你回答: ${buildTile}`,
+              }邀请你回答: ${tile}`,
               subTitle: `${
                 this.questionDetails.userName || '薯片用户'
               }提出了问题,已有${

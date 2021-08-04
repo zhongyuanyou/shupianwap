@@ -594,13 +594,12 @@ export default {
           const url = window && window.location.href
           const sharedUrl = setUrlParams(url, { isShare: 1 })
           const tile = this.answerDetails.title
-          const buildTile = tile.length > 10 ? tile.slice(0, 10) + '...' : tile
 
           this.$appFn.dggShare(
             {
               image:
                 'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png',
-              title: `${buildTile}`,
+              title: `${tile}`,
               subTitle: `${
                 this.answerDetails.userName || '薯片用户'
               }回答了问题,已获${

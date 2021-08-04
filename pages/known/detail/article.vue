@@ -553,15 +553,12 @@ export default {
           const sharedUrl = setUrlParams(url, { isShare: 1 })
           const tile = this.articleDetails.title
           const content = this.articleDetails.contentText
-          const buildTile = tile.length > 10 ? tile.slice(0, 10) + '...' : tile
-          const buildContent =
-            content.length > 20 ? content.slice(0, 20) + '...' : content
           this.$appFn.dggShare(
             {
               image:
                 'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png',
-              title: `${buildTile}`,
-              subTitle: `${buildContent}`,
+              title: `${tile}`,
+              subTitle: `${content}`,
               url: sharedUrl,
             },
             (res) => {
