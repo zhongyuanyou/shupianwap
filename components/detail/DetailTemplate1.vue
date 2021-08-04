@@ -11,6 +11,7 @@
       <sp-top-nav-bar
         ellipsis
         :background="`rgba(255,255,255,0)`"
+        :style="{ padding:isInApp? `${appInfo.statusBarHeight}px 0 0 0`:'0' }"
         @on-click-left="onClickLeft"
       >
         <template #left>
@@ -106,7 +107,7 @@
 
 <script>
 import { TopNavBar, Sticky, List, ShareSheet } from '@chipspc/vant-dgg'
-import { mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import Banner from '~/components/detail/Banner.vue'
 import Title from '~/components/detail/Title1.vue'
 import CommentBox from '~/components/detail/CommentBox.vue'
@@ -326,6 +327,12 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
+      userInfo: (state) => state.user.userInfo,
+      isApplets: (state) => state.app.isApplets,
+    }),
     sellingDetail() {
       // 获取客户端展示信息
       return this.$store.state.sellingGoodsDetail.sellingGoodsData
