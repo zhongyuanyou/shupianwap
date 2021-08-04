@@ -4,7 +4,7 @@
       <div class="search_container">
         <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
           <!-- @click="uPGoBack" -->
-          <div class="left-back">
+          <div class="left-back" @click="uPGoBack">
             <my-icon
               name="nav_ic_back"
               class="back_icon"
@@ -226,10 +226,8 @@ export default {
     position: relative;
     .count-down {
       position: absolute;
-      top: 0;
+      top: 68.5%;
       width: 100%;
-      margin-top: 43%;
-      // margin-top: 53%;
 
       font-size: 24px;
       color: #ffedcb;
@@ -244,7 +242,7 @@ export default {
       .down-time {
         font-size: 24px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: bold;
+
         color: #ffedcb;
         line-height: 24px;
 
@@ -254,6 +252,7 @@ export default {
 
         .time {
           // min-width: 36px;
+          font-weight: bold;
           padding: 0 5px;
           height: 36px;
           line-height: 36px;

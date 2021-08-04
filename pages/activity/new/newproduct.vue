@@ -38,8 +38,25 @@
     </div>
 
     <div class="content_container">
-      <Time :time="time"></Time>
-      <!-- <sp-sticky class="tabs-box" :offset-top="headerHeight">
+      <Box
+        title="爆款单品"
+        :parse-price="parsePrice"
+        :list="recommendProductList"
+        @jump="
+          (item) => {
+            jumpProductDetail(item)
+          }
+        "
+      ></Box>
+
+      <sp-sticky class="tabs-box" :offset-top="headerHeight">
+        <div v-if="isService" class="drop_down">
+          <div class="drop_down_title" @click="swichCityHandle">
+            {{ cityName ? cityName : '定位中' }}
+          </div>
+          <div class="drop_down_icon"></div>
+        </div>
+
         <ul class="tabs-box-items">
           <li
             v-for="(item, index) in activityTypeOptions"
@@ -51,8 +68,9 @@
             {{ item.labelName }}
           </li>
         </ul>
-
-      </sp-sticky> -->
+        <!-- <div>
+        </div> -->
+      </sp-sticky>
       <div class="container-body">
         <div class="body-content">
           <sp-pull-refresh
@@ -73,6 +91,7 @@
                   @click="jumpProductDetail(item)"
                 >
                   <Card
+                    :end-time="endTime"
                     :item="item"
                     :overflow-dot="overflowDot"
                     :parse-price="parsePrice"
@@ -93,12 +112,11 @@ import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
 import activityMixin from './activityMixin'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
-import Time from '@/components/activity/seckill/Time.vue'
+import Box from '@/components/activity/special/Box.vue'
 import Card from '@/components/activity/special/Card.vue'
 import NoData from '@/components/activity/NoData.vue'
-
 export default {
-  name: 'Exclusive',
+  name: 'Subsidy',
   components: {
     // Header,
     HeadWrapper,
@@ -108,20 +126,20 @@ export default {
     [List.name]: List,
     [PullRefresh.name]: PullRefresh,
 
+    Box,
     Card,
     NoData,
-    Time,
   },
   mixins: [activityMixin],
   data() {
     return {
-      specType: 'HDZT_ZTTYPE_XSQG',
+      specType: 'HDZT_ZTTYPE_XTSF',
 
-      hasCity: false,
-
-      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/57zm6tubgjo0000.jpg',
-
+      hasCity: true,
+      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/c3uw9dpx8vk0000.jpg',
       headerHeight: '',
+
+      advertCode: 'ad100033', // 广告code
     }
   },
   computed: {
@@ -139,7 +157,7 @@ export default {
     },
   },
   head() {
-    return { title: '限时直降' }
+    return { title: '新品首发' }
   },
 }
 </script>
@@ -151,7 +169,7 @@ export default {
 }
 .container {
   font-family: PingFangSC;
-  background: #f8f8f8;
+
   .search_container {
     padding-top: constant(safe-area-inset-top);
     padding-top: env(safe-area-inset-top);
@@ -161,7 +179,7 @@ export default {
       padding: 16px 0;
 
       background-size: 100% auto;
-      -moz-background-size: 100% auto;
+
       .left-back {
         display: flex;
         justify-content: center;
@@ -202,49 +220,6 @@ export default {
 
   .img_container {
     position: relative;
-    .count-down {
-      position: absolute;
-      top: 68.5%;
-      width: 100%;
-
-      font-size: 24px;
-      color: #ffedcb;
-      letter-spacing: 0;
-      line-height: 24px;
-
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-
-      .down-time {
-        font-size: 24px;
-        font-family: PingFangSC-Medium, PingFang SC;
-
-        color: #ffedcb;
-        line-height: 24px;
-
-        letter-spacing: 2px;
-        display: flex;
-        align-items: center;
-
-        .time {
-          // min-width: 36px;
-          font-weight: bold;
-          padding: 0 5px;
-          height: 36px;
-          line-height: 36px;
-          background-image: linear-gradient(139deg, #7e9fff 0%, #4974f5 100%);
-          border-radius: 4px;
-
-          font-family: Bebas;
-          font-size: 24px;
-          color: #fff;
-          text-align: center;
-          margin: 0 8px;
-        }
-      }
-    }
   }
 
   .content_container {
@@ -260,22 +235,57 @@ export default {
       font-size: 0;
 
       ::v-deep .sp-sticky {
-        background-color: #fff;
         overflow: hidden;
+        background: #f8f8f8;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 0px 20px;
 
         &.sp-sticky--fixed {
           border-radius: 0 0 0 0;
         }
       }
 
+      .drop_down {
+        height: 56px;
+
+        border: 1px solid #4974f5;
+        border-radius: 32px;
+
+        display: flex;
+        align-items: center;
+        margin-right: 40px;
+        padding: 0 24px;
+        .drop_down_title {
+          white-space: nowrap;
+
+          font-weight: bold;
+          color: #ffffff;
+          line-height: 56px;
+
+          font-family: PingFangSC-Medium;
+          font-size: 30px;
+          color: #4974f5;
+          letter-spacing: 0;
+        }
+        .drop_down_icon {
+          background: url('https://cdn.shupian.cn/sp-pt/wap/images/3obtk0xjgos0000.png');
+          width: 15px;
+          height: 10px;
+          margin-left: 8px;
+          background-size: 100% 100%;
+          -moz-background-size: 100% 100%;
+        }
+      }
+
       .tabs-box-items {
         display: flex;
-        background: #f8f8f8;
+
         overflow-x: scroll;
 
         // height: 96px;
         // line-height: 96px;
-        padding: 0px 40px;
 
         &::-webkit-scrollbar {
           width: 0 !important;

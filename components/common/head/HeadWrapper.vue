@@ -27,6 +27,7 @@ export default {
   data() {
     return {
       HeaderHeight: 88,
+      timer: null,
     }
   },
   computed: {
@@ -37,16 +38,28 @@ export default {
   },
   mounted() {
     this.getHeaderHeight()
+    this.timer = setInterval(() => {
+      this.getHeaderHeight()
+    }, 100)
+    this.timerout = setTimeout(() => {
+      clearInterval(this.timer)
+    }, 5000)
     window.addEventListener('resize', this.getHeaderHeight)
   },
   destroyed() {
+    clearInterval(this.timer)
+    clearTimeout(this.timerout)
     window.removeEventListener('resize', this.getHeaderHeight)
   },
   methods: {
     getHeaderHeight() {
       this.$nextTick(() => {
-        this.HeaderHeight = this.$refs.couponHeaderWarpper.offsetHeight
-        this.$emit('onHeightChange', this.HeaderHeight)
+        const HeaderHeight = parseInt(
+          this.$refs.couponHeaderWarpper.offsetHeight
+        )
+
+        this.HeaderHeight = HeaderHeight
+        this.$emit('onHeightChange', HeaderHeight)
       })
     },
   },
