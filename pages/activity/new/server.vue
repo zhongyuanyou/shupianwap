@@ -1,8 +1,8 @@
 <template>
-  <div class="seckill2_container">
-    <HeadWrapper :fill="true" :line="false" @onHeightChange="onHeightChange">
+  <div class="container">
+    <HeadWrapper :fill="false" :line="false" @onHeightChange="onHeightChange">
       <div class="search_container">
-        <div class="search">
+        <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
           <!-- @click="uPGoBack" -->
           <div class="left-back" @click="uPGoBack">
             <my-icon
@@ -12,22 +12,65 @@
               color="#FFFFFF"
             ></my-icon>
           </div>
-          <div class="search-box">
-            <img
-              class="header_img"
-              src="https://cdn.shupian.cn/sp-pt/wap/images/6pkx5baf85s0000.png"
-              alt=""
-            />
+          <div class="search-box"></div>
+          <div class="right">
+            <my-icon
+              class="search-icon"
+              name="sear_ic_sear"
+              size="0.4rem"
+              color="#FFFFFF"
+              @click.native="clickInputHandle"
+            ></my-icon>
+            <span
+              class="rule"
+              @click="
+                $router.push('/login/protocol?categoryCode=protocol100034')
+              "
+              >规则</span
+            >
           </div>
-          <div class="right"></div>
         </div>
       </div>
-      <div><Sum :state="state"></Sum></div>
     </HeadWrapper>
 
-    <div v-if="!isNoData" ref="fill_container" class="fill_container"></div>
+    <div class="img_container">
+      <img width="100%" :src="imageHead" alt="" />
+    </div>
 
     <div class="content_container">
+      <Recommend
+        title="爆款单品"
+        :parse-price="parsePrice"
+        :list="recommendProductList"
+        @jump="
+          (item) => {
+            jumpProductDetail(item)
+          }
+        "
+      ></Recommend>
+      <Classification
+        :is-service="false"
+        :city-name="cityName"
+        :header-height="headerHeight"
+        :current-index="currentIndex"
+        :activity-type-options="activityTypeOptions"
+        :swich-city-handle="swichCityHandle"
+        :menu-tab="menuTab"
+      />
+      <!-- <sp-sticky class="tabs-box" :offset-top="headerHeight">
+        <ul class="tabs-box-items">
+          <li
+            v-for="(item, index) in activityTypeOptions"
+            :key="index"
+            class="li-tab"
+            :class="{ active: index == currentIndex }"
+            @click="menuTab(item, index)"
+          >
+            {{ item.labelName }}
+          </li>
+        </ul>
+
+      </sp-sticky> -->
       <div class="container-body">
         <div class="body-content">
           <sp-pull-refresh
@@ -54,10 +97,7 @@
                   ></Card>
                 </div>
               </div>
-              <NoData
-                :is-no-data="isNoData"
-                :style="{ marginTop: headerHeight + 'px' }"
-              ></NoData>
+              <NoData :is-no-data="isNoData"></NoData>
             </sp-list>
           </sp-pull-refresh>
         </div>
@@ -71,13 +111,12 @@ import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
 import activityMixin from './activityMixin'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
-
+import Recommend from '~/components/activity/special/Recommend.vue'
 import Card from '@/components/activity/special/Card.vue'
 import NoData from '@/components/activity/NoData.vue'
-import Sum from '@/components/activity/seckill2/Sum.vue'
-
+import Classification from '@/components/activity/Classification.vue'
 export default {
-  name: 'Exclusive',
+  name: 'Subsidy',
   components: {
     // Header,
     HeadWrapper,
@@ -87,22 +126,19 @@ export default {
     [List.name]: List,
     [PullRefresh.name]: PullRefresh,
 
+    Recommend,
     Card,
     NoData,
-    Sum,
+    Classification,
   },
   mixins: [activityMixin],
   data() {
     return {
-      specType: 'HDZT_ZTTYPE_DJZS',
+      specType: 'HDZT_ZTTYPE_XFWHSF',
 
-      hasCity: false,
-
-      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/57zm6tubgjo0000.jpg',
-
-      headerHeight: '',
-
-      ClassState: 1,
+      hasCity: true,
+      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/efcl7pilo9c0000.png',
+      headerHeight: 0,
     }
   },
   computed: {
@@ -113,55 +149,32 @@ export default {
     userInfo() {
       return this.$store.state.user
     },
-    state() {
-      if (this.isNoData) {
-        return 0
-      }
-      return this.ClassState
-    },
-  },
-  mounted() {
-    window.addEventListener('scroll', this.handleScroll) // 监听（绑定）滚轮滚动事件
-  },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
-    handleScroll() {
-      const scrollHeight =
-        document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
-      const boxHeight = this.$refs.fill_container.clientHeight // 盒子高度
-      if (scrollHeight > boxHeight) {
-        this.ClassState = 0
-      } else {
-        this.ClassState = 1
-      }
-    },
     onHeightChange(height) {
       this.headerHeight = height
     },
   },
   head() {
-    return { title: '限时直降' }
+    return { title: '99特卖' }
   },
 }
 </script>
 
 
 <style lang="less" scoped>
-.seckill2_container {
+.container {
   font-family: PingFangSC;
-  background: #f8f8f8;
+
   .search_container {
     padding-top: constant(safe-area-inset-top);
     padding-top: env(safe-area-inset-top);
     .search {
       display: flex;
       align-items: center;
-
       padding: 16px 0;
 
-      background: #4974f5;
+      background-size: 100% auto;
 
       .left-back {
         display: flex;
@@ -177,13 +190,10 @@ export default {
       .search-box {
         margin-right: 40px;
         height: 88px;
-        flex: 1;
+
         display: flex;
         align-items: center;
-        justify-content: center;
-        .header_img {
-          height: 39px;
-        }
+        flex: 1;
       }
       .right {
         display: flex;
@@ -204,19 +214,62 @@ export default {
     }
   }
 
-  .fill_container {
-    background: #4974f5;
-    height: 220px;
+  .img_container {
+    position: relative;
+    .count-down {
+      position: absolute;
+      top: 68.5%;
+      width: 100%;
+
+      font-size: 24px;
+      color: #ffedcb;
+      letter-spacing: 0;
+      line-height: 24px;
+
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+
+      .down-time {
+        font-size: 24px;
+        font-family: PingFangSC-Medium, PingFang SC;
+
+        color: #ffedcb;
+        line-height: 24px;
+
+        letter-spacing: 2px;
+        display: flex;
+        align-items: center;
+
+        .time {
+          // min-width: 36px;
+          font-weight: bold;
+          padding: 0 5px;
+          height: 36px;
+          line-height: 36px;
+          background-image: linear-gradient(139deg, #7e9fff 0%, #4974f5 100%);
+          border-radius: 4px;
+
+          font-family: Bebas;
+          font-size: 24px;
+          color: #fff;
+          text-align: center;
+          margin: 0 8px;
+        }
+      }
+    }
   }
 
   .content_container {
     position: relative;
-    margin-top: -184px;
-
+    margin-top: -24px;
+    background: #f8f8f8;
     border-radius: 24px;
     overflow: hidden;
 
     .container-body {
+      background: #f8f8f8;
       z-index: 1;
       padding: 0 20px;
       &::after {
@@ -224,7 +277,7 @@ export default {
         clear: both;
       }
       .body-content {
-        min-height: 100vh;
+        min-height: 80vh;
       }
     }
   }

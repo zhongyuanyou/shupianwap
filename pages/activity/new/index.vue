@@ -8,6 +8,10 @@
     <div>
       <nuxt-link to="/activity/new/subsidy">官方补贴全网低价</nuxt-link>
     </div>
+
+    <div>
+      <nuxt-link to="/activity/new/server">先服务后收费</nuxt-link>
+    </div>
   </div>
 </template>
 
