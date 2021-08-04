@@ -119,11 +119,6 @@ export default {
           currentUserId: this.userInfo.userId,
           orderBy: 'totalBrowseCount=desc;',
         },
-        {
-          headers: {
-            'x-cache-control': 'cache',
-          },
-        }
       )
       if (code === 200) {
         if (data.rows.length > 0) {

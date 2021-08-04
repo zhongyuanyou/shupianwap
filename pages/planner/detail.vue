@@ -543,11 +543,6 @@ export default {
             cardType: 'plannerCode',
           },
         },
-        {
-          headers: {
-            'x-cache-control': 'cache',
-          },
-        }
       )
       if (newData.code === 200) {
         if (newData.data.status === 'BUSINESS_CARD_STATUS_ON_SHELF') {

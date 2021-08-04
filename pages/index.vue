@@ -146,11 +146,7 @@ export default {
       bdData: [], // 营销区域必懂入口，直播入口广告
     }
     try {
-      const res = await $axios.post(homeApi.initRequest, initReqParams, {
-        headers: {
-          'x-cache-control': 'cache',
-        },
-      })
+      const res = await $axios.post(homeApi.initRequest, initReqParams)
       if (res.code && res.data) {
         if (res.data.advertising) {
           initData.fiexdBannerData =
@@ -284,11 +280,7 @@ export default {
         toolNavList: [], // 工具
       }
       try {
-        const res = await this.$axios.post(homeApi.initRequest, initReqParams, {
-          headers: {
-            'x-cache-control': 'cache',
-          },
-        })
+        const res = await this.$axios.post(homeApi.initRequest, initReqParams)
         if (res.code && res.data) {
           if (res.data.advertising) {
             initData.fiexdBannerData =
