@@ -212,6 +212,12 @@
           <div class="cancel" @click="cancel">取消</div>
         </div>
       </sp-popup>
+      <sp-share-sheet
+        v-model="showShare"
+        title="分享"
+        :options="shareOptions"
+        @select="onSelect"
+      />
     </div>
   </section>
 </template>
@@ -227,6 +233,7 @@ import {
   Dialog,
   Icon,
   Bottombar,
+  ShareSheet,
 } from '@chipspc/vant-dgg'
 import Comment from '@/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
@@ -234,6 +241,7 @@ import DownLoadArea from '@/components/common/downLoadArea'
 import ShareModal from '@/components/common/ShareModal'
 import { knownApi, userinfoApi } from '@/api'
 import util from '@/utils/changeBusinessData'
+import { copyToClipboard, setUrlParams } from '@/utils/common'
 export default {
   layout: 'keepAlive',
   components: {
@@ -242,6 +250,7 @@ export default {
     [Image.name]: Image,
     [Field.name]: Field,
     [Popup.name]: Popup,
+    [ShareSheet.name]: ShareSheet,
     [Dialog.name]: Dialog,
     [Bottombar.name]: Bottombar,
     Comment,
@@ -279,6 +288,8 @@ export default {
       answerCollectCount: '',
       isFollow: false,
       userType: '',
+      shareOptions: [], // wap 分享设置
+      showShare: false, // wap 分享开关
     }
   },
   computed: {
@@ -572,6 +583,64 @@ export default {
           console.log(err)
           // on cancel
         })
+    },
+    async shareHandle() {
+      if (await this.isLogin()) {
+        if (this.isInApp) {
+          const url = window && window.location.href
+          const sharedUrl = setUrlParams(url, { isShare: 1 })
+          this.$appFn.dggShare(
+            {
+              image:
+                'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png',
+              title: `${this.userInfo.userName || '薯片用户'}邀请你回答: ${
+                this.answerDetails.title
+              }`,
+              subTitle: `${
+                this.answerDetails.userName || '薯片用户'
+              }提出了问题,已有${
+                this.answerDetails.answerCount || 0
+              }个回答,快来看看吧!`,
+              url: sharedUrl,
+            },
+            (res) => {
+              const { code } = res || {}
+              if (code !== 200) {
+                this.$xToast.show({
+                  message: '分享失败！',
+                  duration: 1500,
+                  forbidClick: false,
+                  icon: 'toast_ic_remind',
+                })
+              }
+            }
+          )
+          return
+        }
+        this.shareOptions = [{ name: '复制链接', icon: 'link' }]
+        this.showShare = true
+      }
+    },
+    async onSelect() {
+      if (await this.isLogin()) {
+        if (this.isInApp) {
+          this.showShare = false
+          return
+        }
+        const url = window && window.location.href
+        const sharedUrl = setUrlParams(url, { isShare: 1 })
+        const isSuccess = copyToClipboard(sharedUrl)
+        if (isSuccess) {
+          this.$xToast.show({
+            message: '复制成功',
+            duration: 1500,
+            icon: 'toast_ic_comp',
+            forbidClick: true,
+          })
+        }
+        this.showShare = false
+        scrollTo(0, 0)
+      }
     },
   },
 }
