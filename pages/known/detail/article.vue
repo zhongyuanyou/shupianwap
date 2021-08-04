@@ -275,8 +275,8 @@ export default {
       handleType: '',
       isFollow: false,
       releaseFlag: false, // 是否发布的新文章
-      shareOptions: [],
-      showShare: false,
+      shareOptions: [], // wap 分享设置
+      showShare: false, // wap 分享开关
     }
   },
   computed: {
@@ -546,54 +546,62 @@ export default {
           console.log(err)
         })
     },
-    onSelect() {
-      if (this.isInApp) {
-        this.showShare = false
-        return
+    async shareHandle() {
+      if (await this.$isLogin()) {
+        if (this.isInApp) {
+          const url = window && window.location.href
+          const sharedUrl = setUrlParams(url, { isShare: 1 })
+          const tile = this.articleDetails.title
+          const content = this.articleDetails.contentText
+          const buildTile = tile.length > 10 ? tile.slice(0, 10) + '...' : tile
+          const buildContent =
+            content.length > 20 ? content.slice(0, 20) + '...' : content
+          this.$appFn.dggShare(
+            {
+              image:
+                'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png',
+              title: `${buildTile}`,
+              subTitle: `${buildContent}`,
+              url: sharedUrl,
+            },
+            (res) => {
+              const { code } = res || {}
+              if (code !== 200) {
+                this.$xToast.show({
+                  message: '分享失败！',
+                  duration: 1500,
+                  forbidClick: false,
+                  icon: 'toast_ic_remind',
+                })
+              }
+            }
+          )
+          return
+        }
+        this.shareOptions = [{ name: '复制链接', icon: 'link' }]
+        this.showShare = true
       }
-      const url = window && window.location.href
-      const sharedUrl = setUrlParams(url, { isShare: 1 })
-      console.log('sharedUrl:', sharedUrl)
-
-      const isSuccess = copyToClipboard(sharedUrl)
-      if (isSuccess) {
-        this.$xToast.show({
-          message: '复制成功',
-          duration: 1500,
-          icon: 'toast_ic_comp',
-          forbidClick: true,
-        })
-      }
-      this.showShare = false
     },
-    shareHandle() {
-      if (this.isInApp) {
+    async onSelect() {
+      if (await this.$isLogin()) {
+        if (this.isInApp) {
+          this.showShare = false
+          return
+        }
         const url = window && window.location.href
         const sharedUrl = setUrlParams(url, { isShare: 1 })
-        this.$appFn.dggShare(
-          {
-            image:
-              'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png',
-            title: '商户店铺',
-            subTitle: `优选商户 - ${this.detailData.mchBaseInfo.name}的店铺`,
-            url: sharedUrl,
-          },
-          (res) => {
-            const { code } = res || {}
-            if (code !== 200) {
-              this.$xToast.show({
-                message: '分享失败！',
-                duration: 1500,
-                forbidClick: false,
-                icon: 'toast_ic_remind',
-              })
-            }
-          }
-        )
-        return
+        const isSuccess = copyToClipboard(sharedUrl)
+        if (isSuccess) {
+          this.$xToast.show({
+            message: '复制成功',
+            duration: 1500,
+            icon: 'toast_ic_comp',
+            forbidClick: true,
+          })
+        }
+        this.showShare = false
+        scrollTo(0, 0)
       }
-      this.shareOptions = [{ name: '复制链接', icon: 'link' }]
-      this.showShare = true
     },
   },
 }
