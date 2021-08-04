@@ -39,12 +39,14 @@
       <div class="count-down">
         <div class="down-time">
           <span>已累计补贴</span>
-          <span class="time">{{ time.day }}</span>
-          <span class="time">{{ time.hour }}</span>
-          <span class="time">{{ time.min }}</span>
-          <span>.</span>
-          <span class="time">{{ time.min }}</span>
-          <span class="time">{{ time.sec }}</span>
+          <span class="time">3</span>
+          <span class="time">2</span>
+          <span class="time">4</span>
+          <span class="time">5</span>
+          <span class="time">8</span>
+          <span class="time">9</span>
+          <!-- <span>.</span>
+          <span class="time">0</span> -->
           <span>万</span>
         </div>
         <div class="des">- 按照商品销量 · 好评率 · 服务等综合设计 -</div>
@@ -63,28 +65,16 @@
         "
       ></Box>
 
-      <sp-sticky class="tabs-box" :offset-top="headerHeight">
-        <div v-if="isService" class="drop_down">
-          <div class="drop_down_title" @click="swichCityHandle">
-            {{ cityName ? cityName : '定位中' }}
-          </div>
-          <div class="drop_down_icon"></div>
-        </div>
+      <Classification
+        :is-service="isService"
+        :city-name="cityName"
+        :header-height="headerHeight"
+        :current-index="currentIndex"
+        :activity-type-options="activityTypeOptions"
+        :swich-city-handle="swichCityHandle"
+        :menu-tab="menuTab"
+      />
 
-        <ul class="tabs-box-items">
-          <li
-            v-for="(item, index) in activityTypeOptions"
-            :key="index"
-            class="li-tab"
-            :class="{ active: index == currentIndex }"
-            @click="menuTab(item, index)"
-          >
-            {{ item.labelName }}
-          </li>
-        </ul>
-        <!-- <div>
-        </div> -->
-      </sp-sticky>
       <div class="container-body">
         <div class="body-content">
           <sp-pull-refresh
@@ -105,7 +95,6 @@
                   @click="jumpProductDetail(item)"
                 >
                   <Card
-                    :end-time="endTime"
                     :item="item"
                     :overflow-dot="overflowDot"
                     :parse-price="parsePrice"
@@ -129,6 +118,7 @@ import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 import Box from '@/components/activity/special/Box.vue'
 import Card from '@/components/activity/special/Card.vue'
 import NoData from '@/components/activity/NoData.vue'
+import Classification from '@/components/activity/Classification.vue'
 export default {
   name: 'Subsidy',
   components: {
@@ -143,6 +133,7 @@ export default {
     Box,
     Card,
     NoData,
+    Classification,
   },
   mixins: [activityMixin],
   data() {
@@ -151,7 +142,7 @@ export default {
 
       hasCity: true,
       imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg',
-      headerHeight: '',
+      headerHeight: 0,
     }
   },
   computed: {
@@ -295,103 +286,6 @@ export default {
     border-radius: 24px;
     overflow: hidden;
 
-    .tabs-box {
-      height: 96px;
-      line-height: 96px;
-      font-size: 0;
-
-      ::v-deep .sp-sticky {
-        overflow: hidden;
-        background: #f8f8f8;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        padding: 0px 20px;
-
-        &.sp-sticky--fixed {
-          border-radius: 0 0 0 0;
-        }
-      }
-
-      .drop_down {
-        height: 56px;
-
-        border: 1px solid #4974f5;
-        border-radius: 32px;
-
-        display: flex;
-        align-items: center;
-        margin-right: 40px;
-        padding: 0 24px;
-        .drop_down_title {
-          white-space: nowrap;
-
-          font-weight: bold;
-          color: #ffffff;
-          line-height: 56px;
-
-          font-family: PingFangSC-Medium;
-          font-size: 30px;
-          color: #4974f5;
-          letter-spacing: 0;
-        }
-        .drop_down_icon {
-          background: url('https://cdn.shupian.cn/sp-pt/wap/images/3obtk0xjgos0000.png');
-          width: 15px;
-          height: 10px;
-          margin-left: 8px;
-          background-size: 100% 100%;
-          -moz-background-size: 100% 100%;
-        }
-      }
-
-      .tabs-box-items {
-        display: flex;
-
-        overflow-x: scroll;
-
-        // height: 96px;
-        // line-height: 96px;
-
-        &::-webkit-scrollbar {
-          width: 0 !important;
-        }
-        .li-tab {
-          // display: inline-block;
-          white-space: nowrap;
-
-          margin-right: 40px;
-
-          font-size: 32px;
-          color: #999999;
-          letter-spacing: 0;
-          cursor: pointer;
-
-          height: 96px;
-          line-height: 96px;
-        }
-        .active {
-          position: relative;
-          font-weight: bold;
-          color: #222222;
-        }
-        .active::after {
-          content: '';
-          position: absolute;
-          top: 58px;
-          right: 0;
-
-          width: 60px;
-          height: 12px;
-          background-image: linear-gradient(
-            270deg,
-            rgba(73, 116, 245, 0) 0%,
-            #4974f5 100%
-          );
-          border-radius: 6px;
-        }
-      }
-    }
     .container-body {
       background: #f8f8f8;
       z-index: 1;

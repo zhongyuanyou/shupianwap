@@ -39,20 +39,7 @@
 
     <div class="content_container">
       <Time :time="time"></Time>
-      <!-- <sp-sticky class="tabs-box" :offset-top="headerHeight">
-        <ul class="tabs-box-items">
-          <li
-            v-for="(item, index) in activityTypeOptions"
-            :key="index"
-            class="li-tab"
-            :class="{ active: index == currentIndex }"
-            @click="menuTab(item, index)"
-          >
-            {{ item.labelName }}
-          </li>
-        </ul>
 
-      </sp-sticky> -->
       <div class="container-body">
         <div class="body-content">
           <sp-pull-refresh
@@ -254,68 +241,6 @@ export default {
     border-radius: 24px;
     overflow: hidden;
 
-    .tabs-box {
-      height: 96px;
-      line-height: 96px;
-      font-size: 0;
-
-      ::v-deep .sp-sticky {
-        background-color: #fff;
-        overflow: hidden;
-
-        &.sp-sticky--fixed {
-          border-radius: 0 0 0 0;
-        }
-      }
-
-      .tabs-box-items {
-        display: flex;
-        background: #f8f8f8;
-        overflow-x: scroll;
-
-        // height: 96px;
-        // line-height: 96px;
-        padding: 0px 40px;
-
-        &::-webkit-scrollbar {
-          width: 0 !important;
-        }
-        .li-tab {
-          // display: inline-block;
-          white-space: nowrap;
-
-          margin-right: 40px;
-
-          font-size: 32px;
-          color: #999999;
-          letter-spacing: 0;
-          cursor: pointer;
-
-          height: 96px;
-          line-height: 96px;
-        }
-        .active {
-          position: relative;
-          font-weight: bold;
-          color: #222222;
-        }
-        .active::after {
-          content: '';
-          position: absolute;
-          top: 58px;
-          right: 0;
-
-          width: 60px;
-          height: 12px;
-          background-image: linear-gradient(
-            270deg,
-            rgba(73, 116, 245, 0) 0%,
-            #4974f5 100%
-          );
-          border-radius: 6px;
-        }
-      }
-    }
     .container-body {
       background: #f8f8f8;
       z-index: 1;

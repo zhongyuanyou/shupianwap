@@ -2,7 +2,7 @@
   <div class="body-content-items">
     <div class="left-content">
       <div v-if="endTime && endTime.sec" class="left-countdown">
-        距结束{{ endTime.hour }}:{{ endTime.min }}:{{ endTime.sec }}
+        距结束 {{ endTime.hour }}:{{ endTime.min }}:{{ endTime.sec }}
       </div>
       <sp-image
         class="picture"
@@ -124,6 +124,7 @@ export default {
   }
 
   .left-countdown {
+    white-space: nowrap;
     font-size: 20px;
     padding: 6px 10px;
 
@@ -139,6 +140,8 @@ export default {
     background: #ec5330;
     border-radius: 4px;
     font-family: PingFangSC-Regular, PingFang SC;
+    transform-origin: left top;
+    transform: scale(0.83);
   }
 }
 .right-content {

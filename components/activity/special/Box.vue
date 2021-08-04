@@ -1,8 +1,8 @@
 <template>
-  <div class="case_introduction">
+  <div v-if="list.length > 0" class="box">
     <div v-if="title" class="title">{{ title }}</div>
 
-    <div v-if="list.length > 0" class="list">
+    <div class="list">
       <div class="list_container">
         <div
           v-for="(item, index) in list"
@@ -78,7 +78,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.case_introduction {
+.box {
   font-family: PingFangSC;
   margin: 24px 20px 0;
   padding: 24px 20px;

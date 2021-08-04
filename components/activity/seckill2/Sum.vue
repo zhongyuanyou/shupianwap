@@ -1,20 +1,20 @@
 <template>
   <div class="container" :class="{ state: state === 1 }">
     <div class="col active">
-      <div class="num">123123</div>
-      <div class="label">aaaaaaa</div>
+      <div class="num">24</div>
+      <div class="label">全部服务</div>
     </div>
     <div class="col">
-      <div class="num">123123</div>
-      <div class="label">aaaaaaa</div>
+      <div class="num">12</div>
+      <div class="label">秒杀进行中</div>
     </div>
     <div class="col">
-      <div class="num">123123</div>
-      <div class="label">aaaaaaa</div>
+      <div class="num">12</div>
+      <div class="label">即将开始</div>
     </div>
     <div class="col">
-      <div class="num">123123</div>
-      <div class="label">aaaaaaa</div>
+      <div class="num">36</div>
+      <div class="label">秒杀结束</div>
     </div>
   </div>
 </template>

@@ -6,11 +6,11 @@
     />
 
     <div class="down-time">
-      <div class="time">{{ time.hour }}</div>
+      <div class="time">{{ time.hour || '00' }}</div>
       <div>:</div>
-      <div class="time">{{ time.min }}</div>
+      <div class="time">{{ time.min || '00' }}</div>
       <div>:</div>
-      <div class="time">{{ time.sec }}</div>
+      <div class="time">{{ time.sec || '00' }}</div>
     </div>
 
     <div class="welcome">
@@ -87,7 +87,8 @@ export default {
     .time {
       background: #ec5330;
       border-radius: 4px;
-      font-family: BebasNeueBold;
+      font-family: BebasNeueBold, Bebas;
+      font-weight: bold;
       font-size: 32px;
       color: #ffffff;
       letter-spacing: 0;
