@@ -179,7 +179,7 @@ export default {
     // window.sensors.registerPage(param) // 设置公共属性
     // SearchResult
     this.SET_KEEP_ALIVE({ type: 'add', name: 'SearchResult' })
-    this.getInitData()
+    this.getJyCateCode()
     if (this.$route.query.keywords) {
       this.formData.searchText = this.$route.query.keywords
       this.currentInputText = this.$route.query.keywords
@@ -201,6 +201,21 @@ export default {
       this.isShowInput = false
       this.$refs.goods.onshow = false
       this.$refs.goods.getlist()
+    },
+    getJyCateCode() {
+      dict
+        .findCmsCode({ axios: this.$axios }, { code: 'CONDITION-JY' })
+        .then((result) => {
+          console.log('交易分类', result)
+          this.jyTypesData = result.filter((item) => {
+            return /[公司｜专利｜商标｜资质]/.test(item.name)
+          })
+        })
+        .catch((e) => {
+          if (e.code !== 200) {
+            console.error(e)
+          }
+        })
     },
     // 获取初始化数据
     getInitData() {
