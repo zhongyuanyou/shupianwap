@@ -22,10 +22,10 @@
           <div class="right"></div>
         </div>
       </div>
-      <div><Sum :state="ClassState"></Sum></div>
+      <div><Sum :state="state"></Sum></div>
     </HeadWrapper>
 
-    <div ref="fill_container" class="fill_container"></div>
+    <div v-if="!isNoData" ref="fill_container" class="fill_container"></div>
 
     <div class="content_container">
       <div class="container-body">
@@ -54,7 +54,10 @@
                   ></Card>
                 </div>
               </div>
-              <NoData :is-no-data="isNoData"></NoData>
+              <NoData
+                :is-no-data="isNoData"
+                :style="{ marginTop: headerHeight + 'px' }"
+              ></NoData>
             </sp-list>
           </sp-pull-refresh>
         </div>
@@ -109,6 +112,12 @@ export default {
     }),
     userInfo() {
       return this.$store.state.user
+    },
+    state() {
+      if (this.isNoData) {
+        return 0
+      }
+      return this.ClassState
     },
   },
   mounted() {
@@ -207,68 +216,6 @@ export default {
     border-radius: 24px;
     overflow: hidden;
 
-    .tabs-box {
-      height: 96px;
-      line-height: 96px;
-      font-size: 0;
-
-      ::v-deep .sp-sticky {
-        background-color: #fff;
-        overflow: hidden;
-
-        &.sp-sticky--fixed {
-          border-radius: 0 0 0 0;
-        }
-      }
-
-      .tabs-box-items {
-        display: flex;
-        background: #f8f8f8;
-        overflow-x: scroll;
-
-        // height: 96px;
-        // line-height: 96px;
-        padding: 0px 40px;
-
-        &::-webkit-scrollbar {
-          width: 0 !important;
-        }
-        .li-tab {
-          // display: inline-block;
-          white-space: nowrap;
-
-          margin-right: 40px;
-
-          font-size: 32px;
-          color: #999999;
-          letter-spacing: 0;
-          cursor: pointer;
-
-          height: 96px;
-          line-height: 96px;
-        }
-        .active {
-          position: relative;
-          font-weight: bold;
-          color: #222222;
-        }
-        .active::after {
-          content: '';
-          position: absolute;
-          top: 58px;
-          right: 0;
-
-          width: 60px;
-          height: 12px;
-          background-image: linear-gradient(
-            270deg,
-            rgba(73, 116, 245, 0) 0%,
-            #4974f5 100%
-          );
-          border-radius: 6px;
-        }
-      }
-    }
     .container-body {
       z-index: 1;
       padding: 0 20px;
@@ -277,7 +224,7 @@ export default {
         clear: both;
       }
       .body-content {
-        min-height: 80vh;
+        min-height: 100vh;
       }
     }
   }
