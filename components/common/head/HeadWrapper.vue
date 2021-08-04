@@ -10,7 +10,11 @@
     </HeadWrapper>
    -->
   <header class="head-wrapper" :style="{ height: fillHeaderHeight + 'px' }">
-    <div ref="couponHeaderWarpper" class="head-wrapper-warpper">
+    <div
+      ref="couponHeaderWarpper"
+      class="head-wrapper-warpper"
+      :style="{ borderBottom: line && '1px solid #f5f5f5' }"
+    >
       <slot></slot>
     </div>
   </header>
@@ -20,6 +24,10 @@ export default {
   props: {
     // 是否占位
     fill: {
+      type: Boolean,
+      default: true,
+    },
+    line: {
       type: Boolean,
       default: true,
     },
@@ -65,7 +73,7 @@ export default {
   },
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .head-wrapper {
   .head-wrapper-warpper {
     position: fixed;
@@ -74,7 +82,7 @@ export default {
     width: 100%;
     background-color: #ffffff;
     z-index: 999;
-    border-bottom: 1px solid #f5f5f5;
+    // border-bottom: 1px solid #f5f5f5;
   }
 }
 </style>

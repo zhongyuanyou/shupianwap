@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <HeadWrapper :fill="false" @onHeightChange="onHeightChange">
+    <HeadWrapper :fill="false" :line="false" @onHeightChange="onHeightChange">
       <div class="search_container">
         <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
           <!-- @click="uPGoBack" -->
@@ -54,7 +54,7 @@
     </div>
 
     <div class="content_container">
-      <Box
+      <Recommend
         title="爆款单品"
         :parse-price="parsePrice"
         :list="recommendProductList"
@@ -63,7 +63,7 @@
             jumpProductDetail(item)
           }
         "
-      ></Box>
+      ></Recommend>
 
       <Classification
         :is-service="isService"
@@ -115,7 +115,7 @@ import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
 import activityMixin from './activityMixin'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
-import Box from '@/components/activity/special/Box.vue'
+import Recommend from '~/components/activity/special/Recommend.vue'
 import Card from '@/components/activity/special/Card.vue'
 import NoData from '@/components/activity/NoData.vue'
 import Classification from '@/components/activity/Classification.vue'
@@ -130,7 +130,7 @@ export default {
     [List.name]: List,
     [PullRefresh.name]: PullRefresh,
 
-    Box,
+    Recommend,
     Card,
     NoData,
     Classification,
@@ -167,9 +167,6 @@ export default {
 
 
 <style lang="less" scoped>
-::v-deep .head-wrapper-warpper {
-  border-bottom: 0;
-}
 .container {
   font-family: PingFangSC;
 

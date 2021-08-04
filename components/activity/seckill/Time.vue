@@ -2,7 +2,7 @@
   <div class="time_container">
     <img
       class="time_icon"
-      src="https://cdn.shupian.cn/sp-pt/wap/images/newhbdltw2o000.png"
+      src="https://cdn.shupian.cn/sp-pt/wap/images/brnto466ftc0000.png"
     />
 
     <div class="down-time">

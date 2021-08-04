@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <HeadWrapper :fill="false" @onHeightChange="onHeightChange">
+    <HeadWrapper :fill="false" :line="false" @onHeightChange="onHeightChange">
       <div class="search_container">
         <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
           <!-- @click="uPGoBack" -->
@@ -133,9 +133,6 @@ export default {
 
 
 <style lang="less" scoped>
-::v-deep .head-wrapper-warpper {
-  border-bottom: 0;
-}
 .container {
   font-family: PingFangSC;
   background: #f8f8f8;

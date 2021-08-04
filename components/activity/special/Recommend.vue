@@ -41,7 +41,7 @@
 import { Image, Icon } from '@chipspc/vant-dgg'
 
 export default {
-  name: 'CaseIntroduction',
+  name: 'Recommend',
   components: {
     [Image.name]: Image,
 

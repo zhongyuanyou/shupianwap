@@ -25,6 +25,9 @@
           {{ overflowDot(tag, 6) }}
         </div>
       </div>
+      <div class="rc-slogan">
+        {{ item.slogan }}
+      </div>
       <div class="rc-bottom">
         <div class="rc-bottom-lf">
           <span
@@ -90,7 +93,7 @@ export default {
   },
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .multiRowOverflowDot {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -156,11 +159,10 @@ export default {
   .goods-name {
     font-size: 32px;
     line-height: 42px;
-    height: 84px;
+
     font-weight: bold;
     color: #222222;
 
-    padding-bottom: 24px;
     .multiRowOverflowDot();
     span {
       margin-right: 4px;
@@ -210,6 +212,13 @@ export default {
       margin-right: 8px;
       font-family: PingFangSC-Regular, PingFang SC;
     }
+  }
+  .rc-slogan {
+    margin-top: 16px;
+    font-size: 22px;
+    color: #222222;
+    letter-spacing: 0;
+    .mixin-text-oneoverflow();
   }
   .rc-bottom {
     position: absolute;
