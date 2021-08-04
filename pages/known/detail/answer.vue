@@ -27,7 +27,11 @@
                   answerDetails && answerDetails.createrId !== userInfo.userId
                 "
               >
-                <div class="content" style="margin-right: 0.32rem">
+                <div
+                  class="content"
+                  style="margin-right: 0.32rem"
+                  @click.stop="writeAnswer"
+                >
                   <my-icon name="xiehuida" size="0.36rem"></my-icon>
                   <span>写回答</span>
                 </div>
@@ -593,14 +597,12 @@ export default {
             {
               image:
                 'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png',
-              title: `${this.userInfo.userName || '薯片用户'}邀请你回答: ${
-                this.answerDetails.title
-              }`,
+              title: `${this.answerDetails.title}`,
               subTitle: `${
                 this.answerDetails.userName || '薯片用户'
-              }提出了问题,已有${
-                this.answerDetails.answerCount || 0
-              }个回答,快来看看吧!`,
+              }回答了问题,已获${
+                this.answerDetails.applaudCount || 0
+              }个赞,快来看看吧!`,
               url: sharedUrl,
             },
             (res) => {
