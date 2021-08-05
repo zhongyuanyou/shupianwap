@@ -2,15 +2,15 @@
   <div class="time_container">
     <img
       class="time_icon"
-      src="https://cdn.shupian.cn/sp-pt/wap/images/newhbdltw2o000.png"
+      src="https://cdn.shupian.cn/sp-pt/wap/images/brnto466ftc0000.png"
     />
 
     <div class="down-time">
-      <div class="time">{{ time.hour }}</div>
-      <div>:</div>
-      <div class="time">{{ time.min }}</div>
-      <div>:</div>
-      <div class="time">{{ time.sec }}</div>
+      <div class="time">{{ time.hour || '00' }}</div>
+      <div class="colon">:</div>
+      <div class="time">{{ time.min || '00' }}</div>
+      <div class="colon">:</div>
+      <div class="time">{{ time.sec || '00' }}</div>
     </div>
 
     <div class="welcome">
@@ -76,6 +76,7 @@ export default {
   }
   .down-time {
     flex: 1;
+    flex-shrink: 0;
     color: #ec5330;
     font-size: 24px;
     font-weight: bold;
@@ -87,16 +88,20 @@ export default {
     .time {
       background: #ec5330;
       border-radius: 4px;
-      font-family: BebasNeueBold;
+      font-family: BebasNeueBold, Bebas;
+      font-weight: bold;
       font-size: 32px;
       color: #ffffff;
       letter-spacing: 0;
       line-height: 32px;
       padding: 6px 8px;
     }
+    .colon {
+      transform: translateY(-7px);
+    }
   }
   .welcome {
-    margin-right: 48px;
+    margin-right: 28px;
     font-family: PingFangSC-Regular;
     font-size: 24px;
     color: #222222;

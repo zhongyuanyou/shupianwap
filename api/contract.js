@@ -1,6 +1,6 @@
 'use strict'
 import { request } from '@/utils/request'
-import { CHIPS_WAP_BASE_URL } from '@/config/constant'
+import { CHIPS_WAP_BASE_URL, CHIPS_PC_URL } from '@/config/constant'
 // const CHIPS_WAP_BASE_URL = 'http://172.16.133.226:7001/service'
 const contract = {
   authentication({ axios }, params) {
@@ -32,7 +32,7 @@ const contract = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/contract/v2/list.do',
+      url: CHIPS_PC_URL + '/yk/contract/v1/list.do',
     })
   },
   decryptionPhone({ axios }, params) {
@@ -40,7 +40,7 @@ const contract = {
       axios,
       params,
       method: 'post',
-      url:  '/crisps-marketing-web/nk/marketingPhone/v1/decryptionPhoneList',
+      url: '/crisps-marketing-web/nk/marketingPhone/v1/decryptionPhoneList',
     })
   },
   encryptionPhone({ axios }, params) {
@@ -48,7 +48,7 @@ const contract = {
       axios,
       params,
       method: 'post',
-      url:  '/crisps-marketing-web/nk/marketingPhone/v1/encryptionPhone',
+      url: '/crisps-marketing-web/nk/marketingPhone/v1/encryptionPhone',
     })
   },
 }

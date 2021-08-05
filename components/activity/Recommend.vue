@@ -1,8 +1,8 @@
 <template>
-  <div class="case_introduction">
+  <div v-if="list.length > 0" class="box">
     <div v-if="title" class="title">{{ title }}</div>
 
-    <div v-if="list.length > 0" class="list">
+    <div class="list">
       <div class="list_container">
         <div
           v-for="(item, index) in list"
@@ -41,7 +41,7 @@
 import { Image, Icon } from '@chipspc/vant-dgg'
 
 export default {
-  name: 'CaseIntroduction',
+  name: 'Recommend',
   components: {
     [Image.name]: Image,
 
@@ -78,10 +78,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.case_introduction {
+.box {
   font-family: PingFangSC;
   margin: 24px 20px 0;
-  padding: 24px 20px;
+  padding: 24px 20px 0;
   background: #ffffff;
   border-radius: 24px;
 
@@ -99,16 +99,17 @@ export default {
     font-weight: bold;
     font-size: 32px;
     color: #222222;
+    margin-bottom: 28px;
   }
 
   .list {
     overflow: hidden;
-    margin-top: 28px;
+
     .list_container {
       margin: 0 -5px;
     }
     .list_item {
-      margin: 0 6px;
+      margin: 0 6px 28px;
       display: inline-block;
       width: 32%;
 

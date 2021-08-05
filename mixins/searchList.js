@@ -117,6 +117,16 @@ export default {
           }
 
           if (JSON.stringify(data.goods) !== '{}') {
+            console.log("data.goods.records",data.goods.records);
+            if(data.goods.records){
+              data.goods.records.map((item) => {
+                if (item.goodsImg) {
+                  item.goodsImg =
+                    item.goodsImg +
+                    '?x-oss-process=image/resize,m_fill,w_300,h_300,limit_0'
+                }
+              })
+            }
             // 数据里面商品有值
             this.jyGoodsListData[this.currentTabJyCode] = [
               ...this.jyGoodsListData[this.currentTabJyCode],

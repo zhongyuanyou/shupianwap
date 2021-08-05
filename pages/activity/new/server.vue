@@ -35,22 +35,6 @@
 
     <div class="img_container">
       <img width="100%" :src="imageHead" alt="" />
-
-      <div class="count-down">
-        <div class="down-time">
-          <span>已累计补贴</span>
-          <span class="time">3</span>
-          <span class="time">2</span>
-          <span class="time">4</span>
-          <span class="time">5</span>
-          <span class="time">8</span>
-          <span class="time">9</span>
-          <!-- <span>.</span>
-          <span class="time">0</span> -->
-          <span>万</span>
-        </div>
-        <div class="des">- 按照商品销量 · 好评率 · 服务等综合设计 -</div>
-      </div>
     </div>
 
     <div class="content_container">
@@ -66,7 +50,7 @@
       ></Recommend>
       <client-only>
         <Classification
-          :is-service="isService"
+          :is-service="false"
           :city-name="cityName"
           :header-height="headerHeight"
           :current-index="currentIndex"
@@ -89,15 +73,17 @@
               @load="onLoad"
             >
               <div v-if="activityProductList && activityProductList.length > 0">
-                <Card
+                <div
                   v-for="(item, index) in activityProductList"
                   :key="index"
-                  :last="activityProductList.length - 1 == index"
-                  :item="item"
-                  :overflow-dot="overflowDot"
-                  :parse-price="parsePrice"
-                  @click.native="jumpProductDetail(item)"
-                ></Card>
+                  @click="jumpProductDetail(item)"
+                >
+                  <Card
+                    :item="item"
+                    :overflow-dot="overflowDot"
+                    :parse-price="parsePrice"
+                  ></Card>
+                </div>
               </div>
               <NoData :is-no-data="isNoData"></NoData>
             </sp-list>
@@ -136,10 +122,10 @@ export default {
   mixins: [activityMixin],
   data() {
     return {
-      specType: 'HDZT_ZTTYPE_QWBT',
+      specType: 'HDZT_ZTTYPE_XFWHSF',
 
       hasCity: true,
-      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg',
+      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/eik2dfytts00000.png',
       headerHeight: 0,
     }
   },
@@ -152,13 +138,14 @@ export default {
       return this.$store.state.user
     },
   },
+
   methods: {
     onHeightChange(height) {
       this.headerHeight = height
     },
   },
   head() {
-    return { title: '官方补贴全网低价' }
+    return { title: '99特卖' }
   },
 }
 </script>
@@ -220,20 +207,18 @@ export default {
     position: relative;
     .count-down {
       position: absolute;
-
+      top: 68.5%;
       width: 100%;
-      top: 64.2%;
-      // margin-top: 53%;
 
       font-size: 24px;
       color: #ffedcb;
       letter-spacing: 0;
       line-height: 24px;
-      text-align: center;
-      // display: flex;
-      // flex-direction: row;
-      // justify-content: center;
-      // align-items: center;
+
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
 
       .down-time {
         font-size: 24px;
@@ -245,7 +230,6 @@ export default {
         letter-spacing: 2px;
         display: flex;
         align-items: center;
-        justify-content: center;
 
         .time {
           // min-width: 36px;
@@ -260,16 +244,8 @@ export default {
           font-size: 24px;
           color: #fff;
           text-align: center;
-          margin: 0 4px;
+          margin: 0 8px;
         }
-      }
-      .des {
-        opacity: 0.3;
-        font-family: PingFangSC-Regular;
-        font-size: 20px;
-        color: #ffffff;
-        letter-spacing: 0;
-        margin-top: 47px;
       }
     }
   }
