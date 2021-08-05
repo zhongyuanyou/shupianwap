@@ -150,6 +150,9 @@ export default {
 .seckill2_container {
   font-family: PingFangSC;
   background: #f8f8f8;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+
   .search_container {
     padding-top: constant(safe-area-inset-top);
     padding-top: env(safe-area-inset-top);
