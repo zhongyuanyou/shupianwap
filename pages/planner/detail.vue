@@ -490,7 +490,7 @@ import imHandle from '@/mixins/imHandle'
 import { callPhone, copyToClipboard, setUrlParams } from '@/utils/common'
 import { storeApi } from '@/api/store'
 export default {
-  name: 'Detail',
+  name: 'PlannerDetail',
   components: {
     [Icon.name]: Icon,
     [Button.name]: Button,
@@ -543,11 +543,6 @@ export default {
             cardType: 'plannerCode',
           },
         },
-        {
-          headers: {
-            'x-cache-control': 'cache',
-          },
-        }
       )
       if (newData.code === 200) {
         if (newData.data.status === 'BUSINESS_CARD_STATUS_ON_SHELF') {

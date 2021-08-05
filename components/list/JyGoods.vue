@@ -11,6 +11,7 @@
         lowFive: tabs.length <= 5,
         'sp-tabs-self': true,
       }"
+      class="jy_tabs"
       @change="changeTabs"
     >
       <sp-tab
@@ -35,10 +36,6 @@
             ref="spList"
             v-model="loading"
             :finished="finished"
-            :style="{
-              maxHeight: maxHeight,
-              paddingBottom: isShowOpenApp ? '45px' : '0',
-            }"
             finished-text="没有更多了"
             class="goods-content"
             offset="30"
@@ -512,6 +509,24 @@ export default {
 </script>
 
 <style lang="less" scoped>
+::v-deep.jy_tabs {
+  .sp-tabs__wrap {
+    position: fixed;
+    left: 0;
+    top: 220px !important;
+    width: 100%;
+    z-index: 1;
+  }
+  .sp-tabs__content {
+    .sp-dropdown-menu {
+      position: fixed;
+      width: 100%;
+      left: 0;
+      top: 300px !important;
+      z-index: 1;
+    }
+  }
+}
 .jyGoods {
   ::v-deep.sp-tab {
     font-weight: bold;
@@ -590,8 +605,7 @@ export default {
     }
   }
   .goods-content {
-    overflow-x: hidden;
-    overflow-y: scroll;
+    padding-top: 400px;
   }
   ::v-deep.sp-tree-select {
     min-height: 600px;
@@ -610,7 +624,7 @@ export default {
     height: 94px;
   }
   .subscribe {
-    padding: 0 40px;
+    padding: 320px 40px 0 40px;
   }
   ::v-deep.lowFive ::v-deep.sp-tabs__nav ::v-deep.sp-tab {
     &:first-child {

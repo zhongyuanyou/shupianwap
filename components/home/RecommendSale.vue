@@ -286,11 +286,7 @@ export default {
         pageSize: this.tabBtn[index].limit,
       }
       this.$axios
-        .post(recommendApi.saleList, params, {
-          headers: {
-            'x-cache-control': 'cache',
-          },
-        })
+        .post(recommendApi.saleList, params)
         .then((res) => {
           this.loadingList = false
           this.loading = false
