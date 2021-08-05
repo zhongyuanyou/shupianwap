@@ -137,7 +137,7 @@ export default {
       specType: 'HDZT_ZTTYPE_XFWHSF',
 
       hasCity: true,
-      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/efcl7pilo9c0000.png',
+      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/eik2dfytts00000.png',
       headerHeight: 0,
     }
   },
