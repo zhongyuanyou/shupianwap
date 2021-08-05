@@ -16,8 +16,13 @@
         </template>
       </Header>
     </HeadWrapper>
+    <img
+      class="bk"
+      src="https://cdn.shupian.cn/sp-pt/wap/images/7yspkblxjbo0000.png"
+      alt=""
+    />
     <div class="tips">若您已安装app,点此打开</div>
-    <div class="btn">点击立即下载</div>
+    <div class="btn" @click="checkOutApp">点击立即下载</div>
   </div>
 </template>
 <script>
@@ -26,42 +31,27 @@ import Header from '@/components/common/head/header.vue'
 // import { Button, CenterPopup } from '@chipspc/vant-dgg'
 // $ossImgSetV2('g6trabnxtg80000.png')
 export default {
-  name: 'DownLoadArea',
+  name: 'DownLoadApp',
   components: {
     HeadWrapper,
     Header,
   },
-  props: {
-    iosLink: {
-      type: String,
-      default: 'cpsccustomer://',
-    },
-    androdLink: {
-      type: String,
-      default: 'cpsccustomer://', //  主页'cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":2}}'
-    },
-  },
+
   data() {
     return {
-      Field: {
-        type: 'functional',
-        title: '即将离开当页，进入APP',
-        confirmButtonText: '立即进入',
-        cancelButtonText: '取消',
-      },
-      showPop: false,
       isIOS: false,
       isAndroid: false,
-
+      packagename: 'com.chips.cpscustomer',
       headerHeight: 0,
     }
   },
   computed: {
     myIosLink() {
-      return this.iosLink || 'cpsccustomer://'
+      return 'cpsccustomer://'
     },
     myAndrodLink() {
-      return this.androdLink || 'cpsccustomer://'
+      //  主页'cpsccustomer://{"path":"/main/android/main","parameter":{"selectedIndex":2}}'
+      return 'cpsccustomer://'
     },
     isInApp() {
       return this.$store.state.app.isInApp
@@ -69,8 +59,12 @@ export default {
   },
   mounted() {
     const userAgent = window.navigator.userAgent
+    console.log(userAgent)
     this.isAndroid =
-      userAgent.indexOf('Android') > -1 || userAgent.indexOf('Adr') > -1 // android终端
+      userAgent.indexOf('Android') > -1 ||
+      userAgent.indexOf('Adr') > -1 ||
+      userAgent.indexOf('HarmonyOS') > -1 // android和鸿蒙终端
+
     this.isIOS = userAgent.match(/iPhone|iPad|iPod/i) // ios终端
   },
   methods: {
@@ -98,6 +92,7 @@ export default {
     },
 
     checkOutApp() {
+      //
       const ua = window.navigator.userAgent.toLowerCase()
       let isBlur = false
       let url = ''
@@ -109,8 +104,6 @@ export default {
         downLoadUrl = 'https://apps.apple.com/cn/app/薯片找人/id1535886630'
       } else if (this.isAndroid) {
         url = this.myAndrodLink
-        downLoadUrl =
-          'http://m.pp.cn/detail.html?appid=8180749&ch_src=pp_dev&ch=default'
       } else {
         this.$xToast.show({
           message: '请使用手机浏览器访问本页面即可打开薯片找人APP',
@@ -130,9 +123,13 @@ export default {
         })
       } else {
         location.href = url
-        setTimeout(function () {
+        setTimeout(() => {
           if (!isBlur) {
-            window.location.href = downLoadUrl
+            if (this.isIOS) {
+              window.location.href = downLoadUrl
+            } else if (this.isAndroid) {
+              this.toAndroidStore(this.packagename)
+            }
           }
         }, 2000)
       }
@@ -158,6 +155,45 @@ export default {
       }
       document.addEventListener(visibilityChangeEvent, onVisibilityChange)
     },
+
+    toAndroidStore(AppName) {
+      console.log(AppName)
+      const sUserAgent = navigator.userAgent.toLowerCase()
+      console.log(AppName, sUserAgent)
+      const isHuawei = sUserAgent.indexOf('huawei') !== -1
+      const isHonor = sUserAgent.indexOf('honor') !== -1
+      const isOppo = sUserAgent.indexOf('oppo') !== -1
+      const isOppoR15 = sUserAgent.indexOf('pacm00') !== -1
+      const isVivo = sUserAgent.indexOf('vivo') !== -1
+      const isXiaomi = sUserAgent.indexOf('mi') !== -1
+      const isXiaomi2s = sUserAgent.indexOf('mix') !== -1
+      const isRedmi = sUserAgent.indexOf('redmi') !== -1
+
+      console.log(
+        isHuawei,
+        isHonor,
+        isOppo,
+        isOppoR15,
+        isVivo,
+        isXiaomi,
+        isXiaomi2s,
+        isRedmi
+      )
+      if (isHuawei || isHonor) {
+        console.log('华为')
+        location.href = 'appmarket://details?id=' + AppName
+      } else if (isOppo || isOppoR15) {
+        location.href = 'oppomarket://details?packagename=' + AppName
+      } else if (isVivo) {
+        location.href = 'vivomarket://details?id=' + AppName
+      } else if (isXiaomi || isRedmi || isXiaomi2s) {
+        location.href = 'mimarket://details?id=' + AppName
+      } else {
+        // 没找到应该直接下载app
+        window.location.href =
+          'http://m.pp.cn/detail.html?appid=8180749&ch_src=pp_dev&ch=default'
+      }
+    },
   },
 }
 </script>
@@ -166,8 +202,14 @@ export default {
   font-family: PingFangSC;
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
+  background: #f5f5f5;
+  min-height: 100vh;
+  overflow: hidden;
   .search-icon {
     margin-right: 32px;
+  }
+  .bk {
+    width: 100%;
   }
   .tips {
     font-size: 30px;

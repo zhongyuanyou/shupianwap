@@ -34,7 +34,7 @@ export default {
   },
   data() {
     return {
-      HeaderHeight: 88,
+      HeaderHeight: 44,
       timer: null,
     }
   },
