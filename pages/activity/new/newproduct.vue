@@ -205,6 +205,8 @@ export default {
 
   .img_container {
     position: relative;
+    min-height: 300px;
+    background: #f8f8f8;
   }
 
   .content_container {

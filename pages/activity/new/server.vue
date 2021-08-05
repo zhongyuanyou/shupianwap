@@ -145,7 +145,7 @@ export default {
     },
   },
   head() {
-    return { title: '99特卖' }
+    return { title: '先服务后收费' }
   },
 }
 </script>
@@ -205,6 +205,8 @@ export default {
 
   .img_container {
     position: relative;
+    min-height: 300px;
+    background: #f8f8f8;
     .count-down {
       position: absolute;
       top: 68.5%;

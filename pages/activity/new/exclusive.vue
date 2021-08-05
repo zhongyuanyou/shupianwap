@@ -217,6 +217,9 @@ export default {
 
   .img_container {
     position: relative;
+    min-height: 300px;
+    background: #f8f8f8;
+
     .count-down {
       position: absolute;
       top: 68.5%;

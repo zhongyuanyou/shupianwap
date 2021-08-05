@@ -80,7 +80,7 @@ export default {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #ffffff;
+    // background-color: #ffffff;
     z-index: 999;
     // border-bottom: 1px solid #f5f5f5;
   }
