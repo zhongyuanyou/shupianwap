@@ -490,7 +490,7 @@ import imHandle from '@/mixins/imHandle'
 import { callPhone, copyToClipboard, setUrlParams } from '@/utils/common'
 import { storeApi } from '@/api/store'
 export default {
-  name: 'Detail',
+  name: 'PlannerDetail',
   components: {
     [Icon.name]: Icon,
     [Button.name]: Button,

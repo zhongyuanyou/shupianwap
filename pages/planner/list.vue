@@ -265,6 +265,7 @@ export default {
     LoadingDown,
     Search,
   },
+  layout: 'keepAlive',
   mixins: [imHandle],
   data() {
     return {
@@ -365,6 +366,7 @@ export default {
     }
   },
   mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'PlannerList' })
     this.$nextTick(() => {
       this.headHeight = this.$refs.head.clientHeight
     })
@@ -375,6 +377,7 @@ export default {
       SET_CITY: 'city/SET_CITY',
       setUserInfo: 'user/SET_USER',
       clearUserInfo: 'user/CLEAR_USER',
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
     chooseCategory(index) {
       this.catogyActiveIndex = index
@@ -401,8 +404,6 @@ export default {
           },
         ]
       }
-      console.log('regionsOption', this.regionsOption)
-      console.log('this.search.region', this.search.region)
       this.onLoad()
       this.$refs.categoryCodeSelect.toggle()
     },

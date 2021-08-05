@@ -1,5 +1,5 @@
 <template>
-  <div class="jyGoods">
+  <div class="serce_goods">
     <Filters
       ref="dropDownMenu"
       :filter-data="jyFilterData"
@@ -8,6 +8,7 @@
       :pricelist="items.price"
       :sort="items.sortFilter"
       :sortactive="sortactive"
+      class="serve_filters"
       @classfn="classfn"
       @pricefn="pricefn"
       @sortfn="sortfn"
@@ -26,9 +27,12 @@
       :loading="skeletonLoading"
     >
     </sp-skeleton>
-    <div v-show="!skeletonLoading" class="goodsbox">
-      <Newlist ref="list" :datalist="datalist" @load="pagefn"></Newlist>
-    </div>
+    <Newlist
+      v-show="!skeletonLoading"
+      ref="list"
+      :datalist="datalist"
+      @load="pagefn"
+    ></Newlist>
   </div>
 </template>
 
@@ -108,7 +112,7 @@ export default {
       },
       classcode: this.$route.query,
       isOne: true,
-      onshow:true,
+      onshow: true,
     }
   },
   computed: {},
@@ -387,7 +391,21 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.jyGoods {
+::v-deep.serve_filters {
+  .sp-dropdown-menu {
+    position: fixed;
+    left: 0;
+    top: 2.3rem;
+    width: 100%;
+    z-index: 2;
+    h1 {
+      font-size: 0.3rem;
+      padding-left: 0.2rem;
+      margin: 0.2rem 0.1rem;
+    }
+  }
+}
+.serce_goods {
   ::v-deep.sp-tab {
     font-weight: bold;
     font-size: 30px;

@@ -117,6 +117,7 @@ export default {
 
 <style lang="less" scoped>
 .Newlist {
+  padding-top: 300px;
   .list {
     margin: 0 40px 0 40px;
     padding: 32px 0;
