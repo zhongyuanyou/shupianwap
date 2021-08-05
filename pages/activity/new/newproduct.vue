@@ -35,22 +35,6 @@
 
     <div class="img_container">
       <img width="100%" :src="imageHead" alt="" />
-
-      <div class="count-down">
-        <div class="down-time">
-          <span>已累计补贴</span>
-          <span class="time">3</span>
-          <span class="time">2</span>
-          <span class="time">4</span>
-          <span class="time">5</span>
-          <span class="time">8</span>
-          <span class="time">9</span>
-          <!-- <span>.</span>
-          <span class="time">0</span> -->
-          <span>万</span>
-        </div>
-        <div class="des">- 按照商品销量 · 好评率 · 服务等综合设计 -</div>
-      </div>
     </div>
 
     <div class="content_container">
@@ -64,7 +48,6 @@
           }
         "
       ></Recommend>
-
       <Classification
         :is-service="isService"
         :city-name="cityName"
@@ -74,7 +57,6 @@
         :swich-city-handle="swichCityHandle"
         :menu-tab="menuTab"
       />
-
       <div class="container-body">
         <div class="body-content">
           <sp-pull-refresh
@@ -119,8 +101,9 @@ import Recommend from '~/components/activity/special/Recommend.vue'
 import Card from '@/components/activity/special/Card.vue'
 import NoData from '@/components/activity/NoData.vue'
 import Classification from '@/components/activity/Classification.vue'
+
 export default {
-  name: 'Subsidy',
+  name: 'Newproduct',
   components: {
     // Header,
     HeadWrapper,
@@ -138,11 +121,13 @@ export default {
   mixins: [activityMixin],
   data() {
     return {
-      specType: 'HDZT_ZTTYPE_QWBT',
+      specType: 'HDZT_ZTTYPE_XTSF',
 
       hasCity: true,
-      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg',
+      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/c3uw9dpx8vk0000.jpg',
       headerHeight: 0,
+
+      advertCode: 'ad100033', // 广告code
     }
   },
   computed: {
@@ -160,7 +145,7 @@ export default {
     },
   },
   head() {
-    return { title: '官方补贴全网低价' }
+    return { title: '新品首发' }
   },
 }
 </script>
@@ -220,60 +205,6 @@ export default {
 
   .img_container {
     position: relative;
-    .count-down {
-      position: absolute;
-
-      width: 100%;
-      top: 64.2%;
-      // margin-top: 53%;
-
-      font-size: 24px;
-      color: #ffedcb;
-      letter-spacing: 0;
-      line-height: 24px;
-      text-align: center;
-      // display: flex;
-      // flex-direction: row;
-      // justify-content: center;
-      // align-items: center;
-
-      .down-time {
-        font-size: 24px;
-        font-family: PingFangSC-Medium, PingFang SC;
-
-        color: #ffedcb;
-        line-height: 24px;
-
-        letter-spacing: 2px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        .time {
-          // min-width: 36px;
-          font-weight: bold;
-          padding: 0 5px;
-          height: 36px;
-          line-height: 36px;
-          background-image: linear-gradient(139deg, #7e9fff 0%, #4974f5 100%);
-          border-radius: 4px;
-
-          font-family: Bebas;
-          font-size: 24px;
-          color: #fff;
-          text-align: center;
-          margin: 0 4px;
-        }
-      }
-      .des {
-        opacity: 0.3;
-        font-family: PingFangSC-Regular;
-        font-size: 20px;
-        color: #ffffff;
-        letter-spacing: 0;
-        margin-top: 47px;
-      }
-    }
   }
 
   .content_container {

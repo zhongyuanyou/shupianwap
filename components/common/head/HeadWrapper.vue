@@ -10,7 +10,11 @@
     </HeadWrapper>
    -->
   <header class="head-wrapper" :style="{ height: fillHeaderHeight + 'px' }">
-    <div ref="couponHeaderWarpper" class="head-wrapper-warpper">
+    <div
+      ref="couponHeaderWarpper"
+      class="head-wrapper-warpper"
+      :style="{ borderBottom: line && '1px solid #f5f5f5' }"
+    >
       <slot></slot>
     </div>
   </header>
@@ -23,10 +27,15 @@ export default {
       type: Boolean,
       default: true,
     },
+    line: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
       HeaderHeight: 88,
+      timer: null,
     }
   },
   computed: {
@@ -37,22 +46,34 @@ export default {
   },
   mounted() {
     this.getHeaderHeight()
+    this.timer = setInterval(() => {
+      this.getHeaderHeight()
+    }, 100)
+    this.timerout = setTimeout(() => {
+      clearInterval(this.timer)
+    }, 5000)
     window.addEventListener('resize', this.getHeaderHeight)
   },
   destroyed() {
+    clearInterval(this.timer)
+    clearTimeout(this.timerout)
     window.removeEventListener('resize', this.getHeaderHeight)
   },
   methods: {
     getHeaderHeight() {
       this.$nextTick(() => {
-        this.HeaderHeight = this.$refs.couponHeaderWarpper.offsetHeight
-        this.$emit('onHeightChange', this.HeaderHeight)
+        const HeaderHeight = parseInt(
+          this.$refs.couponHeaderWarpper.offsetHeight
+        )
+
+        this.HeaderHeight = HeaderHeight
+        this.$emit('onHeightChange', HeaderHeight)
       })
     },
   },
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .head-wrapper {
   .head-wrapper-warpper {
     position: fixed;
@@ -61,7 +82,7 @@ export default {
     width: 100%;
     background-color: #ffffff;
     z-index: 999;
-    border-bottom: 1px solid #f5f5f5;
+    // border-bottom: 1px solid #f5f5f5;
   }
 }
 </style>

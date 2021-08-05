@@ -20,21 +20,7 @@ export default {
     isNoData() {
       return !this.activityProductList.length
     },
-    safeTopStyle() {
-      return {
-        width: '100%',
-        height: this.safeTop + 'px',
-        // backgroundColor: '#fff',
-        // background:
-        //   "url('https://cdn.shupian.cn/sp-pt/wap/9wjolx4gc0s0000.png')",
-        backgroundSize: '100% 300%',
-        // backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        position: 'fixed',
-        top: '0',
-        zIndex: '99',
-      }
-    },
+
     terminalCode() {
       // return this.isInApp ? 'COMDIC_TERMINAL_APP' : 'COMDIC_TERMINAL_WAP'
       // 只有app有图片
@@ -43,12 +29,10 @@ export default {
     isTimerShow() {
       return this.recommendProductList.length || this.activityProductList.length
     },
-    // isTrade() {
-    //   return this.specType === 'HDZT_ZTTYPE_DJZS'
-    // },
+
+    // 是否是服务商品
     isService() {
       return this.productType === 'PRO_CLASS_TYPE_SERVICE'
-      // return true
     },
   },
   data() {
@@ -57,13 +41,11 @@ export default {
       initList: [],
       endCountDownTimer: null,
       countDownTimer: null,
-      defaultData: {
-        index: 0,
-        sort: -1, // 倒序
-      },
-      iconLeft: 0.35,
+
       loading: false,
       finished: false,
+
+
       refreshDisabled: false,
       refreshing: false,
       activityTypeOptions: [],
@@ -116,7 +98,7 @@ export default {
     }
     // this.headerHeight = this.$refs.header_sticky.height
     // console.log(process.env)
-    // this.chii()
+
     this.screenWidth = window.screen.width
   },
   beforeDestroy() {
@@ -310,7 +292,7 @@ export default {
             console.log('this.specCode', this.specCode)
             if (res.data.settingVOList && res.data.settingVOList.length > 0) {
               this.itemTypeOptions = res.data.settingVOList[0]
-              this.getProductList(this.itemTypeOptions, this.specCode)
+              this.getProductList()
             } else {
               this.loading = false
               this.finished = true
@@ -373,17 +355,13 @@ export default {
         })
         .then((res) => {
           console.log('productMethod',param,res);
+          this.refreshing = false
           if (res.code === 200) {
             if (
               this.isInit &&
-             ( location.href.match('activity/special') ||
-              location.href.match('activity/new/special')||
-              location.href.match('activity/exclusive')||
-              location.href.match('activity/new/exclusive')
-              ) &&
-
-
-              !this.recommendProductList.length
+              (this.specType === 'HDZT_ZTTYPE_TM'||
+              this.specType === 'HDZT_ZTTYPE_DJZS')
+               &&!this.recommendProductList.length
             ) {
               this.initList = res.data.rows
               this.recommendProductList = JSON.parse(
@@ -403,22 +381,22 @@ export default {
             }
             this.total = res.data.total
             this.loading = false
-            if (this.page > res.data.totalPage) {
+            if (this.page > res.data.totalPage||res.data.rows.length<15) {
               this.finished = true
             }
-            this.refreshing = false
+
           } else {
             this.loading = false
+            this.finished = true
+            this.refreshDisabled = true
+
             throw new Error('服务异常，请刷新重试！')
-            // Toast.fail({
-            //   duration: 2000,
-            //   message: '服务异常，请刷新重试！',
-            //   forbidClick: true,
-            //   className: 'my-toast-style',
-            // })
           }
         })
         .catch((err) => {
+          this.loading = false
+          this.finished = true
+          this.refreshDisabled = true
           this.refreshing = false
           Toast.fail({
             duration: 2000,
@@ -431,8 +409,9 @@ export default {
       //   this.refreshing = false
       // })
     },
-    getRecommendProductList() {
 
+    // 获取推荐产品
+    getRecommendProductList() {
       if (this.specCode) {
         const params = {
           specCode: this.specCode,
@@ -441,10 +420,6 @@ export default {
           limit: 10000,
           terminalCode: this.terminalCode,
         }
-
-        // if (this.hasCity) {
-        //   params.cityCode = this.cityCode
-        // }
         // 前端放开，后台校验城市，如果是交易产品后台就不带城市查询
         params.cityCode = this.cityCode
 
@@ -474,32 +449,35 @@ export default {
       }
     },
 
-    getAdvertisingData() {
-      this.$axios
-        .get(activityApi.activityAdvertising, {
-          params: {
-            code: this.advertCode,
-          },
-        })
-        .then((res) => {
-          if (res.code === 200) {
-            if (res.data.sortMaterialList.length) {
-              this.productAdvertData =
-                res.data.sortMaterialList[0].materialList.slice(0, 3)
-            }
-          } else {
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
-          }
-        })
-        .catch((err) => {
-          console.log(err.message)
-        })
-    },
+    // 获取广告位？
+    // getAdvertisingData() {
+    //   this.$axios
+    //     .get(activityApi.activityAdvertising, {
+    //       params: {
+    //         code: this.advertCode,
+    //       },
+    //     })
+    //     .then((res) => {
+    //       if (res.code === 200) {
+    //         if (res.data.sortMaterialList.length) {
+    //           this.productAdvertData =
+    //             res.data.sortMaterialList[0].materialList.slice(0, 3)
+
+    //             console.log('this.productAdvertData',this.productAdvertData);
+    //         }
+    //       } else {
+    //         Toast.fail({
+    //           duration: 2000,
+    //           message: '服务异常，请刷新重试！',
+    //           forbidClick: true,
+    //           className: 'my-toast-style',
+    //         })
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       console.log(err.message)
+    //     })
+    // },
     swichCityHandle() {
       this.$router.push({
         path: '/city/choiceCity',
@@ -594,15 +572,7 @@ export default {
         return str
       }
     },
-    chii() {
-      const script = document.createElement('script')
-      script.src = '//172.16.132.163:9090/target.js'
-      document.body.appendChild(script)
-    },
-    convert2vw(px) {
-      px = parseFloat(px)
-      return (px / this.screenWidth) * 100
-    },
+
     parsePrice(priceStr) {
 
       if (priceStr&&priceStr > 0) {

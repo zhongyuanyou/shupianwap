@@ -205,6 +205,7 @@ export default {
   mixins: [imHandle],
   data() {
     return {
+      offsetTop: 0,
       defaultData: {
         index: 0,
         sort: -1, // 倒序
@@ -341,7 +342,7 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.activityTypeOptions = res.data.settingVOList
+            this.activityTypeOptions = res.data.settingVOList || []
             if (res.data.settingVOList && res.data.settingVOList.length > 0) {
               this.itemTypeOptions = res.data.settingVOList[0]
               this.specCode = res.data.specCode
@@ -384,7 +385,7 @@ export default {
         limit: this.limit,
         page: this.page,
       }
-      if (this.activityTypeOptions.length > 0) {
+      if (this.activityTypeOptions && this.activityTypeOptions.length > 0) {
         this.productMethod(params)
       } else {
         this.isNoData = true

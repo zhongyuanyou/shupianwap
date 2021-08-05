@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <HeadWrapper :fill="false" @onHeightChange="onHeightChange">
+    <HeadWrapper :fill="false" :line="false" @onHeightChange="onHeightChange">
       <div class="search_container">
         <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
           <!-- @click="uPGoBack" -->
-          <div class="left-back">
+          <div class="left-back" @click="uPGoBack">
             <my-icon
               name="nav_ic_back"
               class="back_icon"
@@ -51,7 +51,7 @@
     </div>
 
     <div class="content_container">
-      <Box
+      <Recommend
         title="爆款单品"
         :parse-price="parsePrice"
         :list="recommendProductList"
@@ -60,9 +60,17 @@
             jumpProductDetail(item)
           }
         "
-      ></Box>
-
-      <sp-sticky class="tabs-box" :offset-top="headerHeight">
+      ></Recommend>
+      <Classification
+        :is-service="false"
+        :city-name="cityName"
+        :header-height="headerHeight"
+        :current-index="currentIndex"
+        :activity-type-options="activityTypeOptions"
+        :swich-city-handle="swichCityHandle"
+        :menu-tab="menuTab"
+      />
+      <!-- <sp-sticky class="tabs-box" :offset-top="headerHeight">
         <ul class="tabs-box-items">
           <li
             v-for="(item, index) in activityTypeOptions"
@@ -74,9 +82,8 @@
             {{ item.labelName }}
           </li>
         </ul>
-        <!-- <div>
-        </div> -->
-      </sp-sticky>
+
+      </sp-sticky> -->
       <div class="container-body">
         <div class="body-content">
           <sp-pull-refresh
@@ -118,9 +125,10 @@ import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
 import activityMixin from './activityMixin'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
-import Box from '@/components/activity/special/Box.vue'
+import Recommend from '~/components/activity/special/Recommend.vue'
 import Card from '@/components/activity/special/Card.vue'
 import NoData from '@/components/activity/NoData.vue'
+import Classification from '@/components/activity/Classification.vue'
 export default {
   name: 'Subsidy',
   components: {
@@ -132,9 +140,10 @@ export default {
     [List.name]: List,
     [PullRefresh.name]: PullRefresh,
 
-    Box,
+    Recommend,
     Card,
     NoData,
+    Classification,
   },
   mixins: [activityMixin],
   data() {
@@ -143,7 +152,7 @@ export default {
 
       hasCity: true,
       imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/6kfpkqxmcv00000.png',
-      headerHeight: '',
+      headerHeight: 0,
     }
   },
   computed: {
@@ -168,9 +177,6 @@ export default {
 
 
 <style lang="less" scoped>
-::v-deep .head-wrapper-warpper {
-  border-bottom: 0;
-}
 .container {
   font-family: PingFangSC;
 
@@ -226,10 +232,8 @@ export default {
     position: relative;
     .count-down {
       position: absolute;
-      top: 0;
+      top: 68.5%;
       width: 100%;
-      margin-top: 43%;
-      // margin-top: 53%;
 
       font-size: 24px;
       color: #ffedcb;
@@ -244,7 +248,7 @@ export default {
       .down-time {
         font-size: 24px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: bold;
+
         color: #ffedcb;
         line-height: 24px;
 
@@ -254,6 +258,7 @@ export default {
 
         .time {
           // min-width: 36px;
+          font-weight: bold;
           padding: 0 5px;
           height: 36px;
           line-height: 36px;
@@ -277,68 +282,6 @@ export default {
     border-radius: 24px;
     overflow: hidden;
 
-    .tabs-box {
-      height: 96px;
-      line-height: 96px;
-      font-size: 0;
-
-      ::v-deep .sp-sticky {
-        background-color: #fff;
-        overflow: hidden;
-
-        &.sp-sticky--fixed {
-          border-radius: 0 0 0 0;
-        }
-      }
-
-      .tabs-box-items {
-        display: flex;
-        background: #f8f8f8;
-        overflow-x: scroll;
-
-        // height: 96px;
-        // line-height: 96px;
-        padding: 0px 40px;
-
-        &::-webkit-scrollbar {
-          width: 0 !important;
-        }
-        .li-tab {
-          // display: inline-block;
-          white-space: nowrap;
-
-          margin-right: 40px;
-
-          font-size: 32px;
-          color: #999999;
-          letter-spacing: 0;
-          cursor: pointer;
-
-          height: 96px;
-          line-height: 96px;
-        }
-        .active {
-          position: relative;
-          font-weight: bold;
-          color: #222222;
-        }
-        .active::after {
-          content: '';
-          position: absolute;
-          top: 58px;
-          right: 0;
-
-          width: 60px;
-          height: 12px;
-          background-image: linear-gradient(
-            270deg,
-            rgba(73, 116, 245, 0) 0%,
-            #4974f5 100%
-          );
-          border-radius: 6px;
-        }
-      }
-    }
     .container-body {
       background: #f8f8f8;
       z-index: 1;

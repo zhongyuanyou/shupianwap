@@ -2,7 +2,7 @@
   <div class="body-content-items">
     <div class="left-content">
       <div v-if="endTime && endTime.sec" class="left-countdown">
-        距结束{{ endTime.hour }}:{{ endTime.min }}:{{ endTime.sec }}
+        距结束 {{ endTime.hour }}:{{ endTime.min }}:{{ endTime.sec }}
       </div>
       <sp-image
         class="picture"
@@ -24,6 +24,9 @@
         <div v-for="tag in tags" :key="tag">
           {{ overflowDot(tag, 6) }}
         </div>
+      </div>
+      <div class="rc-slogan">
+        {{ item.slogan }}
       </div>
       <div class="rc-bottom">
         <div class="rc-bottom-lf">
@@ -90,7 +93,7 @@ export default {
   },
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .multiRowOverflowDot {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -124,6 +127,7 @@ export default {
   }
 
   .left-countdown {
+    white-space: nowrap;
     font-size: 20px;
     padding: 6px 10px;
 
@@ -139,6 +143,8 @@ export default {
     background: #ec5330;
     border-radius: 4px;
     font-family: PingFangSC-Regular, PingFang SC;
+    transform-origin: left top;
+    transform: scale(0.83);
   }
 }
 .right-content {
@@ -153,11 +159,10 @@ export default {
   .goods-name {
     font-size: 32px;
     line-height: 42px;
-    height: 84px;
+
     font-weight: bold;
     color: #222222;
 
-    padding-bottom: 24px;
     .multiRowOverflowDot();
     span {
       margin-right: 4px;
@@ -207,6 +212,13 @@ export default {
       margin-right: 8px;
       font-family: PingFangSC-Regular, PingFang SC;
     }
+  }
+  .rc-slogan {
+    margin-top: 16px;
+    font-size: 22px;
+    color: #222222;
+    letter-spacing: 0;
+    .mixin-text-oneoverflow();
   }
   .rc-bottom {
     position: absolute;
