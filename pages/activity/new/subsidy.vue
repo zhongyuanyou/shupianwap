@@ -113,8 +113,8 @@ import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
 import activityMixin from './activityMixin'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
-import Recommend from '~/components/activity/special/Recommend.vue'
-import Card from '@/components/activity/special/Card.vue'
+import Recommend from '~/components/activity/Recommend.vue'
+import Card from '~/components/activity/Card.vue'
 import NoData from '@/components/activity/NoData.vue'
 import Classification from '@/components/activity/Classification.vue'
 export default {

@@ -81,7 +81,7 @@ export default {
 .box {
   font-family: PingFangSC;
   margin: 24px 20px 0;
-  padding: 24px 20px;
+  padding: 24px 20px 0;
   background: #ffffff;
   border-radius: 24px;
 
@@ -99,16 +99,17 @@ export default {
     font-weight: bold;
     font-size: 32px;
     color: #222222;
+    margin-bottom: 28px;
   }
 
   .list {
     overflow: hidden;
-    margin-top: 28px;
+
     .list_container {
       margin: 0 -5px;
     }
     .list_item {
-      margin: 0 6px;
+      margin: 0 6px 28px;
       display: inline-block;
       width: 32%;
 
