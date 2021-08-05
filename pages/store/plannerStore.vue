@@ -446,11 +446,6 @@ export default {
         const { data, code, message } = await this.$axios.get(
           storeApi.plannerStoreInfo,
           { params },
-          {
-            headers: {
-              'x-cache-control': 'cache',
-            },
-          }
         )
 
         if (code !== 200) {
@@ -502,11 +497,6 @@ export default {
         const { data, code, message } = await this.$axios.post(
           storeApi.recommendGoods,
           params,
-          {
-            headers: {
-              'x-cache-control': 'cache',
-            },
-          }
         )
         if (code !== 200) {
           throw new Error(message)

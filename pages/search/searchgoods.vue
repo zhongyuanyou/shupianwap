@@ -1,5 +1,6 @@
 <template>
   <div class="search-result">
+    <div class="top_search_area"></div>
     <!--S搜索框-->
     <Search
       v-if="active === 0"
@@ -46,9 +47,13 @@
     </Search>
     <!--E搜索框-->
     <!--S筛选栏-->
-    <sp-work-tabs ref="tabs" v-model="active">
+    <sp-work-tabs ref="tabs" v-model="active" class="goods_search_tabs">
       <sp-work-tab title="企业服务">
-        <goods ref="goods" :searchkey="formData.searchText" :height="height" />
+        <serveGoods
+          ref="goods"
+          :searchkey="formData.searchText"
+          :height="height"
+        />
       </sp-work-tab>
       <sp-work-tab title="资产交易">
         <JyGoods
@@ -100,19 +105,19 @@ import { mapMutations } from 'vuex'
 import { WorkTabs, WorkTab } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 // import serveGoods from '@/components/list/ServeGoods'
-import Goods from '@/components/list/goods'
+import serveGoods from '@/components/list/goods'
 import JyGoods from '@/components/list/JyGoods'
 import addSearchHistory from '@/mixins/addSearchHistory'
 import listJumpIm from '@/mixins/listJumpIm'
 import { goods, dict } from '@/api/index'
 export default {
-  name: 'SearchResult',
+  name: 'SearchGoods',
   components: {
     Search,
     [WorkTabs.name]: WorkTabs,
     [WorkTab.name]: WorkTab,
     // serveGoods,
-    Goods,
+    serveGoods,
     JyGoods,
   },
   layout: 'keepAlive',
@@ -164,6 +169,7 @@ export default {
     },
   },
   mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'SearchGoods' })
     this.height =
       this.$refs.search.$el.offsetHeight +
       this.$refs.tabs.$el.offsetHeight +
@@ -178,8 +184,7 @@ export default {
     // }
     // window.sensors.registerPage(param) // 设置公共属性
     // SearchResult
-    this.SET_KEEP_ALIVE({ type: 'add', name: 'SearchResult' })
-    this.getInitData()
+    this.getJyCateCode()
     if (this.$route.query.keywords) {
       this.formData.searchText = this.$route.query.keywords
       this.currentInputText = this.$route.query.keywords
@@ -201,6 +206,21 @@ export default {
       this.isShowInput = false
       this.$refs.goods.onshow = false
       this.$refs.goods.getlist()
+    },
+    getJyCateCode() {
+      dict
+        .findCmsCode({ axios: this.$axios }, { code: 'CONDITION-JY' })
+        .then((result) => {
+          console.log('交易分类', result)
+          this.jyTypesData = result.filter((item) => {
+            return /[公司｜专利｜商标｜资质]/.test(item.name)
+          })
+        })
+        .catch((e) => {
+          if (e.code !== 200) {
+            console.error(e)
+          }
+        })
     },
     // 获取初始化数据
     getInitData() {
@@ -300,11 +320,40 @@ export default {
     height: calc(100vh - 290px);
   }
   .search-content {
+    position: fixed;
+    left: 0;
+    top: 0;
     padding: 16px 32px;
     &.has-input {
       ::v-deep.input-box .imitate-input {
         color: #1a1a1a;
       }
+    }
+  }
+  ::v-deep.tablist {
+    position: fixed;
+    left: 0;
+    top: 1.3rem;
+    width: 100%;
+    z-index: 2;
+  }
+  .top_search_area {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 300px;
+    z-index: 1;
+    background: white;
+  }
+  ::v-deep.goods_search_tabs {
+    width: 100%;
+    .sp-work-tabs__wrap {
+      position: fixed;
+      left: 0;
+      top: 1.3rem;
+      width: 100%;
+      z-index: 2;
     }
   }
   ::v-deep.goods-item {

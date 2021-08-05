@@ -102,7 +102,7 @@
                           src="https://cdn.shupian.cn/sp-pt/wap/images/co0535d3gfk0000.png"
                           alt=""
                         />
-                        <span>{{ newDetailData.phone }}</span>
+                        <span>{{ setPhone(newDetailData.phone) }}</span>
                       </div>
                       <div v-if="newDetailData.baseInfo.wechat">
                         <img
@@ -336,7 +336,12 @@
                 pluginspage="https://cdn.shupian.cn/sp-pt/wap/images/28hztm48mx8g000.svg"
               />
               <p>
-                <span :class="data.contentImageUrl?'three_line_img':'three_line'">{{ data.contentText }}</span>
+                <span
+                  :class="
+                    data.contentImageUrl ? 'three_line_img' : 'three_line'
+                  "
+                  >{{ data.contentText }}</span
+                >
                 <img
                   v-if="data.contentImageUrl"
                   :src="data.contentImageUrl"
@@ -360,7 +365,10 @@
           >
             <div>
               <p>
-                <span :class="data.contentImageUrl?'two_line_img':'two_line'">{{ data.title }}</span>
+                <span
+                  :class="data.contentImageUrl ? 'two_line_img' : 'two_line'"
+                  >{{ data.title }}</span
+                >
                 <img
                   v-if="data.contentImageUrl"
                   :src="data.contentImageUrl"
@@ -385,7 +393,9 @@
           >
             <div>
               <p>
-                <span :class="data.imageUrl?'two_line_img':'two_line'">{{ data.title }}</span>
+                <span :class="data.imageUrl ? 'two_line_img' : 'two_line'">{{
+                  data.title
+                }}</span>
                 <img v-if="data.imageUrl" :src="data.imageUrl" alt="" />
               </p>
             </div>
@@ -480,7 +490,7 @@ import imHandle from '@/mixins/imHandle'
 import { callPhone, copyToClipboard, setUrlParams } from '@/utils/common'
 import { storeApi } from '@/api/store'
 export default {
-  name: 'Detail',
+  name: 'PlannerDetail',
   components: {
     [Icon.name]: Icon,
     [Button.name]: Button,
@@ -533,11 +543,6 @@ export default {
             cardType: 'plannerCode',
           },
         },
-        {
-          headers: {
-            'x-cache-control': 'cache',
-          },
-        }
       )
       if (newData.code === 200) {
         if (newData.data.status === 'BUSINESS_CARD_STATUS_ON_SHELF') {
@@ -697,6 +702,12 @@ export default {
       const oldTime = s.split(' ')[0]
       const time = oldTime.split('-')
       return `${time[1]}月${time[2]}日`
+    },
+    setPhone(phone) {
+      if (phone.length === 11) {
+        return phone.substring(0, 3) + '****' + phone.substring(7, 11)
+      }
+      return phone
     },
     formatSeconds(value) {
       if (!value) {
@@ -1617,7 +1628,7 @@ export default {
           max-height: 86px;
           .textOverflow(2);
         }
-        .three_line_img{
+        .three_line_img {
           max-width: 600px;
           .textOverflow(3);
         }
@@ -1625,7 +1636,7 @@ export default {
           max-height: 96px;
           .textOverflow(2);
         }
-        .two_line_img{
+        .two_line_img {
           .textOverflow(3);
         }
       }

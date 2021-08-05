@@ -794,7 +794,7 @@ export default {
   background: #f5f5f5;
 }
 .list3 {
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   font-size: 24px;
   .item {
     padding: 24px 0;
