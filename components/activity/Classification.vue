@@ -21,7 +21,7 @@
   </sp-sticky>
 </template>
 <script>
-import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
+import { Sticky } from '@chipspc/vant-dgg'
 export default {
   components: {
     [Sticky.name]: Sticky,
@@ -54,6 +54,25 @@ export default {
     menuTab: {
       type: Function,
       default() {},
+    },
+  },
+  mounted() {
+    const _this = this
+    const imgs = [...document.getElementsByTagName('img')]
+
+    imgs.map((img) => {
+      img.onload = function () {
+        _this.scroll()
+      }
+    })
+  },
+  methods: {
+    scroll() {
+      const doc = document.documentElement || document.body
+      setTimeout(() => {
+        doc.scrollTop += 1
+        doc.scrollTop -= 1
+      }, 50)
     },
   },
 }

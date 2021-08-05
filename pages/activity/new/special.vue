@@ -61,29 +61,17 @@
           }
         "
       ></Recommend>
-      <Classification
-        :is-service="false"
-        :city-name="cityName"
-        :header-height="headerHeight"
-        :current-index="currentIndex"
-        :activity-type-options="activityTypeOptions"
-        :swich-city-handle="swichCityHandle"
-        :menu-tab="menuTab"
-      />
-      <!-- <sp-sticky class="tabs-box" :offset-top="headerHeight">
-        <ul class="tabs-box-items">
-          <li
-            v-for="(item, index) in activityTypeOptions"
-            :key="index"
-            class="li-tab"
-            :class="{ active: index == currentIndex }"
-            @click="menuTab(item, index)"
-          >
-            {{ item.labelName }}
-          </li>
-        </ul>
-
-      </sp-sticky> -->
+      <client-only>
+        <Classification
+          :is-service="false"
+          :city-name="cityName"
+          :header-height="headerHeight"
+          :current-index="currentIndex"
+          :activity-type-options="activityTypeOptions"
+          :swich-city-handle="swichCityHandle"
+          :menu-tab="menuTab"
+        />
+      </client-only>
       <div class="container-body">
         <div class="body-content">
           <sp-pull-refresh
@@ -98,18 +86,16 @@
               @load="onLoad"
             >
               <div v-if="activityProductList && activityProductList.length > 0">
-                <div
+                <Card
                   v-for="(item, index) in activityProductList"
                   :key="index"
-                  @click="jumpProductDetail(item)"
-                >
-                  <Card
-                    :end-time="endTime"
-                    :item="item"
-                    :overflow-dot="overflowDot"
-                    :parse-price="parsePrice"
-                  ></Card>
-                </div>
+                  :end-time="endTime"
+                  :item="item"
+                  :overflow-dot="overflowDot"
+                  :parse-price="parsePrice"
+                  :last="activityProductList.length - 1 == index"
+                  @click.native="jumpProductDetail(item)"
+                ></Card>
               </div>
               <NoData :is-no-data="isNoData"></NoData>
             </sp-list>
@@ -164,6 +150,7 @@ export default {
       return this.$store.state.user
     },
   },
+
   methods: {
     onHeightChange(height) {
       this.headerHeight = height

@@ -61,17 +61,17 @@
           }
         "
       ></Recommend>
-
-      <Classification
-        :is-service="isService"
-        :city-name="cityName"
-        :header-height="headerHeight"
-        :current-index="currentIndex"
-        :activity-type-options="activityTypeOptions"
-        :swich-city-handle="swichCityHandle"
-        :menu-tab="menuTab"
-      />
-
+      <client-only>
+        <Classification
+          :is-service="isService"
+          :city-name="cityName"
+          :header-height="headerHeight"
+          :current-index="currentIndex"
+          :activity-type-options="activityTypeOptions"
+          :swich-city-handle="swichCityHandle"
+          :menu-tab="menuTab"
+        />
+      </client-only>
       <div class="container-body">
         <div class="body-content">
           <sp-pull-refresh
@@ -86,17 +86,15 @@
               @load="onLoad"
             >
               <div v-if="activityProductList && activityProductList.length > 0">
-                <div
+                <Card
                   v-for="(item, index) in activityProductList"
                   :key="index"
-                  @click="jumpProductDetail(item)"
-                >
-                  <Card
-                    :item="item"
-                    :overflow-dot="overflowDot"
-                    :parse-price="parsePrice"
-                  ></Card>
-                </div>
+                  :last="activityProductList.length - 1 == index"
+                  :item="item"
+                  :overflow-dot="overflowDot"
+                  :parse-price="parsePrice"
+                  @click.native="jumpProductDetail(item)"
+                ></Card>
               </div>
               <NoData :is-no-data="isNoData"></NoData>
             </sp-list>

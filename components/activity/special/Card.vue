@@ -1,5 +1,5 @@
 <template>
-  <div class="body-content-items">
+  <div class="body-content-items" :class="{ last: last }">
     <div class="left-content">
       <div v-if="endTime && endTime.sec" class="left-countdown">
         距结束 {{ endTime.hour }}:{{ endTime.min }}:{{ endTime.sec }}
@@ -84,6 +84,10 @@ export default {
       type: Function,
       default() {},
     },
+    last: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     tags() {
@@ -111,11 +115,15 @@ export default {
   margin-bottom: 20px;
   border-radius: 24px;
 }
+.body-content-items.last {
+  margin-bottom: 0px;
+}
 .left-content {
   position: relative;
   margin-right: 32px;
   width: 220px;
   height: 220px;
+  flex-shrink: 0;
   overflow: hidden;
 
   border-radius: 12px;
@@ -149,13 +157,13 @@ export default {
 }
 .right-content {
   flex: 1;
-  width: 418px;
+  // width: 418px;
   display: flex;
   align-content: flex-start;
   position: relative;
   height: 220px;
   flex-direction: column;
-
+  overflow: hidden;
   .goods-name {
     font-size: 32px;
     line-height: 42px;
@@ -198,12 +206,15 @@ export default {
     }
   }
   .rc-middle {
-    display: flex;
-    align-content: flex-start;
+    // display: flex;
+    // align-content: flex-start;
     margin-top: 12px;
+    font-size: 0;
     div {
+      display: inline-block;
       font-size: 20px;
       font-weight: 400;
+      flex-shrink: 0;
       color: #5c7499;
       line-height: 28px;
       padding: 0 6px;

@@ -7,9 +7,9 @@
 
     <div class="down-time">
       <div class="time">{{ time.hour || '00' }}</div>
-      <div>:</div>
+      <div class="colon">:</div>
       <div class="time">{{ time.min || '00' }}</div>
-      <div>:</div>
+      <div class="colon">:</div>
       <div class="time">{{ time.sec || '00' }}</div>
     </div>
 
@@ -76,6 +76,7 @@ export default {
   }
   .down-time {
     flex: 1;
+    flex-shrink: 0;
     color: #ec5330;
     font-size: 24px;
     font-weight: bold;
@@ -95,9 +96,12 @@ export default {
       line-height: 32px;
       padding: 6px 8px;
     }
+    .colon {
+      transform: translateY(-7px);
+    }
   }
   .welcome {
-    margin-right: 48px;
+    margin-right: 28px;
     font-family: PingFangSC-Regular;
     font-size: 24px;
     color: #222222;
