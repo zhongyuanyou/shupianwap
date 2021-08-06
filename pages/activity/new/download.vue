@@ -20,7 +20,7 @@
     <div class="bk_container">
       <img
         class="picture"
-        src="https://cdn.shupian.cn/sp-pt/wap/images/y205jebq6kw000.png"
+        src="https://cdn.shupian.cn/sp-pt/wap/images/8uv7ytpoxo00000.png"
         alt=""
       />
       <img
