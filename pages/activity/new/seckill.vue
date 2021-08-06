@@ -1,4 +1,5 @@
 <template>
+  <!-- 限时直降 -->
   <div class="container">
     <HeadWrapper :fill="false" :line="false" @onHeightChange="onHeightChange">
       <div class="search_container">
@@ -24,7 +25,7 @@
             <span
               class="rule"
               @click="
-                $router.push('/login/protocol?categoryCode=protocol100034')
+                $router.push('/login/protocol?categoryCode=protocol100047')
               "
               >规则</span
             >
@@ -73,7 +74,7 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
 import activityMixin from './activityMixin'
@@ -83,7 +84,8 @@ import Card from '~/components/activity/Card.vue'
 import NoData from '@/components/activity/NoData.vue'
 
 export default {
-  name: 'Exclusive',
+  name: 'Seckill',
+  layout: 'keepAlive',
   components: {
     // Header,
     HeadWrapper,
@@ -118,7 +120,13 @@ export default {
       return this.$store.state.user
     },
   },
+  mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'Seckill' })
+  },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     onHeightChange(height) {
       this.headerHeight = height
     },

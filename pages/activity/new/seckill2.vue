@@ -64,7 +64,7 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
 import activityMixin from './activityMixin'
@@ -75,7 +75,8 @@ import NoData from '@/components/activity/NoData.vue'
 import Sum from '@/components/activity/seckill2/Sum.vue'
 
 export default {
-  name: 'Exclusive',
+  name: 'Seckill2',
+  layout: 'keepAlive',
   components: {
     // Header,
     HeadWrapper,
@@ -119,12 +120,17 @@ export default {
     },
   },
   mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'Seckill2' })
     window.addEventListener('scroll', this.handleScroll) // 监听（绑定）滚轮滚动事件
   },
   beforeDestroy() {
     window.removeEventListener('scroll', this.handleScroll)
   },
+
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     handleScroll() {
       const scrollHeight =
         document.documentElement.scrollTop || document.body.scrollTop // 滚动高度

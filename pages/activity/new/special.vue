@@ -24,7 +24,7 @@
             <span
               class="rule"
               @click="
-                $router.push('/login/protocol?categoryCode=protocol100034')
+                $router.push('/login/protocol?categoryCode=protocol100046')
               "
               >规则</span
             >
@@ -106,7 +106,7 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
 import activityMixin from './activityMixin'
@@ -116,7 +116,8 @@ import Card from '~/components/activity/Card.vue'
 import NoData from '@/components/activity/NoData.vue'
 import Classification from '@/components/activity/Classification.vue'
 export default {
-  name: 'Subsidy',
+  name: 'Special',
+  layout: 'keepAlive',
   components: {
     // Header,
     HeadWrapper,
@@ -151,7 +152,13 @@ export default {
     },
   },
 
+  mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'Special' })
+  },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     onHeightChange(height) {
       this.headerHeight = height
     },
