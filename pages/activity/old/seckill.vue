@@ -192,29 +192,7 @@
                           <span>{{ item.specialUnit || '元' }}</span>
                         </div>
                       </div>
-                      <div class="rc-bottom-rt">
-                        去抢购
-                        <!--  <div>去抢购</div>-->
-                        <!--<div class="process-per">
-                          <sp-progress
-                            color="#FFF166"
-                            :percentage="
-                              getPercentage(
-                                item.specialResidueInventory,
-                                item.specialInventory
-                              )
-                            "
-                          />
-                          <div class="pro-per">
-                            {{
-                              getPercentage(
-                                item.specialResidueInventory,
-                                item.specialInventory
-                              )
-                            }}%
-                          </div>
-                        </div>-->
-                      </div>
+                      <div class="rc-bottom-rt">去抢购</div>
                     </div>
                   </div>
                 </div>

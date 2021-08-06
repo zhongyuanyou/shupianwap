@@ -91,7 +91,6 @@
                   :key="index"
                   :end-time="endTime"
                   :item="item"
-                  :overflow-dot="overflowDot"
                   :parse-price="parsePrice"
                   :last="activityProductList.length - 1 == index"
                   @click.native="jumpProductDetail(item)"

@@ -78,11 +78,7 @@
                   :key="index"
                   @click="jumpProductDetail(item)"
                 >
-                  <Card
-                    :item="item"
-                    :overflow-dot="overflowDot"
-                    :parse-price="parsePrice"
-                  ></Card>
+                  <Card :item="item" :parse-price="parsePrice"></Card>
                 </div>
               </div>
               <NoData :is-no-data="isNoData"></NoData>

@@ -94,7 +94,6 @@
                   :key="index"
                   :last="activityProductList.length - 1 == index"
                   :item="item"
-                  :overflow-dot="overflowDot"
                   :parse-price="parsePrice"
                   @click.native="jumpProductDetail(item)"
                 ></Card>
