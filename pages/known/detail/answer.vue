@@ -606,6 +606,14 @@ export default {
                 this.answerDetails.applaudCount || 0
               }个赞,快来看看吧!`,
               url: sharedUrl,
+              // 匹配启大顺
+              description: `${
+                this.answerDetails.userName || '薯片用户'
+              }回答了问题,已获${
+                this.answerDetails.applaudCount || 0
+              }个赞,快来看看吧!`,
+              imgUrl:
+                'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png',
             },
             (res) => {
               const { code } = res || {}
