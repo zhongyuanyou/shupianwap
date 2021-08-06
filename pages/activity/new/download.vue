@@ -1,28 +1,42 @@
 <template>
   <div class="download">
     <HeadWrapper
+      v-if="!isWeixin"
       :fill="true"
       :line="false"
       @onHeightChange="(height) => (headerHeight = height)"
     >
       <Header class="my-header" title="下载APP">
-        <template #right>
+        <!-- <template #right>
           <my-icon
             class="search-icon"
             name="nav_ic_more1"
             size="0.4rem"
             color="#1A1A1A"
           ></my-icon>
-        </template>
+        </template> -->
       </Header>
     </HeadWrapper>
-    <img
-      class="bk"
-      src="https://cdn.shupian.cn/sp-pt/wap/images/7yspkblxjbo0000.png"
-      alt=""
-    />
+    <div class="bk_container">
+      <img
+        class="picture"
+        src="https://cdn.shupian.cn/sp-pt/wap/images/y205jebq6kw000.png"
+        alt=""
+      />
+      <img
+        class="bk_color"
+        src="https://cdn.shupian.cn/sp-pt/wap/images/crih96hhw4o0000.png"
+        alt=""
+      />
+      <img
+        class="bk_phone"
+        src="https://cdn.shupian.cn/sp-pt/wap/images/44zftgjj3iy0000.png"
+        alt=""
+      />
+    </div>
+
     <div class="tips">若您已安装app,点此打开</div>
-    <div class="btn" @click="checkOutApp">点击立即下载</div>
+    <div class="btn" @click="download">点击立即下载</div>
   </div>
 </template>
 <script>
@@ -41,6 +55,7 @@ export default {
     return {
       isIOS: false,
       isAndroid: false,
+      isWeixin: false,
       packagename: 'com.chips.cpscustomer',
       headerHeight: 0,
     }
@@ -58,14 +73,16 @@ export default {
     },
   },
   mounted() {
-    const userAgent = window.navigator.userAgent
+    const userAgent = window.navigator.userAgent.toLowerCase()
     console.log(userAgent)
     this.isAndroid =
-      userAgent.indexOf('Android') > -1 ||
-      userAgent.indexOf('Adr') > -1 ||
-      userAgent.indexOf('HarmonyOS') > -1 // android和鸿蒙终端
+      userAgent.indexOf('android') > -1 ||
+      userAgent.indexOf('adr') > -1 ||
+      userAgent.indexOf('harmonyos') > -1 // android和鸿蒙终端
 
-    this.isIOS = userAgent.match(/iPhone|iPad|iPod/i) // ios终端
+    this.isIOS = userAgent.match(/iphone|ipad|ipod/i) // ios终端
+
+    this.isWeixin = userAgent.indexOf('micromessenger') !== -1
   },
   methods: {
     uPGoBack() {
@@ -90,9 +107,28 @@ export default {
       }
       this.$router.back(-1)
     },
+    download() {
+      let downLoadUrl = ''
+      if (this.isWeixin) {
+        this.$xToast.show({
+          message: '微信内不支持打开外部应用，请更换为其他浏览器打开本页面。',
+          duration: 3000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
+        return
+      }
+      if (this.isIOS) {
+        downLoadUrl = 'https://apps.apple.com/cn/app/薯片找人/id1535886630'
+      } else {
+        downLoadUrl =
+          'http://m.pp.cn/detail.html?appid=8180749&ch_src=pp_dev&ch=default'
+      }
+      window.location.href = downLoadUrl
+    },
 
+    // 打开app，安卓未安装则打开应用市场或者pp网页，ios打开appstore
     checkOutApp() {
-      //
       const ua = window.navigator.userAgent.toLowerCase()
       let isBlur = false
       let url = ''
@@ -113,8 +149,7 @@ export default {
         })
         return
       }
-      if (ua.indexOf('micromessenger') !== -1) {
-        // 是否微信打开
+      if (this.isWeixin) {
         this.$xToast.show({
           message: '微信内不支持打开外部应用，请更换为其他浏览器打开本页面。',
           duration: 3000,
@@ -122,16 +157,19 @@ export default {
           forbidClick: true,
         })
       } else {
-        location.href = url
         setTimeout(() => {
+          console.log('downLoadUrl isBlur', isBlur)
+
           if (!isBlur) {
             if (this.isIOS) {
+              console.log('downLoadUrl ios', downLoadUrl)
               window.location.href = downLoadUrl
             } else if (this.isAndroid) {
               this.toAndroidStore(this.packagename)
             }
           }
         }, 2000)
+        location.href = url
       }
       window.onblur = function () {
         isBlur = true
@@ -157,7 +195,6 @@ export default {
     },
 
     toAndroidStore(AppName) {
-      console.log(AppName)
       const sUserAgent = navigator.userAgent.toLowerCase()
       console.log(AppName, sUserAgent)
       const isHuawei = sUserAgent.indexOf('huawei') !== -1
@@ -195,6 +232,9 @@ export default {
       }
     },
   },
+  head() {
+    return { title: '下载APP' }
+  },
 }
 </script>
 <style lang="less" scoped>
@@ -205,12 +245,26 @@ export default {
   background: #f5f5f5;
   min-height: 100vh;
   overflow: hidden;
-  .search-icon {
-    margin-right: 32px;
+
+  .bk_container {
+    position: relative;
+    .bk_color {
+      width: 100%;
+    }
+    .picture {
+      position: absolute;
+      height: 100px;
+      top: 78px;
+      left: 50px;
+    }
+    .bk_phone {
+      position: absolute;
+      width: 100%;
+      left: 0;
+      bottom: 0;
+    }
   }
-  .bk {
-    width: 100%;
-  }
+
   .tips {
     font-size: 30px;
     color: #555555;
@@ -232,45 +286,4 @@ export default {
     letter-spacing: 1.25px;
   }
 }
-
-// .search_container {
-//   padding-top: constant(safe-area-inset-top);
-//   padding-top: env(safe-area-inset-top);
-//   .search {
-//     display: flex;
-//     align-items: center;
-//     padding: 16px 0;
-
-//     background-size: 100% auto;
-
-//     .left-back {
-//       display: flex;
-//       justify-content: center;
-//       align-items: center;
-//       margin: 0 32px;
-//       .back_icon {
-//         width: 40px;
-//         height: 40px;
-//       }
-//     }
-
-//     .search-box {
-//       margin-right: 40px;
-//       height: 88px;
-//       line-height: 88px;
-//       // display: flex;
-//       // align-items: center;
-//       flex: 1;
-
-//       font-size: 36px;
-//       color: #1a1a1a;
-//       text-align: center;
-//       font-weight: bold;
-//     }
-//     .right {
-//       display: flex;
-//       align-items: center;
-//     }
-//   }
-// }
 </style>

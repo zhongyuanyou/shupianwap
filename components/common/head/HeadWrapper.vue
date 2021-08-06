@@ -11,7 +11,7 @@
    -->
   <header class="head-wrapper" :style="{ height: fillHeaderHeight + 'px' }">
     <div
-      ref="couponHeaderWarpper"
+      ref="headerWarpper"
       class="head-wrapper-warpper"
       :style="{ borderBottom: line && '1px solid #f5f5f5' }"
     >
@@ -48,7 +48,7 @@ export default {
     this.getHeaderHeight()
     this.timer = setInterval(() => {
       this.getHeaderHeight()
-    }, 100)
+    }, 200)
     this.timerout = setTimeout(() => {
       clearInterval(this.timer)
     }, 5000)
@@ -61,9 +61,12 @@ export default {
   },
   methods: {
     getHeaderHeight() {
+      if (!this.$refs.headerWarpper) {
+        return
+      }
       this.$nextTick(() => {
         const HeaderHeight = parseInt(
-          this.$refs.couponHeaderWarpper.offsetHeight
+          this.$refs?.headerWarpper?.offsetHeight || 0
         )
 
         this.HeaderHeight = HeaderHeight

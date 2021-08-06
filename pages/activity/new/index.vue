@@ -12,6 +12,9 @@
     <div>
       <nuxt-link to="/activity/new/server">先服务后收费</nuxt-link>
     </div>
+    <div>
+      <nuxt-link to="/activity/new/downLoadApp">下载页</nuxt-link>
+    </div>
   </div>
 </template>
 
