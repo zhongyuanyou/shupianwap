@@ -560,6 +560,10 @@ export default {
               title: `${tile}`,
               subTitle: `${content}`,
               url: sharedUrl,
+              // 匹配启大顺
+              description: `${content}`,
+              imgUrl:
+                'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png',
             },
             (res) => {
               const { code } = res || {}

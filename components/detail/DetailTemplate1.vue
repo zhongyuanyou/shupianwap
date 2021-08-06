@@ -496,9 +496,16 @@ export default {
       if (!this.deviceId) {
         this.deviceId = await getUserSign()
       }
-      const formatId1 = this.sellingDetail.classCodeLevel.split(',')[0] // 产品二级分类
-      const formatId2 = this.sellingDetail.classCodeLevel.split(',')[1] // 产品二级分类
-      const formatId3 = this.sellingDetail.classCodeLevel.split(',')[2] // 产品三级分类
+      console.log('this.sellingDetail', this.sellingDetail)
+
+      let formatId1 = '' // 产品二级分类
+      let formatId2 = '' // 产品二级分类
+      let formatId3 = '' // 产品三级分类
+      if (this.sellingDetail?.classCodeLevel) {
+        formatId1 = this.sellingDetail.classCodeLevel.split(',')[0] // 产品二级分类
+        formatId2 = this.sellingDetail.classCodeLevel.split(',')[1] // 产品二级分类
+        formatId3 = this.sellingDetail.classCodeLevel.split(',')[2] // 产品三级分类
+      }
       this.$axios
         .post(recommendApi.saleList, {
           userId: this.$cookies.get('userId', { path: '/' }), // 用户id

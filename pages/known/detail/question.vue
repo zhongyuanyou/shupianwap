@@ -734,6 +734,14 @@ export default {
                 this.questionDetails.answerCount || 0
               }个回答,快来看看吧!`,
               url: sharedUrl,
+              // 匹配启大顺
+              description: `${
+                this.questionDetails.userName || '薯片用户'
+              }提出了问题,已有${
+                this.questionDetails.answerCount || 0
+              }个回答,快来看看吧!`,
+              imgUrl:
+                'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png',
             },
             (res) => {
               const { code } = res || {}
