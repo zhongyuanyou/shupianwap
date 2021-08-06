@@ -67,7 +67,7 @@
 import { mapState, mapMutations } from 'vuex'
 import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
-import activityMixin from './activityMixin'
+import activityMixin from './new/activityMixin'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 
 import Card from '~/components/activity/Card.vue'
