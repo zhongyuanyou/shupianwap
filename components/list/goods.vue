@@ -349,6 +349,7 @@ export default {
     },
     pagefn(val) {
       this.formData.start = val
+      this.formData.needTypes=0
       this.getlist()
     },
     changeTabs(name, title) {
