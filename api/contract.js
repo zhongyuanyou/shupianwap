@@ -8,7 +8,7 @@ const contract = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/contract/v2/authentication.do',
+      url: CHIPS_PC_URL + '/yk/contract/v1/authentication.do',
     })
   },
   applycontart({ axios }, params) {
@@ -16,7 +16,7 @@ const contract = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/contract/v2/applycontract.do',
+      url: CHIPS_PC_URL + '/yk/contract/v2/applycontract.do',
     })
   },
   signcontart({ axios }, params) {
@@ -24,7 +24,7 @@ const contract = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/contract/v2/sign.do',
+      url: CHIPS_PC_URL + '/yk/contract/v1/sign.do',
     })
   },
   contartlist({ axios }, params) {
@@ -32,7 +32,7 @@ const contract = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/contract/v1/list.do',
+      url: CHIPS_PC_URL + '/yk/contract/v1/list.do',
     })
   },
   decryptionPhone({ axios }, params) {
