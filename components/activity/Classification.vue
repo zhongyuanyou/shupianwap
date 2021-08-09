@@ -1,6 +1,6 @@
 <template >
   <sp-sticky class="tabs-box" :offset-top="headerHeight">
-    <div v-if="isService" class="drop_down">
+    <div v-if="hasCity" class="drop_down">
       <div class="drop_down_title" @click="swichCityHandle">
         {{ cityName ? cityName : '定位中' }}
       </div>
@@ -27,7 +27,7 @@ export default {
     [Sticky.name]: Sticky,
   },
   props: {
-    isService: {
+    hasCity: {
       type: Boolean,
       default: false,
     },

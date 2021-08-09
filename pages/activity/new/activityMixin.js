@@ -75,26 +75,22 @@ export default {
       recommendProductList: [],
       allText: '全部',
       productType: '',
-      safeTop: 0,
+
       headerHeight: 0,
 
     }
   },
-  async created() {
+
+  async mounted() {
     // 初始化定位
-    if (process.client && !this.cityName) {
-      this.POSITION_CITY({
+    if (!this.cityCode) {
+      await this.POSITION_CITY({
         type: 'init',
       })
     }
+    this.getMenuTabs() // 获取tab
+    this.getRecommendProductList() // 获取推荐商品
 
-    await this.getMenuTabs()
-    await this.getRecommendProductList()
-  },
-  mounted() {
-    if (this.isInApp) {
-      this.safeTop = this.appInfo.statusBarHeight
-    }
 
   },
   beforeDestroy() {
@@ -244,7 +240,8 @@ export default {
               this.finished = true
             }
           } else {
-            throw new Error('服务异常，请刷新重试！')
+            throw new Error(res.message)
+            // throw new Error('服务异常，请刷新重试！')
           }
         })
         .catch((error) => {
@@ -267,7 +264,7 @@ export default {
       ) {
         const params = {
           specCode: this.specCode,
-          page:  this.page,
+          page: this.page,
           limit: 15,
           terminalCode: this.terminalCode,
         }
@@ -300,14 +297,14 @@ export default {
           params: param,
         })
         .then((res) => {
-          console.log('productMethod',param,res);
+          console.log('productMethod', param, res);
           this.refreshing = false
           if (res.code === 200) {
             if (
               this.isInit &&
-              (this.specType === 'HDZT_ZTTYPE_TM'||
-              this.specType === 'HDZT_ZTTYPE_DJZS')
-               &&!this.recommendProductList.length
+              (this.specType === 'HDZT_ZTTYPE_TM' ||
+                this.specType === 'HDZT_ZTTYPE_DJZS')
+              && !this.recommendProductList.length
             ) {
               this.initList = res.data.rows
               this.recommendProductList = JSON.parse(
@@ -327,7 +324,7 @@ export default {
             }
             this.total = res.data.total
             this.loading = false
-            if (this.page > res.data.totalPage||res.data.rows.length<15) {
+            if (this.page > res.data.totalPage || res.data.rows.length < 15) {
               this.finished = true
             }
 
@@ -335,8 +332,8 @@ export default {
             this.loading = false
             this.finished = true
             this.refreshDisabled = true
-
-            throw new Error('服务异常，请刷新重试！')
+            throw new Error(res.message)
+            // throw new Error('服务异常，请刷新重试！')
           }
         })
         .catch((err) => {
@@ -369,7 +366,7 @@ export default {
         this.$axios
           .get(activityApi.activityProductList, { params })
           .then((res) => {
-            console.log('getRecommendProductList',params,res);
+            console.log('getRecommendProductList', params, res);
 
             if (res.code === 200) {
               if (res.data.rows.length) {
@@ -378,7 +375,8 @@ export default {
                 this.recommendProductList = this.initList.splice(0, 3)
               }
             } else {
-              throw new Error('服务异常，请刷新重试！')
+              throw new Error(res.message)
+              // throw new Error('服务异常，请刷新重试！')
             }
           })
           .catch((err) => {
@@ -508,7 +506,7 @@ export default {
 
     parsePrice(priceStr) {
 
-      if (priceStr&&priceStr > 0) {
+      if (priceStr && priceStr > 0) {
         priceStr = priceStr.toString()
         return {
           yuan: priceStr.split('.')[0],

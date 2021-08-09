@@ -50,7 +50,7 @@
       ></Recommend>
       <client-only>
         <Classification
-          :is-service="false"
+          :has-city="hasCity && isService"
           :city-name="cityName"
           :header-height="headerHeight"
           :current-index="currentIndex"
