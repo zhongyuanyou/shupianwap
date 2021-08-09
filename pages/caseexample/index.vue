@@ -1,6 +1,6 @@
 <template>
   <div class="case_examples_list">
-    <HeadWrapper>
+    <HeadWrapper ref="HeadWrapperRef">
       <Header class="my-header" title="案例广场"></Header>
       <client-only>
         <Classify :search="search" @select="selectClassify"></Classify>
@@ -134,25 +134,32 @@ export default {
       appInfo: (state) => state.app.appInfo, // app信息
     }),
   },
-
+  activated() {
+    this.$nextTick(() => {
+      this.$refs.HeadWrapperRef.getHeaderHeight()
+      console.log('activated')
+    })
+  },
   mounted() {
     this.search.productTypeCode = this.$route.query.goodsType
     this.search.productOneBelongCode = this.$route.query.classCode1
     // this.search.productTwoBelongCode = this.$route.query.classCode2
 
     this.initData()
+
+    // this.SET_KEEP_ALIVE({ type: 'add', name: 'Caseexample' })
     // this.getHeaderHeight()
   },
-  // beforeRouteLeave(to, from, next) {
-  //   console.log(from.name, to.name)
-  //   if (['caseexample-details'].includes(to.name)) {
-  //     console.log('add keepalive')
-  //     this.SET_KEEP_ALIVE({ type: 'add', name: 'Caseexample' })
-  //   } else {
-  //     this.SET_KEEP_ALIVE({ type: 'remove', name: 'Caseexample' })
-  //   }
-  //   next()
-  // },
+  beforeRouteLeave(to, from, next) {
+    console.log(from.name, to.name)
+    if (['caseexample-details'].includes(to.name)) {
+      console.log('add keepalive')
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'Caseexample' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'Caseexample' })
+    }
+    next()
+  },
 
   methods: {
     ...mapMutations({
