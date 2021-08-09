@@ -61,7 +61,7 @@ export default {
           }
         )
       } else {
-        this.$router.push({ path: '/category' })
+        this.$router.push({ path: '/search/searchgoods' })
       }
     },
   },
