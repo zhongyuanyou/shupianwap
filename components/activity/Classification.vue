@@ -89,7 +89,7 @@ export default {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding: 0px 20px;
+    // padding: 0px 20px;
     height: 96px;
     line-height: 96px;
     &.sp-sticky--fixed {
@@ -105,8 +105,8 @@ export default {
 
     display: flex;
     align-items: center;
-    margin-right: 40px;
     padding: 0 24px;
+    margin-left: 20px;
     .drop_down_title {
       white-space: nowrap;
 
@@ -130,6 +130,7 @@ export default {
   }
 
   .tabs-box-items {
+    margin-left: 40px;
     display: flex;
 
     overflow-x: scroll;
