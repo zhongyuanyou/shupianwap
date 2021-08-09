@@ -63,7 +63,7 @@
       ></Recommend>
       <client-only>
         <Classification
-          :is-service="false"
+          :has-city="hasCity && isService"
           :city-name="cityName"
           :header-height="headerHeight"
           :current-index="currentIndex"
@@ -136,7 +136,7 @@ export default {
     return {
       specType: 'HDZT_ZTTYPE_TM',
 
-      hasCity: true,
+      hasCity: false,
       imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/6kfpkqxmcv00000.png',
       headerHeight: 0,
     }
