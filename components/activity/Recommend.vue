@@ -18,11 +18,11 @@
             <sp-image
               class="picture"
               fit="cover"
-              :src="item.imageUrl"
+              :src="item.imageUrl || defaultImg"
               @click="$emit('preview', item)"
             ></sp-image>
           </div>
-          <div class="skuName">{{ item.skuName }}aaaaaaaaaaaaaaaaaaaaaaaaa</div>
+          <div class="skuName">{{ item.skuName }}</div>
           <div v-if="parsePrice(item.specialPrice) !== '面议'" class="price">
             <span>低至</span
             ><span class="unit">
@@ -63,7 +63,9 @@ export default {
     },
   },
   data() {
-    return {}
+    return {
+      defaultImg: 'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
+    }
   },
   computed: {},
   methods: {

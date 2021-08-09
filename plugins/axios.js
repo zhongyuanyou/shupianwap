@@ -27,12 +27,12 @@ export default function ({ $axios, redirect, app, store }) {
       config.headers.terminalCode = BASE.terminalCode // 终端code
       const data = config.method === 'post' ? config.data : config.params
       let token = store.state.user.token
-      console.log('token1', token)
+
       if (!token)
         token = app.$cookies.get('token', {
           path: '/',
         })
-      console.log('token2', token)
+
       // // 签名
       const signData = gatewaySign.handleSign({
         method: config.method,

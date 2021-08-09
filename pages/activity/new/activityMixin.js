@@ -351,9 +351,6 @@ export default {
             className: 'my-toast-style',
           })
         })
-      // .finally(() => {
-      //   this.refreshing = false
-      // })
     },
 
     // 获取推荐产品
@@ -507,16 +504,6 @@ export default {
         that.countDiff--
       }, 1000)
       // 每执行一次定时器就减少一秒
-    },
-    getPercentage(res, total) {
-      return (res / total) * 100
-    },
-    overflowDot(str, num) {
-      if (str.length > 6) {
-        return str.slice(0, num) + '...'
-      } else {
-        return str
-      }
     },
 
     parsePrice(priceStr) {

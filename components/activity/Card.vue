@@ -80,10 +80,7 @@ export default {
         return {}
       },
     },
-    overflowDot: {
-      type: Function,
-      default() {},
-    },
+
     last: {
       type: Boolean,
       default: false,
@@ -93,6 +90,15 @@ export default {
     tags() {
       const tag = this?.item?.tags?.split(',') || []
       return tag.slice(0, 2)
+    },
+  },
+  methods: {
+    overflowDot(str, num) {
+      if (str.length > 6) {
+        return str.slice(0, num) + '...'
+      } else {
+        return str
+      }
     },
   },
 }
