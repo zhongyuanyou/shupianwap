@@ -36,7 +36,7 @@
     </div>
 
     <div class="tips">若您已安装app,点此打开</div>
-    <div class="btn" @click="download">点击立即下载</div>
+    <div class="btn" @click="checkOutApp">点击立即下载</div>
   </div>
 </template>
 <script>
