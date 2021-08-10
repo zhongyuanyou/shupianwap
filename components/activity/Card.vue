@@ -20,14 +20,13 @@
         <span class="rc-span">千万补贴</span> -->
         {{ item.skuName }}
       </div>
-      <div class="rc-middle">
-        <div v-for="tag in tags" :key="tag">
+
+      <div v-if="tags.length > 0" class="rc-middle">
+        <div v-for="tag of tags" :key="tag">
           {{ overflowDot(tag, 6) }}
         </div>
       </div>
-      <div class="rc-slogan">
-        {{ item.slogan }}
-      </div>
+      <div class="rc-slogan">{{ item.slogan }}</div>
       <div class="rc-bottom">
         <div class="rc-bottom-lf">
           <span
@@ -90,7 +89,7 @@ export default {
   },
   computed: {
     tags() {
-      const tag = this?.item?.tags?.split(',') || []
+      const tag = this?.item?.tags ? this.item.tags.split(',') : []
       return tag.slice(0, 2)
     },
   },
