@@ -1,39 +1,20 @@
 <template>
   <div class="container">
-    <HeadWrapper :fill="false" :line="false" @onHeightChange="onHeightChange">
-      <div class="search_container">
-        <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
-          <!-- @click="uPGoBack" -->
-          <div class="left-back" @click="uPGoBack">
-            <my-icon
-              name="nav_ic_back"
-              class="back_icon"
-              size="0.4rem"
-              color="#FFFFFF"
-            ></my-icon>
-          </div>
-          <div class="search-box"></div>
-          <div class="right">
-            <my-icon
-              class="search-icon"
-              name="sear_ic_sear"
-              size="0.4rem"
-              color="#FFFFFF"
-              @click.native="clickInputHandle"
-            ></my-icon>
-            <span
-              class="rule"
-              @click="
-                $router.push('/login/protocol?categoryCode=protocol100048')
-              "
-              >规则</span
-            >
-          </div>
-        </div>
-      </div>
+    <HeadWrapper
+      :fill="false"
+      :line="ClassState == 0 ? true : false"
+      :background-color="ClassState == 0 ? '#fff' : ''"
+      @onHeightChange="onHeightChange"
+    >
+      <Head
+        :class-state="ClassState"
+        code="protocol100048"
+        :back="uPGoBack"
+        :search="clickInputHandle"
+      ></Head>
     </HeadWrapper>
 
-    <div class="img_container">
+    <div ref="fill_container" class="img_container">
       <img width="100%" :src="imageHead" alt="" />
 
       <div v-if="isTimerShow" class="count-down">
@@ -111,6 +92,7 @@ import activityMixin from './new/activityMixin'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 import Recommend from '~/components/activity/Recommend.vue'
 import Card from '~/components/activity/Card.vue'
+import Head from '~/components/activity/Head.vue'
 import NoData from '@/components/activity/NoData.vue'
 import Classification from '@/components/activity/Classification.vue'
 export default {
@@ -125,6 +107,7 @@ export default {
     [List.name]: List,
     [PullRefresh.name]: PullRefresh,
 
+    Head,
     Recommend,
     Card,
     NoData,
@@ -140,6 +123,7 @@ export default {
       imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/dfnawx8oxnc0000.jpg',
 
       headerHeight: 0,
+      ClassState: 1,
     }
   },
   computed: {
@@ -153,11 +137,27 @@ export default {
   },
   mounted() {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'Exclusive' })
+    window.addEventListener('scroll', this.handleScroll) // 监听（绑定）滚轮滚动事件
   },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
+
   methods: {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
+    handleScroll() {
+      const scrollHeight =
+        document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
+      const boxHeight = this.$refs.fill_container.clientHeight // 盒子高度
+      console.log(this.ClassState)
+      if (scrollHeight > boxHeight - this.headerHeight) {
+        this.ClassState = 0
+      } else {
+        this.ClassState = 1
+      }
+    },
     onHeightChange(height) {
       this.headerHeight = height
     },
@@ -176,8 +176,6 @@ export default {
   padding-bottom: env(safe-area-inset-bottom);
 
   .search_container {
-    padding-top: constant(safe-area-inset-top);
-    padding-top: env(safe-area-inset-top);
     .search {
       display: flex;
       align-items: center;
@@ -213,7 +211,7 @@ export default {
 
           font-weight: bold;
           font-size: 28px;
-          color: #ffffff;
+
           letter-spacing: 0;
           text-align: right;
           line-height: 28px;
