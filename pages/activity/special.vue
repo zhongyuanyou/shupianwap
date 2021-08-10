@@ -1,9 +1,20 @@
 <template>
   <div class="container">
-    <HeadWrapper :fill="false" :line="false" @onHeightChange="onHeightChange">
-      <div class="search_container">
+    <HeadWrapper
+      :fill="false"
+      :line="ClassState == 0 ? true : false"
+      :background-color="ClassState == 0 ? '#fff' : ''"
+      @onHeightChange="onHeightChange"
+    >
+      <Head
+        :class-state="ClassState"
+        code="protocol100047"
+        :back="uPGoBack"
+        :search="clickInputHandle"
+      ></Head>
+      <!-- <div class="search_container">
         <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
-          <!-- @click="uPGoBack" -->
+
           <div class="left-back" @click="uPGoBack">
             <my-icon
               name="nav_ic_back"
@@ -30,10 +41,10 @@
             >
           </div>
         </div>
-      </div>
+      </div> -->
     </HeadWrapper>
 
-    <div class="img_container">
+    <div ref="fill_container" class="img_container">
       <img width="100%" :src="imageHead" alt="" />
 
       <div v-if="isTimerShow" class="count-down">
@@ -112,6 +123,7 @@ import activityMixin from './new/activityMixin'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 import Recommend from '~/components/activity/Recommend.vue'
 import Card from '~/components/activity/Card.vue'
+import Head from '~/components/activity/Head.vue'
 import NoData from '@/components/activity/NoData.vue'
 import Classification from '@/components/activity/Classification.vue'
 export default {
@@ -127,6 +139,7 @@ export default {
     [PullRefresh.name]: PullRefresh,
 
     Recommend,
+    Head,
     Card,
     NoData,
     Classification,
@@ -139,6 +152,7 @@ export default {
       hasCity: false,
       imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/6kfpkqxmcv00000.png',
       headerHeight: 0,
+      ClassState: 1,
     }
   },
   computed: {
@@ -153,13 +167,29 @@ export default {
 
   mounted() {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'Special' })
+    window.addEventListener('scroll', this.handleScroll) // 监听（绑定）滚轮滚动事件
   },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
+
   methods: {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
     onHeightChange(height) {
       this.headerHeight = height
+    },
+    handleScroll() {
+      const scrollHeight =
+        document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
+      const boxHeight = this.$refs.fill_container.clientHeight // 盒子高度
+
+      if (scrollHeight > boxHeight - this.headerHeight) {
+        this.ClassState = 0
+      } else {
+        this.ClassState = 1
+      }
     },
   },
   head() {
