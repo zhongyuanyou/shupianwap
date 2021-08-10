@@ -66,6 +66,7 @@
       ></Recommend>
       <client-only>
         <Classification
+          :has-city="hasCity && isService"
           :is-service="isService"
           :city-name="cityName"
           :header-height="headerHeight"
