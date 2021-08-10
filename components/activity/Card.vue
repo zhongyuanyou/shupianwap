@@ -46,8 +46,10 @@
           </span>
 
           <span v-if="parsePrice(item.specialPrice) !== '面议'" class="bf-my">
-            {{ item.skuUnit ? item.skuNewPrice : item.skuPrice
-            }}{{ item.skuUnit || '元' }}
+            <span class="bold">{{
+              item.skuUnit ? item.skuNewPrice : item.skuPrice
+            }}</span
+            ><span>{{ item.skuUnit || '元' }}</span>
           </span>
         </div>
       </div>
@@ -156,7 +158,7 @@ export default {
 
     background: #ec5330;
     border-radius: 4px;
-    font-family: PingFangSC-Regular, PingFang SC;
+    font-family: PingFangSC-Medium, PingFangSC-Regular, PingFang SC;
     transform-origin: left top;
     transform: scale(0.83);
   }
@@ -206,7 +208,7 @@ export default {
       background: #f0f2f5;
       border-radius: 4px;
       margin-right: 8px;
-      font-family: PingFangSC-Regular, PingFang SC;
+      font-family: PingFangSC-Medium, PingFangSC-Regular, PingFang SC;
     }
   }
   .rc-slogan {
@@ -227,7 +229,7 @@ export default {
         display: inline-block;
       }
       .rc-bottom-lf-my-price {
-        font-family: PingFangSC-Medium;
+        font-family: PingFangSC-Medium, PingFangSC-Regular, PingFang SC;
         font-weight: bold;
         font-size: 36px;
         color: #ec5330;
@@ -235,7 +237,8 @@ export default {
         line-height: 36px;
       }
       .rc-bottom-lf-my-price-unit {
-        font-family: PingFangSC-Medium;
+        font-family: PingFangSC-Medium, PingFangSC-Regular;
+
         font-weight: bold;
         font-size: 22px;
         color: #ec5330;
@@ -248,6 +251,12 @@ export default {
         color: #999999;
         letter-spacing: 0;
         line-height: 22px;
+        & > span {
+          display: inline-block;
+        }
+        .bold {
+          font-weight: bold;
+        }
       }
     }
   }
