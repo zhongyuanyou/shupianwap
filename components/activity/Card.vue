@@ -173,7 +173,7 @@ export default {
   .goods-name {
     font-size: 32px;
     line-height: 42px;
-
+    margin-bottom: 12px;
     font-weight: bold;
     color: #222222;
 
@@ -189,32 +189,11 @@ export default {
       line-height: 20px;
     }
   }
-  .rc-top {
-    font-size: 32px;
-    font-weight: bold;
-    color: #222222;
-    line-height: 32px;
-    text-overflow: ellipsis;
-    word-break: break-all;
-    font-family: PingFangSC-Medium, PingFang SC;
-    overflow: hidden;
-    white-space: normal;
-    max-height: 84px;
-    line-height: 42px;
-    text-indent: 172px;
-    .multiRowOverflowDot();
 
-    .rc-title {
-      font-size: 32px;
-      font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: bold;
-      line-height: 42px;
-    }
-  }
   .rc-middle {
     // display: flex;
     // align-content: flex-start;
-    margin-top: 12px;
+    margin-bottom: 16px;
     font-size: 0;
     div {
       display: inline-block;
@@ -231,7 +210,6 @@ export default {
     }
   }
   .rc-slogan {
-    margin-top: 16px;
     font-size: 22px;
     color: #222222;
     letter-spacing: 0;

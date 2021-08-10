@@ -13,10 +13,7 @@ export default {
     userInfo() {
       return JSON.parse(localStorage.getItem('myInfo'))
     },
-    splittedRecommendProduct() {
-      // return this.activityProductList.slice(0, 3)
-      return this.recommendProductList.slice(0, 3)
-    },
+
     isNoData() {
       return !this.activityProductList.length
     },
@@ -88,8 +85,8 @@ export default {
         type: 'init',
       })
     }
-    this.getMenuTabs() // 获取tab
-    this.getRecommendProductList() // 获取推荐商品
+    await this.getMenuTabs() // 获取tab
+    await this.getRecommendProductList() // 获取推荐商品
 
 
   },
@@ -303,7 +300,10 @@ export default {
             if (
               this.isInit &&
               (this.specType === 'HDZT_ZTTYPE_TM' ||
-                this.specType === 'HDZT_ZTTYPE_DJZS' || this.specType === 'HDZT_ZTTYPE_XFWHSF')
+                this.specType === 'HDZT_ZTTYPE_DJZS' ||
+                this.specType === 'HDZT_ZTTYPE_XFWHSF' ||
+                this.specType === 'HDZT_ZTTYPE_QWBT' ||
+                this.specType === 'HDZT_ZTTYPE_XTSF')
               && !this.recommendProductList.length
             ) {
               this.initList = res.data.rows
@@ -366,7 +366,7 @@ export default {
         this.$axios
           .get(activityApi.activityProductList, { params })
           .then((res) => {
-            console.log('getRecommendProductList', params, res);
+
 
             if (res.code === 200) {
               if (res.data.rows.length) {
@@ -390,35 +390,6 @@ export default {
       }
     },
 
-    // 获取广告位？
-    // getAdvertisingData() {
-    //   this.$axios
-    //     .get(activityApi.activityAdvertising, {
-    //       params: {
-    //         code: this.advertCode,
-    //       },
-    //     })
-    //     .then((res) => {
-    //       if (res.code === 200) {
-    //         if (res.data.sortMaterialList.length) {
-    //           this.productAdvertData =
-    //             res.data.sortMaterialList[0].materialList.slice(0, 3)
-
-    //             console.log('this.productAdvertData',this.productAdvertData);
-    //         }
-    //       } else {
-    //         Toast.fail({
-    //           duration: 2000,
-    //           message: '服务异常，请刷新重试！',
-    //           forbidClick: true,
-    //           className: 'my-toast-style',
-    //         })
-    //       }
-    //     })
-    //     .catch((err) => {
-    //       console.log(err.message)
-    //     })
-    // },
     swichCityHandle() {
       this.$router.push({
         path: '/city/choiceCity',
