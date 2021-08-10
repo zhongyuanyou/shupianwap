@@ -303,7 +303,7 @@ export default {
             if (
               this.isInit &&
               (this.specType === 'HDZT_ZTTYPE_TM' ||
-                this.specType === 'HDZT_ZTTYPE_DJZS')
+                this.specType === 'HDZT_ZTTYPE_DJZS' || this.specType === 'HDZT_ZTTYPE_XFWHSF')
               && !this.recommendProductList.length
             ) {
               this.initList = res.data.rows

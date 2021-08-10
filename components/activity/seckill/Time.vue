@@ -93,8 +93,10 @@ export default {
       font-size: 32px;
       color: #ffffff;
       letter-spacing: 0;
-      line-height: 32px;
-      padding: 6px 8px;
+      height: 40px;
+      line-height: 40px;
+
+      padding: 0px 8px;
     }
     .colon {
       transform: translateY(-7px);
