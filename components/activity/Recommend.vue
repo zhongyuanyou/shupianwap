@@ -23,14 +23,19 @@
             ></sp-image>
           </div>
           <div class="skuName">{{ item.skuName }}</div>
-          <div v-if="parsePrice(item.specialPrice) !== '面议'" class="price">
+          <div
+            v-if="parsePrice(item.specialPrice) !== '面议'"
+            class="priceContainer"
+          >
             <span>低至</span
+            ><span class="price">{{
+              item.specialUnit ? item.specialNewPrice : item.specialPrice
+            }}</span
             ><span class="unit">
-              {{ item.specialUnit ? item.specialNewPrice : item.specialPrice
-              }}{{ item.specialUnit || '元' }}
+              {{ item.specialUnit || '元' }}
             </span>
           </div>
-          <div v-else class="price unit">面议</div>
+          <div v-else class="priceContainer unit">面议</div>
         </div>
       </div>
     </div>
@@ -135,7 +140,7 @@ export default {
         padding: 0 20px;
         .textOverflow(2);
       }
-      .price {
+      .priceContainer {
         font-size: 20px;
         color: #555555;
         text-align: center;
@@ -146,6 +151,11 @@ export default {
         & > span {
           display: inline-block;
         }
+      }
+      .price {
+        font-family: PingFangSC-Regular;
+        color: #ec5330;
+        font-weight: bold;
       }
       .unit {
         color: #ec5330;
@@ -161,8 +171,9 @@ export default {
           width: 30px;
         }
         .picture {
-          margin: 0px auto 24px;
+          margin: 25px auto 24px;
           height: 136px;
+          max-width: 108px;
         }
       }
     }

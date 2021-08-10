@@ -204,53 +204,6 @@ export default {
   font-family: PingFangSC;
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
-  .search_container {
-    padding-top: constant(safe-area-inset-top);
-    padding-top: env(safe-area-inset-top);
-    .search {
-      display: flex;
-      align-items: center;
-      padding: 16px 0;
-
-      background-size: 100% auto;
-
-      .left-back {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0 32px;
-        .back_icon {
-          width: 40px;
-          height: 40px;
-        }
-      }
-
-      .search-box {
-        margin-right: 40px;
-        height: 88px;
-
-        display: flex;
-        align-items: center;
-        flex: 1;
-      }
-      .right {
-        display: flex;
-        align-items: center;
-
-        .rule {
-          height: 28px;
-
-          font-weight: bold;
-          font-size: 28px;
-          color: #ffffff;
-          letter-spacing: 0;
-          text-align: right;
-          line-height: 28px;
-          margin: 0 32px;
-        }
-      }
-    }
-  }
 
   .img_container {
     position: relative;
