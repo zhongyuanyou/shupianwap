@@ -333,6 +333,9 @@ export default {
               type: this.$store.state.app.isInApp ? 1 : '',
               // type: 1,
             },
+            headers: {
+              'x-cache-control': 'cache',
+            },
           }
         )
         this.tabs = data
