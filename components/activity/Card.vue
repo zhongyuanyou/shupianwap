@@ -34,7 +34,11 @@
             class="rc-bottom-lf-my"
           >
             <span class="rc-bottom-lf-my-price">
-              {{ item.specialUnit ? item.specialNewPrice : item.specialPrice }}
+              {{
+                item.specialUnit
+                  ? parseFloat(item.specialNewPrice)
+                  : parseFloat(item.specialPrice)
+              }}
             </span>
             <span class="rc-bottom-lf-my-price-unit">{{
               item.specialUnit || '元'
@@ -46,7 +50,9 @@
 
           <span v-if="parsePrice(item.specialPrice) !== '面议'" class="bf-my">
             <span class="bold">{{
-              item.skuUnit ? item.skuNewPrice : item.skuPrice
+              item.skuUnit
+                ? parseFloat(item.skuNewPrice)
+                : parseFloat(item.skuPrice)
             }}</span
             ><span>{{ item.skuUnit || '元' }}</span>
           </span>

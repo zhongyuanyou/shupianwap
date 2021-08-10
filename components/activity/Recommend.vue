@@ -29,7 +29,9 @@
           >
             <span>低至</span
             ><span class="price">{{
-              item.specialUnit ? item.specialNewPrice : item.specialPrice
+              item.specialUnit
+                ? parseFloat(item.specialNewPrice)
+                : parseFloat(item.specialPrice)
             }}</span
             ><span class="unit">
               {{ item.specialUnit || '元' }}
