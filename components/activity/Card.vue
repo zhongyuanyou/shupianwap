@@ -28,33 +28,21 @@
       </div>
       <div class="rc-slogan">{{ item.slogan }}</div>
       <div class="rc-bottom">
-        <div class="rc-bottom-lf">
+        <div class="price-content">
           <span
             v-if="parsePrice(item.specialPrice) !== '面议'"
-            class="rc-bottom-lf-my"
+            class="price-content-mianyi"
           >
-            <span class="rc-bottom-lf-my-price">
-              {{
-                item.specialUnit
-                  ? parseFloat(item.specialNewPrice)
-                  : parseFloat(item.specialPrice)
-              }}
+            <span class="price-content-mianyi-price">
+              {{ parseFloat(item.specialPrice) }}
             </span>
-            <span class="rc-bottom-lf-my-price-unit">{{
-              item.specialUnit || '元'
-            }}</span>
+            <span class="price-content-mianyi-price-unit">元</span>
           </span>
-          <span v-else class="rc-bottom-lf-my-price-unit">
-            <span>面议</span>
-          </span>
+          <span v-else class="price-content-mianyi-price-unit">面议</span>
 
-          <span v-if="parsePrice(item.specialPrice) !== '面议'" class="bf-my">
-            <span class="bold">{{
-              item.skuUnit
-                ? parseFloat(item.skuNewPrice)
-                : parseFloat(item.skuPrice)
-            }}</span
-            ><span>{{ item.skuUnit || '元' }}</span>
+          <span v-if="parsePrice(item.specialPrice) !== '面议'" class="mianyi">
+            <span class="bold">{{ parseFloat(item.skuPrice) }}</span
+            ><span>{{ '元' }}</span>
           </span>
         </div>
       </div>
@@ -228,12 +216,15 @@ export default {
     display: flex;
     width: 100%;
     justify-content: space-between;
-    .rc-bottom-lf {
+    .price-content {
       font-size: 0;
       span {
         display: inline-block;
       }
-      .rc-bottom-lf-my-price {
+      .price-content-mianyi {
+        margin-right: 16px;
+      }
+      .price-content-mianyi-price {
         font-family: PingFangSC-Medium, PingFangSC-Regular, PingFang SC;
         font-weight: bold;
         font-size: 36px;
@@ -241,7 +232,7 @@ export default {
         letter-spacing: 0;
         line-height: 36px;
       }
-      .rc-bottom-lf-my-price-unit {
+      .price-content-mianyi-price-unit {
         font-family: PingFangSC-Medium, PingFangSC-Regular;
 
         font-weight: bold;
@@ -250,8 +241,7 @@ export default {
         letter-spacing: 0;
         line-height: 22px;
       }
-      .bf-my {
-        margin-left: 16px;
+      .mianyi {
         font-size: 22px;
         color: #999999;
         letter-spacing: 0;
