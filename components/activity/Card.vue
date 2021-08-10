@@ -20,14 +20,13 @@
         <span class="rc-span">千万补贴</span> -->
         {{ item.skuName }}
       </div>
-      <div class="rc-middle">
-        <div v-for="tag in tags" :key="tag">
+
+      <div v-if="tags.length > 0" class="rc-middle">
+        <div v-for="tag of tags" :key="tag">
           {{ overflowDot(tag, 6) }}
         </div>
       </div>
-      <div class="rc-slogan">
-        {{ item.slogan }}
-      </div>
+      <div class="rc-slogan">{{ item.slogan }}</div>
       <div class="rc-bottom">
         <div class="rc-bottom-lf">
           <span
@@ -35,7 +34,11 @@
             class="rc-bottom-lf-my"
           >
             <span class="rc-bottom-lf-my-price">
-              {{ item.specialUnit ? item.specialNewPrice : item.specialPrice }}
+              {{
+                item.specialUnit
+                  ? parseFloat(item.specialNewPrice)
+                  : parseFloat(item.specialPrice)
+              }}
             </span>
             <span class="rc-bottom-lf-my-price-unit">{{
               item.specialUnit || '元'
@@ -47,7 +50,9 @@
 
           <span v-if="parsePrice(item.specialPrice) !== '面议'" class="bf-my">
             <span class="bold">{{
-              item.skuUnit ? item.skuNewPrice : item.skuPrice
+              item.skuUnit
+                ? parseFloat(item.skuNewPrice)
+                : parseFloat(item.skuPrice)
             }}</span
             ><span>{{ item.skuUnit || '元' }}</span>
           </span>
@@ -90,7 +95,7 @@ export default {
   },
   computed: {
     tags() {
-      const tag = this?.item?.tags?.split(',') || []
+      const tag = this?.item?.tags ? this.item.tags.split(',') : []
       return tag.slice(0, 2)
     },
   },
