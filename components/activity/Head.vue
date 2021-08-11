@@ -13,7 +13,9 @@
         class="search-box"
         :style="{ color: classState == 0 ? '#1A1A1A' : '#fff' }"
       >
-        <div>{{ classState == 0 ? title : '' }}</div>
+        <div>
+          {{ classState == 0 ? title : '' }}
+        </div>
       </div>
       <div class="right">
         <my-icon
