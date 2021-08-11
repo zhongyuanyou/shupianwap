@@ -74,12 +74,18 @@ export default {
       productType: '',
 
       headerHeight: 0,
-
+      ClassState: 1,
     }
   },
-
+  watch: {
+    ClassState() {
+      this.setTopColor()
+    },
+  },
   async mounted() {
     // 初始化定位
+    this.setTopColor()
+
     if (!this.cityCode) {
       await this.POSITION_CITY({
         type: 'init',
@@ -99,6 +105,18 @@ export default {
       POSITION_CITY: 'city/POSITION_CITY',
       GET_ACCOUNT_INFO: 'user/GET_ACCOUNT_INFO',
     }),
+    setTopColor() {
+      if (this.isInApp) {
+        this.$appFn.dggChangeTopColor(
+          {
+            flags: this.ClassState === 1 ? 'light' : 'dark',
+          },
+          (res) => {
+            console.log('DGGSetColorRes', res)
+          }
+        )
+      }
+    },
     // 平台不同，跳转方式不同
     uPGoBack() {
       if (this.isInApp) {
