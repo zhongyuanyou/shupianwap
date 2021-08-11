@@ -215,6 +215,7 @@ export default {
 
       width: 100%;
       top: 64.2%;
+
       // margin-top: 53%;
 
       font-size: 24px;
@@ -241,8 +242,9 @@ export default {
 
         .time {
           // min-width: 36px;
-          font-weight: bold;
+
           padding: 0 5px;
+          min-width: 36px;
           height: 36px;
           line-height: 36px;
           background-image: linear-gradient(139deg, #7e9fff 0%, #4974f5 100%);

@@ -669,7 +669,8 @@ export default {
       font-size: 24px;
       position: absolute;
       right: 40px;
-      top: 55%;
+      // top: 55%;
+      bottom: 54px;
       margin-top: -10px;
       button {
         display: block;

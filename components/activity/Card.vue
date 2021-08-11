@@ -41,7 +41,7 @@
           <span v-else class="price-content-mianyi-price-unit">面议</span>
 
           <span v-if="parsePrice(item.specialPrice) !== '面议'" class="mianyi">
-            <span class="bold">{{ parseFloat(item.skuPrice) }}</span
+            <span>{{ parseFloat(item.skuPrice) }}</span
             ><span>{{ '元' }}</span>
           </span>
         </div>
@@ -151,7 +151,7 @@ export default {
 
     background: #ec5330;
     border-radius: 4px;
-    font-family: PingFangSC-Medium, PingFangSC-Regular, PingFang SC;
+    font-family: @fontf-pfsc-med;
     transform-origin: left top;
     transform: scale(0.83);
   }
@@ -201,7 +201,7 @@ export default {
       background: #f0f2f5;
       border-radius: 4px;
       margin-right: 8px;
-      font-family: PingFangSC-Medium, PingFangSC-Regular, PingFang SC;
+      font-family: @fontf-pfsc-med;
     }
   }
   .rc-slogan {
@@ -225,7 +225,7 @@ export default {
         margin-right: 16px;
       }
       .price-content-mianyi-price {
-        font-family: PingFangSC-Medium, PingFangSC-Regular, PingFang SC;
+        font-family: @fontf-pfsc-med;
         font-weight: bold;
         font-size: 36px;
         color: #ec5330;
@@ -233,7 +233,7 @@ export default {
         line-height: 36px;
       }
       .price-content-mianyi-price-unit {
-        font-family: PingFangSC-Medium, PingFangSC-Regular;
+        font-family: @fontf-pfsc-med;
 
         font-weight: bold;
         font-size: 22px;
@@ -246,6 +246,8 @@ export default {
         color: #999999;
         letter-spacing: 0;
         line-height: 22px;
+        // font-family: PingFangSC-Regular, PingFang SC, PingFangSC-Medium;
+        font-family: @fontf-pfsc-reg;
         & > span {
           display: inline-block;
         }

@@ -182,7 +182,10 @@ export default {
 
     .count-down {
       position: absolute;
-      top: 68.5%;
+      top: 72.4%;
+
+      transform: translate(0, -50%);
+
       width: 100%;
 
       font-size: 24px;
@@ -207,19 +210,21 @@ export default {
         align-items: center;
 
         .time {
-          font-weight: bold;
           // min-width: 36px;
           padding: 0 5px;
+          min-width: 36px;
           height: 36px;
           line-height: 36px;
           background-image: linear-gradient(139deg, #7e9fff 0%, #4974f5 100%);
           border-radius: 4px;
 
           font-family: Bebas;
+          //        font-weight: bold;
           font-size: 24px;
           color: #fff;
           text-align: center;
           margin: 0 8px;
+          letter-spacing: 0;
         }
       }
     }
