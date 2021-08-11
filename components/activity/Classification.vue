@@ -162,7 +162,7 @@ export default {
     .active::after {
       content: '';
       position: absolute;
-      top: 58px;
+      bottom: 28px;
       right: 0;
 
       width: 60px;

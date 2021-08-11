@@ -177,49 +177,6 @@ export default {
     position: relative;
     min-height: 300px;
     background: #f8f8f8;
-    .count-down {
-      position: absolute;
-      top: 68.5%;
-      width: 100%;
-
-      font-size: 24px;
-      color: #ffedcb;
-      letter-spacing: 0;
-      line-height: 24px;
-
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-
-      .down-time {
-        font-size: 24px;
-        font-family: PingFangSC-Medium, PingFang SC;
-
-        color: #ffedcb;
-        line-height: 24px;
-
-        letter-spacing: 2px;
-        display: flex;
-        align-items: center;
-
-        .time {
-          // min-width: 36px;
-          font-weight: bold;
-          padding: 0 5px;
-          height: 36px;
-          line-height: 36px;
-          background-image: linear-gradient(139deg, #7e9fff 0%, #4974f5 100%);
-          border-radius: 4px;
-
-          font-family: Bebas;
-          font-size: 24px;
-          color: #fff;
-          text-align: center;
-          margin: 0 8px;
-        }
-      }
-    }
   }
 
   .content_container {

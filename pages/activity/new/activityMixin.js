@@ -216,6 +216,7 @@ export default {
               this.specCode = res.data.specCode
             }
             this.productType = res.data.productType || ''
+
             this.activityTypeOptions.unshift({
               cityCode: this.cityCode,
               cityName: this.cityName,
@@ -270,7 +271,8 @@ export default {
 
         if (
           this.currentTab.labelName !== '' &&
-          this.currentTab.labelName !== '全部'
+          this.currentTab.labelName !== '全部' &&
+          this.currentTab.labelName !== '全部服务'
         ) {
           params.labelName = this.currentTab.labelName
         }
@@ -349,7 +351,7 @@ export default {
 
             if (res.code === 200) {
               if (res.data.rows.length) {
-                this.recommendProductList = res.data.rows
+                this.recommendProductList = res.data.rows.slice(0, 3)
               } else {
                 this.recommendProductList = []
               }
