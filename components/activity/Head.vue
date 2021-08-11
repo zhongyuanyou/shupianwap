@@ -1,36 +1,38 @@
-<template lang="">
-      <div class="search_container">
-        <div class="search"  >
-          <!-- @click="uPGoBack" -->
-          <div class="left-back" @click="back">
-            <my-icon
-              name="nav_ic_back"
-              class="back_icon"
-              size="0.4rem"
-              :color="classState == 0 ? '#1A1A1A' : '#fff'"
-            ></my-icon>
-          </div>
-          <div class="search-box"></div>
-          <div class="right">
-            <my-icon
-              class="search-icon"
-              name="sear_ic_sear"
-              size="0.4rem"
-              :color="classState == 0 ? '#1A1A1A' : '#fff'"
-              @click.native="search"
-            ></my-icon>
-            <span
-            v-if="code"
-              class="rule"
-              :style="{ color: classState == 0 ? '#1A1A1A' : '#fff' }"
-              @click="
-                $router.push('/login/protocol?categoryCode='+code)
-              "
-              >规则</span
-            >
-          </div>
-        </div>
+<template >
+  <div class="search_container">
+    <div class="search">
+      <div class="left-back" @click="back">
+        <my-icon
+          name="nav_ic_back"
+          class="back_icon"
+          size="0.4rem"
+          :color="classState == 0 ? '#1A1A1A' : '#fff'"
+        ></my-icon>
       </div>
+      <div
+        class="search-box"
+        :style="{ color: classState == 0 ? '#1A1A1A' : '#fff' }"
+      >
+        <div>{{ classState == 0 ? title : '' }}</div>
+      </div>
+      <div class="right">
+        <my-icon
+          class="search-icon"
+          name="sear_ic_sear"
+          size="0.4rem"
+          :color="classState == 0 ? '#1A1A1A' : '#fff'"
+          @click.native="search"
+        ></my-icon>
+        <span
+          v-if="code"
+          class="rule"
+          :style="{ color: classState == 0 ? '#1A1A1A' : '#fff' }"
+          @click="$router.push('/login/protocol?categoryCode=' + code)"
+          >规则</span
+        >
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 export default {
@@ -38,6 +40,10 @@ export default {
     classState: {
       type: Number,
       default: 1,
+    },
+    title: {
+      type: String,
+      default: '',
     },
     code: {
       type: String,
@@ -65,9 +71,10 @@ export default {
     -moz-background-size: 100% auto;
     .left-back {
       display: flex;
-      justify-content: center;
+
       align-items: center;
       margin: 0 32px;
+      min-width: 150px;
       .back_icon {
         width: 40px;
         height: 40px;
@@ -81,11 +88,27 @@ export default {
       display: flex;
       align-items: center;
       flex: 1;
+
+      font-size: 36px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      // color: #1a1a1a;
+      text-align: center;
+
+      // max-width: 450px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      div {
+        flex: 1;
+        text-align: center;
+      }
     }
     .right {
       display: flex;
       align-items: center;
-
+      min-width: 150px;
       .rule {
         height: 28px;
 
