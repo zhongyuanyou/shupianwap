@@ -185,8 +185,8 @@ export default {
             {
               contractId: this.contract.contractId,
               phone,
-              signerName: this.contract.signerName,
-              contactWay: phone,
+              type: 'CUSTOMER_PERSON',
+              name: this.contract.signerName,
               businessId: this.$store.state.user.userId,
             }
           )
@@ -204,14 +204,12 @@ export default {
           })
           .catch((err) => {
             this.loading = false
-            const msg = err.data.error
             Toast({
-              message: msg,
+              message: err.message,
               overlay: true,
               iconPrefix: 'sp-iconfont',
               icon: 'popup_ic_fail',
             })
-            console.log('错误信息err', err)
           })
       } else {
         this.loading = false
