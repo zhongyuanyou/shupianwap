@@ -166,7 +166,7 @@ export default {
             }
           )
           .then((res) => {
-            this.sign(res[0])
+            this.sign(res)
           })
       } else {
         this.sign(this.contract.contactWay)
