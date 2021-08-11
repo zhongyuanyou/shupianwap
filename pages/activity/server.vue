@@ -1,5 +1,11 @@
 <template>
   <div class="container">
+    <div
+      v-if="isInApp"
+      class="app_header_fill"
+      style="height: 0.6rem; background-color: #2b292a"
+    ></div>
+
     <HeadWrapper
       :fill="false"
       :line="ClassState == 0 ? true : false"
@@ -9,6 +15,7 @@
       <Head
         :class-state="ClassState"
         code="protocol100052"
+        title="先服务后收费"
         :back="uPGoBack"
         :search="clickInputHandle"
       ></Head>

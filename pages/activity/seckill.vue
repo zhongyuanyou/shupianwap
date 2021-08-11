@@ -1,6 +1,11 @@
 <template>
   <!-- 限时直降 -->
   <div class="container">
+    <div
+      v-if="isInApp"
+      class="app_header_fill"
+      style="height: 0.6rem; background-color: #1c1a1b"
+    ></div>
     <HeadWrapper
       :fill="false"
       :line="ClassState == 0 ? true : false"
@@ -10,6 +15,7 @@
       <Head
         :class-state="ClassState"
         code="protocol100047"
+        title="限时直降"
         :back="uPGoBack"
         :search="clickInputHandle"
       ></Head>
