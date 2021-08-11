@@ -258,8 +258,8 @@ export default {
           .decryptionPhone({ axios: this.axios }, { phoneList: [phone] })
           .then((res) => {
             console.log(res)
-            if (res && res.length > 0) {
-              return resolve(res[0])
+            if (res) {
+              return resolve(res)
             }
             resolve('')
           })
