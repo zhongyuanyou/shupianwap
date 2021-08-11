@@ -69,6 +69,17 @@
       <div class="item-btn-area">
         <div class="inner">
           <!-- <sp-button @click="handleClickBtn(1)">查看底单</sp-button> -->
+
+          <sp-button
+            v-if="
+              cusOrderStatusType !== 4 &&
+              cusOrderStatusType !== 1 &&
+              item.skuType === 'PRO_CLASS_TYPE_SERVICE'
+            "
+            @click="checkProductType(item)"
+            >new 办理进度</sp-button
+          >
+
           <sp-button
             v-if="
               cusOrderStatusType !== 4 &&
@@ -94,6 +105,7 @@
           >
         </div>
       </div>
+
       <!-- <div
           v-if="item.serviceResourceList && item.serviceResourceList.length"
           class="sku-sercice"
@@ -132,6 +144,8 @@
           </div>
         </div> -->
     </div>
+
+    <Process></Process>
   </div>
 </template>
 
@@ -139,11 +153,14 @@
 // 服务商品支付方式分为全款，定金尾款，按节点付费，完结付费
 // 定金胃口，按节点付费，完结付费有办理进度
 import { Button, Image } from '@chipspc/vant-dgg'
+import Process from './Process.vue'
 import changeMoney from '@/utils/changeMoney'
+
 export default {
   components: {
     [Button.name]: Button,
     [Image.name]: Image,
+    Process,
   },
   props: {
     // 当前商品产品
@@ -197,6 +214,7 @@ export default {
           },
         })
       } else {
+        alert(2)
         // 普通产品
         this.$router.push({
           path: '/order/nomalProces',
