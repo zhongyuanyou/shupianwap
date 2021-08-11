@@ -93,6 +93,9 @@ export default {
           {
             id: this.$store.state.user.userInfo.userId,
             orderId: this.order.orderId,
+            page: 1,
+            limit: 500,
+            operateSourcePlat: 'COMDIC_PLATFORM_CRISPS',
           }
         )
         .then((res) => {
