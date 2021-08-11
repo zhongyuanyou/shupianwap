@@ -34,8 +34,8 @@ export default {
   },
   data() {
     return {
-      isInit: true,
-      initList: [],
+
+
       endCountDownTimer: null,
       countDownTimer: null,
 
@@ -159,7 +159,7 @@ export default {
       this.activityProductList = []
       this.finished = false
       this.loading = true
-      // this.isNoData = false
+
     },
 
     menuTab(item, index) {
@@ -190,12 +190,7 @@ export default {
       // }
       // 前端放开，后台校验城市，如果是交易产品后台就不带城市查询
       params.cityCodes = this.cityCode || this.defaultCityCode
-      // if (this.specType !== 'HDZT_ZTTYPE_XSQG') {
-      //   Object.assign(params, {
-      //     // cityCodes: this.cityCode || this.defaultCityCode,
-      //     platformCode: this.platformCode,
-      //   })
-      // }
+
       await this.$axios
         .get(activityApi.activityTypeOptions, {
           params,
@@ -257,7 +252,6 @@ export default {
     async getProductList() {
       if (
         this.activityTypeOptions.length > 0
-        // && this.specType !== 'HDZT_ZTTYPE_XSQG'
       ) {
         const params = {
           specCode: this.specCode,
@@ -282,7 +276,7 @@ export default {
         }
         await this.productMethod(params)
       } else {
-        // this.isNoData = true
+
         this.finished = true
         this.loading = false
       }
@@ -297,31 +291,16 @@ export default {
           console.log('productMethod', param, res);
           this.refreshing = false
           if (res.code === 200) {
-            if (
-              this.isInit &&
-              (this.specType === 'HDZT_ZTTYPE_TM' ||
-                this.specType === 'HDZT_ZTTYPE_DJZS' ||
-                this.specType === 'HDZT_ZTTYPE_XFWHSF' ||
-                this.specType === 'HDZT_ZTTYPE_QWBT' ||
-                this.specType === 'HDZT_ZTTYPE_XTSF')
-              && !this.recommendProductList.length
-            ) {
-              this.initList = res.data.rows
-              this.recommendProductList = JSON.parse(
-                JSON.stringify(res.data.rows)
-              ).splice(0, 3)
-              this.activityProductList = JSON.parse(
-                JSON.stringify(res.data.rows)
-              ).splice(3, res.data.rows.length)
-            } else {
-              this.activityProductList = this.activityProductList.concat(
-                res.data.rows
-              )
-            }
-            this.isInit = false
-            if (this.activityProductList.length === 0) {
-              // this.isNoData = true
-            }
+
+
+
+
+
+            this.activityProductList = this.activityProductList.concat(
+              res.data.rows
+            )
+
+
             this.total = res.data.total
             this.loading = false
             if (this.page > res.data.totalPage || res.data.rows.length < 15) {
@@ -372,7 +351,7 @@ export default {
               if (res.data.rows.length) {
                 this.recommendProductList = res.data.rows
               } else {
-                this.recommendProductList = this.initList.splice(0, 3)
+                this.recommendProductList = []
               }
             } else {
               throw new Error(res.message)
