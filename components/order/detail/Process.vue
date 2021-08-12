@@ -9,7 +9,7 @@
           <div class="goods_info_title">
             aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
           </div>
-          <div class="goods_info_des">预计10天办理完成</div>
+          <div class="goods_info_des" :style="desStyle">预计10天办理完成</div>
           <div class="goods_info_process">
             <div class="goods_info_process_line">
               <sp-progress
@@ -24,31 +24,76 @@
         </div>
       </div>
 
-      <div class="process_container_task">
-        <div class="task_item">
-          <div class="task_item_time">
-            <span class="time">12：45</span>
-            <span class="date">07-25</span>
-          </div>
-          <div class="task_item_round">元</div>
-          <div class="task_item_info">
-            <div class="task_item_info_title">查看更多任务节点</div>
-            <div class="task_item_info_slot">
-              <slot></slot>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Steps :list="list">
+        <template #left="row">
+          <div class="time">{{ row.item.time }}</div>
+          <div class="date">{{ row.item.date }}</div>
+        </template>
+      </Steps>
+
       <div class="process_container_close"></div>
     </div>
   </div>
 </template>
 <script>
 import { Progress, Image } from '@chipspc/vant-dgg'
+import Steps from '@/components/common/Steps.vue'
 export default {
   components: {
     [Image.name]: Image,
     [Progress.name]: Progress,
+    Steps,
+  },
+  data() {
+    return {
+      list: [
+        {
+          status: 'more', // more,current,complete
+
+          title:
+            '查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点',
+          nodes: ['立案（未开始）', '立案（未开始）', '立案（未开始）'], // 更多节点
+        },
+        {
+          status: 'current', // more,current,complete
+          title:
+            '查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点',
+          time: '07:23',
+          date: '12-12',
+          nodes: [], // 更多节点
+        },
+        {
+          status: 'complete', // more,current,complete
+          title:
+            '查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点',
+          time: '07:23',
+          date: '12-12',
+          nodes: [], // 更多节点
+        },
+      ],
+    }
+  },
+  computed: {
+    desStyle() {
+      const state = 3
+      if (state === 1) {
+        return {
+          background: ' #f2f5ff',
+          color: '#4974f5',
+        }
+      } else if (state === 2) {
+        return {
+          background: ' #F0F0F0',
+          color: '#999999',
+        }
+      } else if (state === 3) {
+        return {
+          background: ' #FFF3E9',
+          color: '#FE8C29',
+        }
+      }
+      return {}
+    },
   },
 }
 </script>
@@ -106,12 +151,14 @@ export default {
           display: inline-block;
           height: 32px;
           line-height: 32px;
-          padding: 0 5px;
-          background: #f2f5ff;
+          padding: 0 8px;
+
           border-radius: 4px;
 
           font-family: PingFangSC-Regular;
           font-size: 22px;
+
+          background: #f2f5ff;
           color: #4974f5;
 
           transform-origin: left top;
@@ -142,42 +189,21 @@ export default {
       }
     }
 
-    .process_container_task {
-      .task_item {
-        display: flex;
-        overflow: hidden;
-        .task_item_time {
-          width: 64px;
-          flex-shrink: 1;
-
-          .time {
-            font-family: PingFangSC-Regular;
-            font-size: 24px;
-            color: #999999;
-          }
-          .date {
-            font-family: PingFangSC-Regular;
-            font-size: 20px;
-            color: #999999;
-            letter-spacing: 0;
-          }
-        }
-        .task_item_round {
-          width: 36px;
-          height: 36px;
-          flex-shrink: 1;
-        }
-        .task_item_info {
-          flex: 1;
-          overflow: hidden;
-
-          .task_item_info_title {
-          }
-          .task_item_info_slot {
-          }
-        }
-      }
+    .time {
+      font-family: PingFangSC-Regular;
+      font-size: 24px;
+      color: #999999;
     }
+    .date {
+      font-family: PingFangSC-Regular;
+      font-size: 20px;
+      color: #999999;
+      letter-spacing: 0;
+
+      transform-origin: left top;
+      transform: scale(0.83);
+    }
+
     .process_container_close {
       position: absolute;
       bottom: -124px;
