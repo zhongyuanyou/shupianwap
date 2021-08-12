@@ -41,7 +41,7 @@ export default {
     },
     backgroundColor: {
       type: String,
-      default: 'none',
+      default: '#fff', // none,#fff等色值
     },
   },
   data() {
@@ -80,7 +80,7 @@ export default {
 
   mounted() {
     if (window.AlipayJSBridge || this.$route.query.platForm === 'mpass') {
-      this.safeTop = 0
+      this.safeTop = 30
       this.useSafeAreaClass = true
     }
     this.getTopMargin()
@@ -104,7 +104,7 @@ export default {
       if (process && process.client) {
         let safeTop = safeAreaInsets.top
         if (window.AlipayJSBridge || this.$route.query.platForm === 'mpass') {
-          safeTop = 40
+          safeTop = 30
         } else if (this.isInApp) {
           safeTop = this.appInfo.statusBarHeight
         }

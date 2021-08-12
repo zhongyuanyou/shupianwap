@@ -1,8 +1,8 @@
 <template>
   <div class="act_card">
-    <HeaderSlot>
-      <Header class="my-header" title="活动卡专区"></Header>
-    </HeaderSlot>
+    <!-- <HeadWrapper>
+      <Head title="活动卡专区"></Head>
+    </HeadWrapper> -->
     <div class="banner">
       <span class="card_des" @click="TipsShow = true">活动卡介绍</span>
       <!-- <img :src="$ossImgSetV2(banner)" alt="" /> -->
@@ -17,7 +17,7 @@
         </sp-swipe-item>
       </sp-swipe>
     </div>
-
+    <!--   @load="onLoad" -->
     <sp-list
       v-if="list.length > 0"
       v-model="loading"
@@ -70,8 +70,6 @@ import {
   Bottombar,
   Sticky,
   BottombarButton,
-  WorkTab,
-  WorkTabs,
   Empty,
   List,
   Dialog,
@@ -79,24 +77,22 @@ import {
   SwipeItem,
   Image,
 } from '@chipspc/vant-dgg'
-import { mapState } from 'vuex'
 
-import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
-import Header from '@/components/common/head/header.vue'
+import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
+import Head from '@/components/common/head/Head.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import ActCard from '@/components/my/coupon/ActCard.vue'
-import FooterNav from '~/components/my/coupon/FooterNav.vue'
 
 import { actCard, coupon, activityApi } from '@/api/index'
 
 export default {
   layout: 'keepAlive',
-  name: 'ActCard',
+  name: 'CouponActCard',
   components: {
     LoadingCenter,
-    Header,
-    HeaderSlot,
+    // Head,
+    // HeadWrapper,
 
     [Sticky.name]: Sticky,
     [Empty.name]: Empty,
@@ -151,11 +147,11 @@ export default {
     },
 
     onLoad() {
+      this.loading = true
+      console.log(1111)
       this.getInitData()
     },
     getInitData() {
-      this.loading = true
-      this.finished = false
       const params = {
         // userId: this.$store.state.user.userId,
         // type：1,// 活动卡优惠类型 1：折扣 2：满减
@@ -170,18 +166,24 @@ export default {
 
           const responseData = res.rows || []
           // responseData.map((item) => {})
-          if (this.page > res.totalPage || !res.totalPage) {
+          if (
+            this.page > res.totalPage ||
+            !res.totalPage ||
+            responseData.length < params.limit
+          ) {
             this.finished = true
           }
 
           if (params.page === 1) {
             this.list = responseData
           } else {
-            this.list.concat(responseData)
+            this.list = this.list.concat(responseData)
           }
         })
         .catch((err) => {
+          this.error = true
           this.loading = false
+
           this.$xToast.error(err.message || '操作失败')
         })
     },

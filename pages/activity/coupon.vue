@@ -1,8 +1,8 @@
 <template>
   <div class="act-coupon">
-    <header-slot>
+    <HeadWrapper :line="true">
       <Head ref="head" title="领券中心">
-        <template #left>
+        <!-- <template #left>
           <my-icon
             class="back-icon"
             name="nav_ic_back"
@@ -10,9 +10,9 @@
             color="#1A1A1A"
             @click.native="uPGoBack"
           ></my-icon>
-        </template>
+        </template> -->
       </Head>
-    </header-slot>
+    </HeadWrapper>
     <div v-if="productAdvertData.length > 0" class="banner">
       <sp-swipe :autoplay="3000" @change="onChange">
         <sp-swipe-item v-for="(item, index) in productAdvertData" :key="index">
@@ -126,8 +126,8 @@
 <script>
 import { Swipe, SwipeItem, Image, Toast } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import HeaderSlot from '@/components/common/head/HeaderSlot'
-import Head from '@/components/common/head/header'
+import HeadWrapper from '@/components/common/head/HeadWrapper'
+import Head from '@/components/common/head/Head'
 import Popover from '~/components/common/popover/popover_old.vue'
 import { coupon, activityApi } from '@/api/index'
 import { CHIPS_WAP_BASE_URL } from '@/config/constant'
@@ -136,7 +136,7 @@ export default {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
     [Image.name]: Image,
-    [HeaderSlot.name]: HeaderSlot,
+    HeadWrapper,
     Popover,
     Head,
   },

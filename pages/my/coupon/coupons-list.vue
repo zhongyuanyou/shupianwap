@@ -82,7 +82,7 @@ import { coupon } from '@/api/index'
 
 export default {
   layout: 'keepAlive',
-  name: 'Invoice',
+  name: 'CouponsList',
   components: {
     LoadingCenter,
     Header,
@@ -169,10 +169,11 @@ export default {
           if (params.page === 1) {
             this.list = responseData
           } else {
-            this.list.concat(responseData)
+            this.list = this.list.concat(responseData)
           }
         })
         .catch((err) => {
+          this.error = true
           this.loading = false
           this.$xToast.error(err.message || '操作失败')
         })
