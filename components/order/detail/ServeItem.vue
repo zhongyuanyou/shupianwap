@@ -76,7 +76,7 @@
               cusOrderStatusType !== 1 &&
               item.skuType === 'PRO_CLASS_TYPE_SERVICE'
             "
-            @click="checkProductType(item)"
+            @click="openProcess(item)"
             >new 办理进度</sp-button
           >
 
@@ -197,6 +197,7 @@ export default {
     confirmOrder(id) {
       this.$emit('confirmOrder', id)
     },
+    openProcess() {},
     // 判断是否是周期产品
     checkProductType(item) {
       const skuDetailInfo = JSON.parse(item.skuDetailInfo)
