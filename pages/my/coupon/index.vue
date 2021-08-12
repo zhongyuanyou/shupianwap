@@ -2,10 +2,10 @@
   <div class="coupon">
     <HeadWrapper :background-color="'#fff'">
       <Head color="#1a1a1a" title="我的优惠券"></Head>
-      <sp-tabs v-model="tabActive" line-width="0.28rem" @click="onClickTab">
+      <!-- <sp-tabs v-model="tabActive" line-width="0.28rem" @click="onClickTab">
         <sp-tab title="券包"></sp-tab>
         <sp-tab title="卡包"></sp-tab>
-      </sp-tabs>
+      </sp-tabs> -->
     </HeadWrapper>
 
     <!-- <div class="coupon-header" :style="{ height: HeaderHeight + 'px' }">
@@ -172,11 +172,11 @@ export default {
           iconName: 'lingquan',
           path: '/activity/coupon',
         },
-        {
-          name: '购卡',
-          iconName: 'gouka',
-          path: '/my/coupon/act-card',
-        },
+        // {
+        //   name: '购卡',
+        //   iconName: 'gouka',
+        //   path: '/my/coupon/act-card',
+        // },
       ],
       HeaderHeight: '',
     }
