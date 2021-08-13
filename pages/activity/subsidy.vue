@@ -128,7 +128,7 @@
 import { mapState, mapMutations } from 'vuex'
 import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
-import activityMixin from './new/activityMixin'
+import activityMixin from '@/mixins/activityMixin.js'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 import Recommend from '~/components/activity/Recommend.vue'
 import Card from '~/components/activity/Card.vue'
