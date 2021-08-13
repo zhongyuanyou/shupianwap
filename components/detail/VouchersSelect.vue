@@ -96,13 +96,9 @@
                   {{ item.couponName }}
                 </div>
                 <div class="vouchers_desc">
-                  {{
-                    item.useType == 2
-                      ? '仅限指定品类使用'
-                      : item.useType == 3
-                      ? '仅限指定商品使用'
-                      : ''
-                  }}
+                  <span v-if="item.useType === 1">全场通用</span>
+                  <span v-if="item.useType === 2">仅限指定品类使用</span>
+                  <span v-if="item.useType === 3">仅限指定商品使用</span>
                 </div>
                 <div class="vouchers_date">
                   {{ item.serviceLife }}
@@ -851,8 +847,15 @@ export default {
               font-size: 24px;
               width: 251px;
               line-height: 32px;
-              min-height: 56px;
-              margin-bottom: 10px;
+              min-height: 64px;
+              margin-bottom: 6px;
+
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-line-clamp: 2;
+              -webkit-box-orient: vertical;
+              word-break: break-all;
             }
             .vouchers_date {
               color: #999999;
