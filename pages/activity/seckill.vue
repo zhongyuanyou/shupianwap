@@ -1,16 +1,32 @@
 <template>
   <!-- 限时直降 -->
   <div class="container">
-    <HeadWrapper :fill="false" :line="false" @onHeightChange="onHeightChange">
-      <div class="search_container">
-        <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
-          <!-- @click="uPGoBack" -->
+    <div
+      v-if="isInApp"
+      class="app_header_fill"
+      style="height: 0.6rem; background-color: #1c1a1b"
+    ></div>
+    <HeadWrapper
+      :fill="false"
+      :line="ClassState == 0 ? true : false"
+      :background-color="ClassState == 0 ? '#fff' : ''"
+      @onHeightChange="onHeightChange"
+    >
+      <Head
+        :class-state="ClassState"
+        code="protocol100047"
+        title="限时直降"
+        :back="uPGoBack"
+        :search="clickInputHandle"
+      ></Head>
+      <!-- <div class="search_container">
+        <div class="search">
           <div class="left-back" @click="uPGoBack">
             <my-icon
               name="nav_ic_back"
               class="back_icon"
               size="0.4rem"
-              color="#FFFFFF"
+              :color="ClassState == 0 ? '#1A1A1A' : '#fff'"
             ></my-icon>
           </div>
           <div class="search-box"></div>
@@ -19,11 +35,12 @@
               class="search-icon"
               name="sear_ic_sear"
               size="0.4rem"
-              color="#FFFFFF"
+              :color="ClassState == 0 ? '#1A1A1A' : '#fff'"
               @click.native="clickInputHandle"
             ></my-icon>
             <span
               class="rule"
+              :style="{ color: ClassState == 0 ? '#1A1A1A' : '#fff' }"
               @click="
                 $router.push('/login/protocol?categoryCode=protocol100047')
               "
@@ -31,10 +48,10 @@
             >
           </div>
         </div>
-      </div>
+      </div> -->
     </HeadWrapper>
 
-    <div class="img_container">
+    <div ref="fill_container" class="img_container">
       <img width="100%" :src="imageHead" alt="" />
     </div>
 
@@ -76,10 +93,11 @@
 import { mapState, mapMutations } from 'vuex'
 import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
-import activityMixin from './new/activityMixin'
+import activityMixin from '@/mixins/activityMixin.js'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 import Time from '@/components/activity/seckill/Time.vue'
 import Card from '~/components/activity/Card.vue'
+import Head from '~/components/activity/Head.vue'
 import NoData from '@/components/activity/NoData.vue'
 
 export default {
@@ -93,7 +111,7 @@ export default {
     [Sticky.name]: Sticky,
     [List.name]: List,
     [PullRefresh.name]: PullRefresh,
-
+    Head,
     Card,
     NoData,
     Time,
@@ -107,7 +125,8 @@ export default {
 
       imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/57zm6tubgjo0000.jpg',
 
-      headerHeight: '',
+      headerHeight: 0,
+      ClassState: 1,
     }
   },
   computed: {
@@ -121,11 +140,27 @@ export default {
   },
   mounted() {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'Seckill' })
+    window.addEventListener('scroll', this.handleScroll) // 监听（绑定）滚轮滚动事件
   },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
+
   methods: {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
+    handleScroll() {
+      const scrollHeight =
+        document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
+      const boxHeight = this.$refs.fill_container.clientHeight // 盒子高度
+
+      if (scrollHeight > boxHeight - this.headerHeight) {
+        this.ClassState = 0
+      } else {
+        this.ClassState = 1
+      }
+    },
     onHeightChange(height) {
       this.headerHeight = height
     },
@@ -144,101 +179,10 @@ export default {
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
 
-  .search_container {
-    padding-top: constant(safe-area-inset-top);
-    padding-top: env(safe-area-inset-top);
-    .search {
-      display: flex;
-      align-items: center;
-      padding: 16px 0;
-
-      background-size: 100% auto;
-      -moz-background-size: 100% auto;
-      .left-back {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0 32px;
-        .back_icon {
-          width: 40px;
-          height: 40px;
-        }
-      }
-
-      .search-box {
-        margin-right: 40px;
-        height: 88px;
-
-        display: flex;
-        align-items: center;
-        flex: 1;
-      }
-      .right {
-        display: flex;
-        align-items: center;
-
-        .rule {
-          height: 28px;
-
-          font-weight: bold;
-          font-size: 28px;
-          color: #ffffff;
-          letter-spacing: 0;
-          text-align: right;
-          line-height: 28px;
-          margin: 0 32px;
-        }
-      }
-    }
-  }
-
   .img_container {
     position: relative;
     min-height: 300px;
     background: #f8f8f8;
-    .count-down {
-      position: absolute;
-      top: 68.5%;
-      width: 100%;
-
-      font-size: 24px;
-      color: #ffedcb;
-      letter-spacing: 0;
-      line-height: 24px;
-
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-
-      .down-time {
-        font-size: 24px;
-        font-family: PingFangSC-Medium, PingFang SC;
-
-        color: #ffedcb;
-        line-height: 24px;
-
-        letter-spacing: 2px;
-        display: flex;
-        align-items: center;
-
-        .time {
-          // min-width: 36px;
-          font-weight: bold;
-          padding: 0 5px;
-          height: 36px;
-          line-height: 36px;
-          background-image: linear-gradient(139deg, #7e9fff 0%, #4974f5 100%);
-          border-radius: 4px;
-
-          font-family: Bebas;
-          font-size: 24px;
-          color: #fff;
-          text-align: center;
-          margin: 0 8px;
-        }
-      }
-    }
   }
 
   .content_container {

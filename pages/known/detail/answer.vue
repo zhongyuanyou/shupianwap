@@ -594,39 +594,42 @@ export default {
           const url = window && window.location.href
           const sharedUrl = setUrlParams(url, { isShare: 1 })
           const tile = this.answerDetails.title
+          const shareContent = {
+            title: `${tile}`,
+            url: sharedUrl,
+          }
 
-          this.$appFn.dggShare(
-            {
-              image:
-                'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png',
-              title: `${tile}`,
-              subTitle: `${
-                this.answerDetails.userName || '薯片用户'
-              }回答了问题,已获${
-                this.answerDetails.applaudCount || 0
-              }个赞,快来看看吧!`,
-              url: sharedUrl,
-              // 匹配启大顺
-              description: `${
-                this.answerDetails.userName || '薯片用户'
-              }回答了问题,已获${
-                this.answerDetails.applaudCount || 0
-              }个赞,快来看看吧!`,
-              imgUrl:
-                'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png',
-            },
-            (res) => {
-              const { code } = res || {}
-              if (code !== 200) {
-                this.$xToast.show({
-                  message: '分享失败！',
-                  duration: 1500,
-                  forbidClick: false,
-                  icon: 'toast_ic_remind',
-                })
-              }
+          // 薯片app
+          if (this.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS') {
+            shareContent.image =
+              'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png'
+            shareContent.subTitle = `${
+              this.answerDetails.userName || '薯片用户'
+            }回答了问题,已获${
+              this.answerDetails.applaudCount || 0
+            }个赞,快来看看吧!`
+          } else {
+            // 启大顺
+            shareContent.description = `${
+              this.answerDetails.userName || '薯片用户'
+            }回答了问题,已获${
+              this.answerDetails.applaudCount || 0
+            }个赞,快来看看吧!`
+            shareContent.imgUrl =
+              'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png'
+          }
+
+          this.$appFn.dggShare(shareContent, (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '分享失败！',
+                duration: 1500,
+                forbidClick: false,
+                icon: 'toast_ic_remind',
+              })
             }
-          )
+          })
           return
         }
         this.shareOptions = [{ name: '复制链接', icon: 'link' }]

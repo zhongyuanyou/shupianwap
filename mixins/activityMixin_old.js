@@ -20,7 +20,21 @@ export default {
     isNoData() {
       return !this.activityProductList.length
     },
-
+    safeTopStyle() {
+      return {
+        width: '100%',
+        height: this.safeTop + 'px',
+        // backgroundColor: '#fff',
+        // background:
+        //   "url('https://cdn.shupian.cn/sp-pt/wap/9wjolx4gc0s0000.png')",
+        backgroundSize: '100% 300%',
+        // backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        position: 'fixed',
+        top: '0',
+        zIndex: '99',
+      }
+    },
     terminalCode() {
       // return this.isInApp ? 'COMDIC_TERMINAL_APP' : 'COMDIC_TERMINAL_WAP'
       // 只有app有图片
@@ -29,10 +43,12 @@ export default {
     isTimerShow() {
       return this.recommendProductList.length || this.activityProductList.length
     },
-
-    // 是否是服务商品
+    // isTrade() {
+    //   return this.specType === 'HDZT_ZTTYPE_DJZS'
+    // },
     isService() {
       return this.productType === 'PRO_CLASS_TYPE_SERVICE'
+      // return true
     },
   },
   data() {
@@ -41,11 +57,13 @@ export default {
       initList: [],
       endCountDownTimer: null,
       countDownTimer: null,
-
+      defaultData: {
+        index: 0,
+        sort: -1, // 倒序
+      },
+      iconLeft: 0.35,
       loading: false,
       finished: false,
-
-
       refreshDisabled: false,
       refreshing: false,
       activityTypeOptions: [],
@@ -77,7 +95,8 @@ export default {
       productType: '',
       safeTop: 0,
       headerHeight: 0,
-
+      screenWidth: 0,
+      // isNoData: false,
     }
   },
   async created() {
@@ -95,7 +114,10 @@ export default {
     if (this.isInApp) {
       this.safeTop = this.appInfo.statusBarHeight
     }
-
+    this.headerHeight = this.$refs.header_sticky.height
+    // console.log(process.env)
+    // this.chii()
+    this.screenWidth = window.screen.width
   },
   beforeDestroy() {
     clearInterval(this.endCountDownTimer)
@@ -129,7 +151,9 @@ export default {
       }
       this.$router.back(-1)
     },
-
+    advertjump(item) {
+      this.$router.push('/')
+    },
     jumpProductDetail(item) {
       if (this.isInApp) {
         if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
@@ -152,6 +176,10 @@ export default {
             query: { productId: item.skuId, type: item.classCode },
           })
         } else {
+          // this.$router.push({
+          //   path: `/detail/serviceDetails`,
+          //   query: { productId: item.skuId },
+          // })
           this.$router.push({
             path: `/detail`,
             query: { productId: item.skuId },
@@ -159,8 +187,52 @@ export default {
         }
       }
     },
-
-
+    jumpIM(item) {
+      this.uPIM({
+        mchUserId: this.userInfo.imUserId,
+        userName: this.userInfo.userName,
+        type: this.userInfo.imUserType,
+      })
+    },
+    async uPIM(data = {}) {
+      const { mchUserId, userName, type } = data
+      // 如果当前页面在app中，则调用原生IM的方法
+      if (this.isInApp) {
+        try {
+          // 需要判断登陆没有，没有登录就是调用登录
+          await this.getUserInfo()
+          this.$appFn.dggOpenIM(
+            {
+              name: userName,
+              userId: mchUserId,
+              userType: type || 'MERCHANT_B',
+              requireCode: this.requireCode || '',
+              requireName: this.requireName || '',
+            },
+            (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `联系失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            }
+          )
+        } catch (error) {
+          console.error('uPIM error:', error)
+        }
+        return
+      }
+      const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+      this.creatImSessionMixin({
+        imUserId: mchUserId,
+        imUserType,
+        requireCode: this.requireCode || '',
+        requireName: this.requireName || '',
+      })
+    },
     init() {
       this.page = 1
       this.activityProductList = []
@@ -238,7 +310,7 @@ export default {
             console.log('this.specCode', this.specCode)
             if (res.data.settingVOList && res.data.settingVOList.length > 0) {
               this.itemTypeOptions = res.data.settingVOList[0]
-              this.getProductList()
+              this.getProductList(this.itemTypeOptions, this.specCode)
             } else {
               this.loading = false
               this.finished = true
@@ -267,7 +339,7 @@ export default {
       ) {
         const params = {
           specCode: this.specCode,
-          page:  this.page,
+          page: this.page,
           limit: 15,
           terminalCode: this.terminalCode,
         }
@@ -294,20 +366,16 @@ export default {
       }
     },
     async productMethod(param) {
-
       await this.$axios
         .get(activityApi.activityProductList, {
           params: param,
         })
         .then((res) => {
-          console.log('productMethod',param,res);
-          this.refreshing = false
           if (res.code === 200) {
             if (
               this.isInit &&
-              (this.specType === 'HDZT_ZTTYPE_TM'||
-              this.specType === 'HDZT_ZTTYPE_DJZS')
-               &&!this.recommendProductList.length
+              location.href.match('activity/special') &&
+              !this.recommendProductList.length
             ) {
               this.initList = res.data.rows
               this.recommendProductList = JSON.parse(
@@ -327,22 +395,22 @@ export default {
             }
             this.total = res.data.total
             this.loading = false
-            if (this.page > res.data.totalPage||res.data.rows.length<15) {
+            if (this.page > res.data.totalPage) {
               this.finished = true
             }
-
+            this.refreshing = false
           } else {
             this.loading = false
-            this.finished = true
-            this.refreshDisabled = true
-
             throw new Error('服务异常，请刷新重试！')
+            // Toast.fail({
+            //   duration: 2000,
+            //   message: '服务异常，请刷新重试！',
+            //   forbidClick: true,
+            //   className: 'my-toast-style',
+            // })
           }
         })
         .catch((err) => {
-          this.loading = false
-          this.finished = true
-          this.refreshDisabled = true
           this.refreshing = false
           Toast.fail({
             duration: 2000,
@@ -351,26 +419,29 @@ export default {
             className: 'my-toast-style',
           })
         })
+      // .finally(() => {
+      //   this.refreshing = false
+      // })
     },
-
-    // 获取推荐产品
     getRecommendProductList() {
       if (this.specCode) {
         const params = {
           specCode: this.specCode,
-          isReco: 1,// 是否需要推荐商品
+          isReco: 1,
           page: 1,
           limit: 10000,
           terminalCode: this.terminalCode,
         }
+
+        // if (this.hasCity) {
+        //   params.cityCode = this.cityCode
+        // }
         // 前端放开，后台校验城市，如果是交易产品后台就不带城市查询
         params.cityCode = this.cityCode
 
         this.$axios
           .get(activityApi.activityProductList, { params })
           .then((res) => {
-            console.log('getRecommendProductList',params,res);
-
             if (res.code === 200) {
               if (res.data.rows.length) {
                 this.recommendProductList = res.data.rows
@@ -392,35 +463,32 @@ export default {
       }
     },
 
-    // 获取广告位？
-    // getAdvertisingData() {
-    //   this.$axios
-    //     .get(activityApi.activityAdvertising, {
-    //       params: {
-    //         code: this.advertCode,
-    //       },
-    //     })
-    //     .then((res) => {
-    //       if (res.code === 200) {
-    //         if (res.data.sortMaterialList.length) {
-    //           this.productAdvertData =
-    //             res.data.sortMaterialList[0].materialList.slice(0, 3)
-
-    //             console.log('this.productAdvertData',this.productAdvertData);
-    //         }
-    //       } else {
-    //         Toast.fail({
-    //           duration: 2000,
-    //           message: '服务异常，请刷新重试！',
-    //           forbidClick: true,
-    //           className: 'my-toast-style',
-    //         })
-    //       }
-    //     })
-    //     .catch((err) => {
-    //       console.log(err.message)
-    //     })
-    // },
+    getAdvertisingData() {
+      this.$axios
+        .get(activityApi.activityAdvertising, {
+          params: {
+            code: this.advertCode,
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            if (res.data.sortMaterialList.length) {
+              this.productAdvertData =
+                res.data.sortMaterialList[0].materialList.slice(0, 3)
+            }
+          } else {
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          }
+        })
+        .catch((err) => {
+          console.log(err.message)
+        })
+    },
     swichCityHandle() {
       this.$router.push({
         path: '/city/choiceCity',
@@ -505,11 +573,28 @@ export default {
       }, 1000)
       // 每执行一次定时器就减少一秒
     },
-
+    getPercentage(res, total) {
+      return (res / total) * 100
+    },
+    overflowDot(str, num) {
+      if (str.length > 6) {
+        return str.slice(0, num) + '...'
+      } else {
+        return str
+      }
+    },
+    chii() {
+      const script = document.createElement('script')
+      script.src = '//172.16.132.163:9090/target.js'
+      document.body.appendChild(script)
+    },
+    convert2vw(px) {
+      px = parseFloat(px)
+      return (px / this.screenWidth) * 100
+    },
     parsePrice(priceStr) {
-
-      if (priceStr&&priceStr > 0) {
-        priceStr = priceStr.toString()
+      priceStr = priceStr.toString()
+      if (priceStr > 0) {
         return {
           yuan: priceStr.split('.')[0],
           jiao: priceStr.split('.')[1],

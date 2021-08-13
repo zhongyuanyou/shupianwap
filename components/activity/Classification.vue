@@ -1,6 +1,6 @@
 <template >
   <sp-sticky class="tabs-box" :offset-top="headerHeight">
-    <div v-if="isService" class="drop_down">
+    <div v-if="hasCity" class="drop_down">
       <div class="drop_down_title" @click="swichCityHandle">
         {{ cityName ? cityName : '定位中' }}
       </div>
@@ -27,7 +27,7 @@ export default {
     [Sticky.name]: Sticky,
   },
   props: {
-    isService: {
+    hasCity: {
       type: Boolean,
       default: false,
     },
@@ -79,6 +79,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .tabs-box {
+  font-family: PingFangSC-Medium, PingFangSC-Regular, PingFang SC;
   height: 96px;
   line-height: 96px;
   font-size: 0;
@@ -161,7 +162,7 @@ export default {
     .active::after {
       content: '';
       position: absolute;
-      top: 58px;
+      bottom: 28px;
       right: 0;
 
       width: 60px;
