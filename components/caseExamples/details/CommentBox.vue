@@ -62,7 +62,7 @@ export default {
 <style lang="less" scoped>
 .comment {
   background: #fff;
-  border-bottom: 24px solid #f8f8f8;
+  // border-bottom: 24px solid #f8f8f8;
   padding: 48px 0 16px 0;
 
   > .title {

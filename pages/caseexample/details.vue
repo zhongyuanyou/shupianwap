@@ -97,7 +97,7 @@
       @preview="previewImg"
     />
     <!-- tcPlannerBooth -->
-    <bottomBar :im-jump-query="imJumpQuery" :planner-info="tcPlannerBooth" />
+    <!-- <bottomBar :im-jump-query="imJumpQuery" :planner-info="tcPlannerBooth" /> -->
 
     <Loading-center v-show="loading" />
 
@@ -120,7 +120,7 @@ import HandlingProcess from '@/components/caseExamples/details/HandlingProcess.v
 import ServiceTeam from '@/components/caseExamples/details/ServiceTeam.vue'
 import ExpertComments from '@/components/caseExamples/details/ExpertComments.vue'
 
-import bottomBar from '@/components/caseExamples/details/BottomBar.vue'
+// import bottomBar from '@/components/caseExamples/details/BottomBar.vue'
 
 import getUserSign from '@/utils/fingerprint'
 import { productDetailsApi, caseApi, planner, storeApi } from '@/api'
@@ -143,7 +143,7 @@ export default {
     CaseIntroduction,
 
     ServiceTeam,
-    bottomBar,
+    // bottomBar,
 
     CommentBox,
     HandlingProcess,
@@ -284,7 +284,7 @@ export default {
   mounted() {
     this.id = this.$route.query.id
     this.getDetails()
-    this.getRecPlanner()
+    // this.getRecPlanner()
   },
   methods: {
     previewImg(img) {
