@@ -1,6 +1,6 @@
-<template >
-  <div class="process">
-    <div class="process_container">
+<template>
+  <div class="process" @click="close">
+    <div class="process_container" @click.stop>
       <div class="process_container_goods">
         <div class="goods_img">
           <sp-image src="" alt="" class="sp-image" srcset="" />
@@ -31,13 +31,15 @@
         </template>
       </Steps>
 
-      <div class="process_container_close"></div>
+      <div class="process_container_close" @click="close"></div>
     </div>
   </div>
 </template>
 <script>
 import { Progress, Image } from '@chipspc/vant-dgg'
 import Steps from '@/components/common/Steps.vue'
+import orderApi from '@/api/order'
+
 export default {
   components: {
     [Image.name]: Image,
@@ -93,6 +95,42 @@ export default {
         }
       }
       return {}
+    },
+  },
+
+  methods: {
+    close() {
+      this.$emit('close')
+    },
+    getProcessList() {
+      orderApi
+        .getProcessList(
+          { axios: this.$axios },
+          { orderDetailsId: this.$route.query.detailId }
+        )
+        .then((res) => {
+          this.hasList = true
+          this.batchList = res
+        })
+    },
+    getDetail() {
+      orderApi
+        .getDetailByOrderId(
+          { axios: this.axios },
+          { id: this.orderData.orderId, cusOrderId: this.orderData.cusOrderId }
+        )
+        .then((res) => {
+          this.hasDetail = true
+          const data = res.data ? res.data : res
+          this.skuInfo = data.orderSkuList.filter((item) => {
+            return item.skuId === this.orderData.skuId
+          })[0]
+        })
+        .catch((err) => {
+          console.error(err)
+          this.$xToast.show(err.message)
+          // this.$router.back(-1)
+        })
     },
   },
 }
