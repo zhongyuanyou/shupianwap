@@ -174,8 +174,11 @@ export default {
         }
         .picture {
           margin: 25px auto 24px;
-          height: 136px;
-          max-width: 108px;
+
+          max-width: 126px;
+          height: 120px;
+          border-radius: 4px;
+          overflow: hidden;
         }
       }
     }

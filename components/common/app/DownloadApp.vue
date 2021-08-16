@@ -9,9 +9,13 @@
         />
         <h4 class="app-title">薯片找人APP</h4>
         <p class="app-descript">找人服务，尽在薯片找人</p>
-        <button class="app-download-btn" @click="openApp($event)">
+
+        <button class="app-download-btn" @click="toDownload($event)">
           立即下载
         </button>
+        <!-- <button class="app-download-btn" @click="openApp($event)">
+          立即下载
+        </button> -->
       </div>
       <button class="closse-btn" @click="hanleClose">
         <my-icon
@@ -35,6 +39,12 @@ export default {
     },
     noEvent(e) {
       e.preventDefault()
+    },
+    toDownload() {
+      this.hanleClose()
+      this.$router.push({
+        path: '/activity/download',
+      })
     },
   },
 }

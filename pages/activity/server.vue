@@ -1,5 +1,11 @@
 <template>
   <div class="container">
+    <div
+      v-if="isInApp"
+      class="app_header_fill"
+      style="height: 0.6rem; background-color: #2b292a"
+    ></div>
+
     <HeadWrapper
       :fill="false"
       :line="ClassState == 0 ? true : false"
@@ -9,9 +15,11 @@
       <Head
         :class-state="ClassState"
         code="protocol100052"
+        title="先服务后收费"
         :back="uPGoBack"
         :search="clickInputHandle"
       ></Head>
+
       <!-- <div class="search_container">
         <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
           <div class="left-back" @click="uPGoBack">
@@ -45,6 +53,12 @@
 
     <div ref="fill_container" class="img_container">
       <img width="100%" :src="imageHead" alt="" />
+      <div
+        class="rule"
+        @click="$router.push('/login/protocol?categoryCode=' + ruleCode)"
+      >
+        规则
+      </div>
     </div>
 
     <div class="content_container">
@@ -103,7 +117,7 @@
 import { mapState, mapMutations } from 'vuex'
 import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
-import activityMixin from './new/activityMixin'
+import activityMixin from '@/mixins/activityMixin.js'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 import Recommend from '~/components/activity/Recommend.vue'
 import Card from '~/components/activity/Card.vue'
@@ -137,6 +151,8 @@ export default {
       imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/eik2dfytts00000.png',
       headerHeight: 0,
       ClassState: 1,
+
+      ruleCode: 'protocol100052',
     }
   },
   computed: {
@@ -234,6 +250,28 @@ export default {
           margin: 0 8px;
         }
       }
+    }
+
+    .rule {
+      // header的z-index是999
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.2);
+
+      border-radius: 100px 0 0 100px;
+
+      opacity: 0.9;
+      font-family: PingFangSC-Regular;
+      font-size: 24px;
+      color: #ffffff;
+      letter-spacing: 0;
+      line-height: 40px;
+
+      position: absolute;
+      right: 0;
+      top: 40px;
+      height: 40px;
+      width: 96px;
+      text-align: center;
     }
   }
 

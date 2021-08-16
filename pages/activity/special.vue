@@ -1,5 +1,11 @@
 <template>
   <div class="container">
+    <div
+      v-if="isInApp"
+      class="app_header_fill"
+      style="height: 0.6rem; background-color: #1e1e1e"
+    ></div>
+
     <HeadWrapper
       :fill="false"
       :line="ClassState == 0 ? true : false"
@@ -8,10 +14,12 @@
     >
       <Head
         :class-state="ClassState"
-        code="protocol100047"
+        code="protocol100046"
+        title="99特卖"
         :back="uPGoBack"
         :search="clickInputHandle"
       ></Head>
+
       <!-- <div class="search_container">
         <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
 
@@ -46,7 +54,12 @@
 
     <div ref="fill_container" class="img_container">
       <img width="100%" :src="imageHead" alt="" />
-
+      <div
+        class="rule"
+        @click="$router.push('/login/protocol?categoryCode=' + ruleCode)"
+      >
+        规则
+      </div>
       <div v-if="isTimerShow" class="count-down">
         <div class="down-time">
           <div>距本场结束还剩</div>
@@ -119,7 +132,7 @@
 import { mapState, mapMutations } from 'vuex'
 import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
-import activityMixin from './new/activityMixin'
+import activityMixin from '@/mixins/activityMixin.js'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 import Recommend from '~/components/activity/Recommend.vue'
 import Card from '~/components/activity/Card.vue'
@@ -153,6 +166,8 @@ export default {
       imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/6kfpkqxmcv00000.png',
       headerHeight: 0,
       ClassState: 1,
+
+      ruleCode: 'protocol100046',
     }
   },
   computed: {
@@ -211,7 +226,8 @@ export default {
     background: #f8f8f8;
     .count-down {
       position: absolute;
-      top: 68.5%;
+      top: 72.4%;
+      transform: translate(0, -50%);
       width: 100%;
 
       font-size: 24px;
@@ -237,8 +253,9 @@ export default {
 
         .time {
           // min-width: 36px;
-          font-weight: bold;
+
           padding: 0 5px;
+          min-width: 36px;
           height: 36px;
           line-height: 36px;
           background-image: linear-gradient(139deg, #7e9fff 0%, #4974f5 100%);
@@ -249,8 +266,31 @@ export default {
           color: #fff;
           text-align: center;
           margin: 0 8px;
+          letter-spacing: 0;
         }
       }
+    }
+
+    .rule {
+      // header的z-index是999
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.2);
+
+      border-radius: 100px 0 0 100px;
+
+      opacity: 0.9;
+      font-family: PingFangSC-Regular;
+      font-size: 24px;
+      color: #ffffff;
+      letter-spacing: 0;
+      line-height: 40px;
+
+      position: absolute;
+      right: 0;
+      top: 40px;
+      height: 40px;
+      width: 96px;
+      text-align: center;
     }
   }
 

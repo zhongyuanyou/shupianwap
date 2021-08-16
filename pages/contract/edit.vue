@@ -148,6 +148,10 @@ export default {
           this.encryptPhone = res
           this.applycontart()
         })
+        .catch((e) => {
+          this.loading = false
+          this.$xToast.error(e.message)
+        })
     },
     getorder() {
       orderApi
@@ -219,9 +223,8 @@ export default {
         })
         .catch((err) => {
           this.loading = false
-          const msg = err.data.error
           Toast({
-            message: msg,
+            message: err.message,
             iconPrefix: 'sp-iconfont',
             icon: 'popup_ic_fail',
             overlay: true,

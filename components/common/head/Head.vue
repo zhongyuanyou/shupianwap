@@ -1,63 +1,71 @@
 <template >
   <div class="search_container">
     <div class="search">
-      <div class="left-back" @click="back">
+      <div class="left-back" @click="onLeftClick">
         <my-icon
           name="nav_ic_back"
           class="back_icon"
           size="0.4rem"
-          :color="classState == 0 ? '#1A1A1A' : '#fff'"
+          :color="color"
         ></my-icon>
       </div>
-      <div
-        class="search-box"
-        :style="{ color: classState == 0 ? '#1A1A1A' : '#fff' }"
-      >
-        <div>
-          {{ classState == 0 ? title : '' }}
+      <div class="search-box" :style="{ color: color }">
+        <div class="center">
+          {{ title }}
         </div>
       </div>
       <div class="right">
-        <!-- <my-icon
-          class="search-icon"
-          name="sear_ic_sear"
-          size="0.4rem"
-          :color="classState == 0 ? '#1A1A1A' : '#fff'"
-          @click.native="search"
-        ></my-icon>
-        <span
-          v-if="code"
-          class="rule"
-          :style="{ color: classState == 0 ? '#1A1A1A' : '#fff' }"
-          @click="$router.push('/login/protocol?categoryCode=' + code)"
-          >规则</span
-        > -->
+        <slot name="right"></slot>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
   props: {
-    classState: {
-      type: Number,
-      default: 1,
+    color: {
+      type: String,
+      default: '#1a1a1a', // 1,表现为白色，0，黑色
     },
     title: {
       type: String,
       default: '',
     },
-    // code: {
-    //   type: String,
-    //   default: '',
-    // },
-    back: {
-      type: Function,
-      default: () => {},
+
+    // 是否执行自定义跳转
+    customJump: {
+      type: Boolean,
+      default: false,
     },
-    search: {
-      type: Function,
-      default: () => {},
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp, // 是否app中
+      appInfo: (state) => state.app.appInfo, // app信息
+      isApplets: (state) => state.app.isApplets,
+    }),
+  },
+  methods: {
+    onLeftClick() {
+      if (!this.customJump) {
+        if (this.isInApp) {
+          this.$appFn.dggWebGoBack((res) => {})
+        } else if (
+          window.AlipayJSBridge ||
+          this.$route.query.platForm === 'mpass'
+        ) {
+          if (window.AlipayJSBridge) {
+            window.AlipayJSBridge.call('closeWebview')
+          } else {
+            this.$back()
+          }
+        } else {
+          this.$router.back(-1)
+        }
+      } else {
+        this.$emit('backHandle')
+      }
     },
   },
 }
@@ -67,7 +75,7 @@ export default {
   .search {
     display: flex;
     align-items: center;
-    padding: 16px 0;
+    // padding: 16px 0;
 
     background-size: 100% auto;
     -moz-background-size: 100% auto;
@@ -86,6 +94,7 @@ export default {
     .search-box {
       margin-right: 40px;
       height: 88px;
+      line-height: 88px;
 
       display: flex;
       align-items: center;
@@ -102,7 +111,7 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
 
-      div {
+      .center {
         flex: 1;
         text-align: center;
       }
@@ -111,17 +120,6 @@ export default {
       display: flex;
       align-items: center;
       min-width: 150px;
-      .rule {
-        height: 28px;
-
-        font-weight: bold;
-        font-size: 28px;
-
-        letter-spacing: 0;
-        text-align: right;
-        line-height: 28px;
-        margin: 0 32px;
-      }
     }
   }
 }

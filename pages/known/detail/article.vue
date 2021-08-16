@@ -552,7 +552,9 @@ export default {
           const url = window && window.location.href
           const sharedUrl = setUrlParams(url, { isShare: 1 })
           const tile = this.articleDetails.title
-          const content = this.articleDetails.contentText
+          const content = this.articleDetails.contentText.substring(0, 50).trim()
+          console.log(`output tile: ${tile}`)
+          console.log(`output content: ${content}`)
           const shareContent = {
             title: `${tile}`,
             url: sharedUrl,

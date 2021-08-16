@@ -1,6 +1,11 @@
 <template>
   <!-- 限时直降 -->
   <div class="container">
+    <div
+      v-if="isInApp"
+      class="app_header_fill"
+      style="height: 0.6rem; background-color: #1c1a1b"
+    ></div>
     <HeadWrapper
       :fill="false"
       :line="ClassState == 0 ? true : false"
@@ -10,9 +15,11 @@
       <Head
         :class-state="ClassState"
         code="protocol100047"
+        title="限时直降"
         :back="uPGoBack"
         :search="clickInputHandle"
       ></Head>
+
       <!-- <div class="search_container">
         <div class="search">
           <div class="left-back" @click="uPGoBack">
@@ -47,6 +54,12 @@
 
     <div ref="fill_container" class="img_container">
       <img width="100%" :src="imageHead" alt="" />
+      <div
+        class="rule"
+        @click="$router.push('/login/protocol?categoryCode=' + ruleCode)"
+      >
+        规则
+      </div>
     </div>
 
     <div class="content_container">
@@ -87,7 +100,7 @@
 import { mapState, mapMutations } from 'vuex'
 import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
-import activityMixin from './new/activityMixin'
+import activityMixin from '@/mixins/activityMixin.js'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 import Time from '@/components/activity/seckill/Time.vue'
 import Card from '~/components/activity/Card.vue'
@@ -121,6 +134,8 @@ export default {
 
       headerHeight: 0,
       ClassState: 1,
+
+      ruleCode: 'protocol100047',
     }
   },
   computed: {
@@ -177,48 +192,27 @@ export default {
     position: relative;
     min-height: 300px;
     background: #f8f8f8;
-    .count-down {
-      position: absolute;
-      top: 68.5%;
-      width: 100%;
 
+    .rule {
+      // header的z-index是999
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.2);
+
+      border-radius: 100px 0 0 100px;
+
+      opacity: 0.9;
+      font-family: PingFangSC-Regular;
       font-size: 24px;
-      color: #ffedcb;
+      color: #ffffff;
       letter-spacing: 0;
-      line-height: 24px;
+      line-height: 40px;
 
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-
-      .down-time {
-        font-size: 24px;
-        font-family: PingFangSC-Medium, PingFang SC;
-
-        color: #ffedcb;
-        line-height: 24px;
-
-        letter-spacing: 2px;
-        display: flex;
-        align-items: center;
-
-        .time {
-          // min-width: 36px;
-          font-weight: bold;
-          padding: 0 5px;
-          height: 36px;
-          line-height: 36px;
-          background-image: linear-gradient(139deg, #7e9fff 0%, #4974f5 100%);
-          border-radius: 4px;
-
-          font-family: Bebas;
-          font-size: 24px;
-          color: #fff;
-          text-align: center;
-          margin: 0 8px;
-        }
-      }
+      position: absolute;
+      right: 0;
+      top: 40px;
+      height: 40px;
+      width: 96px;
+      text-align: center;
     }
   }
 
