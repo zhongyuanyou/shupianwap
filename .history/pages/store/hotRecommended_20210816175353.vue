@@ -106,6 +106,7 @@
                   >
                 </p>
                 <p class="type">
+                  <span>data.desc.split('|')</span>
                   <span
                     v-for="(de, deindex) in data.desc && data.desc.split('|')"
                     :key="deindex"
@@ -943,13 +944,12 @@ export default {
               line-height: 22px;
               span {
                 display: inline-block;
-                max-width: 450px;
+                width: 450px;
                 padding: 0 8px 0 8px;
                 border-right: 1px solid #1a1a1a;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-                line-height: 1;
                 &:first-of-type {
                   padding-left: 0;
                 }

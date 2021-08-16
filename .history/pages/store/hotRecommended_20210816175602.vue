@@ -949,7 +949,7 @@ export default {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-                line-height: 1;
+                line
                 &:first-of-type {
                   padding-left: 0;
                 }
