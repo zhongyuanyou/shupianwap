@@ -145,7 +145,7 @@
         </div> -->
     </div>
 
-    <Process></Process>
+    <Process v-if="false"></Process>
   </div>
 </template>
 

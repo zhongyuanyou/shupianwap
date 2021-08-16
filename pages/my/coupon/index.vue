@@ -1,15 +1,23 @@
 <template>
   <div class="coupon">
-    <div class="coupon-header" :style="{ height: HeaderHeight + 'px' }">
-      <div ref="couponHeaderWarpper" class="coupon-header-warpper">
-        <Header class="my-header" title="我的优惠券"></Header>
+    <HeadWrapper :background-color="'#fff'">
+      <Head color="#1a1a1a" title="我的优惠券"></Head>
+      <!-- <sp-tabs v-model="tabActive" line-width="0.28rem" @click="onClickTab">
+        <sp-tab title="券包"></sp-tab>
+        <sp-tab title="卡包"></sp-tab>
+      </sp-tabs> -->
+    </HeadWrapper>
 
-        <!-- <sp-tabs v-model="tabActive" line-width="0.28rem" @click="onClickTab">
+    <!-- <div class="coupon-header" :style="{ height: HeaderHeight + 'px' }">
+      <div ref="couponHeaderWarpper" class="coupon-header-warpper">
+
+
+        <sp-tabs v-model="tabActive" line-width="0.28rem" @click="onClickTab">
           <sp-tab title="券包"></sp-tab>
           <sp-tab title="卡包"></sp-tab>
-        </sp-tabs> -->
+        </sp-tabs>
       </div>
-    </div>
+    </div> -->
 
     <sp-list
       v-if="list.length > 0"
@@ -54,11 +62,11 @@
         class="rules_and_invalid"
         :class="{ rules_and_invalid_bk: list.length > 0 }"
       >
-        <span class="" @click="TipsShow = true">
+        <span class="rule" @click="TipsShow = true">
           通用规则
           <my-icon
             name="order_ic_listnext"
-            size="0.18rem"
+            size="0.17rem"
             color="#999999"
             class="back"
           />
@@ -67,7 +75,7 @@
           {{ tabActive === 0 ? '查看已失效优惠券' : '查看已失效活动卡' }}
           <my-icon
             name="order_ic_listnext"
-            size="0.18rem"
+            size="0.17rem"
             color="#999999"
             class="back"
           />
@@ -112,8 +120,9 @@ import {
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 
+import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
-import Header from '@/components/common/head/header.vue'
+import Head from '@/components/common/head/Head.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import CouponsItem from '~/components/my/coupon/index/CouponsItem.vue'
@@ -127,8 +136,8 @@ export default {
   name: 'Coupon',
   components: {
     LoadingCenter,
-    Header,
-
+    Head,
+    HeadWrapper,
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
     [Sticky.name]: Sticky,
@@ -186,22 +195,43 @@ export default {
 
     // this.FooterNavHeight = this.$refs.FooterNav.$el.offsetHeight
     this.initData()
-    this.getHeaderHeight()
+    // this.getHeaderHeight()
   },
   methods: {
-    getHeaderHeight() {
-      this.$nextTick(() => {
-        this.HeaderHeight = this.$refs.couponHeaderWarpper.offsetHeight
-        console.log(this.HeaderHeight)
-      })
-    },
+    // getHeaderHeight() {
+    //   this.$nextTick(() => {
+    //     this.HeaderHeight = this.$refs.couponHeaderWarpper.offsetHeight
+    //     console.log(this.HeaderHeight)
+    //   })
+    // },
     initData() {
-      if (this.isInApp) {
+      const that = this
+      if (window.AlipayJSBridge) {
+        window.AlipayJSBridge.call('getLoginUserInfo', (res) => {
+          console.log('mpass里获取用户信息', res)
+          if (res.code && res.code === 200) {
+            const userData = JSON.parse(res.data)
+            if (userData && userData.id) {
+              userData.userId = userData.id
+            }
+            console.log('userData', userData)
+            this.$store.dispatch('user/setUser', userData)
+
+            that.init()
+            that.onLoad()
+            // this.formData.userId = userData.id
+            // this.formData.userType = util.getUserType(userData.type)
+            // this.formData.userName = userData.nickName
+            // this.formData.userCode = userData.no
+          } else {
+            this.$xToast.error('获取用户信息失败')
+          }
+        })
+      } else if (this.isInApp) {
         if (this.userInfo.userId && this.userInfo.token) {
           this.init()
           this.onLoad()
         } else {
-          const that = this
           that.$appFn.dggGetUserInfo(async function (res) {
             console.log('调用app获取信息', res)
             if (res && res.code === 200) {
@@ -418,13 +448,16 @@ export default {
     letter-spacing: 0;
 
     text-align: center;
-
+    .rule {
+      color: #4974f5;
+    }
     .invalid {
       margin-left: 64px;
+      color: #4974f5;
     }
     .back {
       margin-right: 18px;
-      font-weight: 500;
+      font-weight: 400;
     }
   }
   .rules_and_invalid_bk {

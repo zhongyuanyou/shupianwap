@@ -1,14 +1,13 @@
 'use strict'
 import { request } from '@/utils/request'
-import { CHIPS_WAP_BASE_URL, CHIPS_PC_URL } from '@/config/constant'
-// const CHIPS_WAP_BASE_URL = 'http://172.16.133.226:7001/service'
+import { CHIPS_PC_URL } from '@/config/constant'
 const contract = {
   authentication({ axios }, params) {
     return request({
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/contract/v2/authentication.do',
+      url: CHIPS_PC_URL + '/yk/contract/v1/authentication.do',
     })
   },
   applycontart({ axios }, params) {
@@ -16,7 +15,7 @@ const contract = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/contract/v2/applycontract.do',
+      url: CHIPS_PC_URL + '/yk/contract/v2/applycontract.do',
     })
   },
   signcontart({ axios }, params) {
@@ -24,7 +23,7 @@ const contract = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/contract/v2/sign.do',
+      url: CHIPS_PC_URL + '/yk/contract/v1/sign.do',
     })
   },
   contartlist({ axios }, params) {
@@ -32,7 +31,7 @@ const contract = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/contract/v1/list.do',
+      url: CHIPS_PC_URL + '/yk/contract/v1/list.do',
     })
   },
   decryptionPhone({ axios }, params) {
@@ -40,7 +39,7 @@ const contract = {
       axios,
       params,
       method: 'post',
-      url: '/crisps-marketing-web/nk/marketingPhone/v1/decryptionPhoneList',
+      url: CHIPS_PC_URL + '/nk/entry/v1/decryption.do',
     })
   },
   encryptionPhone({ axios }, params) {
@@ -48,7 +47,7 @@ const contract = {
       axios,
       params,
       method: 'post',
-      url: '/crisps-marketing-web/nk/marketingPhone/v1/encryptionPhone',
+      url: CHIPS_PC_URL + '/nk/entry/v1/encryption.do',
     })
   },
 }

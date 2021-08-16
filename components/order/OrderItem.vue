@@ -253,6 +253,9 @@
           @click="handleClickItem(6)"
           >确认完成</sp-button
         >
+        <!-- <sp-button type="default" class="btn-look" @click="handleClickItem(9)"
+          >提交订单</sp-button
+        > -->
       </div>
     </div>
   </div>
@@ -293,15 +296,11 @@ export default {
     }
   },
   methods: {
+    confirmorder() {},
     handleClickItem(type) {
       this.$emit('handleClickItem', type, this.orderData)
     },
     toDetail() {
-      // const { href } = this.$router.resolve({
-      //   path: '/order/detail',
-      //   query: { id: this.orderData.id, cusOrderId: this.orderData.cusOrderId },
-      // })
-      // window.open(href, '_blank')
       this.$router.push({
         path: '/order/detail',
         query: { id: this.orderData.id, cusOrderId: this.orderData.cusOrderId },

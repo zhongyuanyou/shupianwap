@@ -552,31 +552,35 @@ export default {
           const url = window && window.location.href
           const sharedUrl = setUrlParams(url, { isShare: 1 })
           const tile = this.articleDetails.title
-          const content = this.articleDetails.contentText
-          this.$appFn.dggShare(
-            {
-              image:
-                'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png',
-              title: `${tile}`,
-              subTitle: `${content}`,
-              url: sharedUrl,
-              // 匹配启大顺
-              description: `${content}`,
-              imgUrl:
-                'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png',
-            },
-            (res) => {
-              const { code } = res || {}
-              if (code !== 200) {
-                this.$xToast.show({
-                  message: '分享失败！',
-                  duration: 1500,
-                  forbidClick: false,
-                  icon: 'toast_ic_remind',
-                })
-              }
+          const content = this.articleDetails.contentText.substring(0, 50).trim()
+          console.log(`output tile: ${tile}`)
+          console.log(`output content: ${content}`)
+          const shareContent = {
+            title: `${tile}`,
+            url: sharedUrl,
+          }
+          // 薯片app
+          if (this.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS') {
+            shareContent.image =
+              'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png'
+            shareContent.subTitle = `${content}`
+          } else {
+            // 启大顺
+            shareContent.description = `${content}`
+            shareContent.imgUrl =
+              'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png'
+          }
+          this.$appFn.dggShare(shareContent, (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '分享失败！',
+                duration: 1500,
+                forbidClick: false,
+                icon: 'toast_ic_remind',
+              })
             }
-          )
+          })
           return
         }
         this.shareOptions = [{ name: '复制链接', icon: 'link' }]

@@ -88,7 +88,7 @@ import { actCard } from '@/api/index'
 
 export default {
   layout: 'keepAlive',
-  name: 'Invoice',
+  name: 'ActCardDetails',
   components: {
     LoadingCenter,
     Header,

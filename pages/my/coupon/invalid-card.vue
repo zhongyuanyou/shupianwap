@@ -1,8 +1,8 @@
 <template>
   <div class="invoice">
-    <HeaderSlot>
-      <Header class="my-header" title="失效卡"></Header>
-    </HeaderSlot>
+    <HeadWrapper>
+      <Head title="失效卡"></Head>
+    </HeadWrapper>
 
     <sp-list
       v-if="list.length > 0"
@@ -45,8 +45,8 @@ import {
   Dialog,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
-import Header from '@/components/common/head/header.vue'
+import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
+import Head from '@/components/common/head/Head.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import ActCardItem from '~/components/my/coupon/index/ActCardItem.vue'
@@ -55,10 +55,10 @@ import { coupon, actCard } from '@/api/index'
 
 export default {
   layout: 'keepAlive',
-  name: 'Invoice',
+  name: 'Invalidcard',
   components: {
     LoadingCenter,
-    Header,
+    Head,
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
     [Sticky.name]: Sticky,
@@ -67,7 +67,7 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [Dialog.Component.name]: Dialog.Component,
     [List.name]: List,
-    HeaderSlot,
+    HeadWrapper,
     ActCardItem,
   },
   data() {
@@ -154,10 +154,11 @@ export default {
 
             this.list = res.rows
           } else {
-            this.list.concat(res.rows)
+            this.list = this.list.concat(res.rows)
           }
         })
         .catch((err) => {
+          this.error = true
           this.loading = false
           this.$xToast.error(err.message || '请求失败')
         })

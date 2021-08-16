@@ -604,6 +604,7 @@ export default {
               this.$router.push({
                 path: '/pay/payType',
                 query: {
+                  fromPage: 'orderList',
                   cusOrderId: result.cusOrderId,
                 },
               })
@@ -754,7 +755,7 @@ export default {
     openCardFn() {
       this.card.show = true
     },
-    close(data) {
+    close() {
       this.couponInfo.popupshow = false
     },
     closeCard() {

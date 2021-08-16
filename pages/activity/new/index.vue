@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div>新的</div>
+    <div class="new">新的</div>
     <div><nuxt-link to="/activity/seckill">直降</nuxt-link></div>
     <div><nuxt-link to="/activity/seckill2">秒杀</nuxt-link></div>
     <div><nuxt-link to="/activity/exclusive">独家专售</nuxt-link></div>
@@ -36,8 +36,12 @@
 .container {
   font-size: 32px;
 
+  .new,
   .old {
-    margin-top: 20px;
+    padding: 20px 0;
+  }
+  .old {
+    margin-top: 50px;
     border-top: 1px solid #f4f4f4;
   }
 }

@@ -1,9 +1,26 @@
 <template>
   <div class="container">
-    <HeadWrapper :fill="false" :line="false" @onHeightChange="onHeightChange">
-      <div class="search_container">
+    <div
+      v-if="isInApp"
+      class="app_header_fill"
+      style="height: 0.6rem; background-color: #2b292a"
+    ></div>
+
+    <HeadWrapper
+      :fill="false"
+      :line="ClassState == 0 ? true : false"
+      :background-color="ClassState == 0 ? '#fff' : ''"
+      @onHeightChange="onHeightChange"
+    >
+      <Head
+        :class-state="ClassState"
+        code="protocol100052"
+        title="先服务后收费"
+        :back="uPGoBack"
+        :search="clickInputHandle"
+      ></Head>
+      <!-- <div class="search_container">
         <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
-          <!-- @click="uPGoBack" -->
           <div class="left-back" @click="uPGoBack">
             <my-icon
               name="nav_ic_back"
@@ -30,10 +47,10 @@
             >
           </div>
         </div>
-      </div>
+      </div> -->
     </HeadWrapper>
 
-    <div class="img_container">
+    <div ref="fill_container" class="img_container">
       <img width="100%" :src="imageHead" alt="" />
     </div>
 
@@ -50,7 +67,7 @@
       ></Recommend>
       <client-only>
         <Classification
-          :is-service="false"
+          :has-city="hasCity && isService"
           :city-name="cityName"
           :header-height="headerHeight"
           :current-index="currentIndex"
@@ -93,10 +110,11 @@
 import { mapState, mapMutations } from 'vuex'
 import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
-import activityMixin from './new/activityMixin'
+import activityMixin from '@/mixins/activityMixin.js'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 import Recommend from '~/components/activity/Recommend.vue'
 import Card from '~/components/activity/Card.vue'
+import Head from '~/components/activity/Head.vue'
 import NoData from '@/components/activity/NoData.vue'
 import Classification from '@/components/activity/Classification.vue'
 export default {
@@ -113,6 +131,7 @@ export default {
 
     Recommend,
     Card,
+    Head,
     NoData,
     Classification,
   },
@@ -124,6 +143,7 @@ export default {
       hasCity: true,
       imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/eik2dfytts00000.png',
       headerHeight: 0,
+      ClassState: 1,
     }
   },
   computed: {
@@ -138,6 +158,10 @@ export default {
 
   mounted() {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'Server' })
+    window.addEventListener('scroll', this.handleScroll) // 监听（绑定）滚轮滚动事件
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
     ...mapMutations({
@@ -145,6 +169,17 @@ export default {
     }),
     onHeightChange(height) {
       this.headerHeight = height
+    },
+    handleScroll() {
+      const scrollHeight =
+        document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
+      const boxHeight = this.$refs.fill_container.clientHeight // 盒子高度
+
+      if (scrollHeight > boxHeight - this.headerHeight) {
+        this.ClassState = 0
+      } else {
+        this.ClassState = 1
+      }
     },
   },
   head() {
@@ -159,53 +194,6 @@ export default {
   font-family: PingFangSC;
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
-  .search_container {
-    padding-top: constant(safe-area-inset-top);
-    padding-top: env(safe-area-inset-top);
-    .search {
-      display: flex;
-      align-items: center;
-      padding: 16px 0;
-
-      background-size: 100% auto;
-
-      .left-back {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0 32px;
-        .back_icon {
-          width: 40px;
-          height: 40px;
-        }
-      }
-
-      .search-box {
-        margin-right: 40px;
-        height: 88px;
-
-        display: flex;
-        align-items: center;
-        flex: 1;
-      }
-      .right {
-        display: flex;
-        align-items: center;
-
-        .rule {
-          height: 28px;
-
-          font-weight: bold;
-          font-size: 28px;
-          color: #ffffff;
-          letter-spacing: 0;
-          text-align: right;
-          line-height: 28px;
-          margin: 0 32px;
-        }
-      }
-    }
-  }
 
   .img_container {
     position: relative;
