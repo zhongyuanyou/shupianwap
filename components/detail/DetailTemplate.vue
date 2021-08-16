@@ -304,6 +304,10 @@ export default {
     },
     // 添加收藏
     addSave() {
+      if (!this.$store.state.user.token) {
+        this.$router.push('/login')
+        return
+      }
       const classCodeLevel = this.proDetail.classCodeLevel
       let codeArr = []
       if (classCodeLevel) {
