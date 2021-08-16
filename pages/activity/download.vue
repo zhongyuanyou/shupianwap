@@ -35,8 +35,8 @@
       />
     </div>
 
-    <div class="tips">若您已安装app,点此打开</div>
-    <div class="btn" @click="download">点击立即下载</div>
+    <div class="tips" @click="openApp">若您已安装app,点此打开</div>
+    <div class="btn" @click="downloadWithStore">点击立即下载</div>
   </div>
 </template>
 <script>
@@ -126,7 +126,33 @@ export default {
       }
       window.location.href = downLoadUrl
     },
-
+    // 只打开app
+    openApp() {
+      let url = ''
+      if (this.isIOS) {
+        url = this.myIosLink
+      } else if (this.isAndroid) {
+        url = this.myAndrodLink
+      } else {
+        this.$xToast.show({
+          message: '请使用手机浏览器访问本页面即可打开薯片找人APP',
+          duration: 3000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
+        return
+      }
+      if (this.isWeixin) {
+        this.$xToast.show({
+          message: '微信内不支持打开外部应用，请更换为其他浏览器打开本页面。',
+          duration: 3000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
+        return
+      }
+      location.href = url
+    },
     // 打开app，安卓未安装则打开应用市场或者pp网页，ios打开appstore
     checkOutApp() {
       const ua = window.navigator.userAgent.toLowerCase()
@@ -194,6 +220,24 @@ export default {
       document.addEventListener(visibilityChangeEvent, onVisibilityChange)
     },
 
+    // 从商店下载
+    downloadWithStore() {
+      if (this.isWeixin) {
+        this.$xToast.show({
+          message: '微信内不支持打开外部应用，请更换为其他浏览器打开本页面。',
+          duration: 3000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
+        return
+      }
+      if (this.isIOS) {
+        window.location.href =
+          'https://apps.apple.com/cn/app/薯片找人/id1535886630'
+      } else {
+        this.toAndroidStore(this.packagename)
+      }
+    },
     toAndroidStore(AppName) {
       const sUserAgent = navigator.userAgent.toLowerCase()
       console.log(AppName, sUserAgent)

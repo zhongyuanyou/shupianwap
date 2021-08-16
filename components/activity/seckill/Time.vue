@@ -79,7 +79,7 @@ export default {
     flex-shrink: 0;
     color: #ec5330;
     font-size: 24px;
-    font-weight: bold;
+
     letter-spacing: 0;
     margin-left: 16px;
     & > div {
@@ -89,14 +89,19 @@ export default {
       background: #ec5330;
       border-radius: 4px;
       font-family: BebasNeueBold, Bebas;
-      font-weight: bold;
+      // font-weight: bold;
       font-size: 32px;
       color: #ffffff;
       letter-spacing: 0;
-      line-height: 32px;
-      padding: 6px 8px;
+      min-width: 40px;
+      height: 40px;
+      line-height: 40px;
+
+      padding: 0px 7px;
+      letter-spacing: 0;
     }
     .colon {
+      font-weight: bold;
       transform: translateY(-7px);
     }
   }

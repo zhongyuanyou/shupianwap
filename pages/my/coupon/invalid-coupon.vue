@@ -1,8 +1,8 @@
 <template>
   <div class="invoice">
-    <HeaderSlot>
-      <Header class="my-header" title="失效券"></Header>
-    </HeaderSlot>
+    <HeadWrapper :line="true">
+      <Head title="失效券"></Head>
+    </HeadWrapper>
     <div v-for="(item, index) of list" :key="index" class="coupon_list">
       <CouponsItem
         :item="item.marketingCouponVO || {}"
@@ -50,8 +50,8 @@ import {
   Dialog,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
-import Header from '@/components/common/head/header.vue'
+import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
+import Head from '@/components/common/head/Head.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import CouponsItem from '~/components/my/coupon/index/CouponsItem.vue'
@@ -60,10 +60,11 @@ import { coupon } from '@/api/index'
 
 export default {
   layout: 'keepAlive',
-  name: 'Invoice',
+  name: 'InvalidCoupon',
   components: {
     LoadingCenter,
-    Header,
+    HeadWrapper,
+    Head,
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
     [Sticky.name]: Sticky,
@@ -72,7 +73,7 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [Dialog.Component.name]: Dialog.Component,
     [List.name]: List,
-    HeaderSlot,
+
     CouponsItem,
   },
   data() {
@@ -147,6 +148,7 @@ export default {
           this.loading = false
         })
         .catch((e) => {
+          this.error = true
           this.loading = false
           this.list = []
           console.log(e)

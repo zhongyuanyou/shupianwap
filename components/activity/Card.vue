@@ -20,34 +20,29 @@
         <span class="rc-span">千万补贴</span> -->
         {{ item.skuName }}
       </div>
-      <div class="rc-middle">
-        <div v-for="tag in tags" :key="tag">
+
+      <div v-if="tags.length > 0" class="rc-middle">
+        <div v-for="tag of tags" :key="tag">
           {{ overflowDot(tag, 6) }}
         </div>
       </div>
-      <div class="rc-slogan">
-        {{ item.slogan }}
-      </div>
+      <div class="rc-slogan">{{ item.slogan }}</div>
       <div class="rc-bottom">
-        <div class="rc-bottom-lf">
+        <div class="price-content">
           <span
             v-if="parsePrice(item.specialPrice) !== '面议'"
-            class="rc-bottom-lf-my"
+            class="price-content-mianyi"
           >
-            <span class="rc-bottom-lf-my-price">
-              {{ item.specialUnit ? item.specialNewPrice : item.specialPrice }}
+            <span class="price-content-mianyi-price">
+              {{ parseFloat(item.specialPrice) }}
             </span>
-            <span class="rc-bottom-lf-my-price-unit">{{
-              item.specialUnit || '元'
-            }}</span>
+            <span class="price-content-mianyi-price-unit">元</span>
           </span>
-          <span v-else class="rc-bottom-lf-my-price-unit">
-            <span>面议</span>
-          </span>
+          <span v-else class="price-content-mianyi-price-unit">面议</span>
 
-          <span v-if="parsePrice(item.specialPrice) !== '面议'" class="bf-my">
-            {{ item.skuUnit ? item.skuNewPrice : item.skuPrice
-            }}{{ item.skuUnit || '元' }}
+          <span v-if="parsePrice(item.specialPrice) !== '面议'" class="mianyi">
+            <span>{{ parseFloat(item.skuPrice) }}</span
+            ><span>{{ '元' }}</span>
           </span>
         </div>
       </div>
@@ -88,7 +83,7 @@ export default {
   },
   computed: {
     tags() {
-      const tag = this?.item?.tags?.split(',') || []
+      const tag = this?.item?.tags ? this.item.tags.split(',') : []
       return tag.slice(0, 2)
     },
   },
@@ -156,7 +151,7 @@ export default {
 
     background: #ec5330;
     border-radius: 4px;
-    font-family: PingFangSC-Regular, PingFang SC;
+    font-family: @fontf-pfsc-med;
     transform-origin: left top;
     transform: scale(0.83);
   }
@@ -173,7 +168,7 @@ export default {
   .goods-name {
     font-size: 32px;
     line-height: 42px;
-
+    margin-bottom: 12px;
     font-weight: bold;
     color: #222222;
 
@@ -189,32 +184,11 @@ export default {
       line-height: 20px;
     }
   }
-  .rc-top {
-    font-size: 32px;
-    font-weight: bold;
-    color: #222222;
-    line-height: 32px;
-    text-overflow: ellipsis;
-    word-break: break-all;
-    font-family: PingFangSC-Medium, PingFang SC;
-    overflow: hidden;
-    white-space: normal;
-    max-height: 84px;
-    line-height: 42px;
-    text-indent: 172px;
-    .multiRowOverflowDot();
 
-    .rc-title {
-      font-size: 32px;
-      font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: bold;
-      line-height: 42px;
-    }
-  }
   .rc-middle {
     // display: flex;
     // align-content: flex-start;
-    margin-top: 12px;
+    margin-bottom: 16px;
     font-size: 0;
     div {
       display: inline-block;
@@ -227,11 +201,10 @@ export default {
       background: #f0f2f5;
       border-radius: 4px;
       margin-right: 8px;
-      font-family: PingFangSC-Regular, PingFang SC;
+      font-family: @fontf-pfsc-med;
     }
   }
   .rc-slogan {
-    margin-top: 16px;
     font-size: 22px;
     color: #222222;
     letter-spacing: 0;
@@ -243,33 +216,44 @@ export default {
     display: flex;
     width: 100%;
     justify-content: space-between;
-    .rc-bottom-lf {
+    .price-content {
       font-size: 0;
       span {
         display: inline-block;
       }
-      .rc-bottom-lf-my-price {
-        font-family: PingFangSC-Medium;
+      .price-content-mianyi {
+        margin-right: 16px;
+      }
+      .price-content-mianyi-price {
+        font-family: @fontf-pfsc-med;
         font-weight: bold;
         font-size: 36px;
         color: #ec5330;
         letter-spacing: 0;
         line-height: 36px;
       }
-      .rc-bottom-lf-my-price-unit {
-        font-family: PingFangSC-Medium;
+      .price-content-mianyi-price-unit {
+        font-family: @fontf-pfsc-med;
+
         font-weight: bold;
         font-size: 22px;
         color: #ec5330;
         letter-spacing: 0;
         line-height: 22px;
       }
-      .bf-my {
-        margin-left: 16px;
+      .mianyi {
         font-size: 22px;
         color: #999999;
         letter-spacing: 0;
         line-height: 22px;
+        // font-family: PingFangSC-Regular, PingFang SC, PingFangSC-Medium;
+        font-family: @fontf-pfsc-reg;
+        & > span {
+          display: inline-block;
+        }
+        .bold {
+          font-weight: bold;
+        }
       }
     }
   }
