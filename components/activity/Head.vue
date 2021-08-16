@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="right">
-        <my-icon
+        <!-- <my-icon
           class="search-icon"
           name="sear_ic_sear"
           size="0.4rem"
@@ -31,7 +31,7 @@
           :style="{ color: classState == 0 ? '#1A1A1A' : '#fff' }"
           @click="$router.push('/login/protocol?categoryCode=' + code)"
           >规则</span
-        >
+        > -->
       </div>
     </div>
   </div>
@@ -47,10 +47,10 @@ export default {
       type: String,
       default: '',
     },
-    code: {
-      type: String,
-      default: '',
-    },
+    // code: {
+    //   type: String,
+    //   default: '',
+    // },
     back: {
       type: Function,
       default: () => {},

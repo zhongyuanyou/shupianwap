@@ -13,7 +13,7 @@
     >
       <Head
         :class-state="ClassState"
-        code="protocol100047"
+        code="protocol100034"
         title="官方补贴"
         :back="uPGoBack"
         :search="clickInputHandle"
@@ -52,7 +52,12 @@
 
     <div ref="fill_container" class="img_container">
       <img width="100%" :src="imageHead" alt="" />
-
+      <div
+        class="rule"
+        @click="$router.push('/login/protocol?categoryCode=' + ruleCode)"
+      >
+        规则
+      </div>
       <div class="count-down">
         <div class="down-time">
           <span>已累计补贴</span>
@@ -162,6 +167,8 @@ export default {
       imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg',
       headerHeight: 0,
       ClassState: 1,
+
+      ruleCode: 'protocol100034',
     }
   },
   computed: {
@@ -271,6 +278,28 @@ export default {
         letter-spacing: 0;
         margin-top: 47px;
       }
+    }
+
+    .rule {
+      // header的z-index是999
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.2);
+
+      border-radius: 100px 0 0 100px;
+
+      opacity: 0.9;
+      font-family: PingFangSC-Regular;
+      font-size: 24px;
+      color: #ffffff;
+      letter-spacing: 0;
+      line-height: 40px;
+
+      position: absolute;
+      right: 0;
+      top: 40px;
+      height: 40px;
+      width: 96px;
+      text-align: center;
     }
   }
 
