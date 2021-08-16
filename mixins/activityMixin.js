@@ -13,28 +13,11 @@ export default {
     userInfo() {
       return JSON.parse(localStorage.getItem('myInfo'))
     },
-    splittedRecommendProduct() {
-      // return this.activityProductList.slice(0, 3)
-      return this.recommendProductList.slice(0, 3)
-    },
+
     isNoData() {
       return !this.activityProductList.length
     },
-    safeTopStyle() {
-      return {
-        width: '100%',
-        height: this.safeTop + 'px',
-        // backgroundColor: '#fff',
-        // background:
-        //   "url('https://cdn.shupian.cn/sp-pt/wap/9wjolx4gc0s0000.png')",
-        backgroundSize: '100% 300%',
-        // backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        position: 'fixed',
-        top: '0',
-        zIndex: '99',
-      }
-    },
+
     terminalCode() {
       // return this.isInApp ? 'COMDIC_TERMINAL_APP' : 'COMDIC_TERMINAL_WAP'
       // 只有app有图片
@@ -43,27 +26,23 @@ export default {
     isTimerShow() {
       return this.recommendProductList.length || this.activityProductList.length
     },
-    // isTrade() {
-    //   return this.specType === 'HDZT_ZTTYPE_DJZS'
-    // },
+
+    // 是否是服务商品
     isService() {
       return this.productType === 'PRO_CLASS_TYPE_SERVICE'
-      // return true
     },
   },
   data() {
     return {
-      isInit: true,
-      initList: [],
+
+
       endCountDownTimer: null,
       countDownTimer: null,
-      defaultData: {
-        index: 0,
-        sort: -1, // 倒序
-      },
-      iconLeft: 0.35,
+
       loading: false,
       finished: false,
+
+
       refreshDisabled: false,
       refreshing: false,
       activityTypeOptions: [],
@@ -93,31 +72,29 @@ export default {
       recommendProductList: [],
       allText: '全部',
       productType: '',
-      safeTop: 0,
+
       headerHeight: 0,
-      screenWidth: 0,
-      // isNoData: false,
+      ClassState: 1,
     }
   },
-  async created() {
+  watch: {
+    ClassState() {
+      this.setTopColor()
+    },
+  },
+  async mounted() {
     // 初始化定位
-    if (process.client && !this.cityName) {
-      this.POSITION_CITY({
+    this.setTopColor()
+
+    if (!this.cityCode) {
+      await this.POSITION_CITY({
         type: 'init',
       })
     }
+    await this.getMenuTabs() // 获取tab
+    await this.getRecommendProductList() // 获取推荐商品
 
-    await this.getMenuTabs()
-    await this.getRecommendProductList()
-  },
-  mounted() {
-    if (this.isInApp) {
-      this.safeTop = this.appInfo.statusBarHeight
-    }
-    this.headerHeight = this.$refs.header_sticky.height
-    // console.log(process.env)
-    // this.chii()
-    this.screenWidth = window.screen.width
+
   },
   beforeDestroy() {
     clearInterval(this.endCountDownTimer)
@@ -128,6 +105,18 @@ export default {
       POSITION_CITY: 'city/POSITION_CITY',
       GET_ACCOUNT_INFO: 'user/GET_ACCOUNT_INFO',
     }),
+    setTopColor() {
+      if (this.isInApp) {
+        this.$appFn.dggChangeTopColor(
+          {
+            flags: this.ClassState === 1 ? 'light' : 'dark',
+          },
+          (res) => {
+            console.log('DGGSetColorRes', res)
+          }
+        )
+      }
+    },
     // 平台不同，跳转方式不同
     uPGoBack() {
       if (this.isInApp) {
@@ -151,9 +140,7 @@ export default {
       }
       this.$router.back(-1)
     },
-    advertjump(item) {
-      this.$router.push('/')
-    },
+
     jumpProductDetail(item) {
       if (this.isInApp) {
         if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
@@ -176,10 +163,6 @@ export default {
             query: { productId: item.skuId, type: item.classCode },
           })
         } else {
-          // this.$router.push({
-          //   path: `/detail/serviceDetails`,
-          //   query: { productId: item.skuId },
-          // })
           this.$router.push({
             path: `/detail`,
             query: { productId: item.skuId },
@@ -187,58 +170,14 @@ export default {
         }
       }
     },
-    jumpIM(item) {
-      this.uPIM({
-        mchUserId: this.userInfo.imUserId,
-        userName: this.userInfo.userName,
-        type: this.userInfo.imUserType,
-      })
-    },
-    async uPIM(data = {}) {
-      const { mchUserId, userName, type } = data
-      // 如果当前页面在app中，则调用原生IM的方法
-      if (this.isInApp) {
-        try {
-          // 需要判断登陆没有，没有登录就是调用登录
-          await this.getUserInfo()
-          this.$appFn.dggOpenIM(
-            {
-              name: userName,
-              userId: mchUserId,
-              userType: type || 'MERCHANT_B',
-              requireCode: this.requireCode || '',
-              requireName: this.requireName || '',
-            },
-            (res) => {
-              const { code } = res || {}
-              if (code !== 200)
-                this.$xToast.show({
-                  message: `联系失败`,
-                  duration: 1000,
-                  forbidClick: true,
-                  icon: 'toast_ic_remind',
-                })
-            }
-          )
-        } catch (error) {
-          console.error('uPIM error:', error)
-        }
-        return
-      }
-      const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
-      this.creatImSessionMixin({
-        imUserId: mchUserId,
-        imUserType,
-        requireCode: this.requireCode || '',
-        requireName: this.requireName || '',
-      })
-    },
+
+
     init() {
       this.page = 1
       this.activityProductList = []
       this.finished = false
       this.loading = true
-      // this.isNoData = false
+
     },
 
     menuTab(item, index) {
@@ -269,12 +208,7 @@ export default {
       // }
       // 前端放开，后台校验城市，如果是交易产品后台就不带城市查询
       params.cityCodes = this.cityCode || this.defaultCityCode
-      // if (this.specType !== 'HDZT_ZTTYPE_XSQG') {
-      //   Object.assign(params, {
-      //     // cityCodes: this.cityCode || this.defaultCityCode,
-      //     platformCode: this.platformCode,
-      //   })
-      // }
+
       await this.$axios
         .get(activityApi.activityTypeOptions, {
           params,
@@ -300,6 +234,7 @@ export default {
               this.specCode = res.data.specCode
             }
             this.productType = res.data.productType || ''
+
             this.activityTypeOptions.unshift({
               cityCode: this.cityCode,
               cityName: this.cityName,
@@ -310,13 +245,14 @@ export default {
             console.log('this.specCode', this.specCode)
             if (res.data.settingVOList && res.data.settingVOList.length > 0) {
               this.itemTypeOptions = res.data.settingVOList[0]
-              this.getProductList(this.itemTypeOptions, this.specCode)
+              this.getProductList()
             } else {
               this.loading = false
               this.finished = true
             }
           } else {
-            throw new Error('服务异常，请刷新重试！')
+            throw new Error(res.message)
+            // throw new Error('服务异常，请刷新重试！')
           }
         })
         .catch((error) => {
@@ -335,7 +271,6 @@ export default {
     async getProductList() {
       if (
         this.activityTypeOptions.length > 0
-        // && this.specType !== 'HDZT_ZTTYPE_XSQG'
       ) {
         const params = {
           specCode: this.specCode,
@@ -354,63 +289,56 @@ export default {
 
         if (
           this.currentTab.labelName !== '' &&
-          this.currentTab.labelName !== '全部'
+          this.currentTab.labelName !== '全部' &&
+          this.currentTab.labelName !== '全部服务'
         ) {
           params.labelName = this.currentTab.labelName
         }
         await this.productMethod(params)
       } else {
-        // this.isNoData = true
+
         this.finished = true
         this.loading = false
       }
     },
     async productMethod(param) {
+
       await this.$axios
         .get(activityApi.activityProductList, {
           params: param,
         })
         .then((res) => {
+          console.log('productMethod', param, res);
+          this.refreshing = false
           if (res.code === 200) {
-            if (
-              this.isInit &&
-              location.href.match('activity/special') &&
-              !this.recommendProductList.length
-            ) {
-              this.initList = res.data.rows
-              this.recommendProductList = JSON.parse(
-                JSON.stringify(res.data.rows)
-              ).splice(0, 3)
-              this.activityProductList = JSON.parse(
-                JSON.stringify(res.data.rows)
-              ).splice(3, res.data.rows.length)
-            } else {
-              this.activityProductList = this.activityProductList.concat(
-                res.data.rows
-              )
-            }
-            this.isInit = false
-            if (this.activityProductList.length === 0) {
-              // this.isNoData = true
-            }
+
+
+
+
+
+            this.activityProductList = this.activityProductList.concat(
+              res.data.rows
+            )
+
+
             this.total = res.data.total
             this.loading = false
-            if (this.page > res.data.totalPage) {
+            if (this.page > res.data.totalPage || res.data.rows.length < 15) {
               this.finished = true
             }
-            this.refreshing = false
+
           } else {
             this.loading = false
-            throw new Error('服务异常，请刷新重试！')
-            // Toast.fail({
-            //   duration: 2000,
-            //   message: '服务异常，请刷新重试！',
-            //   forbidClick: true,
-            //   className: 'my-toast-style',
-            // })
+            this.finished = true
+            this.refreshDisabled = true
+            throw new Error(res.message)
+            // throw new Error('服务异常，请刷新重试！')
           }
         })
         .catch((err) => {
+          this.loading = false
+          this.finished = true
+          this.refreshDisabled = true
           this.refreshing = false
           Toast.fail({
             duration: 2000,
@@ -419,37 +347,35 @@ export default {
             className: 'my-toast-style',
           })
         })
-      // .finally(() => {
-      //   this.refreshing = false
-      // })
     },
+
+    // 获取推荐产品
     getRecommendProductList() {
       if (this.specCode) {
         const params = {
           specCode: this.specCode,
-          isReco: 1,
+          isReco: 1,// 是否需要推荐商品
           page: 1,
           limit: 10000,
           terminalCode: this.terminalCode,
         }
-
-        // if (this.hasCity) {
-        //   params.cityCode = this.cityCode
-        // }
         // 前端放开，后台校验城市，如果是交易产品后台就不带城市查询
         params.cityCode = this.cityCode
 
         this.$axios
           .get(activityApi.activityProductList, { params })
           .then((res) => {
+
+
             if (res.code === 200) {
               if (res.data.rows.length) {
-                this.recommendProductList = res.data.rows
+                this.recommendProductList = res.data.rows.slice(0, 3)
               } else {
-                this.recommendProductList = this.initList.splice(0, 3)
+                this.recommendProductList = []
               }
             } else {
-              throw new Error('服务异常，请刷新重试！')
+              throw new Error(res.message)
+              // throw new Error('服务异常，请刷新重试！')
             }
           })
           .catch((err) => {
@@ -463,32 +389,6 @@ export default {
       }
     },
 
-    getAdvertisingData() {
-      this.$axios
-        .get(activityApi.activityAdvertising, {
-          params: {
-            code: this.advertCode,
-          },
-        })
-        .then((res) => {
-          if (res.code === 200) {
-            if (res.data.sortMaterialList.length) {
-              this.productAdvertData =
-                res.data.sortMaterialList[0].materialList.slice(0, 3)
-            }
-          } else {
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
-          }
-        })
-        .catch((err) => {
-          console.log(err.message)
-        })
-    },
     swichCityHandle() {
       this.$router.push({
         path: '/city/choiceCity',
@@ -573,28 +473,11 @@ export default {
       }, 1000)
       // 每执行一次定时器就减少一秒
     },
-    getPercentage(res, total) {
-      return (res / total) * 100
-    },
-    overflowDot(str, num) {
-      if (str.length > 6) {
-        return str.slice(0, num) + '...'
-      } else {
-        return str
-      }
-    },
-    chii() {
-      const script = document.createElement('script')
-      script.src = '//172.16.132.163:9090/target.js'
-      document.body.appendChild(script)
-    },
-    convert2vw(px) {
-      px = parseFloat(px)
-      return (px / this.screenWidth) * 100
-    },
+
     parsePrice(priceStr) {
-      priceStr = priceStr.toString()
-      if (priceStr > 0) {
+
+      if (priceStr && priceStr > 0) {
+        priceStr = priceStr.toString()
         return {
           yuan: priceStr.split('.')[0],
           jiao: priceStr.split('.')[1],

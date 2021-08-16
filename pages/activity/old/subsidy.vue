@@ -218,7 +218,7 @@ import {
   WorkTabSortItem,
   PullRefresh,
 } from '@chipspc/vant-dgg'
-import activityMixin from '@/mixins/activityMixin'
+import activityMixin from '~/mixins/activityMixin_old'
 
 export default {
   name: 'Subsidy',
