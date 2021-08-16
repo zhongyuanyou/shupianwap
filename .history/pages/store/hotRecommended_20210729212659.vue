@@ -370,6 +370,11 @@ export default {
         const { data, code, message } = await this.$axios.post(
           storeApi.recommendGoods,
           params,
+          {
+            headers: {
+              'x-cache-control': 'cache',
+            },
+          }
         )
         if (code !== 200) {
           this.changePull(true)
@@ -938,13 +943,12 @@ export default {
               line-height: 22px;
               span {
                 display: inline-block;
-                max-width: 450px;
+                width: 450px;
                 padding: 0 8px 0 8px;
                 border-right: 1px solid #1a1a1a;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-                line-height: 1;
                 &:first-of-type {
                   padding-left: 0;
                 }
