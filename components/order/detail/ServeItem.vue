@@ -143,7 +143,8 @@
           </div>
         </div> -->
     </div>
-    <Process v-if="showProcess" @close="closeProcess"> </Process>
+    <Process v-if="showProcess" :info="processInfo" @close="closeProcess">
+    </Process>
   </div>
 </template>
 
@@ -191,6 +192,7 @@ export default {
   data() {
     return {
       showProcess: false,
+      processInfo: {},
     }
   },
   methods: {
@@ -201,6 +203,13 @@ export default {
       this.$emit('confirmOrder', id)
     },
     openProcess(item) {
+      console.log(item)
+      this.processInfo = {
+        orderId: item.orderId,
+        cusOrderId: item.cusOrderId,
+        skuId: item.skuId,
+        detailId: item.id,
+      }
       this.showProcess = true
     },
     closeProcess() {
