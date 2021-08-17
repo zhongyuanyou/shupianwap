@@ -164,7 +164,7 @@ export default {
       specType: 'HDZT_ZTTYPE_QWBT',
 
       hasCity: true,
-      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg',
+      imageHead: this.$ossImgSetV2('c0mhpvuyb2o0000.jpg'), // 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg',
       headerHeight: 0,
       ClassState: 1,
 
