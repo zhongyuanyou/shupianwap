@@ -128,9 +128,9 @@ export default {
     return {
       specType: 'HDZT_ZTTYPE_XSQG',
 
-      hasCity: false,
+      hasCity: true,
 
-      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/57zm6tubgjo0000.jpg',
+      imageHead: this.$ossImgSetV2('57zm6tubgjo0000.jpg'), // 'https://cdn.shupian.cn/sp-pt/wap/images/57zm6tubgjo0000.jpg'
 
       headerHeight: 0,
       ClassState: 1,
