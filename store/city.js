@@ -41,15 +41,15 @@ export const mutations = {
       // domain: 'shupian.cn', // 城市选择加入根域名cookie供其他站点使用
     })
   },
-    // 设置当前定位城市code
-    SET_POSITION_CODE(state, code) {
-      state.positionCityCode = code
-      this.$cookies.set('positionCityCode', state.positionCityCode, {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 7, // 过期时间
-        domain: 'shupian.cn', // 城市选择加入根域名cookie供其他站点使用
-      })
-    },
+  // 设置当前定位城市code
+  SET_POSITION_CODE(state, code) {
+    state.positionCityCode = code
+    this.$cookies.set('positionCityCode', state.positionCityCode, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7, // 过期时间
+      // domain: 'shupian.cn', // 城市选择加入根域名cookie供其他站点使用
+    })
+  },
   // 设置当前定位状态
   SET_POSITION_STATUS(state, num) {
     state.positionStatus = num
@@ -81,7 +81,7 @@ export const actions = {
 
     const { code, data, message } = await getPositonCity()
     // 定位成功,且匹配到开通服务的站点
-    console.log(code,data,message)
+    console.log(code, data, message)
     if (code === 200) {
       commit('SET_POSITION_CITY', data.name)
       commit('SET_POSITION_CODE', data.code)
@@ -123,6 +123,8 @@ export const actions = {
     console.log(message)
     // 定位失败，设置默认城市为成都
     commit('SET_POSITION_CITY', '')
+    commit('SET_POSITION_CODE', '')
+
     commit('SET_POSITION_STATUS', 0)
     if (type === 'rest' && state.currentCity.name) return // 若是重新定位，定位失败并且当前有已选城市不重置当前城市
     commit('SET_CITY', state.defaultCity)

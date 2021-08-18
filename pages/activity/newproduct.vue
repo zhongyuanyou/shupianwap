@@ -98,7 +98,7 @@ import Classification from '@/components/activity/Classification.vue'
 
 export default {
   name: 'Newproduct',
-  layout: 'keepAlive',
+  layout: 'default',
   components: {
     // Header,
     HeadWrapper,
