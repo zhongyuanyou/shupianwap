@@ -143,6 +143,7 @@ import Classification from '@/components/activity/Classification.vue'
 export default {
   name: 'Subsidy',
   layout: 'keepAlive',
+
   components: {
     // Header,
     HeadWrapper,
@@ -171,6 +172,7 @@ export default {
       ruleCode: 'protocol100034',
     }
   },
+  //
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
