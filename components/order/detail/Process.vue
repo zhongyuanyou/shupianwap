@@ -50,7 +50,7 @@
   </div>
 </template>
 <script>
-import { Progress, Image } from '@chipspc/vant-dgg'
+import { Progress, Image, Empty } from '@chipspc/vant-dgg'
 import moment from 'moment'
 import Steps from '@/components/common/Steps.vue'
 import orderApi from '@/api/order'
@@ -58,6 +58,8 @@ export default {
   components: {
     [Image.name]: Image,
     [Progress.name]: Progress,
+    [Empty.name]: Empty,
+
     Steps,
   },
   props: {
