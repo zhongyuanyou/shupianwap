@@ -205,6 +205,7 @@ export default {
     openProcess(item) {
       console.log(item)
       this.processInfo = {
+        image: item.indexImg,
         orderId: item.orderId,
         cusOrderId: item.cusOrderId,
         skuId: item.skuId,
