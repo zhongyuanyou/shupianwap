@@ -196,6 +196,9 @@ export default {
     }),
     servergoodsshow() {
       this.isShowInput = true
+      this.$nextTick(() => {
+        this.$refs.searchPage.$refs.inputRef.focus()
+      })
     },
     servergoodsfn() {
       this.$refs.goods.$refs.list.finished = false

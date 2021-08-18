@@ -596,6 +596,12 @@ export default {
         font-size: 0;
         padding-bottom: 32px;
         border-bottom: 1px solid #f4f4f4;
+        &_title {
+          color: #222222;
+          font-size: 28px;
+          font-weight: bold;
+          margin: 32px 0 30px;
+        }
         &_value {
           display: inline-block;
           padding: 0 27px;

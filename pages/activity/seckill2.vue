@@ -96,8 +96,6 @@ export default {
 
       hasCity: false,
 
-      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/57zm6tubgjo0000.jpg',
-
       headerHeight: '',
 
       ClassState: 1,
@@ -131,8 +129,12 @@ export default {
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
     handleScroll() {
+      if (!this.$refs?.fill_container?.clientHeight) {
+        return
+      }
       const scrollHeight =
         document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
+
       const boxHeight = this.$refs.fill_container.clientHeight // 盒子高度
       if (scrollHeight > boxHeight) {
         this.ClassState = 0

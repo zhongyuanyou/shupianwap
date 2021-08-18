@@ -43,11 +43,6 @@ module.exports = {
           'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, shrink-to-fit=no, viewport-fit=cover',
       },
       {
-        hid: 'description',
-        name: 'description',
-        content: process.env.npm_package_description || '',
-      },
-      {
         name: 'apple-mobile-web-app-capable',
         content: 'yes',
       },
