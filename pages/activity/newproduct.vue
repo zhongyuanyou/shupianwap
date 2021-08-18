@@ -140,9 +140,10 @@ export default {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'Newproduct' })
     window.addEventListener('scroll', this.handleScroll) // 监听（绑定）滚轮滚动事件
   },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
+  // beforeDestroy() {
+  //   console.log('beforeDestroy')
+  //   window.removeEventListener('scroll', this.handleScroll)
+  // },
 
   methods: {
     ...mapMutations({

@@ -186,9 +186,9 @@ export default {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'Subsidy' })
     window.addEventListener('scroll', this.handleScroll) // 监听（绑定）滚轮滚动事件
   },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
+  // beforeDestroy() {
+  //   window.removeEventListener('scroll', this.handleScroll)
+  // },
   methods: {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',

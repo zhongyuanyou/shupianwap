@@ -34,6 +34,8 @@ export const mutations = {
   },
   // 设置当前定位城市
   SET_POSITION_CITY(state, name) {
+    console.log(state, name, 999913213)
+
     state.positionCityName = name
     this.$cookies.set('positionCityName', state.positionCityName, {
       path: '/',
@@ -43,6 +45,7 @@ export const mutations = {
   },
   // 设置当前定位城市code
   SET_POSITION_CODE(state, code) {
+    console.log(state, code, 13213)
     state.positionCityCode = code
     this.$cookies.set('positionCityCode', state.positionCityCode, {
       path: '/',
@@ -81,10 +84,11 @@ export const actions = {
 
     const { code, data, message } = await getPositonCity()
     // 定位成功,且匹配到开通服务的站点
-    console.log(code, data, message)
+    console.log('getPositonCity', code, data, message)
     if (code === 200) {
       commit('SET_POSITION_CITY', data.name)
       commit('SET_POSITION_CODE', data.code)
+
       commit('SET_POSITION_STATUS', 2)
       if (type === 'rest') {
         myToast.hideLoading()
@@ -102,8 +106,7 @@ export const actions = {
     }
     // 定位成功，但未匹配到开通服务的站点
     if (code === 5003) {
-      commit('SET_POSITION_CITY', data.name)
-      commit('SET_POSITION_CODE', data.code)
+
       commit('SET_POSITION_STATUS', 1)
       if (type === 'rest') {
         myToast.hideLoading()
@@ -112,6 +115,9 @@ export const actions = {
       }
       // 若是重新定位，定位后不重置当前城市
       commit('SET_CITY', state.defaultCity)
+      commit('SET_POSITION_CITY', state.defaultCity.name)
+      commit('SET_POSITION_CODE', state.defaultCity.code)
+
       return
     }
 
@@ -122,8 +128,8 @@ export const actions = {
     }
     console.log(message)
     // 定位失败，设置默认城市为成都
-    commit('SET_POSITION_CITY', '')
-    commit('SET_POSITION_CODE', '')
+    commit('SET_POSITION_CITY', state.defaultCity.name)
+    commit('SET_POSITION_CODE', state.defaultCity.code)
 
     commit('SET_POSITION_STATUS', 0)
     if (type === 'rest' && state.currentCity.name) return // 若是重新定位，定位失败并且当前有已选城市不重置当前城市

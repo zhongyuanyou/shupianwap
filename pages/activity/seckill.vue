@@ -151,9 +151,9 @@ export default {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'Seckill' })
     window.addEventListener('scroll', this.handleScroll) // 监听（绑定）滚轮滚动事件
   },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
+  // beforeDestroy() {
+  //   window.removeEventListener('scroll', this.handleScroll)
+  // },
 
   methods: {
     ...mapMutations({

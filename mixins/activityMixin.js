@@ -114,6 +114,7 @@ export default {
 
     clearInterval(this.endCountDownTimer)
     clearInterval(this.countDownTimer)
+    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
     ...mapMutations({
