@@ -44,7 +44,9 @@
         <div class="score-level">一般</div>
       </div>
       <div class="content">
-        <div class="content-txt">奥克斯广场才开不久的一奥克斯广场才开不久的一奥克斯广场才开不久的一奥克斯广场才开不久的一奥克斯广场才开不久的一</div>
+        <div class="content-txt">
+          奥克斯广场才开不久的一奥克斯广场才开不久的一奥克斯广场才开不久的一奥克斯广场才开不久的一奥克斯广场才开不久的一
+        </div>
         <div class="content-img">
           <img
             src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
@@ -67,7 +69,9 @@
           size="0.24rem"
           color="#999999"
         ></my-icon>
-        <div class="tips-desc">性价比高，服务质量好，办理效率高</div>
+        <div class="tips-desc">
+          性价比高，服务质量好，办理效率高,性价比高，服务质量好，办理效率高
+        </div>
       </div>
     </div>
   </div>
@@ -219,6 +223,8 @@ export default {
         margin-right: 12px;
       }
       &-desc {
+        width: 560px;
+        .mixin-text-oneoverflow();
         font-size: 24px;
         line-height: 1;
         color: #999;
