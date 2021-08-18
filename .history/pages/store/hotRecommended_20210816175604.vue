@@ -370,6 +370,11 @@ export default {
         const { data, code, message } = await this.$axios.post(
           storeApi.recommendGoods,
           params,
+          {
+            headers: {
+              'x-cache-control': 'cache',
+            },
+          }
         )
         if (code !== 200) {
           this.changePull(true)

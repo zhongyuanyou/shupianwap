@@ -14,11 +14,12 @@
     >
       <Head
         :class-state="ClassState"
-        code="protocol100047"
+        code="protocol100046"
         title="99特卖"
         :back="uPGoBack"
         :search="clickInputHandle"
       ></Head>
+
       <!-- <div class="search_container">
         <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
 
@@ -53,7 +54,12 @@
 
     <div ref="fill_container" class="img_container">
       <img width="100%" :src="imageHead" alt="" />
-
+      <div
+        class="rule"
+        @click="$router.push('/login/protocol?categoryCode=' + ruleCode)"
+      >
+        规则
+      </div>
       <div v-if="isTimerShow" class="count-down">
         <div class="down-time">
           <div>距本场结束还剩</div>
@@ -156,10 +162,12 @@ export default {
     return {
       specType: 'HDZT_ZTTYPE_TM',
 
-      hasCity: false,
-      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/6kfpkqxmcv00000.png',
+      hasCity: true,
+      imageHead: this.$ossImgSetV2('6kfpkqxmcv00000.png'),
       headerHeight: 0,
       ClassState: 1,
+
+      ruleCode: 'protocol100046',
     }
   },
   computed: {
@@ -261,6 +269,28 @@ export default {
           letter-spacing: 0;
         }
       }
+    }
+
+    .rule {
+      // header的z-index是999
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.2);
+
+      border-radius: 100px 0 0 100px;
+
+      opacity: 0.9;
+      font-family: PingFangSC-Regular;
+      font-size: 24px;
+      color: #ffffff;
+      letter-spacing: 0;
+      line-height: 40px;
+
+      position: absolute;
+      right: 0;
+      top: 40px;
+      height: 40px;
+      width: 96px;
+      text-align: center;
     }
   }
 

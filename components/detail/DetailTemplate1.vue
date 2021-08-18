@@ -66,7 +66,7 @@
     <ContainContent />
     <!--E 第三板块 包含服务-->
     <!--S 评论-->
-    <CommentBox id="comment" :list="commentdata" />
+    <CommentBox id="comment" />
     <!--E 评论-->
     <!--S 动态 -->
     <OrderDynamic></OrderDynamic>

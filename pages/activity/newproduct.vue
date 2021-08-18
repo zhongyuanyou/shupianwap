@@ -19,41 +19,16 @@
         :back="uPGoBack"
         :search="clickInputHandle"
       ></Head>
-
-      <!-- <div class="search_container">
-        <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
-
-          <div class="left-back" @click="uPGoBack">
-            <my-icon
-              name="nav_ic_back"
-              class="back_icon"
-              size="0.4rem"
-              color="#FFFFFF"
-            ></my-icon>
-          </div>
-          <div class="search-box"></div>
-          <div class="right">
-            <my-icon
-              class="search-icon"
-              name="sear_ic_sear"
-              size="0.4rem"
-              color="#FFFFFF"
-              @click.native="clickInputHandle"
-            ></my-icon>
-            <span
-              class="rule"
-              @click="
-                $router.push('/login/protocol?categoryCode=protocol100035')
-              "
-              >规则</span
-            >
-          </div>
-        </div>
-      </div> -->
     </HeadWrapper>
 
     <div ref="fill_container" class="img_container">
       <img width="100%" :src="imageHead" alt="" />
+      <div
+        class="rule"
+        @click="$router.push('/login/protocol?categoryCode=' + ruleCode)"
+      >
+        规则
+      </div>
     </div>
 
     <div class="content_container">
@@ -145,10 +120,11 @@ export default {
       specType: 'HDZT_ZTTYPE_XTSF',
 
       hasCity: true,
-      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/c3uw9dpx8vk0000.jpg',
+      imageHead: this.$ossImgSetV2('c3uw9dpx8vk0000.jpg'), // 'https://cdn.shupian.cn/sp-pt/wap/images/c3uw9dpx8vk0000.jpg'
       headerHeight: 0,
       ClassState: 1,
       advertCode: 'ad100033', // 广告code
+      ruleCode: 'protocol100035',
     }
   },
   computed: {
@@ -204,6 +180,28 @@ export default {
     position: relative;
     min-height: 300px;
     background: #f8f8f8;
+
+    .rule {
+      // header的z-index是999
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.2);
+
+      border-radius: 100px 0 0 100px;
+
+      opacity: 0.9;
+      font-family: PingFangSC-Regular;
+      font-size: 24px;
+      color: #ffffff;
+      letter-spacing: 0;
+      line-height: 40px;
+
+      position: absolute;
+      right: 0;
+      top: 40px;
+      height: 40px;
+      width: 96px;
+      text-align: center;
+    }
   }
 
   .content_container {

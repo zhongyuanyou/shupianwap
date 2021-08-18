@@ -1,57 +1,90 @@
-<template >
-  <div class="process">
-    <div class="process_container">
+<template>
+  <div class="process" @click="close">
+    <div class="process_container" @click.stop>
       <div class="process_container_goods">
         <div class="goods_img">
           <sp-image src="" alt="" class="sp-image" srcset="" />
         </div>
         <div class="goods_info">
           <div class="goods_info_title">
-            aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+            {{ goodsDetail.orderGoodsName }}
           </div>
-          <div class="goods_info_des" :style="desStyle">预计10天办理完成</div>
+          <div class="goods_info_des" :style="desStyle">
+            预计{{ day }}天办理完成
+          </div>
           <div class="goods_info_process">
             <div class="goods_info_process_line">
               <sp-progress
                 color="#4974F5"
                 stroke-width="0.08rem"
-                :percentage="50"
+                :percentage="completePercentage"
                 :show-pivot="false"
               />
             </div>
-            <div class="goods_info_process_text">77%</div>
+            <div class="goods_info_process_text">
+              {{ completePercentage || 0 }}%
+            </div>
           </div>
         </div>
       </div>
-
-      <Steps :list="list">
+      <!-- {{ list }} -->
+      <Steps class="steps_container" :list="list">
         <template #left="row">
           <div class="time">{{ row.item.time }}</div>
           <div class="date">{{ row.item.date }}</div>
         </template>
       </Steps>
 
-      <div class="process_container_close"></div>
+      <div class="process_container_close" @click="close"></div>
     </div>
   </div>
 </template>
 <script>
 import { Progress, Image } from '@chipspc/vant-dgg'
 import Steps from '@/components/common/Steps.vue'
+import orderApi from '@/api/order'
+
 export default {
   components: {
     [Image.name]: Image,
     [Progress.name]: Progress,
     Steps,
   },
+  props: {
+    info: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
+  },
   data() {
     return {
+      //  production_task_status_1("production_task_status_1", "待分配","未开始"),
+      //  production_task_status_2("production_task_status_2", "待接收","未开始"),
+      //  production_task_status_3("production_task_status_3", "办理中","办理中"),
+      //  production_task_status_4("production_task_status_4", "审核中","办理中"),
+      //  production_task_status_5("production_task_status_5", "暂停中","办理中"),
+      //  production_task_status_6("production_task_status_6", "已完成","已完成"),
+      //  production_task_status_7("production_task_status_7", "已取消","已取消"),
+
+      status: {
+        production_task_status_1: '未开始', // "待分配","未开始"
+        production_task_status_2: '未开始', // "待接收","未开始"
+        production_task_status_3: '办理中', // "办理中","办理中"
+        production_task_status_4: '办理中', // "审核中","办理中"
+        production_task_status_5: '办理中', // "暂停中","办理中"
+        production_task_status_6: '已完成', // "已完成","已完成"
+        production_task_status_7: '已取消', // "已取消","已取消"
+      },
+
+      goodsDetail: {},
+      day: 0, // 预计多少天完成
+      completePercentage: 0,
       list: [
         {
           status: 'more', // more,current,complete
-
-          title:
-            '查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点',
+          title: '查看更多任务节点',
           nodes: ['立案（未开始）', '立案（未开始）', '立案（未开始）'], // 更多节点
         },
         {
@@ -95,6 +128,124 @@ export default {
       return {}
     },
   },
+  mounted() {
+    this.getProcessList()
+    this.getDetail()
+  },
+  methods: {
+    close() {
+      this.$emit('close')
+    },
+    /**
+{
+  handlerCode: "U2120961052",
+  handlerId: "732138509210770722",
+  handlerMchId: "732138543570505097",
+  handlerName: "郑有", // 办理人名称，服务人员名称
+  nodeNum: 0, //完成节点数量
+  orderDetailsId: "8098767941153914880", //订单明细ID
+  orderProductId: "1260895651463849650", //订单产品ID
+  productionId: "1260895514024880700", //生产单ID
+  serviceExplain: "公司注册服务项3", //服务说明
+  serviceName: "公司注册服务项3", //服务名称
+  taskName: "公司注册服务项3", //taskName
+  taskStatus: "production_task_status_6"
+}
+ */
+    getProcessList() {
+      orderApi
+        .findTaskByOrder(
+          { axios: this.axios },
+          { orderDetailsId: this.info.detailId }
+        )
+        .then((data) => {
+          console.log(data)
+
+          // this.taskList = data
+
+          this.list = []
+          const more = {
+            status: 'more', // more,current,complete
+            title: '查看更多任务节点',
+            nodes: [], // 更多节点
+          }
+          let completeNum = 0 // 完成节点数量
+
+          data.map((item) => {
+            item.taskStatusName = this.status[item.taskStatus]
+            const info = {
+              status: 'more', // more,current,complete
+              title: item.taskName + `（${item.taskStatusName}）`,
+              // nodes: ['立案（未开始）', '立案（未开始）', '立案（未开始）'], // 更多节点
+            }
+            if (item.taskStatusName === '已完成') {
+              completeNum++
+              info.status = 'complete'
+              this.list.push(info)
+            } else if (item.taskStatusName === '办理中') {
+              info.status = 'current'
+              this.list.push(info)
+            } else if (item.taskStatusName === '未开始') {
+              more.nodes.push(item.taskName + `（${item.taskStatusName}）`)
+            }
+          })
+
+          if (more.nodes.length > 0) {
+            this.list.unshift(more)
+          } else {
+            this.list.unshift({
+              status: 'current',
+              title: '办理完成',
+            })
+          }
+          if (data.length > 0) {
+            // 完成进度
+            this.completePercentage = parseInt(
+              (completeNum / data.length) * 100
+            )
+          }
+          console.log(data)
+        })
+        .catch((err) => {
+          console.error(err)
+          this.$xToast.show(err.message)
+        })
+    },
+    getDetail() {
+      orderApi
+        .findProductionOrderByOrderDetailsId(
+          {
+            orderDetailsId: this.info.detailId,
+            // orderDetailsId: this.info.cusOrderId,
+          }
+          // orderProductId 生产单ID
+          // orderDetailsId 订单详情ID
+        )
+        .then((res) => {
+          console.log(res)
+          this.goodsDetail = res
+          let day = 0
+          if (res.deadlineTime) {
+            day =
+              (new Date(res.deadlineTime) - new Date(res.openTime)) /
+              1000 /
+              60 /
+              60 /
+              24
+            console.log(res.openTime, res.deadlineTime)
+            console.log('day', day, parseInt(day))
+          }
+          this.day = parseInt(day)
+          // res.openTime 开始时间
+          // res.deadlineTime 预计结束
+        })
+        .catch((err) => {
+          console.error(err)
+          this.$xToast.show(err.message)
+          // this.$router.back(-1)
+        })
+    },
+  },
 }
 </script>
 <style  lang="less" scoped>
@@ -113,13 +264,19 @@ export default {
 
   .process_container {
     position: relative;
+    display: flex;
+    flex-direction: column;
+
     width: 670px;
     height: 900px;
     box-sizing: border-box;
     background: #ffffff;
     border-radius: 24px;
-    padding: 40px 0;
-
+    padding: 40px 0 0;
+    // overflow: auto;
+    .steps_container {
+      flex: 1;
+    }
     .process_container_goods {
       display: flex;
       overflow: hidden;

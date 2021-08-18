@@ -1,45 +1,34 @@
 <template>
   <div class="comment">
-    <h1>用户评价</h1>
-    <sp-swipe class="my-swipe" :autoplay="5000" indicator-color="#4974f5;">
-      <sp-swipe-item v-for="(item, index) in list" :key="index">
-        <div class="item">
-          <div class="head">
-            <img :src="item.img" alt="" />
-            <div>
-              <div>
-                <p>{{ item.phone }}</p>
-                <span>{{ item.date }}</span>
-              </div>
-              <sp-rate
-                v-model="item.val"
-                size="0.24rem"
-                color="#ffd21e"
-                void-icon="star"
-                void-color="#eee"
-                class="rate"
-                readonly
-              />
-            </div>
-          </div>
-          <p class="tit">
-            {{ item.tit }}
-          </p>
+    <div class="tile">
+      <div class="tile-tile">用户评价</div>
+      <div class="tile-more">
+        <div class="tile-more__txt">更多评价</div>
+        <my-icon></my-icon>
+      </div>
+    </div>
+    <div class="content-wrap">
+      <div class="tile">
+        <div class="tile-avatar"></div>
+        <div class="tile-desc">
+          <div class="tile-desc__name">哆啦不是A梦</div>
+          <div class="tile-desc__date">2020/09/19 14:00</div>
         </div>
-      </sp-swipe-item>
-    </sp-swipe>
+        <div class="tile-icon"></div>
+      </div>
+      <div class="score">
+        <div class="score-txt">服务评分</div>
+        <div class="score-star"></div>
+        <div class="score-level">一般</div>
+      </div>
+      <div class="content"></div>
+    </div>
   </div>
 </template>
 
 <script>
-import { Swipe, SwipeItem, Rate } from '@chipspc/vant-dgg'
 export default {
   name: 'Comment',
-  components: {
-    [Swipe.name]: Swipe,
-    [SwipeItem.name]: SwipeItem,
-    [Rate.name]: Rate,
-  },
   props: {
     list: {
       type: Array,

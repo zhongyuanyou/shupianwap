@@ -120,6 +120,8 @@ export default {
 <style lang="less" scoped>
 .steps {
   padding: 46px 40px 40px;
+  overflow: auto;
+
   .task_item {
     // overflow: hidden;
     font-size: 0;

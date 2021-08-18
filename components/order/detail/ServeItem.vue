@@ -69,7 +69,6 @@
       <div class="item-btn-area">
         <div class="inner">
           <!-- <sp-button @click="handleClickBtn(1)">查看底单</sp-button> -->
-
           <sp-button
             v-if="
               cusOrderStatusType !== 4 &&
@@ -144,8 +143,8 @@
           </div>
         </div> -->
     </div>
-
-    <Process v-if="false"></Process>
+    <Process v-if="showProcess" :info="processInfo" @close="closeProcess">
+    </Process>
   </div>
 </template>
 
@@ -190,6 +189,12 @@ export default {
       default: 1,
     },
   },
+  data() {
+    return {
+      showProcess: false,
+      processInfo: {},
+    }
+  },
   methods: {
     changeMoney(num) {
       return changeMoney.regFenToYuan(num)
@@ -197,7 +202,19 @@ export default {
     confirmOrder(id) {
       this.$emit('confirmOrder', id)
     },
-    openProcess() {},
+    openProcess(item) {
+      console.log(item)
+      this.processInfo = {
+        orderId: item.orderId,
+        cusOrderId: item.cusOrderId,
+        skuId: item.skuId,
+        detailId: item.id,
+      }
+      this.showProcess = true
+    },
+    closeProcess() {
+      this.showProcess = false
+    },
     // 判断是否是周期产品
     checkProductType(item) {
       const skuDetailInfo = JSON.parse(item.skuDetailInfo)
@@ -215,7 +232,6 @@ export default {
           },
         })
       } else {
-        alert(2)
         // 普通产品
         this.$router.push({
           path: '/order/nomalProces',

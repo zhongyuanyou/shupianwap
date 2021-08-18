@@ -23,7 +23,12 @@
 
     <div ref="fill_container" class="img_container">
       <img width="100%" :src="imageHead" alt="" />
-
+      <div
+        class="rule"
+        @click="$router.push('/login/protocol?categoryCode=' + ruleCode)"
+      >
+        规则
+      </div>
       <div v-if="isTimerShow" class="count-down">
         <div class="down-time">
           <div>距本场结束还剩</div>
@@ -53,7 +58,7 @@
         <Classification
           :has-city="hasCity && isService"
           :city-name="cityName"
-          :header-height="headerHeight"
+          :header-height="headerHeight - 1"
           :current-index="currentIndex"
           :activity-type-options="activityTypeOptions"
           :swich-city-handle="swichCityHandle"
@@ -125,12 +130,13 @@ export default {
     return {
       specType: 'HDZT_ZTTYPE_DJZS',
 
-      hasCity: false,
-
-      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/dfnawx8oxnc0000.jpg',
+      hasCity: true,
+      imageHead: this.$ossImgSetV2('dfnawx8oxnc0000.jpg'), // 'https://cdn.shupian.cn/sp-pt/wap/images/dfnawx8oxnc0000.jpg',
 
       headerHeight: 0,
       ClassState: 1,
+
+      ruleCode: 'protocol100048',
     }
   },
   computed: {
@@ -234,6 +240,28 @@ export default {
           letter-spacing: 0;
         }
       }
+    }
+
+    .rule {
+      // header的z-index是999
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.2);
+
+      border-radius: 100px 0 0 100px;
+
+      opacity: 0.9;
+      font-family: PingFangSC-Regular;
+      font-size: 24px;
+      color: #ffffff;
+      letter-spacing: 0;
+      line-height: 40px;
+
+      position: absolute;
+      right: 0;
+      top: 40px;
+      height: 40px;
+      width: 96px;
+      text-align: center;
     }
   }
 
