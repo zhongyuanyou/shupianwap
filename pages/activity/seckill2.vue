@@ -75,7 +75,7 @@ import Sum from '@/components/activity/seckill2/Sum.vue'
 
 export default {
   name: 'Seckill2',
-  layout: 'keepAlive',
+  layout: 'default',
   components: {
     // Header,
     HeadWrapper,

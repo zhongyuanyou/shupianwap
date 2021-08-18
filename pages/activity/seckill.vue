@@ -109,7 +109,7 @@ import NoData from '@/components/activity/NoData.vue'
 
 export default {
   name: 'Seckill',
-  layout: 'keepAlive',
+  layout: 'default',
   components: {
     // Header,
     HeadWrapper,
