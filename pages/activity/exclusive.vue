@@ -130,9 +130,8 @@ export default {
     return {
       specType: 'HDZT_ZTTYPE_DJZS',
 
-      hasCity: false,
-
-      imageHead: 'https://cdn.shupian.cn/sp-pt/wap/images/dfnawx8oxnc0000.jpg',
+      hasCity: true,
+      imageHead: this.$ossImgSetV2('dfnawx8oxnc0000.jpg'), // 'https://cdn.shupian.cn/sp-pt/wap/images/dfnawx8oxnc0000.jpg',
 
       headerHeight: 0,
       ClassState: 1,
