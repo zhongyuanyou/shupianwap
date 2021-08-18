@@ -65,6 +65,9 @@ const ossImgSetV2 = (imgName = null, config = '') => {
 
 const resizeImg = (width, height, url) => {
   if (!url) return ''
+  if (url.match('image/resize')) {
+    return url
+  }
   // https://cdn.shupian.cn/E5756.png?x-oss-process=image/resize,m_fill,w_300,h_300,limit_0
   width = width || 180
   height = height || 120

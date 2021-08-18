@@ -104,10 +104,13 @@ export default {
     console.log('销毁');
     console.log(this.$store.state.city.positionCityName);
     console.log(this.$store.state.city.positionCityCode);
-    this.SET_CITY({
-      code: this.$store.state.city.positionCityCode || this.$store.state.city.currentCity.code,
-      name: this.$store.state.city.positionCityName || this.$store.state.city.currentCity.name,
-    })
+    if (this.$store.state.city.positionCityCode && this.$store.state.city.positionCityName) {
+      this.SET_CITY({
+        code: this.$store.state.city.positionCityCode,
+        name: this.$store.state.city.positionCityName,
+      })
+    }
+
 
     clearInterval(this.endCountDownTimer)
     clearInterval(this.countDownTimer)
