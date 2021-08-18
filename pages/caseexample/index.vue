@@ -1,7 +1,7 @@
 <template>
   <div class="case_examples_list">
-    <HeadWrapper>
-      <Header class="my-header" title="案例广场"></Header>
+    <HeadWrapper ref="HeadWrapperRef" :line="true">
+      <Head title="案例广场"></Head>
       <client-only>
         <Classify :search="search" @select="selectClassify"></Classify>
       </client-only>
@@ -61,9 +61,8 @@ import {
 } from '@chipspc/vant-dgg'
 import { mapState, mapMutations } from 'vuex'
 
-import HeaderSlot from '@/components/common/head/HeaderSlot.vue'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
-import Header from '@/components/common/head/header.vue'
+import Head from '@/components/common/head/Head.vue'
 
 import Classify from '@/components/caseExamples/index/Classify.vue'
 import CaseExamplesList from '@/components/caseExamples/index/List.vue'
@@ -76,7 +75,9 @@ export default {
   name: 'Caseexample',
   components: {
     LoadingCenter,
-    Header,
+
+    HeadWrapper,
+    Head,
 
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
@@ -87,7 +88,7 @@ export default {
     [Dialog.Component.name]: Dialog.Component,
     [List.name]: List,
     CaseExamplesList,
-    HeadWrapper,
+
     Classify,
   },
   data() {
@@ -134,25 +135,32 @@ export default {
       appInfo: (state) => state.app.appInfo, // app信息
     }),
   },
-
+  activated() {
+    this.$nextTick(() => {
+      this.$refs.HeadWrapperRef.getHeaderHeight()
+      console.log('activated')
+    })
+  },
   mounted() {
     this.search.productTypeCode = this.$route.query.goodsType
     this.search.productOneBelongCode = this.$route.query.classCode1
     // this.search.productTwoBelongCode = this.$route.query.classCode2
 
     this.initData()
+
+    // this.SET_KEEP_ALIVE({ type: 'add', name: 'Caseexample' })
     // this.getHeaderHeight()
   },
-  // beforeRouteLeave(to, from, next) {
-  //   console.log(from.name, to.name)
-  //   if (['caseexample-details'].includes(to.name)) {
-  //     console.log('add keepalive')
-  //     this.SET_KEEP_ALIVE({ type: 'add', name: 'Caseexample' })
-  //   } else {
-  //     this.SET_KEEP_ALIVE({ type: 'remove', name: 'Caseexample' })
-  //   }
-  //   next()
-  // },
+  beforeRouteLeave(to, from, next) {
+    console.log(from.name, to.name)
+    if (['caseexample-details'].includes(to.name)) {
+      console.log('add keepalive')
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'Caseexample' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'Caseexample' })
+    }
+    next()
+  },
 
   methods: {
     ...mapMutations({

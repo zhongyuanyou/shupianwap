@@ -22,12 +22,25 @@
           <p class="title">{{ title }}</p>
           <div class="right-area">
             <my-icon
-              style="margin-right: 0.15rem"
+              style="margin-right: 0.32rem"
               name="nav_ic_searchbig"
               size="0.40rem"
               color="#1a1a1a"
               class="my_icon"
               @click.native="$router.push('/known/search')"
+            ></my-icon>
+            <my-icon
+              :style="{
+                'margin-right':
+                  questionDetails.createrId === userInfo.userId
+                    ? '0.32rem'
+                    : '',
+              }"
+              name="fenxiang"
+              size="0.36rem"
+              color="#1a1a1a"
+              class="my_icon"
+              @click.native="shareHandle"
             ></my-icon>
             <sp-icon
               v-if="questionDetails.createrId === userInfo.userId"
@@ -40,7 +53,11 @@
           </div>
         </div>
       </HeaderSlot>
-      <DownLoadArea :ios-link="iosLink" :androd-link="androdLink" />
+      <DownLoadArea
+        v-if="!isInApp"
+        :ios-link="iosLink"
+        :androd-link="androdLink"
+      />
       <div class="problem">
         <div class="tag">
           <ul class="box">
@@ -237,51 +254,44 @@
           </div>
         </sp-list>
       </div>
-      <template v-show="fixedshow">
-        <sp-bottombar safe-area-inset-bottom>
-          <div
-            class="btn"
-            :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
-            @click="goInvitionPage"
-          >
-            <my-icon name="yaoqinghuida_mian" size="0.4rem"></my-icon>
-            <span>邀请回答</span>
-          </div>
-          <div
-            class="btn"
-            :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
-            @click="goPublishAnswer"
-          >
-            <my-icon name="xiehuida" size="0.4rem"></my-icon>
-            <span>写回答</span>
-          </div>
-          <div
-            class="collect"
-            :style="{
-              background:
-                questionDetails.isCollectFlag === 1 ? '#F5F5F5' : '#4974F5',
-              color:
-                questionDetails.isCollectFlag === 1 ? '#CCCCCC' : '#FFFFFF',
-            }"
-            @click="like('COLLECT')"
-          >
-            <my-icon
-              :name="
-                questionDetails.isCollectFlag === 1
-                  ? 'shoucang_mian'
-                  : 'shoucang'
-              "
-              :color="
-                questionDetails.isCollectFlag === 1 ? '#CCCCCC' : '#FFFFFF'
-              "
-              size="0.32rem"
-            ></my-icon>
-            <span>{{
-              questionDetails.isCollectFlag === 1 ? '已收藏' : '收藏'
-            }}</span>
-          </div>
-        </sp-bottombar>
-      </template>
+      <sp-bottombar v-show="fixedshow" safe-area-inset-bottom>
+        <div
+          class="btn"
+          :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
+          @click="goInvitionPage"
+        >
+          <my-icon name="yaoqinghuida_mian" size="0.4rem"></my-icon>
+          <span>邀请回答</span>
+        </div>
+        <div
+          class="btn"
+          :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
+          @click="goPublishAnswer"
+        >
+          <my-icon name="xiehuida" size="0.4rem"></my-icon>
+          <span>写回答</span>
+        </div>
+        <div
+          class="collect"
+          :style="{
+            background:
+              questionDetails.isCollectFlag === 1 ? '#F5F5F5' : '#4974F5',
+            color: questionDetails.isCollectFlag === 1 ? '#CCCCCC' : '#FFFFFF',
+          }"
+          @click="like('COLLECT')"
+        >
+          <my-icon
+            :name="
+              questionDetails.isCollectFlag === 1 ? 'shoucang_mian' : 'shoucang'
+            "
+            :color="questionDetails.isCollectFlag === 1 ? '#CCCCCC' : '#FFFFFF'"
+            size="0.32rem"
+          ></my-icon>
+          <span>{{
+            questionDetails.isCollectFlag === 1 ? '已收藏' : '收藏'
+          }}</span>
+        </div>
+      </sp-bottombar>
 
       <comment-list
         v-model="commentShow"
@@ -312,12 +322,26 @@
           <div class="cancel" @click="cancel">取消</div>
         </div>
       </sp-popup>
+      <sp-share-sheet
+        v-model="showShare"
+        title="分享"
+        :options="shareOptions"
+        @select="onSelect"
+      />
     </div>
   </section>
 </template>
 
 <script>
-import { Icon, Toast, List, Popup, Dialog, Bottombar } from '@chipspc/vant-dgg'
+import {
+  Icon,
+  Toast,
+  List,
+  Popup,
+  Dialog,
+  Bottombar,
+  ShareSheet,
+} from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import CommentList from '@/components/mustKnown/CommentList'
 import { knownApi, userinfoApi } from '@/api'
@@ -325,6 +349,8 @@ import HeaderSlot from '@/components/common/head/HeaderSlot'
 import util from '@/utils/changeBusinessData'
 import DownLoadArea from '@/components/common/downLoadArea'
 import ShareModal from '@/components/common/ShareModal'
+import { copyToClipboard, setUrlParams } from '@/utils/common'
+
 export default {
   layout: 'keepAlive',
   name: 'Detail',
@@ -334,6 +360,7 @@ export default {
     [List.name]: List,
     [Popup.name]: Popup,
     [Dialog.name]: Dialog,
+    [ShareSheet.name]: ShareSheet,
     [Bottombar.name]: Bottombar,
     CommentList,
     DownLoadArea,
@@ -387,6 +414,8 @@ export default {
       popupShow: false,
       currentDetailsId: '',
       commentShow: false,
+      shareOptions: [], // wap 分享设置
+      showShare: false, // wap 分享开关
     }
   },
   computed: {
@@ -683,6 +712,75 @@ export default {
             id: this.currentDetailsId,
           },
         })
+      }
+    },
+    async shareHandle() {
+      if (await this.isLogin()) {
+        if (this.isInApp) {
+          const url = window && window.location.href
+          const sharedUrl = setUrlParams(url, { isShare: 1 })
+          const tile = this.questionDetails.title
+          const shareContent = {
+            title: `${this.userInfo.userName || '薯片用户'}邀请你回答: ${tile}`,
+            url: sharedUrl,
+          }
+
+          // 薯片app
+          if (this.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS') {
+            shareContent.image =
+              'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png'
+            shareContent.subTitle = `${
+              this.questionDetails.userName || '薯片用户'
+            }提出了问题,已有${
+              this.questionDetails.answerCount || 0
+            }个回答,快来看看吧!`
+          } else {
+            // 启大顺
+            shareContent.description = `${
+              this.questionDetails.userName || '薯片用户'
+            }提出了问题,已有${
+              this.questionDetails.answerCount || 0
+            }个回答,快来看看吧!`
+            shareContent.imgUrl =
+              'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png'
+          }
+
+          this.$appFn.dggShare(shareContent, (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '分享失败！',
+                duration: 1500,
+                forbidClick: false,
+                icon: 'toast_ic_remind',
+              })
+            }
+          })
+          return
+        }
+        this.shareOptions = [{ name: '复制链接', icon: 'link' }]
+        this.showShare = true
+      }
+    },
+    async onSelect() {
+      if (await this.isLogin()) {
+        if (this.isInApp) {
+          this.showShare = false
+          return
+        }
+        const url = window && window.location.href
+        const sharedUrl = setUrlParams(url, { isShare: 1 })
+        const isSuccess = copyToClipboard(sharedUrl)
+        if (isSuccess) {
+          this.$xToast.show({
+            message: '复制成功',
+            duration: 1500,
+            icon: 'toast_ic_comp',
+            forbidClick: true,
+          })
+        }
+        this.showShare = false
+        scrollTo(0, 0)
       }
     },
   },

@@ -292,6 +292,16 @@ export default {
           this.loading = false
           if (res.code === 200) {
             this.tabBtn[index].noData = res.data.records.length === 0
+
+            res.data.records.map((item) => {
+              if (item.img) {
+                item.img =
+                  item.img +
+                  '?x-oss-process=image/resize,m_fill,w_300,h_300,limit_0'
+              }
+            })
+            console.log('res.data.records', res.data.records)
+
             if (this.tabBtn[index].page === 1) {
               this.tabBtn[index].goodsList = res.data.records
             } else {

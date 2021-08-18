@@ -30,18 +30,17 @@ module.exports = {
     DGG_SERVER_ENV: process.env.DGG_SERVER_ENV,
   },
   head: {
-    title: '薯片·让更多人生活更美好！',
+    title: '薯片企服-公司注册商标专利交易查询申请法律咨询服务平台',
+    keywords:
+      '企业服务, 商标注册，法律咨询，会计代理，代缴社保，商标查询，企查查，天眼企服',
+    description:
+      '薯片企服是成都薯片科技有限公司旗下自研可信企业服务平台，薯片企服依托智能科技，传递价值生意，致力于为全类型，各阶段的企业及个人提供：工商服务、会计代理、财税咨询、知识产权代理、资质许可证办理咨询、品牌设计、IT/软件、营销推广、人事社保代理等多品类的线上服务。',
     meta: [
       { charset: 'utf-8' },
       {
         name: 'viewport',
         content:
           'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, shrink-to-fit=no, viewport-fit=cover',
-      },
-      {
-        hid: 'description',
-        name: 'description',
-        content: process.env.npm_package_description || '',
       },
       {
         name: 'apple-mobile-web-app-capable',
@@ -138,7 +137,7 @@ module.exports = {
     { src: '@/plugins/vue-prototype', ssr: false },
     { src: '@/plugins/clear-emoij', ssr: false },
     { src: '@/plugins/sp-api', ssr: false },
-    { src: '@/plugins/echarts', ssr:false },
+    { src: '@/plugins/echarts', ssr: false },
   ],
   router: {
     middleware: 'appDock',
@@ -204,7 +203,7 @@ module.exports = {
   },
   build: {
     transpile: [/vant.*?less/],
-    vendor:['nativeshare'],
+    vendor: ['nativeshare'],
     postcss: {
       plugins: {
         'postcss-pxtorem': {

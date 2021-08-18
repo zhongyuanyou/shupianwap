@@ -20,12 +20,23 @@
           </div>
           <div class="search">
             <my-icon
-              style="margin-right: 0.15rem"
+              style="margin-right: 0.32rem"
               name="nav_ic_searchbig"
               size="0.40rem"
               color="#1a1a1a"
               class="my_icon"
               @click.native="$router.push('/known/search')"
+            ></my-icon>
+            <my-icon
+              :style="{
+                'margin-right':
+                  articleDetails.createrId === userInfo.userId ? '0.32rem' : '',
+              }"
+              name="fenxiang"
+              size="0.36rem"
+              color="#1a1a1a"
+              class="my_icon"
+              @click.native="shareHandle"
             ></my-icon>
             <sp-icon
               v-if="articleDetails.createrId === userInfo.userId"
@@ -47,7 +58,7 @@
         </div>
       </HeaderSlot>
       <DownLoadArea
-        v-if="isShare"
+        v-if="!isInApp"
         :ios-link="iosLink"
         :androd-link="androdLink"
       />
@@ -162,6 +173,12 @@
           <div class="cancel" @click="popupShow = false">取消</div>
         </div>
       </sp-popup>
+      <sp-share-sheet
+        v-model="showShare"
+        title="分享"
+        :options="shareOptions"
+        @select="onSelect"
+      />
     </div>
   </section>
 </template>
@@ -178,6 +195,7 @@ import {
   Popup,
   Dialog,
   Bottombar,
+  ShareSheet,
 } from '@chipspc/vant-dgg'
 import { knownApi, planner } from '@/api'
 import PageHead from '@/components/common/head/header'
@@ -189,6 +207,7 @@ import Comment from '~/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import DownLoadArea from '@/components/common/downLoadArea'
 import ShareModal from '@/components/common/ShareModal'
+import { copyToClipboard, setUrlParams } from '@/utils/common'
 // import SpBottom from '@/components/common/spBottom/SpBottom'
 export default {
   layout: 'keepAlive',
@@ -200,6 +219,7 @@ export default {
     [Field.name]: Field,
     [Dialog.name]: Dialog,
     [Bottombar.name]: Bottombar,
+    [ShareSheet.name]: ShareSheet,
     Comment,
     HeaderSlot,
     // PageHead,
@@ -255,6 +275,8 @@ export default {
       handleType: '',
       isFollow: false,
       releaseFlag: false, // 是否发布的新文章
+      shareOptions: [], // wap 分享设置
+      showShare: false, // wap 分享开关
     }
   },
   computed: {
@@ -523,6 +545,68 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+    },
+    async shareHandle() {
+      if (await this.$isLogin()) {
+        if (this.isInApp) {
+          const url = window && window.location.href
+          const sharedUrl = setUrlParams(url, { isShare: 1 })
+          const tile = this.articleDetails.title
+          const content = this.articleDetails.contentText.substring(0, 50).trim()
+          console.log(`output tile: ${tile}`)
+          console.log(`output content: ${content}`)
+          const shareContent = {
+            title: `${tile}`,
+            url: sharedUrl,
+          }
+          // 薯片app
+          if (this.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS') {
+            shareContent.image =
+              'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png'
+            shareContent.subTitle = `${content}`
+          } else {
+            // 启大顺
+            shareContent.description = `${content}`
+            shareContent.imgUrl =
+              'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png'
+          }
+          this.$appFn.dggShare(shareContent, (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '分享失败！',
+                duration: 1500,
+                forbidClick: false,
+                icon: 'toast_ic_remind',
+              })
+            }
+          })
+          return
+        }
+        this.shareOptions = [{ name: '复制链接', icon: 'link' }]
+        this.showShare = true
+      }
+    },
+    async onSelect() {
+      if (await this.$isLogin()) {
+        if (this.isInApp) {
+          this.showShare = false
+          return
+        }
+        const url = window && window.location.href
+        const sharedUrl = setUrlParams(url, { isShare: 1 })
+        const isSuccess = copyToClipboard(sharedUrl)
+        if (isSuccess) {
+          this.$xToast.show({
+            message: '复制成功',
+            duration: 1500,
+            icon: 'toast_ic_comp',
+            forbidClick: true,
+          })
+        }
+        this.showShare = false
+        scrollTo(0, 0)
+      }
     },
   },
 }

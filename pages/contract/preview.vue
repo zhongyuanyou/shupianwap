@@ -78,7 +78,7 @@ export default {
   },
   data() {
     return {
-      contract: this.$route.query,
+      contract: '',
       src: '',
       timeshow: false,
       time: 5,
@@ -90,16 +90,21 @@ export default {
     }
   },
   created() {
-    if (
-      this.contract.fromPage === 'orderList' ||
-      this.contract.fromPage === 'orderDetail'
-    ) {
-      this.skeletonLoading = true
-      this.getorder()
-    } else {
-      this.src = this.contract.contractUrl
-      this.pdfTask(this.src)
-    }
+    this.contract = this.$route.query
+    const _this = this
+    // 直接加载会导致有时pdf还没有生成出来,这样无法显示导致报错,所以这里延时1s
+    setTimeout(() => {
+      if (
+        _this.contract.fromPage === 'orderList' ||
+        _this.contract.fromPage === 'orderDetail'
+      ) {
+        _this.skeletonLoading = true
+        _this.getorder()
+      } else {
+        _this.src = _this.contract.contractUrl
+        _this.pdfTask(_this.src)
+      }
+    }, 1000)
   },
   mounted() {},
   methods: {
@@ -157,11 +162,11 @@ export default {
           .decryptionPhone(
             { axios: this.axios },
             {
-              phoneList: [this.contract.contactWay]
+              phoneList: [this.contract.contactWay],
             }
           )
           .then((res) => {
-            this.sign(res[0])
+            this.sign(res)
           })
       } else {
         this.sign(this.contract.contactWay)
@@ -180,8 +185,8 @@ export default {
             {
               contractId: this.contract.contractId,
               phone,
-              signerName: this.contract.signerName,
-              contactWay: phone,
+              type: 'CUSTOMER_PERSON',
+              name: this.contract.signerName,
               businessId: this.$store.state.user.userId,
             }
           )
@@ -199,14 +204,12 @@ export default {
           })
           .catch((err) => {
             this.loading = false
-            const msg = err.data.error
             Toast({
-              message: msg,
+              message: err.message,
               overlay: true,
               iconPrefix: 'sp-iconfont',
               icon: 'popup_ic_fail',
             })
-            console.log('错误信息err', err)
           })
       } else {
         this.loading = false

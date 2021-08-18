@@ -317,6 +317,18 @@ export default {
           if (data.goodsList.records.length < 1) {
             this.$refs.list.finished = true
           }
+
+          console.log('goods', data.goodsList.records)
+          if (data.goodsList.records) {
+            data.goodsList.records.map((item) => {
+              if (item.img) {
+                item.img =
+                  item.img +
+                  '?x-oss-process=image/resize,m_fill,w_300,h_300,limit_0'
+              }
+            })
+          }
+
           if (this.datalist.length > 0) {
             this.datalist = this.datalist.concat(data.goodsList.records)
             if (

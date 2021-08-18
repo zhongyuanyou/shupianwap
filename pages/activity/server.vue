@@ -1,901 +1,297 @@
 <template>
   <div class="container">
-    <!-- S search -->
-    <div>
-      <header-slot>
-        <sp-sticky>
-          <div class="search">
-            <div class="left-back" @click="uPGoBack">
-              <my-icon
-                name="nav_ic_back"
-                class="back_icon"
-                size="0.4rem"
-                color="#FFFFFF"
-              ></my-icon>
-            </div>
-            <div class="search-box">
-              <my-icon
-                class="search-icon"
-                name="sear_ic_sear"
-                size="0.30rem"
-                color="#FFFFFF"
-                :style="{ marginLeft: iconLeft + 'rem' }"
-              ></my-icon>
-              <input
-                placeholder="请输入感兴趣的内容"
-                readonly
-                @click="clickInputHandle"
-              />
-            </div>
+    <div
+      v-if="isInApp"
+      class="app_header_fill"
+      style="height: 0.6rem; background-color: #2b292a"
+    ></div>
+
+    <HeadWrapper
+      :fill="false"
+      :line="ClassState == 0 ? true : false"
+      :background-color="ClassState == 0 ? '#fff' : ''"
+      @onHeightChange="onHeightChange"
+    >
+      <Head
+        :class-state="ClassState"
+        code="protocol100052"
+        title="先服务后收费"
+        :back="uPGoBack"
+        :search="clickInputHandle"
+      ></Head>
+
+      <!-- <div class="search_container">
+        <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
+          <div class="left-back" @click="uPGoBack">
+            <my-icon
+              name="nav_ic_back"
+              class="back_icon"
+              size="0.4rem"
+              color="#FFFFFF"
+            ></my-icon>
           </div>
-        </sp-sticky>
-      </header-slot>
-    </div>
-    <!-- E search -->
-    <!-- <sp-sticky></sp-sticky> -->
-    <div class="container-advice">
-      <div class="banner-img">
-        <img
-          src="https://cdn.shupian.cn/sp-pt/wap/images/1ra46owiem9s000.png"
-          alt=""
-        />
-      </div>
-      <div class="advice-box">
-        <div
-          v-for="(item, index) in productAdvertData.slice(0, 1)"
-          :key="index"
-          class="default_s"
-        >
-          <a :href="item.materialLink"
-            ><img :src="item.materialUrl" alt="" srcset=""
-          /></a>
-        </div>
-        <div>
-          <div
-            v-for="(item, index) in productAdvertDataTwo.slice(0, 2)"
-            :key="index"
-            class="other_s"
-          >
-            <a :href="item.materialLink"
-              ><img :src="item.materialUrl" alt="" srcset=""
-            /></a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container-body">
-      <sp-sticky :offset-top="offsetTop">
-        <div ref="menu" class="tabs-box">
-          <div
-            v-if="productType === 'PRO_CLASS_TYPE_SERVICE'"
-            class="tabs-box-left"
-          >
-            <div @click="swichCityHandle">
-              {{ cityName ? cityName : '定位中' }}
-            </div>
-            <div></div>
-          </div>
-          <div
-            v-if="productType === 'PRO_CLASS_TYPE_TRANSACTION'"
-            class="tabs-box-left"
-          >
-            <div>全国</div>
-            <div style="border: none"></div>
-          </div>
-          <ul class="tabs-box-items">
-            <li
-              v-for="(item, index) in activityTypeOptions"
-              :key="index"
-              :class="{ active: index === currentIndex }"
-              @click="menuTab(item, index)"
+          <div class="search-box"></div>
+          <div class="right">
+            <my-icon
+              class="search-icon"
+              name="sear_ic_sear"
+              size="0.4rem"
+              color="#FFFFFF"
+              @click.native="clickInputHandle"
+            ></my-icon>
+            <span
+              class="rule"
+              @click="
+                $router.push('/login/protocol?categoryCode=protocol100052')
+              "
+              >规则</span
             >
-              {{ item.labelName }}
-            </li>
-          </ul>
+          </div>
         </div>
-      </sp-sticky>
-      <div class="body-content">
-        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
-          <sp-list
-            v-model="loading"
-            :finished="finished"
-            finished-text="没有更多了"
-            @load="onLoad"
+      </div> -->
+    </HeadWrapper>
+
+    <div ref="fill_container" class="img_container">
+      <img width="100%" :src="imageHead" alt="" />
+      <div
+        class="rule"
+        @click="$router.push('/login/protocol?categoryCode=' + ruleCode)"
+      >
+        规则
+      </div>
+    </div>
+
+    <div class="content_container">
+      <Recommend
+        title="爆款单品"
+        :parse-price="parsePrice"
+        :list="recommendProductList"
+        @jump="
+          (item) => {
+            jumpProductDetail(item)
+          }
+        "
+      ></Recommend>
+      <client-only>
+        <Classification
+          :has-city="hasCity && isService"
+          :city-name="cityName"
+          :header-height="headerHeight"
+          :current-index="currentIndex"
+          :activity-type-options="activityTypeOptions"
+          :swich-city-handle="swichCityHandle"
+          :menu-tab="menuTab"
+        />
+      </client-only>
+      <div class="container-body">
+        <div class="body-content">
+          <sp-pull-refresh
+            v-model="refreshing"
+            :disabled="refreshDisabled"
+            @refresh="onRefresh"
           >
-            <div v-if="productList && productList.length > 0">
-              <div
-                v-for="(item, index) in productList"
-                :key="index"
-                @click="jumpProductdetail(item)"
-              >
-                <div class="body-content-items">
-                  <div class="left-content">
-                    <img :src="item.imageUrl" alt="" srcset="" />
-                  </div>
-                  <div class="right-content">
-                    <div class="rc-top">
-                      <span v-if="specTypeCode === 'HDZT_ZTTYPE_XFWHSF'"
-                        >好品</span
-                      ><span>千万补贴</span>
-                      {{ item.skuName }}
-                    </div>
-                    <div class="rc-middle">
-                      <div v-for="(item2, index2) in item.tags" :key="index2">
-                        {{ item2 }}
-                      </div>
-                    </div>
-                    <div class="rc-bottom">
-                      <div class="rc-bottom-lf">
-                        <div
-                          v-if="parsePrice(item.specialPrice) !== '面议'"
-                          class="rc-bottom-lf-my"
-                        >
-                          <div>
-                            <span v-if="item.specialNewPrice">{{
-                              item.specialNewPrice
-                            }}</span
-                            ><span v-else>{{ item.specialPrice }}</span>
-                          </div>
-                          <div><span v-if="item.specialUnit">万</span> 元</div>
-                        </div>
-                        <div v-else class="rc-bottom-lf-my">
-                          <div>面议</div>
-                        </div>
-                        <div
-                          v-if="parsePrice(item.skuPrice) !== '面议'"
-                          class="bf-my"
-                        >
-                          原价
-                          <span v-if="item.skuNewPrice">{{
-                            item.skuNewPrice
-                          }}</span
-                          ><span v-else>{{ item.skuPrice }}</span>
-                          <span v-if="item.specialUnit">万</span>元
-                        </div>
-                        <div v-else class="bf-my">面议</div>
-                      </div>
-                      <div class="rc-bottom-rt">
-                        <div class="imm_consult">立即购买</div>
-                        <div class="imm_img"></div>
-                      </div>
-                    </div>
-                  </div>
+            <sp-list
+              v-model="loading"
+              :finished="finished"
+              finished-text="没有更多了"
+              @load="onLoad"
+            >
+              <div v-if="activityProductList && activityProductList.length > 0">
+                <div
+                  v-for="(item, index) in activityProductList"
+                  :key="index"
+                  @click="jumpProductDetail(item)"
+                >
+                  <Card :item="item" :parse-price="parsePrice"></Card>
                 </div>
-                <div class="line"></div>
               </div>
-            </div>
-            <div v-if="isNoData" class="no-data">
-              <img
-                src="https://cdn.shupian.cn/sp-pt/wap/images/bzre7lw14o00000.png"
-                alt=""
-                srcset=""
-              />
-            </div>
-          </sp-list>
-        </sp-pull-refresh>
+              <NoData :is-no-data="isNoData"></NoData>
+            </sp-list>
+          </sp-pull-refresh>
+        </div>
       </div>
     </div>
   </div>
 </template>
-
 <script>
-import { mapState, mapActions } from 'vuex'
-import {
-  CountDown,
-  Sticky,
-  List,
-  WorkTabSort,
-  WorkTabSortItem,
-  PullRefresh,
-  Toast,
-} from '@chipspc/vant-dgg'
-import HeaderSlot from '@/components/common/head/HeaderSlot'
-import { activityApi } from '~/api'
-import imHandle from '@/mixins/imHandle'
+import { mapState, mapMutations } from 'vuex'
+import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
+
+import activityMixin from '@/mixins/activityMixin.js'
+import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
+import Recommend from '~/components/activity/Recommend.vue'
+import Card from '~/components/activity/Card.vue'
+import Head from '~/components/activity/Head.vue'
+import NoData from '@/components/activity/NoData.vue'
+import Classification from '@/components/activity/Classification.vue'
 export default {
+  name: 'Server',
+  layout: 'keepAlive',
   components: {
+    // Header,
+    HeadWrapper,
+
     [CountDown.name]: CountDown,
     [Sticky.name]: Sticky,
     [List.name]: List,
-    [WorkTabSort.name]: WorkTabSort,
-    [WorkTabSortItem.name]: WorkTabSortItem,
     [PullRefresh.name]: PullRefresh,
-    [HeaderSlot.name]: HeaderSlot,
+
+    Recommend,
+    Card,
+    Head,
+    NoData,
+    Classification,
   },
-  mixins: [imHandle],
+  mixins: [activityMixin],
   data() {
     return {
-      defaultData: {
-        index: 0,
-        sort: -1, // 倒序
-      },
-      iconLeft: 0.35,
-      loading: false,
-      finished: false,
-      refreshing: false,
-      activityTypeOptions: [],
-      activityProductList: '',
-      currentIndex: 0,
-      itemTypeOptions: '',
-      productList: [],
-      productRecoData: '',
-      productAdvertData: [],
-      productAdvertDataTwo: [],
-      page: 1,
-      specTypeCode: 'HDZT_ZTTYPE_XFWHSF', // 活动类型code
-      platformCode: 'COMDIC_PLATFORM_CRISPS', // 平台code
-      specCode: '',
-      defaultCityCode: '510100',
-      advertCode: 'ad100034', // 广告code
-      advertCodeTwo: 'ad100035', // 广告code
-      productType: '',
-      fixedShow: false,
-      limit: 10,
-      safeTop: 0,
-      isNoData: false,
-      positionY: false,
+      specType: 'HDZT_ZTTYPE_XFWHSF',
+
+      hasCity: true,
+      imageHead: this.$ossImgSetV2('eik2dfytts00000.png'), // 'https://cdn.shupian.cn/sp-pt/wap/images/eik2dfytts00000.png'
+      headerHeight: 0,
+      ClassState: 1,
+
+      ruleCode: 'protocol100052',
     }
   },
   computed: {
     ...mapState({
-      cityName: (state) => state.city.currentCity.name,
-      code: (state) => state.city.currentCity.code,
       isInApp: (state) => state.app.isInApp,
-      appInfo: (state) => state.app.appInfo, // app信息
+      appInfo: (state) => state.app.appInfo,
     }),
     userInfo() {
-      return JSON.parse(localStorage.getItem('myInfo'))
+      return this.$store.state.user
     },
   },
-  async created() {
-    // 初始化定位
-    if (process.client && !this.cityName) {
-      this.POSITION_CITY({
-        type: 'init',
-      })
-    }
-    this.getAdvertisingData(1, this.advertCode)
-    this.getAdvertisingData(2, this.advertCodeTwo)
-    await this.getMenuTabs().then(this.getProductList)
-  },
+
   mounted() {
-    if (this.isInApp) {
-      this.offsetTop = this.appInfo.statusBarHeight + 62 + 'px'
-      this.positionY = true
-    } else {
-      this.offsetTop = 59 + 'px'
-    }
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'Server' })
+    window.addEventListener('scroll', this.handleScroll) // 监听（绑定）滚轮滚动事件
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
-    ...mapActions({
-      POSITION_CITY: 'city/POSITION_CITY',
-      GET_ACCOUNT_INFO: 'user/GET_ACCOUNT_INFO',
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
-    jumpProductdetail(item) {
-      if (this.isInApp) {
-        if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
-          this.$appFn.dggJumpRoute({
-            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.skuId}"}}}`,
-            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.skuId}"}}}`,
-          })
-        } else {
-          this.$appFn.dggJumpRoute({
-            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.skuId}"}}}`,
-            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.skuId}"}}}`,
-          })
-        }
-      }
+    onHeightChange(height) {
+      this.headerHeight = height
+    },
+    handleScroll() {
+      const scrollHeight =
+        document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
+      const boxHeight = this.$refs.fill_container.clientHeight // 盒子高度
 
-      if (!this.isInApp) {
-        if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
-          this.$router.push({
-            path: `/detail/transactionDetails`,
-            query: { productId: item.skuId, type: item.classCode },
-          })
-        } else {
-          this.$router.push({
-            path: `/detail`,
-            query: { productId: item.skuId },
-          })
-        }
-      }
-    },
-    onRefresh() {
-      if (this.itemTypeOptions) {
-        this.finished = false
-        this.loading = true
-        this.page = 1
-        this.onLoad()
+      if (scrollHeight > boxHeight - this.headerHeight) {
+        this.ClassState = 0
       } else {
-        this.loading = false
-        this.finished = true
-        this.refreshing = false
+        this.ClassState = 1
       }
     },
-    init() {
-      this.page = 1
-      this.productList = []
-      this.finished = false
-      this.loading = true
-    },
-    async onLoad() {
-      if (this.specCode) {
-        this.page++
-        await this.getProductList()
-      }
-    },
-    menuTab(item, index) {
-      this.init()
-      this.currentIndex = index
-      this.itemTypeOptions = item
-      this.getProductList()
-    },
-    async getMenuTabs() {
-      await this.$axios
-        .get(activityApi.activityTypeOptions, {
-          params: {
-            cityCodes: this.code || this.defaultCityCode,
-            platformCode: this.platformCode,
-            specType: this.specTypeCode,
-          },
-        })
-        .then((res) => {
-          if (res.code === 200) {
-            this.activityTypeOptions = res.data.settingVOList
-            if (res.data.settingVOList && res.data.settingVOList.length > 0) {
-              this.itemTypeOptions = res.data.settingVOList[0]
-              this.specCode = res.data.specCode
-              this.productType = res.data.productType
-            } else {
-              this.loading = false
-              this.finished = true
-            }
-          } else {
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
-          }
-        })
-        .catch((err) => {
-          this.loading = false
-          this.finished = true
-          console.log(err)
-        })
-    },
-    parsePrice(priceStr) {
-      if (priceStr > 0) {
-        return {
-          yuan: priceStr.split('.')[0],
-          jiao: priceStr.split('.')[1],
-        }
-      } else {
-        return '面议'
-      }
-    },
-    // 获取产品
-    getProductList() {
-      const params = {
-        specCode: this.specCode,
-        cityCode: this.itemTypeOptions.cityCode,
-        labelId: this.itemTypeOptions.id,
-        limit: this.limit,
-        page: this.page,
-      }
-      if (this.activityTypeOptions.length > 0) {
-        this.productMethod(params)
-      } else {
-        this.isNoData = true
-      }
-    },
-    productMethod(param) {
-      this.$axios
-        .get(activityApi.activityProductList, {
-          params: param,
-        })
-        .then((res) => {
-          if (res.code === 200) {
-            res.data.rows.forEach((item) => {
-              if (item.tags) {
-                item.tags = item.tags.split(',')
-              }
-            })
-            this.productList = this.productList.concat(res.data.rows)
-            this.total = res.data.total
-            this.loading = false
-            this.refreshing = false
-            if (this.page > res.data.totalPage) {
-              this.finished = true
-            }
-            if (this.productList.length === 0) {
-              this.isNoData = true
-            } else {
-              this.isNoData = false
-            }
-          } else {
-            this.loading = false
-            this.finished = true
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
-          }
-        })
-        .catch((err) => {
-          this.loading = false
-          this.finished = true
-          console.log(err)
-        })
-    },
-    getAdvertisingData(adNum, advertCode) {
-      this.$axios
-        .get(activityApi.activityAdvertising, {
-          params: {
-            locationCode: advertCode,
-          },
-        })
-        .then((res) => {
-          if (res.code === 200) {
-            if (adNum === 1) {
-              this.productAdvertData = res.data.sortMaterialList[0].materialList
-            } else {
-              const adImg01 = res.data.sortMaterialList[0].materialList || []
-              const adImg02 = res.data.sortMaterialList[1].materialList || []
-              this.productAdvertDataTwo = adImg01.concat(adImg02)
-            }
-          } else {
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
-          }
-        })
-        .catch((err) => {
-          this.loading = false
-          console.log(err)
-        })
-    },
-    swichCityHandle() {
-      if (!this.cityName) {
-        return
-      }
-      this.$router.push({
-        path: '/city/choiceCity',
-      })
-    },
-    // 搜索框点击
-    clickInputHandle() {
-      if (this.isInApp) {
-        this.$appFn.dggJumpRoute({
-          iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/search/page"}}`,
-          androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/search/page"}}`,
-        })
-      } else {
-        this.$router.push('/search')
-      }
-    },
-    uPGoBack() {
-      if (this.isInApp) {
-        this.$appFn.dggCloseWebView((res) => {
-          if (!res || res.code !== 200) {
-            this.$xToast.show({
-              message: '返回失败',
-              duration: 1000,
-              icon: 'toast_ic_error',
-              forbidClick: true,
-            })
-          }
-        })
-        return
-      }
-
-      // 在浏览器里 返回, 若没返回记录了，就跳转到首页
-      if (window && window.history && window.history.length <= 1) {
-        this.$router.replace('/')
-        return
-      }
-      this.$router.back(-1)
-    },
+  },
+  head() {
+    return { title: '先服务后收费' }
   },
 }
 </script>
 
+
 <style lang="less" scoped>
-.positionY {
-  background-position-y: -46px !important;
-}
-.no-data {
-  text-align: center;
-  padding-top: 10px;
-  img {
-    width: 340px;
-    height: 340px;
-  }
-  p {
-    width: 100%;
-    color: #222222;
-    font-size: 28px;
-  }
-}
 .container {
-  max-width: 8.12rem;
-  height: 100%;
-  overflow-x: hidden;
-  margin: 0 auto;
-  ::v-deep.fixed-head {
-    height: 0.88rem !important;
-    .my-head {
-      max-width: 812px;
-      margin: 0 auto;
-      right: 0;
-      left: 0;
-      height: 1.2rem !important;
-      box-shadow: none !important;
-      background: url('https://cdn.shupian.cn/sp-pt/wap/images/ezdtzc7pkwg0000.png')
-        no-repeat;
-      background-size: 100% 100%;
-    }
-  }
+  font-family: PingFangSC;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
 
-  .search {
-    display: flex;
-    align-items: center;
-    padding: 16px 0;
-    width: 100%;
-    margin: 0 auto;
-    // background: url('https://cdn.shupian.cn/sp-pt/wap/images/eomlorriyxc0000.png')
-    //   no-repeat;
-    background-size: 100% auto;
-    background-position: center 0;
-    .left-back {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 0 32px;
-      .back_icon {
-        width: 40px;
-        height: 40px;
-      }
-    }
-    .search-box {
-      margin-right: 40px;
-      height: 88px;
-      border-radius: 8px;
-      background: #000000;
-      border-radius: 8px;
-      background-color: rgba(0, 0, 0, 0.1);
-      display: flex;
-      align-items: center;
-      flex: 1;
-      .search-icon {
-        margin: 29px 12px 28px 32px;
-      }
-      input {
-        border: none;
-        font-size: 30px;
-        font-weight: 500;
-        color: #ffffff;
-        line-height: 30px;
-        background: transparent;
-        display: flex;
-        align-items: center;
-        &::placeholder {
-          /* Internet Explorer 10+ */
-          color: #ffffff !important;
-        }
-      }
-    }
-  }
-  .container-advice {
-    // padding: 0 20px;
-    width: 100%;
-    height: 700px;
+  .img_container {
     position: relative;
-    .banner-img {
+    min-height: 300px;
+    background: #f8f8f8;
+    .count-down {
       position: absolute;
+      top: 68.5%;
       width: 100%;
-      height: 720px;
-      padding-top: 30px;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-    .rules {
-      position: fixed;
-      width: 68px;
-      height: 36px;
-      background: linear-gradient(45deg, #ffd800 0%, #ff2828 100%);
-      box-shadow: 0px 0px 20px 0px #d70000;
-      border-radius: 32px 0px 0px 32px;
-      // opacity: 0.5;
+
+      font-size: 24px;
+      color: #ffedcb;
+      letter-spacing: 0;
+      line-height: 24px;
+
       display: flex;
-      align-items: center;
+      flex-direction: row;
       justify-content: center;
-      right: -4px;
-      top: 164px;
-      p {
-        height: 20px;
-        font-size: 20px;
+      align-items: center;
+
+      .down-time {
+        font-size: 24px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        color: #ffffff;
-        line-height: 20px;
+
+        color: #ffedcb;
+        line-height: 24px;
+
+        letter-spacing: 2px;
+        display: flex;
+        align-items: center;
+
+        .time {
+          // min-width: 36px;
+          font-weight: bold;
+          padding: 0 5px;
+          height: 36px;
+          line-height: 36px;
+          background-image: linear-gradient(139deg, #7e9fff 0%, #4974f5 100%);
+          border-radius: 4px;
+
+          font-family: Bebas;
+          font-size: 24px;
+          color: #fff;
+          text-align: center;
+          margin: 0 8px;
+        }
       }
     }
 
-    .advice-box {
+    .rule {
+      // header的z-index是999
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.2);
+
+      border-radius: 100px 0 0 100px;
+
+      opacity: 0.9;
+      font-family: PingFangSC-Regular;
+      font-size: 24px;
+      color: #ffffff;
+      letter-spacing: 0;
+      line-height: 40px;
+
       position: absolute;
-      display: flex;
-      justify-content: space-between;
-      bottom: 50px;
-      box-sizing: border-box;
-      padding: 20px;
-      width: 710px;
-      height: 340px;
-      left: 0;
       right: 0;
-      margin: 0 auto;
-      background: linear-gradient(0deg, #ffa04b, #ff8c46);
-      border-radius: 24px;
-      .default_s {
-        width: 327px;
-        height: 298px;
-        overflow: hidden;
-        border-radius: 12px;
-        img {
-          width: 100%;
-          height: 100%;
-        }
-      }
-      .other_s {
-        width: 327px;
-        height: 140px;
-        overflow: hidden;
-        //background: linear-gradient(137deg, #ffffff 0%, #fff3eb 100%);
-        border-radius: 12px;
-        margin-bottom: 18px;
-        img {
-          width: 100%;
-          height: 100%;
-        }
-      }
+      top: 40px;
+      height: 40px;
+      width: 96px;
+      text-align: center;
     }
   }
-  .container-body {
-    width: 100%;
-    background: #ffffff;
-    border-radius: 24px 24px 0px 0px;
+
+  .content_container {
+    position: relative;
+    margin-top: -24px;
+    background: #f8f8f8;
+    border-radius: 24px;
     overflow: hidden;
-    .tabs-box {
-      display: flex;
-      justify-content: flex-start;
-      height: 124px;
-      align-items: center;
-      background: #ffffff;
+
+    .container-body {
+      background: #f8f8f8;
+      z-index: 1;
       padding: 0 20px;
-      .tabs-box-left {
-        padding: 0 20px;
-        max-width: 200px;
-        overflow: hidden;
-        height: 56px;
-        background: linear-gradient(270deg, #f3363f 0%, #ec5330 100%);
-        border-radius: 32px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        div:nth-child(1) {
-          font-size: 30px;
-          font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
-          color: #ffffff;
-          line-height: 30px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          padding: 8px 0;
-        }
-        div:nth-last-child(1) {
-          // width: 15px;
-          // height: 10px;
-          // background: #ffffff;
-          margin-left: 8px;
-          width: 0;
-          height: 0;
-          border-left: 10px solid transparent;
-          border-right: 10px solid transparent;
-          border-top: 12px solid #ffffff;
-        }
+      &::after {
+        display: block;
+        clear: both;
       }
-    }
-    .tabs-box-items::-webkit-scrollbar {
-      display: none;
-    }
-    .tabs-box-items {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 500px;
-      overflow-x: auto;
-      height: 80px;
-      white-space: nowrap;
-      margin-left: 20px;
-      li {
-        height: 32px;
-        font-size: 32px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        color: #555555;
-        line-height: 32px;
-        margin-left: 48px;
-      }
-      li.active {
-        height: 32px;
-        font-size: 32px;
-        font-family: PingFangSC-Semibold, PingFang SC;
-        font-weight: bold;
-        color: #ec5330;
-        line-height: 32px;
-      }
-    }
-    .body-content {
-      background: #fff;
-      .line {
-        width: 710px;
-        height: 1px;
-        background: #f4f4f4;
-        margin: 0 20px;
-      }
-      .body-content-items {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        padding: 32px 20px;
-      }
-      .left-content {
-        position: relative;
-        margin-right: 32px;
-        width: 260px;
-        height: 260px;
-        background: linear-gradient(
-          180deg,
-          #46494d 0%,
-          #797d83 0%,
-          #414347 100%
-        );
-        border-radius: 12px;
-        background-size: 100% 100%;
-        -moz-background-size: 100% 100%;
-        img {
-          width: 100%;
-          height: 100%;
-        }
-        .left-span {
-          position: absolute;
-          border-radius: 12px 0 0 0;
-          background: linear-gradient(90deg, #ffb132 0%, #ff8208 100%);
-          font-size: 20px;
-          font-weight: 500;
-          color: #ffffff;
-          top: -6px;
-          left: 0;
-          padding: 12px 6px 16px 6px;
-        }
-      }
-      .right-content {
-        width: 418px;
-        display: flex;
-        align-content: flex-start;
-        flex-direction: column;
-        .rc-top {
-          width: 378px;
-          max-height: 90px;
-          min-height: 90px;
-          font-size: 32px;
-          font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
-          color: #222222;
-          line-height: 46px;
-          overflow: hidden;
-          span {
-            background: #ec5330;
-            border-radius: 4px;
-            padding: 8px;
-            font-size: 20px;
-            font-weight: 500;
-            color: #ffffff;
-            margin-top: 6px;
-            margin-right: 8px;
-          }
-        }
-        .rc-middle {
-          display: flex;
-          // justify-content: space-between;
-          align-content: flex-start;
-          margin-top: 12px;
-          flex-wrap: wrap;
-          min-height: 80px;
-          div {
-            font-size: 20px;
-            margin-bottom: 12px;
-            font-family: PingFangSC-Regular, PingFang SC;
-            font-weight: 400;
-            color: #5c7499;
-            line-height: 20px;
-            padding: 6px 6px;
-            background: #f0f2f5;
-            border-radius: 4px;
-            margin-right: 8px;
-          }
-        }
-        .rc-bottom {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          .rc-bottom-lf {
-            .rc-bottom-lf-my {
-              display: flex;
-              flex-direction: row;
-              align-content: flex-start;
-              align-items: center;
-              div {
-                color: #ec5330;
-              }
-              div:nth-of-type(1) {
-                font-size: 40px;
-                font-weight: 500;
-                line-height: 40px;
-              }
-              div:nth-of-type(2) {
-                font-size: 22px;
-                font-weight: 500;
-                margin: 13px 0 0 2px;
-                line-height: 22px;
-              }
-            }
-            .bf-my {
-              display: flex;
-              flex-direction: row;
-              margin-top: 4px;
-              font-size: 22px;
-              font-weight: 400;
-              color: #999999;
-              line-height: 22px;
-              margin-left: 2px;
-            }
-          }
-          .rc-bottom-rt {
-            width: 204px;
-            height: 65px;
-            background: linear-gradient(270deg, #f3363f 0%, #ec5330 100%);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            .imm_consult {
-              height: 30px;
-              font-size: 30px;
-              font-family: PingFangSC-Medium, PingFang SC;
-              font-weight: 500;
-              color: #ffffff;
-              line-height: 30px;
-            }
-            .imm_img {
-              width: 32px;
-              height: 32px;
-              background-size: 100% 100%;
-              -moz-background-size: 100% 100%;
-              background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/625y4ztzqec0000.png');
-              margin-left: 8px;
-            }
-          }
-        }
+      .body-content {
+        min-height: 80vh;
       }
     }
   }

@@ -55,8 +55,10 @@ export function request(
     }
     axios[method](url, params, extraConfig)
       .then((data) => {
-        console.log(url,111)
-        console.log('request promise', data)
+        console.log('-----------------')
+        console.log(url)
+        console.log(data)
+
         if (typeof callback === 'function') {
           callback(data, resolve, reject)
           return

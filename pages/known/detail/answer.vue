@@ -14,27 +14,52 @@
               @click.native="$back()"
             ></my-icon>
             <div class="btn-area">
-              <p @click="onInvite">
+              <div
+                class="content"
+                style="margin-right: 0.32rem"
+                @click="onInvite"
+              >
                 <my-icon name="yaoqinghuida_mian" size="0.36rem"></my-icon>
                 <span>邀请</span>
-              </p>
-              <p
+              </div>
+              <template
                 v-if="
                   answerDetails && answerDetails.createrId !== userInfo.userId
                 "
-                @click.stop="writeAnswer"
               >
-                <my-icon name="xiehuida" size="0.36rem"></my-icon>
-                <span>写回答</span>
-              </p>
-              <p v-else>
+                <div
+                  class="content"
+                  style="margin-right: 0.32rem"
+                  @click.stop="writeAnswer"
+                >
+                  <my-icon name="xiehuida" size="0.36rem"></my-icon>
+                  <span>写回答</span>
+                </div>
+                <my-icon
+                  style="margin-top: 0.06rem"
+                  name="fenxiang"
+                  size="0.32rem"
+                  color="#1a1a1a"
+                  class="my_icon"
+                  @click.native="shareHandle"
+                ></my-icon>
+              </template>
+              <template v-else>
+                <my-icon
+                  style="margin-right: 0.32rem; margin-top: 0.06rem"
+                  name="fenxiang"
+                  size="0.32rem"
+                  color="#1a1a1a"
+                  class="my_icon"
+                  @click.native="shareHandle"
+                ></my-icon>
                 <my-icon
                   name="gengduo"
                   size="0.4rem"
                   color="#000000"
                   @click.native="more"
                 ></my-icon>
-              </p>
+              </template>
             </div>
           </div>
           <div v-show="showHead2" class="head2">
@@ -69,7 +94,7 @@
         </header-slot>
       </div>
       <DownLoadArea
-        v-if="isShare"
+        v-if="!isInApp"
         :ios-link="iosLink"
         :androd-link="androdLink"
       />
@@ -191,6 +216,12 @@
           <div class="cancel" @click="cancel">取消</div>
         </div>
       </sp-popup>
+      <sp-share-sheet
+        v-model="showShare"
+        title="分享"
+        :options="shareOptions"
+        @select="onSelect"
+      />
     </div>
   </section>
 </template>
@@ -206,6 +237,7 @@ import {
   Dialog,
   Icon,
   Bottombar,
+  ShareSheet,
 } from '@chipspc/vant-dgg'
 import Comment from '@/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
@@ -213,6 +245,7 @@ import DownLoadArea from '@/components/common/downLoadArea'
 import ShareModal from '@/components/common/ShareModal'
 import { knownApi, userinfoApi } from '@/api'
 import util from '@/utils/changeBusinessData'
+import { copyToClipboard, setUrlParams } from '@/utils/common'
 export default {
   layout: 'keepAlive',
   components: {
@@ -221,6 +254,7 @@ export default {
     [Image.name]: Image,
     [Field.name]: Field,
     [Popup.name]: Popup,
+    [ShareSheet.name]: ShareSheet,
     [Dialog.name]: Dialog,
     [Bottombar.name]: Bottombar,
     Comment,
@@ -258,6 +292,8 @@ export default {
       answerCollectCount: '',
       isFollow: false,
       userType: '',
+      shareOptions: [], // wap 分享设置
+      showShare: false, // wap 分享开关
     }
   },
   computed: {
@@ -552,6 +588,75 @@ export default {
           // on cancel
         })
     },
+    async shareHandle() {
+      if (await this.isLogin()) {
+        if (this.isInApp) {
+          const url = window && window.location.href
+          const sharedUrl = setUrlParams(url, { isShare: 1 })
+          const tile = this.answerDetails.title
+          const shareContent = {
+            title: `${tile}`,
+            url: sharedUrl,
+          }
+
+          // 薯片app
+          if (this.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS') {
+            shareContent.image =
+              'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png'
+            shareContent.subTitle = `${
+              this.answerDetails.userName || '薯片用户'
+            }回答了问题,已获${
+              this.answerDetails.applaudCount || 0
+            }个赞,快来看看吧!`
+          } else {
+            // 启大顺
+            shareContent.description = `${
+              this.answerDetails.userName || '薯片用户'
+            }回答了问题,已获${
+              this.answerDetails.applaudCount || 0
+            }个赞,快来看看吧!`
+            shareContent.imgUrl =
+              'https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png'
+          }
+
+          this.$appFn.dggShare(shareContent, (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '分享失败！',
+                duration: 1500,
+                forbidClick: false,
+                icon: 'toast_ic_remind',
+              })
+            }
+          })
+          return
+        }
+        this.shareOptions = [{ name: '复制链接', icon: 'link' }]
+        this.showShare = true
+      }
+    },
+    async onSelect() {
+      if (await this.isLogin()) {
+        if (this.isInApp) {
+          this.showShare = false
+          return
+        }
+        const url = window && window.location.href
+        const sharedUrl = setUrlParams(url, { isShare: 1 })
+        const isSuccess = copyToClipboard(sharedUrl)
+        if (isSuccess) {
+          this.$xToast.show({
+            message: '复制成功',
+            duration: 1500,
+            icon: 'toast_ic_comp',
+            forbidClick: true,
+          })
+        }
+        this.showShare = false
+        scrollTo(0, 0)
+      }
+    },
   },
 }
 </script>
@@ -606,6 +711,12 @@ export default {
     display: flex;
     align-items: center;
     height: 100%;
+    .content {
+      color: #4974f5;
+      span {
+        font-weight: bold;
+      }
+    }
     p {
       color: #4974f5;
       padding: 0 20px;

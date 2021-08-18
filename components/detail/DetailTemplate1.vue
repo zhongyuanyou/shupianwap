@@ -400,6 +400,10 @@ export default {
     },
     // 添加收藏
     addSave() {
+      if (!this.$store.state.user.token) {
+        this.$router.push('/login')
+        return
+      }
       const classCodeLevel = this.sellingDetail.classCodeLevel
       let codeArr = []
       if (classCodeLevel) {
@@ -489,14 +493,21 @@ export default {
       if (!this.deviceId) {
         this.deviceId = await getUserSign()
       }
-      const formatId1 = this.sellingDetail.classCodeLevel.split(',')[0] // 产品二级分类
-      const formatId2 = this.sellingDetail.classCodeLevel.split(',')[1] // 产品二级分类
-      const formatId3 = this.sellingDetail.classCodeLevel.split(',')[2] // 产品三级分类
+      console.log('this.sellingDetail', this.sellingDetail)
+
+      let formatId1 = '' // 产品二级分类
+      let formatId2 = '' // 产品二级分类
+      let formatId3 = '' // 产品三级分类
+      if (this.sellingDetail?.classCodeLevel) {
+        formatId1 = this.sellingDetail.classCodeLevel.split(',')[0] // 产品二级分类
+        formatId2 = this.sellingDetail.classCodeLevel.split(',')[1] // 产品二级分类
+        formatId3 = this.sellingDetail.classCodeLevel.split(',')[2] // 产品三级分类
+      }
       this.$axios
         .post(recommendApi.saleList, {
           userId: this.$cookies.get('userId', { path: '/' }), // 用户id
           deviceId: this.deviceId, // 设备ID
-          formatId: formatId2 || formatId3, // 产品二级类别,没有二级类别用三级类别（首页等场景不需传，如其他场景能获取到必传）
+          formatId: formatId2 || formatId3 || formatId1, // 产品二级类别,没有二级类别用三级类别（首页等场景不需传，如其他场景能获取到必传）
           classCode: formatId1,
           areaCode: this.$store.state.city.currentCity.code || '510100', // 区域编码
           sceneId: 'app-fwcpxq-01', // 场景ID
@@ -504,7 +515,7 @@ export default {
           productType: 'PRO_CLASS_TYPE_SALES', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
           title: this.sellingDetail.name, // 产品名称（产品详情页传、咨询页等）
           platform: 'm', // 平台（app,m,pc）
-          formatIdOne: formatId1 || formatId2,
+          formatIdOne: formatId1,
           page: { pageNo: this.productPage, pageSize: this.productLimit },
         })
         .then((res) => {

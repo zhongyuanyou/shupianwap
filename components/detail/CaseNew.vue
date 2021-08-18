@@ -37,11 +37,20 @@ export default {
     // 产品详情
     classCodeLevelList() {
       if (this.$route.path.match('transactionDetails')) {
-        return this.$store.state.tcProductDetail.detailData.classCodeLevelList
-      } else {
-        return this.$store.state.sellingGoodsDetail.sellingGoodsData.classCodeLevel.split(
-          ','
+        return (
+          this.$store.state?.tcProductDetail?.detailData?.classCodeLevelList ||
+          []
         )
+      } else {
+        if (
+          this.$store.state?.sellingGoodsDetail?.sellingGoodsData
+            ?.classCodeLevel
+        ) {
+          return this.$store.state?.sellingGoodsDetail?.sellingGoodsData?.classCodeLevel?.split(
+            ','
+          )
+        }
+        return []
       }
     },
   },

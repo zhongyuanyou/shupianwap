@@ -1,10 +1,10 @@
 <template>
   <div>
     <div
-      class="choose-topic"
-      @click="openModal"
       :key="bottomHeight > 90 ? 'choose-topic2' : ''"
+      class="choose-topic"
       :style="{ bottom: bottomHeight + 'px' }"
+      @click="openModal"
     >
       <p v-if="!topics.length">
         <my-icon

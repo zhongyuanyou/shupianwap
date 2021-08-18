@@ -71,19 +71,19 @@
 <script>
 import { PLATFORM_CODE, TERMINAL_CODE } from '@/config/constant'
 import { homeApi } from '@/api'
-import Head from '@/components/home/Head'
+import Head from '@/components/home/Head.vue'
 // import SearchBanner from '@/components/home/SearchBanner'
-import HomeNav from '@/components/home/HomeNav'
-import SkillGroup from '@/components/home/SkillGroup'
-import FirmServeTool from '@/components/home/FirmServeTool'
+import HomeNav from '@/components/home/HomeNav.vue'
+import SkillGroup from '@/components/home/SkillGroup.vue'
+import FirmServeTool from '@/components/home/FirmServeTool.vue'
 // import SwiperBanner from '@/components/home/SwiperAd'
 // import Help from '@/components/home/HelpAd'
 // import Preferential from '@/components/home/Preferential'
 // import Information from '@/components/home/Information'
 // import HotServe from '@/components/home/HotServe'
-import Recommend from '@/components/home/RecommendSale'
-import FiexdBtn from '@/components/home/FiexdBtn'
-import DownloadApp from '@/components/common/app/DownloadApp'
+import Recommend from '@/components/home/RecommendSale.vue'
+import FiexdBtn from '@/components/home/FiexdBtn.vue'
+import DownloadApp from '@/components/common/app/DownloadApp.vue'
 import Marketing from '@/components/home/Marketing'
 export default {
   layout: 'newNav',
@@ -342,8 +342,23 @@ export default {
         })
     },
   },
-  head: {
-    meta: [{ name: 'spptmd-track_code', content: 'SPW000004' }],
+  head() {
+    return {
+      title: '薯片企服-公司注册商标专利交易查询申请法律咨询服务平台',
+      meta: [
+        {
+          name: 'keywords',
+          content:
+            '企业服务, 商标注册，法律咨询，会计代理，代缴社保，商标查询，企查查，天眼企服',
+        },
+        {
+          name: 'description',
+          content:
+            '薯片企服是成都薯片科技有限公司旗下自研可信企业服务平台，薯片企服依托智能科技，传递价值生意，致力于为全类型，各阶段的企业及个人提供：工商服务、会计代理、财税咨询、知识产权代理、资质许可证办理咨询、品牌设计、IT/软件、营销推广、人事社保代理等多品类的线上服务。',
+        },
+        { name: 'spptmd-track_code', content: 'SPW000004' },
+      ],
+    }
   },
 }
 </script>

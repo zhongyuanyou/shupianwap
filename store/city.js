@@ -18,6 +18,7 @@ export const state = () => ({
   },
   currentCity: {}, // 当前选择的城市
   positionCityName: '', // 当前定位城市的名称
+  positionCityCode: '', // 当前定位城市的名称
   positionStatus: null, // 定位状态（0：定位失败 1：定位成功但未开通该城市服务 2：定位成功且有对应的城市服务）
   code: '',
 })
@@ -40,6 +41,15 @@ export const mutations = {
       domain: 'shupian.cn', // 城市选择加入根域名cookie供其他站点使用
     })
   },
+    // 设置当前定位城市code
+    SET_POSITION_CODE(state, code) {
+      state.positionCityCode = code
+      this.$cookies.set('positionCityCode', state.positionCityCode, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7, // 过期时间
+        domain: 'shupian.cn', // 城市选择加入根域名cookie供其他站点使用
+      })
+    },
   // 设置当前定位状态
   SET_POSITION_STATUS(state, num) {
     state.positionStatus = num
@@ -71,9 +81,10 @@ export const actions = {
 
     const { code, data, message } = await getPositonCity()
     // 定位成功,且匹配到开通服务的站点
-    console.log(code,data,message,11111)
+    console.log(code,data,message)
     if (code === 200) {
       commit('SET_POSITION_CITY', data.name)
+      commit('SET_POSITION_CODE', data.code)
       commit('SET_POSITION_STATUS', 2)
       if (type === 'rest') {
         myToast.hideLoading()
@@ -92,6 +103,7 @@ export const actions = {
     // 定位成功，但未匹配到开通服务的站点
     if (code === 5003) {
       commit('SET_POSITION_CITY', data.name)
+      commit('SET_POSITION_CODE', data.code)
       commit('SET_POSITION_STATUS', 1)
       if (type === 'rest') {
         myToast.hideLoading()

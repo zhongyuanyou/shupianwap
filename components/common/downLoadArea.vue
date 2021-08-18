@@ -1,5 +1,5 @@
 <template>
-  <div class="download-area" v-if="!isInApp">
+  <div v-if="!isInApp" class="download-area">
     <img :src="$ossImgSetV2('g6trabnxtg80000.png')" class="logo" />
     <div class="desc">
       <div class="desc-name">薯片APP</div>
