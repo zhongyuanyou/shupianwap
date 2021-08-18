@@ -142,7 +142,8 @@ import NoData from '@/components/activity/NoData.vue'
 import Classification from '@/components/activity/Classification.vue'
 export default {
   name: 'Subsidy',
-  layout: 'keepAlive',
+  layout: 'default',
+
   components: {
     // Header,
     HeadWrapper,
@@ -171,6 +172,7 @@ export default {
       ruleCode: 'protocol100034',
     }
   },
+  //
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,

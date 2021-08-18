@@ -1,9 +1,10 @@
 <template >
   <sp-sticky class="tabs-box" :offset-top="headerHeight">
-    <div v-if="hasCity||activityTypeOptions.length==0" class="drop_down">
+    <div v-if="hasCity || activityTypeOptions.length == 0" class="drop_down">
       <div class="drop_down_title" @click="swichCityHandle">
         {{ cityName ? cityName : '定位中' }}
       </div>
+
       <div class="drop_down_icon"></div>
     </div>
 
