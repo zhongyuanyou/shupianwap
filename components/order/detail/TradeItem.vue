@@ -19,7 +19,10 @@
       <span v-else class="after-sale-text">继续办理</span>
     </div>
     <div class="img">
-      <sp-image class="sp-image" :src="item.indexImg"></sp-image>
+      <sp-image
+        class="sp-image"
+        :src="$resizeImg(130, 110, item.indexImg)"
+      ></sp-image>
     </div>
     <div class="right">
       <p class="goods-name">

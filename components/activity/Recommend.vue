@@ -18,7 +18,8 @@
             <sp-image
               class="picture"
               fit="cover"
-              :src="item.imageUrl || defaultImg"
+              :src="$ossImgSet(126, 120, item.imageUrl || defaultImg)"
+              alt="薯片科技"
               @click="$emit('preview', item)"
             ></sp-image>
           </div>
