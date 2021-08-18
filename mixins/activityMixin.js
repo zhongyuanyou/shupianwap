@@ -217,7 +217,7 @@ export default {
           if (res.code === 200) {
             this.activityTypeOptions = res.data.settingVOList || []
             if (
-              (this.activityTypeOptions.length === 0 &&
+              (res.data.settingVOList.length === 0 &&
                 this.specType !== 'HDZT_ZTTYPE_XSQG') ||
               !res.data.specCode
             ) {
