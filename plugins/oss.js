@@ -52,5 +52,26 @@ const ossImgSetV2 = (imgName = null, config = '') => {
     return `?x-oss-process=image/resize,m_fill,w_10,h_10,limit_0`
   }
 }
+
+/*
+ * @Author: tdb
+ * @params : {number} width 裁剪后图片宽度
+ * @params : {number} height 裁剪后图片高度
+ * @params : {string} url 处理之前的图片线上地址
+ * @return : {string} 处理之后的图片地址
+ * @Date: 2021-09-18
+ * @Description:图片压缩裁剪
+ */
+
+const resizeImg = (width, height, url) => {
+  if (!url) return ''
+  // https://cdn.shupian.cn/E5756.png?x-oss-process=image/resize,m_fill,w_300,h_300,limit_0
+  width = width || 180
+  height = height || 120
+  return (
+    url + `?x-oss-process=image/resize,m_fill,w_${width},h_${height},limit_0`
+  )
+}
 Vue.prototype.$ossImgSet = ossImgSet
 Vue.prototype.$ossImgSetV2 = ossImgSetV2
+Vue.prototype.$resizeImg = resizeImg

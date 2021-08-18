@@ -1,4 +1,4 @@
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 import { Toast } from '@chipspc/vant-dgg'
 import { activityApi } from '~/api'
 
@@ -33,8 +33,11 @@ export default {
     },
   },
   data() {
-    return {
 
+
+    return {
+      // const cityCode = window.sessionStorage.getItem('cityCode')
+      // const cityName = window.sessionStorage.getItem('cityName')
 
       endCountDownTimer: null,
       countDownTimer: null,
@@ -82,6 +85,7 @@ export default {
       this.setTopColor()
     },
   },
+
   async mounted() {
     // 初始化定位
     this.setTopColor()
@@ -97,11 +101,23 @@ export default {
 
   },
   beforeDestroy() {
+    console.log('销毁');
+    console.log(this.$store.state.city.positionCityName);
+    console.log(this.$store.state.city.positionCityCode);
+    this.SET_CITY({
+      code: this.$store.state.city.positionCityCode || this.$store.state.city.currentCity.code,
+      name: this.$store.state.city.positionCityName || this.$store.state.city.currentCity.name,
+    })
+
     clearInterval(this.endCountDownTimer)
     clearInterval(this.countDownTimer)
   },
   methods: {
+    ...mapMutations({
+      SET_CITY: 'city/SET_CITY',
+    }),
     ...mapActions({
+
       POSITION_CITY: 'city/POSITION_CITY',
       GET_ACCOUNT_INFO: 'user/GET_ACCOUNT_INFO',
     }),
