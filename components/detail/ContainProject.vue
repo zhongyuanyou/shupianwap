@@ -80,6 +80,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+:v-deep.sp-popup {
+  .sp-safeguard__list {
+    .sp-safeguard__cont {
+      width: 90% !important;
+      text-align: left;
+    }
+  }
+}
 .container {
   background-color: #fff;
   padding-top: 44px;
@@ -107,7 +115,7 @@ export default {
   }
   &_list {
     margin-top: 14px;
-    &_item {
+    .container_list_item {
       font-size: 26px;
       padding: 0 40px 0 39px;
       height: 88px;
@@ -120,7 +128,7 @@ export default {
       }
       .label {
         color: #222222;
-        width: 260px;
+        width: 100%;
       }
       .desc {
         color: #999999;
@@ -138,8 +146,20 @@ export default {
 </style>
 <style lang="less">
 .cgcontainer {
+  .sp-safeguard__list {
+    .sp-safeguard__icon {
+      display: none;
+    }
+    .sp-safeguard__cont {
+      width: 100% !important;
+      .sp-safeguard__title{
+        max-width: 100%;
+      }
+    }
+  }
   .sp-safeguard__title {
-    width: 500px;
+    width: 100%;
+    text-align: left;
   }
 }
 </style>

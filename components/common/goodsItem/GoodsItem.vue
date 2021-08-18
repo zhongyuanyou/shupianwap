@@ -15,7 +15,11 @@
     @click="jumpUrl"
   >
     <div class="goods-item-left">
-      <img :src="sbGoodsImg || itemData.goodsImg" alt="" class="goods-img" />
+      <img
+        :src="$resizeImg(80, 80, sbGoodsImg || itemData.goodsImg)"
+        alt=""
+        class="goods-img"
+      />
       <!--<span class="tag">急售</span>-->
     </div>
     <div class="goods-right">
