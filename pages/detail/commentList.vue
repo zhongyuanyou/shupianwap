@@ -1,6 +1,6 @@
 <template>
   <div class="good-commentlist">
-    <Header title="面谈记录">
+    <Header title="评价列表">
       <template #left>
         <div @click="$back()">
           <my-icon
@@ -134,6 +134,18 @@
                   class="content-img__item"
                 />
               </div>
+              <div class="planner-wrap">
+                <div class="planner">
+                  <img
+                    class="planner-avatar"
+                    src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+                  />
+                  <span class="planner-replay"
+                    ><span class="planner-name">江刘杰【规划师】</span
+                    >回复：谢谢您的认可,我们会越做约好的继续加油！</span
+                  >
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -205,7 +217,10 @@ export default {
   .back_icon {
     margin-left: 40px;
   }
+  background: #F5F5F5;
   .content-wrap {
+    background: #fff;
+    margin-bottom: 20px;
     padding: 32px 40px;
     .tile {
       display: flex;
@@ -346,6 +361,37 @@ export default {
         }
         &__txt {
           margin-top: 4px;
+        }
+      }
+      .planner-wrap {
+        margin-top: 32px;
+        border-top: 1px solid #f4f4f4;
+        .planner {
+          position: relative;
+          padding-top: 24px;
+          display: flex;
+          &-avatar {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            border-radius: 100%;
+            width: 26px;
+            height: 26px;
+            object-fit: cover;
+            margin-right: 8px;
+            line-height: 38px;
+          }
+          &-name {
+            color: #222;
+            font-size: 26px;
+            line-height: 38px;
+          }
+          &-replay {
+            margin-left: 34px;
+            color: #999;
+            font-size: 26px;
+            line-height: 38px;
+          }
         }
       }
     }
