@@ -106,7 +106,9 @@
             <sp-list
               v-model="loading"
               :finished="finished"
-              finished-text="没有更多了"
+              :finished-text="
+                activityProductList.length > 0 ? '没有更多了' : '暂无数据'
+              "
               @load="onLoad"
             >
               <div v-if="activityProductList && activityProductList.length > 0">
@@ -184,9 +186,9 @@ export default {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'Special' })
     window.addEventListener('scroll', this.handleScroll) // 监听（绑定）滚轮滚动事件
   },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
+  // beforeDestroy() {
+  //   window.removeEventListener('scroll', this.handleScroll)
+  // },
 
   methods: {
     ...mapMutations({

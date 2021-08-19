@@ -5,8 +5,8 @@ import { activityApi } from '~/api'
 export default {
   computed: {
     ...mapState({
-      cityName: (state) => state.city.currentCity.name,
-      cityCode: (state) => state.city.currentCity.code,
+      cityName: (state) => state.city1.currentCity.name,
+      cityCode: (state) => state.city1.currentCity.code,
       isInApp: (state) => state.app.isInApp,
       appInfo: (state) => state.app.appInfo, // app信息
     }),
@@ -33,8 +33,6 @@ export default {
     },
   },
   data() {
-
-
     return {
       // const cityCode = window.sessionStorage.getItem('cityCode')
       // const cityName = window.sessionStorage.getItem('cityName')
@@ -44,7 +42,6 @@ export default {
 
       loading: false,
       finished: false,
-
 
       refreshDisabled: false,
       refreshing: false,
@@ -89,39 +86,27 @@ export default {
   async mounted() {
     // 初始化定位
     this.setTopColor()
-
+    console.log('cityCode', this.cityCode)
+    console.log('city1', this.$store.state.city1)
     if (!this.cityCode) {
-      await this.POSITION_CITY({
+      await this.POSITION_CITY1({
         type: 'init',
       })
     }
     await this.getMenuTabs() // 获取tab
     await this.getRecommendProductList() // 获取推荐商品
-
-
   },
   beforeDestroy() {
-    console.log('销毁');
-    console.log(this.$store.state.city.positionCityName);
-    console.log(this.$store.state.city.positionCityCode);
-    if (this.$store.state.city.positionCityCode && this.$store.state.city.positionCityName) {
-      this.SET_CITY({
-        code: this.$store.state.city.positionCityCode,
-        name: this.$store.state.city.positionCityName,
-      })
-    }
-
-
     clearInterval(this.endCountDownTimer)
     clearInterval(this.countDownTimer)
+    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
     ...mapMutations({
-      SET_CITY: 'city/SET_CITY',
+      SET_CITY1: 'city1/SET_CITY',
     }),
     ...mapActions({
-
-      POSITION_CITY: 'city/POSITION_CITY',
+      POSITION_CITY1: 'city1/POSITION_CITY',
       GET_ACCOUNT_INFO: 'user/GET_ACCOUNT_INFO',
     }),
     setTopColor() {
@@ -138,6 +123,10 @@ export default {
     },
     // 平台不同，跳转方式不同
     uPGoBack() {
+      this.SET_CITY1({
+        code: '',
+        name: '',
+      })
       if (this.isInApp) {
         this.$appFn.dggWebGoBack((res) => {
           if (!res || res.code !== 200) {
@@ -190,13 +179,11 @@ export default {
       }
     },
 
-
     init() {
       this.page = 1
       this.activityProductList = []
       this.finished = false
       this.loading = true
-
     },
 
     menuTab(item, index) {
@@ -288,9 +275,7 @@ export default {
     },
     // 获取产品
     async getProductList() {
-      if (
-        this.activityTypeOptions.length > 0
-      ) {
+      if (this.activityTypeOptions.length > 0) {
         const params = {
           specCode: this.specCode,
           page: this.page,
@@ -315,37 +300,28 @@ export default {
         }
         await this.productMethod(params)
       } else {
-
         this.finished = true
         this.loading = false
       }
     },
     async productMethod(param) {
-
       await this.$axios
         .get(activityApi.activityProductList, {
           params: param,
         })
         .then((res) => {
-          console.log('productMethod', param, res);
+          console.log('productMethod', param, res)
           this.refreshing = false
           if (res.code === 200) {
-
-
-
-
-
             this.activityProductList = this.activityProductList.concat(
               res.data.rows
             )
-
 
             this.total = res.data.total
             this.loading = false
             if (this.page > res.data.totalPage || res.data.rows.length < 15) {
               this.finished = true
             }
-
           } else {
             this.loading = false
             this.finished = true
@@ -373,7 +349,7 @@ export default {
       if (this.specCode) {
         const params = {
           specCode: this.specCode,
-          isReco: 1,// 是否需要推荐商品
+          isReco: 1, // 是否需要推荐商品
           page: 1,
           limit: 10000,
           terminalCode: this.terminalCode,
@@ -384,8 +360,6 @@ export default {
         this.$axios
           .get(activityApi.activityProductList, { params })
           .then((res) => {
-
-
             if (res.code === 200) {
               if (res.data.rows.length) {
                 this.recommendProductList = res.data.rows.slice(0, 3)
@@ -411,6 +385,9 @@ export default {
     swichCityHandle() {
       this.$router.push({
         path: '/city/choiceCity',
+        query: {
+          type: 1,
+        },
       })
     },
     // 搜索框点击
@@ -494,7 +471,6 @@ export default {
     },
 
     parsePrice(priceStr) {
-
       if (priceStr && priceStr > 0) {
         priceStr = priceStr.toString()
         return {
