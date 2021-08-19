@@ -3,7 +3,7 @@
     <div class="tile-wrap">
       <div class="tile-tile">用户评价</div>
       <div class="tile-more">
-        <div class="tile-more__txt">更多评价</div>
+        <div class="tile-more__txt" @click="linkMoreComment">更多评价</div>
         <my-icon
           name="order_ic_listnext"
           size="0.24rem"
@@ -99,6 +99,13 @@ export default {
         { flag: false },
       ],
     }
+  },
+  methods: {
+    linkMoreComment() {
+      this.$router.push({
+        path: '/detail/commentList',
+      })
+    },
   },
 }
 </script>
