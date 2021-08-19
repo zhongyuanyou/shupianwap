@@ -8,8 +8,9 @@
         class="picture"
         fit="cover"
         :src="
-          item.imageUrl ||
-          'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
+          item.imageUrl
+            ? $resizeImg(250, 250, item.imageUrl)
+            : 'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
         "
         alt="商品图片"
       />
