@@ -231,10 +231,10 @@ export default {
             if (item.taskStatusName === '已完成') {
               completeNum++
               info.status = 'complete'
-              if (item.deadlineTime) {
-                item.deadlineTime = parseInt(item.deadlineTime)
-                info.time = this.formatTime(item.deadlineTime)
-                info.date = this.formatDate(item.deadlineTime)
+              if (item.endTime) {
+                item.endTime = parseInt(item.endTime)
+                info.time = this.formatTime(item.endTime)
+                info.date = this.formatDate(item.endTime)
               }
               completeNodes.push(info)
             } else if (item.taskStatusName === '办理中') {
@@ -246,7 +246,7 @@ export default {
           })
           // 对已完成订单排序
           completeNodes.sort((a, b) => {
-            return b.deadlineTime - a.deadlineTime
+            return b.endTime - a.endTime
           })
           this.list.push(...completeNodes)
           if (more.nodes.length > 0) {
