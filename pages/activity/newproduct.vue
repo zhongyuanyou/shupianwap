@@ -44,7 +44,7 @@
       ></Recommend>
       <client-only>
         <Classification
-          :has-city="hasCity && isService"
+          :has-city="true"
           :city-name="cityName"
           :header-height="headerHeight"
           :current-index="currentIndex"
@@ -169,7 +169,6 @@ export default {
   },
 }
 </script>
-
 
 <style lang="less" scoped>
 .container {
