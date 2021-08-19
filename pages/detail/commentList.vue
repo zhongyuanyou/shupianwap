@@ -89,12 +89,51 @@
           <div class="tips">
             <my-icon
               class="tips-icon"
+              :class="[showTipTxt ? 'z-more' : '']"
               name="biaoqian"
               size="0.24rem"
               color="#999999"
             ></my-icon>
-            <div class="tips-desc">
+            <div
+              ref="tipTxt"
+              class="tips-desc"
+              :class="[showTipTxt ? 'z-more' : '']"
+            >
               性价比高，服务质量好，办理效率高,性价比高，服务质量好，办理效率高
+            </div>
+          </div>
+          <div class="addcomments" :class="[showTipTxt ? 'z-small' : '']">
+            <div class="addcomments-item content">
+              <div class="addcomments-item__tile">用户x天后追评：</div>
+              <div
+                ref="addCommentContentTxt"
+                class="content-txt addcomments-item__txt"
+                :class="[showAddCommentAllContentTxt ? 'z-overflow' : '']"
+              >
+                奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯
+              </div>
+              <div
+                v-show="showAddCommentAllContentTxt"
+                ref="addCommentfullContentFlag"
+                class="content-full"
+                @click="showAddCommentAllContentTxt = false"
+              >
+                全文
+              </div>
+              <div class="content-img">
+                <img
+                  src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+                  class="content-img__item"
+                />
+                <img
+                  src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+                  class="content-img__item"
+                />
+                <img
+                  src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+                  class="content-img__item"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -122,20 +161,36 @@ export default {
         { flag: false },
       ],
       showAllContentTxt: true, // 显示全文标识
+      showAddCommentAllContentTxt: true, // 追加评论显示全文标识
+      showTipTxt: true, // 显示标签行数
+      lineHeight: 0,
     }
   },
   mounted() {
-    this.setContentTxtLineNum()
+    this.lineHeight = this.$refs.fullContentFlag.offsetHeight
+    this.setContentTxt(this.$refs.contentTxt, 'showAllContentTxt')
+    this.setContentTxt(
+      this.$refs.addCommentContentTxt,
+      'showAddCommentAllContentTxt'
+    )
+    this.setTipTxt()
   },
   methods: {
     // 设置评论区域行高
-    setContentTxtLineNum() {
-      const lineHeight = this.$refs.fullContentFlag.offsetHeight
-      const contentTxtHeight = this.$refs.contentTxt.offsetHeight
-      if (contentTxtHeight / lineHeight >= 4) {
-        this.showAllContentTxt = true
+    setContentTxt(ele, flag) {
+      const contentTxtHeight = ele.offsetHeight
+      if (contentTxtHeight / this.lineHeight >= 4) {
+        this[flag] = true
       } else {
-        this.showAllContentTxt = false
+        this[flag] = false
+      }
+    },
+    setTipTxt() {
+      const tipHeight = this.$refs.tipTxt.offsetHeight
+      if (this.lineHeight < tipHeight) {
+        this.showTipTxt = true
+      } else {
+        this.showTipTxt = false
       }
     },
   },
@@ -244,20 +299,54 @@ export default {
         color: #4974f5;
         margin-top: 4px;
       }
+      &-img {
+        margin-top: 12px;
+        height: 210px;
+        display: flex;
+        &__item {
+          height: inherit;
+          width: 210px;
+          border-radius: 8px;
+          margin-right: 8px;
+          &.z-last {
+            margin-right: 0;
+          }
+        }
+      }
     }
     .tips {
-      margin-left: 100px;
       margin-top: 12px;
       display: flex;
       &-icon {
         margin-right: 12px;
+        &.z-more {
+          line-height: 36px;
+        }
       }
       &-desc {
-        width: 560px;
-        .mixin-text-oneoverflow();
         font-size: 24px;
         line-height: 1;
         color: #999;
+        &.z-more {
+          line-height: 36px;
+        }
+      }
+    }
+    .addcomments {
+      margin-top: 32px;
+      &.z-small {
+        margin-top: 26px;
+      }
+      &-item {
+        &__tile {
+          font-size: 28px;
+          line-height: 40px;
+          font-weight: bold;
+          color: #222;
+        }
+        &__txt {
+          margin-top: 4px;
+        }
       }
     }
   }
