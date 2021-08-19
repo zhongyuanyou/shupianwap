@@ -251,7 +251,8 @@ export default {
           this.list.push(...completeNodes)
           if (more.nodes.length > 0) {
             this.list.unshift(more)
-          } else {
+          }
+          if (completeNodes.length === data.length) {
             this.list.unshift({
               status: 'current',
               title: '办理完成',
