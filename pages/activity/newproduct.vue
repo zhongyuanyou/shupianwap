@@ -44,7 +44,7 @@
       ></Recommend>
       <client-only>
         <Classification
-          :has-city="true"
+          :has-city="hasCity && isService"
           :city-name="cityName"
           :header-height="headerHeight"
           :current-index="currentIndex"
