@@ -47,9 +47,29 @@
             </template>
             <div class="score-level">一般</div>
           </div>
+          <div class="score-detail">
+            <div class="score-detail__item">专业能力:1分</div>
+            <div class="score-detail__item">回复时效:3分</div>
+            <div class="score-detail__item">时效效率:4分</div>
+            <div class="score-detail__item">专业能力:1分</div>
+            <div class="score-detail__item">回复时效:3分</div>
+            <div class="score-detail__item">时效效率:4分</div>
+          </div>
           <div class="content">
-            <div class="content-txt">
-              奥克斯广场才开不久的一奥克斯广场才开不久的一奥克斯广场才开不久的一奥克斯广场才开不久的一奥克斯广场才开不久的一
+            <div
+              ref="contentTxt"
+              class="content-txt"
+              :class="[showAllContentTxt ? 'z-overflow' : '']"
+            >
+              奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯
+            </div>
+            <div
+              v-show="showAllContentTxt"
+              ref="fullContentFlag"
+              class="content-full"
+              @click="showAllContentTxt = false"
+            >
+              全文
             </div>
             <div class="content-img">
               <img
@@ -101,7 +121,23 @@ export default {
         { flag: false },
         { flag: false },
       ],
+      showAllContentTxt: true, // 显示全文标识
     }
+  },
+  mounted() {
+    this.setContentTxtLineNum()
+  },
+  methods: {
+    // 设置评论区域行高
+    setContentTxtLineNum() {
+      const lineHeight = this.$refs.fullContentFlag.offsetHeight
+      const contentTxtHeight = this.$refs.contentTxt.offsetHeight
+      if (contentTxtHeight / lineHeight >= 4) {
+        this.showAllContentTxt = true
+      } else {
+        this.showAllContentTxt = false
+      }
+    },
   },
 }
 </script>
@@ -154,9 +190,9 @@ export default {
       color: #999999;
       font-size: 24px;
       line-height: 1;
+      margin-bottom: 12px;
     }
     .score {
-      margin-left: 100px;
       display: flex;
       align-items: center;
       &-txt {
@@ -177,28 +213,36 @@ export default {
         color: #555555;
       }
     }
+    .score-detail {
+      display: flex;
+      flex-wrap: wrap;
+      &__item {
+        margin-top: 12px;
+        line-height: 1;
+        font-size: 24px;
+        color: #999;
+        margin-right: 24px;
+      }
+    }
     .content {
       margin-top: 24px;
-      margin-left: 100px;
+      &-spaceholder {
+        font-size: 26px;
+        line-height: 32px;
+      }
       &-txt {
-        .textOverflow(3);
-        color: #222222;
+        color: #000000;
         font-size: 26px;
         line-height: 38px;
-      }
-      &-img {
-        margin-top: 12px;
-        height: 184px;
-        display: flex;
-        &__item {
-          height: inherit;
-          width: 184px;
-          border-radius: 8px;
-          margin-right: 8px;
-          &.z-last {
-            margin-right: 0;
-          }
+        &.z-overflow {
+          .textOverflow(3);
         }
+      }
+      &-full {
+        font-size: 26px;
+        line-height: 28px;
+        color: #4974f5;
+        margin-top: 4px;
       }
     }
     .tips {
