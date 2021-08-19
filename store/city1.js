@@ -26,39 +26,19 @@ export const mutations = {
   // 设置当前选择城市
   SET_CITY(state, data) {
     state.currentCity = data
-    this.$cookies.set('currentCity', state.currentCity, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 城市选择加入根域名cookie供其他站点使用
-    })
   },
   // 设置当前定位城市
   SET_POSITION_CITY(state, name) {
     state.positionCityName = name
-    this.$cookies.set('positionCityName', state.positionCityName, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 城市选择加入根域名cookie供其他站点使用
-    })
   },
   // 设置当前定位城市code
   SET_POSITION_CODE(state, code) {
     console.log(state, code, 13213)
     state.positionCityCode = code
-    this.$cookies.set('positionCityCode', state.positionCityCode, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 城市选择加入根域名cookie供其他站点使用
-    })
   },
   // 设置当前定位状态
   SET_POSITION_STATUS(state, num) {
     state.positionStatus = num
-    this.$cookies.set('positionStatus', state.positionStatus, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 城市选择加入根域名cookie供其他站点使用
-    })
   },
   // 修改城市CODE
   SET_CODE(state, code) {
