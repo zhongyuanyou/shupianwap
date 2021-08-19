@@ -206,6 +206,7 @@ export default {
     // },
     initData() {
       const that = this
+      console.log('AlipayJSBridge', !!window.AlipayJSBridge)
       if (window.AlipayJSBridge) {
         window.AlipayJSBridge.call('getLoginUserInfo', (res) => {
           console.log('mpass里获取用户信息', res)
@@ -227,7 +228,38 @@ export default {
             this.$xToast.error('获取用户信息失败')
           }
         })
+      } else if (
+        this.$route.query.platForm &&
+        this.$route.query.platForm === 'mpass'
+      ) {
+        console.log('mpass')
+        if (!this.userId) {
+          const userData = {
+            token: this.$route.query.token,
+            id: this.$route.query.userId,
+            userId: this.$route.query.userId,
+          }
+          console.log('mpass userData', userData)
+          this.$store.dispatch('user/setUser', userData)
+        }
+        that.init()
+        that.onLoad()
+        // const params = {
+        //   // id: this.userId,
+        //   id: this.$route.query.userId || this.userId,
+        // }
+        // const res = await this.$axios.get(userinfoApi.info, { params })
+        // this.loading = false
+        // if (res.code === 200 && res.data) {
+        //   // start: set userInfo
+        //   this.formData.userId = res.data.id
+        //   this.formData.userType = util.getUserType(res.data.type)
+        //   this.formData.userName = res.data.nickName
+        //   this.formData.userCode = res.data.no
+        //   // end: set userInfo
+        // }
       } else if (this.isInApp) {
+        console.log('isInApp')
         if (this.userInfo.userId && this.userInfo.token) {
           this.init()
           this.onLoad()
