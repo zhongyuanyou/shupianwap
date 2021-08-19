@@ -38,7 +38,9 @@
             <sp-list
               v-model="loading"
               :finished="finished"
-              finished-text="没有更多了"
+              :finished-text="
+                activityProductList.length > 0 ? '没有更多了' : '暂无数据'
+              "
               @load="onLoad"
             >
               <div v-if="activityProductList && activityProductList.length > 0">
