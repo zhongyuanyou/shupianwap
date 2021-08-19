@@ -31,7 +31,8 @@
     <!-- S 当前选择的城市 -->
     <div class="box">
       <div class="current-city">
-        <strong>{{ currentCity }}</strong>
+        <strong v-if="dataType === 1">{{ currentCity1 }}</strong>
+        <strong v-else>{{ currentCity }}</strong>
         <span>当前选择</span>
       </div>
       <!-- S 当前定位城市 -->
@@ -45,7 +46,12 @@
           <span>无法定位到当前城市</span>
         </div>
         <div v-else class="position-success">
-          <strong @click="choosePositionCity(positionCityName)">{{
+          <strong
+            v-if="dataType === 1"
+            @click="choosePositionCity(positionCityName1)"
+            >{{ positionCityName1 }}</strong
+          >
+          <strong v-else @click="choosePositionCity(positionCityName)">{{
             positionCityName
           }}</strong>
           <span>GPS定位</span>
@@ -125,13 +131,16 @@ export default {
       nweCityList: [], // 带首字母的站点列表
       indexList: [], // 首字母列表
       searchDomHeight: 0, // 头部高度
+      dataType: 0,
     }
   },
   computed: {
     ...mapState({
       appInfo: (state) => state.app.appInfo, // app信息
       currentCity: (state) => state.city.currentCity.name, // 当前选择的城市
+      currentCity1: (state) => state.city1.currentCity.name,
       positionCityName: (state) => state.city.positionCityName, // 当前定位城市
+      positionCityName1: (state) => state.city1.positionCityName, // 当前定位城市
       positionStatus: (state) => state.city.positionStatus, // 定位状态（0：定位失败 1：定位成功但未开通该城市服务 2：定位成功且有对应的城市服务）
       isInApp: (state) => state.app.isInApp, // 是否在app中打开此页
     }),
@@ -166,21 +175,28 @@ export default {
     }
   },
   mounted() {
-    try {
-      // this.searchDomHeight = this.$refs.searchRef.$el.clientHeight
-      // 获取历史选择
-      this.cityHistory = this.$cookies.get('cityHistory')
-        ? this.$cookies.get('cityHistory')
-        : []
-    } catch (e) {}
-    
+    if (this.$route.query.type) {
+      this.dataType = Number(this.$route.query.type)
+    }
+    console.log('this.dataType', this.dataType)
+    if (this.dataType === 0) {
+      try {
+        // this.searchDomHeight = this.$refs.searchRef.$el.clientHeight
+        // 获取历史选择
+        this.cityHistory = this.$cookies.get('cityHistory')
+          ? this.$cookies.get('cityHistory')
+          : []
+      } catch (e) {}
+    }
   },
   methods: {
     ...mapActions({
       POSITION_CITY: 'city/POSITION_CITY',
+      POSITION_CITY1: 'city1/POSITION_CITY',
     }),
     ...mapMutations({
       SET_CITY: 'city/SET_CITY',
+      SET_CITY1: 'city1/SET_CITY',
     }),
     // 格式化城市数据
     getBrands(data) {
@@ -226,12 +242,26 @@ export default {
     },
     // 定位城市
     positionCity() {
-      this.POSITION_CITY({
-        type: 'rest',
-      })
+      if (this.dataType === 1) {
+        this.POSITION_CITY1({
+          type: 'rest',
+        })
+      } else {
+        this.POSITION_CITY({
+          type: 'rest',
+        })
+      }
     },
     // 选择城市
     chooseCity(data) {
+      if (this.dataType === 1) {
+        this.SET_CITY1({
+          code: data.code,
+          name: data.cityName,
+        })
+        this.$router.back()
+        return
+      }
       const historyList = this.$cookies.get('cityHistory')
         ? this.$cookies.get('cityHistory')
         : []
@@ -253,15 +283,26 @@ export default {
         maxAge: 60 * 60 * 24 * 99999, // 过期时间
         // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
       })
-      this.SET_CITY({
-        code: data.code,
-        name: data.cityName,
-      })
+      if (this.dataType === 1) {
+        this.SET_CITY1({
+          code: data.code,
+          name: data.cityName,
+        })
+      } else {
+        this.SET_CITY({
+          code: data.code,
+          name: data.cityName,
+        })
+      }
       this.$router.back()
     },
     // 选择定位城市
     choosePositionCity(name) {
-      if (this.currentCity === name) {
+      if (this.dataType === 1 && this.currentCity1 === name) {
+        this.$router.back()
+        return
+      }
+      if (this.dataType === 0 && this.currentCity === name) {
         this.$router.back()
         return
       }
@@ -269,10 +310,17 @@ export default {
         return item.name === name
       })
       if (arr) {
-        this.SET_CITY({
-          code: arr[0].code,
-          name: arr[0].name,
-        })
+        if (this.dataType === 1) {
+          this.SET_CITY1({
+            code: arr[0].code,
+            name: arr[0].name,
+          })
+        } else {
+          this.SET_CITY({
+            code: arr[0].code,
+            name: arr[0].name,
+          })
+        }
         this.$router.back()
       }
     },
