@@ -107,6 +107,7 @@ const category = {
 
   /**
    *CHIPS_PC_URL
+   'http://172.16.132.154:7001'
    * @param {*} param0
    * @param {*} params
    * @returns
@@ -115,7 +116,7 @@ const category = {
     return request({
       params,
       method: 'get',
-      url: 'http://172.16.132.154:7001' + '/service/yk/order/v1/findTaskByOrder.do',
+      url: CHIPS_PC_URL + '/service/yk/order/v1/findTaskByOrder.do',
     })
   },
   /**
@@ -128,7 +129,7 @@ const category = {
     return request({
       params,
       method: 'get',
-      url: 'http://172.16.132.154:7001' + '/service/yk/order/v1/findProductionOrderByOrderDetailsId.do',
+      url: CHIPS_PC_URL + '/service/yk/order/v1/findProductionOrderByOrderDetailsId.do',
     })
   },
 
