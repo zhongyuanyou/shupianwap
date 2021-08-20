@@ -58,6 +58,9 @@ export default {
             limit: this.limit,
             page: this.page,
           },
+          headers: {
+            'x-cache-control': 'cache',
+          },
         }
       )
       if (code === 200) {
