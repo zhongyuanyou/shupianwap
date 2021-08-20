@@ -82,9 +82,12 @@ export default {
   name: 'Comment',
   props: {
     list: {
-      type: Array,
+      type: Object,
       default: () => {
-        return []
+        return {
+          totalCount: 0, // 初始化评论字段,防止程序报错
+          records: [],
+        }
       },
     },
   },
