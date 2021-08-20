@@ -8,13 +8,9 @@
 -->
 <template>
   <div class="complaint">
-    <Header
-      v-if="!isApplets"
-      class="my-header"
-      :title="!isApplets ? '我要吐槽' : ''"
-    >
+    <Header class="my-header" :title="!isApplets ? '我要吐槽' : ''">
       <template #left>
-        <div @click="back">
+        <div v-if="!isApplets" @click="back">
           <my-icon
             name="nav_ic_back"
             class="back_icon"
