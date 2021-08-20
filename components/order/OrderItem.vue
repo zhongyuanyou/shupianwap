@@ -67,7 +67,7 @@
       >
         <div class="img">
           <sp-image
-            :src="$resizeImg(130, 100, item.indexImg)"
+            :src="$resizeImg(130, 130, item.indexImg)"
             alt="薯片科技"
             class="sp-image"
             srcset=""

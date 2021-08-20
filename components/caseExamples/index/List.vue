@@ -6,7 +6,7 @@
           width="100%"
           height="100%"
           fit="cover"
-          :src="$resizeImg(88, 60, item.caseImg)"
+          :src="$resizeImg(88, 70, item.caseImg)"
         />
       </div>
       <div class="flex_1 list_header_center">
