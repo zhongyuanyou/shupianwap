@@ -4,6 +4,7 @@ import { saveAxiosInstance } from '@/utils/request'
 import xToast from '@/components/common/spToast'
 // const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
 const BASE = require('~/config/index.js')
+
 export default function ({ $axios, redirect, app, store }) {
   $axios.defaults.withCredentials = false
   $axios.defaults.timeout = 12000
@@ -55,11 +56,6 @@ export default function ({ $axios, redirect, app, store }) {
         config.headers['X-Auth-Token'] = token
         config.headers['X-Req-UserId'] = userId
       }
-
-      // console.log('aixos的token', token)
-      // let userNo = app.$cookies.get('userNo', {
-      //   path: '/',
-      // })
       let userNo = store.state.user.userNo
       if (!userNo) {
         userNo = app.$cookies.get('userNo', {
@@ -68,9 +64,7 @@ export default function ({ $axios, redirect, app, store }) {
       }
       // 获取用户信息
       if (userNo) {
-        config.headers['X-Req-UserNo'] = app.$cookies.get('userNo', {
-          path: '/',
-        })
+        config.headers['X-Req-UserNo'] = userNo
         // config.headers['X-Req-UserName'] = app.$cookies.get('userName', {
         //   path: '/',
         // })
@@ -98,6 +92,7 @@ export default function ({ $axios, redirect, app, store }) {
     (response) => {
       const result = response.data
       const code = result.code
+      console.log('process.env.DGG_SERVER_ENV:', process.env.DGG_SERVER_ENV)
       // 网关会对带有yk地址的请求做token有效性验证，若失效，网关直接抛出5223，wap里面跳转到 我的
       if (code === 5223) {
         // 清空登录信息
@@ -116,6 +111,9 @@ export default function ({ $axios, redirect, app, store }) {
           return result
         }
       } else {
+        if (process.env.DGG_SERVER_ENV === 'production' && code !== 200) {
+          result.message = '您的网络开小差了，请稍后再试！'
+        }
         return result
       }
     },

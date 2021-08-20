@@ -587,6 +587,9 @@ export default {
           this.Orderform.contractFormParam = this.contaract
           this.Orderform.contractFormParam.contractApplyWay = 'CUSTOMER'
         }
+        if (this.$route.query.plannerId) {
+          this.Orderform.plannerId = this.$route.query.plannerId
+        }
         order
           .placeOrder({ axios: this.$axios }, this.Orderform)
           .then((result) => {
