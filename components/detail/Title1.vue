@@ -1,5 +1,5 @@
 <template>
-  <div class="title">
+  <div v-if="comment.records.length > 0" class="title">
     <p class="title_btitle">{{ sellingGoodsData.name }}</p>
     <div class="title_tags">
       <span
@@ -25,8 +25,8 @@
     <!--      根据《中华人民共和国公司法》规定，注册公司时需要依法向注册公司时需要...-->
     <!--    </div>-->
     <div class="comment" @click="commentfn">
-      <p class="tit">{{ comment }}</p>
-      <p class="num">共999+评价</p>
+      <p class="tit">{{ comment.records[0].evaluateContent }}</p>
+      <p class="num">共{{ comment.totalCount | count }}评价</p>
       <sp-icon name="arrow" class="icon" />
     </div>
     <div class="title_bottom">
@@ -53,10 +53,26 @@ export default {
     PriceReduction,
     SpIcon: Icon,
   },
+  filters: {
+    count(val) {
+      if (isNaN(Number(val))) {
+        return 0
+      } else if (val < 999) {
+        return val
+      } else {
+        return '999+'
+      }
+    },
+  },
   props: {
     comment: {
-      type: String,
-      default: '',
+      type: Object,
+      default: () => {
+        return {
+          totalCount: 0, // 初始化评论字段,防止程序报错
+          records: [],
+        }
+      },
     },
   },
   data() {

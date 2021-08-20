@@ -156,6 +156,7 @@
 
 <script>
 import Header from '@/components/common/head/header'
+import { evaluateApi } from '~/api'
 
 export default {
   name: 'GoodCommentList',
@@ -176,9 +177,16 @@ export default {
       showAddCommentAllContentTxt: true, // 追加评论显示全文标识
       showTipTxt: true, // 显示标签行数
       lineHeight: 0,
+      goodId: '', // 商品id
     }
   },
+  computed: {
+    userInfo() {
+      return this.$store.state.user
+    },
+  },
   mounted() {
+    this.goodId = this.$route.query.goodId
     this.lineHeight = this.$refs.fullContentFlag.offsetHeight
     this.setContentTxt(this.$refs.contentTxt, 'showAllContentTxt')
     this.setContentTxt(
@@ -186,6 +194,8 @@ export default {
       'showAddCommentAllContentTxt'
     )
     this.setTipTxt()
+    // 获取评价
+    this.getCommentsApi()
   },
   methods: {
     // 设置评论区域行高
@@ -205,6 +215,28 @@ export default {
         this.showTipTxt = false
       }
     },
+    // 得到评价内容
+    async getCommentsApi() {
+      try {
+        const params = {
+          start: 1,
+          limit: 10,
+          ext1: this.goodId, // 商品id
+          userId: this.user && this.user.userId ? this.user.userId : '',
+          evaluateUserId: this.user && this.user.userId ? this.user.userId : '',
+        }
+        const { data, code, message } = await this.$axios.post(
+          evaluateApi.getGoodsEvaluate,
+          params
+        )
+        if (code !== 200) {
+          throw new Error(message)
+        }
+        this.comments = data
+      } catch (e) {
+        console.log(e)
+      }
+    },
   },
 }
 </script>
@@ -217,7 +249,7 @@ export default {
   .back_icon {
     margin-left: 40px;
   }
-  background: #F5F5F5;
+  background: #f5f5f5;
   .content-wrap {
     background: #fff;
     margin-bottom: 20px;
