@@ -63,7 +63,9 @@
             <sp-list
               v-model="loading"
               :finished="finished"
-              finished-text="没有更多了"
+              :finished-text="
+                activityProductList.length > 0 ? '没有更多了' : '暂无数据'
+              "
               @load="onLoad"
             >
               <div v-if="activityProductList && activityProductList.length > 0">
@@ -98,7 +100,7 @@ import Classification from '@/components/activity/Classification.vue'
 
 export default {
   name: 'Newproduct',
-  layout: 'keepAlive',
+  layout: 'default',
   components: {
     // Header,
     HeadWrapper,
@@ -140,9 +142,10 @@ export default {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'Newproduct' })
     window.addEventListener('scroll', this.handleScroll) // 监听（绑定）滚轮滚动事件
   },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
+  // beforeDestroy() {
+  //   console.log('beforeDestroy')
+  //   window.removeEventListener('scroll', this.handleScroll)
+  // },
 
   methods: {
     ...mapMutations({
@@ -168,7 +171,6 @@ export default {
   },
 }
 </script>
-
 
 <style lang="less" scoped>
 .container {

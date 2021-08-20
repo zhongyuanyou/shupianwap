@@ -3,14 +3,17 @@
     <div class="process_container" @click.stop>
       <div class="process_container_goods">
         <div class="goods_img">
-          <sp-image src="" alt="" class="sp-image" srcset="" />
+          <sp-image :src="info.image" alt="" class="sp-image" srcset="" />
         </div>
         <div class="goods_info">
           <div class="goods_info_title">
             {{ goodsDetail.orderGoodsName }}
           </div>
           <div class="goods_info_des" :style="desStyle">
-            预计{{ day }}天办理完成
+            <span v-if="state == 2">已完成办理</span>
+            <span v-else-if="state == 3">已超期，请联系规划师咨询</span>
+            <span v-else-if="state == 1">预计{{ day }}天办理完成</span>
+            <span v-else-if="state == 0">暂未开始办理</span>
           </div>
           <div class="goods_info_process">
             <div class="goods_info_process_line">
@@ -28,26 +31,35 @@
         </div>
       </div>
       <!-- {{ list }} -->
-      <Steps class="steps_container" :list="list">
+      <Steps v-if="state != 0" class="steps_container" :list="list">
         <template #left="row">
           <div class="time">{{ row.item.time }}</div>
           <div class="date">{{ row.item.date }}</div>
         </template>
       </Steps>
+      <div v-if="state == 0" class="">
+        <sp-empty
+          class="empty-text"
+          :description="'暂无数据'"
+          :image="imgAddress"
+        />
+      </div>
 
       <div class="process_container_close" @click="close"></div>
     </div>
   </div>
 </template>
 <script>
-import { Progress, Image } from '@chipspc/vant-dgg'
+import { Progress, Image, Empty } from '@chipspc/vant-dgg'
+import moment from 'moment'
 import Steps from '@/components/common/Steps.vue'
 import orderApi from '@/api/order'
-
 export default {
   components: {
     [Image.name]: Image,
     [Progress.name]: Progress,
+    [Empty.name]: Empty,
+
     Steps,
   },
   props: {
@@ -60,6 +72,7 @@ export default {
   },
   data() {
     return {
+      imgAddress: this.$ossImgSetV2('d4wtafx70s80000.png'),
       //  production_task_status_1("production_task_status_1", "待分配","未开始"),
       //  production_task_status_2("production_task_status_2", "待接收","未开始"),
       //  production_task_status_3("production_task_status_3", "办理中","办理中"),
@@ -68,7 +81,7 @@ export default {
       //  production_task_status_6("production_task_status_6", "已完成","已完成"),
       //  production_task_status_7("production_task_status_7", "已取消","已取消"),
 
-      status: {
+      production_task_status: {
         production_task_status_1: '未开始', // "待分配","未开始"
         production_task_status_2: '未开始', // "待接收","未开始"
         production_task_status_3: '办理中', // "办理中","办理中"
@@ -78,48 +91,77 @@ export default {
         production_task_status_7: '已取消', // "已取消","已取消"
       },
 
+      loading: true,
       goodsDetail: {},
+      // state: 0, // 0，未开始办理， 1 办理中 ，显示预计多少天，2已完成，3已超期
       day: 0, // 预计多少天完成
-      completePercentage: 0,
+      completePercentage: 0, // 完成进度，0-100
       list: [
-        {
-          status: 'more', // more,current,complete
-          title: '查看更多任务节点',
-          nodes: ['立案（未开始）', '立案（未开始）', '立案（未开始）'], // 更多节点
-        },
-        {
-          status: 'current', // more,current,complete
-          title:
-            '查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点',
-          time: '07:23',
-          date: '12-12',
-          nodes: [], // 更多节点
-        },
-        {
-          status: 'complete', // more,current,complete
-          title:
-            '查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点',
-          time: '07:23',
-          date: '12-12',
-          nodes: [], // 更多节点
-        },
+        // {
+        //   status: 'more', // more,current,complete
+        //   title: '查看更多任务节点',
+        //   nodes: ['立案（未开始）', '立案（未开始）', '立案（未开始）'], // 更多节点
+        // },
+        // {
+        //   status: 'current',
+        //   title:
+        //     '查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点',
+        //   time: '07:23',
+        //   date: '12-12',
+        //   nodes: [], // 更多节点
+        // },
+        // {
+        //   status: 'complete',
+        //   title:
+        //     '查看更多任务节点查看更多任务节点查看更多任务节点查看更多任务节点',
+        //   time: '07:23',
+        //   date: '12-12',
+        //   nodes: [], // 更多节点
+        // },
       ],
     }
   },
   computed: {
+    // 0，未开始办理， 1 办理中 ，显示预计多少天，2已完成，3已超期
+    state() {
+      let status = 0
+      let ex = 0
+      if (this.loading) {
+        return status
+      }
+      if (this.goodsDetail.openTime) {
+        status = 1
+
+        if (this.goodsDetail.deadlineTime) {
+          ex = new Date(this.goodsDetail.deadlineTime) - new Date()
+          if (ex < 0) {
+            status = 3
+          }
+        }
+      }
+      if (this.completePercentage === 100) {
+        status = 2
+      }
+
+      return status
+    },
     desStyle() {
-      const state = 3
-      if (state === 1) {
+      if (this.state === 0) {
         return {
           background: ' #f2f5ff',
           color: '#4974f5',
         }
-      } else if (state === 2) {
+      } else if (this.state === 1) {
+        return {
+          background: ' #f2f5ff',
+          color: '#4974f5',
+        }
+      } else if (this.state === 2) {
         return {
           background: ' #F0F0F0',
           color: '#999999',
         }
-      } else if (state === 3) {
+      } else if (this.state === 3) {
         return {
           background: ' #FFF3E9',
           color: '#FE8C29',
@@ -129,10 +171,17 @@ export default {
     },
   },
   mounted() {
-    this.getProcessList()
     this.getDetail()
+    // this.getProcessList()
   },
   methods: {
+    formatDate(time) {
+      console.log(time, new Date(time))
+      return moment(new Date(time)).format('MM-DD')
+    },
+    formatTime(time) {
+      return moment(new Date(time)).format('HH:mm')
+    },
     close() {
       this.$emit('close')
     },
@@ -169,10 +218,11 @@ export default {
             title: '查看更多任务节点',
             nodes: [], // 更多节点
           }
+          const completeNodes = [] // 已完成节点，需要排序
           let completeNum = 0 // 完成节点数量
 
           data.map((item) => {
-            item.taskStatusName = this.status[item.taskStatus]
+            item.taskStatusName = this.production_task_status[item.taskStatus]
             const info = {
               status: 'more', // more,current,complete
               title: item.taskName + `（${item.taskStatusName}）`,
@@ -181,7 +231,12 @@ export default {
             if (item.taskStatusName === '已完成') {
               completeNum++
               info.status = 'complete'
-              this.list.push(info)
+              if (item.endTime) {
+                item.endTime = parseInt(item.endTime)
+                info.time = this.formatTime(item.endTime)
+                info.date = this.formatDate(item.endTime)
+              }
+              completeNodes.push(info)
             } else if (item.taskStatusName === '办理中') {
               info.status = 'current'
               this.list.push(info)
@@ -189,43 +244,48 @@ export default {
               more.nodes.push(item.taskName + `（${item.taskStatusName}）`)
             }
           })
-
+          // 对已完成订单排序
+          completeNodes.sort((a, b) => {
+            return b.endTime - a.endTime
+          })
+          this.list.push(...completeNodes)
           if (more.nodes.length > 0) {
             this.list.unshift(more)
-          } else {
+          }
+          if (completeNodes.length === data.length) {
             this.list.unshift({
               status: 'current',
               title: '办理完成',
             })
           }
+
           if (data.length > 0) {
             // 完成进度
             this.completePercentage = parseInt(
               (completeNum / data.length) * 100
             )
           }
+          this.loading = false
           console.log(data)
         })
         .catch((err) => {
+          this.loading = false
           console.error(err)
           this.$xToast.show(err.message)
         })
     },
     getDetail() {
+      // res.openTime 没有开始时间时 前端提示未开始
       orderApi
-        .findProductionOrderByOrderDetailsId(
-          {
-            orderDetailsId: this.info.detailId,
-            // orderDetailsId: this.info.cusOrderId,
-          }
-          // orderProductId 生产单ID
-          // orderDetailsId 订单详情ID
-        )
+        .findProductionOrderByOrderDetailsId({
+          orderDetailsId: this.info.detailId, // 订单详情ID
+        })
         .then((res) => {
           console.log(res)
           this.goodsDetail = res
           let day = 0
-          if (res.deadlineTime) {
+
+          if (res.deadlineTime && res.openTime) {
             day =
               (new Date(res.deadlineTime) - new Date(res.openTime)) /
               1000 /
@@ -236,10 +296,12 @@ export default {
             console.log('day', day, parseInt(day))
           }
           this.day = parseInt(day)
+          this.getProcessList()
           // res.openTime 开始时间
           // res.deadlineTime 预计结束
         })
         .catch((err) => {
+          this.loading = false
           console.error(err)
           this.$xToast.show(err.message)
           // this.$router.back(-1)
@@ -350,10 +412,12 @@ export default {
       font-family: PingFangSC-Regular;
       font-size: 24px;
       color: #999999;
+      white-space: nowrap;
     }
     .date {
+      white-space: nowrap;
       font-family: PingFangSC-Regular;
-      font-size: 20px;
+      font-size: 24px;
       color: #999999;
       letter-spacing: 0;
 

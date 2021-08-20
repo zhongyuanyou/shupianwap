@@ -66,7 +66,12 @@
         :class="index !== 0 ? 'border-top' : ''"
       >
         <div class="img">
-          <sp-image :src="item.indexImg" alt="" class="sp-image" srcset="" />
+          <sp-image
+            :src="$resizeImg(130, 100, item.indexImg)"
+            alt="薯片科技"
+            class="sp-image"
+            srcset=""
+          />
         </div>
         <div class="right">
           <p class="goods-name">

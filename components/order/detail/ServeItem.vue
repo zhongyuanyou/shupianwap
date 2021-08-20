@@ -19,7 +19,12 @@
       <span v-else class="after-sale-text">继续办理</span>
     </div>
     <div class="img">
-      <sp-image :src="item.indexImg" alt="" class="sp-image" srcset="" />
+      <sp-image
+        :src="$resizeImg(130, 110, item.indexImg)"
+        alt=""
+        class="sp-image"
+        srcset=""
+      />
     </div>
     <div
       class="right"
@@ -205,6 +210,7 @@ export default {
     openProcess(item) {
       console.log(item)
       this.processInfo = {
+        image: item.indexImg,
         orderId: item.orderId,
         cusOrderId: item.cusOrderId,
         skuId: item.skuId,

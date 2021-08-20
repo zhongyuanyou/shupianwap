@@ -342,8 +342,23 @@ export default {
         })
     },
   },
-  head: {
-    meta: [{ name: 'spptmd-track_code', content: 'SPW000004' }],
+  head() {
+    return {
+      title: '薯片企服-公司注册商标专利交易查询申请法律咨询服务平台',
+      meta: [
+        {
+          name: 'keywords',
+          content:
+            '企业服务, 商标注册，法律咨询，会计代理，代缴社保，商标查询，企查查，天眼企服',
+        },
+        {
+          name: 'description',
+          content:
+            '薯片企服是成都薯片科技有限公司旗下自研可信企业服务平台，薯片企服依托智能科技，传递价值生意，致力于为全类型，各阶段的企业及个人提供：工商服务、会计代理、财税咨询、知识产权代理、资质许可证办理咨询、品牌设计、IT/软件、营销推广、人事社保代理等多品类的线上服务。',
+        },
+        { name: 'spptmd-track_code', content: 'SPW000004' },
+      ],
+    }
   },
 }
 </script>

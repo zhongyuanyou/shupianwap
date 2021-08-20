@@ -19,6 +19,7 @@
               class="picture"
               fit="cover"
               :src="item.imageUrl || defaultImg"
+              alt="薯片科技"
               @click="$emit('preview', item)"
             ></sp-image>
           </div>

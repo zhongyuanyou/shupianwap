@@ -211,8 +211,8 @@ export default {
           console.log('mpass里获取用户信息', res)
           if (res.code && res.code === 200) {
             const userData = JSON.parse(res.data)
-            if (userData && userData.id) {
-              userData.userId = userData.id
+            if (userData && (userData.id || userData.userId)) {
+              userData.userId = userData.userId || userData.id
             }
             console.log('userData', userData)
             this.$store.dispatch('user/setUser', userData)
