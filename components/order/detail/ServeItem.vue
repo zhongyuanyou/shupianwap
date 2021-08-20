@@ -81,10 +81,10 @@
               item.skuType === 'PRO_CLASS_TYPE_SERVICE'
             "
             @click="openProcess(item)"
-            >new 办理进度</sp-button
+            >办理进度</sp-button
           >
 
-          <sp-button
+          <!-- <sp-button
             v-if="
               cusOrderStatusType !== 4 &&
               cusOrderStatusType !== 1 &&
@@ -92,7 +92,7 @@
             "
             @click="checkProductType(item)"
             >办理进度</sp-button
-          >
+          > -->
           <!-- 服务产品确认完成显示条件 1产品状态为已处理 2支付状态未完成支付  3用户未点确认-->
           <sp-button
             v-if="
