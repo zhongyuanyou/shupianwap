@@ -54,7 +54,7 @@
     <Banner :images="imgFileIdPaths" />
     <!--S banner-->
     <!--S 第一板块-->
-    <Title :comment="commentdata[0].tit" @onComment="comment" />
+    <Title :comment="comments" @onComment="commentHandler" />
     <!--E 第一板块-->
     <!--S 第二板块 领券 SKU-->
     <VouchersSelect ref="sku" />
@@ -66,7 +66,7 @@
     <ContainContent />
     <!--E 第三板块 包含服务-->
     <!--S 评论-->
-    <CommentBox id="comment" />
+    <CommentBox id="comment" :comment="comments" />
     <!--E 评论-->
     <!--S 动态 -->
     <OrderDynamic></OrderDynamic>
@@ -122,7 +122,7 @@ import bottomBar from '@/components/detail/bottomBar/index.vue'
 import CaseNew from '~/components/detail/CaseNew'
 
 import getUserSign from '~/utils/fingerprint'
-import { productDetailsApi, recommendApi, shopApi } from '~/api'
+import { productDetailsApi, recommendApi, shopApi, evaluateApi } from '~/api'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import { copyToClipboard } from '~/utils/common'
 import imHandle from '~/mixins/imHandle'
@@ -323,6 +323,10 @@ export default {
       ],
       commentdata: [],
       isShare: false,
+      comments: {
+        totalCount: 0, // 初始化评论字段,防止程序报错
+        records: [],
+      },
     }
   },
   computed: {
@@ -360,6 +364,8 @@ export default {
     this.getRecommendPlanner()
     // 获取钻展
     this.getRecPlanner()
+    // 获取评价
+    this.getCommentsApi()
   },
   methods: {
     ...mapActions({
@@ -443,7 +449,7 @@ export default {
           this.$xToast.error('收藏失败')
         })
     },
-    comment() {
+    commentHandler() {
       const user = navigator.userAgent.toLowerCase()
       console.log(user)
       if (
@@ -616,6 +622,26 @@ export default {
         this.$router.push({
           path: '/shopCart',
         })
+      }
+    },
+    // 得到评价内容
+    async getCommentsApi() {
+      try {
+        const params = {
+          start: 1,
+          limit: 10,
+          ext1: this.sellingDetail.id, // 商品id
+        }
+        const { data, code, message } = await this.$axios.post(
+          evaluateApi.getGoodsEvaluate,
+          params
+        )
+        if (code !== 200) {
+          throw new Error(message)
+        }
+        this.comments = data
+      } catch (e) {
+        console.log(e)
       }
     },
     //  分享
