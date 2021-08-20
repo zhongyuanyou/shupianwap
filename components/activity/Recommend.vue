@@ -18,7 +18,9 @@
             <sp-image
               class="picture"
               fit="cover"
-              :src="item.imageUrl || defaultImg"
+              :src="
+                item.imageUrl ? $resizeImg(250, 250, item.imageUrl) : defaultImg
+              "
               alt="薯片科技"
               @click="$emit('preview', item)"
             ></sp-image>

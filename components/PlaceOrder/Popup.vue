@@ -77,9 +77,6 @@
                         仅限指定商品使用
                       </p>
                     </div>
-                    <!-- <p v-if="item.marketingCouponVO.useType === 1">
-                      全场通用
-                    </p> -->
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
                   <div class="right">
@@ -114,7 +111,7 @@
               <p>暂无优惠券</p>
             </div>
             <div v-if="datalist.length > 0" class="btn">
-              <p @click="close()">确定</p>
+              <p @click="submit">确定</p>
             </div>
           </div>
         </div>
@@ -271,50 +268,31 @@ export default {
       tabAct: 0,
       checkarr: '',
       radio: null,
-      selectedCoupon: {},
-      disPrice: 0,
+
+      // disPrice: 0,
 
       TipsShow: false,
-      // num: 0,
     }
   },
   computed: {
-    num() {
-      if (this.checkarr.marketingCouponVO) {
-        if (this.checkarr.marketingCouponVO.couponType === 1) {
-          return this.checkarr.marketingCouponVO.reducePrice
-        } else {
-          const price =
-            this.$route.query.type === 'shopcar'
-              ? this.$parent.order.skuTotalPrice
-              : this.$parent.order.salesPrice
-          const discount =
-            parseFloat(this.checkarr.marketingCouponVO.discount) / 100
-
-          const discountNum = ((10 - discount) / 10) * price
-          return Math.ceil(discountNum * 100) / 100
-        }
-      }
-      return 0
-    },
-  },
-
-  mounted() {},
-  methods: {
-    getDiscount(count) {
-      return Number(count) / 100
-    },
-    sum() {
+    // 折算后售价
+    price() {
+      // 原价
       const originPrice =
         this.$route.query.type === 'shopcar'
           ? this.$parent.order.skuTotalPrice
           : this.$parent.order.salesPrice
+
       let price = 0
-      if (this.selectedCoupon.marketingCouponVO.discount) {
+      if (!this.checkarr.marketingCouponVO) {
+        return originPrice
+      }
+
+      if (this.checkarr.marketingCouponVO.discount) {
         price =
           Number(originPrice) *
           10000 *
-          (this.selectedCoupon.marketingCouponVO.discount / 1000)
+          (this.checkarr.marketingCouponVO.discount / 1000)
         if (price % 100 === 0) {
           price = price / 10000
         } else {
@@ -322,41 +300,62 @@ export default {
         }
       } else {
         price =
-          Number(originPrice) -
-          this.selectedCoupon.marketingCouponVO.reducePrice
+          Number(originPrice) - this.checkarr.marketingCouponVO.reducePrice
       }
-      this.disPrice =
-        Math.ceil(Number(originPrice) * 100 - Number(price) * 100) / 100
-
-      this.$emit('change', price, -this.disPrice, this.checkarr)
-
-      // order
-      //   .getcalculation(
-      //     { axios: this.$axios },
-      //     {
-      //       price:
-      //         this.$route.query.type === 'shopcar'
-      //           ? this.$parent.order.skuTotalPrice
-      //           : this.$parent.order.salesPrice,
-      //       culation: this.num,
-      //     }
-      //   )
-      //   .then((result) => {
-      //     this.$emit('change', result, -this.num, this.checkarr)
-
-      //     this.close()
-      //   })
-      //   .catch((e) => {
-      //     Toast({
-      //       message: e.data.error,
-      //       iconPrefix: 'sp-iconfont',
-      //       icon: 'popup_ic_fail',
-      //       overlay: true,
-      //     })
-      //   })
+      return price
     },
+
+    // 折扣价
+    disPrice() {
+      // 原价
+      const originPrice =
+        this.$route.query.type === 'shopcar'
+          ? this.$parent.order.skuTotalPrice
+          : this.$parent.order.salesPrice
+      return (
+        Math.ceil(Number(originPrice) * 100 - Number(this.price) * 100) / 100
+      )
+    },
+  },
+
+  mounted() {},
+  methods: {
+    //
+    getDiscount(count) {
+      return Number(count) / 100
+    },
+    // sum() {
+    //   // 原价
+    //   const originPrice =
+    //     this.$route.query.type === 'shopcar'
+    //       ? this.$parent.order.skuTotalPrice
+    //       : this.$parent.order.salesPrice
+    //   // 售价
+    //   let price = 0
+
+    //   if (this.checkarr.marketingCouponVO.discount) {
+    //     price =
+    //       Number(originPrice) *
+    //       10000 *
+    //       (this.checkarr.marketingCouponVO.discount / 1000)
+    //     if (price % 100 === 0) {
+    //       price = price / 10000
+    //     } else {
+    //       price = (Math.floor(price / 100) + 1) / 100
+    //     }
+    //   } else {
+    //     price =
+    //       Number(originPrice) - this.checkarr.marketingCouponVO.reducePrice
+    //   }
+    //   // 折扣价
+    //   this.disPrice =
+    //     Math.ceil(Number(originPrice) * 100 - Number(price) * 100) / 100
+
+    //   // price计算后售价，disPrice折扣价，checkarr选择项
+    //   this.$emit('change', price, -this.disPrice, this.checkarr)
+    // },
     checkitem(item, index) {
-      this.selectedCoupon = item
+      // this.checkarr = item
       if (this.radio === index) {
         this.checkarr = ''
         this.radio = -1
@@ -364,10 +363,14 @@ export default {
         this.checkarr = item
         this.radio = index
       }
-      this.sum()
     },
-    close(data) {
-      this.$emit('close', data)
+    close() {
+      this.$emit('close')
+    },
+    submit() {
+      // price计算后售价，disPrice折扣价，checkarr选择项
+      this.$emit('change', this.price, -this.disPrice, this.checkarr)
+      this.close()
     },
     tabactivefn(item, index) {
       this.tabAct = index
@@ -569,17 +572,28 @@ export default {
                 }
               }
               .goods-types {
-                height: 20px;
-              }
-              p {
+                min-height: 64px;
                 font-size: 24px;
                 font-weight: 400;
                 color: #555555;
-                margin-top: 9px;
+                margin-top: 6px;
+
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                word-break: break-all;
               }
+
               > .date {
+                font-size: 24px;
+                font-weight: 400;
+
+                margin-top: 8px;
+
                 color: #999999;
-                margin-top: 36px;
+
                 transform: scale(0.83);
                 transform-origin: left center;
               }
@@ -736,16 +750,23 @@ export default {
                   }
                 }
                 .goods-types {
-                  min-height: 20px;
-                }
-                p {
+                  min-height: 64px;
                   font-size: 24px;
                   font-weight: 400;
                   color: #555555;
-                  margin-top: 9px;
+                  margin-top: 6px;
+
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 2;
+                  -webkit-box-orient: vertical;
+                  word-break: break-all;
                 }
+
                 > .date {
-                  margin-top: 36px;
+                  font-size: 24px;
+                  margin-top: 8px;
                   color: #999999;
                   transform: scale(0.83);
                   transform-origin: left center;

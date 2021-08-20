@@ -15,6 +15,9 @@
         <div class="item-button read" @click="linkDetail(evaluateInfo)">
           查看评价
         </div>
+        <div class="item-button read add" @click="linkWrite(evaluateInfo)">
+          追评
+        </div>
       </template>
       <div class="item-clear"></div>
     </div>
@@ -122,6 +125,9 @@ export default {
         border-radius: 6px;
         border: 1px solid #cccccc;
         color: #555555;
+      }
+      &.add {
+        margin-right: 20px;
       }
     }
     &-clear {

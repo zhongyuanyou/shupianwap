@@ -587,6 +587,9 @@ export default {
           this.Orderform.contractFormParam = this.contaract
           this.Orderform.contractFormParam.contractApplyWay = 'CUSTOMER'
         }
+        if (this.$route.query.plannerId) {
+          this.Orderform.plannerId = this.$route.query.plannerId
+        }
         order
           .placeOrder({ axios: this.$axios }, this.Orderform)
           .then((result) => {
@@ -601,6 +604,7 @@ export default {
               this.$router.push({
                 path: '/pay/payType',
                 query: {
+                  fromPage: 'orderList',
                   cusOrderId: result.cusOrderId,
                 },
               })
@@ -751,7 +755,7 @@ export default {
     openCardFn() {
       this.card.show = true
     },
-    close(data) {
+    close() {
       this.couponInfo.popupshow = false
     },
     closeCard() {

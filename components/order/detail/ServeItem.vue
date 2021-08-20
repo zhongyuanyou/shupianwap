@@ -80,9 +80,19 @@
               cusOrderStatusType !== 1 &&
               item.skuType === 'PRO_CLASS_TYPE_SERVICE'
             "
-            @click="checkProductType(item)"
+            @click="openProcess(item)"
             >办理进度</sp-button
           >
+
+          <!-- <sp-button
+            v-if="
+              cusOrderStatusType !== 4 &&
+              cusOrderStatusType !== 1 &&
+              item.skuType === 'PRO_CLASS_TYPE_SERVICE'
+            "
+            @click="checkProductType(item)"
+            >办理进度</sp-button
+          > -->
           <!-- 服务产品确认完成显示条件 1产品状态为已处理 2支付状态未完成支付  3用户未点确认-->
           <sp-button
             v-if="
@@ -99,6 +109,7 @@
           >
         </div>
       </div>
+
       <!-- <div
           v-if="item.serviceResourceList && item.serviceResourceList.length"
           class="sku-sercice"
@@ -137,6 +148,8 @@
           </div>
         </div> -->
     </div>
+    <Process v-if="showProcess" :info="processInfo" @close="closeProcess">
+    </Process>
   </div>
 </template>
 
@@ -144,11 +157,14 @@
 // 服务商品支付方式分为全款，定金尾款，按节点付费，完结付费
 // 定金胃口，按节点付费，完结付费有办理进度
 import { Button, Image } from '@chipspc/vant-dgg'
+import Process from './Process.vue'
 import changeMoney from '@/utils/changeMoney'
+
 export default {
   components: {
     [Button.name]: Button,
     [Image.name]: Image,
+    Process,
   },
   props: {
     // 当前商品产品
@@ -178,12 +194,32 @@ export default {
       default: 1,
     },
   },
+  data() {
+    return {
+      showProcess: false,
+      processInfo: {},
+    }
+  },
   methods: {
     changeMoney(num) {
       return changeMoney.regFenToYuan(num)
     },
     confirmOrder(id) {
       this.$emit('confirmOrder', id)
+    },
+    openProcess(item) {
+      console.log(item)
+      this.processInfo = {
+        image: item.indexImg,
+        orderId: item.orderId,
+        cusOrderId: item.cusOrderId,
+        skuId: item.skuId,
+        detailId: item.id,
+      }
+      this.showProcess = true
+    },
+    closeProcess() {
+      this.showProcess = false
     },
     // 判断是否是周期产品
     checkProductType(item) {

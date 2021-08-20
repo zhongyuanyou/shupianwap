@@ -80,7 +80,7 @@
                 >{{ item.couponType === 1 ? '满减券' : '折扣券' }}</span
               >{{ item.couponName }}
             </div>
-            <div ref="textpro" class="content" @click="popOver(index)">
+            <div class="content" @click="popOver(index)">
               <span v-if="item.useType === 1">全场通用</span>
               <span v-if="item.useType === 2">仅限指定品类使用</span>
               <span v-if="item.useType === 3">仅限指定商品使用</span>
@@ -551,6 +551,7 @@ export default {
             transform: scale(0.7);
             transform-origin: 14px 14px;
             text-align: left;
+            white-space: nowrap;
           }
         }
         .no-num {
@@ -566,6 +567,7 @@ export default {
         font-weight: 400;
         color: #ffffff;
         text-align: center;
+        white-space: nowrap;
       }
     }
     .item-rt {
@@ -620,12 +622,15 @@ export default {
         font-weight: 400;
         color: #555555;
         line-height: 32px;
-        margin-bottom: 30px;
+
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
+        padding-right: 1.88rem;
+        min-height: 64px;
+        margin-bottom: 8px;
       }
       .date {
         font-size: 24px;
@@ -664,14 +669,13 @@ export default {
       }
     }
     .item-btn {
-      width: 150px;
+      width: 132px;
       height: 54px;
       font-size: 24px;
       position: absolute;
-      right: 40px;
+      right: 50px;
       // top: 55%;
       bottom: 54px;
-      margin-top: -10px;
       button {
         display: block;
         width: 100%;

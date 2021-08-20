@@ -316,7 +316,7 @@ export default {
               this.finished = true
             }
           } else {
-            throw new Error('服务异常，请刷新重试！')
+            throw new Error(res.message)
           }
         })
         .catch((error) => {

@@ -58,7 +58,11 @@
         :maxlength="maxLength"
         placeholder="请对服务进行评价~"
         show-word-limit
-      />
+      >
+        <template #button>
+          <sp-checkbox v-model="anonymousFlag">匿名</sp-checkbox>
+        </template>
+      </sp-field>
     </div>
 
     <div class="line-upload"></div>
@@ -106,6 +110,7 @@ import {
   Button,
   Bottombar,
   BottombarButton,
+  Checkbox,
 } from '@chipspc/vant-dgg'
 import utils from '@/utils/changeBusinessData'
 import { evaluateApi } from '@/api'
@@ -125,6 +130,7 @@ export default {
     [Button.name]: Button,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
+    [Checkbox.name]: Checkbox,
     LoadingCenter,
   },
   filters: {
@@ -204,6 +210,7 @@ export default {
       evaluateFileId: '',
       CONFIG: config,
       imgLength: 0, // 图片数量
+      anonymousFlag: true,
     }
   },
   computed: {
@@ -570,10 +577,22 @@ export default {
       padding: 0;
       font: 400 28px/40px @fontf-pfsc-reg;
       color: #222222;
+      position: relative;
       .sp-field__body {
         textarea {
           min-height: 200px;
         }
+      }
+      .sp-field__button {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      }
+      .sp-checkbox__label {
+        margin-left: 8px;
+        color: #222;
+        font-size: 28px;
+        line-height: 1;
       }
     }
   }

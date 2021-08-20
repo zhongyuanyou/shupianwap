@@ -62,11 +62,11 @@
         class="rules_and_invalid"
         :class="{ rules_and_invalid_bk: list.length > 0 }"
       >
-        <span class="" @click="TipsShow = true">
+        <span class="rule" @click="TipsShow = true">
           通用规则
           <my-icon
             name="order_ic_listnext"
-            size="0.18rem"
+            size="0.17rem"
             color="#999999"
             class="back"
           />
@@ -75,7 +75,7 @@
           {{ tabActive === 0 ? '查看已失效优惠券' : '查看已失效活动卡' }}
           <my-icon
             name="order_ic_listnext"
-            size="0.18rem"
+            size="0.17rem"
             color="#999999"
             class="back"
           />
@@ -206,6 +206,7 @@ export default {
     // },
     initData() {
       const that = this
+      console.log('AlipayJSBridge', !!window.AlipayJSBridge)
       if (window.AlipayJSBridge) {
         window.AlipayJSBridge.call('getLoginUserInfo', (res) => {
           console.log('mpass里获取用户信息', res)
@@ -227,7 +228,38 @@ export default {
             this.$xToast.error('获取用户信息失败')
           }
         })
+      } else if (
+        this.$route.query.platForm &&
+        this.$route.query.platForm === 'mpass'
+      ) {
+        console.log('mpass')
+        if (!this.userId) {
+          const userData = {
+            token: this.$route.query.token,
+            id: this.$route.query.userId,
+            userId: this.$route.query.userId,
+          }
+          console.log('mpass userData', userData)
+          this.$store.dispatch('user/setUser', userData)
+        }
+        that.init()
+        that.onLoad()
+        // const params = {
+        //   // id: this.userId,
+        //   id: this.$route.query.userId || this.userId,
+        // }
+        // const res = await this.$axios.get(userinfoApi.info, { params })
+        // this.loading = false
+        // if (res.code === 200 && res.data) {
+        //   // start: set userInfo
+        //   this.formData.userId = res.data.id
+        //   this.formData.userType = util.getUserType(res.data.type)
+        //   this.formData.userName = res.data.nickName
+        //   this.formData.userCode = res.data.no
+        //   // end: set userInfo
+        // }
       } else if (this.isInApp) {
+        console.log('isInApp')
         if (this.userInfo.userId && this.userInfo.token) {
           this.init()
           this.onLoad()
@@ -448,13 +480,16 @@ export default {
     letter-spacing: 0;
 
     text-align: center;
-
+    .rule {
+      color: #4974f5;
+    }
     .invalid {
       margin-left: 64px;
+      color: #4974f5;
     }
     .back {
       margin-right: 18px;
-      font-weight: 500;
+      font-weight: 400;
     }
   }
   .rules_and_invalid_bk {

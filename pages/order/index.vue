@@ -16,6 +16,7 @@
     >
       <sp-tabs v-model="selectedOrderStatus" @click="changeTab">
         <sp-tab name="" title="全部"></sp-tab>
+        <sp-tab name="ORDER_CUS_STATUS_NOSUBMIT" title="待提交"></sp-tab>
         <sp-tab name="ORDER_CUS_STATUS_UNPAID" title="待付款"></sp-tab>
         <sp-tab name="ORDER_CUS_STATUS_PROGRESSING" title="办理中"></sp-tab>
         <sp-tab name="ORDER_CUS_STATUS_COMPLETED" title="已完成"></sp-tab>
@@ -57,6 +58,8 @@
       />
       <p v-if="noMore" class="no-more">没有更多了</p>
     </div>
+
+    <!-- 取消订单弹窗 -->
     <CancelOrder
       ref="cancleOrderModel"
       :order-id="orderData.orderId"
@@ -73,6 +76,8 @@
       />
       <p class="text">暂无订单</p>
     </div>
+
+    <!-- 支付弹窗 -->
     <PayModal
       ref="payModal"
       :order-data="orderData"
@@ -110,13 +115,13 @@
 <script>
 import { mapMutations, mapState } from 'vuex'
 import { Tab, Tabs, Loading, Skeleton, Dialog } from '@chipspc/vant-dgg'
-import Header from '@/components/common/head/header'
-import OrderItem from '@/components/order/OrderItem'
-import CancelOrder from '@/components/order/CancelOrder' // 取消订单弹窗
-import PayModal from '@/components/order/PayModal' // 支付弹窗
-import Bottombar from '@/components/common/nav/Bottombar'
+import Header from '@/components/common/head/header.vue'
+import OrderItem from '@/components/order/OrderItem.vue'
+import CancelOrder from '@/components/order/CancelOrder.vue' // 取消订单弹窗
+import PayModal from '@/components/order/PayModal.vue' // 支付弹窗
+import Bottombar from '@/components/common/nav/Bottombar.vue'
 import orderApi from '@/api/order'
-import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import OrderMixins from '@/mixins/order'
 export default {
   components: {
@@ -171,6 +176,8 @@ export default {
         this.selectedOrderStatus = 'ORDER_CUS_STATUS_COMPLETED'
       } else if (pageType === '4') {
         this.selectedOrderStatus = 'ORDER_CUS_STATUS_CANCELLED'
+      } else if (pageType === '5') {
+        this.selectedOrderStatus = 'ORDER_CUS_STATUS_NOSUBMIT'
       }
     }
     this.getOrderList()
@@ -224,12 +231,21 @@ export default {
       if (this.$route.query.type) {
         this.$router.push({ query: {} })
       }
-      
+
       this.list = []
       this.getOrderList()
     },
     toCar() {
       this.$router.push('../shopCart/')
+    },
+    toConfirmorder(order) {
+      this.$router.push({
+        path: '/order/confirmorder',
+        query: {
+          // 临时使用
+          productId: order.orderSkuEsList[0].orderSaleId,
+        },
+      })
     },
     getOrderList() {
       this.noMore = false
@@ -288,6 +304,7 @@ export default {
     },
     handleClickItem(type, order) {
       this.initItem(order)
+      console.log(order)
       switch (type) {
         case 1:
           // 取消订单 首先判断是否有关联订单
@@ -326,6 +343,10 @@ export default {
           // 发票
           this.opType = 'invoice'
           this.toInvoice()
+          break
+        case 9:
+          // 提交订单
+          this.toConfirmorder(order)
           break
       }
     },

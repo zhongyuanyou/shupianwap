@@ -143,8 +143,8 @@ export default {
     },
   },
   mounted() {
-    if (this.$route.query.isShare && this.$route.plannerId) {
-      this.getPlanerInfo(this.$route.plannerId)
+    if (this.$route.query.isShare && this.$route.query.plannerId) {
+      this.getPlanerInfo(this.$route.query.plannerId)
     }
     // this.getPlanerInfo('607997736314102930')
   },
@@ -202,6 +202,7 @@ export default {
             path: '/order/confirmorder',
             query: {
               productId: this.sellingGoodsData.id,
+              plannerId: this.$route.query.plannerId,
             },
           })
         } else {
