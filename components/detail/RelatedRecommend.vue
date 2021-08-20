@@ -45,7 +45,13 @@
             </div>
 
             <div class="desc">
-              <p>{{ item.salesGoodsOperatings.slogan }}</p>
+              <p>
+                {{
+                  item.salesGoodsOperatings
+                    ? item.salesGoodsOperatings.slogan
+                    : ''
+                }}
+              </p>
             </div>
             <p class="money">{{ item.salesPrice || item.price }}元</p>
           </div>
