@@ -15,51 +15,51 @@
       <div class="tile">
         <img
           class="tile-avatar"
-          src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+          :src="info.avatar || $ossImgSetV2('9zzzas17j8k0000.png')"
         />
         <div class="tile-desc">
           <div class="tile-desc__name">
-            哆啦不是A梦哆啦不是A梦哆啦不是A梦哆啦不是A梦
+            {{ info.choiceAnonymous ? '匿名用户' : info.userName }}
           </div>
-          <div class="tile-desc__date">2020/09/19 14:00</div>
+          <div class="tile-desc__date">{{ info.evaluateTime }}</div>
         </div>
         <img
+          v-if="info.goodEvaluate"
           :src="$ossImgSetV2('g31f5ub1prc0000.png')"
           class="tile-desc__icon"
         />
       </div>
       <div class="score">
         <div class="score-txt">服务评分</div>
-        <template v-for="(item, index) in totalStars">
+        <template v-for="(item, i) in 5">
           <my-icon
-            :key="index"
+            :key="i"
             class="score-star__item"
-            :class="index === 4 ? 'z-last' : ''"
+            :class="i === 4 ? 'z-last' : ''"
             name="dafen_mian"
             size="0.22rem"
-            :color="item.flag ? '#FFB400' : '#F0F0F0'"
-            @click.native="clkTotalStar(index, 'totalStarLevel')"
+            :color="
+              i < Math.floor(info.averageScore / 100 / 2)
+                ? '#FFB400'
+                : '#F0F0F0'
+            "
           ></my-icon>
         </template>
-        <div class="score-level">一般</div>
+        <div class="score-level">{{ info.averageScore | fliterLevel }}</div>
       </div>
       <div class="content">
         <div class="content-txt">
-          奥克斯广场才开不久的一奥克斯广场才开不久的一奥克斯广场才开不久的一奥克斯广场才开不久的一奥克斯广场才开不久的一
+          {{ info.evaluateContent }}
         </div>
-        <div class="content-img">
-          <img
-            src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-            class="content-img__item"
-          />
-          <img
-            src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-            class="content-img__item"
-          />
-          <img
-            src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-            class="content-img__item"
-          />
+        <div v-if="info.imgs && info.imgs.length" class="content-img">
+          <template v-for="(item, i) in info.imgs">
+            <img
+              v-if="i < 3"
+              :key="i"
+              :src="item.filepath"
+              class="content-img__item"
+            />
+          </template>
         </div>
       </div>
       <div class="tips">
@@ -70,7 +70,7 @@
           color="#999999"
         ></my-icon>
         <div class="tips-desc">
-          性价比高，服务质量好，办理效率高,性价比高，服务质量好，办理效率高
+          {{ info.evaluateTagList | filterTags }}
         </div>
       </div>
     </div>
@@ -80,28 +80,38 @@
 <script>
 export default {
   name: 'Comment',
+  filters: {
+    fliterLevel(val) {
+      const txts = ['', '非常差', '差', '一般', '好', '非常好']
+      return txts[val]
+    },
+    filterTags(val) {
+      if (Array.isArray(val) && val.length) {
+        const arr =  val.reduce((acc, cur) => {
+          acc.push(cur.name)
+          return acc
+        }, [])
+        return arr.join()
+      } else {
+        return ''
+      }
+    },
+  },
   props: {
-    list: {
+    comment: {
       type: Object,
       default: () => {
-        return {
-          totalCount: 0, // 初始化评论字段,防止程序报错
-          records: [],
-        }
+        return {}
       },
     },
   },
   data() {
-    return {
-      totalStars: [
-        // 总得分
-        { flag: true },
-        { flag: true },
-        { flag: true },
-        { flag: false },
-        { flag: false },
-      ],
-    }
+    return {}
+  },
+  computed: {
+    info() {
+      return this.comment
+    },
   },
   methods: {
     linkMoreComment() {
