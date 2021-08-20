@@ -11,6 +11,7 @@ const ORDERSTATUSCODE = {
   2: 'ORDER_CUS_STATUS_PROGRESSING', // 进行中
   3: 'ORDER_CUS_STATUS_COMPLETED', // 已完成
   4: 'ORDER_CUS_STATUS_CANCELLED', // 已取消
+  5: 'ORDER_CUS_STATUS_UNSUBMITE',// 待提交
 }
 
 // 客户单支付状态code

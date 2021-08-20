@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import orderUtils from '@/utils/order'
+import orderUtils from '@/utils/order.js'
 import payApi from '@/api/pay'
 let timer
 export default {

@@ -16,7 +16,7 @@
     >
       <sp-tabs v-model="selectedOrderStatus" @click="changeTab">
         <sp-tab name="" title="全部"></sp-tab>
-        <sp-tab name="ORDER_CUS_STATUS_NOSUBMIT" title="待提交"></sp-tab>
+        <sp-tab name="ORDER_CUS_STATUS_UNSUBMITE" title="待提交"></sp-tab>
         <sp-tab name="ORDER_CUS_STATUS_UNPAID" title="待付款"></sp-tab>
         <sp-tab name="ORDER_CUS_STATUS_PROGRESSING" title="办理中"></sp-tab>
         <sp-tab name="ORDER_CUS_STATUS_COMPLETED" title="已完成"></sp-tab>
@@ -177,7 +177,7 @@ export default {
       } else if (pageType === '4') {
         this.selectedOrderStatus = 'ORDER_CUS_STATUS_CANCELLED'
       } else if (pageType === '5') {
-        this.selectedOrderStatus = 'ORDER_CUS_STATUS_NOSUBMIT'
+        this.selectedOrderStatus = 'ORDER_CUS_STATUS_UNSUBMITE'
       }
     }
     this.getOrderList()
@@ -238,15 +238,7 @@ export default {
     toCar() {
       this.$router.push('../shopCart/')
     },
-    toConfirmorder(order) {
-      this.$router.push({
-        path: '/order/confirmorder',
-        query: {
-          // 临时使用
-          productId: order.orderSkuEsList[0].orderSaleId,
-        },
-      })
-    },
+
     getOrderList() {
       this.noMore = false
       orderApi
@@ -345,10 +337,19 @@ export default {
           this.toInvoice()
           break
         case 9:
-          // 提交订单
-          this.toConfirmorder(order)
+          // 未提交转提交订单
+          this.toSubmitOrder(order)
           break
       }
+    },
+    toSubmitOrder(order) {
+      this.$router.push({
+        path: '/order/confirmorder',
+        query: {
+          // 临时使用
+          productId: order.orderSkuEsList[0].orderSaleId,
+        },
+      })
     },
   },
 }

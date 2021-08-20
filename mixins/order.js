@@ -21,6 +21,7 @@ const ORDERSTATUSCODE = {
   2: 'ORDER_CUS_STATUS_PROGRESSING', // 进行中
   3: 'ORDER_CUS_STATUS_COMPLETED', // 已完成
   4: 'ORDER_CUS_STATUS_CANCELLED', // 已取消
+  5: 'ORDER_CUS_STATUS_UNSUBMITE',// 待提交
 }
 
 // 支付类型CODE
@@ -33,6 +34,40 @@ const PAYTYPECODE = {
 
 // 根据订单状态判断订单状态名称
 const orderStatusObj = {
+  // 销售商品待提交
+  SALE_STATUS_UNSUBMITE: {
+    type: 'PRO_CLASS_TYPE_SALES',
+    code: 'ORDER_ORDER_SALE_STATUS_UNSUBMITE',
+    name: '未提交',
+    cripsName: '未提交',
+    status: 'ORDER_CUS_STATUS_UNSUBMITE',
+  },
+  // 交易商品 待提交
+  TRADE_STATUS_UNSUBMITE: {
+    type: 'PRO_CLASS_TYPE_TRANSACTION',
+    code: 'ORDER_ORDER_TRADE_STATUS_UNSUBMITE',
+    name: '未提交',
+    cripsName: '未提交',
+    status: 'ORDER_CUS_STATUS_UNSUBMITE',
+  },
+  //  资源商品 待提交：
+  RESOURCE_STATUS_UNSUBMITE: {
+    type: 'PRO_CLASS_TYPE_SERVICE_RESOURCE',
+    code: 'ORDER_ORDER_RESOURCE_STATUS_UNSUBMITE',
+    name: '未提交',
+    cripsName: '未提交',
+    status: 'ORDER_CUS_STATUS_UNSUBMITE',
+  },
+  // 服务商品  待提交：
+  SERVER_STATUS_UNSUBMITE: {
+    type: 'PRO_CLASS_TYPE_SERVICE',
+    code: 'ORDER_ORDER_SERVER_STATUS_UNSUBMITE',
+    name: '未提交',
+    cripsName: '未提交',
+    status: 'ORDER_CUS_STATUS_UNSUBMITE',
+  },
+
+
   TRADE_STATUS_UN_PAID: {
     type: 'PRO_CLASS_TYPE_TRANSACTION',
     code: 'ORDER_ORDER_TRADE_STATUS_UN_PAID',
@@ -216,6 +251,7 @@ export default {
         ORDER_CUS_STATUS_PROGRESSING: '办理中', // 进行中
         ORDER_CUS_STATUS_COMPLETED: '已完成', // 已完成
         ORDER_CUS_STATUS_CANCELLED: '已取消', // 已取消
+        ORDER_CUS_STATUS_UNSUBMITE: "待提交",
       },
       // 客户单付款状态CODE对应文字
       PAYSTATUSCODENAME: {
@@ -554,9 +590,9 @@ export default {
             (orderArr[i].skuStatusNo === 'ORDER_ORDER_SALE_STATUS_HANDLED' ||
               orderArr[i].skuStatusNo === 'ORDER_ORDER_TRADE_STATUS_HANDLED' ||
               orderArr[i].skuStatusNo ===
-                'ORDER_ORDER_RESOURCE_STATUS_HANDLED' ||
+              'ORDER_ORDER_RESOURCE_STATUS_HANDLED' ||
               orderArr[i].skuStatusNo ===
-                'ORDER_ORDER_SERVER_STATUS_HANDLED') &&
+              'ORDER_ORDER_SERVER_STATUS_HANDLED') &&
             orderArr[i].payStatusNo === 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
           ) {
             if (orderArr[i].userConfirm === 0) {
@@ -1100,25 +1136,25 @@ export default {
       // 合同链接
       const contractUrl =
         this.orderData.contractVo2s &&
-        this.orderData.contractVo2s.length &&
-        (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
-          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+          this.orderData.contractVo2s.length &&
+          (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+            this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
           ? this.orderData.contractVo2s[0].contractUrl
           : this.orderData.contractUrl
       // 合同ID
       const contractId =
         this.orderData.contractVo2s &&
-        this.orderData.contractVo2s.length &&
-        (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
-          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+          this.orderData.contractVo2s.length &&
+          (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+            this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
           ? this.orderData.contractVo2s[0].contractId
           : this.orderData.contractId
       // 合同编号
       const contractNo =
         this.orderData.contractVo2s &&
-        this.orderData.contractVo2s.length &&
-        (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
-          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+          this.orderData.contractVo2s.length &&
+          (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+            this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
           ? this.orderData.contractVo2s[0].contractNo
           : this.orderData.contractNo
       if (
