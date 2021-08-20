@@ -87,7 +87,7 @@ export default {
     },
     filterTags(val) {
       if (Array.isArray(val) && val.length) {
-        const arr =  val.reduce((acc, cur) => {
+        const arr = val.reduce((acc, cur) => {
           acc.push(cur.name)
           return acc
         }, [])
@@ -104,6 +104,10 @@ export default {
         return {}
       },
     },
+    goodId: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {}
@@ -117,6 +121,9 @@ export default {
     linkMoreComment() {
       this.$router.push({
         path: '/detail/commentList',
+        query: {
+          goodId: this.goodId,
+        },
       })
     },
   },
