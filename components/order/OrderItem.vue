@@ -272,7 +272,7 @@ export default {
   },
   methods: {
     isUnSubmit(orderData) {
-      return !(orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_UNSUBMITE')
+      return orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_UNSUBMITE'
     },
     getStatusClass(status) {
       if (
