@@ -8,7 +8,7 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/order_list.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v3/order_list.do',
     })
   },
   // 客户单列表
