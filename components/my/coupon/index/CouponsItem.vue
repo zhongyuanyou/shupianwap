@@ -30,7 +30,7 @@
           </span>
         </div>
         <div class="content">
-          {{ getuseTypeName(item.useType) }}
+          {{ getuseTypeName(item.useType, item) }}
           <!-- item.useType === 1
               ? '全品类通用'
               : item.useType === 2
@@ -88,7 +88,7 @@ export default {
         }
       }
     },
-    getuseTypeName(useType) {
+    getuseTypeName(useType, item) {
       let useTypeName = ''
       switch (useType) {
         case 1:
@@ -98,7 +98,11 @@ export default {
           useTypeName = '仅限指定品类使用'
           break
         case 3:
-          useTypeName = '仅限指定商品使用'
+          // useTypeName = '仅限指定商品使用'
+
+          useTypeName = item.productName
+            ? item.productName + '-可用'
+            : '仅限指定商品使用'
       }
       return useTypeName
     },
