@@ -58,7 +58,7 @@ export default {
       itemTypeOptions: '',
       productList: '',
       productRecoData: '',
-      productAdvertData: '',
+      banner: '',
       page: 1,
       specType: 'HDZT_ZTTYPE_XTSF', // 活动类型code 在页面覆盖
       platformCode: 'COMDIC_PLATFORM_CRISPS', // 终端code
@@ -93,6 +93,7 @@ export default {
         type: 'init',
       })
     }
+    this.getAdvertisingData()
     await this.getMenuTabs() // 获取tab
     await this.getRecommendProductList() // 获取推荐商品
   },
@@ -380,6 +381,37 @@ export default {
             })
           })
       }
+    },
+    // 通过广告位获取banner图
+    getAdvertisingData() {
+      if (!this.advertCode) {
+        console.log('未配置广告位');
+        return
+      }
+      this.$axios
+        .get(activityApi.activityAdvertising, {
+          params: {
+            locationCode: this.advertCode,
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            if (res.data.sortMaterialList.length && res.data.sortMaterialList[0].materialList.length) {
+              this.imageHead =
+                res.data.sortMaterialList[0].materialList[0].materialUrl
+            }
+          } else {
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          }
+        })
+        .catch((err) => {
+          console.log(err.message)
+        })
     },
 
     swichCityHandle() {

@@ -1,14 +1,9 @@
 <template>
   <div class="container">
-    <div
-      v-if="isInApp"
-      class="app_header_fill"
-      style="height: 0.6rem; background-color: #1e1e1e"
-    ></div>
     <HeadWrapper
       :fill="false"
       :line="ClassState == 0 ? true : false"
-      :background-color="ClassState == 0 ? '#fff' : ''"
+      :background-color="`rgba(255,255,255,${headBkOpacity})`"
       @onHeightChange="onHeightChange"
     >
       <Head
@@ -54,6 +49,7 @@
       <img width="100%" :src="imageHead" alt="" />
       <div
         class="rule"
+        :class="{ rule_in_app: isInApp }"
         @click="$router.push('/login/protocol?categoryCode=' + ruleCode)"
       >
         规则
@@ -167,11 +163,13 @@ export default {
       specType: 'HDZT_ZTTYPE_QWBT',
 
       hasCity: true,
-      imageHead: this.$ossImgSetV2('c0mhpvuyb2o0000.jpg'), // 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg',
+      imageHead: this.$ossImgSetV2('aay0oucfo840000.png'), // 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg',
       headerHeight: 0,
       ClassState: 1,
-
+      advertCode: 'ad100075',
       ruleCode: 'protocol100034',
+
+      headBkOpacity: 0,
     }
   },
   //
@@ -202,12 +200,26 @@ export default {
       const scrollHeight =
         document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
       const boxHeight = this.$refs.fill_container.clientHeight // 盒子高度
-
-      if (scrollHeight > boxHeight - this.headerHeight) {
+      let opacity = 0
+      if (scrollHeight < boxHeight / 2) {
+        opacity = scrollHeight / (boxHeight / 2)
+      } else {
+        opacity = 1
+      }
+      if (opacity > 0.8) {
         this.ClassState = 0
       } else {
         this.ClassState = 1
       }
+
+      this.headBkOpacity = opacity
+
+      // if (scrollHeight > boxHeight - this.headerHeight) {
+      //   this.ClassState = 0
+      // } else {
+      //   this.headBkOpacity = 0 // 透明度
+      //   this.ClassState = 1
+      // }
     },
   },
   head() {
@@ -231,7 +243,7 @@ export default {
       position: absolute;
 
       width: 100%;
-      top: 64.2%;
+      top: 66.2%;
 
       // margin-top: 53%;
 
@@ -304,6 +316,9 @@ export default {
       height: 40px;
       width: 96px;
       text-align: center;
+    }
+    .rule_in_app {
+      top: 100px;
     }
   }
 

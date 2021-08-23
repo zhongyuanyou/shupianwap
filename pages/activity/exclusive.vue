@@ -1,15 +1,15 @@
 <template>
   <div class="container">
-    <div
+    <!-- <div
       v-if="isInApp"
       class="app_header_fill"
       style="height: 0.6rem; background-color: #1e1e1e"
-    ></div>
+    ></div> -->
 
     <HeadWrapper
       :fill="false"
       :line="ClassState == 0 ? true : false"
-      :background-color="ClassState == 0 ? '#fff' : ''"
+      :background-color="`rgba(255,255,255,${headBkOpacity})`"
       @onHeightChange="onHeightChange"
     >
       <Head
@@ -25,6 +25,7 @@
       <img width="100%" :src="imageHead" alt="" />
       <div
         class="rule"
+        :class="{ rule_in_app: isInApp }"
         @click="$router.push('/login/protocol?categoryCode=' + ruleCode)"
       >
         规则
@@ -133,11 +134,12 @@ export default {
       specType: 'HDZT_ZTTYPE_DJZS',
 
       hasCity: true,
-      imageHead: this.$ossImgSetV2('dfnawx8oxnc0000.jpg'), // 'https://cdn.shupian.cn/sp-pt/wap/images/dfnawx8oxnc0000.jpg',
+      imageHead: this.$ossImgSetV2('6kicshv3vcw0000.jpg'), // 'https://cdn.shupian.cn/sp-pt/wap/images/dfnawx8oxnc0000.jpg',
 
       headerHeight: 0,
+      headBkOpacity: 0,
       ClassState: 1,
-
+      advertCode: 'ad100076',
       ruleCode: 'protocol100048',
     }
   },
@@ -166,12 +168,19 @@ export default {
       const scrollHeight =
         document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
       const boxHeight = this.$refs.fill_container.clientHeight // 盒子高度
-      console.log(this.ClassState)
-      if (scrollHeight > boxHeight - this.headerHeight) {
+      let opacity = 0
+      if (scrollHeight < boxHeight / 2) {
+        opacity = scrollHeight / (boxHeight / 2)
+      } else {
+        opacity = 1
+      }
+      if (opacity > 0.8) {
         this.ClassState = 0
       } else {
         this.ClassState = 1
       }
+
+      this.headBkOpacity = opacity
     },
     onHeightChange(height) {
       this.headerHeight = height
@@ -197,7 +206,7 @@ export default {
 
     .count-down {
       position: absolute;
-      top: 72.4%;
+      top: 74.8%;
 
       transform: translate(0, -50%);
 
@@ -264,6 +273,9 @@ export default {
       height: 40px;
       width: 96px;
       text-align: center;
+    }
+    .rule_in_app {
+      top: 100px;
     }
   }
 
