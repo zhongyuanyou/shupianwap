@@ -15,7 +15,11 @@
         <div class="item-button read" @click="linkDetail(evaluateInfo)">
           查看评价
         </div>
-        <div class="item-button read add" @click="linkWrite(evaluateInfo)">
+        <div
+          v-if="evaluateInfo.isReview"
+          class="item-button read add"
+          @click="linkWrite(evaluateInfo)"
+        >
           追评
         </div>
       </template>
