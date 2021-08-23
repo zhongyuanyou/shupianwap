@@ -1,5 +1,6 @@
 <template>
   <div class="content-wrap">
+    <div ref="spaceholder" class="spaceholder"></div>
     <div class="tile">
       <img
         class="tile-avatar"
@@ -31,15 +32,16 @@
           "
         ></my-icon>
       </template>
-      <div class="score-level">一般</div>
+      <div class="score-level">{{ info.averageScore | fliterLevel }}</div>
     </div>
-    <div class="score-detail">
-      <div class="score-detail__item">专业能力:1分</div>
-      <div class="score-detail__item">回复时效:3分</div>
-      <div class="score-detail__item">时效效率:4分</div>
-      <div class="score-detail__item">专业能力:1分</div>
-      <div class="score-detail__item">回复时效:3分</div>
-      <div class="score-detail__item">时效效率:4分</div>
+    <div v-if="info.evaluateDimensionList.length" class="score-detail">
+      <div
+        v-for="(item, i) in info.evaluateDimensionList"
+        :key="i"
+        class="score-detail__item"
+      >
+        {{ item.name }}:{{ item.fraction }}分
+      </div>
     </div>
     <div class="content">
       <div
@@ -47,7 +49,7 @@
         class="content-txt"
         :class="[showAllContentTxt ? 'z-overflow' : '']"
       >
-        奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯
+        {{ info.evaluateContent }}
       </div>
       <div
         v-show="showAllContentTxt"
@@ -57,22 +59,16 @@
       >
         全文
       </div>
-      <div class="content-img">
-        <img
-          src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-          class="content-img__item"
-        />
-        <img
-          src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-          class="content-img__item"
-        />
-        <img
-          src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-          class="content-img__item"
-        />
+      <div v-if="info.imgs && info.imgs.length" class="content-img">
+        <template v-for="(item, i) in info.imgs">
+          <img :key="i" :src="item.filepath" class="content-img__item" />
+        </template>
       </div>
     </div>
-    <div class="tips">
+    <div
+      v-if="info.evaluateTagList && info.evaluateTagList.length"
+      class="tips"
+    >
       <my-icon
         class="tips-icon"
         :class="[showTipTxt ? 'z-more' : '']"
@@ -81,18 +77,24 @@
         color="#999999"
       ></my-icon>
       <div ref="tipTxt" class="tips-desc" :class="[showTipTxt ? 'z-more' : '']">
-        性价比高，服务质量好，办理效率高,性价比高，服务质量好，办理效率高
+        {{ info.evaluateTagList | filterTags }}
       </div>
     </div>
-    <div class="addcomments" :class="[showTipTxt ? 'z-small' : '']">
+    <div
+      v-if="info.reviewStatus && info.custAddComment"
+      class="addcomments"
+      :class="[showTipTxt ? 'z-small' : '']"
+    >
       <div class="addcomments-item content">
-        <div class="addcomments-item__tile">用户x天后追评：</div>
+        <div class="addcomments-item__tile">
+          {{ info.custAddComment.xDayAfterTxt }}
+        </div>
         <div
           ref="addCommentContentTxt"
           class="content-txt addcomments-item__txt"
           :class="[showAddCommentAllContentTxt ? 'z-overflow' : '']"
         >
-          奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯奥克斯广场才开不久的一奥克斯广场才奥克斯
+          {{ info.custAddComment.reviewReplyContent }}
         </div>
         <div
           v-show="showAddCommentAllContentTxt"
@@ -102,29 +104,30 @@
         >
           全文
         </div>
-        <div class="content-img">
-          <img
-            src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-            class="content-img__item"
-          />
-          <img
-            src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-            class="content-img__item"
-          />
-          <img
-            src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-            class="content-img__item"
-          />
+        <div
+          v-if="info.custAddComment.imgs && info.custAddComment.imgs.length"
+          class="content-img"
+        >
+          <template v-for="(item, i) in info.imgs">
+            <img :key="i" :src="item.filepath" class="content-img__item" />
+          </template>
         </div>
-        <div class="planner-wrap">
+        <div
+          v-if="info.replyStatus && info.custReplayComment"
+          class="planner-wrap"
+        >
           <div class="planner">
             <img
               class="planner-avatar"
-              src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+              :src="
+                info.custReplayComment.avatar ||
+                $ossImgSetV2('9zzzas17j8k0000.png')
+              "
             />
             <span class="planner-replay"
-              ><span class="planner-name">江刘杰【规划师】</span
-              >回复：谢谢您的认可,我们会越做约好的继续加油！</span
+              ><span class="planner-name"
+                >{{ info.custReplayComment.userName }}【规划师】</span
+              >回复：{{ info.custReplayComment.reviewReplyContent }}</span
             >
           </div>
         </div>
@@ -139,7 +142,7 @@ export default {
   filters: {
     fliterLevel(val) {
       const txts = ['', '非常差', '差', '一般', '好', '非常好']
-      return txts[val]
+      return txts[Math.floor(val / 100 / 2)]
     },
     filterTags(val) {
       if (Array.isArray(val) && val.length) {
@@ -163,8 +166,8 @@ export default {
   },
   data() {
     return {
-      showAllContentTxt: true, // 显示全文标识
-      showAddCommentAllContentTxt: true, // 追加评论显示全文标识
+      showAllContentTxt: false, // 显示全文标识
+      showAddCommentAllContentTxt: false, // 追加评论显示全文标识
       showTipTxt: true, // 显示标签行数
       lineHeight: 0,
     }
@@ -174,14 +177,23 @@ export default {
       return this.comment
     },
   },
+  watch: {
+    info(val) {
+      this.$nextTick(() => {
+        this.renderView()
+      })
+    },
+  },
   mounted() {
+    // 定义一行间距
+    this.lineHeight = this.$refs.spaceholder.offsetHeight
+    this.$refs.spaceholder.style = 'display: none;'
     this.$nextTick(() => {
       this.renderView()
     })
   },
   methods: {
     renderView() {
-      this.lineHeight = this.$refs.fullContentFlag.offsetHeight
       this.setContentTxt(this.$refs.contentTxt, 'showAllContentTxt')
       this.setContentTxt(
         this.$refs.addCommentContentTxt,
@@ -191,19 +203,23 @@ export default {
     },
     // 设置评论区域行高
     setContentTxt(ele, flag) {
-      const contentTxtHeight = ele.offsetHeight
-      if (contentTxtHeight / this.lineHeight >= 4) {
-        this[flag] = true
-      } else {
-        this[flag] = false
+      if (ele) {
+        const contentTxtHeight = ele.offsetHeight
+        if (contentTxtHeight / this.lineHeight > 4) {
+          this[flag] = true
+        } else {
+          this[flag] = false
+        }
       }
     },
     setTipTxt() {
-      const tipHeight = this.$refs.tipTxt.offsetHeight
-      if (this.lineHeight < tipHeight) {
-        this.showTipTxt = true
-      } else {
-        this.showTipTxt = false
+      if (this.$refs.tipTxt) {
+        const tipHeight = this.$refs.tipTxt.offsetHeight
+        if (this.lineHeight < tipHeight) {
+          this.showTipTxt = true
+        } else {
+          this.showTipTxt = false
+        }
       }
     },
   },
@@ -215,6 +231,9 @@ export default {
   background: #fff;
   margin-bottom: 20px;
   padding: 32px 40px;
+  .spaceholder {
+    height: 28px;
+  }
   .tile {
     display: flex;
     align-items: center;
@@ -289,10 +308,6 @@ export default {
   }
   .content {
     margin-top: 24px;
-    &-spaceholder {
-      font-size: 26px;
-      line-height: 32px;
-    }
     &-txt {
       color: #000000;
       font-size: 26px;
@@ -308,14 +323,15 @@ export default {
       margin-top: 4px;
     }
     &-img {
-      margin-top: 12px;
-      height: 210px;
+      margin-top: 4px;
       display: flex;
+      flex-wrap: wrap;
       &__item {
-        height: inherit;
+        height: 210px;
         width: 210px;
         border-radius: 8px;
         margin-right: 8px;
+        margin-top: 8px;
         &.z-last {
           margin-right: 0;
         }

@@ -103,7 +103,9 @@ export default {
         if (code !== 200) {
           throw new Error(message)
         }
-        this.comments.push(...data.records)
+        // 构建评价数据
+        const res = this.buildCommentData(data.records)
+        this.comments.push(...res)
         this.page++
         if (this.page > data.totalPage) {
           this.finished = true
@@ -113,6 +115,49 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+    buildCommentData(data) {
+      if (!Array.isArray(data) || !data.length) {
+        return []
+      }
+      data.forEach((cur) => {
+        // 构建追评数据
+        const reviewComment = cur.triggerReviewReplies
+        // 追评数据不存在
+        if (Array.isArray(reviewComment) && reviewComment.length) {
+          // 构建追评数据
+          if (
+            reviewComment.some((item) => Number(item.reviewReplyType) === 1)
+          ) {
+            cur.custAddComment = reviewComment.find(
+              (item) => Number(item.reviewReplyType) === 1
+            )
+            const xDayAfter = this.xDayAfter(
+              cur.evaluateTime,
+              cur.custAddComment.reviewReplyTime
+            )
+            if (xDayAfter < 1) {
+              cur.custAddComment.xDayAfterTxt = '用户当天追评:'
+            } else {
+              cur.custAddComment.xDayAfterTxt = `用户${Math.floor(
+                xDayAfter
+              )}天后追评:`
+            }
+          }
+          // 构建回复数据
+          if (
+            reviewComment.some((item) => Number(item.reviewReplyType) === 2)
+          ) {
+            cur.custReplayComment = reviewComment.find(
+              (item) => Number(item.reviewReplyType) === 2
+            )
+          }
+        }
+      })
+      return data
+    },
+    xDayAfter(start, end) {
+      return (Date.parse(end) - Date.parse(start)) / (1 * 24 * 60 * 60 * 1000)
     },
   },
 }
