@@ -1,6 +1,6 @@
 <template>
   <div class="evaluateStar_container">
-    <div v-if="scoreFlag" class="score">
+    <div v-if="scoreFlag && !additional" class="score">
       <div class="score-total">
         <div class="tile">服务评分</div>
         <template v-for="(item, index) in totalStars">
@@ -36,7 +36,7 @@
         </div>
       </template>
     </div>
-    <div v-if="tipsFlag && subScoreFlag" class="tips">
+    <div v-if="tipsFlag && subScoreFlag && !additional" class="tips">
       <div
         v-for="(item, index) in tips"
         :key="index"
@@ -59,7 +59,7 @@
         placeholder="请对服务进行评价~"
         show-word-limit
       >
-        <template #button>
+        <template v-if="supportAnonymous && !additional" #button>
           <sp-checkbox v-model="anonymousFlag">匿名</sp-checkbox>
         </template>
       </sp-field>
@@ -87,7 +87,7 @@
     <div class="placeholder"></div>
     <sp-bottombar safe-area-inset-bottom>
       <sp-bottombar-button
-        :class="[submitFlag ? '' : 'z-inactive']"
+        :class="[submitFlag || additional ? '' : 'z-inactive']"
         type="primary"
         color="#4974F5"
         text="发布评价"
@@ -112,8 +112,9 @@ import {
   BottombarButton,
   Checkbox,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import utils from '@/utils/changeBusinessData'
-import { evaluateApi } from '@/api'
+import { evaluateApi, userinfoApi } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import config from '@/config'
 
@@ -211,9 +212,17 @@ export default {
       CONFIG: config,
       imgLength: 0, // 图片数量
       anonymousFlag: true,
+      additional: 0, // 追评标识
+      supportAnonymous: 0,
+      submitEvaluateId: '', // 追评id
+      createrId: '',
+      createrName: '',
     }
   },
   computed: {
+    ...mapState({
+      userId: (state) => state.user.userId,
+    }),
     submitFlag() {
       // check 服务评分
       if (this.totalStarLevel === 0) {
@@ -257,6 +266,13 @@ export default {
   },
   mounted() {
     this.infoId = this.$route.query.infoId
+    if (this.$route.query.additional === '1') {
+      this.additional = 1
+      this.subScoreFlag = true
+      this.submitEvaluateId = this.$route.query.addEvaluateId
+      this.createrId = this.$route.query.createrId
+      this.createrName = this.$route.query.createrName
+    }
     this.init()
   },
   methods: {
@@ -380,6 +396,18 @@ export default {
       return true
     },
     submit() {
+      if (this.additional === 1) {
+        // 先通过查询用户信息接口,拿到对应的用户信息
+        const params = {
+          id: this.userId,
+        }
+        this.$axios.get(userinfoApi.info, { params }).then((res) => {
+          if (res.code === 200) {
+            this.additionalEvaluateApi(res.data)
+          }
+        })
+        return
+      }
       // start: check data
       const checkResult = this.checkSubmit()
       if (checkResult) {
@@ -402,6 +430,9 @@ export default {
         this.evaluateDimensionList = data.evaluateDimensionList
         this.tips = data.evaluateTagList
         this.evaluateFileId = data.evaluateFileId || ''
+        this.supportAnonymous = data.choiceSupportAnonymous
+          ? data.choiceSupportAnonymous
+          : 0
         this.initItemsStar()
         this.initTips()
       } catch (e) {
@@ -428,6 +459,40 @@ export default {
           params.evaluateFileId = this.evaluateFileId
         }
         const { code, data } = await this.$axios.post(evaluateApi.add, params)
+        this.loading = false
+        if (code !== 200) {
+          this.$xToast.error(data.error || '评价失败')
+          return
+        }
+        this.$router.replace({ path: '/my/evaluate/success' })
+      } catch (e) {
+        this.loading = false
+        this.$xToast.error('评价失败')
+      }
+    },
+    // 追评接口
+    async additionalEvaluateApi(info) {
+      try {
+        this.loading = true
+        const params = {
+          submitEvaluateId: this.submitEvaluateId,
+          reviewReplyContent: this.evaluateContent,
+          sourceSyscode: this.CONFIG.SYS_CODE,
+          reviewReplyType: 1, // 追评回复类型:1是追评;2:是回复
+          userId: info.id, // 追评/回复人ID
+          userCode: info.no, // 追评/回复人工号
+          userName: info.fullName, // 追评/回复人名称
+          createrId: this.createrId, // 创建人
+          createrName: this.createrName, // 姓名/工号
+        }
+        // 如果有图片,则添加图片参数
+        if (this.uploadImgFlag) {
+          params.reviewReplyFileId = this.evaluateFileId
+        }
+        const { code, data } = await this.$axios.post(
+          evaluateApi.addReview,
+          params
+        )
         this.loading = false
         if (code !== 200) {
           this.$xToast.error(data.error || '评价失败')
