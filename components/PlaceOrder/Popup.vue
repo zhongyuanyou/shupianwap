@@ -156,7 +156,11 @@
                         仅限指定品类使用
                       </p>
                       <p v-else-if="item.marketingCouponVO.useType === 3">
-                        仅限指定商品使用
+                        {{
+                          item.productName
+                            ? item.productName + '-可用'
+                            : '仅限指定商品使用'
+                        }}
                       </p>
                     </div>
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
