@@ -137,10 +137,11 @@ export default {
     async getEvaluateDetail() {
       const params = {
         infoId: this.$route.query.infoId,
-        userId: this.$store.state.user.userId,
+        evaluateUserId: this.$store.state.user.userId,
       }
-      const res = await this.$axios.get(evaluateApi.detail, { params })
+      const res = await this.$axios.post(evaluateApi.getGoodsEvaluate, params)
       if (res.code === 200) {
+
         this.evaluateContent = res.data.evaluateContent
         if (res.data.evaluateTagList.length > 0) {
           this.evaluateTagList = (
