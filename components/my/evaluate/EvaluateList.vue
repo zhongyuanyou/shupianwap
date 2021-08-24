@@ -15,7 +15,11 @@
         <div class="item-button read" @click="linkDetail(evaluateInfo)">
           查看评价
         </div>
-        <div class="item-button read add" @click="linkWrite(evaluateInfo)">
+        <div
+          v-if="evaluateInfo.isReview"
+          class="item-button read add"
+          @click="linkWrite(evaluateInfo, 1)"
+        >
           追评
         </div>
       </template>
@@ -47,7 +51,7 @@ export default {
     }
   },
   methods: {
-    linkWrite(evaluateInfo) {
+    linkWrite(evaluateInfo, additional) {
       this.$router.push({
         path: '/my/evaluate/write',
         query: {
@@ -55,6 +59,10 @@ export default {
           orderName: evaluateInfo.orderName,
           infoId: evaluateInfo.evaluateCenterId,
           orderDesc: evaluateInfo.orderDesc,
+          additional,
+          addEvaluateId: evaluateInfo.submitEvaluateId,
+          createrId: evaluateInfo.createrId,
+          createrName: evaluateInfo.createrName,
         },
       })
     },

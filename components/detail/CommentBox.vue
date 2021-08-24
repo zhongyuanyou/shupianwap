@@ -62,7 +62,10 @@
           </template>
         </div>
       </div>
-      <div class="tips">
+      <div
+        v-if="info.evaluateTagList && info.evaluateTagList.length"
+        class="tips"
+      >
         <my-icon
           class="tips-icon"
           name="biaoqian"
@@ -83,7 +86,7 @@ export default {
   filters: {
     fliterLevel(val) {
       const txts = ['', '非常差', '差', '一般', '好', '非常好']
-      return txts[val]
+      return txts[Math.floor(val / 100 / 2)]
     },
     filterTags(val) {
       if (Array.isArray(val) && val.length) {
