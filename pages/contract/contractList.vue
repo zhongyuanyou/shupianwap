@@ -111,15 +111,12 @@ export default {
           if (res.records.length < 10) {
             this.$refs.list.finished = true
           }
-          /*
-          console.log(`################# output list.loading: ${JSON.stringify(this.$refs.list)}`)
-          if (this.$refs.list.loading === true) {
-            this.$refs.list.loading = false
+          if (this.$refs.list.isLoading === true) {
+            this.$refs.list.isLoading = false
           }
           if (this.$refs.list.loading === true) {
             this.$refs.list.loading = false
           }
-          */
         })
         .catch((err) => {
           this.$xToast.show(err.message)

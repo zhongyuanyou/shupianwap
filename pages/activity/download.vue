@@ -36,7 +36,7 @@
     </div>
 
     <div class="tips" @click="openApp">若您已安装app,点此打开</div>
-    <div class="btn" @click="downloadWithStore">点击立即下载</div>
+    <div class="btn" @click="download">点击立即下载</div>
   </div>
 </template>
 <script>
@@ -121,8 +121,7 @@ export default {
       if (this.isIOS) {
         downLoadUrl = 'https://apps.apple.com/cn/app/薯片找人/id1535886630'
       } else {
-        downLoadUrl =
-          'http://m.pp.cn/detail.html?appid=8180749&ch_src=pp_dev&ch=default'
+        downLoadUrl = 'https://cdn.shupian.cn/app-official-release.apk'
       }
       window.location.href = downLoadUrl
     },
