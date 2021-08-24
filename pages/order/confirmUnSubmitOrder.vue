@@ -1,6 +1,6 @@
 <template>
   <div class="PlaceOrder">
-    <Head v-show="!editShow" ref="head" title="确认订单">
+    <Head v-show="!editShow" ref="head" title="提交订单">
       <template #left>
         <my-icon
           class="back-icon"
@@ -56,17 +56,6 @@
             </p>
           </div>
         </div>
-        <div class="inpbox">
-          <Field
-            v-model="message"
-            rows="1"
-            autosize
-            label="备注留言"
-            type="textarea"
-            placeholder="建议提前先与规划师联系"
-            maxlength="50"
-          ></Field>
-        </div>
       </div>
 
       <div class="news-content">
@@ -78,7 +67,9 @@
           />
           <Cell
             title="商品金额"
-            :value="order.salesPrice || order.skuTotalPrice || 0 + '元'"
+            :value="
+              order.orderTotalMoney || order.orderPayableMoneys || 0 + '元'
+            "
             value-class="black"
           />
           <Cell
@@ -123,30 +114,57 @@
           </span>
         </p>
       </div>
-      <div class="contract">
-        <CellGroup>
-          <Cell
-            title="合同信息"
-            :value="
-              contaract.contractFirstPhone ? '已完善合同信息' : '完善合同信息'
-            "
-            :value-class="contaract.contractFirstPhone ? 'ys' : 'black'"
-            is-link
-            @click="gocontractedit()"
-          />
-        </CellGroup>
-      </div>
+
       <div class="agreement">
         <Checkbox v-model="radio">
           <template>
             <p class="tit">
-              我已阅读过并知晓<span @click="goagr"
+              我已阅读过并知晓<span @click="goagr('protocol100008')"
+                >《薯片平台用户交易下单协议》</span
+              ><span @click="goagr('protocol100033')"
+                >《薯片平台交易委托协议》</span
+              ><span @click="goagr('protocol100008')"
+                >《薯片平台订单协议》</span
+              >
+            </p>
+          </template>
+        </Checkbox>
+      </div>
+
+      <!-- <div class="agreement">
+        <Checkbox v-model="radio">
+          <template>
+            <p class="tit">
+              我已阅读过并知晓<span @click="goagr('protocol100008')"
                 >《薯片平台用户交易下单协议》</span
               >
             </p>
           </template>
         </Checkbox>
       </div>
+
+      <div class="agreement">
+        <Checkbox v-model="radio">
+          <template>
+            <p class="tit">
+              我已阅读过并知晓<span @click="goagr('protocol100033')"
+                >《薯片平台交易委托协议》</span
+              >
+            </p>
+          </template>
+        </Checkbox>
+      </div>
+      <div class="agreement">
+        <Checkbox v-model="radio">
+          <template>
+            <p class="tit">
+              我已阅读过并知晓<span @click="goagr('protocol100008')"
+                >《薯片平台订单协议》</span
+              >
+            </p>
+          </template>
+        </Checkbox>
+      </div> -->
     </div>
     <div ref="foot" class="foot">
       <p class="left">
@@ -158,9 +176,7 @@
         提交订单
       </div>
     </div>
-    <div v-show="editShow" class="contractbox">
-      <Contract @goback="contractback" @sum="contractsum"></Contract>
-    </div>
+
     <LoadingCenter v-show="loading" />
     <Popup
       ref="conpon"
@@ -168,6 +184,7 @@
       :height="75"
       title="优惠"
       help="使用说明"
+      :origin-price="order.orderTotalMoney"
       :tablist="couponInfo.tablist"
       :datalist="couponInfo.datalist"
       :nolist="couponInfo.nolist"
@@ -199,37 +216,37 @@ import {
   Checkbox,
   Toast,
   Skeleton,
-  // CheckboxGroup,
+  CheckboxGroup,
 } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header.vue'
 import Popup from '@/components/PlaceOrder/Popup.vue'
 import CardPopup from '@/components/PlaceOrder/CardPopup.vue'
-import Contract from '@/components/PlaceOrder/contract.vue'
+
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { productDetailsApi, auth, shopCart } from '@/api'
 import cardApi from '@/api/card'
+import orderApi from '@/api/order'
+import OrderMixins from '@/mixins/order'
+
 import { coupon, order, actCard } from '@/api/index'
 export default {
   name: 'PlaceOrder',
   components: {
     Head,
-    Field,
     Cell,
     CellGroup,
     Checkbox,
+    // CheckboxGroup,
     Popup,
     CardPopup,
     [Skeleton.name]: Skeleton,
     LoadingCenter,
-    Contract,
   },
+  mixins: [OrderMixins],
   data() {
     return {
-      money: '1232',
-
       radio: '', // 选中协议
-
-      message: '',
+      checkboxProtocol: [], // 选中协议
       order: '',
       // num: 0,
 
@@ -258,27 +275,12 @@ export default {
         nolist: [], // 不支持的列表
       },
 
-      contaract: '',
-      productId: this.$route.query.productId,
-      formData: {
-        orderByWhere: 'createTime=desc',
-        findType: 5,
-        userId: '767579686475123456',
-        actionId: this.productId,
-      },
       price: '',
       Orderform: {
-        needSplitProPackageDataParam: [],
-        cusOrderPayType: '',
-        isFromCart: '',
-        cartIds: '',
-        orderProvinceNo: '',
-        orderCityNo: '',
-        orderLocationProvinceName: '',
-        orderLocationCityName: '',
         orderAgreementIds: '',
-        customerOrderMark: '',
+
         discount: [],
+
         payType: 'ORDER_PAY_MODE_ONLINE',
       },
       loading: false,
@@ -288,11 +290,8 @@ export default {
     }
   },
   mounted() {
-    if (this.$route.query.type === 'shopcar') {
-      this.getcart()
-    } else {
-      this.asyncData()
-    }
+    this.asyncData()
+
     // this.getInitData()
     this.getProtocol('protocol100008')
   },
@@ -301,98 +300,62 @@ export default {
       this.$router.back()
     },
     // 打开《薯片平台用户交易下单协议》
-    goagr() {
+    goagr(categoryCode) {
       this.$router.push({
         name: 'login-protocol',
-        query: { categoryCode: 'protocol100008' },
+        query: { categoryCode },
       })
     },
-    // 购物车结算
-    getcart() {
-      const that = this
-      shopCart
-        .bill({
-          cartId: this.$route.query.cartIdsStr,
-          type: '1',
-        })
-        .then((result) => {
-          // result = JSON.parse(result.productVo)
-          this.order = result
-          this.order.list = this.order.productVo
-          this.price = this.order.skuTotalPrice
-          this.skeletonloading = false
-          this.getInitData(5)
-          this.getInitData(6)
-        })
-        .catch((e) => {
-          if (e.code !== 200) {
-            this.$xToast.show(e.message)
-            console.error(e)
-            setTimeout(function () {
-              that.$router.back(-1)
-            }, 2000)
-          }
-        })
-    },
-    async asyncData() {
-      const that = this
+
+    asyncData() {
       this.skeletonloading = false
-      try {
-        const { code, message, data } = await this.$axios.post(
-          productDetailsApi.sellingGoodsDetail,
+
+      orderApi
+        .getDetailByOrderId(
+          { axios: this.axios },
           {
-            id: this.$route.query.productId,
-            configFlg: 1,
-            floatingFlg: 1,
-            withSalesSubsFlg: 1,
-            withTagsFlg: 1,
-            withGoodsSubFlg: 1,
-            withOperatingsFlg: 1,
-            clientType: 'COMDIC_TERMINAL_APP',
+            id: this.$route.query.id,
+            cusOrderId: this.$route.query.cusOrderId,
           }
         )
-        if (code === 200) {
-          const obj = {
-            name: data.name,
-            classCode: data.classCode,
-            classCodeName: data.classCodeName,
-            id: data.id,
-            salesPrice: data.salesPrice,
-            salesGoodsSubVos: data.salesGoodsSubVos,
-            salesGoodsOperatings: data.salesGoodsOperatings,
+        .then((res) => {
+          console.log('res', res)
+          this.changeMoney(res.data || res)
+          const cusDetail = res.data
+            ? res.data.orderSplitAndCusVo
+            : res.orderSplitAndCusVo
+
+          const data = Object.assign(cusDetail, res.data || res)
+
+          if (data) {
+            data.list = []
+            this.order = data
+
+            console.log('res', res)
+
+            data.orderSkuList.map((item) => {
+              const obj = {
+                name: item.spuHideName || item.spuName,
+                classCode: item.classCode,
+                classCodeName: item.classCodeName,
+                id: item.id,
+                salesPrice: item.skuPrice,
+                salesGoodsSubVos: item.salesGoodsSubVos,
+              }
+              this.order.list.push(obj)
+            })
+
+            this.order.num = this.order.list.length
+            this.price = this.order.salesPrice
+            this.getInitData(5) // 获取优惠券
+            this.getInitData(6)
+          } else {
+            this.$xToast.show('服务器异常,请然后再试')
+            // setTimeout(function () {
+            //   that.$router.back(-1)
+            // }, 2000)
           }
-          this.order = data
-          this.order.list = []
-          this.order.list.push(obj)
-          this.order.num = this.order.list.length
-          this.price = this.order.salesPrice
-          this.getInitData(5)
-          this.getInitData(6)
-
-          this.productList = new Array(1).fill({
-            categoryCode: data.classCodeLevel.split(',')[0],
-            productId: data.id,
-            productPrice: data.salesPrice,
-          })
-
-          // this.getCardList()
-
-          console.log('productList', this.productList)
-        } else {
-          this.$xToast.show('服务器异常,请然后再试')
-          setTimeout(function () {
-            that.$router.back(-1)
-          }, 2000)
-          throw message
-        }
-      } catch (err) {
-        this.$xToast.show('请求数据失败，请稍后再试')
-        console.error(err)
-        setTimeout(function () {
-          that.$router.back(-1)
-        }, 2000)
-        this.skeletonloading = false
-      }
+        })
     },
     async getProtocol(categoryCode) {
       if (!categoryCode) {
@@ -422,40 +385,6 @@ export default {
         })
       } else {
         this.loading = true
-        if (this.$route.query.type === 'shopcar') {
-          const arr = []
-          for (let i = 0; i < this.order.list.length; i++) {
-            const sku = {
-              saleSkuId: this.order.list[i].id,
-              saleSkuName: this.order.list[i].name,
-              saleSkuVersionNo: this.order.list[i].version + '',
-              saleSkuPrice: this.order.list[i].salesPrice,
-              saleSkuCount: this.order.list[i].salesVolume,
-            }
-            arr.push(sku)
-            this.loading = false
-          }
-          this.Orderform.needSplitProPackageDataParam = arr
-        } else {
-          const sku = {
-            saleSkuId: this.order.id,
-            saleSkuName: this.order.name,
-            saleSkuVersionNo: this.order.version + '',
-            saleSkuPrice: this.order.salesPrice,
-            saleSkuCount: 1,
-          }
-          this.Orderform.needSplitProPackageDataParam = new Array(1).fill(sku)
-        }
-        let isFromCart = false
-        let cusOrderPayType
-        if (this.$route.query.type === 'shopcar') {
-          isFromCart = true
-          this.Orderform.cartIds = this.$route.query.cartIdsStr
-          cusOrderPayType = this.order.list[0].refConfig.payType
-        } else {
-          cusOrderPayType = this.order.refConfig.payType
-          isFromCart = false
-        }
 
         if (
           this.couponInfo.couponPrice &&
@@ -484,24 +413,28 @@ export default {
           }
           this.Orderform.discount = new Array(1).fill(arr)
         }
-        this.Orderform.cusOrderPayType = cusOrderPayType
-        this.Orderform.isFromCart = isFromCart
-        this.Orderform.orderProvinceNo = this.$store.state.city.defaultCity.pid
-        this.Orderform.orderCityNo = this.$store.state.city.defaultCity.code
-        this.Orderform.orderLocationProvinceName =
-          this.$store.state.city.defaultCity.pname
-        this.Orderform.orderLocationCityName =
-          this.$store.state.city.defaultCity.name
-        this.Orderform.customerOrderMark = this.message
-        if (this.contaract) {
-          this.Orderform.contractFormParam = this.contaract
-          this.Orderform.contractFormParam.contractApplyWay = 'CUSTOMER'
-        }
-        if (this.$route.query.plannerId) {
-          this.Orderform.plannerId = this.$route.query.plannerId
-        }
+
+        const discount = [
+          {
+            code: '', // ORDER_DISCOUNT_DISCOUNT:优惠券,ORDER_DISCOUNT_DISCOUT:折扣券，ORDER_DISCOUNT_ACTIVITY:活动优惠，ORDER_DISCOUNT_INTEGRAL:积分抵扣，ORDER_DISCOUNT_ENVELOPES:红包优惠,ORDER_DISCOUNT_BALANCE:余额优惠，ORDER_DISCOUNT_BUSINESS_AFFAIRS:商务优惠
+            value: '', // 优惠券的id逗号分隔
+            couponUseCode: '', // 优惠券编码
+            discountType: '', // COUPON_DISCOUNT  平台优惠券,BUSINESS_COUPON 商户优惠券
+            no: '', // 优惠劵id
+            quota: '', //  优惠额度
+          },
+        ]
         order
-          .placeOrder({ axios: this.$axios }, this.Orderform)
+          .commit_order(
+            { axios: this.$axios },
+            {
+              orderAgreementIds: '', // 下单协议id，多个id用逗号隔开
+              discount, //
+              operateSourcePlat: 'COMDIC_PLATFORM_CRISPS', // 来源 薯片
+              operateTerminal: 'COMDIC_TERMINAL_WAP',
+              cusOrderId: this.cusOrderId,
+            }
+          )
           .then((result) => {
             this.loading = false
             Toast({
@@ -633,16 +566,6 @@ export default {
         .then((res) => {
           this.card.nolist = res || []
         })
-    },
-    contractback() {
-      this.editShow = false
-    },
-    contractsum(val) {
-      this.contaract = val
-      this.editShow = false
-    },
-    gocontractedit() {
-      this.editShow = true
     },
 
     conponChange(price, num, item) {
