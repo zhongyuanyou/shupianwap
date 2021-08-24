@@ -211,12 +211,14 @@ export default {
       evaluateFileId: '',
       CONFIG: config,
       imgLength: 0, // 图片数量
-      anonymousFlag: true,
+      anonymousFlag: false, // 匿名标识
+      supportAnonymous: 0, // 是否支持匿名评价
+      /* start:  追评添加字段 */
       additional: 0, // 追评标识
-      supportAnonymous: 0,
       submitEvaluateId: '', // 追评id
-      createrId: '',
-      createrName: '',
+      createrId: '', // 追评需要字段,创建id
+      createrName: '', // 追评需要字段,创建名称
+      /* end:  追评添加字段 */
     }
   },
   computed: {
@@ -265,20 +267,21 @@ export default {
     },
   },
   mounted() {
-    this.infoId = this.$route.query.infoId
     if (this.$route.query.additional === '1') {
+      // 追评逻辑
       this.additional = 1
-      this.subScoreFlag = true
       this.submitEvaluateId = this.$route.query.addEvaluateId
       this.createrId = this.$route.query.createrId
       this.createrName = this.$route.query.createrName
+      this.subScoreFlag = true
+      this.getFileIdApi()
+    } else {
+      // 首评逻辑
+      this.infoId = this.$route.query.infoId
+      this.getEvaluateDetailApi()
     }
-    this.init()
   },
   methods: {
-    init() {
-      this.getEvaluateDetailApi()
-    },
     setTotalStars() {
       const _this = this
       this.totalStars.forEach((item, index) => {
@@ -397,7 +400,7 @@ export default {
     },
     submit() {
       if (this.additional === 1) {
-        // 先通过查询用户信息接口,拿到对应的用户信息
+        // 追评提交逻辑
         const params = {
           id: this.userId,
         }
@@ -406,12 +409,23 @@ export default {
             this.additionalEvaluateApi(res.data)
           }
         })
-        return
+      } else {
+        // 首评提交逻辑
+        const checkResult = this.checkSubmit()
+        if (checkResult) {
+          this.addEvaluateApi()
+        }
       }
-      // start: check data
-      const checkResult = this.checkSubmit()
-      if (checkResult) {
-        this.addEvaluateApi()
+    },
+    async getFileIdApi() {
+      try {
+        const { data, code } = await this.$axios.post(evaluateApi.reviewFileId)
+        if (code !== 200) {
+          throw new Error('查询追评fileid出错')
+        }
+        this.evaluateFileId = data.reviewReplyFileId
+      } catch (e) {
+        this.$xToast.error('查询追评fileid出错')
       }
     },
     async getEvaluateDetailApi() {
@@ -430,6 +444,7 @@ export default {
         this.evaluateDimensionList = data.evaluateDimensionList
         this.tips = data.evaluateTagList
         this.evaluateFileId = data.evaluateFileId || ''
+        // 赋值是否匿名
         this.supportAnonymous = data.choiceSupportAnonymous
           ? data.choiceSupportAnonymous
           : 0
@@ -453,6 +468,7 @@ export default {
           evaluateDimensionList: this.buildEvaluateDimensionList(),
           evaluateTagList: this.buildTips(),
           sourceSyscode: this.CONFIG.SYS_CODE,
+          choiceAnonymous: this.anonymousFlag ? 1 : 0, // 添加是否匿名
         }
         // 如果有图片,则添加图片参数
         if (this.uploadImgFlag) {
