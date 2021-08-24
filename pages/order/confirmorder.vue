@@ -258,6 +258,9 @@
       :height="75"
       title="优惠"
       help="使用说明"
+      :origin-price="
+        $route.query.type === 'shopcar' ? order.skuTotalPrice : order.salesPrice
+      "
       :tablist="couponInfo.tablist"
       :datalist="couponInfo.datalist"
       :nolist="couponInfo.nolist"

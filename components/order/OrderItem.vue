@@ -302,10 +302,10 @@ export default {
     },
     toSubmitOrder(order) {
       this.$router.push({
-        path: '/order/confirmorder',
+        path: '/order/confirmUnSubmitOrder',
         query: {
-          // 临时使用
-          productId: order.orderSkuEsList[0].orderSaleId,
+          id: order.id,
+          cusOrderId: order.cusOrderId,
         },
       })
     },

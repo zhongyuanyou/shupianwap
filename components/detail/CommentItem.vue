@@ -34,7 +34,12 @@
       </template>
       <div class="score-level">{{ info.averageScore | fliterLevel }}</div>
     </div>
-    <div v-if="info.evaluateDimensionList.length" class="score-detail">
+    <div
+      v-if="
+        info && info.evaluateDimensionList && info.evaluateDimensionList.length
+      "
+      class="score-detail"
+    >
       <div
         v-for="(item, i) in info.evaluateDimensionList"
         :key="i"
@@ -105,10 +110,15 @@
           全文
         </div>
         <div
-          v-if="info.custAddComment.imgs && info.custAddComment.imgs.length"
+          v-if="
+            info &&
+            info.custAddComment &&
+            info.custAddComment.imgs &&
+            info.custAddComment.imgs.length
+          "
           class="content-img"
         >
-          <template v-for="(item, i) in info.imgs">
+          <template v-for="(item, i) in info.custAddComment.imgs">
             <img :key="i" :src="item.filepath" class="content-img__item" />
           </template>
         </div>
