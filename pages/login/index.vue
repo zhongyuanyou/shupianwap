@@ -410,7 +410,7 @@ export default {
                   : {}
                 openLink(this.redirect, query)
               } else {
-                this.$router.back(-1)
+                window.history.go(-1)
               }
               return
             }
