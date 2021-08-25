@@ -74,7 +74,11 @@
                         仅限指定品类使用
                       </p>
                       <p v-if="item.marketingCouponVO.useType === 3">
-                        仅限指定商品使用
+                        {{
+                          item.marketingCouponVO.productName
+                            ? item.marketingCouponVO.productName + '-可用'
+                            : '仅限指定商品使用'
+                        }}
                       </p>
                     </div>
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
@@ -152,7 +156,11 @@
                         仅限指定品类使用
                       </p>
                       <p v-else-if="item.marketingCouponVO.useType === 3">
-                        仅限指定商品使用
+                        {{
+                          item.marketingCouponVO.productName
+                            ? item.marketingCouponVO.productName + '-可用'
+                            : '仅限指定商品使用'
+                        }}
                       </p>
                     </div>
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
@@ -262,6 +270,10 @@ export default {
         return []
       },
     },
+    originPrice: {
+      type: [Number, String],
+      default: 0,
+    },
   },
   data() {
     return {
@@ -278,19 +290,19 @@ export default {
     // 折算后售价
     price() {
       // 原价
-      const originPrice =
-        this.$route.query.type === 'shopcar'
-          ? this.$parent.order.skuTotalPrice
-          : this.$parent.order.salesPrice
+      // const originPrice =
+      //   this.$route.query.type === 'shopcar'
+      //     ? this.$parent.order.skuTotalPrice
+      //     : this.$parent.order.salesPrice
 
       let price = 0
       if (!this.checkarr.marketingCouponVO) {
-        return originPrice
+        return this.originPrice
       }
 
       if (this.checkarr.marketingCouponVO.discount) {
         price =
-          Number(originPrice) *
+          Number(this.originPrice) *
           10000 *
           (this.checkarr.marketingCouponVO.discount / 1000)
         if (price % 100 === 0) {
@@ -300,7 +312,7 @@ export default {
         }
       } else {
         price =
-          Number(originPrice) - this.checkarr.marketingCouponVO.reducePrice
+          Number(this.originPrice) - this.checkarr.marketingCouponVO.reducePrice
       }
       return price
     },
@@ -308,12 +320,13 @@ export default {
     // 折扣价
     disPrice() {
       // 原价
-      const originPrice =
-        this.$route.query.type === 'shopcar'
-          ? this.$parent.order.skuTotalPrice
-          : this.$parent.order.salesPrice
+      // const originPrice =
+      //   this.$route.query.type === 'shopcar'
+      //     ? this.$parent.order.skuTotalPrice
+      //     : this.$parent.order.salesPrice
       return (
-        Math.ceil(Number(originPrice) * 100 - Number(this.price) * 100) / 100
+        Math.ceil(Number(this.originPrice) * 100 - Number(this.price) * 100) /
+        100
       )
     },
   },

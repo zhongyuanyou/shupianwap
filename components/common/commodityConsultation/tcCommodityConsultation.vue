@@ -6,6 +6,13 @@
     <div class="commodityConsult-containner">
       <div class="commodityConsult-containner-userInfo">
         <a
+          v-md:p_plannerBoothClick
+          data-even_name="p_plannerBoothClick"
+          data-track_code="SPW000032"
+          :data-recommend_number="plannerDetail.dggPlannerRecomLog"
+          :data-planner_number="plannerDetail.userCenterNo"
+          :data-planner_name="plannerDetail.userName"
+          :data-crisps_fraction="plannerDetail.point"
           href="javascript:void(0);"
           @click="plannerInfoUrlJump(plannerDetail.mchUserId)"
         >

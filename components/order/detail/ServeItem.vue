@@ -20,7 +20,7 @@
     </div>
     <div class="img">
       <sp-image
-        :src="$resizeImg(130, 110, item.indexImg)"
+        :src="$resizeImg(130, 130, item.indexImg)"
         alt=""
         class="sp-image"
         srcset=""
@@ -74,11 +74,13 @@
       <div class="item-btn-area">
         <div class="inner">
           <!-- <sp-button @click="handleClickBtn(1)">查看底单</sp-button> -->
+          <!-- 不显示周期产品进度 -->
           <sp-button
             v-if="
               cusOrderStatusType !== 4 &&
               cusOrderStatusType !== 1 &&
-              item.skuType === 'PRO_CLASS_TYPE_SERVICE'
+              item.skuType === 'PRO_CLASS_TYPE_SERVICE' &&
+              !isCycleProductType(item)
             "
             @click="openProcess(item)"
             >办理进度</sp-button
@@ -222,6 +224,16 @@ export default {
       this.showProcess = false
     },
     // 判断是否是周期产品
+    isCycleProductType(item) {
+      const skuDetailInfo = JSON.parse(item.skuDetailInfo)
+      const productStyle =
+        skuDetailInfo.sku.refConfig && skuDetailInfo.sku.refConfig.productStyle
+      if (productStyle && productStyle === 'PRO_CYCLE_PRODUCT') {
+        return true
+      }
+      return false
+    },
+    // 判断是否是周期产品，并跳转到对应进度
     checkProductType(item) {
       const skuDetailInfo = JSON.parse(item.skuDetailInfo)
       const productStyle =

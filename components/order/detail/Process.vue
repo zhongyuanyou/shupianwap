@@ -235,6 +235,7 @@ export default {
                 item.endTime = parseInt(item.endTime)
                 info.time = this.formatTime(item.endTime)
                 info.date = this.formatDate(item.endTime)
+                info.endTime = item.endTime
               }
               completeNodes.push(info)
             } else if (item.taskStatusName === '办理中') {
@@ -248,6 +249,7 @@ export default {
           completeNodes.sort((a, b) => {
             return b.endTime - a.endTime
           })
+          console.log('completeNodes', completeNodes)
           this.list.push(...completeNodes)
           if (more.nodes.length > 0) {
             this.list.unshift(more)

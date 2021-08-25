@@ -21,7 +21,7 @@
     <div class="img">
       <sp-image
         class="sp-image"
-        :src="$resizeImg(130, 110, item.indexImg)"
+        :src="$resizeImg(130, 130, item.indexImg)"
       ></sp-image>
     </div>
     <div class="right">

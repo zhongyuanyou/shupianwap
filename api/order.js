@@ -8,7 +8,7 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/order_list.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v3/order_list.do',
     })
   },
   // 客户单列表
@@ -94,6 +94,23 @@ const category = {
       url: CHIPS_WAP_BASE_URL + '/yk/order/v2/add_order.do', // CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
     })
   },
+
+  /**
+   * 提交订单（从待提交订单列表提交订单）
+   * @link http://yapi.dgg.cn/project/111/interface/api/125889
+   * @param {*} param0
+   * @param {*} params
+   * @returns
+   */
+  commit_order({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v1/commit_order.do', // CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
+    })
+  },
+
   // 查询订单详情
   detailOrder({ axios }, params) {
     return request({
