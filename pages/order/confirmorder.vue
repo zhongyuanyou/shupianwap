@@ -499,7 +499,9 @@ export default {
       try {
         const data = await auth.protocol(params)
         const { rows = [] } = data || {}
-        this.Orderform.orderAgreementIds = rows[0].id || {}
+        if (rows.length > 0) {
+          this.Orderform.orderAgreementIds = rows[0].id
+        }
       } catch (error) {
         this.$xToast.error(error.message || '请求失败')
         return Promise.reject(error)
@@ -598,6 +600,9 @@ export default {
         }
         if (this.$route.query.plannerId) {
           this.Orderform.plannerId = this.$route.query.plannerId
+        }
+        if (!this.Orderform.orderAgreementIds) {
+          return this.$xToast.warning('协议获取失败!')
         }
         order
           .placeOrder({ axios: this.$axios }, this.Orderform)

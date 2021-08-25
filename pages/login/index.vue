@@ -202,7 +202,7 @@ export default {
       isValidSubmit: false,
       loading: false,
       passwordFieldType: 'password', // text：明文
-      sourcePlatform: this.$route.query.sourcePlatform || '', // 第三方 需要携带的参数   IM: token, userId
+      sourcePlatform: '', // 第三方 需要携带的参数   IM: token, userId
       loginType: this.$route.query.loginType || 'telephone', // account: 账户登录； telephone：手机快捷登录
       redirect: this.$route.query.redirect || '', // 登录后需要跳转的地址
     }
@@ -218,10 +218,14 @@ export default {
       this.$router.replace('/')
     }
   },
+  mounted() {
+    this.sourcePlatform = this.$route.query.sourcePlatform
+    this.$router.push('/login')
+  },
   methods: {
     ...mapMutations({
       setUser: 'user/SET_USER',
-      setImSdk: 'im/SET_IM_SDK',
+      //   setImSdk: 'im/SET_IM_SDK',
     }),
     onSubmit() {
       const error = this.checkFormData()
@@ -421,7 +425,7 @@ export default {
             } else {
               window.history.go(-1)
             }
-            this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
+            //  this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
           }, 1500)
         } else {
           // 清除用户缓存信息
