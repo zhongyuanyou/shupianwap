@@ -417,7 +417,7 @@ export default {
             if (this.redirect) {
               this.$router.replace(this.redirect)
             } else {
-              this.$router.back(-1)
+              window.history.go(-1)
             }
             this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
           }, 1500)
