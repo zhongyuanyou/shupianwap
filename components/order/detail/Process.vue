@@ -9,13 +9,13 @@
           <div class="goods_info_title">
             {{ goodsDetail.orderGoodsName }}
           </div>
-          <div class="goods_info_des" :style="desStyle">
+          <div v-show="!loading" class="goods_info_des" :style="desStyle">
             <span v-if="state == 2">已完成办理</span>
             <span v-else-if="state == 3">已超期，请联系规划师咨询</span>
             <span v-else-if="state == 1">预计{{ day }}天办理完成</span>
             <span v-else-if="state == 0">暂未开始办理</span>
           </div>
-          <div class="goods_info_process">
+          <div v-show="!loading" class="goods_info_process">
             <div class="goods_info_process_line">
               <sp-progress
                 color="#4974F5"
@@ -181,6 +181,8 @@ export default {
     },
   },
   mounted() {
+    this.$xToast.showLoading({ message: '正在加载...' })
+
     this.getDetail()
     // this.getProcessList()
   },
@@ -284,11 +286,13 @@ export default {
               parseInt((completeNodes.length / data.length) * 100) || 0
           }
           this.loading = false
+          this.$xToast.hideLoading()
           console.log(data)
         })
         .catch((err) => {
           this.loading = false
           console.error(err)
+          this.$xToast.hideLoading()
           this.$xToast.show(err.message)
         })
     },
@@ -321,7 +325,8 @@ export default {
         .catch((err) => {
           this.loading = false
           console.error(err)
-          this.$xToast.show(err.message)
+          this.$xToast.hideLoading()
+          this.$xToast.show(err.message || '网络错误')
           // this.$router.back(-1)
         })
     },

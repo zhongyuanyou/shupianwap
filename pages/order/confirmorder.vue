@@ -562,6 +562,10 @@ export default {
             no: this.couponInfo.selectedItem.marketingCouponVO.id,
             couponName:
               this.couponInfo.selectedItem.marketingCouponVO.couponName,
+            discountType:
+              this.couponInfo.selectedItem.marketingCouponVO.merId === -1
+                ? 'COUPON_DISCOUNT'
+                : 'BUSINESS_COUPON',
           }
           this.Orderform.discount = new Array(1).fill(arr)
         } else if (
@@ -578,6 +582,7 @@ export default {
           }
           this.Orderform.discount = new Array(1).fill(arr)
         }
+        this.Orderform.payType = 'ORDER_PAY_MODE_ONLINE'
         this.Orderform.cusOrderPayType = cusOrderPayType
         this.Orderform.isFromCart = isFromCart
         this.Orderform.orderProvinceNo = this.$store.state.city.defaultCity.pid
