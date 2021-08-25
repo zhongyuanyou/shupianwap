@@ -381,7 +381,9 @@ export default {
       try {
         const data = await auth.protocol(params)
         const { rows = [] } = data || {}
-        this.Orderform.orderAgreementIds.push(rows[0].id)
+        if (rows.length > 0) {
+          this.Orderform.orderAgreementIds.push(rows[0].id)
+        }
       } catch (error) {
         this.$xToast.error(error.message || '请求失败')
         return Promise.reject(error)
@@ -390,6 +392,10 @@ export default {
 
     // 提交订单
     placeOrder() {
+      if (this.Orderform.orderAgreementIds.length !== 3) {
+        return this.$xToast.warning('协议获取失败!')
+      }
+
       if (!this.radio) {
         Toast({
           message: '下单前，请先同意《薯片平台用户交易下单协议》',
