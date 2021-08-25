@@ -38,32 +38,32 @@ const orderStatusObj = {
   SALE_STATUS_UNSUBMITE: {
     type: 'PRO_CLASS_TYPE_SALES',
     code: 'ORDER_ORDER_SALE_STATUS_UNSUBMITE',
-    name: '未提交',
-    cripsName: '未提交',
+    name: '待提交',
+    cripsName: '待提交',
     status: 'ORDER_CUS_STATUS_UNSUBMITE',
   },
   // 交易商品 待提交
   TRADE_STATUS_UNSUBMITE: {
     type: 'PRO_CLASS_TYPE_TRANSACTION',
     code: 'ORDER_ORDER_TRADE_STATUS_UNSUBMITE',
-    name: '未提交',
-    cripsName: '未提交',
+    name: '待提交',
+    cripsName: '待提交',
     status: 'ORDER_CUS_STATUS_UNSUBMITE',
   },
   //  资源商品 待提交：
   RESOURCE_STATUS_UNSUBMITE: {
     type: 'PRO_CLASS_TYPE_SERVICE_RESOURCE',
     code: 'ORDER_ORDER_RESOURCE_STATUS_UNSUBMITE',
-    name: '未提交',
-    cripsName: '未提交',
+    name: '待提交',
+    cripsName: '待提交',
     status: 'ORDER_CUS_STATUS_UNSUBMITE',
   },
   // 服务商品  待提交：
   SERVER_STATUS_UNSUBMITE: {
     type: 'PRO_CLASS_TYPE_SERVICE',
     code: 'ORDER_ORDER_SERVER_STATUS_UNSUBMITE',
-    name: '未提交',
-    cripsName: '未提交',
+    name: '待提交',
+    cripsName: '待提交',
     status: 'ORDER_CUS_STATUS_UNSUBMITE',
   },
 

@@ -73,6 +73,7 @@
             value-class="black"
           />
           <Cell
+            v-if="order.orderType !== 0"
             title="优惠券"
             :value="
               couponInfo.couponPrice
@@ -121,9 +122,9 @@
             <p class="tit">
               我已阅读过并知晓<span @click="goagr('protocol100008')"
                 >《薯片平台用户交易下单协议》</span
-              ><span @click="goagr('protocol100033')"
+              >、<span @click="goagr('protocol100033')"
                 >《薯片平台交易委托协议》</span
-              ><span @click="goagr('protocol100008')"
+              >、<span @click="goagr('protocol100008')"
                 >《薯片平台订单协议》</span
               >
             </p>
@@ -247,7 +248,7 @@ export default {
     return {
       radio: '', // 选中协议
       checkboxProtocol: [], // 选中协议
-      order: '',
+      order: {},
       // num: 0,
 
       couponInfo: {
@@ -277,7 +278,7 @@ export default {
 
       price: '',
       Orderform: {
-        orderAgreementIds: '',
+        orderAgreementIds: [],
 
         discount: [],
 
@@ -289,10 +290,17 @@ export default {
       productList: [],
     }
   },
+  computed: {
+    // orderType() {
+    //   return this.order.orderType !== 0
+    // },
+  },
   mounted() {
     this.asyncData()
 
     // this.getInitData()
+    this.getProtocol('protocol100008')
+    this.getProtocol('protocol100033')
     this.getProtocol('protocol100008')
   },
   methods: {
@@ -347,8 +355,12 @@ export default {
 
             this.order.num = this.order.list.length
             this.price = this.order.orderTotalMoney
-            this.getInitData(5) // 获取优惠券
-            this.getInitData(6)
+
+            // 意向单不使用优惠券
+            if (this.order.orderType !== 0) {
+              this.getInitData(5) // 获取优惠券
+              this.getInitData(6)
+            }
           } else {
             this.$xToast.show('服务器异常,请然后再试')
             // setTimeout(function () {
@@ -369,7 +381,7 @@ export default {
       try {
         const data = await auth.protocol(params)
         const { rows = [] } = data || {}
-        this.Orderform.orderAgreementIds = rows[0].id || {}
+        this.Orderform.orderAgreementIds.push(rows[0].id)
       } catch (error) {
         this.$xToast.error(error.message || '请求失败')
         return Promise.reject(error)
@@ -398,6 +410,10 @@ export default {
             no: this.couponInfo.selectedItem.marketingCouponVO.id,
             couponName:
               this.couponInfo.selectedItem.marketingCouponVO.couponName,
+            discountType:
+              this.couponInfo.selectedItem.marketingCouponVO.merId === -1
+                ? 'COUPON_DISCOUNT'
+                : 'BUSINESS_COUPON',
           }
           this.Orderform.discount = new Array(1).fill(arr)
         } else if (
@@ -429,11 +445,12 @@ export default {
           .commit_order(
             { axios: this.$axios },
             {
-              orderAgreementIds: this.Orderform.orderAgreementIds, // 下单协议id，多个id用逗号隔开
+              orderAgreementIds: this.Orderform.orderAgreementIds.join(','), // 下单协议id，多个id用逗号隔开
               discount: this.Orderform.discount, //
               operateSourcePlat: 'COMDIC_PLATFORM_CRISPS', // 来源 薯片
               operateTerminal: 'COMDIC_TERMINAL_WAP',
               cusOrderId: this.$route.query.cusOrderId,
+              payType: 'ORDER_PAY_MODE_ONLINE', // 支付类型：线上支付：ORDER_PAY_MODE_ONLINE  线下支付：ORDER_PAY_MODE_OFFLINE
             }
           )
           .then((result) => {
@@ -446,14 +463,25 @@ export default {
               overlay: true,
             })
             setTimeout(() => {
-              this.$router.push({
-                path: '/pay/payType',
-                query: {
-                  fromPage: 'orderList',
-                  // cusOrderId: result.cusOrderId,
-                  cusOrderId: this.$route.query.cusOrderId,
-                },
-              })
+              if (
+                this.order.orderType !== 0 &&
+                this.order.payType !== 'ORDER_PAY_MODE_SECURED'
+              ) {
+                this.$router.push({
+                  path: '/pay/payType',
+                  query: {
+                    fromPage: 'orderList',
+                    // cusOrderId: result.cusOrderId,
+                    cusOrderId: this.$route.query.cusOrderId,
+                  },
+                })
+              } else {
+                // 意向单和担保交易 回到订单列表
+                this.$router.push({
+                  path: '/order',
+                  query: {},
+                })
+              }
             }, 2000)
           })
           .catch((e) => {

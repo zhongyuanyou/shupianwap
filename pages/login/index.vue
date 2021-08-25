@@ -213,13 +213,15 @@ export default {
   //     imExample: (state) => state.im.imExample, // IM 实例
   //   }),
   // },
-  mounted() {
-    this.$store.dispatch('user/clearUser')
+  beforeCreate() {
+    if (this.$store.state.user.token) {
+      this.$router.replace('/')
+    }
   },
   methods: {
     ...mapMutations({
       setUser: 'user/SET_USER',
-      setImSdk: 'im/SET_IM_SDK',
+      //   setImSdk: 'im/SET_IM_SDK',
     }),
     onSubmit() {
       const error = this.checkFormData()
@@ -417,9 +419,9 @@ export default {
             if (this.redirect) {
               this.$router.replace(this.redirect)
             } else {
-              this.$router.back(-1)
+              window.history.go(-1)
             }
-            this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
+            //  this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
           }, 1500)
         } else {
           // 清除用户缓存信息

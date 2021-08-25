@@ -9,13 +9,13 @@
           <div class="goods_info_title">
             {{ goodsDetail.orderGoodsName }}
           </div>
-          <div class="goods_info_des" :style="desStyle">
+          <div v-show="!loading" class="goods_info_des" :style="desStyle">
             <span v-if="state == 2">已完成办理</span>
             <span v-else-if="state == 3">已超期，请联系规划师咨询</span>
             <span v-else-if="state == 1">预计{{ day }}天办理完成</span>
             <span v-else-if="state == 0">暂未开始办理</span>
           </div>
-          <div class="goods_info_process">
+          <div v-show="!loading" class="goods_info_process">
             <div class="goods_info_process_line">
               <sp-progress
                 color="#4974F5"
@@ -40,7 +40,7 @@
       <div v-if="state == 0" class="">
         <sp-empty
           class="empty-text"
-          :description="'暂无数据'"
+          :description="list.length > 0 ? '暂未开始办理' : '暂无数据'"
           :image="imgAddress"
         />
       </div>
@@ -96,6 +96,9 @@ export default {
       // state: 0, // 0，未开始办理， 1 办理中 ，显示预计多少天，2已完成，3已超期
       day: 0, // 预计多少天完成
       completePercentage: 0, // 完成进度，0-100
+
+      isStart: false, // 任务是否开始，判断未开始数量是否等于所有任务
+
       list: [
         // {
         //   status: 'more', // more,current,complete
@@ -127,14 +130,21 @@ export default {
       let status = 0
       let ex = 0
       if (this.loading) {
+        // 加载中
         return status
       }
+      if (!this.isStart) {
+        // 未开始
+        return 0
+      }
       if (this.goodsDetail.openTime) {
+        // 有开始时间
         status = 1
 
         if (this.goodsDetail.deadlineTime) {
           ex = new Date(this.goodsDetail.deadlineTime) - new Date()
           if (ex < 0) {
+            // 是否超出预期时间
             status = 3
           }
         }
@@ -171,6 +181,8 @@ export default {
     },
   },
   mounted() {
+    this.$xToast.showLoading({ message: '正在加载...' })
+
     this.getDetail()
     // this.getProcessList()
   },
@@ -219,7 +231,6 @@ export default {
             nodes: [], // 更多节点
           }
           const completeNodes = [] // 已完成节点，需要排序
-          let completeNum = 0 // 完成节点数量
 
           data.map((item) => {
             item.taskStatusName = this.production_task_status[item.taskStatus]
@@ -228,8 +239,10 @@ export default {
               title: item.taskName + `（${item.taskStatusName}）`,
               // nodes: ['立案（未开始）', '立案（未开始）', '立案（未开始）'], // 更多节点
             }
-            if (item.taskStatusName === '已完成') {
-              completeNum++
+            if (
+              item.taskStatusName === '已完成' ||
+              item.taskStatusName === '已取消'
+            ) {
               info.status = 'complete'
               if (item.endTime) {
                 item.endTime = parseInt(item.endTime)
@@ -254,6 +267,12 @@ export default {
           if (more.nodes.length > 0) {
             this.list.unshift(more)
           }
+
+          if (more.nodes.length === data.length) {
+            this.isStart = false
+          } else {
+            this.isStart = true
+          }
           if (completeNodes.length === data.length) {
             this.list.unshift({
               status: 'current',
@@ -263,16 +282,17 @@ export default {
 
           if (data.length > 0) {
             // 完成进度
-            this.completePercentage = parseInt(
-              (completeNum / data.length) * 100
-            )
+            this.completePercentage =
+              parseInt((completeNodes.length / data.length) * 100) || 0
           }
           this.loading = false
+          this.$xToast.hideLoading()
           console.log(data)
         })
         .catch((err) => {
           this.loading = false
           console.error(err)
+          this.$xToast.hideLoading()
           this.$xToast.show(err.message)
         })
     },
@@ -305,7 +325,8 @@ export default {
         .catch((err) => {
           this.loading = false
           console.error(err)
-          this.$xToast.show(err.message)
+          this.$xToast.hideLoading()
+          this.$xToast.show(err.message || '网络错误')
           // this.$router.back(-1)
         })
     },
@@ -363,6 +384,7 @@ export default {
         .goods_info_title {
           height: 50px;
           font-family: PingFangSC-Medium;
+          font-weight: bold;
           font-size: 36px;
           color: #222222;
           margin-bottom: 8px;
@@ -438,6 +460,13 @@ export default {
       background-size: 100%;
       background-repeat: no-repeat;
     }
+  }
+
+  .empty-text ::v-deep .sp-empty__description {
+    font-family: PingFangSC-Medium;
+    font-size: 32px;
+    color: #222222;
+    font-weight: bold;
   }
 }
 </style>
