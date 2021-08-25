@@ -213,8 +213,10 @@ export default {
   //     imExample: (state) => state.im.imExample, // IM 实例
   //   }),
   // },
-  mounted() {
-    this.$store.dispatch('user/clearUser')
+  beforeCreate() {
+    if (this.$store.state.user.token) {
+      this.$router.replace('/')
+    }
   },
   methods: {
     ...mapMutations({
