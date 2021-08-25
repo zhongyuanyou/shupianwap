@@ -10,7 +10,7 @@
             v-if="
               orderData.orderStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED'
             "
-            class="order-status status2"
+            class="order-status status3"
             >{{ orderData.statusName }}</span
           >
           <span
@@ -280,7 +280,10 @@ export default {
         status === 'ORDER_CUS_STATUS_COMPLETED'
       ) {
         return 'status1' // 已取消,已完成
-      } else if (status === 'ORDER_CUS_STATUS_UNPAID') {
+      } else if (
+        status === 'ORDER_CUS_STATUS_UNPAID' ||
+        status === 'ORDER_CUS_STATUS_UNSUBMITE'
+      ) {
         return 'status2' //   未付款
       } else {
         return 'status3'
