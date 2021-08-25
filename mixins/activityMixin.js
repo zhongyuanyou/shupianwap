@@ -386,6 +386,7 @@ export default {
     getAdvertisingData() {
       if (!this.advertCode) {
         console.log('未配置广告位');
+        this.imageHead = this.imageHead || this.imageHeadDefault
         return
       }
       this.$axios
@@ -399,8 +400,11 @@ export default {
             if (res.data.sortMaterialList.length && res.data.sortMaterialList[0].materialList.length) {
               this.imageHead =
                 res.data.sortMaterialList[0].materialList[0].materialUrl
+            } else {
+              this.imageHead = this.imageHead || this.imageHeadDefault
             }
           } else {
+            this.imageHead = this.imageHead || this.imageHeadDefault
             Toast.fail({
               duration: 2000,
               message: '服务异常，请刷新重试！',
@@ -411,6 +415,7 @@ export default {
         })
         .catch((err) => {
           console.log(err.message)
+          this.imageHead = this.imageHead || this.imageHeadDefault
         })
     },
 
