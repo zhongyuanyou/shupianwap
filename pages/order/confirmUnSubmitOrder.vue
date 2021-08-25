@@ -73,6 +73,7 @@
             value-class="black"
           />
           <Cell
+            v-if="order.orderType !== 0"
             title="优惠券"
             :value="
               couponInfo.couponPrice
@@ -247,7 +248,7 @@ export default {
     return {
       radio: '', // 选中协议
       checkboxProtocol: [], // 选中协议
-      order: '',
+      order: {},
       // num: 0,
 
       couponInfo: {
@@ -288,6 +289,11 @@ export default {
       editShow: false,
       productList: [],
     }
+  },
+  computed: {
+    // orderType() {
+    //   return this.order.orderType !== 0
+    // },
   },
   mounted() {
     this.asyncData()
@@ -347,8 +353,12 @@ export default {
 
             this.order.num = this.order.list.length
             this.price = this.order.orderTotalMoney
-            this.getInitData(5) // 获取优惠券
-            this.getInitData(6)
+
+            // 意向单不使用优惠券
+            if (this.order.orderType !== 0) {
+              this.getInitData(5) // 获取优惠券
+              this.getInitData(6)
+            }
           } else {
             this.$xToast.show('服务器异常,请然后再试')
             // setTimeout(function () {
@@ -446,14 +456,25 @@ export default {
               overlay: true,
             })
             setTimeout(() => {
-              this.$router.push({
-                path: '/pay/payType',
-                query: {
-                  fromPage: 'orderList',
-                  // cusOrderId: result.cusOrderId,
-                  cusOrderId: this.$route.query.cusOrderId,
-                },
-              })
+              if (
+                this.order.orderType !== 0 &&
+                this.order.payType !== 'ORDER_PAY_MODE_SECURED'
+              ) {
+                this.$router.push({
+                  path: '/pay/payType',
+                  query: {
+                    fromPage: 'orderList',
+                    // cusOrderId: result.cusOrderId,
+                    cusOrderId: this.$route.query.cusOrderId,
+                  },
+                })
+              } else {
+                // 意向单和担保交易 回到订单列表
+                this.$router.push({
+                  path: '/order',
+                  query: {},
+                })
+              }
             }, 2000)
           })
           .catch((e) => {
