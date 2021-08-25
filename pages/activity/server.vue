@@ -151,7 +151,8 @@ export default {
       specType: 'HDZT_ZTTYPE_XFWHSF',
 
       hasCity: true,
-      imageHead: this.$ossImgSetV2('eyufuwzo88o0000.png'), // 'https://cdn.shupian.cn/sp-pt/wap/images/eik2dfytts00000.png'
+      imageHead: '',
+      imageHeadDefault: this.$ossImgSetV2('eyufuwzo88o0000.png'), // 'https://cdn.shupian.cn/sp-pt/wap/images/eik2dfytts00000.png'
       headerHeight: 0,
       ClassState: 1,
       headBkOpacity: 0,

@@ -123,7 +123,8 @@ export default {
       specType: 'HDZT_ZTTYPE_XTSF',
 
       hasCity: true,
-      imageHead: this.$ossImgSetV2('c3uw9dpx8vk0000.jpg'), // 'https://cdn.shupian.cn/sp-pt/wap/images/c3uw9dpx8vk0000.jpg'
+      imageHead: '',
+      imageHeadDefault: this.$ossImgSetV2('c3uw9dpx8vk0000.jpg'), // 'https://cdn.shupian.cn/sp-pt/wap/images/c3uw9dpx8vk0000.jpg'
       headerHeight: 0,
       headBkOpacity: 0,
       ClassState: 1,
