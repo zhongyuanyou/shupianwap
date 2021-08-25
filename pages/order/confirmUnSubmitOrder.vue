@@ -108,6 +108,7 @@
             @click="openCardFn()"
           /> -->
         </CellGroup>
+
         <p class="money">
           合计：
           <span>
@@ -115,7 +116,9 @@
           </span>
         </p>
       </div>
-
+      <div class="news-content">
+        <Cell title="支付方式" value="在线支付" is-link value-class="black" />
+      </div>
       <div class="agreement">
         <Checkbox v-model="radio">
           <template>
@@ -131,41 +134,6 @@
           </template>
         </Checkbox>
       </div>
-
-      <!-- <div class="agreement">
-        <Checkbox v-model="radio">
-          <template>
-            <p class="tit">
-              我已阅读过并知晓<span @click="goagr('protocol100008')"
-                >《薯片平台用户交易下单协议》</span
-              >
-            </p>
-          </template>
-        </Checkbox>
-      </div>
-
-      <div class="agreement">
-        <Checkbox v-model="radio">
-          <template>
-            <p class="tit">
-              我已阅读过并知晓<span @click="goagr('protocol100033')"
-                >《薯片平台交易委托协议》</span
-              >
-            </p>
-          </template>
-        </Checkbox>
-      </div>
-      <div class="agreement">
-        <Checkbox v-model="radio">
-          <template>
-            <p class="tit">
-              我已阅读过并知晓<span @click="goagr('protocol100008')"
-                >《薯片平台订单协议》</span
-              >
-            </p>
-          </template>
-        </Checkbox>
-      </div> -->
     </div>
     <div ref="foot" class="foot">
       <p class="left">
