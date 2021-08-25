@@ -557,10 +557,11 @@ export default {
         ) {
           const arr = {
             code: 'ORDER_DISCOUNT_DISCOUNT',
-            value: this.$refs.conpon.checkarr.marketingCouponVO.id,
-            couponUseCode: this.$refs.conpon.checkarr.couponUseCode,
-            no: this.$refs.conpon.checkarr.marketingCouponVO.id,
-            couponName: this.$refs.conpon.checkarr.marketingCouponVO.couponName,
+            value: this.couponInfo.selectedItem.marketingCouponVO.id,
+            couponUseCode: this.couponInfo.selectedItem.couponUseCode,
+            no: this.couponInfo.selectedItem.marketingCouponVO.id,
+            couponName:
+              this.couponInfo.selectedItem.marketingCouponVO.couponName,
           }
           this.Orderform.discount = new Array(1).fill(arr)
         } else if (

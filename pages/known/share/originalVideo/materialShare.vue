@@ -173,7 +173,7 @@ export default {
           this.vDetail = res.data
           this.vurl = this.vDetail.videoUrl
           this.goods = res.data.goodsList
-          this.playerOptions.post = res.data.image
+          this.playerOptions.poster = res.data.image
           this.buildDetail()
         })
         .catch((e) => {

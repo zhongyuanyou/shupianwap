@@ -346,7 +346,7 @@ export default {
             })
 
             this.order.num = this.order.list.length
-            this.price = this.order.salesPrice
+            this.price = this.order.orderTotalMoney
             this.getInitData(5) // 获取优惠券
             this.getInitData(6)
           } else {
@@ -393,10 +393,11 @@ export default {
         ) {
           const arr = {
             code: 'ORDER_DISCOUNT_DISCOUNT',
-            value: this.$refs.conpon.checkarr.marketingCouponVO.id,
-            couponUseCode: this.$refs.conpon.checkarr.couponUseCode,
-            no: this.$refs.conpon.checkarr.marketingCouponVO.id,
-            couponName: this.$refs.conpon.checkarr.marketingCouponVO.couponName,
+            value: this.couponInfo.selectedItem.marketingCouponVO.id,
+            couponUseCode: this.couponInfo.selectedItem.couponUseCode,
+            no: this.couponInfo.selectedItem.marketingCouponVO.id,
+            couponName:
+              this.couponInfo.selectedItem.marketingCouponVO.couponName,
           }
           this.Orderform.discount = new Array(1).fill(arr)
         } else if (
@@ -414,28 +415,29 @@ export default {
           this.Orderform.discount = new Array(1).fill(arr)
         }
 
-        const discount = [
-          {
-            code: '', // ORDER_DISCOUNT_DISCOUNT:优惠券,ORDER_DISCOUNT_DISCOUT:折扣券，ORDER_DISCOUNT_ACTIVITY:活动优惠，ORDER_DISCOUNT_INTEGRAL:积分抵扣，ORDER_DISCOUNT_ENVELOPES:红包优惠,ORDER_DISCOUNT_BALANCE:余额优惠，ORDER_DISCOUNT_BUSINESS_AFFAIRS:商务优惠
-            value: '', // 优惠券的id逗号分隔
-            couponUseCode: '', // 优惠券编码
-            discountType: '', // COUPON_DISCOUNT  平台优惠券,BUSINESS_COUPON 商户优惠券
-            no: '', // 优惠劵id
-            quota: '', //  优惠额度
-          },
-        ]
+        // const discount = [
+        //   {
+        //     code: '', // ORDER_DISCOUNT_DISCOUNT:优惠券,ORDER_DISCOUNT_DISCOUT:折扣券，ORDER_DISCOUNT_ACTIVITY:活动优惠，ORDER_DISCOUNT_INTEGRAL:积分抵扣，ORDER_DISCOUNT_ENVELOPES:红包优惠,ORDER_DISCOUNT_BALANCE:余额优惠，ORDER_DISCOUNT_BUSINESS_AFFAIRS:商务优惠
+        //     value: '', // 优惠券的id逗号分隔
+        //     couponUseCode: '', // 优惠券编码
+        //     discountType: '', // COUPON_DISCOUNT  平台优惠券,BUSINESS_COUPON 商户优惠券
+        //     no: '', // 优惠劵id
+        //     quota: '', //  优惠额度
+        //   },
+        // ]
         order
           .commit_order(
             { axios: this.$axios },
             {
-              orderAgreementIds: '', // 下单协议id，多个id用逗号隔开
-              discount, //
+              orderAgreementIds: this.Orderform.orderAgreementIds, // 下单协议id，多个id用逗号隔开
+              discount: this.Orderform.discount, //
               operateSourcePlat: 'COMDIC_PLATFORM_CRISPS', // 来源 薯片
               operateTerminal: 'COMDIC_TERMINAL_WAP',
-              cusOrderId: this.cusOrderId,
+              cusOrderId: this.$route.query.cusOrderId,
             }
           )
           .then((result) => {
+            console.log('result', result)
             this.loading = false
             Toast({
               message: '下单成功',
@@ -448,7 +450,8 @@ export default {
                 path: '/pay/payType',
                 query: {
                   fromPage: 'orderList',
-                  cusOrderId: result.cusOrderId,
+                  // cusOrderId: result.cusOrderId,
+                  cusOrderId: this.$route.query.cusOrderId,
                 },
               })
             }, 2000)
