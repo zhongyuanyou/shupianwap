@@ -10,60 +10,6 @@
       <div v-for="(item, index) in list" :key="index" class="list">
         <div class="head">
           <h1>{{ item.contractName }}</h1>
-          <!--  <p
-            v-if="item.contractStatus == 'STRUTS_YWC'"
-            :style="{
-              color:
-                item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
-            }"
-          >
-            已完成
-          </p>
-          <p
-            v-if="item.contractStatus == 'STRUTS_CG'"
-            :style="{
-              color:
-                item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
-            }"
-          >
-            待签署
-          </p>
-          <p
-            v-if="item.contractStatus == 'STRUTS_STRUTS_QSZ'"
-            :style="{
-              color:
-                item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
-            }"
-          >
-            签署中
-          </p>
-          <p
-            v-if="item.contractStatus == 'STRUTS_YJQ'"
-            :style="{
-              color:
-                item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
-            }"
-          >
-            已拒签
-          </p>
-          <p
-            v-if="item.contractStatus == 'STRUTS_YYQ'"
-            :style="{
-              color:
-                item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
-            }"
-          >
-            已逾期
-          </p>
-          <p
-            v-if="item.contractStatus == 'STRUTS_YZF'"
-            :style="{
-              color:
-                item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
-            }"
-          >
-            已作废
-          </p> -->
         </div>
         <div class="data">
           <div class="tit">

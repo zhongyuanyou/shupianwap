@@ -31,7 +31,7 @@ const contract = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_PC_URL + '/yk/contract/v1/list.do',
+      url: CHIPS_PC_URL + '/yk/contract/v3/list.do',
     })
   },
   decryptionPhone({ axios }, params) {
