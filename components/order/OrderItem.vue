@@ -10,7 +10,7 @@
             v-if="
               orderData.orderStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED'
             "
-            class="order-status status3"
+            class="order-status status2"
             >{{ orderData.statusName }}</span
           >
           <span
