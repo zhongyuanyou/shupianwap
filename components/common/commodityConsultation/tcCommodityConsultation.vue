@@ -94,6 +94,12 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      isPlannerShare: false,
+      sharePlaner: {},
+    }
+  },
   computed: {
     // 产品详情
     proDetail() {
@@ -103,7 +109,7 @@ export default {
       return this.$store.state.city.currentCity
     },
     plannerDetail() {
-      if (this.sharePlaner) {
+      if (this.isPlannerShare) {
         return this.sharePlaner
       } else {
         return this.plannerInfo
@@ -111,8 +117,9 @@ export default {
     },
   },
   mounted() {
-    if (this.$route.query.isShare && this.$route.plannerId) {
-      this.getPlanerInfo(this.$route.plannerId)
+    if (this.$route.query.plannerId) {
+      this.getPlanerInfo(this.$route.query.plannerId)
+      this.isPlannerShare = true
     }
   },
   methods: {

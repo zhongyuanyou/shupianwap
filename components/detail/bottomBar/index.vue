@@ -1,7 +1,9 @@
 <template>
   <div
     class="commodityConsult"
-    :style="{ opacity: plannerInfo.mchUserId ? 1 : 0 }"
+    :style="{
+      opacity: plannerDetail.mchUserId || plannerDetail.id ? 1 : 0,
+    }"
   >
     <div class="commodityConsult-containner">
       <div class="commodityConsult-containner-userInfo">
@@ -9,7 +11,7 @@
           v-md:p_plannerBoothClick
           data-even_name="p_plannerBoothClick"
           data-track_code="SPW000032"
-          :data-recommend_number="plannerDetail.dggPlannerRecomLog"
+          :data-recommend_number="plannerDetail.dggPlannerRecomLog || ''"
           :data-planner_number="plannerDetail.userCenterNo"
           :data-planner_name="plannerDetail.userName"
           :data-crisps_fraction="plannerDetail.point"
@@ -105,7 +107,8 @@ export default {
       type: 1,
       article: {}, // 下单协议信息
       carSub: null,
-      sharePlaner: null,
+      sharePlaner: {},
+      isPlannerShare: false,
     }
   },
   computed: {
@@ -144,7 +147,7 @@ export default {
       },
     }),
     plannerDetail() {
-      if (this.sharePlaner) {
+      if (this.isPlannerShare) {
         return this.sharePlaner
       } else {
         return this.plannerInfo
@@ -152,8 +155,9 @@ export default {
     },
   },
   mounted() {
-    if (this.$route.query.isShare && this.$route.query.plannerId) {
+    if (this.$route.query.plannerId) {
       this.getPlanerInfo(this.$route.query.plannerId)
+      this.isPlannerShare = true
     }
     // this.getPlanerInfo('607997736314102930')
   },
