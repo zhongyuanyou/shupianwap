@@ -73,9 +73,11 @@ export const parseTel = (tel) => {
 // 打开第三方链接
 export const openLink = (link, data) => {
   const dataStr = Qs.stringify(data)
-  window &&
-    (window.location.href =
-      link.indexOf('?') > -1 ? `${link}&${dataStr}` : `${link}?${dataStr}`)
+  const linkurl =
+    link.indexOf('?') > -1 ? `${link}&${dataStr}` : `${link}?${dataStr}`
+  window && window.history.replaceState(null, '', linkurl)
+  // window &&
+  //   (window.location.href = linkurl)
 }
 
 export const setUrlParams = (url, data = {}) => {
@@ -168,7 +170,7 @@ export const numChangeW = (num, suffix = 'w') => {
  * 将秒转化为 '00 : 21 : 44' 这种形式返回
  */
 export const secondToTime = (second) => {
-  console.log(second);
+  console.log(second)
   const num = Number(second)
   const hour =
     Math.floor(num / 3600) < 10

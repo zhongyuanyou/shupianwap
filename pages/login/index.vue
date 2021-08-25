@@ -221,7 +221,7 @@ export default {
   methods: {
     ...mapMutations({
       setUser: 'user/SET_USER',
-      setImSdk: 'im/SET_IM_SDK',
+      //   setImSdk: 'im/SET_IM_SDK',
     }),
     onSubmit() {
       const error = this.checkFormData()
@@ -421,7 +421,7 @@ export default {
             } else {
               window.history.go(-1)
             }
-            this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
+            //  this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
           }, 1500)
         } else {
           // 清除用户缓存信息
