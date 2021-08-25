@@ -63,8 +63,6 @@
           <span class="time">5</span>
           <span class="time">8</span>
           <span class="time">9</span>
-          <!-- <span>.</span>
-          <span class="time">0</span> -->
           <span>万</span>
         </div>
         <div class="des">- 按照商品销量 · 好评率 · 服务等综合设计 -</div>
@@ -163,7 +161,8 @@ export default {
       specType: 'HDZT_ZTTYPE_QWBT',
 
       hasCity: true,
-      imageHead: this.$ossImgSetV2('aay0oucfo840000.png'), // 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg',
+      imageHead: '',
+      imageHeadDefault: this.$ossImgSetV2('aay0oucfo840000.png'), // 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg',
       headerHeight: 0,
       ClassState: 1,
       advertCode: 'ad100075',
