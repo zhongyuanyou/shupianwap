@@ -91,20 +91,16 @@ export default {
   },
   created() {
     this.contract = this.$route.query
-    const _this = this
-    // 直接加载会导致有时pdf还没有生成出来,这样无法显示导致报错,所以这里延时1s
-    setTimeout(() => {
-      if (
-        _this.contract.fromPage === 'orderList' ||
-        _this.contract.fromPage === 'orderDetail'
-      ) {
-        _this.skeletonLoading = true
-        _this.getorder()
-      } else {
-        _this.src = _this.contract.contractUrl
-        _this.pdfTask(_this.src)
-      }
-    }, 1000)
+    this.skeletonLoading = true
+
+    if (
+      this.contract.fromPage === 'orderList' ||
+      this.contract.fromPage === 'orderDetail'
+    ) {
+      this.getorder()
+    } else {
+      this.getContractApi()
+    }
   },
   mounted() {},
   methods: {
@@ -249,7 +245,31 @@ export default {
         }
       }, 1000)
     },
-    dialogShow() {},
+    getContractApi() {
+      contractApi
+        .getContractDetail(
+          { axios: this.axios },
+          {
+            contractId: this.contract.contractId,
+            contractNo: this.contract.contractNo,
+          }
+        )
+        .then((res) => {
+          if (!res.filePath) {
+            throw new Error('查阅合同为空')
+          }
+          this.src = res.filePath
+          this.pdfTask()
+        })
+        .catch((e) => {
+          this.$xToast.error(e.message, 2000, false, () => {
+            this.$back()
+          })
+        })
+        .finally(() => {
+          this.skeletonLoading = false
+        })
+    },
   },
 }
 </script>
@@ -264,8 +284,6 @@ export default {
     padding: 40px 40px 0 40px;
     > .box {
       width: 100%;
-      height: calc(100% - 160px);
-      overflow-y: auto;
       p {
         height: 100%;
         background: #e5e5e5;

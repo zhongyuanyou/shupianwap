@@ -50,5 +50,13 @@ const contract = {
       url: CHIPS_PC_URL + '/nk/entry/v1/encryption.do',
     })
   },
+  getContractDetail({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'get',
+      url: CHIPS_PC_URL + '/yk/contract/v1/detail.do',
+    })
+  },
 }
 export default contract

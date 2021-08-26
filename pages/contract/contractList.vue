@@ -20,10 +20,11 @@
       </p>
     </div>
     <div class="list">
+      <div class="spaceholder"></div>
       <sp-list
+        v-show="!contractEmptyFlag"
         v-model="loading"
         :finished="finished"
-        :immediate-check="false"
         class="list"
         finished-text="我是有底线的..."
         :error.sync="error"
@@ -34,6 +35,10 @@
           <Item :key="i" :info="info" />
         </template>
       </sp-list>
+      <div v-show="contractEmptyFlag" class="none">
+        <img src="https://img10.dgg.cn/pt03/wap/cmxakdtkqxs0000.png" alt="" />
+        <p>暂无合同</p>
+      </div>
     </div>
   </div>
 </template>
@@ -60,60 +65,37 @@ export default {
       error: false,
       loading: false,
       finished: false,
+      contractEmptyFlag: false,
     }
   },
-  mounted() {
-    this.onLoad()
-  },
   methods: {
-    jump(val) {
-      if (val.contractStatus === 'STRUTS_YWC') {
-        this.$router.push({
-          path: '/contract/preview',
-          query: {
-            contractUrl: val.contractUrl,
-            type: 'yl',
-            fromPage: 'contractList',
-          },
-        })
-      } else {
-        this.$router.push({
-          path: '/contract/preview',
-          query: {
-            contractUrl: val.contractUrl,
-            contractId: val.contractId,
-            contractNo: val.contractNo,
-            signerName: val.contractFirstName,
-            contactWay: val.contractFirstPhone,
-            type: 'qs',
-            fromPage: 'contractList',
-          },
-        })
-      }
-    },
     onLoad() {
       contractApi
         .contartlist(
           { axios: this.axios },
           {
-            cusUserId: this.$store.state.user.userId,
+            // cusUserId: this.$store.state.user.userId,
             statusList: this.status,
             page: this.page,
             limit: this.limit,
           }
         )
         .then((res) => {
+          if (res.totalPage === 0 && res.totalCount === 0) {
+            this.contractEmptyFlag = true
+          }
           this.list.push(...res.records)
           this.page++
           if (this.page > res.totalPage) {
             this.finished = true
           }
-          this.loading = false
         })
         .catch((err) => {
           this.error = true
-          this.$xToast.show(err.message)
+          this.$xToast.show('查询合同列表失败')
           console.log('错误信息err', err)
+        })
+        .finally(() => {
           this.loading = false
         })
     },
@@ -146,7 +128,7 @@ export default {
 <style lang="less" scoped>
 .contractList {
   background: #f8f8f8;
-  height: 100vh;
+  min-height: 100vh;
   > .tab {
     width: 100%;
     position: fixed;
@@ -185,7 +167,26 @@ export default {
   }
   > .list {
     margin-top: 88px;
-    overflow: auto;
+    background: #f8f8f8;
+    .spaceholder {
+      width: 100%;
+      height: 1px;
+    }
+  }
+  .none {
+    padding-top: 100px;
+    margin: 0 auto;
+    text-align: center;
+    img {
+      width: 340px;
+      height: 340px;
+    }
+    p {
+      font-size: 30px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #1a1a1a;
+    }
   }
 }
 </style>
