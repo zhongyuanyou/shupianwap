@@ -600,6 +600,7 @@ export default {
         }
         if (this.$route.query.plannerId) {
           this.Orderform.plannerId = this.$route.query.plannerId
+          this.Orderform.cusOrderModeNo = 'ORDER_CUS_MODE_SHARE'
         }
         if (!this.Orderform.orderAgreementIds) {
           return this.$xToast.warning('协议获取失败!')
@@ -615,7 +616,7 @@ export default {
               overlay: true,
             })
             setTimeout(() => {
-              this.$router.push({
+              this.$router.replace({
                 path: '/pay/payType',
                 query: {
                   fromPage: 'orderList',
