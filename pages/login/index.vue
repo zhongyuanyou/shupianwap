@@ -220,7 +220,6 @@ export default {
   },
   mounted() {
     this.sourcePlatform = this.$route.query.sourcePlatform
-    this.$router.push('/login')
   },
   methods: {
     ...mapMutations({
