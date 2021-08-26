@@ -162,8 +162,10 @@ export default {
     }),
   },
   async mounted() {
-    if (this.$route.plannerId) {
-      this.getPlanerInfo(this.$route.plannerId)
+    if (this.$route.query.plannerId || this.$route.query.mchUserId) {
+      this.getPlanerInfo(
+        this.$route.query.plannerId || this.$route.query.mchUserId
+      )
       this.isPlannerShare = true
     }
     if (!this.city.code) {
