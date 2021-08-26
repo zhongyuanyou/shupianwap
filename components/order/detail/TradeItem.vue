@@ -81,12 +81,6 @@ export default {
       fromPage: 'orderDetail',
     }
   },
-  watch: {
-    afterSaleStatus(newVal, oldVal) {
-      console.log('afterSaleStatus', newVal)
-      console.log('afterSaleStatus', oldVal)
-    },
-  },
   methods: {
     toNav() {},
     changeMoney(num) {

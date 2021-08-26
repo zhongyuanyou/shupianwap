@@ -181,12 +181,6 @@ export default {
       default: 1,
     },
   },
-  watch: {
-    afterSaleStatus(newVal, oldVal) {
-      console.log('afterSaleStatus', newVal)
-      console.log('afterSaleStatus', oldVal)
-    },
-  },
   methods: {
     changeMoney(num) {
       return changeMoney.regFenToYuan(num)
