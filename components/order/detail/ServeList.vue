@@ -16,6 +16,7 @@
           :cus-order-status-type="cusOrderStatusType"
           :cus-order-pay-status-no="cusOrderPayStatusNo"
           :order-type="orderData.orderType"
+          :afterSaleStatus="orderData.afterSaleStatus"
           @showSkuModal="showSkuModal"
           @confirmOrder="confirmOrder"
         />
