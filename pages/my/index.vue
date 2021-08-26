@@ -296,7 +296,6 @@
 
 <script>
 import { Button, Image, CenterPopup } from '@chipspc/vant-dgg'
-import { mapState } from 'vuex'
 import { userinfoApi, evaluateApi, afterSaleApi } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 // import { GOODSLIST } from '~/config/constant'
@@ -388,12 +387,15 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      userId: (state) => state.user.userId,
-      token: (state) => state.user.token,
-      userPhone: (state) => state.user.userPhone,
-    }),
-
+    userId() {
+      return state.user.userId || this.$cookies.get('userId')
+    },
+    token() {
+      return state.user.token || this.$cookies.get('token')
+    },
+    token() {
+      return state.user.userPhone || this.$cookies.get('userPhone')
+    },
     nickName() {
       if (this.info.nickName) {
         if (this.info.nickName.indexOf('****') !== -1) {
