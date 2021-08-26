@@ -1,7 +1,7 @@
 <template>
   <div class="item-inner">
     <div
-      v-if="item.skuDealType && item.afterSaleStatus === 'AFTER_SALE_STATUS_3'"
+      v-if="item.skuDealType && afterSaleStatus === 'AFTER_SALE_STATUS_3'"
       class="img-mark"
     >
       <img
@@ -156,6 +156,11 @@ export default {
         return {}
       },
     },
+    // 售后状态
+    afterSaleStatus: {
+      type: String,
+      default: '',
+    },
     // 订单状态
     cusOrderStatusType: {
       type: Number,
@@ -174,6 +179,12 @@ export default {
     orderType: {
       type: Number,
       default: 1,
+    },
+  },
+  watch: {
+    afterSaleStatus(newVal, oldVal) {
+      console.log('afterSaleStatus', newVal)
+      console.log('afterSaleStatus', oldVal)
     },
   },
   methods: {
