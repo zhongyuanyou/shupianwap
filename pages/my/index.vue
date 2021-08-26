@@ -388,13 +388,13 @@ export default {
   },
   computed: {
     userId() {
-      return state.user.userId || this.$cookies.get('userId')
+      return this.$store.state.user.userId || this.$cookies.get('userId')
     },
     token() {
-      return state.user.token || this.$cookies.get('token')
+      return this.$store.state.user.token || this.$cookies.get('token')
     },
-    token() {
-      return state.user.userPhone || this.$cookies.get('userPhone')
+    userPhone() {
+      return this.$store.state.user.userPhone || this.$cookies.get('userPhone')
     },
     nickName() {
       if (this.info.nickName) {

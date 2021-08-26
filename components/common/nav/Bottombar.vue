@@ -93,7 +93,7 @@ export default {
         userId: this.$cookies.get('userId', { path: '/' }),
         userType: this.$cookies.get('userType', { path: '/' }),
       }
-      return state.user.userInfo || userInfo
+      return this.$store.state.user.userInfo || userInfo
     },
   },
   watch: {
