@@ -130,6 +130,7 @@ export default {
         background: #ffffff;
 
         font-family: PingFangSC-Medium;
+        font-weight: bold;
         font-size: 32px;
         color: #222222;
         text-align: center;

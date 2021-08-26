@@ -122,7 +122,7 @@
           :value="payMethod.text"
           is-link
           value-class="black"
-          @click="payMethod.show = true"
+          @click="openPayMethod"
         />
       </div>
       <div class="agreement">
@@ -643,6 +643,14 @@ export default {
     openCardFn() {
       this.card.show = true
     },
+    openPayMethod() {
+      if (this.payMethod.list.length) {
+        this.payMethod.show = true
+      } else {
+        this.$xToast.error('未获取到支付方式' || '')
+      }
+    },
+
     close() {
       this.couponInfo.popupshow = false
     },
