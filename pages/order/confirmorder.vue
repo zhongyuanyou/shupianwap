@@ -568,6 +568,10 @@ export default {
               this.couponInfo.selectedItem.marketingCouponVO.merId === -1
                 ? 'COUPON_DISCOUNT'
                 : 'BUSINESS_COUPON',
+            discountSubsidy:
+              this.couponInfo.selectedItem.marketingCouponVO.merId === -1
+                ? 1
+                : 0,
           }
           this.Orderform.discount = new Array(1).fill(arr)
         } else if (
