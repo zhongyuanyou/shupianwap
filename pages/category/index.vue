@@ -234,7 +234,7 @@ export default {
       if (item.level === 2) {
         sessionStorage.categoryData = JSON.stringify(item)
         // this.$router.push('/list/serveList')
-        this.$router.push('/search/searchResult?typeCode=' + item.code)
+        this.$router.push('/search/searchgoods?typeCode=' + item.code)
       } else {
         this.$router.push({
           name: 'list-jyList',
