@@ -74,7 +74,7 @@ export default {
         .contartlist(
           { axios: this.axios },
           {
-            // cusUserId: this.$store.state.user.userId,
+            cusUserId: this.$store.state.user.userId,
             statusList: this.status,
             page: this.page,
             limit: this.limit,
