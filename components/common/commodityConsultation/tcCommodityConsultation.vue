@@ -117,8 +117,10 @@ export default {
     },
   },
   mounted() {
-    if (this.$route.query.plannerId) {
-      this.getPlanerInfo(this.$route.query.plannerId)
+    if (this.$route.query.plannerId || this.$route.query.mchUserId) {
+      this.getPlanerInfo(
+        this.$route.query.plannerId || this.$route.query.mchUserId
+      )
       this.isPlannerShare = true
     }
   },
