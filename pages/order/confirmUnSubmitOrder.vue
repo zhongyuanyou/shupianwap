@@ -117,7 +117,13 @@
         </p>
       </div>
       <div class="news-content">
-        <Cell title="支付方式" value="在线支付" is-link value-class="black" />
+        <Cell
+          title="支付方式"
+          :value="payMethod.text"
+          is-link
+          value-class="black"
+          @click="openPayMethod"
+        />
       </div>
       <div class="agreement">
         <Checkbox v-model="radio">
@@ -160,6 +166,13 @@
       @change="conponChange"
       @close="close"
     ></Popup>
+    <PayMethodPopup
+      :show="payMethod.show"
+      :list="payMethod.list"
+      :value="payMethod.value"
+      @change="payMethodPopupChange"
+      @close="closePayMethod"
+    ></PayMethodPopup>
 
     <CardPopup
       ref="cardPopup"
@@ -190,6 +203,7 @@ import {
 import Head from '@/components/common/head/header.vue'
 import Popup from '@/components/PlaceOrder/Popup.vue'
 import CardPopup from '@/components/PlaceOrder/CardPopup.vue'
+import PayMethodPopup from '@/components/PlaceOrder/PayMethodPopup.vue'
 
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { productDetailsApi, auth, shopCart } from '@/api'
@@ -208,6 +222,7 @@ export default {
     // CheckboxGroup,
     Popup,
     CardPopup,
+    PayMethodPopup,
     [Skeleton.name]: Skeleton,
     LoadingCenter,
   },
@@ -242,6 +257,16 @@ export default {
         ],
         datalist: [], // 支持的列表
         nolist: [], // 不支持的列表
+      },
+      payMethod: {
+        show: false,
+        list: [
+          // { value: 'ORDER_PAY_MODE_ONLINE', text: '在线支付' },
+          // { value: 'ORDER_PAY_MODE_OFFLINE', text: '线下支付' },
+          // { value: 'ORDER_PAY_MODE_SECURED', text: '担保交易' },
+        ],
+        value: '', // 'ORDER_PAY_MODE_ONLINE',
+        text: '', // '在线支付',
       },
 
       price: '',
@@ -329,6 +354,7 @@ export default {
               this.getInitData(5) // 获取优惠券
               this.getInitData(6)
             }
+            this.setPayMethod()
           } else {
             this.$xToast.show('服务器异常,请然后再试')
             // setTimeout(function () {
@@ -336,6 +362,20 @@ export default {
             // }, 2000)
           }
         })
+    },
+    setPayMethod() {
+      if (this.order.orderType !== 0) {
+        this.payMethod.list = [
+          { value: 'ORDER_PAY_MODE_ONLINE', text: '在线支付' },
+          { value: 'ORDER_PAY_MODE_OFFLINE', text: '线下支付' },
+        ]
+      } else {
+        this.payMethod.list = [
+          { value: 'ORDER_PAY_MODE_SECURED', text: '担保交易' },
+        ]
+      }
+      this.payMethod.text = this.payMethod.list[0].text
+      this.payMethod.value = this.payMethod.list[0].value
     },
     async getProtocol(categoryCode) {
       if (!categoryCode) {
@@ -363,7 +403,9 @@ export default {
       if (this.Orderform.orderAgreementIds.length !== 3) {
         return this.$xToast.warning('协议获取失败!')
       }
-
+      if (!this.payMethod.value) {
+        return this.$xToast.warning('请选择支付方式!')
+      }
       if (!this.radio) {
         Toast({
           message: '下单前，请先同意《薯片平台用户交易下单协议》',
@@ -388,6 +430,10 @@ export default {
               this.couponInfo.selectedItem.marketingCouponVO.merId === -1
                 ? 'COUPON_DISCOUNT'
                 : 'BUSINESS_COUPON',
+            discountSubsidy:
+              this.couponInfo.selectedItem.marketingCouponVO.merId === -1
+                ? 1
+                : 0,
           }
           this.Orderform.discount = new Array(1).fill(arr)
         } else if (
@@ -424,7 +470,7 @@ export default {
               operateSourcePlat: 'COMDIC_PLATFORM_CRISPS', // 来源 薯片
               operateTerminal: 'COMDIC_TERMINAL_WAP',
               cusOrderId: this.$route.query.cusOrderId,
-              payType: 'ORDER_PAY_MODE_ONLINE', // 支付类型：线上支付：ORDER_PAY_MODE_ONLINE  线下支付：ORDER_PAY_MODE_OFFLINE
+              payType: this.payMethod.value, // 'ORDER_PAY_MODE_ONLINE', // 支付类型：线上支付：ORDER_PAY_MODE_ONLINE  线下支付：ORDER_PAY_MODE_OFFLINE
             }
           )
           .then((result) => {
@@ -441,7 +487,7 @@ export default {
                 this.order.orderType !== 0 &&
                 this.order.payType !== 'ORDER_PAY_MODE_SECURED'
               ) {
-                this.$router.push({
+                this.$router.replace({
                   path: '/pay/payType',
                   query: {
                     fromPage: 'orderList',
@@ -451,7 +497,7 @@ export default {
                 })
               } else {
                 // 意向单和担保交易 回到订单列表
-                this.$router.push({
+                this.$router.replace({
                   path: '/order',
                   query: {},
                 })
@@ -587,17 +633,32 @@ export default {
       this.card.cardPrice = num
       this.card.selectedItem = item || {}
     },
+    payMethodPopupChange(item) {
+      this.payMethod.value = item.value
+      this.payMethod.text = item.text
+    },
     openPopupfn() {
       this.couponInfo.popupshow = true
     },
     openCardFn() {
       this.card.show = true
     },
+    openPayMethod() {
+      if (this.payMethod.list.length) {
+        this.payMethod.show = true
+      } else {
+        this.$xToast.error('未获取到支付方式' || '')
+      }
+    },
+
     close() {
       this.couponInfo.popupshow = false
     },
     closeCard() {
       this.card.show = false
+    },
+    closePayMethod() {
+      this.payMethod.show = false
     },
   },
 }

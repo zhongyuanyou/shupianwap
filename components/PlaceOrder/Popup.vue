@@ -4,7 +4,6 @@
       v-model="show"
       position="bottom"
       :close-on-click-overlay="false"
-      :style="{ height: '70%' }"
       round
       @click-overlay="close(false)"
     >
@@ -656,7 +655,7 @@ export default {
       }
     }
     .nodatabox {
-      height: calc(76vh - 324px);
+      height: calc(67vh - 324px);
       .listbox {
         height: 100%;
         > .nolist {
