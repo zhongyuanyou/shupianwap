@@ -67,6 +67,10 @@ export default {
       })
     },
     linkDetail(evaluateInfo) {
+      if (evaluateInfo.isEffective === 0) {
+        this.$xToast.error('该条评价已被禁用')
+        return
+      }
       this.$router.push({
         path: '/my/evaluate/detail',
         query: {
