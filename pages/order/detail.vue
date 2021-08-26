@@ -406,19 +406,19 @@
 
 <script>
 import { Button, Skeleton, Dialog } from '@chipspc/vant-dgg'
-import Header from '@/components/common/head/header'
-import Banner from '@/components/order/detail/Banner'
+import Header from '@/components/common/head/header.vue'
+import Banner from '@/components/order/detail/Banner.vue'
 // 服务订单
-import ServeList from '@/components/order/detail/ServeList'
+import ServeList from '@/components/order/detail/ServeList.vue'
 // 交易订单
-import TradeList from '@/components/order/detail/TradeList'
-import CancelOrder from '@/components/order/CancelOrder' // 取消订单弹窗
-import PayModal from '@/components/order/PayModal' // 支付弹窗
+import TradeList from '@/components/order/detail/TradeList.vue'
+import CancelOrder from '@/components/order/CancelOrder.vue' // 取消订单弹窗
+import PayModal from '@/components/order/PayModal.vue' // 支付弹窗
 import orderUtils from '@/utils/order'
 import orderApi from '@/api/order'
 import OrderMixins from '@/mixins/order'
-import LoadingCenter from '@/components/common/loading/LoadingCenter'
-import InvoiceToast from '@/components/order/detail/InvoiceModal'
+import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
+import InvoiceToast from '@/components/order/detail/InvoiceModal.vue'
 export default {
   components: {
     [Button.name]: Button,

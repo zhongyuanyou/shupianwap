@@ -94,9 +94,10 @@ export default function ({ $axios, redirect, app, store }) {
       const code = result.code
       console.log('process.env.DGG_SERVER_ENV:', process.env.DGG_SERVER_ENV)
       // 网关会对带有yk地址的请求做token有效性验证，若失效，网关直接抛出5223，wap里面跳转到 我的
-      if (code === 5223) {
+      if (code === 5223 || code === 9984) {
         // 清空登录信息
         store.dispatch('user/clearUser')
+        console.log('store.state.app.isInApp', store.state.app.isInApp)
         if (!store.state.app.isInApp) {
           if (process && process.client) {
             xToast.error('登录失效，请重新登录')

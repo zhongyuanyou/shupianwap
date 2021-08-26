@@ -1,6 +1,6 @@
 <template>
   <div class="PlaceOrder">
-    <Head v-show="!editShow" ref="head" title="确认订单">
+    <Head v-show="!editShow" ref="head" title="提交订单">
       <template #left>
         <my-icon
           class="back-icon"
@@ -23,20 +23,6 @@
     <div v-if="!skeletonloading" class="allbox">
       <div class="data-content">
         <div v-for="(item, index) in order.list" :key="index" class="list">
-          <!-- <div class="left">
-            <img
-              :src="
-                item.salesGoodsOperatings
-                  ? item.salesGoodsOperatings.clientDetails[0]
-                    ? item.salesGoodsOperatings.clientDetails[0]
-                        .imgFileIdPaths[0] ||
-                      'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
-                    : 'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
-                  : 'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
-              "
-              alt=""
-            />
-          </div> -->
           <div class="right">
             <h1 class="tit">
               {{
@@ -59,7 +45,6 @@
                   : ''
               }}
             </p>
-            <!-- <p class="tag">{{ item.classCodeName }}</p> -->
             <p class="price">
               <span
                 ><b>{{ item.salesPrice }}</b
@@ -69,95 +54,10 @@
                 $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
               }}</i>
             </p>
-            <!--
-            <div v-if="$route.query.type === 'shopcar'" class="list">
-              <div
-                v-for="(listitem, listindex) in item.saleGoodsSubs"
-                :key="listindex"
-              >
-                <p class="name">{{ listitem.goodsSubName || '-' }}</p>
-                <p class="data">{{ listitem.goodsSubDetailsName || '-' }}</p>
-                <p class="price">
-                  {{ `x1` }}
-                </p>
-              </div>
-            </div>
-            <div v-else class="list">
-              <div
-                v-for="(listitem, listindex) in item.salesGoodsSubVos"
-                :key="listindex"
-              >
-                <p class="name">
-                  <span v-if="listitem.goodsType === 'PRO_CLASS_TYPE_SALES'">
-                    销售产品
-                  </span>
-                  <span
-                    v-else-if="listitem.goodsType === 'PRO_CLASS_TYPE_SERVICE'"
-                  >
-                    服务产品
-                  </span>
-                  <span
-                    v-else-if="
-                      listitem.goodsType === 'PRO_CLASS_TYPE_SERVICE_RESOURCE'
-                    "
-                  >
-                    服务资源
-                  </span>
-                  <span
-                    v-else-if="
-                      listitem.goodsType === 'PRO_CLASS_TYPE_TRANSACTION'
-                    "
-                  >
-                    交易资源
-                  </span>
-                </p>
-                <p class="data">{{ listitem.goodsSubName }}</p>
-                <p class="price">
-                  {{ listitem.settlementPriceEdit }}
-                  {{ `x1` }}
-                </p>
-              </div>
-            </div>
-             -->
           </div>
-        </div>
-        <div class="inpbox">
-          <Field
-            v-model="message"
-            rows="1"
-            autosize
-            label="备注留言"
-            type="textarea"
-            placeholder="建议提前先与规划师联系"
-            maxlength="50"
-          ></Field>
         </div>
       </div>
-      <!-- <div v-else class="data-content data-content1">
-          <div v-for="(item, index) in order.list" :key="index" class="list">
-            <h1><span>套餐</span>{{ item.name }}</h1>
-            <div
-              class="goods"
-              v-for="(goodsitem, goodsindex) in item.salesGoodsSubVos"
-              :key="goodsindex"
-            >
-              <img src="item.img" alt="" class="left" />
-              <div class="right">
-                <h1></h1>
-              </div>
-            </div>
-          </div>
-          <div class="inpbox">
-            <Field
-              v-model="message"
-              rows="1"
-              autosize
-              label="备注留言"
-              type="textarea"
-              placeholder="建议提前先与规划师联系"
-            ></Field>
-          </div>
-        </div> -->
+
       <div class="news-content">
         <CellGroup>
           <Cell
@@ -167,10 +67,13 @@
           />
           <Cell
             title="商品金额"
-            :value="order.salesPrice || order.skuTotalPrice || 0 + '元'"
+            :value="
+              order.orderTotalMoney || order.orderPayableMoneys || 0 + '元'
+            "
             value-class="black"
           />
           <Cell
+            v-if="order.orderType !== 0"
             title="优惠券"
             :value="
               couponInfo.couponPrice
@@ -205,33 +108,33 @@
             @click="openCardFn()"
           /> -->
         </CellGroup>
+
         <p class="money">
           合计：
           <span>
-            <!-- <b>{{ order.salesPrice || order.skuTotalPrice }}</b> 元 -->
             <b>{{ price }}</b> 元
           </span>
         </p>
       </div>
-      <div class="contract">
-        <CellGroup>
-          <Cell
-            title="合同信息"
-            :value="
-              contaract.contractFirstPhone ? '已完善合同信息' : '完善合同信息'
-            "
-            :value-class="contaract.contractFirstPhone ? 'ys' : 'black'"
-            is-link
-            @click="gocontractedit()"
-          />
-        </CellGroup>
+      <div class="news-content">
+        <Cell
+          title="支付方式"
+          :value="payMethod.text"
+          is-link
+          value-class="black"
+          @click="payMethod.show = true"
+        />
       </div>
       <div class="agreement">
         <Checkbox v-model="radio">
           <template>
             <p class="tit">
-              我已阅读过并知晓<span @click="goagr"
+              我已阅读过并知晓<span @click="goagr('protocol100008')"
                 >《薯片平台用户交易下单协议》</span
+              >、<span @click="goagr('protocol100033')"
+                >《薯片平台交易委托协议》</span
+              >、<span @click="goagr('protocol100008')"
+                >《薯片平台订单协议》</span
               >
             </p>
           </template>
@@ -248,9 +151,7 @@
         提交订单
       </div>
     </div>
-    <div v-show="editShow" class="contractbox">
-      <Contract @goback="contractback" @sum="contractsum"></Contract>
-    </div>
+
     <LoadingCenter v-show="loading" />
     <Popup
       ref="conpon"
@@ -258,15 +159,20 @@
       :height="75"
       title="优惠"
       help="使用说明"
-      :origin-price="
-        $route.query.type === 'shopcar' ? order.skuTotalPrice : order.salesPrice
-      "
+      :origin-price="order.orderTotalMoney"
       :tablist="couponInfo.tablist"
       :datalist="couponInfo.datalist"
       :nolist="couponInfo.nolist"
       @change="conponChange"
       @close="close"
     ></Popup>
+    <PayMethodPopup
+      :show="payMethod.show"
+      :list="payMethod.list"
+      :value="payMethod.value"
+      @change="payMethodPopupChange"
+      @close="closePayMethod"
+    ></PayMethodPopup>
 
     <CardPopup
       ref="cardPopup"
@@ -292,38 +198,40 @@ import {
   Checkbox,
   Toast,
   Skeleton,
-  // CheckboxGroup,
+  CheckboxGroup,
 } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header.vue'
 import Popup from '@/components/PlaceOrder/Popup.vue'
 import CardPopup from '@/components/PlaceOrder/CardPopup.vue'
-import Contract from '@/components/PlaceOrder/contract.vue'
+import PayMethodPopup from '@/components/PlaceOrder/PayMethodPopup.vue'
+
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { productDetailsApi, auth, shopCart } from '@/api'
 import cardApi from '@/api/card'
+import orderApi from '@/api/order'
+import OrderMixins from '@/mixins/order'
+
 import { coupon, order, actCard } from '@/api/index'
 export default {
   name: 'PlaceOrder',
   components: {
     Head,
-    Field,
     Cell,
     CellGroup,
     Checkbox,
+    // CheckboxGroup,
     Popup,
     CardPopup,
+    PayMethodPopup,
     [Skeleton.name]: Skeleton,
     LoadingCenter,
-    Contract,
   },
+  mixins: [OrderMixins],
   data() {
     return {
-      money: '1232',
-
       radio: '', // 选中协议
-
-      message: '',
-      order: '',
+      checkboxProtocol: [], // 选中协议
+      order: {},
       // num: 0,
 
       couponInfo: {
@@ -350,28 +258,23 @@ export default {
         datalist: [], // 支持的列表
         nolist: [], // 不支持的列表
       },
-
-      contaract: '',
-      productId: this.$route.query.productId,
-      formData: {
-        orderByWhere: 'createTime=desc',
-        findType: 5,
-        userId: '767579686475123456',
-        actionId: this.productId,
+      payMethod: {
+        show: false,
+        list: [
+          // { value: 'ORDER_PAY_MODE_ONLINE', text: '在线支付' },
+          // { value: 'ORDER_PAY_MODE_OFFLINE', text: '线下支付' },
+          // { value: 'ORDER_PAY_MODE_SECURED', text: '担保交易' },
+        ],
+        value: '', // 'ORDER_PAY_MODE_ONLINE',
+        text: '', // '在线支付',
       },
+
       price: '',
       Orderform: {
-        needSplitProPackageDataParam: [],
-        cusOrderPayType: '',
-        isFromCart: '',
-        cartIds: '',
-        orderProvinceNo: '',
-        orderCityNo: '',
-        orderLocationProvinceName: '',
-        orderLocationCityName: '',
-        orderAgreementIds: '',
-        customerOrderMark: '',
+        orderAgreementIds: [],
+
         discount: [],
+
         payType: 'ORDER_PAY_MODE_ONLINE',
       },
       loading: false,
@@ -380,13 +283,17 @@ export default {
       productList: [],
     }
   },
+  computed: {
+    // orderType() {
+    //   return this.order.orderType !== 0
+    // },
+  },
   mounted() {
-    if (this.$route.query.type === 'shopcar') {
-      this.getcart()
-    } else {
-      this.asyncData()
-    }
+    this.asyncData()
+
     // this.getInitData()
+    this.getProtocol('protocol100008')
+    this.getProtocol('protocol100033')
     this.getProtocol('protocol100008')
   },
   methods: {
@@ -394,98 +301,81 @@ export default {
       this.$router.back()
     },
     // 打开《薯片平台用户交易下单协议》
-    goagr() {
+    goagr(categoryCode) {
       this.$router.push({
         name: 'login-protocol',
-        query: { categoryCode: 'protocol100008' },
+        query: { categoryCode },
       })
     },
-    // 购物车结算
-    getcart() {
-      const that = this
-      shopCart
-        .bill({
-          cartId: this.$route.query.cartIdsStr,
-          type: '1',
-        })
-        .then((result) => {
-          // result = JSON.parse(result.productVo)
-          this.order = result
-          this.order.list = this.order.productVo
-          this.price = this.order.skuTotalPrice
-          this.skeletonloading = false
-          this.getInitData(5)
-          this.getInitData(6)
-        })
-        .catch((e) => {
-          if (e.code !== 200) {
-            this.$xToast.show(e.message)
-            console.error(e)
-            setTimeout(function () {
-              that.$router.back(-1)
-            }, 2000)
+
+    asyncData() {
+      this.skeletonloading = false
+
+      orderApi
+        .getDetailByOrderId(
+          { axios: this.axios },
+          {
+            id: this.$route.query.id,
+            cusOrderId: this.$route.query.cusOrderId,
+          }
+        )
+        .then((res) => {
+          console.log('res', res)
+          this.changeMoney(res.data || res)
+          const cusDetail = res.data
+            ? res.data.orderSplitAndCusVo
+            : res.orderSplitAndCusVo
+
+          const data = Object.assign(cusDetail, res.data || res)
+
+          if (data) {
+            data.list = []
+            this.order = data
+
+            console.log('res', res)
+
+            data.orderSkuList.map((item) => {
+              const obj = {
+                name: item.spuHideName || item.spuName,
+                classCode: item.classCode,
+                classCodeName: item.classCodeName,
+                id: item.id,
+                salesPrice: item.skuPrice,
+                salesGoodsSubVos: item.salesGoodsSubVos,
+              }
+              this.order.list.push(obj)
+            })
+
+            this.order.num = this.order.list.length
+            this.price = this.order.orderTotalMoney
+
+            // 意向单不使用优惠券
+            if (this.order.orderType !== 0) {
+              this.getInitData(5) // 获取优惠券
+              this.getInitData(6)
+            }
+            this.setPayMethod()
+          } else {
+            this.$xToast.show('服务器异常,请然后再试')
+            // setTimeout(function () {
+            //   that.$router.back(-1)
+            // }, 2000)
           }
         })
     },
-    async asyncData() {
-      const that = this
-      this.skeletonloading = false
-      try {
-        const { code, message, data } = await this.$axios.post(
-          productDetailsApi.sellingGoodsDetail,
-          {
-            id: this.$route.query.productId,
-            configFlg: 1,
-            floatingFlg: 1,
-            withSalesSubsFlg: 1,
-            withTagsFlg: 1,
-            withGoodsSubFlg: 1,
-            withOperatingsFlg: 1,
-            clientType: 'COMDIC_TERMINAL_APP',
-          }
-        )
-        if (code === 200) {
-          const obj = {
-            name: data.name,
-            classCode: data.classCode,
-            classCodeName: data.classCodeName,
-            id: data.id,
-            salesPrice: data.salesPrice,
-            salesGoodsSubVos: data.salesGoodsSubVos,
-            salesGoodsOperatings: data.salesGoodsOperatings,
-          }
-          this.order = data
-          this.order.list = []
-          this.order.list.push(obj)
-          this.order.num = this.order.list.length
-          this.price = this.order.salesPrice
-          this.getInitData(5)
-          this.getInitData(6)
-
-          this.productList = new Array(1).fill({
-            categoryCode: data.classCodeLevel.split(',')[0],
-            productId: data.id,
-            productPrice: data.salesPrice,
-          })
-
-          // this.getCardList()
-
-          console.log('productList', this.productList)
-        } else {
-          this.$xToast.show('服务器异常,请然后再试')
-          setTimeout(function () {
-            that.$router.back(-1)
-          }, 2000)
-          throw message
-        }
-      } catch (err) {
-        this.$xToast.show('请求数据失败，请稍后再试')
-        console.error(err)
-        setTimeout(function () {
-          that.$router.back(-1)
-        }, 2000)
-        this.skeletonloading = false
+    setPayMethod() {
+      if (this.order.orderType !== 0) {
+        this.payMethod.list = [
+          { value: 'ORDER_PAY_MODE_ONLINE', text: '在线支付' },
+          { value: 'ORDER_PAY_MODE_OFFLINE', text: '线下支付' },
+        ]
+      } else {
+        this.payMethod.list = [
+          { value: 'ORDER_PAY_MODE_SECURED', text: '担保交易' },
+        ]
       }
+      this.payMethod.text = this.payMethod.list[0].text
+      this.payMethod.value = this.payMethod.list[0].value
     },
     async getProtocol(categoryCode) {
       if (!categoryCode) {
@@ -500,7 +390,7 @@ export default {
         const data = await auth.protocol(params)
         const { rows = [] } = data || {}
         if (rows.length > 0) {
-          this.Orderform.orderAgreementIds = rows[0].id
+          this.Orderform.orderAgreementIds.push(rows[0].id)
         }
       } catch (error) {
         this.$xToast.error(error.message || '请求失败')
@@ -510,6 +400,12 @@ export default {
 
     // 提交订单
     placeOrder() {
+      if (this.Orderform.orderAgreementIds.length !== 3) {
+        return this.$xToast.warning('协议获取失败!')
+      }
+      if (!this.payMethod.value) {
+        return this.$xToast.warning('请选择支付方式!')
+      }
       if (!this.radio) {
         Toast({
           message: '下单前，请先同意《薯片平台用户交易下单协议》',
@@ -517,40 +413,6 @@ export default {
         })
       } else {
         this.loading = true
-        if (this.$route.query.type === 'shopcar') {
-          const arr = []
-          for (let i = 0; i < this.order.list.length; i++) {
-            const sku = {
-              saleSkuId: this.order.list[i].id,
-              saleSkuName: this.order.list[i].name,
-              saleSkuVersionNo: this.order.list[i].version + '',
-              saleSkuPrice: this.order.list[i].salesPrice,
-              saleSkuCount: this.order.list[i].salesVolume,
-            }
-            arr.push(sku)
-            this.loading = false
-          }
-          this.Orderform.needSplitProPackageDataParam = arr
-        } else {
-          const sku = {
-            saleSkuId: this.order.id,
-            saleSkuName: this.order.name,
-            saleSkuVersionNo: this.order.version + '',
-            saleSkuPrice: this.order.salesPrice,
-            saleSkuCount: 1,
-          }
-          this.Orderform.needSplitProPackageDataParam = new Array(1).fill(sku)
-        }
-        let isFromCart = false
-        let cusOrderPayType
-        if (this.$route.query.type === 'shopcar') {
-          isFromCart = true
-          this.Orderform.cartIds = this.$route.query.cartIdsStr
-          cusOrderPayType = this.order.list[0].refConfig.payType
-        } else {
-          cusOrderPayType = this.order.refConfig.payType
-          isFromCart = false
-        }
 
         if (
           this.couponInfo.couponPrice &&
@@ -588,29 +450,31 @@ export default {
           }
           this.Orderform.discount = new Array(1).fill(arr)
         }
-        this.Orderform.payType = 'ORDER_PAY_MODE_ONLINE'
-        this.Orderform.cusOrderPayType = cusOrderPayType
-        this.Orderform.isFromCart = isFromCart
-        this.Orderform.orderProvinceNo = this.$store.state.city.defaultCity.pid
-        this.Orderform.orderCityNo = this.$store.state.city.defaultCity.code
-        this.Orderform.orderLocationProvinceName =
-          this.$store.state.city.defaultCity.pname
-        this.Orderform.orderLocationCityName =
-          this.$store.state.city.defaultCity.name
-        this.Orderform.customerOrderMark = this.message
-        if (this.contaract) {
-          this.Orderform.contractFormParam = this.contaract
-          this.Orderform.contractFormParam.contractApplyWay = 'CUSTOMER'
-        }
-        if (this.$route.query.plannerId) {
-          this.Orderform.plannerId = this.$route.query.plannerId
-        }
-        if (!this.Orderform.orderAgreementIds) {
-          return this.$xToast.warning('协议获取失败!')
-        }
+
+        // const discount = [
+        //   {
+        //     code: '', // ORDER_DISCOUNT_DISCOUNT:优惠券,ORDER_DISCOUNT_DISCOUT:折扣券，ORDER_DISCOUNT_ACTIVITY:活动优惠，ORDER_DISCOUNT_INTEGRAL:积分抵扣，ORDER_DISCOUNT_ENVELOPES:红包优惠,ORDER_DISCOUNT_BALANCE:余额优惠，ORDER_DISCOUNT_BUSINESS_AFFAIRS:商务优惠
+        //     value: '', // 优惠券的id逗号分隔
+        //     couponUseCode: '', // 优惠券编码
+        //     discountType: '', // COUPON_DISCOUNT  平台优惠券,BUSINESS_COUPON 商户优惠券
+        //     no: '', // 优惠劵id
+        //     quota: '', //  优惠额度
+        //   },
+        // ]
         order
-          .placeOrder({ axios: this.$axios }, this.Orderform)
+          .commit_order(
+            { axios: this.$axios },
+            {
+              orderAgreementIds: this.Orderform.orderAgreementIds.join(','), // 下单协议id，多个id用逗号隔开
+              discount: this.Orderform.discount, //
+              operateSourcePlat: 'COMDIC_PLATFORM_CRISPS', // 来源 薯片
+              operateTerminal: 'COMDIC_TERMINAL_WAP',
+              cusOrderId: this.$route.query.cusOrderId,
+              payType: this.payMethod.value, // 'ORDER_PAY_MODE_ONLINE', // 支付类型：线上支付：ORDER_PAY_MODE_ONLINE  线下支付：ORDER_PAY_MODE_OFFLINE
+            }
+          )
           .then((result) => {
+            console.log('result', result)
             this.loading = false
             Toast({
               message: '下单成功',
@@ -619,13 +483,25 @@ export default {
               overlay: true,
             })
             setTimeout(() => {
-              this.$router.push({
-                path: '/pay/payType',
-                query: {
-                  fromPage: 'orderList',
-                  cusOrderId: result.cusOrderId,
-                },
-              })
+              if (
+                this.order.orderType !== 0 &&
+                this.order.payType !== 'ORDER_PAY_MODE_SECURED'
+              ) {
+                this.$router.replace({
+                  path: '/pay/payType',
+                  query: {
+                    fromPage: 'orderList',
+                    // cusOrderId: result.cusOrderId,
+                    cusOrderId: this.$route.query.cusOrderId,
+                  },
+                })
+              } else {
+                // 意向单和担保交易 回到订单列表
+                this.$router.replace({
+                  path: '/order',
+                  query: {},
+                })
+              }
             }, 2000)
           })
           .catch((e) => {
@@ -742,16 +618,6 @@ export default {
           this.card.nolist = res || []
         })
     },
-    contractback() {
-      this.editShow = false
-    },
-    contractsum(val) {
-      this.contaract = val
-      this.editShow = false
-    },
-    gocontractedit() {
-      this.editShow = true
-    },
 
     conponChange(price, num, item) {
       this.price = price
@@ -767,6 +633,10 @@ export default {
       this.card.cardPrice = num
       this.card.selectedItem = item || {}
     },
+    payMethodPopupChange(item) {
+      this.payMethod.value = item.value
+      this.payMethod.text = item.text
+    },
     openPopupfn() {
       this.couponInfo.popupshow = true
     },
@@ -778,6 +648,9 @@ export default {
     },
     closeCard() {
       this.card.show = false
+    },
+    closePayMethod() {
+      this.payMethod.show = false
     },
   },
 }

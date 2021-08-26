@@ -17,63 +17,15 @@
         <div class="info_right_sku">{{ orderDesc }}</div>
       </div>
     </div>
-    <div class="score">
-      <div class="score-block">
-        <div class="score-block-tile">服务评分</div>
-        <template v-for="(item, index) in stars">
-          <my-icon
-            :key="index"
-            class="score-block-icon"
-            name="dafen_mian"
-            size="0.22rem"
-            :color="item.flag ? '#FFB400' : '#F0F0F0'"
-          ></my-icon>
-        </template>
-        <div class="score-block-desc">
-          {{ starLevel | fliterLevel }}
-        </div>
-      </div>
-      <div class="score-time">{{ evaluateTime }}</div>
-    </div>
-    <div class="score-sub">
-      <span v-for="(item, index) in evaluateDimensionList" :key="index"
-        >{{ item.name }}:&nbsp;{{ item.fraction | fliterStar }}</span
-      >
-    </div>
     <div class="placeholder"></div>
-    <div class="content">
-      {{ evaluateContent }}
-    </div>
-    <div class="imgs">
-      <sp-image
-        v-for="(item, index) in evaluateImgs"
-        :key="index"
-        square
-        class="img"
-        fit="cover"
-        :src="item"
-        :width="size"
-        :height="size"
-        radius="8px"
-      />
-    </div>
-    <div v-if="evaluateTagFlag" class="tips">
-      <my-icon
-        class="tips-icon"
-        name="biaoqian"
-        size="0.24rem"
-        color="#999999"
-      ></my-icon>
-      <div class="tips-desc">
-        <p>{{ evaluateTagList }}</p>
-      </div>
-    </div>
+    <CommentItem :comment="info" />
   </div>
 </template>
 
 <script>
 import { Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
+import CommentItem from '@/components/detail/CommentItem'
 import { evaluateApi } from '@/api'
 // mock data
 
@@ -83,51 +35,20 @@ export default {
   components: {
     Header,
     [Image.name]: Image,
-  },
-  filters: {
-    fliterLevel(val) {
-      const txts = {
-        0: '非常差',
-        2: '非常差',
-        4: '差',
-        6: '一般',
-        8: '好',
-        10: '非常好',
-      }
-      return txts[val] || '非常差'
-    },
-    fliterStar(val) {
-      return val ? val / 2 + '星' : '无'
-    },
+    CommentItem,
   },
   data() {
     return {
-      evaluateImgs: [],
-      imgs: '',
       orderDesc: '',
+      orderName: '',
       indexImg: 'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png',
       imageSize: '1.3rem',
       size: '2.1rem',
-      orderName: '',
-      starLevel: 1, // 星级
-      stars: [
-        { flag: false, num: 2 },
-        { flag: false, num: 4 },
-        { flag: false, num: 6 },
-        { flag: false, num: 8 },
-        { flag: false, num: 10 },
-      ], // flag 图标是否点亮
-      evaluateContent: '',
-      evaluateTagList: '',
-      evaluateTagFlag: false,
-      evaluateDimensionList: [],
-      serverScore: 0, // 服务分
-      evaluateTime: '',
+      info: {}, // 评价内容
     }
   },
   mounted() {
     this.init()
-    this.setStars()
   },
   methods: {
     init() {
@@ -135,46 +56,71 @@ export default {
       this.initData()
     },
     async getEvaluateDetail() {
-      const params = {
-        infoId: this.$route.query.infoId,
-        userId: this.$store.state.user.userId,
-      }
-      const res = await this.$axios.get(evaluateApi.detail, { params })
-      if (res.code === 200) {
-        this.evaluateContent = res.data.evaluateContent
-        if (res.data.evaluateTagList.length > 0) {
-          this.evaluateTagList = (
-            res.data.evaluateTagList.map((item) => {
-              return item.name
-            }) || []
-          ).join(', ')
-          this.evaluateTagFlag = true
+      try {
+        const params = {
+          infoId: this.$route.query.infoId,
+          evaluateUserId: this.$store.state.user.userId,
         }
-
-        this.evaluateDimensionList = res.data.evaluateDimensionList
-        this.evaluateImgs = res.data.evaluateImgs || []
-        this.evaluateTime = res.data.evaluateTime
-        if (res.data.serverScore) {
-          this.starLevel = res.data.serverScore
-          this.setStars()
+        const res = await this.$axios.post(evaluateApi.getGoodsEvaluate, params)
+        if (res.code === 200 && res.data.records.length) {
+          const res1 = this.buildCommentData(res.data.records)
+          this.info = res1[0]
+        } else {
+          throw new Error('获取用户信息失败')
         }
-      } else {
+      } catch (e) {
         this.$xToast.show({ message: '获取信息失败' })
       }
     },
     initData() {
-      this.indexImg = this.$route.query.indexImg || 'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png'
+      this.indexImg =
+        this.$route.query.indexImg ||
+        'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png'
       this.orderName = this.$route.query.orderName
       this.orderDesc = this.$route.query.orderDesc
     },
-    setStars() {
-      // 构建星级
-      const _this = this
-      this.stars.forEach((item) => {
-        if (_this.starLevel >= item.num) {
-          item.flag = true
+    buildCommentData(data) {
+      if (!Array.isArray(data) || !data.length) {
+        return []
+      }
+      data.forEach((cur) => {
+        // 构建追评数据
+        const reviewComment = cur.triggerReviewReplies
+        // 追评数据不存在
+        if (Array.isArray(reviewComment) && reviewComment.length) {
+          // 构建追评数据
+          if (
+            reviewComment.some((item) => Number(item.reviewReplyType) === 1)
+          ) {
+            cur.custAddComment = reviewComment.find(
+              (item) => Number(item.reviewReplyType) === 1
+            )
+            const xDayAfter = this.xDayAfter(
+              cur.evaluateTime,
+              cur.custAddComment.reviewReplyTime
+            )
+            if (xDayAfter < 1) {
+              cur.custAddComment.xDayAfterTxt = '用户当天追评:'
+            } else {
+              cur.custAddComment.xDayAfterTxt = `用户${Math.floor(
+                xDayAfter
+              )}天后追评:`
+            }
+          }
+          // 构建回复数据
+          if (
+            reviewComment.some((item) => Number(item.reviewReplyType) === 2)
+          ) {
+            cur.custReplayComment = reviewComment.find(
+              (item) => Number(item.reviewReplyType) === 2
+            )
+          }
         }
       })
+      return data
+    },
+    xDayAfter(start, end) {
+      return (Date.parse(end) - Date.parse(start)) / (1 * 24 * 60 * 60 * 1000)
     },
   },
 }
@@ -186,6 +132,11 @@ export default {
 .m-evaluate.detail {
   .mixin-flex {
     display: flex;
+  }
+  .placeholder {
+    height: 1px;
+    background: #f4f4f4;
+    margin: 0 40px;
   }
   .header-line {
     width: 100%;
@@ -209,93 +160,6 @@ export default {
         color: #999999;
         line-height: 24px;
       }
-    }
-    .name {
-      height: 34px;
-      font: bold 34px/34px @fontf-pfsc-med;
-      color: #1a1a1a;
-      margin: 0 16px 0 24px;
-    }
-    .desc {
-      box-sizing: border-box;
-      padding: 10px 12px;
-      border-radius: 4px;
-      border: 1px solid #dddddd;
-      font: 24px @fontf-pfsc-reg;
-      color: #999999;
-    }
-  }
-  .score {
-    padding: 0 40px;
-    .mixin-flex();
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
-    &-block {
-      .mixin-flex();
-      align-items: center;
-      &-tile {
-        font: 400 24px @fontf-pfsc-reg;
-        color: #222222;
-        margin-right: 16px;
-      }
-      &-icon {
-        margin-right: 8px;
-      }
-      &-desc {
-        margin-left: 8px;
-        font: 400 22px @fontf-pfsc-reg;
-        color: #555555;
-      }
-    }
-    &-time {
-      font: 400 0.24rem @font-regular;
-      color: #999999;
-    }
-  }
-  .score-sub {
-    padding: 0 40px 40px 40px;
-    .mixin-flex();
-    align-items: center;
-    font: 400 24px @fontf-pfsc-reg;
-    color: #999999;
-    span {
-      display: inline-block;
-      margin-right: 24px;
-    }
-  }
-  .placeholder {
-    height: 1px;
-    background: #f4f4f4;
-    margin: 0 40px;
-  }
-  .content {
-    margin: 40px 40px 32px;
-    font: 400 28px/44px @fontf-pfsc-reg;
-    color: #222222;
-  }
-  .imgs {
-    .mixin-flex();
-    padding: 0 40px;
-    margin-bottom: 32px;
-    ::v-deep .img {
-      margin: 0 20px 0 0;
-    }
-    ::v-deep .img:nth-last-child(1) {
-      margin: 0;
-    }
-  }
-  .tips {
-    padding: 0 40px;
-    position: relative;
-    &-icon {
-      position: absolute;
-      top: 6px;
-    }
-    &-desc {
-      margin-left: 36px;
-      font: 400 24px/40px @fontf-pfsc-reg;
-      color: #999999;
     }
   }
 }

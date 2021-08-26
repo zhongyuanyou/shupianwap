@@ -10,7 +10,7 @@
   <div class="complaint">
     <Header class="my-header" :title="!isApplets ? '我要吐槽' : ''">
       <template #left>
-        <div @click="back">
+        <div v-show="!isApplets" @click="back">
           <my-icon
             name="nav_ic_back"
             class="back_icon"

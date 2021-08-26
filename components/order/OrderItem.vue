@@ -3,7 +3,9 @@
     <div @click="toDetail">
       <p class="order-no-area">
         <span class="orderNo"> 订单编号: {{ orderData.orderNo }} </span>
-        <span v-if="selectedOrderStatus">
+
+        <span>
+          <!-- 待确认 -->
           <span
             v-if="
               orderData.orderStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED'
@@ -19,41 +21,7 @@
           <span
             v-else
             class="order-status"
-            :class="
-              selectedOrderStatus === 'ORDER_CUS_STATUS_CANCELLED' ||
-              selectedOrderStatus === 'ORDER_CUS_STATUS_COMPLETED'
-                ? 'status1'
-                : selectedOrderStatus === 'ORDER_CUS_STATUS_UNPAID'
-                ? 'status2'
-                : 'status3'
-            "
-            >{{ orderData.statusName }}</span
-          >
-        </span>
-        <span v-else>
-          <span
-            v-if="
-              orderData.orderStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED'
-            "
-            class="order-status status3"
-            >{{ orderData.statusName }}</span
-          >
-          <span
-            v-else-if="orderData.orderStatusNo === 'ORDER_CUS_STATUS_UNPAID'"
-            class="order-status status2"
-            >待支付</span
-          >
-          <span
-            v-else
-            class="order-status"
-            :class="
-              orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_CANCELLED' ||
-              orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_COMPLETED'
-                ? 'status1'
-                : orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_UNPAID'
-                ? 'status2'
-                : 'status3'
-            "
+            :class="getStatusClass(orderData.cusOrderStatusNo)"
             >{{ orderData.statusName }}</span
           >
         </span>
@@ -67,7 +35,7 @@
       >
         <div class="img">
           <sp-image
-            :src="$resizeImg(130, 100, item.indexImg)"
+            :src="$resizeImg(130, 130, item.indexImg)"
             alt="薯片科技"
             class="sp-image"
             srcset=""
@@ -133,7 +101,7 @@
         </div>
       </div>
     </div>
-    <div class="total-price-area">
+    <div v-if="!isUnSubmit(orderData)" class="total-price-area">
       <!-- 定金尾款付费 -->
       <p v-if="checkPayType() === 2" class="inner">
         总价
@@ -175,7 +143,7 @@
       </p>
     </div>
     <div class="btn-area">
-      <div class="inner">
+      <div v-if="!isUnSubmit(orderData)" class="inner">
         <!-- <sp-button
           v-if="checkBillStatus() === 1"
           class="btn-look"
@@ -259,6 +227,11 @@
           >确认完成</sp-button
         >
       </div>
+      <div v-if="isUnSubmit(orderData)" class="inner noSubmit">
+        <sp-button type="default" class="btn-look" @click="handleClickItem(9)"
+          >提交订单</sp-button
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -298,18 +271,45 @@ export default {
     }
   },
   methods: {
+    isUnSubmit(orderData) {
+      return orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_UNSUBMITE'
+    },
+    getStatusClass(status) {
+      if (
+        status === 'ORDER_CUS_STATUS_CANCELLED' ||
+        status === 'ORDER_CUS_STATUS_COMPLETED'
+      ) {
+        return 'status1' // 已取消,已完成
+      } else if (
+        status === 'ORDER_CUS_STATUS_UNPAID' ||
+        status === 'ORDER_CUS_STATUS_UNSUBMITE'
+      ) {
+        return 'status2' //   未付款
+      } else {
+        return 'status3'
+      }
+    },
+    confirmorder() {},
     handleClickItem(type) {
       this.$emit('handleClickItem', type, this.orderData)
     },
     toDetail() {
-      // const { href } = this.$router.resolve({
-      //   path: '/order/detail',
-      //   query: { id: this.orderData.id, cusOrderId: this.orderData.cusOrderId },
-      // })
-      // window.open(href, '_blank')
+      // 未提交订单转到提交页
+      if (this.isUnSubmit(this.orderData)) {
+        return this.toSubmitOrder(this.orderData)
+      }
       this.$router.push({
         path: '/order/detail',
         query: { id: this.orderData.id, cusOrderId: this.orderData.cusOrderId },
+      })
+    },
+    toSubmitOrder(order) {
+      this.$router.push({
+        path: '/order/confirmUnSubmitOrder',
+        query: {
+          id: order.id,
+          cusOrderId: order.cusOrderId,
+        },
       })
     },
     setName(str) {
@@ -498,6 +498,9 @@ export default {
         border: 1px solid #e5654c;
         color: #e5654c;
       }
+    }
+    .noSubmit {
+      margin-top: 18px;
     }
   }
 }

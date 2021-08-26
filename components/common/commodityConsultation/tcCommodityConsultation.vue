@@ -6,6 +6,13 @@
     <div class="commodityConsult-containner">
       <div class="commodityConsult-containner-userInfo">
         <a
+          v-md:p_plannerBoothClick
+          data-even_name="p_plannerBoothClick"
+          data-track_code="SPW000032"
+          :data-recommend_number="plannerDetail.dggPlannerRecomLog"
+          :data-planner_number="plannerDetail.userCenterNo"
+          :data-planner_name="plannerDetail.userName"
+          :data-crisps_fraction="plannerDetail.point"
           href="javascript:void(0);"
           @click="plannerInfoUrlJump(plannerDetail.mchUserId)"
         >
@@ -87,6 +94,12 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      isPlannerShare: false,
+      sharePlaner: {},
+    }
+  },
   computed: {
     // 产品详情
     proDetail() {
@@ -96,7 +109,7 @@ export default {
       return this.$store.state.city.currentCity
     },
     plannerDetail() {
-      if (this.sharePlaner) {
+      if (this.isPlannerShare) {
         return this.sharePlaner
       } else {
         return this.plannerInfo
@@ -104,8 +117,11 @@ export default {
     },
   },
   mounted() {
-    if (this.$route.query.isShare && this.$route.plannerId) {
-      this.getPlanerInfo(this.$route.plannerId)
+    if (this.$route.query.plannerId || this.$route.query.mchUserId) {
+      this.getPlanerInfo(
+        this.$route.query.plannerId || this.$route.query.mchUserId
+      )
+      this.isPlannerShare = true
     }
   },
   methods: {

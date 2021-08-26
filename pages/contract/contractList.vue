@@ -12,41 +12,59 @@
       </template>
     </Head>
     <div class="tab">
-      <!-- <p :class="tabAct == 0 ? 'act' : ''" @click="tabFn(0)">
-        全部<i class="icon"></i>
-      </p> -->
-      <p :class="tabAct == 1 ? 'act' : ''" @click="tabFn(1)">
+      <p :class="tabAct == 1 ? 'act' : ''" @click="changeTab(1)">
         待签署<i class="icon"></i>
       </p>
-      <p :class="tabAct == 2 ? 'act' : ''" @click="tabFn(2)">
+      <p :class="tabAct == 2 ? 'act' : ''" @click="changeTab(2)">
         已签署<i class="icon"></i>
       </p>
     </div>
     <div class="list">
-      <List ref="list" :list="list" @load="pagefn" @Jump="jump"></List>
+      <sp-list
+        v-model="loading"
+        :finished="finished"
+        :immediate-check="false"
+        class="list"
+        finished-text="我是有底线的..."
+        :error.sync="error"
+        error-text="请求失败，点击重新加载"
+        @load="onLoad"
+      >
+        <template v-for="(info, i) in list">
+          <Item :key="i" :info="info" />
+        </template>
+      </sp-list>
     </div>
   </div>
 </template>
 
 <script>
+import { List } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
-import List from '@/components/contract/list'
+import Item from '@/components/contract/Item'
 import contractApi from '@/api/contract'
 export default {
   name: 'Contractlist',
   components: {
     Head,
-    List,
+    Item,
+    [List.name]: List,
   },
   data() {
     return {
       tabAct: 1,
       page: 1,
-      status: '',
+      limit: 10,
+      status: ['STRUTS_QSZ'],
       list: [],
+      error: false,
+      loading: false,
+      finished: false,
     }
   },
-  mounted() {},
+  mounted() {
+    this.onLoad()
+  },
   methods: {
     jump(val) {
       if (val.contractStatus === 'STRUTS_YWC') {
@@ -73,64 +91,48 @@ export default {
         })
       }
     },
-    pagefn(val) {
-      this.page = val
-      this.getlist()
-    },
-    Refresh() {
-      this.list = []
-      this.page = 1
-      this.$refs.list.page = 1
-      this.$refs.list.finished = false
-      this.getlist()
-    },
-    getlist() {
-      if (this.tabAct === 1) {
-        this.status = 'ORDER_CONTRACT_STATUS_DQS'
-      } else if (this.tabAct === 2) {
-        this.status = 'ORDER_CONTRACT_STATUS_YQS'
-      } else {
-        this.status = ''
-      }
+    onLoad() {
       contractApi
         .contartlist(
           { axios: this.axios },
           {
-            id: this.$store.state.user.userId,
-            status: this.status,
+            cusUserId: this.$store.state.user.userId,
+            statusList: this.status,
             page: this.page,
-            limit: 10,
+            limit: this.limit,
           }
         )
         .then((res) => {
-          if (this.list.length < 1) {
-            this.list = res.records
-          } else {
-            this.list = this.list.concat(res.records)
+          this.list.push(...res.records)
+          this.page++
+          if (this.page > res.totalPage) {
+            this.finished = true
           }
-          if (res.records.length < 10) {
-            this.$refs.list.finished = true
-          }
-          if (this.$refs.list.isLoading === true) {
-            this.$refs.list.isLoading = false
-          }
-          if (this.$refs.list.loading === true) {
-            this.$refs.list.loading = false
-          }
+          this.loading = false
         })
         .catch((err) => {
+          this.error = true
           this.$xToast.show(err.message)
           console.log('错误信息err', err)
+          this.loading = false
         })
     },
-    tabFn(index) {
-      if (this.tabAct !== index) {
-        this.tabAct = index
-        this.list = []
-        this.page = 1
-        this.$refs.list.page = 1
-        this.$refs.list.finished = false
+    changeTab(index) {
+      if (this.tabAct === index) {
+        return
       }
+      this.tabAct = index
+      this.page = 1
+      this.list = []
+      this.loading = true
+      this.finished = false
+      this.error = false
+      if (this.tabAct === 1) {
+        this.status = ['STRUTS_QSZ']
+      } else {
+        this.status = ['STRUTS_YWC']
+      }
+      this.onLoad()
     },
     onLeftClick() {
       this.$router.push({

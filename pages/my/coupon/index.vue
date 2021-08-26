@@ -62,11 +62,11 @@
         class="rules_and_invalid"
         :class="{ rules_and_invalid_bk: list.length > 0 }"
       >
-        <span class="" @click="TipsShow = true">
+        <span class="rule" @click="TipsShow = true">
           通用规则
           <my-icon
             name="order_ic_listnext"
-            size="0.18rem"
+            size="0.17rem"
             color="#999999"
             class="back"
           />
@@ -75,7 +75,7 @@
           {{ tabActive === 0 ? '查看已失效优惠券' : '查看已失效活动卡' }}
           <my-icon
             name="order_ic_listnext"
-            size="0.18rem"
+            size="0.17rem"
             color="#999999"
             class="back"
           />
@@ -480,13 +480,16 @@ export default {
     letter-spacing: 0;
 
     text-align: center;
-
+    .rule {
+      color: #4974f5;
+    }
     .invalid {
       margin-left: 64px;
+      color: #4974f5;
     }
     .back {
       margin-right: 18px;
-      font-weight: 500;
+      font-weight: 400;
     }
   }
   .rules_and_invalid_bk {

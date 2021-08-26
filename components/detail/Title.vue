@@ -10,7 +10,7 @@
         <!--          {{ item }}-->
         <!--        </div>-->
       </div>
-      <div class="title_tags_remind" @click="handleShowPriceRed">
+      <div v-if="false" class="title_tags_remind" @click="handleShowPriceRed">
         <my-icon
           name="notify_ic_clock1"
           color="#4974f5"
