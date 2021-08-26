@@ -1,5 +1,5 @@
 <template>
-  <div v-if="comment.records.length > 0" class="title">
+  <div class="title">
     <p class="title_btitle">{{ sellingGoodsData.name }}</p>
     <div class="title_tags">
       <span
@@ -24,7 +24,11 @@
     <!--      公司注册是开始创业的第一步，-->
     <!--      根据《中华人民共和国公司法》规定，注册公司时需要依法向注册公司时需要...-->
     <!--    </div>-->
-    <div class="comment" @click="commentfn">
+    <div
+      v-if="comment.records && comment.records.length"
+      class="comment"
+      @click="commentfn"
+    >
       <p class="tit">{{ comment.records[0].evaluateContent }}</p>
       <p class="num">共{{ comment.totalCount | count }}评价</p>
       <sp-icon name="arrow" class="icon" />
