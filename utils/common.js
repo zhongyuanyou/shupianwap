@@ -73,7 +73,6 @@ export const parseTel = (tel) => {
 // 打开第三方链接
 export const openLink = (link, data) => {
   const dataStr = Qs.stringify(data)
-  const dataStr = Qs.stringify(data)
   const linkurl =
     link.indexOf('?') > -1 ? `${link}&${dataStr}` : `${link}?${dataStr}`
   window.location.replace(linkurl)
