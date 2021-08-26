@@ -1,15 +1,15 @@
 <template>
   <!-- 限时直降 -->
   <div class="container">
-    <div
+    <!-- <div
       v-if="isInApp"
       class="app_header_fill"
       style="height: 0.6rem; background-color: #1c1a1b"
-    ></div>
+    ></div> -->
     <HeadWrapper
       :fill="false"
       :line="ClassState == 0 ? true : false"
-      :background-color="ClassState == 0 ? '#fff' : ''"
+      :background-color="`rgba(255,255,255,${headBkOpacity})`"
       @onHeightChange="onHeightChange"
     >
       <Head
@@ -56,6 +56,7 @@
       <img width="100%" :src="imageHead" alt="" />
       <div
         class="rule"
+        :class="{ rule_in_app: isInApp }"
         @click="$router.push('/login/protocol?categoryCode=' + ruleCode)"
       >
         规则
@@ -131,12 +132,15 @@ export default {
       specType: 'HDZT_ZTTYPE_XSQG',
 
       hasCity: true,
-
-      imageHead: this.$ossImgSetV2('57zm6tubgjo0000.jpg'), // 'https://cdn.shupian.cn/sp-pt/wap/images/57zm6tubgjo0000.jpg'
+      imageHead: '',
+      imageHeadDefault: this.$ossImgSetV2('eqn8id0bly00000.png'), // 'https://cdn.shupian.cn/sp-pt/wap/images/57zm6tubgjo0000.jpg'
 
       headerHeight: 0,
       ClassState: 1,
 
+      headBkOpacity: 0,
+
+      advertCode: 'ad100073',
       ruleCode: 'protocol100047',
     }
   },
@@ -165,12 +169,30 @@ export default {
       const scrollHeight =
         document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
       const boxHeight = this.$refs.fill_container.clientHeight // 盒子高度
+      let opacity = 0
 
-      if (scrollHeight > boxHeight - this.headerHeight) {
+      if (scrollHeight < boxHeight / 2) {
+        opacity = scrollHeight / (boxHeight / 2)
+      } else {
+        opacity = 1
+      }
+      if (opacity > 0.8) {
         this.ClassState = 0
       } else {
         this.ClassState = 1
       }
+
+      this.headBkOpacity = opacity
+
+      // const scrollHeight =
+      //   document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
+      // const boxHeight = this.$refs.fill_container.clientHeight // 盒子高度
+
+      // if (scrollHeight > boxHeight - this.headerHeight) {
+      //   this.ClassState = 0
+      // } else {
+      //   this.ClassState = 1
+      // }
     },
     onHeightChange(height) {
       this.headerHeight = height
@@ -215,6 +237,9 @@ export default {
       height: 40px;
       width: 96px;
       text-align: center;
+    }
+    .rule_in_app {
+      top: 100px;
     }
   }
 

@@ -54,7 +54,7 @@
       >
         规则
       </div>
-      <div class="count-down">
+      <!-- <div class="count-down">
         <div class="down-time">
           <span>已累计补贴</span>
           <span class="time">3</span>
@@ -66,7 +66,7 @@
           <span>万</span>
         </div>
         <div class="des">- 按照商品销量 · 好评率 · 服务等综合设计 -</div>
-      </div>
+      </div> -->
     </div>
 
     <div class="content_container">
@@ -158,15 +158,17 @@ export default {
   mixins: [activityMixin],
   data() {
     return {
-      specType: 'HDZT_ZTTYPE_QWBT',
+      specType: 'HDZT_ZTTYPE_QWBT2',
 
       hasCity: true,
+      // "https://cdn.shupian.cn/sp-pt/wap/images/9x8c0a58gew0000.png" //待文字
+      // 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg' //不带文字的
       imageHead: '',
-      imageHeadDefault: this.$ossImgSetV2('aay0oucfo840000.png'), // 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg',
+      imageHeadDefault: this.$ossImgSetV2('9x8c0a58gew0000.png'), // ,
       headerHeight: 0,
       ClassState: 1,
-      advertCode: 'ad100075',
-      ruleCode: 'protocol100034',
+      advertCode: 'ad100077',
+      ruleCode: 'protocol100053',
 
       headBkOpacity: 0,
     }
