@@ -217,7 +217,8 @@ export default {
             path: '/order/confirmorder',
             query: {
               productId: this.sellingGoodsData.id,
-              plannerId: this.$route.query.plannerId,
+              plannerId:
+                this.$route.query.plannerId || this.$route.query.mchUserId,
             },
           })
         } else {
