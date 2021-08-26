@@ -75,8 +75,10 @@ export const openLink = (link, data) => {
   const dataStr = Qs.stringify(data)
   const linkurl =
     link.indexOf('?') > -1 ? `${link}&${dataStr}` : `${link}?${dataStr}`
-    window.location.replace(linkurl)
-  // window && (window.location.href = linkurl)
+  window.location.replace(linkurl)
+  // window &&
+  //   (window.location.href =
+  //     link.indexOf('?') > -1 ? `${link}&${dataStr}` : `${link}?${dataStr}`)
 }
 
 export const setUrlParams = (url, data = {}) => {
