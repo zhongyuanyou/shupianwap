@@ -276,19 +276,22 @@ export default {
           couponId: item.id,
         })
         .then((res) => {
+          console.log(res)
           this.loading = false
           if (res && res.code === 200) {
             Toast('领取成功')
-            this.page = 1
-            this.getInitCouponData()
-            this.nomore = false
+            // this.page = 1
+            // this.getInitCouponData()
+            // this.nomore = false
+            item.couponStatus = 2
+          } else if (res && res.code === 510) {
+            // 重复领取
+            item.couponStatus = 2
+            this.$xToast.error(res.message || '领取失败')
           } else {
-            Toast.fail({
-              duration: 2000,
-              message: res.message || '领取失败',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
+            // res.code === 500
+            item.couponStatus = 1
+            this.$xToast.error(res.message || '领取失败')
           }
         })
         .catch((err) => {
