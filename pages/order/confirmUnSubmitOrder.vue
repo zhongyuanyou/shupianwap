@@ -133,11 +133,13 @@
                 class="protocol_name"
                 @click.stop="goagr('protocol100008')"
                 >《薯片平台订单协议》</span
-              >和<span
-                class="protocol_name"
-                @click.stop="goagr('protocol100044')"
-                >《薯片平台担保交易支付服务协议》</span
-              >
+              ><span v-if="order.orderType === 0">
+                和<span
+                  class="protocol_name"
+                  @click.stop="goagr('protocol100044')"
+                  >《薯片平台担保交易支付服务协议》</span
+                >
+              </span>
               <!-- 、<span class="protocol_name" @click="goagr('protocol100033')"
                 >《薯片平台交易委托协议》</span
               >、<span class="protocol_name" @click="goagr('protocol100008')"
