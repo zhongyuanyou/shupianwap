@@ -7,15 +7,15 @@
         </div>
         <div class="goods_info">
           <div class="goods_info_title">
-            {{ goodsDetail.orderGoodsName }}
+            {{ goodsDetail.productName }}
           </div>
-          <div v-show="!loading" class="goods_info_des" :style="desStyle">
+          <div v-if="!loading" class="goods_info_des" :style="desStyle">
             <span v-if="state == 2">已完成办理</span>
             <span v-else-if="state == 3">已超期，请联系规划师咨询</span>
             <span v-else-if="state == 1">预计{{ day }}天办理完成</span>
             <span v-else-if="state == 0">暂未开始办理</span>
           </div>
-          <div v-show="!loading" class="goods_info_process">
+          <div v-if="!loading" class="goods_info_process">
             <div class="goods_info_process_line">
               <sp-progress
                 color="#4974F5"
@@ -37,7 +37,7 @@
           <div class="date">{{ row.item.date }}</div>
         </template>
       </Steps>
-      <div v-if="state == 0" class="">
+      <div v-if="state == 0 && loading == false" class="">
         <sp-empty
           class="empty-text"
           :description="list.length > 0 ? '暂未开始办理' : '暂无数据'"
@@ -361,6 +361,7 @@ export default {
     // overflow: auto;
     .steps_container {
       flex: 1;
+      margin: 0px 0 40px;
     }
     .process_container_goods {
       display: flex;
