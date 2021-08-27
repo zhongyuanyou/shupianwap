@@ -72,7 +72,9 @@ export default {
           type: [2, 3],
           limit: this.limit,
           page: this.page,
-        },
+          needContent: 0,
+          contentTextLength: 60,
+        }
       )
       if (code === 200) {
         if (this.refreshing) {
