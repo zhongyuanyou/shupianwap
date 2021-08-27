@@ -129,13 +129,20 @@
         <Checkbox v-model="radio">
           <template>
             <p class="tit">
-              我已阅读过并知晓<span @click="goagr('protocol100008')"
-                >《薯片平台用户交易下单协议》</span
-              >、<span @click="goagr('protocol100033')"
-                >《薯片平台交易委托协议》</span
-              >、<span @click="goagr('protocol100008')"
+              我已阅读过并知晓<span
+                class="protocol_name"
+                @click.stop="goagr('protocol100008')"
                 >《薯片平台订单协议》</span
+              >和<span
+                class="protocol_name"
+                @click.stop="goagr('protocol100044')"
+                >《薯片平台担保交易支付服务协议》</span
               >
+              <!-- 、<span class="protocol_name" @click="goagr('protocol100033')"
+                >《薯片平台交易委托协议》</span
+              >、<span class="protocol_name" @click="goagr('protocol100008')"
+                >《薯片平台订单协议》</span
+              > -->
             </p>
           </template>
         </Checkbox>
@@ -293,8 +300,8 @@ export default {
 
     // this.getInitData()
     this.getProtocol('protocol100008')
-    this.getProtocol('protocol100033')
-    this.getProtocol('protocol100008')
+
+    // this.getProtocol('protocol100033') // 薯片平台交易委托协议
 
     // this.getProtocol('protocol100044') // 薯片平台担保交易支付服务协议
   },
@@ -828,7 +835,7 @@ export default {
         font-size: 28px;
         font-weight: 400;
         color: #222222;
-        > span {
+        > .protocol_name {
           color: #4974f5;
         }
       }
