@@ -93,19 +93,17 @@
             <!-- 右侧显示 end-->
           </div>
           <div class="item-btn">
-            <button
+            <span
               v-if="item.couponStatus === 0"
               class="my-coupon"
               @click="operation_coupon(item)"
             >
               立即领取
-            </button>
-            <button v-if="item.couponStatus === 1" class="no-coupon">
+            </span>
+            <span v-if="item.couponStatus === 1" class="no-coupon">
               已领完
-            </button>
-            <button v-if="item.couponStatus === 2" class="no-use">
-              已领取
-            </button>
+            </span>
+            <span v-if="item.couponStatus === 2" class="no-use"> 已领取 </span>
           </div>
           <div v-if="item.couponStatus === 2" class="receive">
             <img
@@ -683,11 +681,14 @@ export default {
       right: 50px;
       // top: 55%;
       bottom: 54px;
-      button {
+      span {
         display: block;
         width: 100%;
         height: 100%;
+        line-height: 54px;
         font-size: 0.24rem;
+        white-space: nowrap;
+        text-align: center;
         &.my-coupon {
           background: #ec5330;
           border-radius: 27px;
