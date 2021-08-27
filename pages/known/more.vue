@@ -7,6 +7,7 @@
       :finished="finished"
       finished-text="没有更多了"
       class="list_container"
+      :immediate-check="false"
       @load="getList"
     >
       <div v-for="(item, index) in list" :key="index" class="item">
@@ -67,6 +68,9 @@ export default {
     isInApp() {
       return this.$store.state.app.isInApp
     },
+  },
+  mounted() {
+    this.getList()
   },
   methods: {
     toHome(id) {
