@@ -195,6 +195,7 @@
 import { Cell, Popup, Safeguard, Image } from '@chipspc/vant-dgg'
 import { coupon, productDetailsApi } from '@/api'
 import imHandle from '~/mixins/imHandle'
+import { CHIPS_WAP_BASE_URL } from '@/config/constant'
 // 数组排序
 function xier(arr) {
   let interval = parseInt(arr.length / 2) // 分组间隔设置
@@ -417,8 +418,11 @@ export default {
           const params = {
             couponId: id,
           }
-          coupon
-            .receiveCoupon({ axios: this.$axios }, params)
+          this.$axios
+            .post(
+              `${CHIPS_WAP_BASE_URL}/yk/coupon/v2/receive_coupon.do`,
+              params
+            )
             .then((res) => {
               this.$xToast.success('优惠券领取成功')
 
