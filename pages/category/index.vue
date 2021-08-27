@@ -230,10 +230,14 @@ export default {
       }
     },
     handleItem(item) {
+      console.log('item', item)
       // 点击每一个二级分类
       if (item.level === 2) {
         sessionStorage.categoryData = JSON.stringify(item)
-        this.$router.push('/search/searchgoods')
+        this.$router.push(
+          `/list/transactionList?navcode=${item.parentCode}&classcode=${item.code}`
+        )
+        // this.$router.push('/search/searchgoods?typeCode=' + item.code)
       } else {
         this.$router.push({
           name: 'list-jyList',
@@ -289,6 +293,7 @@ export default {
       flex-direction: row;
     }
     &_con {
+      margin-left: 20px;
       display: flex;
       justify-content: flex-start;
       align-items: center;

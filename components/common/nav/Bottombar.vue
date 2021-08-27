@@ -85,9 +85,16 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: (state) => state.user.userInfo, // 登录的用户信息
       imExample: (state) => state.im.imExample, // IM 实例
     }),
+    userInfo() {
+      const userInfo = {
+        token: this.$cookies.get('token', { path: '/' }),
+        userId: this.$cookies.get('userId', { path: '/' }),
+        userType: this.$cookies.get('userType', { path: '/' }),
+      }
+      return this.$store.state.user.userInfo || userInfo
+    },
   },
   watch: {
     $route(to, from) {

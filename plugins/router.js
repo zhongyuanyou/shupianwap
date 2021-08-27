@@ -76,6 +76,23 @@ export default ({ app, store }) => {
         store.dispatch('user/clearUser')
       }
       const token = app.$cookies.get('token') // 获取缓存用户token
+      if (token) {
+        if (!store.state.user.userInfo.token || !store.state.user.token) {
+          const userId = app.$cookies.get('userId')
+          const userName = app.$cookies.get('userName')
+          const userType = app.$cookies.get('userType')
+          const userPhone = app.$cookies.get('userPhone')
+          const avatar = app.$cookies.get('avatar')
+          store.dispatch('user/setUser', {
+            token,
+            userId,
+            userName,
+            userType,
+            userPhone,
+            avatar,
+          })
+        }
+      }
       if (!store.state.app.isInApp && !store.state.app.isApplets) {
         // wap页面中
         if (token) {

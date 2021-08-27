@@ -2,7 +2,10 @@
   <section>
     <div ref="content" class="serve-list serve-list1">
       <div v-for="(item, index) in goodsList" :key="index" class="item">
-        <TradeItem :item="item" :afterSaleStatus="orderData.afterSaleStatus" />
+        <TradeItem
+          :item="item"
+          :after-sale-status="orderData.afterSaleStatus"
+        />
       </div>
     </div>
     <div v-if="orderData.orderSkuList.length > 3" class="btn-p">
