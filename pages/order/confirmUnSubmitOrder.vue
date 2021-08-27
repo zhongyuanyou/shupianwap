@@ -295,6 +295,8 @@ export default {
     this.getProtocol('protocol100008')
     this.getProtocol('protocol100033')
     this.getProtocol('protocol100008')
+
+    // this.getProtocol('protocol100044') // 薯片平台担保交易支付服务协议
   },
   methods: {
     onLeftClick() {

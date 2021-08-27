@@ -411,7 +411,6 @@ export default {
     },
     // 领取优惠券
     async getCoupons(id, status) {
-      // 点击立即购买
       const isLogin = await this.judgeLoginMixin()
       if (isLogin) {
         if (status === 0) {
@@ -422,10 +421,25 @@ export default {
             .receiveCoupon({ axios: this.$axios }, params)
             .then((res) => {
               this.$xToast.success('优惠券领取成功')
-              this.$store.commit(
-                'sellingGoodsDetail/SET_SELLING_COUPONLIST',
-                id
-              )
+
+              let couponStatus = 0
+              if (res && res.code === 200) {
+                this.$xToast.success('领取成功')
+                couponStatus = 2
+              } else if (res && res.code === 510) {
+                // 重复领取
+                couponStatus = 2
+                this.$xToast.error(res.message || '领取失败')
+              } else {
+                // res.code === 500
+                couponStatus = 1
+                this.$xToast.error(res.message || '领取失败')
+              }
+
+              this.$store.commit('sellingGoodsDetail/SET_SELLING_COUPONLIST', {
+                cid: id,
+                couponStatus,
+              })
             })
             .catch((err) => {
               console.log(err)

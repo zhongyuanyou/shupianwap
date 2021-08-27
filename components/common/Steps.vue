@@ -119,7 +119,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .steps {
-  padding: 46px 40px 40px;
+  padding: 46px 40px 0;
   overflow: auto;
 
   .task_item {

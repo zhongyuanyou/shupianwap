@@ -34,10 +34,11 @@ export const mutations = {
     state.sellingGoodsData = object
   },
   // 更新优惠券状态
-  SET_SELLING_COUPONLIST(state, cid) {
+  SET_SELLING_COUPONLIST(state, info) {
+    console.log(info.cid, info.couponStatus);
     const newCouponList = state.sellingGoodsData.couponList.map((item) => {
-      if (item.id === cid) {
-        item.couponStatus = 2
+      if (item.id === info.cid) {
+        item.couponStatus = info.couponStatus || 2
       }
       return item
     })
