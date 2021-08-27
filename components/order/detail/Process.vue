@@ -352,6 +352,9 @@ export default {
 
     width: 670px;
     height: 900px;
+    max-height: 80%;
+    // max-height: 50vh;
+
     box-sizing: border-box;
     background: #ffffff;
     border-radius: 24px;
