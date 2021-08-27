@@ -8,7 +8,7 @@
             @click="adJumpHandleMixin(item.materialList[0])"
           >
             <img
-              v-lazy="item.materialList[0].materialUrl + $ossImgSet(375, 150)"
+              :src="$resizeImg(375, 150, item.materialList[0].materialUrl)"
               alt=""
             />
           </a>
@@ -29,11 +29,7 @@
       </div>
     </Search>
     <div class="jy_goods_list">
-      <goods
-        ref="goods"
-        :search-text="currentInputText"
-        class="jygood"
-      />
+      <goods ref="goods" :search-text="currentInputText" class="jygood" />
     </div>
     <!-- <goods ref="goods" :searchkey="currentInputText" /> -->
     <!-- <sp-work-tabs ref="tabs" v-model="active" class="jy_goods_list">
@@ -127,6 +123,7 @@ export default {
 
 <style lang="less" scoped>
 ::v-deep.jy-list {
+  padding-top: 200px;
   .jy_search {
     position: fixed;
     left: 0;
@@ -139,7 +136,7 @@ export default {
       }
     }
     .Newlist {
-      padding-top: 2rem;
+      padding-top: 0;
     }
   }
 }
