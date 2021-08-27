@@ -504,6 +504,8 @@ export default {
           page: this.page,
           currentUserId: this.userInfo.userId,
           limit: this.limit,
+          needContent: 0,
+          contentTextLength: 60,
         })
         .then((res) => {
           if (res.code === 200) {
