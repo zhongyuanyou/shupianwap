@@ -217,10 +217,11 @@ export default {
         productName: this.imJumpQuery.productName, // 产品名称
         productContent: this.imJumpQuery.productContent, // 产品信息
         price: this.imJumpQuery.price, // 价格
-        forwardAbstract: this.imJumpQuery.forwardAbstract, // 摘要信息，可与显示内容保持一致
+        // forwardAbstract: this.imJumpQuery.forwardAbstract, // 摘要信息，可与显示内容保持一致
         routerId: this.imJumpQuery.routerId, // 路由ID
         imageUrl: this.imJumpQuery.imageUrl[0], // 产品图片
         unit: this.imJumpQuery.unit, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+        forwardAbstract: '[商品详情]',
       }
       this.sendTemplateMsgMixin({ sessionParams, msgParams })
     },

@@ -3,10 +3,10 @@
     <Filters
       ref="dropDownMenu"
       :filter-data="jyFilterData"
-      :classification="items.typeData"
+      :classification="classification"
       :active_data="itemsclass"
-      :pricelist="items.price"
-      :sort="items.sortFilter"
+      :pricelist="priceList"
+      :sort="sortFilterList"
       :sortactive="sortactive"
       class="serve_filters"
       @classfn="classfn"
@@ -73,6 +73,9 @@ export default {
         { services: [{ id: -1, name: '不限', text: '不限' }] },
       ],
       skeletonLoading: true,
+      classification: [],
+      priceList: [],
+      sortFilterList: [],
       jyFilterData: [
         {
           name: '全部分类',
@@ -248,6 +251,18 @@ export default {
         .then((data) => {
           if (this.formData.needTypes === 1) {
             this.items = data
+            console.log('this.items', this.items)
+            this.classification = Array.isArray(data.typeData)
+              ? data.typeData
+              : data.typeData.children
+            this.priceList = Array.isArray(data.price)
+              ? data.price
+              : data.price.children
+            this.sortFilterList = Array.isArray(data.sortFilter)
+              ? data.sortFilter
+              : data.sortFilter.children
+            console.log('this.priceList.priceList')
+            console.log(this.priceList)
             if (this.classcode && this.isOne) {
               for (let i = 0; i < this.items.typeData.length; i++) {
                 if (this.classcode.navcode === this.items.typeData[i].code) {
@@ -361,7 +376,7 @@ export default {
     },
     pagefn(val) {
       this.formData.start = val
-      this.formData.needTypes=0
+      this.formData.needTypes = 0
       this.getlist()
     },
     changeTabs(name, title) {
