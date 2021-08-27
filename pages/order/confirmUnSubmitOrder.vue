@@ -250,7 +250,7 @@ export default {
         couponPrice: '', // 选择的优惠券对象
 
         tablist: [
-          { name: '可用优惠券', num: '12', is: true },
+          { name: '可用优惠券', num: '', is: true },
           { name: '不可用优惠券' },
         ],
         datalist: [],
@@ -261,7 +261,7 @@ export default {
         selectedItem: {}, // 选择的对象
         cardPrice: '', // 选择的card对象立减金额
         tablist: [
-          { name: '可用活动卡', num: '12', is: true },
+          { name: '可用活动卡', num: '', is: true },
           { name: '不可用活动卡' },
         ],
         datalist: [], // 支持的列表
@@ -311,7 +311,7 @@ export default {
     onLeftClick() {
       this.$router.back()
     },
-    // 打开《薯片平台用户交易下单协议》
+    // 打开协议
     goagr(categoryCode) {
       this.$router.push({
         name: 'login-protocol',
@@ -365,6 +365,7 @@ export default {
               this.getInitData(5) // 获取优惠券
               this.getInitData(6)
             }
+            this.getProtocol('protocol100044')
             this.setPayMethod()
           } else {
             this.$xToast.show('服务器异常,请然后再试')
@@ -411,7 +412,7 @@ export default {
 
     // 提交订单
     placeOrder() {
-      if (this.Orderform.orderAgreementIds.length !== 3) {
+      if (this.Orderform.orderAgreementIds.length === 0) {
         return this.$xToast.warning('协议获取失败!')
       }
       if (!this.payMethod.value) {
