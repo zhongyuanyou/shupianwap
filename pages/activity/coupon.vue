@@ -198,7 +198,7 @@ export default {
 
         const time = list[0].receiveEndDate - Date.now()
         if (time > 0) {
-          console.log('添加刷新计时器')
+          console.log('添加刷新计时器', time, 'ms')
           this.timer = setTimeout(() => {
             console.log('刷新页面数据')
             this.getInitCouponData()
