@@ -84,16 +84,16 @@ export default {
       production_task_status: {
         production_task_status_1: '未开始', // "待分配","未开始"
         production_task_status_2: '未开始', // "待接收","未开始"
-        production_task_status_3: '办理中', // "办理中","办理中"
-        production_task_status_4: '办理中', // "审核中","办理中"
-        production_task_status_5: '办理中', // "暂停中","办理中"
+        production_task_status_3: '处理中', // "办理中","办理中"
+        production_task_status_4: '处理中', // "审核中","办理中"
+        production_task_status_5: '处理中', // "暂停中","办理中"
         production_task_status_6: '已完成', // "已完成","已完成"
         production_task_status_7: '已取消', // "已取消","已取消"
       },
 
       loading: true,
       goodsDetail: {},
-      // state: 0, // 0，未开始办理， 1 办理中 ，显示预计多少天，2已完成，3已超期
+      // state: 0, // 0，未开始办理， 1 处理中 ，显示预计多少天，2已完成，3已超期
       day: 0, // 预计多少天完成
       completePercentage: 0, // 完成进度，0-100
 
@@ -251,7 +251,7 @@ export default {
                 info.endTime = item.endTime
               }
               completeNodes.push(info)
-            } else if (item.taskStatusName === '办理中') {
+            } else if (item.taskStatusName === '处理中') {
               info.status = 'current'
               this.list.push(info)
             } else if (item.taskStatusName === '未开始') {
@@ -308,16 +308,14 @@ export default {
           let day = 0
 
           if (res.deadlineTime && res.openTime) {
-            day =
-              (new Date(res.deadlineTime) - new Date(res.openTime)) /
-              1000 /
-              60 /
-              60 /
-              24
+            const a = moment(res.deadlineTime)
+            const b = moment(res.openTime)
+
+            day = a.diff(b, 'days')
             console.log(res.openTime, res.deadlineTime)
             console.log('day', day, parseInt(day))
           }
-          this.day = parseInt(day)
+          this.day = parseInt(day) || 0
           this.getProcessList()
           // res.openTime 开始时间
           // res.deadlineTime 预计结束
@@ -354,6 +352,9 @@ export default {
 
     width: 670px;
     height: 900px;
+    max-height: 75%;
+    // max-height: 50vh;
+
     box-sizing: border-box;
     background: #ffffff;
     border-radius: 24px;

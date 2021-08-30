@@ -87,9 +87,13 @@ export default {
         const data = await auth.protocol(params)
         console.log('data:', data)
         const { rows = [] } = data || {}
-        this.article = rows[0] || {}
-        this.loading = false
-        return rows[0] || {}
+        if (rows.length > 0) {
+          this.article = rows[0] || {}
+          this.loading = false
+          return rows[0] || {}
+        } else {
+          this.$xToast.error('获取协议失败')
+        }
       } catch (error) {
         this.$xToast.error(error.message || '请求失败')
         return Promise.reject(error)

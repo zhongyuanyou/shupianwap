@@ -129,13 +129,22 @@
         <Checkbox v-model="radio">
           <template>
             <p class="tit">
-              我已阅读过并知晓<span @click="goagr('protocol100008')"
-                >《薯片平台用户交易下单协议》</span
-              >、<span @click="goagr('protocol100033')"
-                >《薯片平台交易委托协议》</span
-              >、<span @click="goagr('protocol100008')"
+              我已阅读过并知晓<span
+                class="protocol_name"
+                @click.stop="goagr('protocol100008')"
                 >《薯片平台订单协议》</span
-              >
+              ><span v-if="order.orderType === 0">
+                和<span
+                  class="protocol_name"
+                  @click.stop="goagr('protocol100044')"
+                  >《薯片平台担保交易支付服务协议》</span
+                >
+              </span>
+              <!-- 、<span class="protocol_name" @click="goagr('protocol100033')"
+                >《薯片平台交易委托协议》</span
+              >、<span class="protocol_name" @click="goagr('protocol100008')"
+                >《薯片平台订单协议》</span
+              > -->
             </p>
           </template>
         </Checkbox>
@@ -241,7 +250,7 @@ export default {
         couponPrice: '', // 选择的优惠券对象
 
         tablist: [
-          { name: '可用优惠券', num: '12', is: true },
+          { name: '可用优惠券', num: '', is: true },
           { name: '不可用优惠券' },
         ],
         datalist: [],
@@ -252,7 +261,7 @@ export default {
         selectedItem: {}, // 选择的对象
         cardPrice: '', // 选择的card对象立减金额
         tablist: [
-          { name: '可用活动卡', num: '12', is: true },
+          { name: '可用活动卡', num: '', is: true },
           { name: '不可用活动卡' },
         ],
         datalist: [], // 支持的列表
@@ -293,8 +302,8 @@ export default {
 
     // this.getInitData()
     this.getProtocol('protocol100008')
-    this.getProtocol('protocol100033')
-    this.getProtocol('protocol100008')
+
+    // this.getProtocol('protocol100033') // 薯片平台交易委托协议
 
     // this.getProtocol('protocol100044') // 薯片平台担保交易支付服务协议
   },
@@ -302,7 +311,7 @@ export default {
     onLeftClick() {
       this.$router.back()
     },
-    // 打开《薯片平台用户交易下单协议》
+    // 打开协议
     goagr(categoryCode) {
       this.$router.push({
         name: 'login-protocol',
@@ -356,6 +365,7 @@ export default {
               this.getInitData(5) // 获取优惠券
               this.getInitData(6)
             }
+            this.getProtocol('protocol100044')
             this.setPayMethod()
           } else {
             this.$xToast.show('服务器异常,请然后再试')
@@ -402,7 +412,7 @@ export default {
 
     // 提交订单
     placeOrder() {
-      if (this.Orderform.orderAgreementIds.length !== 3) {
+      if (this.Orderform.orderAgreementIds.length === 0) {
         return this.$xToast.warning('协议获取失败!')
       }
       if (!this.payMethod.value) {
@@ -828,7 +838,7 @@ export default {
         font-size: 28px;
         font-weight: 400;
         color: #222222;
-        > span {
+        > .protocol_name {
           color: #4974f5;
         }
       }
