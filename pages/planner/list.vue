@@ -445,6 +445,7 @@ export default {
             const { limit, currentPage = 1, totalCount = 0, records = [] } = res
             this.pageOption = { limit, totalCount, page: currentPage }
             this.pageOption.page = currentPage + 1
+            this.plannerMd(records)
             // 第一页面请求提示
             if (currentPage === 1) {
               this.$xToast.show({
@@ -775,6 +776,7 @@ export default {
           const { limit, currentPage = 1, totalCount = 0, records = [] } = data
           this.pageOption = { limit, totalCount, page: currentPage }
           this.list.push(...records)
+          this.plannerMd(records)
           // 第一页面请求提示
           if (currentPage === 1) {
             this.$xToast.show({
@@ -831,6 +833,20 @@ export default {
         console.error('getRegionList:', error)
         return Promise.reject(error)
       }
+    },
+    plannerMd(records) {
+      // 处理规划师列表访问埋点
+      records.forEach((item) => {
+        if (item) {
+          window.spptMd.spptTrackRow('p_plannerBoothVisit', {
+            track_code: 'SPP001111',
+            planner_number: item.userCenterNo,
+            planner_name: item.userName,
+            crisps_fraction: item.point,
+            recommend_number: item.dggPlannerRecomLog || '',
+          })
+        }
+      })
     },
   },
   head() {
