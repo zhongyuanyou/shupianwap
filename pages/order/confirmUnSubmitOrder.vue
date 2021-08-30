@@ -55,7 +55,15 @@
           </div>
         </div>
       </div>
-
+      <div v-if="order.orderType === 0" class="deposit">
+        <div class="deposit_tips">
+          温馨提示：该订单先支付定金在业务办理完成后支付尾款
+        </div>
+        <div class="deposit_content">
+          定金尾款：定金 {{ order.depositAmount }}元，尾款
+          {{ order.lastAount }}元
+        </div>
+      </div>
       <div class="news-content">
         <CellGroup>
           <Cell
@@ -66,10 +74,11 @@
           <Cell
             title="商品金额"
             :value="
-              order.orderTotalMoney || order.orderPayableMoneys || 0 + '元'
+              (order.orderTotalMoney || order.orderPayableMoneys || 0) + '元'
             "
             value-class="black"
           />
+          <!-- 意向单不用优惠券 -->
           <Cell
             v-if="order.orderType !== 0"
             title="优惠券"
@@ -109,9 +118,12 @@
 
         <p class="money">
           合计：
-          <span>
-            <b>{{ price }}</b> 元
-          </span>
+          <span
+            ><b>{{ price }}</b> 元</span
+          ><span v-if="order.orderType === 0" class="deposit_text"
+            >（定金 {{ order.depositAmount }}元，尾款
+            {{ order.lastAount }}元）</span
+          >
         </p>
       </div>
       <div class="news-content">
@@ -131,7 +143,7 @@
                 class="protocol_name"
                 @click.stop="goagr('protocol100008')"
                 >《薯片平台订单协议》</span
-              ><span v-if="order.orderType === 0">
+              ><span v-if="order.isSecuredTrade === 1">
                 和<span
                   class="protocol_name"
                   @click.stop="goagr('protocol100044')"
@@ -151,7 +163,8 @@
     <div ref="foot" class="foot">
       <p class="left">
         应付:<span>
-          <b>{{ price }}</b> 元</span
+          <b v-if="order.orderType === 0">{{ order.depositAmount }}</b>
+          <b v-if="order.orderType !== 0">{{ price }}</b> 元</span
         >
       </p>
       <div class="right" :class="radio ? 'act' : ''" @click="placeOrder">
@@ -365,7 +378,8 @@ export default {
             if (this.order.orderType !== 0) {
               this.getInitData(5) // 获取优惠券
               this.getInitData(6)
-            } else {
+            }
+            if (order.isSecuredTrade === 1) {
               this.getProtocol('protocol100044')
             }
 
@@ -385,12 +399,12 @@ export default {
         })
     },
     setPayMethod() {
-      if (this.order.orderType !== 0) {
+      if (this.order.isSecuredTrade === 0) {
         this.payMethod.list = [
           { value: 'ORDER_PAY_MODE_ONLINE', text: '在线支付' },
           { value: 'ORDER_PAY_MODE_OFFLINE', text: '线下支付' },
         ]
-      } else {
+      } else if (this.order.isSecuredTrade === 1) {
         this.payMethod.list = [
           { value: 'ORDER_PAY_MODE_SECURED', text: '担保交易' },
         ]
@@ -665,6 +679,9 @@ export default {
       this.card.show = true
     },
     openPayMethod() {
+      if (this.payMethod.list.length === 1) {
+        return
+      }
       if (this.payMethod.list.length) {
         this.payMethod.show = true
       } else {
@@ -830,6 +847,28 @@ export default {
             font-size: 30px;
           }
         }
+        .deposit_text {
+          color: #222222;
+        }
+      }
+    }
+    .deposit {
+      margin-top: 24px;
+      background: #fff;
+      padding: 36px 40px;
+      .deposit_tips {
+        font-family: PingFangSC-Regular;
+        font-size: 24px;
+        color: #999999;
+        line-height: 34px;
+      }
+      .deposit_content {
+        margin-top: 20px;
+        height: 40px;
+        font-family: PingFangSC-Regular;
+        font-size: 28px;
+        color: #222222;
+        letter-spacing: 0;
       }
     }
     > .contract {
