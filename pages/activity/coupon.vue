@@ -164,6 +164,8 @@ export default {
       limit: 100,
       nomore: false,
       isLogin: '',
+
+      timer: null,
     }
   },
   computed: {
@@ -177,31 +179,33 @@ export default {
   mounted() {
     this.getAdvertisingData()
     this.getInitCouponData()
-    // this.getInitCouponData()
-    // if (this.isInApp) {
-    //   if (this.userInfo.userId && this.userInfo.token) {
-    //     console.log('无token')
-    //     this.getInitCouponData()
-    //   } else {
-    //     this.$appFn.dggGetUserInfo((res) => {
-    //       console.log('调用app获取信息', res)
-    //       if (res.code === 200) {
-    //         // 兼容启大顺参数返回
-    //         this.$store.dispatch(
-    //           'user/setUser',
-    //           typeof res.data === 'string' ? JSON.parse(res.data) : res.data
-    //         )
-    //         this.getInitCouponData()
-    //       } else {
-    //         this.getInitCouponData()
-    //       }
-    //     })
-    //   }
-    // } else {
-    //   this.getInitCouponData()
-    // }
+  },
+  destroyed() {
+    clearTimeout(this.timer)
   },
   methods: {
+    /**
+     * 当有优惠券领取时间到期后，刷新数据
+     */
+    refresh() {
+      clearTimeout(this.timer)
+
+      const list = [...this.responseData]
+      if (list.length > 0) {
+        list.sort((a, b) => {
+          return a.receiveEndDate - b.receiveEndDate
+        })
+
+        const time = list[0].receiveEndDate - Date.now()
+        if (time > 0) {
+          console.log('添加刷新计时器', time, 'ms')
+          this.timer = setTimeout(() => {
+            console.log('刷新页面数据')
+            this.getInitCouponData()
+          }, time)
+        }
+      }
+    },
     getRemainPercent(data) {
       if (data.countSum > 0 && data.countSur > 0) {
         return Math.ceil((Number(data.countSur) * 100) / Number(data.countSum))
@@ -365,6 +369,8 @@ export default {
           // this.notUsedCount = result.notUsedCount
           // this.invalidCount = result.invalidCount
           this.responseData = dataArr
+          this.refresh()
+
           this.loading = false
           if (result.length < this.limit) {
             this.nomore = true
@@ -379,6 +385,7 @@ export default {
           }
         })
     },
+
     popOver(index) {
       const l = this.responseData.length
       for (let i = 0; i < l; i++) {

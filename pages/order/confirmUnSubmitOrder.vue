@@ -378,9 +378,9 @@ export default {
         })
         .catch(() => {
           this.$xToast.show('服务器异常,请然后再试')
-          setTimeout(() => {
-            this.$router.back(-1)
-          }, 2000)
+          // setTimeout(() => {
+          //   this.$router.back(-1)
+          // }, 2000)
         })
     },
     setPayMethod() {
