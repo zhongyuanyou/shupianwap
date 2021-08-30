@@ -1,5 +1,15 @@
 <template>
-  <div class="planner-search-item" @click.stop="handleClick('detail')">
+  <div
+    v-md:p_plannerBoothClick
+    data-even_name="p_plannerBoothClick"
+    data-track_code="SPP001112"
+    :data-recommend_number="itemData.dggPlannerRecomLog || ''"
+    :data-planner_number="itemData.userCenterNo"
+    :data-planner_name="itemData.userName"
+    :data-crisps_fraction="itemData.point"
+    class="planner-search-item"
+    @click.stop="handleClick('detail')"
+  >
     <div class="left">
       <div class="planner-search-item__avatar">
         <sp-image
@@ -108,10 +118,20 @@ export default {
   //     await this.POSITION_CITY({ type: 'init' })
   //   }
   // },
-
   methods: {
     async handleClick(type) {
       let data = {}
+      // 添加埋点
+      if (type === 'IM' || type === 'tel') {
+        window.spptMd.spptTrackRow('p_IMClick', {
+          track_code: 'SPP001113',
+          im_type: '售前',
+          planner_number: this.itemData.userCenterNo,
+          planner_name: this.itemData.userName,
+          crisps_fraction: this.itemData.point,
+          recommend_number: this.itemData.dggPlannerRecomLog || '',
+        })
+      }
       switch (type) {
         case 'IM':
           data = {
