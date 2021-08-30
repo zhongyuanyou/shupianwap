@@ -1,5 +1,5 @@
 <template>
-  <div class="process" @click="close">
+  <div class="process" @click="close" @touchmove.stop.prevent>
     <div class="process_container" @click.stop>
       <div class="process_container_goods">
         <div class="goods_img">
