@@ -364,15 +364,23 @@ export default {
             if (this.order.orderType !== 0) {
               this.getInitData(5) // 获取优惠券
               this.getInitData(6)
+            } else {
+              this.getProtocol('protocol100044')
             }
-            this.getProtocol('protocol100044')
+
             this.setPayMethod()
           } else {
-            this.$xToast.show('服务器异常,请然后再试')
-            // setTimeout(function () {
-            //   that.$router.back(-1)
+            this.$xToast.show('数据异常,请然后再试')
+            // setTimeout(() => {
+            //   this.$router.back(-1)
             // }, 2000)
           }
+        })
+        .catch(() => {
+          this.$xToast.show('服务器异常,请然后再试')
+          setTimeout(() => {
+            this.$router.back(-1)
+          }, 2000)
         })
     },
     setPayMethod() {
@@ -496,19 +504,19 @@ export default {
             })
             setTimeout(() => {
               if (
-                this.order.orderType !== 0 &&
-                this.order.payType !== 'ORDER_PAY_MODE_SECURED'
+                result.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
+                result.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
               ) {
+                // 先付款后服务 PRO_PRE_PAY_POST_SERVICE;先定金后尾款 PRO_PRE_DEPOSIT_POST_OTHERS;
                 this.$router.replace({
                   path: '/pay/payType',
                   query: {
                     fromPage: 'orderList',
-                    // cusOrderId: result.cusOrderId,
-                    cusOrderId: this.$route.query.cusOrderId,
+                    cusOrderId: result.cusOrderId,
                   },
                 })
               } else {
-                // 意向单和担保交易 回到订单列表
+                // 意向单和担保交易等 回到订单列表
                 this.$router.replace({
                   path: '/order',
                   query: {},

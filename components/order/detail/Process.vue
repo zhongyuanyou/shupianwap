@@ -128,7 +128,7 @@ export default {
     // 0，未开始办理， 1 办理中 ，显示预计多少天，2已完成，3已超期
     state() {
       let status = 0
-      let ex = 0
+
       if (this.loading) {
         // 加载中
         return status
@@ -142,7 +142,12 @@ export default {
         status = 1
 
         if (this.goodsDetail.deadlineTime) {
-          ex = new Date(this.goodsDetail.deadlineTime) - new Date()
+          //  = new Date(this.goodsDetail.deadlineTime) - new Date()
+          // 年月日格式 ios处理不了
+          const a = moment(this.goodsDetail.deadlineTime)
+          const b = moment(new Date())
+          const ex = a.diff(b, 'seconds')
+          console.log('ex', ex)
           if (ex < 0) {
             // 是否超出预期时间
             status = 3
@@ -188,11 +193,11 @@ export default {
   },
   methods: {
     formatDate(time) {
-      console.log(time, new Date(time))
-      return moment(new Date(time)).format('MM-DD')
+      console.log('time', time)
+      return moment(time).format('MM-DD')
     },
     formatTime(time) {
-      return moment(new Date(time)).format('HH:mm')
+      return moment(time).format('HH:mm')
     },
     close() {
       this.$emit('close')
