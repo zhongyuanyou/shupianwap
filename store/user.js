@@ -46,7 +46,7 @@ export const mutations = {
     state.avatar = String(data.avatar || AVATAR)
   },
   CLEAR_USER(state) {
-    const clearKeys = ['token', 'userId', 'avatar', 'userNo', 'userName', 'userName', 'userPhone', 'realStatus', 'mainAccountFull', 'userNo', 'userType']
+    const clearKeys = ['token', 'userId', 'avatar', 'userNo', 'userName', 'userPhone', 'realStatus', 'mainAccountFull', 'userType']
     clearKeys.forEach((key) => {
       this.$cookies.remove(key, {
         path: '/',

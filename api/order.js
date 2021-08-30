@@ -107,7 +107,9 @@ const category = {
       axios,
       params,
       method: 'post',
+
       url: CHIPS_WAP_BASE_URL + '/yk/order/v1/commit_order.do', // CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
+      // url: 'http://127.0.0.1:7001/service/yk/order/v1/commit_order.do',
     })
   },
 
