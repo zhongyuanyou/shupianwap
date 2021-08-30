@@ -187,7 +187,7 @@ export default {
     /**
      * 当有优惠券领取时间到期后，刷新数据
      */
-    refresh() {
+    setRefresh() {
       clearTimeout(this.timer)
 
       const list = [...this.responseData]
@@ -369,7 +369,8 @@ export default {
           // this.notUsedCount = result.notUsedCount
           // this.invalidCount = result.invalidCount
           this.responseData = dataArr
-          this.refresh()
+
+          this.setRefresh()
 
           this.loading = false
           if (result.length < this.limit) {

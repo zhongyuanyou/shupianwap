@@ -50,9 +50,7 @@
                 ><b>{{ item.salesPrice }}</b
                 >元</span
               >
-              <i>{{
-                $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
-              }}</i>
+              <i>{{ 'x' + item.skuCount }}</i>
             </p>
           </div>
         </div>
@@ -332,32 +330,35 @@ export default {
         )
         .then((res) => {
           console.log('res', res)
-          this.changeMoney(res.data || res)
-          const cusDetail = res.data
-            ? res.data.orderSplitAndCusVo
-            : res.orderSplitAndCusVo
+          // this.changeMoney(res.data || res)
+          // const cusDetail = res.data
+          // ? res.data.orderSplitAndCusVo
+          // : res.orderSplitAndCusVo
 
-          const data = Object.assign(cusDetail, res.data || res)
-
+          // const data = Object.assign(cusDetail, res.data || res)
+          this.changeMoney(res)
+          const data = res
           if (data) {
             data.list = []
             this.order = data
 
             console.log('res', res)
-
+            let num = 0
             data.orderSkuList.map((item) => {
               const obj = {
                 name: item.spuHideName || item.spuName,
                 classCode: item.classCode,
                 classCodeName: item.classCodeName,
                 id: item.id,
+                skuCount: item.skuCount,
                 salesPrice: item.skuPrice,
                 salesGoodsSubVos: item.salesGoodsSubVos,
               }
+              num += parseInt(item.skuCount) || 0
               this.order.list.push(obj)
             })
 
-            this.order.num = this.order.list.length
+            this.order.num = num // this.order.list.length
             this.price = this.order.orderTotalMoney
 
             // 意向单不使用优惠券
