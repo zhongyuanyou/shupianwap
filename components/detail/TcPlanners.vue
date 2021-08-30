@@ -9,10 +9,7 @@
       :style="{ marginTop: index === 0 ? '0.42rem' : '0.66rem' }"
     >
       <div class="planners_item_lf">
-        <a
-          href="javascript:void(0);"
-          @click="plannerInfoUrlJump(item.mchUserId)"
-        >
+        <a href="javascript:void(0);" @click="plannerInfoUrlJump(item)">
           <sp-image
             width="0.8rem"
             height="0.8rem"
@@ -24,10 +21,7 @@
         </a>
         <div class="info">
           <div class="info_tp">
-            <a
-              href="javascript:void(0);"
-              @click="plannerInfoUrlJump(item.mchUserId)"
-            >
+            <a href="javascript:void(0);" @click="plannerInfoUrlJump(item)">
               <p class="name">{{ item.userName }}</p>
             </a>
             <i v-if="item.postName ? true : false" class="gold_icon">
@@ -42,8 +36,16 @@
       </div>
       <div class="planners_item_rt">
         <sp-button
+          v-md:p_IMClick
+          data-even_name="p_IMClick"
           round
           class="contact-btn"
+          data-im_type="售前"
+          :data-recommend_number="item.dggPlannerRecomLog || ''"
+          :data-planner_number="item.userCenterNo"
+          :data-planner_name="item.userName"
+          :data-crisps_fraction="item.point"
+          data-track_code="SPW000157"
           @click="sendTemplateMsgWithImg(item.mchUserId, item.type)"
           ><my-icon
             class=""
@@ -51,7 +53,18 @@
             size="0.424rem"
             color="#4974F5"
         /></sp-button>
-        <sp-button round class="contact-btn" @click="handleTel(item.mchUserId)"
+        <sp-button
+          v-md:p_IMClick
+          round
+          class="contact-btn"
+          data-even_name="p_IMClick"
+          data-im_type="售前"
+          :data-recommend_number="item.dggPlannerRecomLog || ''"
+          :data-planner_number="item.userCenterNo"
+          :data-planner_name="item.userName"
+          :data-crisps_fraction="item.point"
+          data-track_code="SPW000157"
+          @click="handleTel(item.mchUserId)"
           ><my-icon
             class=""
             name="notify_ic_tel"
@@ -108,10 +121,21 @@ export default {
   },
   methods: {
     // 规划师详情跳转
-    plannerInfoUrlJump(mchUserId) {
+    plannerInfoUrlJump(item) {
+      // 处理埋点
+      window.spptMd.spptTrackRow('p_plannerBoothClick', {
+        track_code: 'SPW000158',
+        planner_number: item.userCenterNo,
+        planner_name: item.userName,
+        crisps_fraction: item.point,
+        recommend_number: item.dggPlannerRecomLog || '',
+      })
       this.$router.push({
         path: '/planner/detail',
-        query: { mchUserId, requireCode: this.proDetail.classCodeLevelList[0] },
+        query: {
+          mchUserId: item.mchUserId,
+          requireCode: this.proDetail.classCodeLevelList[0],
+        },
       })
     },
     async handleTel(mchUserId) {
