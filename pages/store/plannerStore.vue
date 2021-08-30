@@ -837,7 +837,7 @@ export default {
     mdPlannerStore(info) {
       // 处理曝光埋点
       window.spptMd.spptTrackRow('p_plannerBoothVisit', {
-        track_code: 'SPP001147',
+        track_code: this.isInApp ? 'SPP001147' : 'SPW000146',
         planner_number: info.userCenterNo,
         planner_name: info.name,
         crisps_fraction: info.point,
