@@ -214,7 +214,7 @@ export default {
   productionId: "1260895514024880700", //生产单ID
   serviceExplain: "公司注册服务项3", //服务说明
   serviceName: "公司注册服务项3", //服务名称
-  taskName: "公司注册服务项3", //taskName
+  taskName: "公司注册服务项3",
   taskStatus: "production_task_status_6"
 }
  */
@@ -241,7 +241,7 @@ export default {
             item.taskStatusName = this.production_task_status[item.taskStatus]
             const info = {
               status: 'more', // more,current,complete
-              title: item.taskName + `（${item.taskStatusName}）`,
+              title: item.serviceName + `（${item.taskStatusName}）`,
               // nodes: ['立案（未开始）', '立案（未开始）', '立案（未开始）'], // 更多节点
             }
             if (
@@ -260,7 +260,7 @@ export default {
               info.status = 'current'
               this.list.push(info)
             } else if (item.taskStatusName === '未开始') {
-              more.nodes.push(item.taskName + `（${item.taskStatusName}）`)
+              more.nodes.push(item.serviceName + `（${item.taskStatusName}）`)
             }
           })
           // 对已完成订单排序

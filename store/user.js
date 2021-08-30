@@ -56,46 +56,6 @@ export const mutations = {
         path: '/',
       })
     })
-    // this.$cookies.remove('token', {
-    //   path: '/',
-    //   // domain: 'shupian.cn',
-    // })
-    // this.$cookies.remove('userId', {
-    //   path: '/',
-    //   // domain: 'shupian.cn',
-    // })
-    // this.$cookies.remove('avatar', {
-    //   path: '/',
-    //   // domain: 'shupian.cn',
-    // })
-    // this.$cookies.remove('userNo', {
-    //   path: '/',
-    //   // domain: 'shupian.cn',
-    // })
-    // this.$cookies.remove('userName', {
-    //   path: '/',
-    //   // domain: 'shupian.cn',
-    // })
-    // this.$cookies.remove('userPhone', {
-    //   path: '/',
-    //   // domain: 'shupian.cn',
-    // })
-    // this.$cookies.remove('realStatus', {
-    //   path: '/',
-    //   // domain: 'shupian.cn',
-    // })
-    // this.$cookies.remove('mainAccountFull', {
-    //   path: '/',
-    //   // domain: 'shupian.cn',
-    // })
-    // this.$cookies.remove('userNo', {
-    //   path: '/',
-    //   // domain: 'shupian.cn',
-    // })
-    // this.$cookies.remove('userType', {
-    //   path: '/',
-    //   // domain: 'shupian.cn',
-    // })
     state.token = ''
     state.userId = ''
     state.userType = ''
