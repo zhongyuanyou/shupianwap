@@ -24,13 +24,9 @@
     <!--      公司注册是开始创业的第一步，-->
     <!--      根据《中华人民共和国公司法》规定，注册公司时需要依法向注册公司时需要...-->
     <!--    </div>-->
-    <div
-      v-if="comment.records && comment.records.length"
-      class="comment"
-      @click="commentfn"
-    >
-      <p class="tit">{{ comment.records[0].evaluateContent }}</p>
-      <p class="num">共{{ comment.totalCount | count }}评价</p>
+    <div class="comment" @click="commentfn">
+      <p class="tit">{{ comment }}</p>
+      <p class="num">共999+评价</p>
       <sp-icon name="arrow" class="icon" />
     </div>
     <div class="title_bottom">
@@ -57,26 +53,10 @@ export default {
     PriceReduction,
     SpIcon: Icon,
   },
-  filters: {
-    count(val) {
-      if (isNaN(Number(val))) {
-        return 0
-      } else if (val < 999) {
-        return val
-      } else {
-        return '999+'
-      }
-    },
-  },
   props: {
     comment: {
-      type: Object,
-      default: () => {
-        return {
-          totalCount: 0, // 初始化评论字段,防止程序报错
-          records: [],
-        }
-      },
+      type: String,
+      default: '',
     },
   },
   data() {
