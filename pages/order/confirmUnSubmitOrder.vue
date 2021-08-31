@@ -593,14 +593,34 @@ export default {
           .then((result) => {
             console.log('result', result)
             this.loading = false
-            Toast({
-              message: '下单成功',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_success',
-              overlay: true,
-            })
+
+            if (this.payMethod.value === 'ORDER_PAY_MODE_SECURED') {
+              this.$xToast.error(
+                '该订单为担保交易订单，请访问薯片网站PC端进行付款！'
+              )
+            } else if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
+              this.$xToast.error('请前往线下银行网点进行支付！')
+            } else {
+              Toast({
+                message: '下单成功',
+                iconPrefix: 'sp-iconfont',
+                icon: 'popup_ic_success',
+                overlay: true,
+              })
+            }
             setTimeout(() => {
-              if (
+              if (this.payMethod.value === 'ORDER_PAY_MODE_SECURED') {
+                this.$router.replace({
+                  path: '/order',
+                  query: {},
+                })
+              } else if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
+                // 线下付款
+                this.$router.replace({
+                  path: '/order',
+                  query: {},
+                })
+              } else if (
                 result.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
                 result.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
               ) {
