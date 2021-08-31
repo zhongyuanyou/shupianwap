@@ -49,12 +49,9 @@
                 isUnSubmit(orderData)
               "
               class="name"
+              >{{ item.spuHideName || item.spuName }}</span
             >
-              {{ item.spuHideName || item.spuName }}</span
-            >
-            <span v-else class="name">
-              {{ item.classifyOneName.match('公司') }}{{ item.spuName }}</span
-            >
+            <span v-else class="name">{{ item.spuName }}</span>
             <span
               v-if="
                 checkPayType() !== 2 && checkPayType() !== 4 && !item.orderType
