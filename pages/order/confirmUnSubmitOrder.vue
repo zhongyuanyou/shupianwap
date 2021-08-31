@@ -110,7 +110,7 @@
           />
           <!-- 意向单不用优惠券 -->
           <Cell
-            v-if="!isIntendedOrder"
+            v-if="!isIntendedOrder && isBeforePay"
             title="优惠券"
             :value="
               couponInfo.couponPrice
