@@ -55,7 +55,7 @@
           </div>
         </div>
       </div>
-      <div v-if="order.orderType === 0" class="deposit">
+      <div v-if="isDeposit" class="deposit">
         <div class="deposit_tips">
           温馨提示：该订单先支付定金在业务办理完成后支付尾款
         </div>
@@ -80,7 +80,7 @@
           />
           <!-- 意向单不用优惠券 -->
           <Cell
-            v-if="order.orderType !== 0"
+            v-if="!isIntendedOrder"
             title="优惠券"
             :value="
               couponInfo.couponPrice
@@ -120,7 +120,7 @@
           合计：
           <span
             ><b>{{ price }}</b> 元</span
-          ><span v-if="order.orderType === 0" class="deposit_text"
+          ><span v-if="isDeposit" class="deposit_text"
             >（定金 {{ order.depositAmount }}元，尾款
             {{ order.lastAount }}元）</span
           >
@@ -163,8 +163,8 @@
     <div ref="foot" class="foot">
       <p class="left">
         应付:<span>
-          <b v-if="order.orderType === 0">{{ order.depositAmount }}</b>
-          <b v-if="order.orderType !== 0">{{ price }}</b> 元</span
+          <b v-if="isDeposit">{{ order.depositAmount }}</b>
+          <b v-if="!isDeposit">{{ price }}</b> 元</span
         >
       </p>
       <div class="right" :class="radio ? 'act' : ''" @click="placeOrder">
@@ -252,6 +252,7 @@ export default {
       radio: '', // 选中协议
       checkboxProtocol: [], // 选中协议
       order: {},
+      orderData: {},
       // num: 0,
 
       couponInfo: {
@@ -304,9 +305,28 @@ export default {
     }
   },
   computed: {
-    // orderType() {
-    //   return this.order.orderType !== 0
-    // },
+    // 是否先定金后服务
+    isDeposit() {
+      return (
+        this.order?.orderSplitAndCusVo?.cusOrderPayType ===
+        'PRO_PRE_DEPOSIT_POST_OTHERS'
+      )
+    },
+    // 服务完结收费
+    isServiceFinshed() {
+      return (
+        this.order?.orderSplitAndCusVo?.cusOrderPayType ===
+        'PRO_PRE_SERVICE_FINISHED_PAY'
+      )
+    },
+    // 是否是意向单
+    isIntendedOrder() {
+      return this.order.orderType === 0
+    },
+    // 是否担保订单
+    isSecuredTrade() {
+      return this.order.isSecuredTrade === 1
+    },
   },
   mounted() {
     this.asyncData()
@@ -351,9 +371,11 @@ export default {
           // const data = Object.assign(cusDetail, res.data || res)
           this.changeMoney(res)
           const data = res
+
           if (data) {
             data.list = []
             this.order = data
+            this.orderData = res
 
             console.log('res', res)
             let num = 0
@@ -375,7 +397,7 @@ export default {
             this.price = this.order.orderTotalMoney
 
             // 意向单不使用优惠券
-            if (this.order.orderType !== 0) {
+            if (!this.isIntendedOrder) {
               this.getInitData(5) // 获取优惠券
               this.getInitData(6)
             }
