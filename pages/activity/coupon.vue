@@ -282,9 +282,7 @@ export default {
           this.loading = false
           if (res && res.code === 200) {
             Toast('领取成功')
-            // this.page = 1
-            // this.getInitCouponData()
-            // this.nomore = false
+
             item.couponStatus = 2
           } else if (res && res.code === 510) {
             // 重复领取
@@ -295,6 +293,9 @@ export default {
             item.couponStatus = 1
             this.$xToast.error(res.message || '领取失败')
           }
+          this.page = 1
+          this.getInitCouponData()
+          this.nomore = false
         })
         .catch((err) => {
           this.loading = false

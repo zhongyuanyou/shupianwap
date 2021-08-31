@@ -98,7 +98,11 @@
                 <div class="vouchers_desc">
                   <span v-if="item.useType === 1">全场通用</span>
                   <span v-if="item.useType === 2">仅限指定品类使用</span>
-                  <span v-if="item.useType === 3">仅限指定商品使用</span>
+                  <span v-if="item.useType === 3">{{
+                    item.productName
+                      ? item.productName + '-可用'
+                      : '仅限指定商品使用'
+                  }}</span>
                 </div>
                 <div class="vouchers_date">
                   {{ item.serviceLife }}
