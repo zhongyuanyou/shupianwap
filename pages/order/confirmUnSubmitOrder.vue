@@ -55,13 +55,43 @@
           </div>
         </div>
       </div>
-      <div v-if="isDeposit" class="deposit">
-        <div class="deposit_tips">
-          温馨提示：该订单先支付定金在业务办理完成后支付尾款
+
+      <!-- 根据当前的付款模式，先付款后服务/先定金后尾款/先服务后付款/按节点付费，展示不同的模块 -->
+      <div>
+        <div v-if="isDeposit" class="deposit">
+          <!-- 先定金后尾款 -->
+          <div class="deposit_tips">
+            温馨提示：该订单先支付定金在业务办理完成后支付尾款
+          </div>
+          <div class="deposit_content">
+            定金尾款：定金 {{ order.depositAmount }}元，尾款
+            {{ order.lastAount }}元
+          </div>
         </div>
-        <div class="deposit_content">
-          定金尾款：定金 {{ order.depositAmount }}元，尾款
-          {{ order.lastAount }}元
+
+        <div v-else-if="isServiceFinshed" class="deposit">
+          <!-- 服务完结收费的意向单 -->
+          <div class="deposit_tips">温馨提示：该订单先服务后收费</div>
+          <div class="deposit_content">
+            <span v-if="order.orderType === 0">总价：面议</span>
+            <span v-else
+              >总价 {{ order.orderTotalMoney }}元，优惠
+              {{ order.orderDiscountMoney }}元，</span
+            >
+          </div>
+        </div>
+        <div v-else class="deposit">
+          <div class="deposit_tips">
+            温馨提示：{{
+              isNodes ? '该订单按服务节点付费' : '该订单先付款后服务'
+            }}
+          </div>
+          <div class="deposit_content">
+            总价 {{ order.orderTotalMoney }}元，优惠
+            {{ order.orderDiscountMoney }}元，应付款{{
+              orderData.orderPayableMoney
+            }}元
+          </div>
         </div>
       </div>
       <div class="news-content">
@@ -164,7 +194,9 @@
       <p class="left">
         应付:<span>
           <b v-if="isDeposit">{{ order.depositAmount }}</b>
-          <b v-if="!isDeposit">{{ price }}</b> 元</span
+          <b v-else-if="isNodes">0</b>
+          <b v-else-if="isServiceFinshed">0</b>
+          <b v-else-if="isBeforePay">{{ price }}</b> 元</span
         >
       </p>
       <div class="right" :class="radio ? 'act' : ''" @click="placeOrder">
@@ -298,6 +330,7 @@ export default {
 
         payType: 'ORDER_PAY_MODE_ONLINE',
       },
+
       loading: false,
       skeletonloading: true,
       editShow: false,
@@ -319,6 +352,21 @@ export default {
         'PRO_PRE_SERVICE_FINISHED_PAY'
       )
     },
+    // 节点付费
+    isNodes() {
+      return (
+        this.order?.orderSplitAndCusVo?.cusOrderPayType ===
+        'PRO_PRE_SERVICE_POST_PAY_BY_NODE'
+      )
+    },
+    // 先付款后服务
+    isBeforePay() {
+      return (
+        this.order?.orderSplitAndCusVo?.cusOrderPayType ===
+        'PRO_PRE_PAY_POST_SERVICE'
+      )
+    },
+
     // 是否是意向单
     isIntendedOrder() {
       return this.order.orderType === 0
@@ -421,6 +469,8 @@ export default {
         })
     },
     setPayMethod() {
+      // this.Orderform.payType = this.order?.orderSplitAndCusVo?.payType
+
       if (this.order.isSecuredTrade === 0) {
         this.payMethod.list = [
           { value: 'ORDER_PAY_MODE_ONLINE', text: '在线支付' },
@@ -431,8 +481,18 @@ export default {
           { value: 'ORDER_PAY_MODE_SECURED', text: '担保交易' },
         ]
       }
-      this.payMethod.text = this.payMethod.list[0].text
-      this.payMethod.value = this.payMethod.list[0].value
+      if (this.order?.orderSplitAndCusVo?.payType) {
+        const pay = this.payMethod.list.find((item) => {
+          return item.value === this.order?.orderSplitAndCusVo?.payType
+        })
+        if (pay && pay.value) {
+          this.payMethod.text = pay.text
+          this.payMethod.value = pay.value
+        }
+      } else {
+        this.payMethod.text = this.payMethod.list[0].text
+        this.payMethod.value = this.payMethod.list[0].value
+      }
     },
     async getProtocol(categoryCode) {
       if (!categoryCode) {
@@ -590,15 +650,15 @@ export default {
     //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
       const arr = this.order.list.map((x) => {
-        return x.id
+        return x.orderSaleId
       })
       const list = []
       for (let i = 0; i < this.order.list.length; i++) {
         const item = {
-          goodsId: this.order.list[i].id,
+          goodsId: this.order.list[i].orderSaleId,
           price: this.order.list[i].salesPrice,
           goodsNum: this.order.list[i].salesVolume || 1,
-          goodsClassCode: this.order.list[i].classCode,
+          // goodsClassCode: this.order.list[i].classifyTwoNo,
         }
         list.push(item)
       }
