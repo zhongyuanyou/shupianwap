@@ -110,7 +110,7 @@
           />
           <!-- 意向单不用优惠券 -->
           <Cell
-            v-if="!isIntendedOrder && isBeforePay"
+            v-if="!isIntendedOrder"
             title="优惠券"
             :value="
               couponInfo.couponPrice
@@ -650,15 +650,15 @@ export default {
     //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
       const arr = this.order.list.map((x) => {
-        return x.id
+        return x.orderSaleId
       })
       const list = []
       for (let i = 0; i < this.order.list.length; i++) {
         const item = {
-          goodsId: this.order.list[i].id,
+          goodsId: this.order.list[i].orderSaleId,
           price: this.order.list[i].salesPrice,
           goodsNum: this.order.list[i].salesVolume || 1,
-          goodsClassCode: this.order.list[i].classCode,
+          // goodsClassCode: this.order.list[i].classifyTwoNo,
         }
         list.push(item)
       }
