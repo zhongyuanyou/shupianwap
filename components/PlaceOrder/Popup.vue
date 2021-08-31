@@ -473,7 +473,7 @@ export default {
     .databox {
       height: calc(67vh - 324px);
       .listbox {
-        height: calc(100% - 130px);
+        height: calc(100% - 180px);
         overflow-y: auto;
         padding: 0 40px;
         > .list {
