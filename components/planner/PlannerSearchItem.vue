@@ -2,7 +2,7 @@
   <div
     v-md:p_plannerBoothClick
     data-even_name="p_plannerBoothClick"
-    data-track_code="SPP001112"
+    :data-track_code="isInApp ? 'SPP001112' : 'SPW000112'"
     :data-recommend_number="itemData.dggPlannerRecomLog || ''"
     :data-planner_number="itemData.userCenterNo"
     :data-planner_name="itemData.userName"
@@ -124,7 +124,7 @@ export default {
       // 添加埋点
       if (type === 'IM' || type === 'tel') {
         window.spptMd.spptTrackRow('p_IMClick', {
-          track_code: 'SPP001113',
+          track_code: this.isInApp ? 'SPP001113' : 'SPW000113',
           im_type: '售前',
           planner_number: this.itemData.userCenterNo,
           planner_name: this.itemData.userName,

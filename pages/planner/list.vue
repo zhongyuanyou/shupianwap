@@ -839,7 +839,7 @@ export default {
       records.forEach((item) => {
         if (item) {
           window.spptMd.spptTrackRow('p_plannerBoothVisit', {
-            track_code: 'SPP001111',
+            track_code: this.isInApp ? 'SPP001111' : 'SPW000111',
             planner_number: item.userCenterNo,
             planner_name: item.userName,
             crisps_fraction: item.point,

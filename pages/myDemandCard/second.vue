@@ -61,7 +61,7 @@
       <button
         v-md:p_formSubmit
         data-even_name="p_formSubmit"
-        data-track_code="SPW000114"
+        :data-track_code="isInApp ? 'SPP001115' : 'SPW000114'"
         :data-form_type="formType"
         class="form-button"
         @click="consultForm"
@@ -256,7 +256,7 @@ export default {
             // start: 添加埋点接口
             window.spptMd.spptTrackRow('p_formSubmitResult', {
               form_type: this.formType,
-              track_code: 'SPW000115',
+              track_code: this.isInApp ? 'SPP001116' : 'SPW000115',
             })
             // end: 添加埋点接口
             this.formData = {
