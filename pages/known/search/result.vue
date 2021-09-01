@@ -20,6 +20,27 @@
         </template>
       </Search>
     </header-slot>
+    <sp-tabs
+      v-model="active"
+      :class="[isInApp ? 'z-app' : '']"
+      @change="changeTabs"
+    >
+      <template v-if="!isInApp">
+        <sp-tab
+          v-for="item in wapClassify"
+          :key="item.code"
+          :title="item.txt"
+        ></sp-tab>
+      </template>
+      <template v-else>
+        <sp-tab
+          v-for="item in appClassify"
+          :key="item.code"
+          :title="item.txt"
+          title-style="width: 20vw;"
+        ></sp-tab>
+      </template>
+    </sp-tabs>
     <div class="tab">
       <p :class="tabIndex === '1' ? 'act' : ''" @click="changeTab('1')">
         <span>问题</span><i></i>
@@ -245,6 +266,8 @@ import {
   List,
   CenterPopup,
   Image,
+  Tab,
+  Tabs,
 } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import knownApi from '@/api/known'
@@ -263,6 +286,8 @@ export default {
     [List.name]: List,
     [CenterPopup.name]: CenterPopup,
     [Image.name]: Image,
+    [Tab.name]: Tab,
+    [Tabs.name]: Tabs,
     HeaderSlot,
   },
   filters: {
@@ -277,6 +302,56 @@ export default {
     return {
       searchList: [],
       userList: [],
+      // wap 页面对应分类
+      wapClassify: [
+        {
+          code: 'question',
+          txt: '问题',
+        },
+        {
+          code: 'article',
+          txt: '文章',
+        },
+        {
+          code: 'user',
+          txt: '用户',
+        },
+      ],
+      // app 页面对应分类
+      appClassify: [
+        {
+          code: 'question',
+          txt: '问题',
+        },
+        {
+          code: 'article',
+          txt: '文章',
+        },
+        {
+          code: 'live',
+          txt: '直播',
+        },
+        {
+          code: 'vback',
+          txt: '回放',
+        },
+        {
+          code: 'video',
+          txt: '短视频',
+        },
+        {
+          code: 'svideo',
+          txt: '小视频',
+        },
+        {
+          code: 'course',
+          txt: '大讲堂',
+        },
+        {
+          code: 'user',
+          txt: '用户',
+        },
+      ],
       tabIndex: '1',
       value: '',
       page: 1,
@@ -294,13 +369,15 @@ export default {
         confirmButtonText: '好的',
       },
       showItem: true,
+      isInApp: true,
+      active: 0,
     }
   },
   computed: {
     ...mapState({
       userInfo: (state) => state.user, // 登录的用户信息
       userId: (state) => state.user.userId, // userId 用于判断登录
-      isInApp: (state) => state.app.isInApp, // 是否app中
+      // isInApp: (state) => state.app.isInApp, // 是否app中
       appInfo: (state) => state.app.appInfo, // app信息
       // isApplets: (state) => state.app.isApplets,
     }),
@@ -314,12 +391,7 @@ export default {
     this.value = query.keyword
   },
   beforeRouteLeave(to, from, next) {
-    if (
-      [
-        'known-detail-question',
-        'known-detail-article',
-      ].includes(to.name)
-    ) {
+    if (['known-detail-question', 'known-detail-article'].includes(to.name)) {
       this.SET_KEEP_ALIVE({ type: 'add', name: 'Searchresult' })
     } else {
       this.SET_KEEP_ALIVE({ type: 'remove', name: 'Searchresult' })
@@ -330,6 +402,9 @@ export default {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
+    changeTabs() {
+      console.log(`output active: ${this.active}`)
+    },
     timeSplice(time) {
       return time.substring(0, time.length - 3)
     },
@@ -577,35 +652,83 @@ export default {
     font-weight: 400;
     color: #222222;
   }
-  > .tab {
-    width: 100%;
+  ::v-deep.sp-tabs__wrap {
     height: 80px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #fff;
-    > p {
-      width: 250px;
+  }
+  ::v-deep.sp-tab {
+    padding: 0;
+    font-size: 30px;
+    line-height: 30px;
+    color: #999;
+  }
+  ::v-deep.sp-tab__text--ellipsis {
+    overflow: unset;
+  }
+  ::v-deep.sp-tabs__line {
+    width: 28px;
+    height: 6px;
+    bottom: 23px;
+  }
+  ::v-deep .sp-tab--active {
+    color: #222222;
+    font-weight: bold;
+  }
+  ::v-deep.sp-tabs__nav--line {
+    padding-bottom: 15px;
+  }
+  ::v-deep.sp-tabs__nav--complete {
+    padding-left: unset;
+    padding-right: unset;
+  }
+  .z-app {
+    overflow: hidden;
+    width: 100vw;
+  }
+  .sp-tab__app {
+    width: 20vw;
+  }
+  .tabs-wrap {
+    width: 100vw;
+    overflow: hidden;
+    .z-app__wrap {
+      height: 80px;
+      overflow: hidden;
+      .z-app {
+        display: flex;
+        overflow-y: hidden;
+        overflow-x: auto;
+        box-sizing: content-box;
+        height: 100%;
+        user-select: none;
+      }
+    }
+    p {
+      flex: 1 0 auto;
       height: 30px;
       font-size: 30px;
-      font-weight: 400;
       color: #999999;
       line-height: 30px;
       text-align: center;
-      > i {
+      &.wap-item {
+        width: 33.3%;
+      }
+      &.app-item {
+        width: 20vw;
+      }
+      &.z-active {
+        font-weight: bold;
+        color: #222222;
+        i {
+          display: block;
+        }
+      }
+      i {
         width: 28px;
         height: 6px;
         background: #4974f5;
         border-radius: 3px;
         display: none;
-        margin: 10px auto 0 auto;
-      }
-    }
-    > .act {
-      font-weight: bold;
-      color: #222222;
-      > i {
-        display: block;
+        margin: 11px auto 0 auto;
       }
     }
   }
