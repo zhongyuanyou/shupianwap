@@ -46,10 +46,12 @@
               }}
             </p>
             <p class="price">
-              <span
+              <span v-if="order.orderType === 0"><b>面议</b></span>
+              <span v-else
                 ><b>{{ item.salesPrice }}</b
                 >元</span
               >
+
               <i>{{ 'x' + item.skuCount }}</i>
             </p>
           </div>
@@ -64,8 +66,10 @@
             温馨提示：该订单先支付定金在业务办理完成后支付尾款
           </div>
           <div class="deposit_content">
-            定金尾款：定金 {{ order.depositAmount }}元，尾款
-            {{ order.lastAount }}元
+            定金尾款：定金 {{ order.depositAmount }}元，<span
+              v-if="order.orderType === 0"
+              >尾款 面议</span
+            ><span v-else>尾款 {{ order.lastAount }}元</span>
           </div>
         </div>
 
@@ -104,7 +108,10 @@
           <Cell
             title="商品金额"
             :value="
-              (order.orderTotalMoney || order.orderPayableMoneys || 0) + '元'
+              order.orderType === 0
+                ? '面议'
+                : (order.orderTotalMoney || order.orderPayableMoneys || 0) +
+                  '元'
             "
             value-class="black"
           />
@@ -148,11 +155,20 @@
 
         <p class="money">
           合计：
-          <span
-            ><b>{{ price }}</b> 元</span
-          ><span v-if="isDeposit" class="deposit_text"
-            >（定金 {{ order.depositAmount }}元，尾款
-            {{ order.lastAount }}元）</span
+          <span v-if="order.orderType === 0" class="money_price"
+            ><b>面议</b></span
+          ><span v-else class="money_price"
+            ><b>{{ price }}</b
+            >元</span
+          >
+          <span v-if="isDeposit" class="deposit_text"
+            >（定金 {{ order.depositAmount }}元，<span
+              v-if="order.orderType === 0"
+              class="deposit_text"
+              >尾款 面议</span
+            ><span v-else class="deposit_text"
+              >尾款 {{ order.lastAount }}元</span
+            >）</span
           >
         </p>
       </div>
@@ -942,7 +958,7 @@ export default {
         font-size: 28px;
         font-weight: 400;
         color: #222222;
-        span {
+        .money_price {
           font-size: 22px;
           color: #ec5330;
           b {
@@ -951,6 +967,7 @@ export default {
         }
         .deposit_text {
           color: #222222;
+          font-size: 22px;
         }
       }
     }
