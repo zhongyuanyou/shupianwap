@@ -5,60 +5,63 @@
       <div v-for="(item, index) in list" :key="index" class="list">
         <div class="head">
           <h1>{{ item.contractName }}</h1>
-          <p v-if="item.contractStatus == 'STRUTS_YWC'">已签署</p>
+          <p v-if="item.status == 'STRUTS_YWC'">已签署</p>
           <p
-            v-if="item.contractStatus == 'STRUTS_CG'"
+            v-if="item.status == 'STRUTS_CG'"
             :style="{
-              color: item.contractStatus == 'STRUTS_CG' ? '#FE8C29' : '#222222',
+              color: item.status == 'STRUTS_CG' ? '#FE8C29' : '#222222',
             }"
           >
             待签署
           </p>
           <p
-            v-if="item.contractStatus == 'STRUTS_QSZ'"
+            v-if="item.status == 'STRUTS_QSZ'"
             :style="{
-              color:
-                item.contractStatus == 'STRUTS_QSZ' ? '#4974F5' : '#222222',
+              color: item.status == 'STRUTS_QSZ' ? '#4974F5' : '#222222',
             }"
           >
             签署中
           </p>
-          <p v-if="item.contractStatus == 'STRUTS_DSH'">待审核</p>
-          <p v-if="item.contractStatus == 'STRUTS_YJQ'">已拒签</p>
-          <p v-if="item.contractStatus == 'STRUTS_YYQ'">已逾期</p>
-          <p v-if="item.contractStatus == 'STRUTS_YZF'">已作废</p>
+          <p v-if="item.status == 'STRUTS_DSH'">待审核</p>
+          <p v-if="item.status == 'STRUTS_YJQ'">已拒签</p>
+          <p v-if="item.status == 'STRUTS_YYQ'">已逾期</p>
+          <p v-if="item.status == 'STRUTS_YZF'">已作废</p>
+          <p v-if="item.status == 'STRUTS_SHZ'">审核中(平台)</p>
+          <p v-if="item.status == 'STRUTS_SHZ_SH'">审核中(待商户审核)</p>
+          <p v-if="item.status == 'STRUTS_DGD'">待归档</p>
         </div>
         <div class="body">
           <div class="cell">
-            <p class="title">合同编号：{{ item.contractNo }}</p>
+            <p class="title">合同编号：{{ item.documentNo }}</p>
           </div>
           <div class="cell">
-            <p class="title">合同金额：￥{{ item.contractMoney }}</p>
+            <p class="title">
+              合同金额：{{ item.money ? '￥' + item.money : '-' }}
+            </p>
           </div>
           <div class="cell">
             <p class="title">
               合同类型：{{
-                item.isAppendixContract == 0 ? '通用合同' : '产品附件'
+                item.contractTypeName ? item.contractTypeName : '-'
               }}
             </p>
           </div>
           <div class="cell">
-            <p class="title">签署时间：{{ item.contractSignedTime || '-' }}</p>
+            <p class="title">签署时间：{{ item.signCompleteTime || '-' }}</p>
           </div>
         </div>
         <div
           v-if="
-            item.contractStatus == 'STRUTS_YWC' ||
-            item.contractStatus == 'STRUTS_QSZ' ||
-            item.contractStatus == 'STRUTS_CG' ||
-            item.contractStatus == 'STRUTS_DSH'
+            item.status == 'STRUTS_YWC' ||
+            item.status == 'STRUTS_QSZ' ||
+            item.status == 'STRUTS_CG' ||
+            item.status == 'STRUTS_DSH'
           "
           class="btn"
           @click="goPreview(item)"
         >
           {{
-            item.contractStatus == 'STRUTS_CG' ||
-            item.contractStatus == 'STRUTS_QSZ'
+            item.status == 'STRUTS_CG' || item.status == 'STRUTS_QSZ'
               ? '签署合同'
               : '查看合同'
           }}
@@ -70,7 +73,7 @@
 
 <script>
 import Head from '@/components/common/head/header'
-import orderApi from '@/api/order'
+import contractApi from '@/api/contract'
 export default {
   name: 'OrderContract',
   components: {
@@ -80,6 +83,8 @@ export default {
     return {
       list: [],
       order: this.$route.query,
+      page: 1,
+      limit: 500,
     }
   },
   mounted() {
@@ -87,53 +92,51 @@ export default {
   },
   methods: {
     getorder() {
-      orderApi
-        .annexList(
+      contractApi
+        .contartlist(
           { axios: this.axios },
           {
-            id: this.$store.state.user.userInfo.userId,
-            orderId: this.order.orderId,
-            page: 1,
-            limit: 500,
-            operateSourcePlat: 'COMDIC_PLATFORM_CRISPS',
+            cusUserId: this.$store.state.user.userId, // 用户id
+            businessId: this.order.orderId, // 订单id
+            page: this.page,
+            limit: this.limit,
           }
         )
         .then((res) => {
           this.list = res.records
         })
         .catch((err) => {
-          this.$xToast.error(err.message || '查询失败，请稍后重试')
-          const that = this
-          setTimeout(function () {
-            that.$router.back(-1)
-          }, 2000)
+          this.$xToast.show('查询合同列表失败', 2000, false, () => {
+            this.$back()
+          })
+          console.log('错误信息err', err)
         })
     },
     goPreview(item) {
-      if (item.contractStatus === 'STRUTS_DSH') {
+      if (item.status === 'STRUTS_DSH') {
         this.$xToast.error('合同正在审核中，请稍后~')
-      } else if (item.contractStatus === 'STRUTS_YWC') {
-        this.$router.push({
-          path: '/contract/preview',
-          query: {
-            contractUrl: item.contractUrl,
-            type: 'yl',
-          },
-        })
-      } else {
-        this.$router.push({
-          path: '/contract/preview',
-          query: {
-            contractUrl: item.contractUrl,
-            contractId: item.contractId,
-            contractNo: item.contractNo,
-            signerName: item.contractFirstName,
-            contactWay: item.contractFirstPhone,
-            type: 'qs',
-            go: '-1',
-          },
-        })
+        return
       }
+      const queryParams = {
+        contractUrl: item.fileUrl,
+        go: '-1',
+        contractId: item.id, // 合同id
+        contractNo: item.documentNo, // 合同编码
+      }
+      // 已完成状态
+      if (item.status === 'STRUTS_YWC') {
+        queryParams.type = 'yl'
+      } else {
+        // 甲方名称
+        queryParams.signerName = item.partyaName
+        // 甲方联系电话(加密)
+        queryParams.contactWay = item.partyaTelephone
+        queryParams.type = 'qs'
+      }
+      this.$router.push({
+        path: '/contract/preview',
+        query: queryParams,
+      })
     },
   },
 }

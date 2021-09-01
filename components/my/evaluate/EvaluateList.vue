@@ -15,13 +15,6 @@
         <div class="item-button read" @click="linkDetail(evaluateInfo)">
           查看评价
         </div>
-        <div
-          v-if="evaluateInfo.isReview"
-          class="item-button read add"
-          @click="linkWrite(evaluateInfo, 1)"
-        >
-          追评
-        </div>
       </template>
       <div class="item-clear"></div>
     </div>
@@ -51,7 +44,7 @@ export default {
     }
   },
   methods: {
-    linkWrite(evaluateInfo, additional) {
+    linkWrite(evaluateInfo) {
       this.$router.push({
         path: '/my/evaluate/write',
         query: {
@@ -59,18 +52,10 @@ export default {
           orderName: evaluateInfo.orderName,
           infoId: evaluateInfo.evaluateCenterId,
           orderDesc: evaluateInfo.orderDesc,
-          additional,
-          addEvaluateId: evaluateInfo.submitEvaluateId,
-          createrId: evaluateInfo.createrId,
-          createrName: evaluateInfo.createrName,
         },
       })
     },
     linkDetail(evaluateInfo) {
-      if (evaluateInfo.isEffective === 0) {
-        this.$xToast.error('该条评价已被禁用')
-        return
-      }
       this.$router.push({
         path: '/my/evaluate/detail',
         query: {
@@ -137,9 +122,6 @@ export default {
         border-radius: 6px;
         border: 1px solid #cccccc;
         color: #555555;
-      }
-      &.add {
-        margin-right: 20px;
       }
     }
     &-clear {

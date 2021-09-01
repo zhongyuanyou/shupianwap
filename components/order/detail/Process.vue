@@ -1,5 +1,5 @@
 <template>
-  <div class="process" @click="close">
+  <div class="process" @click="close" @touchmove.stop.prevent>
     <div class="process_container" @click.stop>
       <div class="process_container_goods">
         <div class="goods_img">
@@ -7,15 +7,15 @@
         </div>
         <div class="goods_info">
           <div class="goods_info_title">
-            {{ goodsDetail.orderGoodsName }}
+            {{ goodsDetail.productName }}
           </div>
-          <div v-show="!loading" class="goods_info_des" :style="desStyle">
+          <div v-if="!loading" class="goods_info_des" :style="desStyle">
             <span v-if="state == 2">已完成办理</span>
             <span v-else-if="state == 3">已超期，请联系规划师咨询</span>
             <span v-else-if="state == 1">预计{{ day }}天办理完成</span>
             <span v-else-if="state == 0">暂未开始办理</span>
           </div>
-          <div v-show="!loading" class="goods_info_process">
+          <div v-if="!loading" class="goods_info_process">
             <div class="goods_info_process_line">
               <sp-progress
                 color="#4974F5"
@@ -37,7 +37,7 @@
           <div class="date">{{ row.item.date }}</div>
         </template>
       </Steps>
-      <div v-if="state == 0" class="">
+      <div v-if="state == 0 && loading == false" class="">
         <sp-empty
           class="empty-text"
           :description="list.length > 0 ? '暂未开始办理' : '暂无数据'"
@@ -84,16 +84,16 @@ export default {
       production_task_status: {
         production_task_status_1: '未开始', // "待分配","未开始"
         production_task_status_2: '未开始', // "待接收","未开始"
-        production_task_status_3: '办理中', // "办理中","办理中"
-        production_task_status_4: '办理中', // "审核中","办理中"
-        production_task_status_5: '办理中', // "暂停中","办理中"
+        production_task_status_3: '处理中', // "办理中","办理中"
+        production_task_status_4: '处理中', // "审核中","办理中"
+        production_task_status_5: '处理中', // "暂停中","办理中"
         production_task_status_6: '已完成', // "已完成","已完成"
         production_task_status_7: '已取消', // "已取消","已取消"
       },
 
       loading: true,
       goodsDetail: {},
-      // state: 0, // 0，未开始办理， 1 办理中 ，显示预计多少天，2已完成，3已超期
+      // state: 0, // 0，未开始办理， 1 处理中 ，显示预计多少天，2已完成，3已超期
       day: 0, // 预计多少天完成
       completePercentage: 0, // 完成进度，0-100
 
@@ -128,7 +128,7 @@ export default {
     // 0，未开始办理， 1 办理中 ，显示预计多少天，2已完成，3已超期
     state() {
       let status = 0
-      let ex = 0
+
       if (this.loading) {
         // 加载中
         return status
@@ -142,7 +142,12 @@ export default {
         status = 1
 
         if (this.goodsDetail.deadlineTime) {
-          ex = new Date(this.goodsDetail.deadlineTime) - new Date()
+          //  = new Date(this.goodsDetail.deadlineTime) - new Date()
+          // 年月日格式 ios处理不了
+          const a = moment(this.goodsDetail.deadlineTime)
+          const b = moment(new Date())
+          const ex = a.diff(b, 'seconds')
+          console.log('ex', ex)
           if (ex < 0) {
             // 是否超出预期时间
             status = 3
@@ -188,11 +193,11 @@ export default {
   },
   methods: {
     formatDate(time) {
-      console.log(time, new Date(time))
-      return moment(new Date(time)).format('MM-DD')
+      console.log('time', time)
+      return moment(time).format('MM-DD')
     },
     formatTime(time) {
-      return moment(new Date(time)).format('HH:mm')
+      return moment(time).format('HH:mm')
     },
     close() {
       this.$emit('close')
@@ -209,7 +214,7 @@ export default {
   productionId: "1260895514024880700", //生产单ID
   serviceExplain: "公司注册服务项3", //服务说明
   serviceName: "公司注册服务项3", //服务名称
-  taskName: "公司注册服务项3", //taskName
+  taskName: "公司注册服务项3",
   taskStatus: "production_task_status_6"
 }
  */
@@ -236,7 +241,7 @@ export default {
             item.taskStatusName = this.production_task_status[item.taskStatus]
             const info = {
               status: 'more', // more,current,complete
-              title: item.taskName + `（${item.taskStatusName}）`,
+              title: item.serviceName + `（${item.taskStatusName}）`,
               // nodes: ['立案（未开始）', '立案（未开始）', '立案（未开始）'], // 更多节点
             }
             if (
@@ -251,11 +256,11 @@ export default {
                 info.endTime = item.endTime
               }
               completeNodes.push(info)
-            } else if (item.taskStatusName === '办理中') {
+            } else if (item.taskStatusName === '处理中') {
               info.status = 'current'
               this.list.push(info)
             } else if (item.taskStatusName === '未开始') {
-              more.nodes.push(item.taskName + `（${item.taskStatusName}）`)
+              more.nodes.push(item.serviceName + `（${item.taskStatusName}）`)
             }
           })
           // 对已完成订单排序
@@ -308,16 +313,14 @@ export default {
           let day = 0
 
           if (res.deadlineTime && res.openTime) {
-            day =
-              (new Date(res.deadlineTime) - new Date(res.openTime)) /
-              1000 /
-              60 /
-              60 /
-              24
+            const a = moment(res.deadlineTime)
+            const b = moment(res.openTime)
+
+            day = a.diff(b, 'days')
             console.log(res.openTime, res.deadlineTime)
             console.log('day', day, parseInt(day))
           }
-          this.day = parseInt(day)
+          this.day = parseInt(day) || 0
           this.getProcessList()
           // res.openTime 开始时间
           // res.deadlineTime 预计结束
@@ -354,6 +357,9 @@ export default {
 
     width: 670px;
     height: 900px;
+    max-height: 75%;
+    // max-height: 50vh;
+
     box-sizing: border-box;
     background: #ffffff;
     border-radius: 24px;
@@ -361,6 +367,7 @@ export default {
     // overflow: auto;
     .steps_container {
       flex: 1;
+      margin: 0px 0 40px;
     }
     .process_container_goods {
       display: flex;

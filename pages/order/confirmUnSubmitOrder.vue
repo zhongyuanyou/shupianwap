@@ -46,18 +46,54 @@
               }}
             </p>
             <p class="price">
-              <span
+              <span v-if="order.orderType === 0"><b>面议</b></span>
+              <span v-else
                 ><b>{{ item.salesPrice }}</b
                 >元</span
               >
-              <i>{{
-                $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
-              }}</i>
+
+              <i>{{ 'x' + item.skuCount }}</i>
             </p>
           </div>
         </div>
       </div>
 
+      <!-- 根据当前的付款模式，先付款后服务/先定金后尾款/先服务后付款/按节点付费，展示不同的模块 -->
+      <div>
+        <div v-if="isDeposit" class="deposit">
+          <!-- 先定金后尾款 -->
+          <div class="deposit_tips">
+            温馨提示：该订单先支付定金在业务办理完成后支付尾款
+          </div>
+          <div class="deposit_content">
+            定金尾款：定金 {{ order.depositAmount }}元，<span
+              v-if="order.orderType === 0"
+              >尾款 面议</span
+            ><span v-else>尾款 {{ order.lastAount }}元</span>
+          </div>
+        </div>
+
+        <div v-else-if="isServiceFinshed" class="deposit">
+          <!-- 服务完结收费的意向单 -->
+          <div class="deposit_tips">温馨提示：该订单先服务后收费</div>
+          <div class="deposit_content">
+            <span v-if="order.orderType === 0">总价：面议</span>
+            <span v-else>总价 {{ order.orderTotalMoney }}元</span>
+          </div>
+        </div>
+        <div v-else class="deposit">
+          <div class="deposit_tips">
+            温馨提示：{{
+              isNodes ? '该订单按服务节点付费' : '该订单先付款后服务'
+            }}
+          </div>
+          <div class="deposit_content">
+            总价 {{ order.orderTotalMoney }}元，应付款{{
+              orderData.orderPayableMoney
+            }}元
+          </div>
+        </div>
+      </div>
       <div class="news-content">
         <CellGroup>
           <Cell
@@ -68,12 +104,16 @@
           <Cell
             title="商品金额"
             :value="
-              order.orderTotalMoney || order.orderPayableMoneys || 0 + '元'
+              order.orderType === 0
+                ? '面议'
+                : (order.orderTotalMoney || order.orderPayableMoneys || 0) +
+                  '元'
             "
             value-class="black"
           />
+          <!-- 意向单不用优惠券 -->
           <Cell
-            v-if="order.orderType !== 0"
+            v-if="!isIntendedOrder"
             title="优惠券"
             :value="
               couponInfo.couponPrice
@@ -111,9 +151,21 @@
 
         <p class="money">
           合计：
-          <span>
-            <b>{{ price }}</b> 元
-          </span>
+          <span v-if="order.orderType === 0" class="money_price"
+            ><b>面议</b></span
+          ><span v-else class="money_price"
+            ><b>{{ price }}</b
+            >元</span
+          >
+          <span v-if="isDeposit" class="deposit_text"
+            >（定金 {{ order.depositAmount }}元，<span
+              v-if="order.orderType === 0"
+              class="deposit_text"
+              >尾款 面议</span
+            ><span v-else class="deposit_text"
+              >尾款 {{ order.lastAount }}元</span
+            >）</span
+          >
         </p>
       </div>
       <div class="news-content">
@@ -122,20 +174,29 @@
           :value="payMethod.text"
           is-link
           value-class="black"
-          @click="payMethod.show = true"
+          @click="openPayMethod"
         />
       </div>
       <div class="agreement">
         <Checkbox v-model="radio">
           <template>
             <p class="tit">
-              我已阅读过并知晓<span @click="goagr('protocol100008')"
-                >《薯片平台用户交易下单协议》</span
-              >、<span @click="goagr('protocol100033')"
-                >《薯片平台交易委托协议》</span
-              >、<span @click="goagr('protocol100008')"
+              我已阅读过并知晓<span
+                class="protocol_name"
+                @click.stop="goagr('protocol100008')"
                 >《薯片平台订单协议》</span
-              >
+              ><span v-if="order.isSecuredTrade === 1">
+                和<span
+                  class="protocol_name"
+                  @click.stop="goagr('protocol100044')"
+                  >《薯片平台担保交易支付服务协议》</span
+                >
+              </span>
+              <!-- 、<span class="protocol_name" @click="goagr('protocol100033')"
+                >《薯片平台交易委托协议》</span
+              >、<span class="protocol_name" @click="goagr('protocol100008')"
+                >《薯片平台订单协议》</span
+              > -->
             </p>
           </template>
         </Checkbox>
@@ -144,7 +205,10 @@
     <div ref="foot" class="foot">
       <p class="left">
         应付:<span>
-          <b>{{ price }}</b> 元</span
+          <b v-if="isDeposit">{{ order.depositAmount }}</b>
+          <b v-else-if="isNodes">0</b>
+          <b v-else-if="isServiceFinshed">0</b>
+          <b v-else-if="isBeforePay">{{ price }}</b> 元</span
         >
       </p>
       <div class="right" :class="radio ? 'act' : ''" @click="placeOrder">
@@ -232,6 +296,7 @@ export default {
       radio: '', // 选中协议
       checkboxProtocol: [], // 选中协议
       order: {},
+      orderData: {},
       // num: 0,
 
       couponInfo: {
@@ -241,7 +306,7 @@ export default {
         couponPrice: '', // 选择的优惠券对象
 
         tablist: [
-          { name: '可用优惠券', num: '12', is: true },
+          { name: '可用优惠券', num: '', is: true },
           { name: '不可用优惠券' },
         ],
         datalist: [],
@@ -252,7 +317,7 @@ export default {
         selectedItem: {}, // 选择的对象
         cardPrice: '', // 选择的card对象立减金额
         tablist: [
-          { name: '可用活动卡', num: '12', is: true },
+          { name: '可用活动卡', num: '', is: true },
           { name: '不可用活动卡' },
         ],
         datalist: [], // 支持的列表
@@ -277,6 +342,7 @@ export default {
 
         payType: 'ORDER_PAY_MODE_ONLINE',
       },
+
       loading: false,
       skeletonloading: true,
       editShow: false,
@@ -284,23 +350,59 @@ export default {
     }
   },
   computed: {
-    // orderType() {
-    //   return this.order.orderType !== 0
-    // },
+    // 是否先定金后服务
+    isDeposit() {
+      return (
+        this.order?.orderSplitAndCusVo?.cusOrderPayType ===
+        'PRO_PRE_DEPOSIT_POST_OTHERS'
+      )
+    },
+    // 服务完结收费
+    isServiceFinshed() {
+      return (
+        this.order?.orderSplitAndCusVo?.cusOrderPayType ===
+        'PRO_PRE_SERVICE_FINISHED_PAY'
+      )
+    },
+    // 节点付费
+    isNodes() {
+      return (
+        this.order?.orderSplitAndCusVo?.cusOrderPayType ===
+        'PRO_PRE_SERVICE_POST_PAY_BY_NODE'
+      )
+    },
+    // 先付款后服务
+    isBeforePay() {
+      return (
+        this.order?.orderSplitAndCusVo?.cusOrderPayType ===
+        'PRO_PRE_PAY_POST_SERVICE'
+      )
+    },
+
+    // 是否是意向单
+    isIntendedOrder() {
+      return this.order.orderType === 0
+    },
+    // 是否担保订单
+    isSecuredTrade() {
+      return this.order.isSecuredTrade === 1
+    },
   },
   mounted() {
     this.asyncData()
 
     // this.getInitData()
     this.getProtocol('protocol100008')
-    this.getProtocol('protocol100033')
-    this.getProtocol('protocol100008')
+
+    // this.getProtocol('protocol100033') // 薯片平台交易委托协议
+
+    // this.getProtocol('protocol100044') // 薯片平台担保交易支付服务协议
   },
   methods: {
     onLeftClick() {
       this.$router.back()
     },
-    // 打开《薯片平台用户交易下单协议》
+    // 打开协议
     goagr(categoryCode) {
       this.$router.push({
         name: 'login-protocol',
@@ -315,67 +417,94 @@ export default {
         .getDetailByOrderId(
           { axios: this.axios },
           {
-            id: this.$route.query.id,
+            id: this.$route.query.orderIds,
             cusOrderId: this.$route.query.cusOrderId,
           }
         )
         .then((res) => {
           console.log('res', res)
-          this.changeMoney(res.data || res)
-          const cusDetail = res.data
-            ? res.data.orderSplitAndCusVo
-            : res.orderSplitAndCusVo
+          // this.changeMoney(res.data || res)
+          // const cusDetail = res.data
+          // ? res.data.orderSplitAndCusVo
+          // : res.orderSplitAndCusVo
 
-          const data = Object.assign(cusDetail, res.data || res)
+          // const data = Object.assign(cusDetail, res.data || res)
+          this.changeMoney(res)
+          const data = res
 
           if (data) {
             data.list = []
             this.order = data
+            this.orderData = res
 
             console.log('res', res)
-
+            let num = 0
             data.orderSkuList.map((item) => {
               const obj = {
                 name: item.spuHideName || item.spuName,
                 classCode: item.classCode,
                 classCodeName: item.classCodeName,
                 id: item.id,
+                skuCount: item.skuCount,
                 salesPrice: item.skuPrice,
                 salesGoodsSubVos: item.salesGoodsSubVos,
               }
+              num += parseInt(item.skuCount) || 0
               this.order.list.push(obj)
             })
 
-            this.order.num = this.order.list.length
+            this.order.num = num // this.order.list.length
             this.price = this.order.orderTotalMoney
 
             // 意向单不使用优惠券
-            if (this.order.orderType !== 0) {
+            if (!this.isIntendedOrder) {
               this.getInitData(5) // 获取优惠券
               this.getInitData(6)
             }
+            if (order.isSecuredTrade === 1) {
+              this.getProtocol('protocol100044')
+            }
+
             this.setPayMethod()
           } else {
-            this.$xToast.show('服务器异常,请然后再试')
-            // setTimeout(function () {
-            //   that.$router.back(-1)
+            this.$xToast.show('数据异常,请然后再试')
+            // setTimeout(() => {
+            //   this.$router.back(-1)
             // }, 2000)
           }
         })
+        .catch(() => {
+          this.$xToast.show('服务器异常,请然后再试')
+          // setTimeout(() => {
+          //   this.$router.back(-1)
+          // }, 2000)
+        })
     },
     setPayMethod() {
-      if (this.order.orderType !== 0) {
+      // this.Orderform.payType = this.order?.orderSplitAndCusVo?.payType
+
+      if (this.order.isSecuredTrade === 0) {
         this.payMethod.list = [
           { value: 'ORDER_PAY_MODE_ONLINE', text: '在线支付' },
           { value: 'ORDER_PAY_MODE_OFFLINE', text: '线下支付' },
         ]
-      } else {
+      } else if (this.order.isSecuredTrade === 1) {
         this.payMethod.list = [
           { value: 'ORDER_PAY_MODE_SECURED', text: '担保交易' },
         ]
       }
-      this.payMethod.text = this.payMethod.list[0].text
-      this.payMethod.value = this.payMethod.list[0].value
+      if (this.order?.orderSplitAndCusVo?.payType) {
+        const pay = this.payMethod.list.find((item) => {
+          return item.value === this.order?.orderSplitAndCusVo?.payType
+        })
+        if (pay && pay.value) {
+          this.payMethod.text = pay.text
+          this.payMethod.value = pay.value
+        }
+      } else {
+        this.payMethod.text = this.payMethod.list[0].text
+        this.payMethod.value = this.payMethod.list[0].value
+      }
     },
     async getProtocol(categoryCode) {
       if (!categoryCode) {
@@ -400,7 +529,7 @@ export default {
 
     // 提交订单
     placeOrder() {
-      if (this.Orderform.orderAgreementIds.length !== 3) {
+      if (this.Orderform.orderAgreementIds.length === 0) {
         return this.$xToast.warning('协议获取失败!')
       }
       if (!this.payMethod.value) {
@@ -476,27 +605,47 @@ export default {
           .then((result) => {
             console.log('result', result)
             this.loading = false
-            Toast({
-              message: '下单成功',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_success',
-              overlay: true,
-            })
+
+            if (this.payMethod.value === 'ORDER_PAY_MODE_SECURED') {
+              this.$xToast.error(
+                '该订单为担保交易订单，请访问薯片网站PC端进行付款！'
+              )
+            } else if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
+              this.$xToast.error('请前往线下银行网点进行支付！')
+            } else {
+              Toast({
+                message: '下单成功',
+                iconPrefix: 'sp-iconfont',
+                icon: 'popup_ic_success',
+                overlay: true,
+              })
+            }
             setTimeout(() => {
-              if (
-                this.order.orderType !== 0 &&
-                this.order.payType !== 'ORDER_PAY_MODE_SECURED'
+              if (this.payMethod.value === 'ORDER_PAY_MODE_SECURED') {
+                this.$router.replace({
+                  path: '/order',
+                  query: {},
+                })
+              } else if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
+                // 线下付款
+                this.$router.replace({
+                  path: '/order',
+                  query: {},
+                })
+              } else if (
+                result.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
+                result.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
               ) {
+                // 先付款后服务 PRO_PRE_PAY_POST_SERVICE;先定金后尾款 PRO_PRE_DEPOSIT_POST_OTHERS;
                 this.$router.replace({
                   path: '/pay/payType',
                   query: {
                     fromPage: 'orderList',
-                    // cusOrderId: result.cusOrderId,
-                    cusOrderId: this.$route.query.cusOrderId,
+                    cusOrderId: result.cusOrderId,
                   },
                 })
               } else {
-                // 意向单和担保交易 回到订单列表
+                // 意向单和担保交易等 回到订单列表
                 this.$router.replace({
                   path: '/order',
                   query: {},
@@ -533,15 +682,15 @@ export default {
     //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
       const arr = this.order.list.map((x) => {
-        return x.id
+        return x.orderSaleId
       })
       const list = []
       for (let i = 0; i < this.order.list.length; i++) {
         const item = {
-          goodsId: this.order.list[i].id,
+          goodsId: this.order.list[i].orderSaleId,
           price: this.order.list[i].salesPrice,
           goodsNum: this.order.list[i].salesVolume || 1,
-          goodsClassCode: this.order.list[i].classCode,
+          // goodsClassCode: this.order.list[i].classifyTwoNo,
         }
         list.push(item)
       }
@@ -643,6 +792,17 @@ export default {
     openCardFn() {
       this.card.show = true
     },
+    openPayMethod() {
+      if (this.payMethod.list.length === 1) {
+        return
+      }
+      if (this.payMethod.list.length) {
+        this.payMethod.show = true
+      } else {
+        this.$xToast.error('未获取到支付方式' || '')
+      }
+    },
+
     close() {
       this.couponInfo.popupshow = false
     },
@@ -794,13 +954,36 @@ export default {
         font-size: 28px;
         font-weight: 400;
         color: #222222;
-        span {
+        .money_price {
           font-size: 22px;
           color: #ec5330;
           b {
             font-size: 30px;
           }
         }
+        .deposit_text {
+          color: #222222;
+          font-size: 22px;
+        }
+      }
+    }
+    .deposit {
+      margin-top: 24px;
+      background: #fff;
+      padding: 36px 40px;
+      .deposit_tips {
+        font-family: PingFangSC-Regular;
+        font-size: 24px;
+        color: #999999;
+        line-height: 34px;
+      }
+      .deposit_content {
+        margin-top: 20px;
+        height: 40px;
+        font-family: PingFangSC-Regular;
+        font-size: 28px;
+        color: #222222;
+        letter-spacing: 0;
       }
     }
     > .contract {
@@ -818,7 +1001,7 @@ export default {
         font-size: 28px;
         font-weight: 400;
         color: #222222;
-        > span {
+        > .protocol_name {
           color: #4974f5;
         }
       }

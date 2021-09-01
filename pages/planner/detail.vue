@@ -416,7 +416,17 @@
     >
       <sp-bottombar safe-area-inset-bottom>
         <div class="footer-body">
-          <div class="phone" @click="goShop">
+          <div
+            v-md:p_plannerBoothClick
+            class="phone"
+            data-even_name="p_plannerBoothClick"
+            data-track_code="SPP001148"
+            :data-recommend_number="newDetailData.dggPlannerRecomLog || ''"
+            :data-planner_number="newDetailData.userNo"
+            :data-planner_name="newDetailData.userName"
+            :data-crisps_fraction="newDetailData.point"
+            @click="goShop"
+          >
             <i
               class="spiconfont spiconfont-xiaodian"
               style="font-size: 19px"
@@ -534,16 +544,13 @@ export default {
         return
       }
       const params = { id: mchUserId }
-      const newData = await $axios.get(
-        storeApi.plannerDetail,
-        {
-          params: {
-            mchUserId,
-            dataFlg: '1',
-            cardType: 'plannerCode',
-          },
+      const newData = await $axios.get(storeApi.plannerDetail, {
+        params: {
+          mchUserId,
+          dataFlg: '1',
+          cardType: 'plannerCode',
         },
-      )
+      })
       if (newData.code === 200) {
         if (newData.data.status === 'BUSINESS_CARD_STATUS_ON_SHELF') {
           console.log(
@@ -622,7 +629,6 @@ export default {
       active: '', // tab状态
     }
   },
-
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,

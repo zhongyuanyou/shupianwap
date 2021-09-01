@@ -45,14 +45,13 @@
           <p class="goods-name">
             <span
               v-if="
-                item.payStatusNo === 'ORDER_CUS_PAY_STATUS_UN_PAID' &&
-                item.classifyOneName.match('公司')
+                item.payStatusNo === 'ORDER_CUS_PAY_STATUS_UN_PAID' ||
+                isUnSubmit(orderData)
               "
               class="name"
+              >{{ item.spuHideName || item.spuName }}</span
             >
-              {{ item.spuHideName || item.spuName }}</span
-            >
-            <span v-else class="name"> {{ item.spuName }}</span>
+            <span v-else class="name">{{ item.spuName }}</span>
             <span
               v-if="
                 checkPayType() !== 2 && checkPayType() !== 4 && !item.orderType
@@ -307,7 +306,7 @@ export default {
       this.$router.push({
         path: '/order/confirmUnSubmitOrder',
         query: {
-          id: order.id,
+          orderIds: order.id,
           cusOrderId: order.cusOrderId,
         },
       })

@@ -130,6 +130,7 @@ export default {
         background: #ffffff;
 
         font-family: PingFangSC-Medium;
+        font-weight: bold;
         font-size: 32px;
         color: #222222;
         text-align: center;
@@ -137,7 +138,7 @@ export default {
         height: 112px;
       }
       .list.active {
-        background: #f8f8f8;
+        // background: #f8f8f8;
       }
       .line {
         height: 24px;
