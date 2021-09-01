@@ -306,7 +306,7 @@ export default {
       this.$router.push({
         path: '/order/confirmUnSubmitOrder',
         query: {
-          id: order.id,
+          orderIds: order.id,
           cusOrderId: order.cusOrderId,
         },
       })

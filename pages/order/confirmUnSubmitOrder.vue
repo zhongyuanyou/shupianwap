@@ -78,10 +78,7 @@
           <div class="deposit_tips">温馨提示：该订单先服务后收费</div>
           <div class="deposit_content">
             <span v-if="order.orderType === 0">总价：面议</span>
-            <span v-else
-              >总价 {{ order.orderTotalMoney }}元，优惠
-              {{ order.orderDiscountMoney }}元，</span
-            >
+            <span v-else>总价 {{ order.orderTotalMoney }}元</span>
           </div>
         </div>
         <div v-else class="deposit">
@@ -91,8 +88,7 @@
             }}
           </div>
           <div class="deposit_content">
-            总价 {{ order.orderTotalMoney }}元，优惠
-            {{ order.orderDiscountMoney }}元，应付款{{
+            总价 {{ order.orderTotalMoney }}元，应付款{{
               orderData.orderPayableMoney
             }}元
           </div>
@@ -421,7 +417,7 @@ export default {
         .getDetailByOrderId(
           { axios: this.axios },
           {
-            id: this.$route.query.id,
+            id: this.$route.query.orderIds,
             cusOrderId: this.$route.query.cusOrderId,
           }
         )

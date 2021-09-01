@@ -138,7 +138,7 @@ export default {
         height: 112px;
       }
       .list.active {
-        background: #f8f8f8;
+        // background: #f8f8f8;
       }
       .line {
         height: 24px;
