@@ -45,30 +45,66 @@
                   : ''
               }}
             </p>
-
-            <p v-if="item.salesGoodsSubVos" class="price">
+            <!-- <p class="tag">{{ item.classCodeName }}</p> -->
+            <p class="price">
               <span
-                ><b>{{
-                  getGoodsSubById(item.salesGoodsSubVos[0].goodsSubId)
-                    .salesPrice
-                }}</b
+                ><b>{{ item.salesPrice }}</b
                 >元</span
               >
               <i>{{
                 $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
               }}</i>
             </p>
-            <p v-if="item.saleGoodsSubs" class="price">
-              <span
-                ><b>{{
-                  getGoodsSubById(item.saleGoodsSubs[0].goodsSubId).salesPrice
-                }}</b
-                >元</span
+            <!--
+            <div v-if="$route.query.type === 'shopcar'" class="list">
+              <div
+                v-for="(listitem, listindex) in item.saleGoodsSubs"
+                :key="listindex"
               >
-              <i>{{
-                $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
-              }}</i>
-            </p>
+                <p class="name">{{ listitem.goodsSubName || '-' }}</p>
+                <p class="data">{{ listitem.goodsSubDetailsName || '-' }}</p>
+                <p class="price">
+                  {{ `x1` }}
+                </p>
+              </div>
+            </div>
+            <div v-else class="list">
+              <div
+                v-for="(listitem, listindex) in item.salesGoodsSubVos"
+                :key="listindex"
+              >
+                <p class="name">
+                  <span v-if="listitem.goodsType === 'PRO_CLASS_TYPE_SALES'">
+                    销售产品
+                  </span>
+                  <span
+                    v-else-if="listitem.goodsType === 'PRO_CLASS_TYPE_SERVICE'"
+                  >
+                    服务产品
+                  </span>
+                  <span
+                    v-else-if="
+                      listitem.goodsType === 'PRO_CLASS_TYPE_SERVICE_RESOURCE'
+                    "
+                  >
+                    服务资源
+                  </span>
+                  <span
+                    v-else-if="
+                      listitem.goodsType === 'PRO_CLASS_TYPE_TRANSACTION'
+                    "
+                  >
+                    交易资源
+                  </span>
+                </p>
+                <p class="data">{{ listitem.goodsSubName }}</p>
+                <p class="price">
+                  {{ listitem.settlementPriceEdit }}
+                  {{ `x1` }}
+                </p>
+              </div>
+            </div>
+             -->
           </div>
         </div>
         <div class="inpbox">
@@ -492,8 +528,8 @@ export default {
         )
         .then((result) => {
           console.log('settlement', result)
-          // result.skuTotalPrice = result.skuTotalPrice / 100
-          // result.needPayTotalMoney = result.needPayTotalMoney / 100
+          result.skuTotalPrice = result.skuTotalPrice / 100
+          result.needPayTotalMoney = result.needPayTotalMoney / 100
           this.settlementInfo = result
         })
         .catch((e) => {
@@ -508,19 +544,7 @@ export default {
           console.error(e)
         })
     },
-    getGoodsSubById(goodsSubId) {
-      let goodsSub = {}
-      this.settlementInfo.saleGoodsList.forEach((goods) => {
-        goods.goodsList.forEach((item) => {
-          console.log(goodsSubId, item.goodsSubId)
-          if (item.goodsSubId === goodsSubId) {
-            goodsSub = item
-          }
-        })
-      })
-      console.log('goodsSub', goodsSub)
-      return goodsSub
-    },
+    getGoodsSubId() {},
     async getProtocol(categoryCode) {
       if (!categoryCode) {
         this.$xToast.warning('请传入需要获取的协议!')
