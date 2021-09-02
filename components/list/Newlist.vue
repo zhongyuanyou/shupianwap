@@ -47,7 +47,13 @@
           <p v-if="item.attr" class="describe">
             {{ item.attr }}
           </p>
-          <p class="price">
+          <p
+            v-if="item.refConfig.taskType == 'PRO_WANT_ORDER_DIGEST'"
+            class="price"
+          >
+            面议
+          </p>
+          <p v-else class="price">
             {{ item.price === '0.00' ? '面议' : item.price
             }}<span v-if="item.price !== '0.00'">元</span>
           </p>

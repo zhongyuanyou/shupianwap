@@ -20,39 +20,28 @@
         </template>
       </Search>
     </header-slot>
-    <div class="tab">
-      <p :class="tabIndex === '1' ? 'act' : ''" @click="changeTab('1')">
-        <span>问题</span><i></i>
-      </p>
-      <p :class="tabIndex === '2' ? 'act' : ''" @click="changeTab('2')">
-        <span>文章</span><i></i>
-      </p>
-      <p
-        v-if="showItem"
-        :class="tabIndex === '4' ? 'act' : ''"
-        @click="changeTab('4')"
-      >
-        <span>视频</span><i></i>
-      </p>
-      <p
-        v-if="showItem"
-        :class="tabIndex === '6' ? 'act' : ''"
-        @click="changeTab('6')"
-      >
-        <span>小视频</span><i></i>
-      </p>
-      <p
-        v-if="showItem"
-        :class="tabIndex === '5' ? 'act' : ''"
-        @click="changeTab('5')"
-      >
-        <span>大讲堂</span><i></i>
-      </p>
-      <p :class="tabIndex === '3' ? 'act' : ''" @click="changeTab('3')">
-        <span>用户</span><i></i>
-      </p>
-    </div>
-    <div v-show="tabIndex === '1' || tabIndex === '2'" class="listbox">
+    <sp-tabs
+      v-model="active"
+      :class="[isInApp ? 'z-app' : '']"
+      @change="changeTabs"
+    >
+      <template v-if="!isInApp">
+        <sp-tab
+          v-for="item in wapClassify"
+          :key="item.code"
+          :title="item.txt"
+        ></sp-tab>
+      </template>
+      <template v-else>
+        <sp-tab
+          v-for="item in appClassify"
+          :key="item.code"
+          :title="item.txt"
+          title-style="width: 20vw;"
+        ></sp-tab>
+      </template>
+    </sp-tabs>
+    <div v-show="actTemplate === 'txtlist'" class="listbox">
       <sp-list
         v-model="loading"
         :finished="finished"
@@ -67,38 +56,12 @@
           class="list"
           @click="toDetail(item.id)"
         >
-          <h1 v-html="item.titleHtml"></h1>
-          <div class="box">
-            <div
-              :style="{ 'padding-right': item.contentImageUrl ? '210px' : '0' }"
-            >
-              <p v-html="item.contentTextHtml"></p>
-              <div v-if="item.contentImageUrl" class="num">
-                <span>{{ item.applaudCount }} 赞同</span>
-                <i></i>
-                <span>{{ item.remarkCount }} 评论</span>
-                <i></i>
-                <span>{{ item.createTime | fromatDate }} </span>
-              </div>
-            </div>
-            <img
-              v-if="item.contentImageUrl"
-              :src="item.contentImageUrl.split(',')[0]"
-              alt=""
-            />
-          </div>
-          <div v-if="!item.contentImageUrl" class="num">
-            <span>{{ item.applaudCount }} 赞同</span>
-            <i></i>
-            <span>{{ item.remarkCount }} 评论</span>
-            <i></i>
-            <span>{{ item.createTime | fromatDate }} </span>
-          </div>
+          <txt-item :txt-item="item"></txt-item>
         </div>
       </sp-list>
     </div>
     <div
-      v-show="tabIndex === '3'"
+      v-show="actTemplate === 'userlist'"
       :class="userList.length !== 0 ? 'userlist' : ''"
     >
       <sp-list
@@ -110,24 +73,11 @@
         @load="onLoad"
       >
         <div v-for="item in userList" :key="item.id" class="list">
-          <img :src="item.avatar" alt="" @click="toHome(item)" />
-          <div class="name" v-html="item.userNameHtml"></div>
-          <div class="applaudFlag" @click="attentionHandler(item)">
-            <my-icon
-              v-if="!item.custAttentionFlag"
-              name="tianjia"
-              size="0.27rem"
-              color="#4974F5"
-            ></my-icon>
-            <span
-              :style="{ color: item.custAttentionFlag ? '#999999' : '#4974F5' }"
-              >{{ item.custAttentionFlag ? '已关注' : '关注' }}</span
-            >
-          </div>
+          <User-item :user-item="item"></User-item>
         </div>
       </sp-list>
     </div>
-    <div v-show="tabIndex === '4'" class="videolist">
+    <div v-show="actTemplate === 'video'" class="videolist">
       <sp-list
         v-model="loading"
         :finished="finished"
@@ -142,66 +92,12 @@
           class="list"
           @click="open(item)"
         >
-          <div class="item">
-            <div class="lf_img">
-              <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
-              <div class="time">{{ totime(item.duration) }}</div>
-            </div>
-            <div class="rt_content">
-              <div class="title">
-                <p v-html="item.videoNameHtml"></p>
-                <!-- {{ item.videoName }} -->
-              </div>
-              <div class="name_time">
-                <div class="name">{{ item.createrName }}</div>
-                <div class="time">
-                  {{ timeSplice(item.createTime) }}
-                </div>
-              </div>
-            </div>
-          </div>
+          <video-item :video-item="item"></video-item>
           <div v-if="index + 1 !== searchList.length" class="line"></div>
         </div>
       </sp-list>
     </div>
-    <div v-show="tabIndex === '5'" class="videolist">
-      <sp-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        :error.sync="error"
-        error-text="请求失败，点击重新加载"
-        @load="onLoad"
-      >
-        <div
-          v-for="(item, index) in searchList"
-          :key="index"
-          class="list"
-          @click="open(item)"
-        >
-          <div class="item">
-            <div class="lf_img">
-              <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
-              <div class="time">{{ totime(item.duration) }}</div>
-            </div>
-            <div class="rt_content">
-              <div class="title">
-                <p v-html="item.courseNameHtml"></p>
-                <!-- {{ item.videoName }} -->
-              </div>
-              <div class="name_time">
-                <div class="name">{{ item.createrName }}</div>
-                <div class="time">
-                  {{ timeSplice(item.createTime) }}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-if="index + 1 !== searchList.length" class="line"></div>
-        </div>
-      </sp-list>
-    </div>
-    <div v-show="tabIndex === '6'" class="smallVideolist">
+    <div v-show="actTemplate === 'svideo'" class="smallVideolist">
       <sp-list
         v-model="loading"
         :finished="finished"
@@ -217,18 +113,7 @@
             class="item"
             @click="open(item)"
           >
-            <sp-image
-              width="3.72rem"
-              height="6.61rem"
-              fit="cover"
-              :src="item.image"
-            />
-            <div class="content_box">
-              <div class="content">
-                <div class="count">{{ item.custTotalCount }} 次观看</div>
-                <div class="tile">{{ item.videoName }}</div>
-              </div>
-            </div>
+            <small-video-item :svideo-item="item"></small-video-item>
           </div>
         </div>
       </sp-list>
@@ -238,17 +123,13 @@
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex'
-import {
-  Sticky,
-  Icon,
-  Dialog,
-  List,
-  CenterPopup,
-  Image,
-} from '@chipspc/vant-dgg'
+import { List, CenterPopup, Tab, Tabs } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
+import VideoItem from '@/components/mustKnown/search/VideoItem'
+import TxtItem from '@/components/mustKnown/search/TxtItem'
+import UserItem from '@/components/mustKnown/search/UserItem'
+import SmallVideoItem from '@/components/mustKnown/search/SmallVideoItem'
 import knownApi from '@/api/known'
-import utils from '@/utils/changeBusinessData'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { numChangeW } from '@/utils/common'
 
@@ -256,27 +137,82 @@ export default {
   layout: 'keepAlive',
   name: 'Searchresult',
   components: {
-    [Sticky.name]: Sticky,
-    [Icon.name]: Icon,
     Search,
-    [Dialog.name]: Dialog,
+    VideoItem,
+    TxtItem,
+    UserItem,
+    SmallVideoItem,
     [List.name]: List,
     [CenterPopup.name]: CenterPopup,
-    [Image.name]: Image,
+    [Tab.name]: Tab,
+    [Tabs.name]: Tabs,
     HeaderSlot,
-  },
-  filters: {
-    fromatDate(value) {
-      if (!value) {
-        return
-      }
-      return value.split(' ')[0]
-    },
   },
   data() {
     return {
       searchList: [],
       userList: [],
+      // wap 页面对应分类
+      wapClassify: [
+        {
+          code: 'question',
+          txt: '问题',
+          template: 'txtlist',
+        },
+        {
+          code: 'article',
+          txt: '文章',
+          template: 'txtlist',
+        },
+        {
+          code: 'user',
+          txt: '用户',
+          template: 'userlist',
+        },
+      ],
+      // app 页面对应分类
+      appClassify: [
+        {
+          code: 'question',
+          txt: '问题',
+          template: 'txtlist',
+        },
+        {
+          code: 'article',
+          txt: '文章',
+          template: 'txtlist',
+        },
+        {
+          code: 'live',
+          txt: '直播',
+          template: 'video',
+        },
+        {
+          code: 'vback',
+          txt: '回放',
+          template: 'video',
+        },
+        {
+          code: 'video',
+          txt: '短视频',
+          template: 'video',
+        },
+        {
+          code: 'svideo',
+          txt: '小视频',
+          template: 'svideo',
+        },
+        {
+          code: 'course',
+          txt: '大讲堂',
+          template: 'video',
+        },
+        {
+          code: 'user',
+          txt: '用户',
+          template: 'userlist',
+        },
+      ],
       tabIndex: '1',
       value: '',
       page: 1,
@@ -294,13 +230,16 @@ export default {
         confirmButtonText: '好的',
       },
       showItem: true,
+      isInApp: true,
+      active: 0, // 当前tabIndex
+      actTemplate: 'txtlist', // 默认展示分类模板
     }
   },
   computed: {
     ...mapState({
       userInfo: (state) => state.user, // 登录的用户信息
       userId: (state) => state.user.userId, // userId 用于判断登录
-      isInApp: (state) => state.app.isInApp, // 是否app中
+      // isInApp: (state) => state.app.isInApp, // 是否app中
       appInfo: (state) => state.app.appInfo, // app信息
       // isApplets: (state) => state.app.isApplets,
     }),
@@ -314,12 +253,7 @@ export default {
     this.value = query.keyword
   },
   beforeRouteLeave(to, from, next) {
-    if (
-      [
-        'known-detail-question',
-        'known-detail-article',
-      ].includes(to.name)
-    ) {
+    if (['known-detail-question', 'known-detail-article'].includes(to.name)) {
       this.SET_KEEP_ALIVE({ type: 'add', name: 'Searchresult' })
     } else {
       this.SET_KEEP_ALIVE({ type: 'remove', name: 'Searchresult' })
@@ -330,28 +264,9 @@ export default {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
-    timeSplice(time) {
-      return time.substring(0, time.length - 3)
-    },
-    totime(time) {
-      if (!time) {
-        return ''
-      }
-      let hour = Math.floor(time / 3600)
-      let mid = Math.floor((time - 3600 * hour) / 60)
-      // math.flotime / 60
-      let sec = Math.floor((time - 3600 * hour) % 60)
-      if (hour < 10) {
-        hour = '0' + hour
-      }
-      if (mid < 10) {
-        mid = '0' + mid
-      }
-      if (sec < 10) {
-        sec = '0' + sec
-      }
-
-      return hour + ':' + mid + ':' + sec
+    changeTabs() {
+      this.initTab()
+      this.onLoad()
     },
     keyClickHandle() {
       this.$router.replace({
@@ -359,15 +274,7 @@ export default {
         query: { type: this.tabIndex, keyword: this.value },
       })
     },
-    toHome(item) {
-      this.$router.push({
-        path: '/known/home',
-        query: {
-          homeUserId: item.id,
-          type: utils.getUserType(item.type),
-        },
-      })
-    },
+
     toDetail(id) {
       if (this.tabIndex === '2') {
         this.$router.push({
@@ -385,62 +292,22 @@ export default {
         })
       }
     },
-    changeTab(type) {
-      if (this.tabIndex === type) {
-        return
-      }
-      this.tabIndex = type
-      this.initTab()
-      this.onLoad()
-    },
     initTab() {
+      // start: 赋值当前模板
+      let curTabList = this.wapClassify
+      if (this.isInApp) {
+        curTabList = this.appClassify
+      }
+      this.actTemplate = curTabList[this.active]
+        ? curTabList[this.active].template
+        : 'txtlist'
+      // end: 赋值当前模板
       this.loading = true
       this.finished = false
       this.error = false
       this.page = 1
       this.searchList = []
       this.userList = []
-    },
-    async attentionHandler(item) {
-      // 先判断是否登录
-      const result = await this.$isLogin()
-      if (result === 'app_login_success') {
-        return
-      }
-      try {
-        const res = await this.$axios.post(knownApi.home.attention, {
-          handleUserId: this.userInfo.userId,
-          handleUserName: this.userInfo.userName || '测试用户',
-          handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-          handleType: item.custAttentionFlag ? 2 : 1,
-          attentionUserId: item.id,
-          attentionUserName: item.userName,
-          attentionUserType: item.type === 'ORDINARY_USER' ? 1 : 2,
-        })
-        if (res.code === 200) {
-          // 重新构建页面数据,处理关注状态
-          item.custAttentionFlag = !item.custAttentionFlag
-          let message
-          if (item.custAttentionFlag) {
-            message = '关注成功'
-          } else {
-            message = '取关成功'
-          }
-          this.$xToast.show({
-            message,
-            duration: 1000,
-            icon: 'toast_ic_comp',
-            forbidClick: true,
-          })
-        }
-      } catch (e) {
-        this.$xToast.show({
-          message: '请求失败,请联系客服',
-          duration: 1000,
-          icon: 'toast_ic_error',
-          forbidClick: true,
-        })
-      }
     },
     async getSearchListApi() {
       if (this.tabIndex === '6') {
@@ -547,9 +414,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-::v-deep .sp-image__img {
-  border-radius: 4px;
-}
 .result {
   background: #f5f5f5;
   min-height: 100vh;
@@ -577,35 +441,83 @@ export default {
     font-weight: 400;
     color: #222222;
   }
-  > .tab {
-    width: 100%;
+  ::v-deep.sp-tabs__wrap {
     height: 80px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #fff;
-    > p {
-      width: 250px;
+  }
+  ::v-deep.sp-tab {
+    padding: 0;
+    font-size: 30px;
+    line-height: 30px;
+    color: #999;
+  }
+  ::v-deep.sp-tab__text--ellipsis {
+    overflow: unset;
+  }
+  ::v-deep.sp-tabs__line {
+    width: 28px;
+    height: 6px;
+    bottom: 23px;
+  }
+  ::v-deep .sp-tab--active {
+    color: #222222;
+    font-weight: bold;
+  }
+  ::v-deep.sp-tabs__nav--line {
+    padding-bottom: 15px;
+  }
+  ::v-deep.sp-tabs__nav--complete {
+    padding-left: unset;
+    padding-right: unset;
+  }
+  .z-app {
+    overflow: hidden;
+    width: 100vw;
+  }
+  .sp-tab__app {
+    width: 20vw;
+  }
+  .tabs-wrap {
+    width: 100vw;
+    overflow: hidden;
+    .z-app__wrap {
+      height: 80px;
+      overflow: hidden;
+      .z-app {
+        display: flex;
+        overflow-y: hidden;
+        overflow-x: auto;
+        box-sizing: content-box;
+        height: 100%;
+        user-select: none;
+      }
+    }
+    p {
+      flex: 1 0 auto;
       height: 30px;
       font-size: 30px;
-      font-weight: 400;
       color: #999999;
       line-height: 30px;
       text-align: center;
-      > i {
+      &.wap-item {
+        width: 33.3%;
+      }
+      &.app-item {
+        width: 20vw;
+      }
+      &.z-active {
+        font-weight: bold;
+        color: #222222;
+        i {
+          display: block;
+        }
+      }
+      i {
         width: 28px;
         height: 6px;
         background: #4974f5;
         border-radius: 3px;
         display: none;
-        margin: 10px auto 0 auto;
-      }
-    }
-    > .act {
-      font-weight: bold;
-      color: #222222;
-      > i {
-        display: block;
+        margin: 11px auto 0 auto;
       }
     }
   }
@@ -614,83 +526,6 @@ export default {
       padding: 40px 32px;
       background: #fff;
       margin-top: 20px;
-      > h1 {
-        font-size: 36px;
-        font-weight: bold;
-        color: #222222;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-        overflow: hidden;
-      }
-      > .box {
-        margin-top: 18px;
-        align-items: center;
-        position: relative;
-        > div {
-          padding-right: 210px;
-          > p {
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-            overflow: hidden;
-            font-size: 30px;
-            font-weight: 400;
-            color: #555555;
-          }
-          > .num {
-            width: 464px;
-            display: flex;
-            align-items: center;
-            margin-top: 16px;
-            > span {
-              font-size: 24px;
-              font-family: PingFangSC-Regular, PingFang SC;
-              font-weight: 400;
-              color: #999999;
-            }
-            > i {
-              width: 4px;
-              height: 4px;
-              background: #999999;
-              border-radius: 50%;
-              margin: 0 16px;
-              display: block;
-            }
-          }
-        }
-        > img {
-          position: absolute;
-          right: 0;
-          top: 0;
-          width: 190px;
-          height: 127px;
-          background: #d8d8d8;
-          border-radius: 12px;
-          margin-left: 32px;
-          object-fit: cover;
-        }
-      }
-      > .num {
-        width: 464px;
-        display: flex;
-        align-items: center;
-        margin-top: 16px;
-        > span {
-          font-size: 24px;
-          font-family: PingFangSC-Regular, PingFang SC;
-          font-weight: 400;
-          color: #999999;
-        }
-        > i {
-          width: 4px;
-          height: 4px;
-          background: #999999;
-          border-radius: 50%;
-          margin: 0 16px;
-          display: block;
-        }
-      }
     }
   }
   > .userlist {
@@ -704,97 +539,11 @@ export default {
       padding: 0 32px 40px 32px;
       box-sizing: border-box;
       margin-top: 16px;
-      > img {
-        width: 74px;
-        height: 74px;
-        background: #d8d8d8;
-        border-radius: 50%;
-      }
-      .name {
-        flex: 1;
-        margin-left: 24px;
-        font-size: 36px;
-        font-weight: bold;
-      }
-      .applaudFlag {
-        width: 144px;
-        height: 64px;
-        background: #f5f5f5;
-        border-radius: 8px;
-        font-size: 26px;
-        font-weight: bold;
-        color: #4974f5;
-        margin-left: auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        > span {
-          margin-left: 13px;
-        }
-      }
     }
   }
-  > .videolist {
+  .videolist {
     background: #fff;
     .list {
-      .item {
-        padding: 28px 32px;
-        display: flex;
-        align-items: center;
-        .lf_img {
-          width: 240px;
-          height: 135px;
-          background: #f5f5f5;
-          border-radius: 8px;
-          position: relative;
-          margin-right: 28px;
-          img {
-            width: 100%;
-            height: 100%;
-            display: block;
-            border-radius: 8px;
-          }
-          .time {
-            background: #000000;
-            border-radius: 8px;
-            opacity: 0.6;
-            position: absolute;
-            bottom: 8px;
-            left: 9px;
-            font: bold 22px/30px PingFangSC-Medium, PingFang SC;
-            color: #ffffff;
-            padding: 3px 8px;
-          }
-        }
-        .rt_content {
-          width: 402px;
-          .title {
-            color: #222222;
-            font: bold 30px/42px PingFangSC-Medium, PingFang SC;
-            margin-bottom: 15px;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            word-break: break-all;
-            height: 84px;
-          }
-          .name_time {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            .name {
-              color: #555555;
-              font: bold 26px/36px PingFangSC-Medium, PingFang SC;
-            }
-            .time {
-              color: #999999;
-              font: 400 26px/32px PingFangSC-Regular, PingFang SC;
-            }
-          }
-        }
-      }
       .line {
         margin: 0 32px;
         height: 1px;
@@ -808,48 +557,6 @@ export default {
       display: flex;
       flex-wrap: wrap;
       padding: 0 2px;
-      .item {
-        position: relative;
-        display: inline-block;
-        box-sizing: border-box;
-        width: 50%;
-        height: 661px;
-        margin: 2px 0;
-        .content_box {
-          position: absolute;
-          bottom: 0;
-          height: 200px;
-          width: 100%;
-          background-image: linear-gradient(
-            0deg,
-            rgba(0, 0, 0, 0.4) 0%,
-            rgba(0, 0, 0, 0) 100%
-          );
-          border-radius: 0 0 4px 4px;
-          .content {
-            position: absolute;
-            bottom: 16px;
-            left: 20px;
-            .count {
-              font-size: 24px;
-              opacity: 0.8;
-              margin-bottom: 8px;
-              line-height: 32px;
-              color: #fff;
-              font-weight: bold;
-            }
-            .tile {
-              line-height: 44px;
-              font-size: 36px;
-              .textOverflow(2);
-              text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-              color: #fff;
-              font-weight: bold;
-              width: 340px;
-            }
-          }
-        }
-      }
     }
   }
 }
