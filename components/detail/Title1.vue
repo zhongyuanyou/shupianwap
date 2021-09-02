@@ -31,10 +31,12 @@
     </div>
     <div class="title_bottom">
       <span class="title_bottom_money">{{
-        sellingGoodsData.salesPrice !== '0.00'
+        sellingGoodsData.salesPrice !== '0.00' &&
+        sellingGoodsData.refConfig.taskType != 'PRO_WANT_ORDER_DIGEST'
           ? sellingGoodsData.salesPrice + '元'
           : '面议'
       }}</span>
+
       <!-- <span class="title_bottom_num"
         >销量 {{ sellingGoodsData.salesVolume }}</span
       > -->
