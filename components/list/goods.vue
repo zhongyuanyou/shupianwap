@@ -38,8 +38,8 @@
 
 <script>
 import { Skeleton } from '@chipspc/vant-dgg'
-import Newlist from '@/components/list/Newlist'
-import Filters from '@/components/list/filters'
+import Newlist from '@/components/list/Newlist.vue'
+import Filters from '@/components/list/filters.vue'
 import searchList from '@/mixins/searchList'
 import { goods } from '@/api/index'
 export default {
@@ -361,7 +361,7 @@ export default {
     },
     pagefn(val) {
       this.formData.start = val
-      this.formData.needTypes=0
+      this.formData.needTypes = 0
       this.getlist()
     },
     changeTabs(name, title) {

@@ -55,7 +55,7 @@
     <!--S banner-->
 
     <!--start 会员价 -->
-    <MemberPrice></MemberPrice>
+    <!-- <MemberPrice></MemberPrice> -->
 
     <!--S 第一板块-->
     <Title :comment="commentdata[0].tit" @onComment="comment" />
@@ -123,7 +123,7 @@ import TcPlanners from '~/components/detail/TcPlanners1.vue'
 import ServiceDetail from '~/components/detail/ServiceDetail.vue'
 import RelatedRecommend from '~/components/detail/RelatedRecommend.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
-import MemberPrice from '@/components/detail/memberPrice/MemberPrice.vue'
+// import MemberPrice from '@/components/detail/memberPrice/MemberPrice.vue'
 
 import CaseNew from '~/components/detail/CaseNew'
 
@@ -148,7 +148,7 @@ export default {
     ServiceDetail,
     RelatedRecommend,
     bottomBar,
-    MemberPrice,
+    // MemberPrice,
     MyIcon,
     CommentBox,
     // OrderCase,
