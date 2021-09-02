@@ -1034,25 +1034,6 @@ export default {
 
     // 平台不同，跳转方式不同
     uPGoBack() {
-      if (this.isInApp) {
-        this.$appFn.dggCloseWebView((res) => {
-          if (!res || res.code !== 200) {
-            this.$xToast.show({
-              message: '返回失败',
-              duration: 1000,
-              icon: 'toast_ic_error',
-              forbidClick: true,
-            })
-          }
-        })
-        return
-      }
-
-      // 在浏览器里 返回, 若没返回记录了，就跳转到首页
-      if (window && window.history && window.history.length <= 1) {
-        this.$router.replace('/')
-        return
-      }
       this.$router.back(-1)
     },
 
