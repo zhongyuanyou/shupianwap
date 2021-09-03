@@ -51,6 +51,7 @@ export default {
       cusOrderId: '',
       allOrderSkuList: [],
       fromPage: 'orderDetail',
+      skuInfo: {},
     }
   },
   mounted() {
@@ -97,11 +98,10 @@ export default {
           // 处理价格
           for (let i = 0, l = allOrderSkuList.length; i < l; i++) {
             if (allOrderSkuList[i].skuPayableTotalMoney)
-              allOrderSkuList[
-                i
-              ].skuPayableTotalMoney = changeMoney.regFenToYuan(
-                allOrderSkuList[i].skuPayableTotalMoney
-              )
+              allOrderSkuList[i].skuPayableTotalMoney =
+                changeMoney.regFenToYuan(
+                  allOrderSkuList[i].skuPayableTotalMoney
+                )
           }
           this.allOrderSkuList = allOrderSkuList
           localStorage.setItem('nodeList', JSON.stringify(allOrderSkuList))
