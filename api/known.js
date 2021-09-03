@@ -52,6 +52,7 @@ const knownApi = {
   },
   search: {
     list: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/search.do`, // 搜索历史记录 搜索类型 1: 问题  2: 文章  3: 用户
+    listV2: `${CHIPS_WAP_BASE_URL}/nk/known_home/v2/search.do`,
   },
   createCenter: {
     findListByStatus: `${CHIPS_WAP_BASE_URL}/yk/known/v2/find_question_article_bystatus.do`, // 搜索 文章 | 问题 | 回答 list
