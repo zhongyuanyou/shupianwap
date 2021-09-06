@@ -104,14 +104,12 @@
         @load="onLoad"
       >
         <div v-if="searchList.length > 0" class="video-list">
-          <div
-            v-for="(item, index) in searchList"
-            :key="index"
-            class="item"
-            @click="open(item)"
-          >
-            <small-video-item :svideo-item="item"></small-video-item>
-          </div>
+          <template v-for="(item, index) in searchList" @click="open(item)">
+            <small-video-item
+              :key="index"
+              :svideo-item="item"
+            ></small-video-item
+          ></template>
         </div>
       </sp-list>
     </div>

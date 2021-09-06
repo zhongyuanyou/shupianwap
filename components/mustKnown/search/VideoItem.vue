@@ -4,7 +4,7 @@
       <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
       <div class="time">{{ totime(item.duration) }}</div>
     </div>
-    <div class="rt_content">
+    <div class="rt_content" :class="[custCode === 'course' ? 'z-course' : '']">
       <div class="title">
         <p v-if="custCode === 'video'" v-html="item.videoNameHtml"></p>
         <p v-else v-html="item.courseNameHtml"></p>
@@ -117,6 +117,9 @@ export default {
   }
   .rt_content {
     width: 402px;
+    &.z-course {
+      margin-top: -5px;
+    }
     .title {
       color: #222222;
       font: bold 30px/42px PingFangSC-Medium, PingFang SC;

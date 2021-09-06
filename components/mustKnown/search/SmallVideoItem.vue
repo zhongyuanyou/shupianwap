@@ -1,6 +1,6 @@
 <template>
   <div class="item">
-    <sp-image width="3.72rem" height="6.61rem" fit="cover" :src="item.image" />
+    <sp-image width="100%" height="6.61rem" fit="cover" :src="item.image" />
     <div class="content_box">
       <div class="content">
         <div class="count">{{ item.custTotalCount }} 次观看</div>
@@ -42,12 +42,16 @@ export default {
   box-sizing: border-box;
   width: 50%;
   height: 661px;
-  margin: 2px 0;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
   .content_box {
     position: absolute;
     bottom: 0;
-    height: 200px;
-    width: 100%;
+    left: 5px;
+    right: 5px;
+    height: 215px;
     background-image: linear-gradient(
       0deg,
       rgba(0, 0, 0, 0.4) 0%,
