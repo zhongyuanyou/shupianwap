@@ -89,7 +89,7 @@
           class="list"
           @click="open(item)"
         >
-          <video-item :video-item="item"></video-item>
+          <video-item :video-item="item" :code="actTab.code"></video-item>
           <div v-if="index + 1 !== searchList.length" class="line"></div>
         </div>
       </sp-list>
@@ -155,7 +155,7 @@ export default {
           code: 'question',
           txt: '问题',
           template: 'txtlist', // 页面展示template
-          apiCode: 'txt', // 接口api参数
+          apiCode: 'txt',
           type: 1,
         },
         {
@@ -192,13 +192,15 @@ export default {
           code: 'live',
           txt: '直播',
           template: 'video',
-          apiCode: '',
+          apiCode: 'live',
+          type: 'LIVEING,WAIT_LIVE',
         },
         {
           code: 'vback',
           txt: '回放',
           template: 'video',
-          apiCode: '',
+          apiCode: 'live',
+          type: 'LIVE_END',
         },
         {
           code: 'video',
