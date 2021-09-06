@@ -416,7 +416,17 @@
     >
       <sp-bottombar safe-area-inset-bottom>
         <div class="footer-body">
-          <div class="phone" @click="goShop">
+          <div
+            v-md:p_plannerBoothClick
+            class="phone"
+            data-even_name="p_plannerBoothClick"
+            data-track_code="SPP001148"
+            :data-recommend_number="newDetailData.dggPlannerRecomLog || ''"
+            :data-planner_number="newDetailData.userNo"
+            :data-planner_name="newDetailData.userName"
+            :data-crisps_fraction="newDetailData.point"
+            @click="goShop"
+          >
             <i
               class="spiconfont spiconfont-xiaodian"
               style="font-size: 19px"
@@ -534,16 +544,13 @@ export default {
         return
       }
       const params = { id: mchUserId }
-      const newData = await $axios.get(
-        storeApi.plannerDetail,
-        {
-          params: {
-            mchUserId,
-            dataFlg: '1',
-            cardType: 'plannerCode',
-          },
+      const newData = await $axios.get(storeApi.plannerDetail, {
+        params: {
+          mchUserId,
+          dataFlg: '1',
+          cardType: 'plannerCode',
         },
-      )
+      })
       if (newData.code === 200) {
         if (newData.data.status === 'BUSINESS_CARD_STATUS_ON_SHELF') {
           console.log(
@@ -622,7 +629,6 @@ export default {
       active: '', // tab状态
     }
   },
-
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
@@ -1028,25 +1034,6 @@ export default {
 
     // 平台不同，跳转方式不同
     uPGoBack() {
-      if (this.isInApp) {
-        this.$appFn.dggCloseWebView((res) => {
-          if (!res || res.code !== 200) {
-            this.$xToast.show({
-              message: '返回失败',
-              duration: 1000,
-              icon: 'toast_ic_error',
-              forbidClick: true,
-            })
-          }
-        })
-        return
-      }
-
-      // 在浏览器里 返回, 若没返回记录了，就跳转到首页
-      if (window && window.history && window.history.length <= 1) {
-        this.$router.replace('/')
-        return
-      }
       this.$router.back(-1)
     },
 

@@ -58,7 +58,16 @@
           为您匹配到合适服务时，将在第一时间联系您
         </div>
       </div>
-      <button class="form-button" @click="consultForm">生成需求卡</button>
+      <button
+        v-md:p_formSubmit
+        data-even_name="p_formSubmit"
+        :data-track_code="isInApp ? 'SPP001115' : 'SPW000114'"
+        :data-form_type="formType"
+        class="form-button"
+        @click="consultForm"
+      >
+        生成需求卡
+      </button>
     </div>
     <Loading-center v-show="loading" title="提交中..." />
   </div>
@@ -97,6 +106,7 @@ export default {
           是否允许电话联系: '是',
         },
       },
+      formType: '',
     }
   },
   computed: {
@@ -108,6 +118,7 @@ export default {
   },
   mounted() {
     const val = localStorage.getItem('needContent')
+    this.formType = localStorage.getItem('needName')
     if (val) {
       this.formData.content.备注 = val
     }
@@ -242,6 +253,12 @@ export default {
             localStorage.removeItem('needContent')
             this.$xToast.success('提交成功，请注意接听电话')
             sessionStorage.removeItem('formData')
+            // start: 添加埋点接口
+            window.spptMd.spptTrackRow('p_formSubmitResult', {
+              form_type: this.formType,
+              track_code: this.isInApp ? 'SPP001116' : 'SPW000115',
+            })
+            // end: 添加埋点接口
             this.formData = {
               type: 'gszc',
               tel: '', // 电话

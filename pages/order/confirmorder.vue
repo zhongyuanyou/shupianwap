@@ -230,7 +230,7 @@
         <Checkbox v-model="radio">
           <template>
             <p class="tit">
-              我已阅读过并知晓<span @click="goagr"
+              我已阅读过并知晓<span @click.stop="goagr"
                 >《薯片平台用户交易下单协议》</span
               >
             </p>

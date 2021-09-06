@@ -389,6 +389,14 @@ export default {
         if (code !== 200) {
           throw new Error(message)
         }
+        if (this.isInApp) {
+          this.mdAppViewScreen(data)
+        }
+        data.planners.forEach((item) => {
+          if (item) {
+            this.mdPlannerStore(item)
+          }
+        })
         // 赋值查询团队信息
         this.info = data
         // 处理 bannber 为空情况
@@ -487,6 +495,12 @@ export default {
       if (this.type === 'preview') {
         return
       }
+      // 处理规划师展位点击
+      window.spptMd.spptTrackRow('p_plannerBoothClick', {
+        track_code: this.isInApp ? 'SPP001152' : 'SPW000151',
+        planner_name: item.name,
+        crisps_fraction: item.point,
+      })
       this.$router.push({
         path: '/planner/detail',
         query: {
@@ -526,6 +540,22 @@ export default {
       }
       this.shareOptions = [{ name: '复制链接', icon: 'link' }]
       this.showShare = true
+    },
+    mdAppViewScreen(info) {
+      // 处理埋点逻辑
+      window.spptMd.spptTrackRow('$AppViewScreen', {
+        track_code: 'SPP001150',
+        content_type: '店铺',
+        planner_shop_id: info.id,
+      })
+    },
+    mdPlannerStore(info) {
+      // 处理曝光埋点
+      window.spptMd.spptTrackRow('p_plannerBoothVisit', {
+        track_code: this.isInApp ? 'SPP001151' : 'SPW000150',
+        planner_name: info.name,
+        crisps_fraction: info.score,
+      })
     },
   },
   head() {

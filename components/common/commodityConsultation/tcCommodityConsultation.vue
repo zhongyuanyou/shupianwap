@@ -6,15 +6,8 @@
     <div class="commodityConsult-containner">
       <div class="commodityConsult-containner-userInfo">
         <a
-          v-md:p_plannerBoothClick
-          data-even_name="p_plannerBoothClick"
-          data-track_code="SPW000032"
-          :data-recommend_number="plannerDetail.dggPlannerRecomLog"
-          :data-planner_number="plannerDetail.userCenterNo"
-          :data-planner_name="plannerDetail.userName"
-          :data-crisps_fraction="plannerDetail.point"
           href="javascript:void(0);"
-          @click="plannerInfoUrlJump(plannerDetail.mchUserId)"
+          @click="plannerInfoUrlJump(plannerDetail)"
         >
           <sp-image
             width="0.8rem"
@@ -27,7 +20,7 @@
         <div class="commodityConsult-containner-userInfo-name">
           <a
             href="javascript:void(0);"
-            @click="plannerInfoUrlJump(plannerDetail.mchUserId)"
+            @click="plannerInfoUrlJump(plannerDetail)"
           >
             <p :class="{ isTitle: plannerDetail.postName ? false : true }">
               {{ plannerDetail.userName }}
@@ -40,6 +33,14 @@
       </div>
       <div class="commodityConsult-containner-handle">
         <sp-button
+          v-md:p_IMClick
+          data-even_name="p_IMClick"
+          data-im_type="售前"
+          :data-recommend_number="plannerDetail.dggPlannerRecomLog || ''"
+          :data-planner_number="plannerDetail.userCenterNo"
+          :data-planner_name="plannerDetail.userName"
+          :data-crisps_fraction="plannerDetail.point"
+          data-track_code="SPW000162"
           type="primary"
           @click="
             sendTemplateMsgWithImg(plannerDetail.mchUserId, plannerDetail.type)
@@ -47,7 +48,18 @@
         >
           在线咨询
         </sp-button>
-        <sp-button type="info" @click="handleTel(plannerDetail.mchUserId)">
+        <sp-button
+          v-md:p_IMClick
+          data-even_name="p_IMClick"
+          data-im_type="售前"
+          :data-recommend_number="plannerDetail.dggPlannerRecomLog || ''"
+          :data-planner_number="plannerDetail.userCenterNo"
+          :data-planner_name="plannerDetail.userName"
+          :data-crisps_fraction="plannerDetail.point"
+          data-track_code="SPW000162"
+          type="info"
+          @click="handleTel(plannerDetail.mchUserId)"
+        >
           电话联系
         </sp-button>
       </div>
@@ -142,11 +154,19 @@ export default {
       })
     },
     // 规划师详情跳转
-    plannerInfoUrlJump(mchUserId) {
+    plannerInfoUrlJump(item) {
+      // 处理埋点
+      window.spptMd.spptTrackRow('p_plannerBoothClick', {
+        track_code: 'SPW000159',
+        planner_number: item.userCenterNo,
+        planner_name: item.userName,
+        crisps_fraction: item.point,
+        recommend_number: item.dggPlannerRecomLog || '',
+      })
       this.$router.push({
         path: '/planner/detail',
         query: {
-          mchUserId,
+          mchUserId: item.mchUserId,
           requireCode: this.proDetail.classCodeLevelList[0],
           requireName: '',
         },
