@@ -56,7 +56,7 @@ export default {
       apiLock: false,
       prefixPath: 'cpsccustomer://',
       iosPath: {
-        path: 'CPSCustomer:CPSCustomer/CPSCKnowCommonDetailViewController///push/animation',
+        path: 'CPSCustomer:CPSCustomer/CPSCVideoCommonDetailViewController///push/animation',
         parameter: {
           selectedIndex: 1,
           type: '7', // 小视频
