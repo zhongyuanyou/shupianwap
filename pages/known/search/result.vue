@@ -192,13 +192,15 @@ export default {
           code: 'live',
           txt: '直播',
           template: 'video',
-          apiCode: '',
+          apiCode: 'live',
+          type: 'LIVEING,WAIT_LIVE',
         },
         {
           code: 'vback',
           txt: '回放',
           template: 'video',
-          apiCode: '',
+          apiCode: 'live',
+          type: 'LIVE_END',
         },
         {
           code: 'video',
