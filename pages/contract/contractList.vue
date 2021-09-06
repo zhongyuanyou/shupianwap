@@ -110,6 +110,7 @@ export default {
       this.loading = true
       this.finished = false
       this.error = false
+      this.contractEmptyFlag = false
       if (this.tabAct === 1) {
         this.status = ['STRUTS_QSZ']
       } else {
