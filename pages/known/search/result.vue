@@ -253,7 +253,7 @@ export default {
         code: 'question',
         txt: '问题',
         template: 'txtlist',
-        apiCode: 'video',
+        apiCode: 'txt',
         type: 1,
       },
     }
