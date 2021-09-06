@@ -2,9 +2,12 @@
   <div class="item">
     <sp-image width="100%" height="6.61rem" fit="cover" :src="item.image" />
     <div class="content_box">
-      <div class="content">
-        <div class="count">{{ item.custTotalCount }} 次观看</div>
-        <div class="tile">{{ item.videoName }}</div>
+      <div class="desc">
+        <div class="count">
+          <my-icon name="a-guankan2" color="#FFFFFF" size="0.32rem"></my-icon>
+          <div class="count-count">{{ item.custTotalCount | numChange }}</div>
+        </div>
+        <div class="classify">jajajajjajaja</div>
       </div>
     </div>
   </div>
@@ -12,9 +15,16 @@
 
 <script>
 import { Image } from '@chipspc/vant-dgg'
+import { numChangeW } from '@/utils/common'
+
 export default {
   name: 'KnownSearchSmallVideoItem',
   components: { [Image.name]: Image },
+  filters: {
+    numChange(val) {
+      return numChangeW(val)
+    },
+  },
   props: {
     svideoItem: {
       type: Object,
@@ -58,26 +68,31 @@ export default {
       rgba(0, 0, 0, 0) 100%
     );
     border-radius: 0 0 4px 4px;
-    .content {
+    .desc {
       position: absolute;
-      bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      top: 59px;
       left: 20px;
+      right: 20px;
       .count {
-        font-size: 24px;
-        opacity: 0.8;
-        margin-bottom: 8px;
-        line-height: 32px;
-        color: #fff;
-        font-weight: bold;
+        display: flex;
+        align-items: center;
+        &-count {
+          font-size: 24px;
+          color: #fff;
+          line-height: 1;
+          margin-left: 8px;
+        }
       }
-      .tile {
-        line-height: 44px;
-        font-size: 36px;
-        .textOverflow(2);
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-        color: #fff;
-        font-weight: bold;
-        width: 340px;
+      .classify {
+        background: #fff;
+        padding: 4px 10px;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 16px;
+        color: #000;
       }
     }
   }
