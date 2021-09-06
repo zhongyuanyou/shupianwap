@@ -6,22 +6,37 @@
     </div>
     <div class="rt_content">
       <div class="title">
-        <p v-html="item.videoNameHtml"></p>
+        <p v-if="custCode === 'video'" v-html="item.videoNameHtml"></p>
+        <p v-else v-html="item.courseNameHtml"></p>
         <!-- {{ item.videoName }} -->
       </div>
-      <div class="name_time">
+      <div v-if="custCode === 'video'" class="name_time">
         <div class="name">{{ item.createrName }}</div>
         <div class="time">
           {{ timeSplice(item.createTime) }}
         </div>
       </div>
+      <template v-if="custCode === 'course'">
+        <div class="name_desc">
+          <div class="name">{{ item.authorName }}</div>
+          <div class="desc">{{ item.authorTile }}</div>
+        </div>
+        <div class="num_desc">{{ item.totalViewCount | numChange }} 人次</div>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
+import { numChangeW } from '@/utils/common'
+
 export default {
   name: 'KnownSearchVideoItem',
+  filters: {
+    numChange(val) {
+      return numChangeW(val)
+    },
+  },
   props: {
     videoItem: {
       type: Object,
@@ -29,10 +44,17 @@ export default {
         return {}
       },
     },
+    code: {
+      type: String,
+      default: '',
+    },
   },
   computed: {
     item() {
       return this.videoItem
+    },
+    custCode() {
+      return this.code
     },
   },
   methods: {
@@ -67,7 +89,7 @@ export default {
 .item {
   padding: 28px 32px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   .lf_img {
     width: 240px;
     height: 135px;
@@ -119,6 +141,30 @@ export default {
         color: #999999;
         font: 400 26px/32px PingFangSC-Regular, PingFang SC;
       }
+    }
+    .name_desc {
+      display: flex;
+      align-items: center;
+      .name {
+        max-width: 150px;
+        margin-right: 20px;
+        color: #222222;
+        font: bold 26px/36px PingFangSC-Medium, PingFang SC;
+        .mixin-text-oneoverflow();
+      }
+      .desc {
+        flex: 1;
+        color: #999999;
+        font-size: 28px;
+        line-height: 28px;
+        .mixin-text-oneoverflow();
+      }
+    }
+    .num_desc {
+      margin-top: 28px;
+      color: #999;
+      font-size: 24px;
+      line-height: 24px;
     }
   }
 }
