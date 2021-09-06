@@ -158,7 +158,7 @@ export default {
   mixins: [activityMixin],
   data() {
     return {
-      specType: 'HDZT_ZTTYPE_QWBT2',
+      specType: 'MARKETING-HDZT-YXHD',
 
       hasCity: true,
       // "https://cdn.shupian.cn/sp-pt/wap/images/9x8c0a58gew0000.png" //待文字
@@ -228,7 +228,6 @@ export default {
   },
 }
 </script>
-
 
 <style lang="less" scoped>
 .container {

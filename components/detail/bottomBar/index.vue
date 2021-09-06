@@ -318,8 +318,7 @@ export default {
         productContent:
           this.sellingGoodsData.salesGoodsOperatings.productDescribe, // 产品信息
         price: `${this.sellingGoodsData.salesPrice}元`, // 价格
-        forwardAbstract:
-          this.sellingGoodsData.salesGoodsOperatings.productDescribe, // 摘要信息，可与显示内容保持一致
+        forwardAbstract: '[商品详情]',
         routerId: 'IMRouter_APP_ProductDetail_Service', // 路由ID
         imageUrl:
           this.sellingGoodsData.salesGoodsOperatings.clientDetails[0]

@@ -69,7 +69,6 @@ export default {
       .img {
         width: 84px;
         height: 84px;
-        background: #f7fafb;
         overflow: hidden;
       }
       .name {

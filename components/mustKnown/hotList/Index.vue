@@ -118,6 +118,8 @@ export default {
           limit: 50,
           currentUserId: this.userInfo.userId,
           orderBy: 'totalBrowseCount=desc;',
+          needContent: 0,
+          contentTextLength: 60,
         },
       )
       if (code === 200) {

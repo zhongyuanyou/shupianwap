@@ -57,6 +57,8 @@ export default {
           params: {
             limit: this.limit,
             page: this.page,
+            needContent: 0,
+            contentTextLength: 50,
           },
           headers: {
             'x-cache-control': 'cache',

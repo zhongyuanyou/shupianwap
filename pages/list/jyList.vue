@@ -43,7 +43,7 @@
 import { mapMutations, mapState } from 'vuex'
 import { WorkTabs, WorkTab, Badge } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
-import JyGoods from '@/components/list/JyGoods'
+import JyGoods from '@/components/list/JyGoodsOld'
 import { dict } from '@/api/index'
 import listJumpIm from '@/mixins/listJumpIm'
 

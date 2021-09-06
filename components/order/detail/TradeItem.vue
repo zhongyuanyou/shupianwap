@@ -1,6 +1,9 @@
 <template>
   <div class="item-inner">
-    <div v-if="item.skuDealType" class="img-mark">
+    <div
+      v-if="item.skuDealType && afterSaleStatus === 'AFTER_SALE_STATUS_3'"
+      class="img-mark"
+    >
       <img
         v-if="item.skuDealType === 'SKU_DEAL_TYPE_1'"
         src="https://cdn.shupian.cn/sp-pt/wap/images/7yo84dwgx0k0000.png"
@@ -69,6 +72,11 @@ export default {
       default() {
         return {}
       },
+    },
+    // 订单售后状态
+    afterSaleStatus: {
+      type: String,
+      default: '',
     },
   },
   data() {
