@@ -155,7 +155,7 @@ export default {
           code: 'question',
           txt: '问题',
           template: 'txtlist', // 页面展示template
-          apiCode: 'txt', // 接口api参数
+          apiCode: 'txt',
           type: 1,
         },
         {
@@ -251,7 +251,7 @@ export default {
         code: 'question',
         txt: '问题',
         template: 'txtlist',
-        apiCode: 'txt',
+        apiCode: 'video',
         type: 1,
       },
     }
