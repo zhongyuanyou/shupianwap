@@ -354,6 +354,11 @@ export default {
     }
   },
   computed: {
+    // 是否是服务商品
+    // 其他的是交易/销售/资源
+    isServerGoods() {
+      return this.order?.orderProTypeNo === 'PRO_CLASS_TYPE_SERVICE'
+    },
     // 是否先定金后服务
     isDeposit() {
       return (
@@ -448,10 +453,11 @@ export default {
               let refConfig = {}
               if (item.skuDetailInfo) {
                 const skuDetailInfo = JSON.parse(item.skuDetailInfo)
+
                 sku = skuDetailInfo?.sku
 
                 refConfig = sku?.refConfig
-                console.log(skuDetailInfo)
+                console.log('skuDetailInfo', skuDetailInfo)
               }
 
               const obj = {
@@ -487,7 +493,8 @@ export default {
             }
 
             this.setPayMethod()
-            // this.settlement()
+
+            // this.settlement() // 调用接口结算，和获取会员价
           } else {
             this.$xToast.show('数据异常,请然后再试')
             // setTimeout(() => {
@@ -503,57 +510,69 @@ export default {
         })
     },
     // 获取待结算价格
-    // settlement() {
-    //   const saleGoodsList = this.order.list.map((item) => {
-    //     return {
-    //       classCode: item.classCode,
-    //       classCodeLevel: [
-    //         item.classifyOneNo,
-    //         item.classifyTwoNo,
-    //         item.classCode,
-    //       ].join(','),
-    //       goodsNo: item.goodsNo,
+    settlement() {
+      const params = {
+        discountsType: 'COUPON_DISCOUNT', // 优惠劵
+        sceneType: 'TWEET_DISCOUNT_ACCOUNT', // 销售商品推单结算
+        // saleGoodsList,
+        // tradingGoodsList,
 
-    //       id: item.id,
-    //       name: item.name,
-    //       refConfig: item.refConfig,
-    //       saleNum: item.skuCount,
+        couponId: this.couponInfo.selectedItem.couponId,
+        couponUseCode: this.couponInfo.selectedItem.couponUseCode,
+      }
+      let saleGoodsList = []
+      let tradingGoodsList = []
+      if (this.isServerGoods) {
+        saleGoodsList = this.order.list.map((item) => {
+          return {
+            classCode: item.classCode,
+            classCodeLevel: [
+              item.classifyOneNo,
+              item.classifyTwoNo,
+              item.classCode,
+            ].join(','),
+            goodsNo: item.goodsNo,
 
-    //       salesGoodsSubs: item.salesGoodsSubVos,
-    //       version: item.version,
-    //       // priceType
-    //     }
-    //   })
-    //   const tradingGoodsList = []
+            id: item.id,
+            name: item.name,
+            refConfig: item.refConfig,
+            saleNum: item.skuCount,
 
-    //   order
-    //     .discountsSettlement(
-    //       { axios: this.$axios },
-    //       {
-    //         discountsType: 'COUPON_DISCOUNT', // 优惠劵
-    //         sceneType: 'TWEET_DISCOUNT_ACCOUNT', // 销售商品推单结算
-    //         saleGoodsList,
+            salesGoodsSubs: item.salesGoodsSubVos,
+            version: item.version,
+            // priceType
+          }
+        })
+        params.saleGoodsList = saleGoodsList
+      } else {
+        tradingGoodsList = this.order.list.map((item) => {
+          return {
+            id: item.id,
+            goodsPrice: item.salesPrice,
+            saleNum: item.skuCount,
+          }
+        })
+        params.tradingGoodsList = tradingGoodsList
+      }
 
-    //         couponId: this.couponInfo.selectedItem.couponId,
-    //         couponUseCode: this.couponInfo.selectedItem.couponUseCode,
-    //       }
-    //     )
-    //     .then((result) => {
-    //       console.log('settlement', result)
-    //       this.settlementInfo = result
-    //     })
-    //     .catch((e) => {
-    //       this.loading = false
-    //       const msg = e.data.error
-    //       Toast({
-    //         message: msg,
-    //         iconPrefix: 'sp-iconfont',
-    //         icon: 'popup_ic_fail',
-    //         overlay: true,
-    //       })
-    //       console.error(e)
-    //     })
-    // },
+      order
+        .discountsSettlement({ axios: this.$axios }, params)
+        .then((result) => {
+          console.log('settlement', result)
+          this.settlementInfo = result
+        })
+        .catch((e) => {
+          this.loading = false
+          const msg = e.data.error
+          Toast({
+            message: msg,
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+            overlay: true,
+          })
+          console.error(e)
+        })
+    },
 
     setPayMethod() {
       // this.Orderform.payType = this.order?.orderSplitAndCusVo?.payType
