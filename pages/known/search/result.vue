@@ -89,7 +89,7 @@
           class="list"
           @click="open(item)"
         >
-          <video-item :video-item="item"></video-item>
+          <video-item :video-item="item" :code="actTab.code"></video-item>
           <div v-if="index + 1 !== searchList.length" class="line"></div>
         </div>
       </sp-list>
