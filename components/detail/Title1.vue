@@ -30,13 +30,19 @@
       <sp-icon name="arrow" class="icon" />
     </div>
     <div class="title_bottom">
-      <span class="title_bottom_money">{{
+      <p
+        v-if="sellingGoodsData.priceType === 'PRO_FLOATING_PRICE' && sellingGoodsData.plannerRatio"
+        class="title_bottom_money"
+      >
+        {{ sellingGoodsData.plannerRatio / 100 }}%
+        <span>服务费</span>
+      </p>
+      <span v-else class="title_bottom_money">{{
         sellingGoodsData.salesPrice !== '0.00' &&
         sellingGoodsData.refConfig.taskType != 'PRO_WANT_ORDER_DIGEST'
           ? sellingGoodsData.salesPrice + '元'
           : '面议'
       }}</span>
-
       <!-- <span class="title_bottom_num"
         >销量 {{ sellingGoodsData.salesVolume }}</span
       > -->
@@ -159,6 +165,9 @@ export default {
       color: #ec5330;
       font-size: 44px;
       line-height: 52px;
+      span {
+        font-size: 22px;
+      }
     }
     &_num {
       color: #999999;

@@ -53,13 +53,21 @@
                 }}
               </p>
             </div>
-            <p class="money">
+            <p
+              v-if="
+                item.priceType === 'PRO_FLOATING_PRICE' && item.plannerRatio
+              "
+              class="money"
+            >
+              {{ item.plannerRatio / 100 }}%
+              <span>服务费</span>
+            </p>
+            <p v-else class="money">
               {{
                 item.refConfig.taskType != 'PRO_WANT_ORDER_DIGEST'
                   ? (item.salesPrice || item.price) + '元'
                   : '面议'
               }}
-              <!-- {{ item.salesPrice || item.price }}元 -->
             </p>
           </div>
         </nuxt-link>
@@ -198,6 +206,9 @@ export default {
         font-weight: bold;
         color: #ec5330;
         margin-top: 10px;
+        span {
+          font-size: 24px;
+        }
       }
     }
   }
