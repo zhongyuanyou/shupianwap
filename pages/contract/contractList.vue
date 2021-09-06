@@ -105,6 +105,7 @@ export default {
       }
       this.tabAct = index
       this.page = 1
+      this.contractEmptyFlag = false
       this.list = []
       this.loading = true
       this.finished = false
