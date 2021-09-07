@@ -7,7 +7,12 @@
           <my-icon name="a-guankan2" color="#FFFFFF" size="0.32rem"></my-icon>
           <div class="count-count">{{ item.custTotalCount | numChange }}</div>
         </div>
-        <div class="classify">jajajajjajaja</div>
+        <div v-if="item.categoryName" class="classify">
+          {{ item.categoryName }}
+        </div>
+      </div>
+      <div class="tile">
+        {{ item.videoName }}
       </div>
     </div>
   </div>
@@ -93,7 +98,20 @@ export default {
         box-sizing: border-box;
         font-size: 16px;
         color: #000;
+        max-width: 50%;
+        .mixin-text-oneoverflow();
       }
+    }
+    .tile {
+      position: absolute;
+      right: 20px;
+      left: 20px;
+      top: 99px;
+      font-size: 36px;
+      line-height: 48px;
+      font-weight: bold;
+      color: #fff;
+      .textOverflow(2);
     }
   }
 }

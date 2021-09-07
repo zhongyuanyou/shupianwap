@@ -688,8 +688,8 @@ export default {
     },
     async bindhidden() {
       try {
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
+        // const isLogin = await this.judgeLoginMixin()
+        // if (isLogin) {
           const telData = await planner.newtel({
             areaCode: this.city.code,
             areaName: this.city.name,
@@ -721,13 +721,13 @@ export default {
             })
             return ''
           }
-        } else {
-          Toast({
-            message: '请先登录账号',
-            iconPrefix: 'sp-iconfont',
-            icon: 'popup_ic_fail',
-          })
-        }
+        // } else {
+        //   Toast({
+        //     message: '请先登录账号',
+        //     iconPrefix: 'sp-iconfont',
+        //     icon: 'popup_ic_fail',
+        //   })
+        // }
       } catch (err) {
         Toast({
           message: '未获取到划师联系方式',

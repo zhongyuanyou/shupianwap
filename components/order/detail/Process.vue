@@ -368,6 +368,25 @@ export default {
     .steps_container {
       flex: 1;
       margin: 0px 0 40px;
+
+      .time {
+        font-family: PingFangSC-Regular;
+        font-size: 24px;
+        color: #999999;
+        white-space: nowrap;
+        text-align: center;
+      }
+      .date {
+        text-align: center;
+        white-space: nowrap;
+        font-family: PingFangSC-Regular;
+        font-size: 24px;
+        color: #999999;
+        letter-spacing: 0;
+
+        transform-origin: center top;
+        transform: scale(0.83);
+      }
     }
     .process_container_goods {
       display: flex;
@@ -437,23 +456,6 @@ export default {
           }
         }
       }
-    }
-
-    .time {
-      font-family: PingFangSC-Regular;
-      font-size: 24px;
-      color: #999999;
-      white-space: nowrap;
-    }
-    .date {
-      white-space: nowrap;
-      font-family: PingFangSC-Regular;
-      font-size: 24px;
-      color: #999999;
-      letter-spacing: 0;
-
-      transform-origin: left top;
-      transform: scale(0.83);
     }
 
     .process_container_close {

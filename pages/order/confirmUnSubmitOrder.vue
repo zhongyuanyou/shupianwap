@@ -35,20 +35,7 @@
             <p v-if="item.skuExtInfo" class="goods-sku">
               {{ item.skuExtInfo }}
             </p>
-            <!-- <p v-if="item.salesGoodsSubVos" class="goods-sku">
-              {{
-                item.salesGoodsSubVos.length
-                  ? item.salesGoodsSubVos[0].goodsSubDetailsName
-                  : item.skuExtInfo
-              }}
-            </p>
-            <p v-if="item.saleGoodsSubs" class="goods-sku">
-              {{
-                item.saleGoodsSubs.length
-                  ? item.saleGoodsSubs[0].goodsSubDetailsName
-                  : item.skuExtInfo
-              }}
-            </p> -->
+
             <p class="price">
               <span v-if="order.orderType === 0"><b>面议</b></span>
               <span v-else
@@ -70,10 +57,10 @@
             温馨提示：该订单先支付定金在业务办理完成后支付尾款
           </div>
           <div class="deposit_content">
-            定金尾款：定金 {{ order.depositAmount }}元，<span
+            定金尾款：定金 {{ settlementInfo.depositAmount }}元，<span
               v-if="order.orderType === 0"
               >尾款 面议</span
-            ><span v-else>尾款 {{ order.lastAount }}元</span>
+            ><span v-else>尾款 {{ settlementInfo.orderBalanceMoney }}元</span>
           </div>
         </div>
 
@@ -82,7 +69,7 @@
           <div class="deposit_tips">温馨提示：该订单先服务后收费</div>
           <div class="deposit_content">
             <span v-if="order.orderType === 0">总价：面议</span>
-            <span v-else>总价 {{ order.orderTotalMoney }}元</span>
+            <span v-else>总价 {{ settlementInfo.orderTotalMoney }}元</span>
           </div>
         </div>
         <div v-else class="deposit">
@@ -92,8 +79,8 @@
             }}
           </div>
           <div class="deposit_content">
-            总价 {{ order.orderTotalMoney }}元，应付款{{
-              orderData.orderPayableMoney
+            总价 {{ settlementInfo.orderTotalMoney }}元，应付款{{
+              settlementInfo.orderPayableMoney
             }}元
           </div>
         </div>
@@ -110,8 +97,9 @@
             :value="
               order.orderType === 0
                 ? '面议'
-                : (order.orderTotalMoney || order.orderPayableMoneys || 0) +
-                  '元'
+                : (settlementInfo.orderTotalMoney ||
+                    order.orderPayableMoneys ||
+                    0) + '元'
             "
             value-class="black"
           />
@@ -120,8 +108,8 @@
             v-if="!isIntendedOrder"
             title="优惠券"
             :value="
-              couponInfo.couponPrice
-                ? couponInfo.couponPrice + '元'
+              parseFloat(settlementInfo.orderDiscountMoney)
+                ? -settlementInfo.orderDiscountMoney + '元'
                 : couponInfo.datalist.length > 0
                 ? couponInfo.datalist.length + '个优惠券'
                 : '无可用'
@@ -158,16 +146,16 @@
           <span v-if="order.orderType === 0" class="money_price"
             ><b>面议</b></span
           ><span v-else class="money_price"
-            ><b>{{ price }}</b
+            ><b>{{ settlementInfo.orderTotalMoney }}</b
             >元</span
           >
           <span v-if="isDeposit" class="deposit_text"
-            >（定金 {{ order.depositAmount }}元，<span
+            >（定金 {{ settlementInfo.depositAmount }}元，<span
               v-if="order.orderType === 0"
               class="deposit_text"
               >尾款 面议</span
             ><span v-else class="deposit_text"
-              >尾款 {{ order.lastAount }}元</span
+              >尾款 {{ settlementInfo.orderBalanceMoney }}元</span
             >）</span
           >
         </p>
@@ -209,10 +197,11 @@
     <div ref="foot" class="foot">
       <p class="left">
         应付:<span>
-          <b v-if="isDeposit">{{ order.depositAmount }}</b>
+          <b v-if="isDeposit">{{ settlementInfo.depositAmount }}</b>
           <b v-else-if="isNodes">0</b>
           <b v-else-if="isServiceFinshed">0</b>
-          <b v-else-if="isBeforePay">{{ price }}</b> 元</span
+          <b v-else-if="isBeforePay">{{ settlementInfo.orderPayableMoney }}</b>
+          元</span
         >
       </p>
       <div class="right" :class="radio ? 'act' : ''" @click="placeOrder">
@@ -227,7 +216,7 @@
       :height="75"
       title="优惠"
       help="使用说明"
-      :origin-price="order.orderTotalMoney"
+      :origin-price="settlementInfo.orderTotalMoney"
       :tablist="couponInfo.tablist"
       :datalist="couponInfo.datalist"
       :nolist="couponInfo.nolist"
@@ -301,6 +290,7 @@ export default {
       checkboxProtocol: [], // 选中协议
       order: {},
       orderData: {},
+      settlementInfo: {},
       // num: 0,
 
       couponInfo: {
@@ -361,31 +351,19 @@ export default {
     },
     // 是否先定金后服务
     isDeposit() {
-      return (
-        this.order?.orderSplitAndCusVo?.cusOrderPayType ===
-        'PRO_PRE_DEPOSIT_POST_OTHERS'
-      )
+      return this.order?.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
     },
     // 服务完结收费
     isServiceFinshed() {
-      return (
-        this.order?.orderSplitAndCusVo?.cusOrderPayType ===
-        'PRO_PRE_SERVICE_FINISHED_PAY'
-      )
+      return this.order?.cusOrderPayType === 'PRO_PRE_SERVICE_FINISHED_PAY'
     },
     // 节点付费
     isNodes() {
-      return (
-        this.order?.orderSplitAndCusVo?.cusOrderPayType ===
-        'PRO_PRE_SERVICE_POST_PAY_BY_NODE'
-      )
+      return this.order?.cusOrderPayType === 'PRO_PRE_SERVICE_POST_PAY_BY_NODE'
     },
     // 先付款后服务
     isBeforePay() {
-      return (
-        this.order?.orderSplitAndCusVo?.cusOrderPayType ===
-        'PRO_PRE_PAY_POST_SERVICE'
-      )
+      return this.order?.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE'
     },
 
     // 是否是意向单
@@ -400,12 +378,7 @@ export default {
   mounted() {
     this.asyncData()
 
-    // this.getInitData()
     this.getProtocol('protocol100008')
-
-    // this.getProtocol('protocol100033') // 薯片平台交易委托协议
-
-    // this.getProtocol('protocol100044') // 薯片平台担保交易支付服务协议
   },
   methods: {
     onLeftClick() {
@@ -423,78 +396,84 @@ export default {
       this.skeletonloading = false
 
       orderApi
-        .getDetailByOrderId(
+        .getDetailByCusOrderId(
           { axios: this.axios },
           {
-            id: this.$route.query.orderIds,
             cusOrderId: this.$route.query.cusOrderId,
+            id: this.$route.query.cusOrderId,
+
+            isSkuDetailInfo: true,
+            isSkuImages: true,
           }
         )
         .then((res) => {
           console.log('res', res)
-          // this.changeMoney(res.data || res)
-          // const cusDetail = res.data
-          // ? res.data.orderSplitAndCusVo
-          // : res.orderSplitAndCusVo
-
-          // const data = Object.assign(cusDetail, res.data || res)
-          this.changeMoney(res)
-          const data = res
+          const data = res.data
 
           if (data) {
             data.list = []
+            // data.depositAmount = data.depositAmount / 100 || 0
+            // data.lastAount = data.lastAount / 100 || 0
+            // data.orderTotalMoney = data.cusOrderTotalMoney / 100 || 0
+            // data.orderPayableMoney = data.cusOrderPayableMoney / 100 || 0
             this.order = data
             this.orderData = res
 
-            console.log('res', res)
             let num = 0
-            data.orderSkuList.map((item) => {
-              let sku = {}
-              let refConfig = {}
-              if (item.skuDetailInfo) {
-                const skuDetailInfo = JSON.parse(item.skuDetailInfo)
 
-                sku = skuDetailInfo?.sku
+            data.orderList.map((order) => {
+              this.order.orderType = order.orderType
+              this.order.orderProTypeNo = order.orderProTypeNo
+              order.orderSkuList.map((item) => {
+                this.order.isSecuredTrade = item.isSecuredTrade
 
-                refConfig = sku?.refConfig
-                console.log('skuDetailInfo', skuDetailInfo)
-              }
+                item.skuPrice = item.skuPrice / 100 || 0
 
-              const obj = {
-                name: item.spuHideName || item.spuName,
-                classifyOneNo: item.classifyOneNo,
-                classifyTwoNo: item.classifyTwoNo,
-                classCode: item.classifyThreeNo,
+                let sku = {}
+                let refConfig = {}
 
-                classCodeName: sku.className,
-                goodsNo: sku.goodsNo,
-                version: sku.version,
-                id: item.id,
-                refConfig,
-                skuCount: item.skuCount,
-                salesPrice: item.skuPrice,
-                salesGoodsSubVos: item.salesGoodsSubVos,
-                skuExtInfo: item.skuExtInfo,
-              }
-              num += parseInt(item.skuCount) || 0
-              this.order.list.push(obj)
+                if (item.skuDetailInfo) {
+                  const skuDetailInfo = JSON.parse(item.skuDetailInfo)
+                  console.log('skuDetailInfo', skuDetailInfo)
+
+                  sku = skuDetailInfo?.sku
+
+                  refConfig = sku?.refConfig
+                }
+
+                const obj = {
+                  name: item.spuHideName || item.spuName,
+                  // classifyOneNo: item.classifyOneNo,
+                  // classifyTwoNo: item.classifyTwoNo,
+                  // classCode: item.classifyThreeNo,
+
+                  // classCodeName: sku.className,
+                  // goodsNo: sku.goodsNo,
+                  // version: sku.version,
+                  // id: item.id,
+                  // refConfig,
+                  skuCount: item.skuCount,
+                  salesPrice: item.skuPrice,
+                  // salesGoodsSubVos: item.salesGoodsSubVos,
+                  skuExtInfo: item.skuExtInfo,
+
+                  // orderSaleSubjectId,
+                }
+                num += parseInt(item.skuCount) || 0
+                this.order.list.push(obj)
+              })
             })
 
             this.order.num = num // this.order.list.length
-            this.price = this.order.orderTotalMoney
+            this.price = this.settlementInfo.orderTotalMoney
 
-            // 意向单不使用优惠券
-            if (!this.isIntendedOrder) {
-              this.getInitData(5) // 获取优惠券
-              this.getInitData(6)
-            }
             if (order.isSecuredTrade === 1) {
               this.getProtocol('protocol100044')
             }
 
             this.setPayMethod()
 
-            // this.settlement() // 调用接口结算，和获取会员价
+            this.settlement() // 调用接口结算，和获取会员价
           } else {
             this.$xToast.show('数据异常,请然后再试')
             // setTimeout(() => {
@@ -509,73 +488,37 @@ export default {
           // }, 2000)
         })
     },
+
     // 获取待结算价格
     settlement() {
-      const params = {
-        discountsType: 'COUPON_DISCOUNT', // 优惠劵
-        sceneType: 'TWEET_DISCOUNT_ACCOUNT', // 销售商品推单结算
-        // saleGoodsList,
-        // tradingGoodsList,
-
-        couponId: this.couponInfo.selectedItem.couponId,
-        couponUseCode: this.couponInfo.selectedItem.couponUseCode,
-      }
-      let saleGoodsList = []
-      let tradingGoodsList = []
-      if (this.isServerGoods) {
-        saleGoodsList = this.order.list.map((item) => {
-          return {
-            classCode: item.classCode,
-            classCodeLevel: [
-              item.classifyOneNo,
-              item.classifyTwoNo,
-              item.classCode,
-            ].join(','),
-            goodsNo: item.goodsNo,
-
-            id: item.id,
-            name: item.name,
-            refConfig: item.refConfig,
-            saleNum: item.skuCount,
-
-            salesGoodsSubs: item.salesGoodsSubVos,
-            version: item.version,
-            // priceType
-          }
-        })
-        params.saleGoodsList = saleGoodsList
-      } else {
-        tradingGoodsList = this.order.list.map((item) => {
-          return {
-            id: item.id,
-            goodsPrice: item.salesPrice,
-            saleNum: item.skuCount,
-          }
-        })
-        params.tradingGoodsList = tradingGoodsList
-      }
-
       order
-        .discountsSettlement({ axios: this.$axios }, params)
+        .settle_order_by_unsubmit(
+          {},
+          {
+            orderId: this.$route.query.cusOrderId,
+            couponUseCode: this.couponInfo.selectedItem.couponUseCode,
+            couponId: this.couponInfo.selectedItem.couponId,
+          }
+        )
         .then((result) => {
-          console.log('settlement', result)
+          console.log('result', result)
           this.settlementInfo = result
+          if (this.couponInfo.datalist.length === 0) {
+            // 意向单不使用优惠券
+            if (!this.isIntendedOrder) {
+              this.getInitData(5) // 获取优惠券
+              this.getInitData(6)
+            }
+          }
         })
-        .catch((e) => {
-          this.loading = false
-          const msg = e.data.error
-          Toast({
-            message: msg,
-            iconPrefix: 'sp-iconfont',
-            icon: 'popup_ic_fail',
-            overlay: true,
-          })
-          console.error(e)
+        .catch((error) => {
+          console.log(error)
+          this.$xToast.show('服务器异常,请然后再试')
         })
     },
 
     setPayMethod() {
-      // this.Orderform.payType = this.order?.orderSplitAndCusVo?.payType
+      // this.Orderform.payType = this.orde?.payType
 
       if (this.order.isSecuredTrade === 0) {
         this.payMethod.list = [
@@ -587,9 +530,9 @@ export default {
           { value: 'ORDER_PAY_MODE_SECURED', text: '担保交易' },
         ]
       }
-      if (this.order?.orderSplitAndCusVo?.payType) {
+      if (this.order?.payType) {
         const pay = this.payMethod.list.find((item) => {
-          return item.value === this.order?.orderSplitAndCusVo?.payType
+          return item.value === this.order?.payType
         })
         if (pay && pay.value) {
           this.payMethod.text = pay.text
@@ -765,25 +708,20 @@ export default {
     },
     //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
-      const arr = this.order.list.map((x) => {
+      const arr = this.settlementInfo.orderSkuList.map((x) => {
         return x.orderSaleId
       })
       const list = []
-      for (let i = 0; i < this.order.list.length; i++) {
+      for (let i = 0; i < this.settlementInfo.orderSkuList.length; i++) {
         const item = {
-          goodsId: this.order.list[i].orderSaleId,
-          price: this.order.list[i].salesPrice,
-          goodsNum: this.order.list[i].salesVolume || 1,
+          goodsId: this.settlementInfo.orderSkuList[i].orderSaleId,
+          price: this.settlementInfo.orderSkuList[i].skuPrice,
+          goodsNum: this.settlementInfo.orderSkuList[i].skuCount || 1,
           // goodsClassCode: this.order.list[i].classifyTwoNo,
         }
         list.push(item)
       }
-      let price = 0
-      if (this.order.salesPrice) {
-        price = this.order.salesPrice
-      } else if (this.order.skuTotalPrice) {
-        price = this.order.skuTotalPrice
-      }
+
       coupon
         .findOrderCouponPage(
           { axios: this.$axios },
@@ -791,7 +729,7 @@ export default {
             findType: index,
             userId: this.$store.state.user.userId,
             actionId: arr,
-            orderPrice: price,
+            orderPrice: this.settlementInfo.orderPayableMoney,
             orderByWhere: 'createTime=desc',
             limit: 50,
             page: 1,
@@ -803,7 +741,7 @@ export default {
             this.couponInfo.datalist = result.marketingCouponLogList
             const sortList1 = this.getDisPrice(
               result.marketingCouponLogList,
-              this.order.salesPrice || this.order.skuTotalPrice
+              this.order.cusOrderPayableMoney || this.order.cusOrderTotalMoney
             )
             const sortList = sortList1.sort((a, b) => {
               return (
@@ -858,6 +796,7 @@ export default {
       this.couponInfo.selectedItem = item || {}
       this.card.cardPrice = ''
       this.card.selectedItem = {}
+      this.settlement()
     },
     cardChange(price, num, item) {
       this.price = price

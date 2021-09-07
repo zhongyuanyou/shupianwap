@@ -55,6 +55,10 @@
                       {{ getDiscount(item.marketingCouponVO.discount) }}
                       <span>折</span>
                     </div>
+                    <div v-if="item.useType === 1" class="can_use">无门槛</div>
+                    <div v-else class="can_use">
+                      满{{ item.marketingCouponVO.fullPrice }}元可用
+                    </div>
                   </div>
                 </div>
                 <div class="right">
@@ -136,6 +140,10 @@
                     <div class="coupon_discount">
                       {{ getDiscount(item.marketingCouponVO.discount) }}
                       <span>折</span>
+                    </div>
+                    <div v-if="item.useType === 1" class="can_use">无门槛</div>
+                    <div v-else class="can_use">
+                      满{{ item.marketingCouponVO.fullPrice }}元可用
                     </div>
                   </div>
                 </div>
@@ -507,12 +515,12 @@ export default {
             padding-top: 20px;
             box-sizing: border-box;
             .coupon_discount {
-              font-size: 72px;
+              font-size: 62px;
               font-family: Bebas;
               font-weight: 400;
               color: #ffffff;
               text-align: center;
-              padding-top: 34px;
+              padding-top: 27px;
               position: relative;
               padding-right: 20px;
               margin-bottom: 10px;
