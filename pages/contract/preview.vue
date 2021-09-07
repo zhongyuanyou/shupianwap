@@ -152,6 +152,10 @@ export default {
       }
     },
     decryptionPhone() {
+      if (!this.contract.contactWay) {
+        this.$xToast.error('获取签署信息失败')
+        return
+      }
       if (this.contract.contactWay.length > 11) {
         this.loading = true
         contractApi
