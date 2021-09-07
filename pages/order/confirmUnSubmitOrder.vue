@@ -109,7 +109,7 @@
             title="优惠券"
             :value="
               parseFloat(settlementInfo.orderDiscountMoney)
-                ? settlementInfo.orderDiscountMoney + '元'
+                ? -settlementInfo.orderDiscountMoney + '元'
                 : couponInfo.datalist.length > 0
                 ? couponInfo.datalist.length + '个优惠券'
                 : '无可用'
