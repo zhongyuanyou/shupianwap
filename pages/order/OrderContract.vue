@@ -3,69 +3,48 @@
     <Head ref="head" title="附件协议-合同列表"> </Head>
     <div class="listbox">
       <div v-for="(item, index) in list" :key="index" class="list">
-        <div class="head">
-          <h1>{{ item.contractName }}</h1>
-          <p v-if="item.status == 'STRUTS_YWC'">已签署</p>
-          <p
-            v-if="item.status == 'STRUTS_CG'"
-            :style="{
-              color: item.status == 'STRUTS_CG' ? '#FE8C29' : '#222222',
-            }"
-          >
-            待签署
-          </p>
-          <p
-            v-if="item.status == 'STRUTS_QSZ'"
-            :style="{
-              color: item.status == 'STRUTS_QSZ' ? '#4974F5' : '#222222',
-            }"
-          >
-            签署中
-          </p>
-          <p v-if="item.status == 'STRUTS_DSH'">待审核</p>
-          <p v-if="item.status == 'STRUTS_YJQ'">已拒签</p>
-          <p v-if="item.status == 'STRUTS_YYQ'">已逾期</p>
-          <p v-if="item.status == 'STRUTS_YZF'">已作废</p>
-          <p v-if="item.status == 'STRUTS_SHZ'">审核中(平台)</p>
-          <p v-if="item.status == 'STRUTS_SHZ_SH'">审核中(待商户审核)</p>
-          <p v-if="item.status == 'STRUTS_DGD'">待归档</p>
-        </div>
-        <div class="body">
-          <div class="cell">
-            <p class="title">合同编号：{{ item.documentNo }}</p>
-          </div>
-          <div class="cell">
-            <p class="title">
-              合同金额：{{ item.money ? '￥' + item.money : '-' }}
+        <template v-if="showContract(item.status)">
+          <div class="head">
+            <h1>{{ item.contractName }}</h1>
+            <p v-if="item.status == 'STRUTS_YWC'">已签署</p>
+            <p
+              v-if="item.status == 'STRUTS_QSZ'"
+              :style="{
+                color: item.status == 'STRUTS_QSZ' ? '#4974F5' : '#222222',
+              }"
+            >
+              签署中
             </p>
+            <p v-if="item.status == 'STRUTS_DSH'">待审核</p>
+            <p v-if="item.status == 'STRUTS_YJQ'">已拒签</p>
+            <p v-if="item.status == 'STRUTS_YYQ'">已逾期</p>
+            <p v-if="item.status == 'STRUTS_YZF'">已作废</p>
+            <p v-if="item.status == 'STRUTS_DGD'">待归档</p>
           </div>
-          <div class="cell">
-            <p class="title">
-              合同类型：{{
-                item.contractTypeName ? item.contractTypeName : '-'
-              }}
-            </p>
+          <div class="body">
+            <div class="cell">
+              <p class="title">合同编号：{{ item.documentNo }}</p>
+            </div>
+            <div class="cell">
+              <p class="title">
+                合同金额：{{ item.money ? '￥' + item.money : '-' }}
+              </p>
+            </div>
+            <div class="cell">
+              <p class="title">
+                合同类型：{{
+                  item.contractTypeName ? item.contractTypeName : '-'
+                }}
+              </p>
+            </div>
+            <div class="cell">
+              <p class="title">签署时间：{{ item.signCompleteTime || '-' }}</p>
+            </div>
           </div>
-          <div class="cell">
-            <p class="title">签署时间：{{ item.signCompleteTime || '-' }}</p>
+          <div class="btn" @click="goPreview(item)">
+            {{ item.status == 'STRUTS_QSZ' ? '签署合同' : '查看合同' }}
           </div>
-        </div>
-        <div
-          v-if="
-            item.status == 'STRUTS_YWC' ||
-            item.status == 'STRUTS_QSZ' ||
-            item.status == 'STRUTS_CG' ||
-            item.status == 'STRUTS_DSH'
-          "
-          class="btn"
-          @click="goPreview(item)"
-        >
-          {{
-            item.status == 'STRUTS_CG' || item.status == 'STRUTS_QSZ'
-              ? '签署合同'
-              : '查看合同'
-          }}
-        </div>
+        </template>
       </div>
     </div>
   </div>
@@ -91,6 +70,17 @@ export default {
     this.getorder()
   },
   methods: {
+    showContract(val) {
+      // 草稿状态, 审核状态不显示,其余状态均显示合同
+      if (
+        val === 'STRUTS_CG' ||
+        val === 'STRUTS_SHZ' ||
+        val === 'STRUTS_SHZ_SH'
+      ) {
+        return false
+      }
+      return true
+    },
     getorder() {
       contractApi
         .contartlist(

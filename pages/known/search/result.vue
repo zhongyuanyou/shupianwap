@@ -1,6 +1,6 @@
 <template>
   <div class="result">
-    <header-slot>
+    <header-slot height="1.68rem">
       <Search
         ref="searchRef"
         v-model="value"
@@ -19,28 +19,28 @@
           ></my-icon>
         </template>
       </Search>
+      <sp-tabs
+        v-model="active"
+        :class="[isInApp ? 'z-app' : '']"
+        @change="changeTabs"
+      >
+        <template v-if="!isInApp">
+          <sp-tab
+            v-for="item in wapClassify"
+            :key="item.code"
+            :title="item.txt"
+          ></sp-tab>
+        </template>
+        <template v-else>
+          <sp-tab
+            v-for="item in appClassify"
+            :key="item.code"
+            :title="item.txt"
+            title-style="width: 20vw;"
+          ></sp-tab>
+        </template>
+      </sp-tabs>
     </header-slot>
-    <sp-tabs
-      v-model="active"
-      :class="[isInApp ? 'z-app' : '']"
-      @change="changeTabs"
-    >
-      <template v-if="!isInApp">
-        <sp-tab
-          v-for="item in wapClassify"
-          :key="item.code"
-          :title="item.txt"
-        ></sp-tab>
-      </template>
-      <template v-else>
-        <sp-tab
-          v-for="item in appClassify"
-          :key="item.code"
-          :title="item.txt"
-          title-style="width: 20vw;"
-        ></sp-tab>
-      </template>
-    </sp-tabs>
     <div v-show="actTab.template === 'txtlist'" class="listbox">
       <sp-list
         v-model="loading"
@@ -104,14 +104,12 @@
         @load="onLoad"
       >
         <div v-if="searchList.length > 0" class="video-list">
-          <div
-            v-for="(item, index) in searchList"
-            :key="index"
-            class="item"
-            @click="open(item)"
-          >
-            <small-video-item :svideo-item="item"></small-video-item>
-          </div>
+          <template v-for="(item, index) in searchList" @click="open(item)">
+            <small-video-item
+              :key="index"
+              :svideo-item="item"
+            ></small-video-item
+          ></template>
         </div>
       </sp-list>
     </div>
@@ -229,7 +227,6 @@ export default {
           apiCode: 'user',
         },
       ],
-      tabIndex: '1',
       value: '',
       page: 1,
       limit: 15,
@@ -272,7 +269,18 @@ export default {
   },
   mounted() {
     const query = this.$route.query
-    this.tabIndex = query.type || '1'
+    let curTabList = this.wapClassify
+    if (this.isInApp) {
+      curTabList = this.appClassify
+    }
+    const type = query.type || 'question'
+    for (let i = 0, l = curTabList.length; i < l; i++) {
+      if (curTabList[i].code === type) {
+        this.active = i
+        this.actTab = curTabList[i]
+        break
+      }
+    }
     this.value = query.keyword
   },
   beforeRouteLeave(to, from, next) {
@@ -294,11 +302,11 @@ export default {
     keyClickHandle() {
       this.$router.replace({
         path: '/known/search',
-        query: { type: this.tabIndex, keyword: this.value },
+        query: { type: this.actTab.code, keyword: this.value },
       })
     },
     toDetail(id) {
-      if (this.tabIndex === '2') {
+      if (this.actTab.code === 'article') {
         this.$router.push({
           path: '/known/detail/article',
           query: {
@@ -378,7 +386,7 @@ export default {
     },
     open(item) {
       if (this.isInApp && this.appInfo.appCode === 'CPSAPP') {
-        if (this.tabIndex === '4') {
+        if (this.actTab.code === 'video') {
           try {
             this.$appFn.dggOpenVideo(item.id, (res) => {
               const { code } = res || {}
@@ -393,7 +401,7 @@ export default {
           } catch (error) {
             console.error('changeTop error:', error)
           }
-        } else if (this.tabIndex === '5') {
+        } else if (this.actTab.code === 'course') {
           try {
             this.$appFn.dggOpenCourse(item.id, (res) => {
               const { code } = res || {}
@@ -408,7 +416,7 @@ export default {
           } catch (error) {
             console.error('changeTop error:', error)
           }
-        } else if (this.tabIndex === '6') {
+        } else if (this.actTab.code === 'svideo') {
           try {
             this.$appFn.dggOpenSmallVideo(item.id, (res) => {
               const { code } = res || {}
@@ -423,12 +431,71 @@ export default {
           } catch (error) {
             console.error('changeTop error:', error)
           }
+        } else if (this.actTab.code === 'live') {
+          // 直播间: 2 回放: 3
+          this.openLive(item.roomId, 2)
+        } else if (this.actTab.code === 'vback') {
+          this.openLive(item.roomId, 3)
         }
       } else if (this.isInApp && this.appInfo.appCode === 'syscode') {
         this.showItem = false
       } else {
         this.showPop = true
       }
+    },
+    openLive(roomId, type) {
+      this.$isLogin().then((res) => {
+        // 验证是否为android
+        const isAndroid =
+          navigator.userAgent.indexOf('Android') > -1 ||
+          navigator.userAgent.indexOf('Adr') > -1
+        // 验证是否为ios
+        const isiOS = !!navigator.userAgent.match(
+          /\(i[^;]+;( U;)? CPU.+Mac OS X/
+        )
+        if (isiOS) {
+          const iOSRouterPath = {
+            roomId,
+            liveRoleType: type,
+          }
+          // ios方法
+          this.$appFn.dggLiveOnline(iOSRouterPath, (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '打开视频失败！',
+                duration: 1500,
+                forbidClick: false,
+                icon: 'toast_ic_remind',
+              })
+            }
+          })
+        }
+        if (isAndroid) {
+          const androidRouterPath = {
+            path: '/live/PlayBackActivity',
+            parameter: {
+              id: roomId,
+            },
+          }
+          this.$appFn.dggJumpRoute(
+            {
+              androidRouter: JSON.stringify(androidRouterPath),
+            },
+            (res) => {
+              const { code } = res || {}
+              if (code !== 200) {
+                this.$xToast.show({
+                  message: '打开视频失败！',
+                  duration: 1500,
+                  forbidClick: false,
+                  icon: 'toast_ic_remind',
+                })
+              }
+            }
+          )
+        }
+      })
     },
   },
 }
