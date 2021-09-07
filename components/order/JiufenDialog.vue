@@ -2,8 +2,8 @@
   <div class="modal_area">
     <sp-dialog
       v-model="showJiufenModal"
-      @confirm="copyLink"
       confirm-button-text="复制"
+      @confirm="copyLink"
     >
       <p class="text_area">请复制下方链接在PC端打开，进行纠纷/售后</p>
       <p class="url">{{ linkUrl }}</p>

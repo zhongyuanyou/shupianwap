@@ -1,5 +1,5 @@
 <template>
-  <div class="service-goods-component" @click="toDetail">
+  <div class="service-goods-component" @click="toGoodsDeatil(info)">
     <div class="service-goods-component-item">
       <slot name="left"></slot>
       <sp-image
@@ -68,12 +68,13 @@
 
 <script>
 import { Image } from '@chipspc/vant-dgg'
-
+import detailLinkMixin from '@/mixins/todetail'
 export default {
   name: 'EvaluateList',
   components: {
     [Image.name]: Image,
   },
+  mixins: [detailLinkMixin],
   props: {
     type: {
       type: String,
@@ -88,33 +89,6 @@ export default {
   },
   data() {
     return {}
-  },
-  methods: {
-    toDetail() {
-      if (this.type === 'Service') {
-        this.$router.push({
-          path: '/detail',
-          query: {
-            productId: this.info.id,
-          },
-        })
-      } else {
-        this.$router.push({
-          path: '/detail/transactionDetails',
-          query: {
-            productId: this.info.id,
-          },
-        })
-      }
-    },
-    // linkServiceGoodsDetail(info) {
-    //   this.$router.push({
-    //     path: '/detail',
-    //     query: {
-    //       productId: info.id,
-    //     },
-    //   })
-    // },
   },
 }
 </script>

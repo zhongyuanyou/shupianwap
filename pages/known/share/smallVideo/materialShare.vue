@@ -65,7 +65,7 @@
                         }}<span class="unit">元</span>
                       </div>
                     </template>
-                    <div class="btn" @click="goodLink(info)">立即抢购</div>
+                    <div class="btn" @click="toGoodsDeatil(info)">立即抢购</div>
                   </div>
                 </div>
               </div>
@@ -95,7 +95,7 @@ import knownApi from '@/api/known'
 import { planner } from '@/api'
 import ShareModal from '@/components/common/ShareModal.vue'
 import PlannerBottom from '@/components/mustKnown/share/PlannerBottom.vue'
-
+import detailLinkMixin from '@/mixins/todetail'
 export default {
   name: 'KnownSmallVideo',
   components: {
@@ -106,6 +106,7 @@ export default {
     PlannerBottom,
     ShareModal,
   },
+  mixins: [detailLinkMixin],
   data() {
     return {
       id: '', // 分享id
@@ -190,23 +191,6 @@ export default {
           shareType: 'materialShare', // 传对应的分销标识
         },
       })
-    },
-    goodLink(item) {
-      if (item.productType === 'PRO_CLASS_TYPE_SALES') {
-        this.$router.push({
-          path: '/detail',
-          query: {
-            productId: item.id,
-          },
-        })
-      } else {
-        this.$router.push({
-          path: '/detail/transactionDetails',
-          query: {
-            productId: item.id,
-          },
-        })
-      }
     },
   },
 }

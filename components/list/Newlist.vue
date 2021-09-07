@@ -25,7 +25,7 @@
         :data-commodity_number="item.goodsNo || ''"
         :data-commodity_name="item.name || ''"
         data-commodity_type="服务商品"
-        @click="godeatil(item)"
+        @click="toGoodsDeatil(item)"
       >
         <div class="left">
           <img :src="item.img" alt="" />
@@ -71,13 +71,14 @@
 <script>
 import { PullRefresh, List } from '@chipspc/vant-dgg'
 import { goods } from '@/api/index'
-
+import detailLinkMixin from '@/mixins/todetail'
 export default {
   name: 'Newlist',
   components: {
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
   },
+  mixins: [detailLinkMixin],
   props: {
     searchtext: {
       type: String,
@@ -101,14 +102,6 @@ export default {
   //   this.getlist()
   // },
   methods: {
-    godeatil(item) {
-      this.$router.push({
-        path: '/detail',
-        query: {
-          productId: item.id,
-        },
-      })
-    },
     getlist() {},
     onLoad() {
       if (this.$parent && this.$parent.onshow) {

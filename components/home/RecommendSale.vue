@@ -70,7 +70,7 @@
               v-for="(item, goodsIndex) in swipItem.goodsList"
               :key="goodsIndex"
               class="goods-item"
-              @click="jumpPage(item)"
+              @click="toGoodsDeatil(item)"
             >
               <div class="goods-lable-img">
                 <span v-if="false" class="lable">2千元成交礼</span>
@@ -170,6 +170,7 @@ import getUserSign from '@/utils/fingerprint'
 import { recommendApi, dict } from '@/api'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 import adJumpHandle from '~/mixins/adJumpHandle'
+import detailLinkMixin from '@/mixins/todetail'
 export default {
   components: {
     [Swipe.name]: Swipe,
@@ -179,7 +180,7 @@ export default {
     [Sticky.name]: Sticky,
     LoadingDown,
   },
-  mixins: [adJumpHandle],
+  mixins: [adJumpHandle, detailLinkMixin],
   data() {
     return {
       isFixed: false,
@@ -285,41 +286,36 @@ export default {
         pageNo: this.tabBtn[index].page,
         pageSize: this.tabBtn[index].limit,
       }
-      this.$axios
-        .post(recommendApi.saleList, params)
-        .then((res) => {
-          this.loadingList = false
-          this.loading = false
-          if (res.code === 200) {
-            this.tabBtn[index].noData = res.data.records.length === 0
+      this.$axios.post(recommendApi.saleList, params).then((res) => {
+        this.loadingList = false
+        this.loading = false
+        if (res.code === 200) {
+          this.tabBtn[index].noData = res.data.records.length === 0
 
-            res.data.records.map((item) => {
-              if (item.img) {
-                item.img =
-                  item.img +
-                  '?x-oss-process=image/resize,m_fill,w_300,h_300,limit_0'
-              }
-            })
-            console.log('res.data.records', res.data.records)
+          res.data.records.map((item) => {
+            if (item.img) {
+              item.img =
+                item.img +
+                '?x-oss-process=image/resize,m_fill,w_300,h_300,limit_0'
+            }
+          })
+          console.log('res.data.records', res.data.records)
 
-            if (this.tabBtn[index].page === 1) {
-              this.tabBtn[index].goodsList = res.data.records
-            } else {
-              this.tabBtn[index].goodsList = this.tabBtn[
-                index
-              ].goodsList.concat(res.data.records)
-            }
-            // 加载更多时无更多数据
-            if (
-              !res.data.records.length &&
-              this.tabBtn[index].goodsList.length
-            ) {
-              this.tabBtn[index].noMore = true
-            }
+          if (this.tabBtn[index].page === 1) {
+            this.tabBtn[index].goodsList = res.data.records
           } else {
-            this.tabBtn[index].page--
+            this.tabBtn[index].goodsList = this.tabBtn[index].goodsList.concat(
+              res.data.records
+            )
           }
-        })
+          // 加载更多时无更多数据
+          if (!res.data.records.length && this.tabBtn[index].goodsList.length) {
+            this.tabBtn[index].noMore = true
+          }
+        } else {
+          this.tabBtn[index].page--
+        }
+      })
     },
     priceRest(index = 0, price) {
       const isFlot = price.indexOf('.')
@@ -327,14 +323,6 @@ export default {
         return price.split('.')[index]
       }
       return index === 0 ? price : ''
-    },
-    jumpPage(item) {
-      this.$router.push({
-        path: '/detail',
-        query: {
-          productId: item.id,
-        },
-      })
     },
     // 切换轮播
     onChange(index) {
