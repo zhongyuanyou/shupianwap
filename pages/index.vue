@@ -240,7 +240,38 @@ export default {
           e.persisted ||
           (window.performance && window.performance.navigation.type === 2)
         ) {
-          location.reload()
+          if (
+            !this.$store.state.user.userInfo.token ||
+            !this.$store.state.user.token
+          ) {
+            console.log('更新用户信息')
+            const token = this.$cookies.get('token', {
+              path: '/',
+            })
+            const userId = this.$cookies.get('userId', {
+              path: '/',
+            })
+            const userName = this.$cookies.get('userName', {
+              path: '/',
+            })
+            const userType = this.$cookies.get('userType', {
+              path: '/',
+            })
+            const userPhone = this.$cookies.get('userPhone', {
+              path: '/',
+            })
+            const avatar = this.$cookies.get('avatar', {
+              path: '/',
+            })
+            this.$store.dispatch('user/setUser', {
+              token,
+              userId,
+              userName,
+              userType,
+              userPhone,
+              avatar,
+            })
+          }
         }
       },
       false
