@@ -95,16 +95,7 @@ const category = {
     })
   },
 
-  // 营销优惠结算v2，提交订单使用
-  //  http://yapi.dgg.cn/project/452/interface/api/82297
-  settlement({ axios }, params) {
-    return request({
-      axios,
-      params,
-      method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/settlement.do', // CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
-    })
-  },
+
 
   /**
    * 提交订单（从待提交订单列表提交订单）
@@ -217,6 +208,16 @@ const category = {
     })
   },
 
+  // 营销优惠结算v2，提交订单使用
+  //  http://yapi.dgg.cn/project/452/interface/api/82297
+  settlement({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/settlement.do', // CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
+    })
+  },
   // 待提交订单结算
   discountsSettlement({ axios }, params) {
     return request({
