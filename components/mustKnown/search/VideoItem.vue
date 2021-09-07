@@ -1,29 +1,53 @@
 <template>
   <div class="item">
-    <div class="lf_img">
-      <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
-      <div class="time">{{ totime(item.duration) }}</div>
-    </div>
-    <div class="rt_content">
-      <div class="title">
-        <p v-if="custCode === 'video'" v-html="item.videoNameHtml"></p>
-        <p v-else v-html="item.courseNameHtml"></p>
-        <!-- {{ item.videoName }} -->
-      </div>
-      <div v-if="custCode === 'video'" class="name_time">
-        <div class="name">{{ item.createrName }}</div>
-        <div class="time">
-          {{ timeSplice(item.createTime) }}
+    <template v-if="liveFlag">
+      <div class="lf_img">
+        <img :src="item.myCoverUrl" alt="" />
+        <div v-if="item.myStatusName" class="live" :class="liveStatusClass">
+          <my-icon
+            v-if="item.myStatusName === '直播中'"
+            name="zhibozhong"
+            size="0.2rem"
+            color="#fff"
+          ></my-icon>
+          <div class="txt">{{ item.myStatusName }}</div>
         </div>
       </div>
-      <template v-if="custCode === 'course'">
-        <div class="name_desc">
-          <div class="name">{{ item.authorName }}</div>
-          <div class="desc">{{ item.authorTile }}</div>
+      <div class="rt_content">
+        <div class="title">
+          <p v-html="item.myStudioNameTxt"></p>
         </div>
-        <div class="num_desc">{{ item.totalViewCount | numChange }} 人次</div>
-      </template>
-    </div>
+      </div>
+    </template>
+    <template v-else>
+      <div class="lf_img">
+        <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
+        <div class="time">{{ totime(item.duration) }}</div>
+      </div>
+      <div
+        class="rt_content"
+        :class="[custCode === 'course' ? 'z-course' : '']"
+      >
+        <div class="title">
+          <p v-if="custCode === 'video'" v-html="item.videoNameHtml"></p>
+          <p v-else v-html="item.courseNameHtml"></p>
+          <!-- {{ item.videoName }} -->
+        </div>
+        <div v-if="custCode === 'video'" class="name_time">
+          <div class="name">{{ item.createrName }}</div>
+          <div class="time">
+            {{ timeSplice(item.createTime) }}
+          </div>
+        </div>
+        <template v-if="custCode === 'course'">
+          <div class="name_desc">
+            <div class="name">{{ item.authorName }}</div>
+            <div class="desc">{{ item.authorTile }}</div>
+          </div>
+          <div class="num_desc">{{ item.totalViewCount | numChange }} 人次</div>
+        </template>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -55,6 +79,22 @@ export default {
     },
     custCode() {
       return this.code
+    },
+    liveFlag() {
+      if (this.code === 'live' || this.code === 'vback') {
+        return true
+      } else {
+        return false
+      }
+    },
+    liveStatusClass() {
+      if (this.videoItem.myStatusName === '直播中') {
+        return 'z-live'
+      } else if (this.videoItem.myStatusName === '待直播') {
+        return 'z-waitlive'
+      } else {
+        return 'z-vback'
+      }
     },
   },
   methods: {
@@ -114,9 +154,40 @@ export default {
       color: #ffffff;
       padding: 3px 8px;
     }
+    .live {
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      border-radius: 4px;
+      padding: 6px 10px;
+      &.z-live {
+        display: flex;
+        align-items: center;
+        background-image: linear-gradient(90deg, #80acfb 0%, #4974f5 100%);
+        > div {
+          margin-left: 6px;
+        }
+      }
+      &.z-waitlive {
+        background-image: linear-gradient(90deg, #faaa5a 0%, #f57622 100%);
+      }
+      &.z-vback {
+        padding: 6px 20px;
+        background-image: linear-gradient(90deg, #adadad 0%, #808080 100%);
+      }
+      .txt {
+        font-size: 20px;
+        line-height: 1;
+        font-weight: bold;
+        color: #fff;
+      }
+    }
   }
   .rt_content {
     width: 402px;
+    &.z-course {
+      margin-top: -5px;
+    }
     .title {
       color: #222222;
       font: bold 30px/42px PingFangSC-Medium, PingFang SC;

@@ -48,7 +48,14 @@
             {{ item.attr }}
           </p>
           <p
-            v-if="item.refConfig.taskType == 'PRO_WANT_ORDER_DIGEST'"
+            v-if="item.priceType === 'PRO_FLOATING_PRICE' && item.plannerRatio"
+            class="price"
+          >
+            {{ item.plannerRatio / 100 }}%
+            <span>服务费</span>
+          </p>
+          <p
+            v-else-if="item.refConfig.taskType === 'PRO_WANT_ORDER_DIGEST'"
             class="price"
           >
             面议

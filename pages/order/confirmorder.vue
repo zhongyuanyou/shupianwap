@@ -692,25 +692,6 @@ export default {
 
     //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
-      // brandPrice: ""
-      // classCode: "FL20210425163710"
-      // classCodeLevel: "FL20210425163708,FL20210425163709,FL20210425163710"
-      // discountMoney: "0"
-      // goodsList: [{productContractorProfits: "250", brandItemVos: [], goodsId: "1379373728185897714",…}]
-      // goodsNo: ""
-      // id: "1379373728185897714"
-      // name: "会员商品"
-      // needPayTotalMoney: "1500"
-      // saleGoodsContractorProfits: "250"
-      // saleGoodsContractorProfitsSum: "250"
-      // saleGoodsOverseas: "80"
-      // saleGoodsOverseasSum: "80"
-      // saleNum: 1
-      // settlementPriceEdit: "700"
-      // skuTotalPrice: "1500"
-      // skuTotalPriceSum: "1500"
-      // version: "0
-
       this.settlementInfo.saleGoodsList.map((item) => {
         return {
           goodsId: item.id,
