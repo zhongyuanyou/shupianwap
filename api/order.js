@@ -128,7 +128,6 @@ const category = {
 
   /**
    *CHIPS_PC_URL
-   'http://172.16.132.154:7001/service'
    * @param {*} param0
    * @param {*} params
    * @returns
@@ -215,7 +214,7 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/settlement.do', // CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
+      url: CHIPS_PC_URL + '/yk/order/v2/settlement.do', // CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
     })
   },
   // 待提交订单结算

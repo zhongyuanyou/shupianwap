@@ -143,6 +143,7 @@ export default {
         transform: translate(0, -50%);
 
         width: 72px;
+        text-align: center;
         flex-shrink: 1;
       }
 
