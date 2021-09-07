@@ -91,7 +91,7 @@ import {
   Stepper,
   Icon,
 } from '@chipspc/vant-dgg'
-
+import detailLinkMixin from '@/mixins/todetail'
 const SHOP_RESTRICTION = {
   unrestricted: 'PRO_SHOP_RESTRICTION_ALL', // 无限制
   restrictedNumber: 'PRO_SHOP_RESTRICTION_NUMBER', // 限制数量
@@ -109,6 +109,7 @@ export default {
     [Stepper.name]: Stepper,
     [Icon.name]: Icon,
   },
+  mixins: [detailLinkMixin],
   props: {
     mainData: {
       type: Object,
@@ -297,12 +298,7 @@ export default {
           }
         )
       } else {
-        this.$router.push({
-          path: '/detail',
-          query: {
-            productId: id,
-          },
-        })
+        this.toGoodsDeatil(this.mainData)
       }
     },
   },

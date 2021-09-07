@@ -21,7 +21,7 @@ const ORDERSTATUSCODE = {
   2: 'ORDER_CUS_STATUS_PROGRESSING', // 进行中
   3: 'ORDER_CUS_STATUS_COMPLETED', // 已完成
   4: 'ORDER_CUS_STATUS_CANCELLED', // 已取消
-  5: 'ORDER_CUS_STATUS_UNSUBMITE',// 待提交
+  5: 'ORDER_CUS_STATUS_UNSUBMITE', // 待提交
 }
 
 // 支付类型CODE
@@ -66,7 +66,6 @@ const orderStatusObj = {
     cripsName: '待提交',
     status: 'ORDER_CUS_STATUS_UNSUBMITE',
   },
-
 
   TRADE_STATUS_UN_PAID: {
     type: 'PRO_CLASS_TYPE_TRANSACTION',
@@ -238,6 +237,7 @@ const billStatusCodesObj = {
 export default {
   data() {
     return {
+      showJiufenModal: false,
       remainTotalPayIds: '', // 分批支付剩余支付批次id
       addOrderXy: {},
       tranXy: {},
@@ -251,7 +251,7 @@ export default {
         ORDER_CUS_STATUS_PROGRESSING: '办理中', // 进行中
         ORDER_CUS_STATUS_COMPLETED: '已完成', // 已完成
         ORDER_CUS_STATUS_CANCELLED: '已取消', // 已取消
-        ORDER_CUS_STATUS_UNSUBMITE: "待提交",
+        ORDER_CUS_STATUS_UNSUBMITE: '待提交',
       },
       // 客户单付款状态CODE对应文字
       PAYSTATUSCODENAME: {
@@ -447,6 +447,10 @@ export default {
           console.error(err)
         })
     },
+    // 纠纷弹窗
+    handleShowJiufen() {
+      this.$refs.jiufenModal.showJiufenModal = true
+    },
     // 判断是分批支付还是全款支付等
     checkCusBatchPayType() {
       if (
@@ -590,9 +594,9 @@ export default {
             (orderArr[i].skuStatusNo === 'ORDER_ORDER_SALE_STATUS_HANDLED' ||
               orderArr[i].skuStatusNo === 'ORDER_ORDER_TRADE_STATUS_HANDLED' ||
               orderArr[i].skuStatusNo ===
-              'ORDER_ORDER_RESOURCE_STATUS_HANDLED' ||
+                'ORDER_ORDER_RESOURCE_STATUS_HANDLED' ||
               orderArr[i].skuStatusNo ===
-              'ORDER_ORDER_SERVER_STATUS_HANDLED') &&
+                'ORDER_ORDER_SERVER_STATUS_HANDLED') &&
             orderArr[i].payStatusNo === 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
           ) {
             if (orderArr[i].userConfirm === 0) {
@@ -1136,25 +1140,25 @@ export default {
       // 合同链接
       const contractUrl =
         this.orderData.contractVo2s &&
-          this.orderData.contractVo2s.length &&
-          (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
-            this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+        this.orderData.contractVo2s.length &&
+        (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
           ? this.orderData.contractVo2s[0].contractUrl
           : this.orderData.contractUrl
       // 合同ID
       const contractId =
         this.orderData.contractVo2s &&
-          this.orderData.contractVo2s.length &&
-          (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
-            this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+        this.orderData.contractVo2s.length &&
+        (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
           ? this.orderData.contractVo2s[0].contractId
           : this.orderData.contractId
       // 合同编号
       const contractNo =
         this.orderData.contractVo2s &&
-          this.orderData.contractVo2s.length &&
-          (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
-            this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+        this.orderData.contractVo2s.length &&
+        (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
           ? this.orderData.contractVo2s[0].contractNo
           : this.orderData.contractNo
       if (
@@ -1398,6 +1402,33 @@ export default {
             orderId: orderData.id,
           },
         })
+      }
+    },
+    // 纠纷判断
+    checkJjiufen(orderData) {
+      orderData = orderData || this.orderData
+      const jiufengStatus = [
+        'STAFF_WORK_ORDER_STATUS_CAN',
+        'STAFF_WORK_ORDER_STATUS_4',
+      ]
+      const proceingOrderStatus = [
+        'ORDER_ORDER_SALE_STATUS_HANDLING',
+        'ORDER_ORDER_SALE_STATUS_HANDLED',
+        'ORDER_ORDER_TRADE_STATUS_HANDLING',
+        'ORDER_ORDER_TRADE_STATUS_HANDLED',
+        'ORDER_ORDER_RESOURCE_STATUS_HANDLING',
+        'ORDER_ORDER_RESOURCE_STATUS_HANDLED',
+        'ORDER_ORDER_SERVER_STATUS_HANDLING',
+        'ORDER_ORDER_SERVER_STATUS_HANDLED',
+      ]
+      orderData.disputeStatus =
+        orderData.disputeStatus || orderData.orderSkuEsList[0].disputeStatus
+      if (
+        orderData.disputeStatus &&
+        jiufengStatus.indexOf(orderData.disputeStatus) > -1 &&
+        proceingOrderStatus.indexOf(orderData.orderStatusNo) > -1
+      ) {
+        return 1
       }
     },
   },
