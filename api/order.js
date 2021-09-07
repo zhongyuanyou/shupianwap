@@ -1,6 +1,6 @@
 'use strict'
 import { request } from '@/utils/request'
-import { CHIPS_APP_BASE_URL, CHIPS_WAP_BASE_URL, CHIPS_PC_URL } from '@/config/constant'
+import { CHIPS_APP_BASE_URL, CHIPS_WAP_BASE_URL, CHIPS_PC_URL, CRISPS_C_MIDDLE_SERVICE_API } from '@/config/constant'
 const category = {
   // 订单列表
   list({ axios }, params) {
@@ -226,5 +226,18 @@ const category = {
       url: CHIPS_PC_URL + '/yk/order/v2/discountsSettlement.do',
     })
   },
+  // 待提交订单结算
+  settle_order_by_unsubmit({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CRISPS_C_MIDDLE_SERVICE_API + '/yk/settle/v3/settle_order_by_unsubmit.do',
+    })
+  },
+  settle_order_by_unsubmitStr: CRISPS_C_MIDDLE_SERVICE_API + '/yk/settle/v3/settle_order_by_unsubmit.do',
+
+
+
 }
 export default category
