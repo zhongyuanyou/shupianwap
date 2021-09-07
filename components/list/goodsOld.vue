@@ -1,14 +1,13 @@
 <template>
-  <div class="serce_goods">
+  <div class="jyGoods">
     <Filters
       ref="dropDownMenu"
       :filter-data="jyFilterData"
-      :classification="classification"
+      :classification="items.typeData"
       :active_data="itemsclass"
-      :pricelist="priceList"
-      :sort="sortFilterList"
+      :pricelist="items.price"
+      :sort="items.sortFilter"
       :sortactive="sortactive"
-      class="serve_filters"
       @classfn="classfn"
       @pricefn="pricefn"
       @sortfn="sortfn"
@@ -27,19 +26,16 @@
       :loading="skeletonLoading"
     >
     </sp-skeleton>
-    <Newlist
-      v-show="!skeletonLoading"
-      ref="list"
-      :datalist="datalist"
-      @load="pagefn"
-    ></Newlist>
+    <div v-show="!skeletonLoading" class="goodsbox">
+      <Newlist ref="list" :datalist="datalist" @load="pagefn"></Newlist>
+    </div>
   </div>
 </template>
 
 <script>
 import { Skeleton } from '@chipspc/vant-dgg'
-import Newlist from '@/components/list/Newlist.vue'
-import Filters from '@/components/list/filters.vue'
+import Newlist from '@/components/list/serList'
+import Filters from '@/components/list/filters'
 import searchList from '@/mixins/searchList'
 import { goods } from '@/api/index'
 export default {
@@ -73,9 +69,6 @@ export default {
         { services: [{ id: -1, name: '不限', text: '不限' }] },
       ],
       skeletonLoading: true,
-      classification: [],
-      priceList: [],
-      sortFilterList: [],
       jyFilterData: [
         {
           name: '全部分类',
@@ -251,19 +244,9 @@ export default {
         .then((data) => {
           if (this.formData.needTypes === 1) {
             this.items = data
-            console.log('this.items', this.items)
-            this.classification = Array.isArray(data.typeData)
-              ? data.typeData
-              : data.typeData.children
-            this.priceList = Array.isArray(data.price)
-              ? data.price
-              : data.price.children
-            this.sortFilterList = Array.isArray(data.sortFilter)
-              ? data.sortFilter
-              : data.sortFilter.children
-            console.log('this.priceList.priceList')
-            console.log(this.priceList)
+            console.log('typeData', data.typeData)
             if (this.classcode && this.isOne) {
+              console.log('jyFilterData', this.jyFilterData)
               for (let i = 0; i < this.items.typeData.length; i++) {
                 if (this.classcode.navcode === this.items.typeData[i].code) {
                   this.$refs.dropDownMenu.navIndex = i + 1
@@ -302,6 +285,7 @@ export default {
                           } else {
                             this.jyFilterData[0].name = `${this.jyFilterData[0].name},${this.items.typeData[i].children[b].name}`
                           }
+                          console.log(this.jyFilterData[0].name)
                         }
                       }
                     }
@@ -309,6 +293,7 @@ export default {
                       this.itemsclass[1].services
                     this.isOne = false
                   }
+                  console.log('jyFilterData[0]', this.jyFilterData[0])
                 }
               }
               if (this.classcode.priceid) {
@@ -332,18 +317,6 @@ export default {
           if (data.goodsList.records.length < 1) {
             this.$refs.list.finished = true
           }
-
-          console.log('goods', data.goodsList.records)
-          if (data.goodsList.records) {
-            data.goodsList.records.map((item) => {
-              if (item.img) {
-                item.img =
-                  item.img +
-                  '?x-oss-process=image/resize,m_fill,w_300,h_300,limit_0'
-              }
-            })
-          }
-
           if (this.datalist.length > 0) {
             this.datalist = this.datalist.concat(data.goodsList.records)
             if (
@@ -366,7 +339,7 @@ export default {
           this.skeletonLoading = false
         })
         .catch((err) => {
-          console.error(err)
+          console.log(err)
           this.skeletonLoading = false
           this.$refs.list.loading = false
         })
@@ -375,8 +348,8 @@ export default {
       console.log(data, filrerName)
     },
     pagefn(val) {
+      console.log(val)
       this.formData.start = val
-      this.formData.needTypes = 0
       this.getlist()
     },
     changeTabs(name, title) {
@@ -419,21 +392,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-::v-deep.serve_filters {
-  .sp-dropdown-menu {
-    position: fixed;
-    left: 0;
-    top: 2.3rem;
-    width: 100%;
-    z-index: 2;
-    h1 {
-      font-size: 0.3rem;
-      padding-left: 0.2rem;
-      margin: 0.2rem 0.1rem;
-    }
-  }
-}
-.serce_goods {
+.jyGoods {
   ::v-deep.sp-tab {
     font-weight: bold;
     font-size: 30px;

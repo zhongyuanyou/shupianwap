@@ -128,6 +128,8 @@ export default {
           categorIds: [this.$route.query.id],
           limit: 50,
           page: 1,
+          needContent: 0,
+          contentTextLength: 60,
         }
       )
       if (code === 200) {

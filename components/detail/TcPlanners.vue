@@ -140,43 +140,43 @@ export default {
     },
     async handleTel(mchUserId) {
       try {
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          const telData = await planner.newtel({
-            areaCode: this.city.code,
-            areaName: this.city.name,
-            customerUserId: this.$store.state.user.userId,
-            plannerId: mchUserId,
-            customerPhone: this.$cookies.get('mainAccountFull', { path: '/' }),
-            requireCode: this.proDetail.classCodeLevel.split(',')[0],
-            requireName: '',
-            // id: mchUserId,
-            // sensitiveInfoType: 'MCH_USER',
-          })
-          // 解密电话
-          if (telData.status === 1) {
-            const tel = telData.phone
-            window.location.href = `tel://${tel}`
-          } else if (telData.status === 0) {
-            Toast({
-              message: '当前人员已禁用，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-          } else if (telData.status === 3) {
-            Toast({
-              message: '当前人员已离职，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-          }
-        } else {
+        // const isLogin = await this.judgeLoginMixin()
+        // if (isLogin) {
+        const telData = await planner.newtel({
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          plannerId: mchUserId,
+          customerPhone: this.$cookies.get('mainAccountFull', { path: '/' }),
+          requireCode: this.proDetail.classCodeLevel.split(',')[0],
+          requireName: '',
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+        })
+        // 解密电话
+        if (telData.status === 1) {
+          const tel = telData.phone
+          window.location.href = `tel://${tel}`
+        } else if (telData.status === 0) {
           Toast({
-            message: '请先登录账号',
+            message: '当前人员已禁用，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+        } else if (telData.status === 3) {
+          Toast({
+            message: '当前人员已离职，无法拨打电话',
             iconPrefix: 'sp-iconfont',
             icon: 'popup_ic_fail',
           })
         }
+        // } else {
+        //   Toast({
+        //     message: '请先登录账号',
+        //     iconPrefix: 'sp-iconfont',
+        //     icon: 'popup_ic_fail',
+        //   })
+        // }
       } catch (err) {
         console.log(err)
         Toast({
@@ -221,10 +221,11 @@ export default {
         productName: this.imJumpQuery.productName, // 产品名称
         productContent: this.imJumpQuery.productContent, // 产品信息
         price: this.imJumpQuery.price, // 价格
-        forwardAbstract: this.imJumpQuery.forwardAbstract, // 摘要信息，可与显示内容保持一致
+        // forwardAbstract: this.imJumpQuery.forwardAbstract, // 摘要信息，可与显示内容保持一致
         routerId: this.imJumpQuery.routerId, // 路由ID
         imageUrl: this.imJumpQuery.imageUrl[0], // 产品图片
         unit: this.imJumpQuery.unit, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+        forwardAbstract: '[商品详情]',
       }
       this.sendTemplateMsgMixin({ sessionParams, msgParams })
       // } else {

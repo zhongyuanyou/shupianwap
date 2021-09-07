@@ -99,11 +99,9 @@
                   <span class="good-tile">{{ data.name }}</span>
                 </p>
                 <p class="label">
-                  <span
-                    v-for="(ta, taindex) in data.tags"
-                    :key="taindex"
-                    >{{ ta }}</span
-                  >
+                  <span v-for="(ta, taindex) in data.tags" :key="taindex">{{
+                    ta
+                  }}</span>
                 </p>
                 <p class="type">
                   <span
@@ -369,7 +367,7 @@ export default {
         }
         const { data, code, message } = await this.$axios.post(
           storeApi.recommendGoods,
-          params,
+          params
         )
         if (code !== 200) {
           this.changePull(true)
@@ -445,46 +443,46 @@ export default {
     },
     async bindhidden() {
       try {
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          const telData = await planner.newtel({
-            areaCode: this.city.code,
-            areaName: this.city.name,
-            customerUserId: this.$store.state.user.userId,
-            plannerId: this.detailData.id,
-            customerPhone:
-              this.$store.state.user.mainAccountFull ||
-              this.$cookies.get('mainAccountFull', { path: '/' }),
-            requireCode: this.requireCode,
-            requireName: this.requireName,
-            // id: mchUserId,
-            // sensitiveInfoType: 'MCH_USER',
-          })
-          // 解密电话
-          if (telData.status === 1) {
-            this.uPCall(telData)
-          } else if (telData.status === 0) {
-            Toast({
-              message: '当前人员已禁用，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-            return ''
-          } else if (telData.status === 3) {
-            Toast({
-              message: '当前人员已离职，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-            return ''
-          }
-        } else {
+        // const isLogin = await this.judgeLoginMixin()
+        // if (isLogin) {
+        const telData = await planner.newtel({
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          plannerId: this.detailData.id,
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }),
+          requireCode: this.requireCode,
+          requireName: this.requireName,
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+        })
+        // 解密电话
+        if (telData.status === 1) {
+          this.uPCall(telData)
+        } else if (telData.status === 0) {
           Toast({
-            message: '请先登录账号',
+            message: '当前人员已禁用，无法拨打电话',
             iconPrefix: 'sp-iconfont',
             icon: 'popup_ic_fail',
           })
+          return ''
+        } else if (telData.status === 3) {
+          Toast({
+            message: '当前人员已离职，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+          return ''
         }
+        // } else {
+        //   Toast({
+        //     message: '请先登录账号',
+        //     iconPrefix: 'sp-iconfont',
+        //     icon: 'popup_ic_fail',
+        //   })
+        // }
       } catch (err) {
         Toast({
           message: '未获取到划师联系方式',

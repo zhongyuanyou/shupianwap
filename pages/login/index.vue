@@ -204,7 +204,7 @@ export default {
       passwordFieldType: 'password', // text：明文
       sourcePlatform: '', // 第三方 需要携带的参数   IM: token, userId
       loginType: this.$route.query.loginType || 'telephone', // account: 账户登录； telephone：手机快捷登录
-      redirect: this.$route.query.redirect || '', // 登录后需要跳转的地址
+      redirect: '', // 登录后需要跳转的地址
     }
   },
 
@@ -220,6 +220,7 @@ export default {
   },
   mounted() {
     this.sourcePlatform = this.$route.query.sourcePlatform
+    this.redirect = this.$route.query.redirect
   },
   methods: {
     ...mapMutations({

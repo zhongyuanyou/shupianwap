@@ -8,7 +8,7 @@
             @click="adJumpHandleMixin(item.materialList[0])"
           >
             <img
-              v-lazy="item.materialList[0].materialUrl + $ossImgSet(375, 150)"
+              :src="$resizeImg(375, 150, item.materialList[0].materialUrl)"
               alt=""
             />
           </a>
@@ -21,13 +21,35 @@
       v-model="currentInputText"
       placeholder="请输入搜索内容"
       :maxlength="50"
+      class="jy_search"
       @searchKeydownHandle="searchKeydownHandle"
     >
       <div slot="left" class="nav-back" @click="$router.go(-1)">
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
     </Search>
-    <goods ref="goods" :searchkey="currentInputText" />
+    <div class="jy_goods_list">
+      <goods ref="goods" :search-text="currentInputText" class="jygood" />
+    </div>
+    <!-- <goods ref="goods" :searchkey="currentInputText" /> -->
+    <!-- <sp-work-tabs ref="tabs" v-model="active" class="jy_goods_list">
+      <sp-work-tab title="企业服务">
+        <serveGoods
+          ref="goods"
+          :searchkey="formData.searchText"
+          :height="height"
+        />
+      </sp-work-tab>
+      <sp-work-tab title="资产交易">
+        <goods
+          :search-text="currentInputText"
+          :tab-items="jyTypesData"
+          :req-type="reqType"
+          class="jygood"
+          @goodsList="getTabVue"
+        />
+      </sp-work-tab>
+    </sp-work-tabs> -->
   </div>
 </template>
 
@@ -40,6 +62,7 @@ import adJumpHandle from '~/mixins/adJumpHandle'
 import { publicApi } from '@/api/index'
 export default {
   name: 'TransactionList',
+  layout: 'default',
   components: {
     // JyFilters,
     [Swipe.name]: Swipe,
@@ -57,8 +80,6 @@ export default {
       typeCodeIndex: 0,
       searchText: '',
       currentInputText: '',
-      reqType: 'jy',
-      jyTypesData: [], // 交易业态数据
       height: '',
       adList: [],
     }
@@ -92,9 +113,8 @@ export default {
           locationCodeList: [transAdCode],
         })
         .then((res) => {
-          console.log('广告', res)
-          if (res.data) this.adList = res.data[transAdCode].sortMaterialList
-          console.log('this.adList', this.adList)
+          if (res.data && JSON.stringify(res.data) !== '{}')
+            this.adList = res.data[transAdCode].sortMaterialList
         })
     },
   },
@@ -102,6 +122,24 @@ export default {
 </script>
 
 <style lang="less" scoped>
+::v-deep.jy-list {
+  padding-top: 200px;
+  .jy_search {
+    position: fixed;
+    left: 0;
+    top: 0;
+  }
+  .jy_goods_list {
+    .serve_filters {
+      .sp-dropdown-menu {
+        top: 120px;
+      }
+    }
+    .Newlist {
+      padding-top: 0;
+    }
+  }
+}
 .ad-area {
   width: 100%;
   height: 300px;
@@ -111,9 +149,6 @@ export default {
   }
 }
 .jy-list {
-  width: 100%;
-  height: 100%;
-  background: #e4e4e4;
   .search-content {
     padding: 16px 32px;
   }

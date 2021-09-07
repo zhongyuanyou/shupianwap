@@ -97,6 +97,12 @@ export default {
 
 <style lang="less" scoped>
 .item {
+  display: flex;
+  padding-top: 20px;
+  align-items: center;
+  padding: 0 32px 40px 32px;
+  box-sizing: border-box;
+  margin-top: 16px;
   > img {
     width: 74px;
     height: 74px;

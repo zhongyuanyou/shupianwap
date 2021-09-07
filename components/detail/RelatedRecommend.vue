@@ -53,7 +53,14 @@
                 }}
               </p>
             </div>
-            <p class="money">{{ item.salesPrice || item.price }}元</p>
+            <p class="money">
+              {{
+                item.refConfig.taskType != 'PRO_WANT_ORDER_DIGEST'
+                  ? (item.salesPrice || item.price) + '元'
+                  : '面议'
+              }}
+              <!-- {{ item.salesPrice || item.price }}元 -->
+            </p>
           </div>
         </nuxt-link>
       </div>
