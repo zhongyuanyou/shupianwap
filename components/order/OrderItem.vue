@@ -158,6 +158,15 @@
         <!-- 未支付订单可取消订单 根据订单状态判断-->
         <sp-button
           v-if="
+            checkJjiufen() === 1 &&
+            selectedOrderStatus === 'ORDER_CUS_STATUS_PROGRESSING'
+          "
+          class="btn-look"
+          @click="handleClickItem(10)"
+          >纠纷/售后</sp-button
+        >
+        <sp-button
+          v-if="
             checkAfterSaleStatus() === 1 &&
             orderData.cusOrderStatusNo !== 'ORDER_CUS_STATUS_UNPAID' &&
             orderData.cusOrderStatusNo !== 'ORDER_CUS_STATUS_CANCELLED'
