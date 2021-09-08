@@ -420,7 +420,7 @@
             v-md:p_plannerBoothClick
             class="phone"
             data-even_name="p_plannerBoothClick"
-            data-track_code="SPP001148"
+            :data-track_code="isInApp ? 'SPP001148' : 'SPW000147'"
             :data-recommend_number="newDetailData.dggPlannerRecomLog || ''"
             :data-planner_number="newDetailData.userNo"
             :data-planner_name="newDetailData.userName"
