@@ -26,7 +26,7 @@
           <div class="right">
             <h1 class="tit">
               {{
-                item.salesGoodsSubVos && item.salesGoodsSubVos.length
+                item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
                   ? item.salesGoodsSubVos[0].goodsSubName
                   : item.name
               }}
