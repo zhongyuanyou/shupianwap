@@ -644,7 +644,7 @@ export default {
     // 拨打电话号码
     uPCall(data) {
       const ciphertext = data || {}
-      const telNumber = ciphertext.phone
+      const telNumber = ciphertext.outbound
       if (ciphertext.status === 1) {
         if (this.isInApp) {
           this.$appFn.dgg_bindHiddenPhone(
