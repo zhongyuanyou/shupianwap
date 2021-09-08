@@ -59,7 +59,7 @@ export default {
 <style lang="less">
 .ad_area {
   background: white;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   width: 100%;
   height: 300px;
 }
