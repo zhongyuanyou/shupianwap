@@ -690,37 +690,37 @@ export default {
       try {
         // const isLogin = await this.judgeLoginMixin()
         // if (isLogin) {
-          const telData = await planner.newtel({
-            areaCode: this.city.code,
-            areaName: this.city.name,
-            customerUserId: this.$store.state.user.userId,
-            plannerId: this.IMDetailData.id,
-            customerPhone:
-              this.$store.state.user.mainAccountFull ||
-              this.$cookies.get('mainAccountFull', { path: '/' }),
-            requireCode: this.requireCode,
-            requireName: this.requireName,
-            // id: mchUserId,
-            // sensitiveInfoType: 'MCH_USER',
+        const telData = await planner.newtel({
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          plannerId: this.IMDetailData.id,
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }),
+          requireCode: this.requireCode,
+          requireName: this.requireName,
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+        })
+        // 解密电话
+        if (telData.status === 1) {
+          this.uPCall(telData)
+        } else if (telData.status === 0) {
+          Toast({
+            message: '当前人员已禁用，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
           })
-          // 解密电话
-          if (telData.status === 1) {
-            this.uPCall(telData)
-          } else if (telData.status === 0) {
-            Toast({
-              message: '当前人员已禁用，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-            return ''
-          } else if (telData.status === 3) {
-            Toast({
-              message: '当前人员已离职，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-            return ''
-          }
+          return ''
+        } else if (telData.status === 3) {
+          Toast({
+            message: '当前人员已离职，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+          return ''
+        }
         // } else {
         //   Toast({
         //     message: '请先登录账号',
@@ -749,7 +749,7 @@ export default {
     // 拨打电话号码
     uPCall(telNumber) {
       // 浏览器中调用的
-      callPhone(telNumber.phone)
+      callPhone(telNumber.operation)
     },
     onClickLeft() {
       if (this.urlData.platform === 'mpass') {

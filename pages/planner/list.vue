@@ -194,7 +194,7 @@ import CoupleSelect from '@/components/common/coupleSelected/CoupleSelect'
 import Header from '@/components/common/head/header'
 import Search from '@/components/common/search/Search'
 import SearchPopup from '@/components/planner/SearchPopup'
-import PlannerSearchItem from '@/components/planner/PlannerSearchItem'
+import PlannerSearchItem from '@/components/planner/PlannerSearchItem.vue'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 import imHandle from '@/mixins/imHandle'
 
@@ -644,7 +644,7 @@ export default {
     // 拨打电话号码
     uPCall(data) {
       const ciphertext = data || {}
-      const telNumber = ciphertext.phone
+      const telNumber = ciphertext.outbound
       if (ciphertext.status === 1) {
         if (this.isInApp) {
           this.$appFn.dgg_bindHiddenPhone(
