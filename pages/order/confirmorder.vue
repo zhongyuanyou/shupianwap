@@ -26,7 +26,7 @@
           <div class="right">
             <h1 class="tit">
               {{
-                item.salesGoodsSubVos && item.salesGoodsSubVos.length
+                item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
                   ? item.salesGoodsSubVos[0].goodsSubName
                   : item.name
               }}
@@ -174,6 +174,13 @@
             is-link
             @click="gocontractedit()"
           />
+          <Cell
+            title="支付方式"
+            :value="payMethod.text"
+            is-link
+            value-class="black"
+            @click="openPayMethod"
+          />
         </CellGroup>
       </div>
       <div class="agreement">
@@ -225,7 +232,13 @@
       @change="conponChange"
       @close="close"
     ></Popup>
-
+    <PayMethodPopup
+      :show="payMethod.show"
+      :list="payMethod.list"
+      :value="payMethod.value"
+      @change="payMethodPopupChange"
+      @close="closePayMethod"
+    ></PayMethodPopup>
     <CardPopup
       ref="cardPopup"
       :show="card.show"
@@ -257,6 +270,8 @@ import Popup from '@/components/PlaceOrder/Popup.vue'
 import CardPopup from '@/components/PlaceOrder/CardPopup.vue'
 import Contract from '@/components/PlaceOrder/contract.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
+import PayMethodPopup from '@/components/PlaceOrder/PayMethodPopup.vue'
+
 import { productDetailsApi, auth, shopCart } from '@/api'
 import cardApi from '@/api/card'
 import { coupon, order, actCard } from '@/api/index'
@@ -273,6 +288,7 @@ export default {
     [Skeleton.name]: Skeleton,
     LoadingCenter,
     Contract,
+    PayMethodPopup,
   },
   data() {
     return {
@@ -312,6 +328,16 @@ export default {
         ],
         datalist: [], // 支持的列表
         nolist: [], // 不支持的列表
+      },
+      payMethod: {
+        show: false,
+        list: [
+          { value: 'ORDER_PAY_MODE_ONLINE', text: '在线支付' },
+          { value: 'ORDER_PAY_MODE_OFFLINE', text: '线下支付' },
+          // { value: 'ORDER_PAY_MODE_SECURED', text: '担保交易' },
+        ],
+        value: 'ORDER_PAY_MODE_ONLINE', // 'ORDER_PAY_MODE_ONLINE',
+        text: '在线支付', // '在线支付',
       },
 
       contaract: '',
@@ -376,8 +402,7 @@ export default {
           this.order.list = this.order.productVo
           this.price = this.order.skuTotalPrice
           this.skeletonloading = false
-          this.getInitData(5)
-          this.getInitData(6)
+
           this.settlement()
         })
         .catch((e) => {
@@ -422,8 +447,6 @@ export default {
           this.order.list.push(obj)
           this.order.num = this.order.list.length
           this.price = this.order.salesPrice
-          this.getInitData(5)
-          this.getInitData(6)
 
           this.productList = new Array(1).fill({
             categoryCode: data.classCodeLevel.split(',')[0],
@@ -495,6 +518,11 @@ export default {
           // result.skuTotalPrice = result.skuTotalPrice / 100
           // result.needPayTotalMoney = result.needPayTotalMoney / 100
           this.settlementInfo = result
+
+          if (this.couponInfo.datalist.length === 0) {
+            this.getInitData(5)
+            this.getInitData(6)
+          }
         })
         .catch((e) => {
           this.loading = false
@@ -622,7 +650,8 @@ export default {
           }
           this.Orderform.discount = new Array(1).fill(arr)
         }
-        this.Orderform.payType = 'ORDER_PAY_MODE_ONLINE'
+
+        this.Orderform.payType = this.payMethod.value // 'ORDER_PAY_MODE_ONLINE'
         this.Orderform.cusOrderPayType = cusOrderPayType
         this.Orderform.isFromCart = isFromCart
         this.Orderform.orderProvinceNo = this.$store.state.city.defaultCity.pid
@@ -647,20 +676,33 @@ export default {
           .placeOrder({ axios: this.$axios }, this.Orderform)
           .then((result) => {
             this.loading = false
-            Toast({
-              message: '下单成功',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_success',
-              overlay: true,
-            })
-            setTimeout(() => {
-              this.$router.replace({
-                path: '/pay/payType',
-                query: {
-                  fromPage: 'orderList',
-                  cusOrderId: result.cusOrderId,
-                },
+
+            if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
+              this.$xToast.error('请前往线下银行网点进行支付！')
+            } else {
+              Toast({
+                message: '下单成功',
+                iconPrefix: 'sp-iconfont',
+                icon: 'popup_ic_success',
+                overlay: true,
               })
+            }
+            setTimeout(() => {
+              if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
+                // 线下付款
+                this.$router.replace({
+                  path: '/order',
+                  query: {},
+                })
+              } else {
+                this.$router.replace({
+                  path: '/pay/payType',
+                  query: {
+                    fromPage: 'orderList',
+                    cusOrderId: result.cusOrderId,
+                  },
+                })
+              }
             }, 2000)
           })
           .catch((e) => {
@@ -706,9 +748,11 @@ export default {
       })
       const list = []
       for (let i = 0; i < this.order.list.length; i++) {
+        const id = this.order.list[i].salesGoodsSubVos[0].goodsSubId
+
         const item = {
           goodsId: this.order.list[i].id,
-          price: this.order.list[i].salesPrice,
+          price: this.getGoodsSubById(id).salesPrice, // this.order.list[i].salesPrice,
           goodsNum: this.order.list[i].salesVolume || 1,
           goodsClassCode: this.order.list[i].classCode,
         }
@@ -727,7 +771,8 @@ export default {
             findType: index,
             userId: this.$store.state.user.userId,
             actionId: arr,
-            orderPrice: price,
+            orderPrice: this.settlementInfo.needPayTotalMoney,
+            // getGoodsSubById(item.salesGoodsSubVos[0].goodsSubId).salesPrice
             orderByWhere: 'createTime=desc',
             limit: 50,
             page: 1,
@@ -803,12 +848,24 @@ export default {
       this.card.cardPrice = num
       this.card.selectedItem = item || {}
     },
+    payMethodPopupChange(item) {
+      this.payMethod.value = item.value
+      this.payMethod.text = item.text
+    },
+
     openPopupfn() {
       this.couponInfo.popupshow = true
     },
     openCardFn() {
       this.card.show = true
     },
+    openPayMethod() {
+      this.payMethod.show = true
+    },
+    closePayMethod() {
+      this.payMethod.show = false
+    },
+
     close() {
       this.couponInfo.popupshow = false
     },
@@ -970,6 +1027,9 @@ export default {
       margin-top: 24px;
       background: #fff;
       .ys {
+        color: #1a1a1a;
+      }
+      .black {
         color: #1a1a1a;
       }
     }

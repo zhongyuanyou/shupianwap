@@ -26,7 +26,7 @@
           <div class="right">
             <h1 class="tit">
               {{
-                item.salesGoodsSubVos && item.salesGoodsSubVos.length
+                item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
                   ? item.salesGoodsSubVos[0].goodsSubName
                   : item.name
               }}
@@ -431,7 +431,7 @@ export default {
 
                 let sku = {}
                 let refConfig = {}
-
+                let tradeMarkPrice = item.skuPrice
                 if (item.skuDetailInfo) {
                   const skuDetailInfo = JSON.parse(item.skuDetailInfo)
                   console.log('skuDetailInfo', skuDetailInfo)
@@ -439,6 +439,12 @@ export default {
                   sku = skuDetailInfo?.sku
 
                   refConfig = sku?.refConfig
+
+                  if (item.classifyOneNo === 'FL20210425164438') {
+                    const categoryListLength =
+                      skuDetailInfo.tradeMark.categoryList.length
+                    tradeMarkPrice = item.skuPrice * categoryListLength
+                  }
                 }
 
                 const obj = {
@@ -454,10 +460,9 @@ export default {
                   // refConfig,
                   skuCount: item.skuCount,
                   salesPrice: item.skuPrice,
-                  // salesGoodsSubVos: item.salesGoodsSubVos,
-                  skuExtInfo: item.skuExtInfo,
 
-                  // orderSaleSubjectId,
+                  skuExtInfo: item.skuExtInfo,
+                  tradeMarkPrice,
                 }
                 num += parseInt(item.skuCount) || 0
                 this.order.list.push(obj)
@@ -718,6 +723,7 @@ export default {
           price: this.settlementInfo.orderSkuList[i].skuPrice,
           goodsNum: this.settlementInfo.orderSkuList[i].skuCount || 1,
           // goodsClassCode: this.order.list[i].classifyTwoNo,
+          // tradeMarkPrice
         }
         list.push(item)
       }
