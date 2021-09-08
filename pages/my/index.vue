@@ -20,12 +20,12 @@
           <span class="nickName">{{
             userId ? nickName || '' : '登录/注册'
           }}</span>
-          <!-- <img
-            v-if="userId"
+          <img
+            v-if="isPlus"
             class="icon-plus"
             :src="$ossImgSetV2(imgList.plus)"
             alt=""
-          /> -->
+          />
         </span>
         <div v-if="userId" class="right" @click="toKnownHome">
           <span class="home">个人主页</span>
@@ -265,6 +265,9 @@ export default {
     userPhone() {
       return this.$store.state.user.userPhone || this.$cookies.get('userPhone')
     },
+    isPlus() {
+      return this.info?.member?.memberType === 'PLUS'
+    },
     nickName() {
       if (this.info.nickName) {
         if (this.info.nickName.indexOf('****') !== -1) {
@@ -438,6 +441,7 @@ export default {
           id: this.userId || this.$cookies.get('userId', { path: '/' }),
         }
         const res = await this.$axios.get(userinfoApi.info, { params })
+
         this.loading = false
         if (res.code === 200 && res.data && typeof res.data === 'object') {
           this.info = res.data

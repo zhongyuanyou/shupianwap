@@ -6,15 +6,9 @@
         v-for="(item, index) in productData"
         :key="index + '' + item.id"
         class="need_item"
+        @click="toGoodsDeatil(item)"
       >
-        <nuxt-link
-          :to="{
-            path: '/detail',
-            query: {
-              productId: item.id,
-            },
-          }"
-        >
+        <a>
           <div class="need_item_img">
             <sp-image
               width="1.6rem"
@@ -71,7 +65,7 @@
               }}
             </p>
           </div>
-        </nuxt-link>
+        </a>
       </div>
     </sp-skeleton>
   </div>
@@ -79,12 +73,14 @@
 
 <script>
 import { Image, Skeleton } from '@chipspc/vant-dgg'
+import detailLinkMixin from '@/mixins/todetail'
 export default {
   name: 'RelatedRecommend',
   components: {
     [Image.name]: Image,
     [Skeleton.name]: Skeleton,
   },
+  mixins: [detailLinkMixin],
   props: {
     productData: {
       type: Array,

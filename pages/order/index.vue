@@ -109,6 +109,7 @@
         >
       </p>
     </sp-dialog>
+    <JiufenModal ref="jiufenModal" />
   </div>
 </template>
 
@@ -119,6 +120,7 @@ import Header from '@/components/common/head/header.vue'
 import OrderItem from '@/components/order/OrderItem.vue'
 import CancelOrder from '@/components/order/CancelOrder.vue' // 取消订单弹窗
 import PayModal from '@/components/order/PayModal.vue' // 支付弹窗
+import JiufenModal from '@/components/order/JiufenDialog.vue'
 import Bottombar from '@/components/common/nav/Bottombar.vue'
 import orderApi from '@/api/order'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
@@ -136,6 +138,7 @@ export default {
     Bottombar,
     PayModal,
     LoadingCenter,
+    JiufenModal,
   },
   mixins: [OrderMixins],
   data() {
@@ -296,7 +299,6 @@ export default {
     },
     handleClickItem(type, order) {
       this.initItem(order)
-      console.log(order)
       switch (type) {
         case 1:
           // 取消订单 首先判断是否有关联订单
@@ -339,6 +341,10 @@ export default {
         case 9:
           // 未提交转提交订单
           this.toSubmitOrder(order)
+          break
+        case 10:
+          // 未提交转提交订单
+          this.handleShowJiufen(order)
           break
       }
     },

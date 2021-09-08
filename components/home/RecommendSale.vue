@@ -70,7 +70,7 @@
               v-for="(item, goodsIndex) in swipItem.goodsList"
               :key="goodsIndex"
               class="goods-item"
-              @click="jumpPage(item)"
+              @click="toGoodsDeatil(item)"
             >
               <div class="goods-lable-img">
                 <span v-if="false" class="lable">2千元成交礼</span>
@@ -180,6 +180,7 @@ import getUserSign from '@/utils/fingerprint'
 import { recommendApi, dict } from '@/api'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 import adJumpHandle from '~/mixins/adJumpHandle'
+import detailLinkMixin from '@/mixins/todetail'
 export default {
   components: {
     [Swipe.name]: Swipe,
@@ -189,7 +190,7 @@ export default {
     [Sticky.name]: Sticky,
     LoadingDown,
   },
-  mixins: [adJumpHandle],
+  mixins: [adJumpHandle, detailLinkMixin],
   data() {
     return {
       isFixed: false,
@@ -332,14 +333,6 @@ export default {
         return price.split('.')[index]
       }
       return index === 0 ? price : ''
-    },
-    jumpPage(item) {
-      this.$router.push({
-        path: '/detail',
-        query: {
-          productId: item.id,
-        },
-      })
     },
     // 切换轮播
     onChange(index) {

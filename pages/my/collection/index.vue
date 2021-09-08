@@ -172,7 +172,7 @@ import { shopApi } from '@/api'
 import Header from '@/components/common/head/header.vue'
 
 import ServiceGoods from '@/components/my/collection/ServiceGoods.vue'
-
+import detailLinkMixin from '@/mixins/todetail'
 export default {
   layout: 'keepAlive',
   name: 'MyCollection',
@@ -190,6 +190,7 @@ export default {
     [CheckboxGroup.name]: CheckboxGroup,
     [Checkbox.name]: Checkbox,
   },
+  mixins: [detailLinkMixin],
   data() {
     return {
       content: '',
@@ -269,12 +270,13 @@ export default {
         return
       }
       if (this.tabIndex === 4) {
-        this.$router.push({
-          path: '/detail',
-          query: {
-            productId: info.goodsId,
-          },
-        })
+        // this.$router.push({
+        //   path: '/detail',
+        //   query: {
+        //     productId: info.goodsId,
+        //   },
+        // })
+        this.toGoodsDeatil(info)
       } else {
         this.$router.push({
           path: '/detail/transactionDetails',
