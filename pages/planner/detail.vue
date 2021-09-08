@@ -985,7 +985,7 @@ export default {
     // 拨打电话号码
     uPCall(telNumber) {
       // 浏览器中调用的
-      callPhone(telNumber.phone)
+      callPhone(telNumber.operation)
     },
 
     // 发起聊天

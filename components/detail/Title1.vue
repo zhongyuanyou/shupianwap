@@ -31,7 +31,10 @@
     </div>
     <div class="title_bottom">
       <p
-        v-if="sellingGoodsData.priceType === 'PRO_FLOATING_PRICE' && sellingGoodsData.plannerRatio"
+        v-if="
+          sellingGoodsData.priceType === 'PRO_FLOATING_PRICE' &&
+          sellingGoodsData.plannerRatio
+        "
         class="title_bottom_money"
       >
         {{ sellingGoodsData.plannerRatio / 100 }}%
@@ -39,6 +42,7 @@
       </p>
       <span v-else class="title_bottom_money">{{
         sellingGoodsData.salesPrice !== '0.00' &&
+        sellingGoodsData.refConfig &&
         sellingGoodsData.refConfig.taskType != 'PRO_WANT_ORDER_DIGEST'
           ? sellingGoodsData.salesPrice + '元'
           : '面议'
