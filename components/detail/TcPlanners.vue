@@ -155,7 +155,7 @@ export default {
         })
         // 解密电话
         if (telData.status === 1) {
-          const tel = telData.phone
+          const tel = telData.outbound
           window.location.href = `tel://${tel}`
         } else if (telData.status === 0) {
           Toast({
