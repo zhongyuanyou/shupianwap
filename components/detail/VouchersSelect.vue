@@ -1,5 +1,20 @@
 <template>
   <div class="container">
+    <div v-if="serviceTag && serviceTag.length" class="cell">
+      <div class="cell_left">
+        <div class="label">保障</div>
+        <div class="server_tags">
+          <span
+            v-for="(item, index) in serviceTag"
+            :key="index"
+            class="item"
+            :class="index === serviceTag.length - 1 ? 'last_item' : ''"
+            >{{ item.title }}</span
+          >
+        </div>
+      </div>
+      <!-- <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" /> -->
+    </div>
     <div
       v-if="sellingGoodsData.salesPrice !== '0.00'"
       class="cell"
@@ -33,20 +48,15 @@
       </div>
       <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
     </div>
-    <div v-if="serviceTag && serviceTag.length > 0" class="cell">
-      <div class="cell_left">
-        <div class="label">保障</div>
-        <div class="content">
-          <span
-            v-for="(item, index) in serviceTag.slice(0, 3)"
-            :key="index"
-            class="item"
-            :class="index === 2 ? 'last-item' : ''"
-            >{{ item.title }}</span
-          >
-        </div>
-      </div>
-      <!-- <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" /> -->
+    <div class="cell youhui">
+      <my-icon
+        name="gerenzhongxin_youhuiquanicon"
+        size="0.36rem"
+        color="#EC5330"
+        class="my_icon"
+      ></my-icon>
+      线下优惠可咨询规划师
+      <sp-button class="im_btn">询优惠</sp-button>
     </div>
     <sp-popup
       v-model="show"
@@ -198,7 +208,7 @@
 </template>
 
 <script>
-import { Cell, Popup, Safeguard, Image } from '@chipspc/vant-dgg'
+import { Cell, Popup, Safeguard, Image, Button } from '@chipspc/vant-dgg'
 import { coupon, productDetailsApi } from '@/api'
 import imHandle from '~/mixins/imHandle'
 import { CHIPS_WAP_BASE_URL } from '@/config/constant'
@@ -230,10 +240,16 @@ export default {
     [Popup.name]: Popup,
     [Safeguard.name]: Safeguard,
     [Image.name]: Image,
+    [Button.name]: Button,
   },
   mixins: [imHandle],
   data() {
     return {
+      serviceTag: [
+        { text: '服务保持踩踩踩', title: '实名认证律师' },
+        { text: '服务保持踩踩踩', title: '未履约可退款' },
+        { text: '服务保持踩踩踩', title: '不满意可申诉' },
+      ],
       type: 1, // 1 加入购物车、立即购买  2 加入购物车  3 立即购买
       vouchers: '',
       show: false,
@@ -252,27 +268,27 @@ export default {
       // 获取客户端展示信息
       return this.$store.state.sellingGoodsDetail.sellingGoodsData
     },
-    serviceTag() {
-      const salesGoodsTags =
-        this.$store.state.sellingGoodsDetail.sellingGoodsData.salesGoodsTags
-      let serviceTag = []
-      if (salesGoodsTags) {
-        // 产品中心605版本筛选服务标签 code DSJTC20210514000043
-        serviceTag = salesGoodsTags
-          .filter((item) => {
-            return item.categoryCode === 'DSJTC20210514000042'
-          })
-          .map((item) => {
-            return {
-              text: item.ext1 || item.ext2 || item.ext3,
-              title: item.tagValueName,
-              icon: 'sp-iconfont sp-iconfont-security2',
-            }
-          })
-      }
-      console.log('serviceTag', serviceTag)
-      return serviceTag
-    },
+    // serviceTag() {
+    //   const salesGoodsTags =
+    //     this.$store.state.sellingGoodsDetail.sellingGoodsData.salesGoodsTags
+    //   let serviceTag = []
+    //   if (salesGoodsTags) {
+    //     // 产品中心605版本筛选服务标签 code DSJTC20210514000043
+    //     serviceTag = salesGoodsTags
+    //       .filter((item) => {
+    //         return item.categoryCode === 'DSJTC20210514000042'
+    //       })
+    //       .map((item) => {
+    //         return {
+    //           text: item.ext1 || item.ext2 || item.ext3,
+    //           title: item.tagValueName,
+    //           icon: 'sp-iconfont sp-iconfont-security2',
+    //         }
+    //       })
+    //       .slice(0, 3)
+    //   }
+    //   return serviceTag
+    // },
     // 优惠券列表
     coupon() {
       const list = []
@@ -527,6 +543,31 @@ export default {
         font-size: 26px;
         margin-right: 40px;
       }
+      .server_tags {
+        font-size: 26px;
+        color: #222222;
+        .item {
+          position: relative;
+          padding-right: 40px;
+          &::before {
+            height: 16px;
+            position: absolute;
+            right: 15px;
+            content: '·';
+            top: 0;
+            font-size: 24px;
+            font-weight: 600;
+          }
+        }
+        ::v-deep.last_item {
+          position: initial;
+          padding-right: 0;
+          &::before {
+            position: initial;
+            content: '';
+          }
+        }
+      }
       .content {
         display: flex;
         align-items: center;
@@ -539,7 +580,6 @@ export default {
         height: 40px;
         overflow: hidden;
         white-space: nowrap;
-
         .tag {
           display: inline-block;
           // width: 60px;
@@ -588,6 +628,32 @@ export default {
           margin-right: 0;
         }
       }
+    }
+  }
+  .youhui {
+    display: block;
+    padding: 0 60px;
+    height: 88px;
+    font-size: 28px;
+    color: #1a1a1a;
+    text-align: left;
+    line-height: 88px;
+    .my_icon {
+      float: left;
+      margin-right: 12px;
+    }
+    .im_btn {
+      float: right;
+      background: #ec5330;
+      border-radius: 8px;
+      width: 118px;
+      height: 56px;
+      text-align: center;
+      color: white;
+      font-size: 26px;
+      padding: 0;
+      line-height: 56px;
+      margin-top: 16px;
     }
   }
   .sku_box {

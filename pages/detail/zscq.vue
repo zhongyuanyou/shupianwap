@@ -61,10 +61,10 @@
       <!-- <MemberPrice></MemberPrice> -->
 
       <!--S 第一板块-->
-      <Title :comment="commentdata[0].tit" @onComment="comment" />
+      <ServeDetailTitle />
       <!--E 第一板块-->
       <!-- 页面中部广告位 -->
-      <PageMidAd/>
+      <PageMidAd />
       <!-- <div class="banner file_box">
         <span class="text1">
           <sp-image
@@ -127,7 +127,7 @@ import { mapActions } from 'vuex'
 import { Sticky, List, TopNavBar, ShareSheet, Image } from '@chipspc/vant-dgg'
 import ShareModal from '@/components/common/ShareModal.vue'
 import Banner from '~/components/detail/Banner.vue'
-import Title from '~/components/detail/Title1.vue'
+import ServeDetailTitle from '~/components/detail/ServeDetailTitle.vue'
 import CommentBox from '~/components/detail/CommentBox.vue'
 import OrderCase from '~/components/detail/OrderCase.vue'
 import OrderDynamic from '~/components/detail/OrderDynamic.vue'
@@ -156,7 +156,7 @@ export default {
     [Image.name]: Image,
     [ShareSheet.name]: ShareSheet,
     Banner,
-    Title,
+    ServeDetailTitle,
     VouchersSelect,
     ContainProject,
     ContainContent,
