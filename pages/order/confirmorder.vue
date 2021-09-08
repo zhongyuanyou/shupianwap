@@ -224,7 +224,9 @@
       title="优惠"
       help="使用说明"
       :origin-price="
-        $route.query.type === 'shopcar' ? order.skuTotalPrice : order.salesPrice
+        $route.query.type === 'shopcar'
+          ? order.skuTotalPrice
+          : settlementInfo.skuTotalPrice
       "
       :tablist="couponInfo.tablist"
       :datalist="couponInfo.datalist"
