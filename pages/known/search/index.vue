@@ -84,7 +84,7 @@ export default {
     return {
       value: '',
       knownHistory: [], // 搜索历史记录
-      tabIndex: '1', // 搜索结果页面tab,默认为问题:1
+      tabIndex: 'question', // 搜索结果页面tab,默认为问题:question
     }
   },
   computed: {
@@ -102,11 +102,7 @@ export default {
     this.$nextTick(() => {
       _this.$refs.searchRef.$refs.inputRef.focus()
     })
-    // 判断是否从结果查询页面返回对应查询
-    if (this.$route.query.type) {
-      this.tabIndex = this.$route.query.type
-    }
-    this.tabIndex = this.$route.query.type || '1'
+    this.tabIndex = this.$route.query.type || 'question'
     this.value = this.$route.query.keyword || ''
   },
   methods: {

@@ -23,20 +23,6 @@
     <div v-if="!skeletonloading" class="allbox">
       <div class="data-content">
         <div v-for="(item, index) in order.list" :key="index" class="list">
-          <!-- <div class="left">
-            <img
-              :src="
-                item.salesGoodsOperatings
-                  ? item.salesGoodsOperatings.clientDetails[0]
-                    ? item.salesGoodsOperatings.clientDetails[0]
-                        .imgFileIdPaths[0] ||
-                      'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
-                    : 'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
-                  : 'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
-              "
-              alt=""
-            />
-          </div> -->
           <div class="right">
             <h1 class="tit">
               {{
@@ -59,66 +45,30 @@
                   : ''
               }}
             </p>
-            <!-- <p class="tag">{{ item.classCodeName }}</p> -->
-            <p class="price">
+
+            <p v-if="item.salesGoodsSubVos" class="price">
               <span
-                ><b>{{ item.salesPrice }}</b
+                ><b>{{
+                  getGoodsSubById(item.salesGoodsSubVos[0].goodsSubId)
+                    .salesPrice
+                }}</b
                 >元</span
               >
               <i>{{
                 $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
               }}</i>
             </p>
-            <!--
-            <div v-if="$route.query.type === 'shopcar'" class="list">
-              <div
-                v-for="(listitem, listindex) in item.saleGoodsSubs"
-                :key="listindex"
+            <p v-if="item.saleGoodsSubs" class="price">
+              <span
+                ><b>{{
+                  getGoodsSubById(item.saleGoodsSubs[0].goodsSubId).salesPrice
+                }}</b
+                >元</span
               >
-                <p class="name">{{ listitem.goodsSubName || '-' }}</p>
-                <p class="data">{{ listitem.goodsSubDetailsName || '-' }}</p>
-                <p class="price">
-                  {{ `x1` }}
-                </p>
-              </div>
-            </div>
-            <div v-else class="list">
-              <div
-                v-for="(listitem, listindex) in item.salesGoodsSubVos"
-                :key="listindex"
-              >
-                <p class="name">
-                  <span v-if="listitem.goodsType === 'PRO_CLASS_TYPE_SALES'">
-                    销售产品
-                  </span>
-                  <span
-                    v-else-if="listitem.goodsType === 'PRO_CLASS_TYPE_SERVICE'"
-                  >
-                    服务产品
-                  </span>
-                  <span
-                    v-else-if="
-                      listitem.goodsType === 'PRO_CLASS_TYPE_SERVICE_RESOURCE'
-                    "
-                  >
-                    服务资源
-                  </span>
-                  <span
-                    v-else-if="
-                      listitem.goodsType === 'PRO_CLASS_TYPE_TRANSACTION'
-                    "
-                  >
-                    交易资源
-                  </span>
-                </p>
-                <p class="data">{{ listitem.goodsSubName }}</p>
-                <p class="price">
-                  {{ listitem.settlementPriceEdit }}
-                  {{ `x1` }}
-                </p>
-              </div>
-            </div>
-             -->
+              <i>{{
+                $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
+              }}</i>
+            </p>
           </div>
         </div>
         <div class="inpbox">
@@ -167,7 +117,7 @@
           />
           <Cell
             title="商品金额"
-            :value="order.salesPrice || order.skuTotalPrice || 0 + '元'"
+            :value="settlementInfo.skuTotalPrice + '元'"
             value-class="black"
           />
           <Cell
@@ -209,7 +159,7 @@
           合计：
           <span>
             <!-- <b>{{ order.salesPrice || order.skuTotalPrice }}</b> 元 -->
-            <b>{{ price }}</b> 元
+            <b>{{ settlementInfo.needPayTotalMoney }}</b> 元
           </span>
         </p>
       </div>
@@ -239,11 +189,19 @@
       </div>
     </div>
     <div ref="foot" class="foot">
-      <p class="left">
+      <!-- <p class="left">
         应付:<span>
           <b>{{ price }}</b> 元</span
         >
+        settlementInfo
       </p>
+       -->
+      <p class="left">
+        应付:<span>
+          <b>{{ settlementInfo.needPayTotalMoney }}</b> 元</span
+        >
+      </p>
+
       <div class="right" :class="radio ? 'act' : ''" @click="placeOrder">
         提交订单
       </div>
@@ -324,6 +282,11 @@ export default {
 
       message: '',
       order: '',
+      settlementInfo: {
+        skuTotalPrice: 0,
+        needPayTotalMoney: 0,
+        saleGoodsList: [],
+      },
       // num: 0,
 
       couponInfo: {
@@ -386,7 +349,6 @@ export default {
     } else {
       this.asyncData()
     }
-    // this.getInitData()
     this.getProtocol('protocol100008')
   },
   methods: {
@@ -416,13 +378,14 @@ export default {
           this.skeletonloading = false
           this.getInitData(5)
           this.getInitData(6)
+          this.settlement()
         })
         .catch((e) => {
           if (e.code !== 200) {
             this.$xToast.show(e.message)
             console.error(e)
             setTimeout(function () {
-              that.$router.back(-1)
+              // that.$router.back(-1)
             }, 2000)
           }
         })
@@ -468,6 +431,7 @@ export default {
             productPrice: data.salesPrice,
           })
 
+          this.settlement()
           // this.getCardList()
 
           console.log('productList', this.productList)
@@ -486,6 +450,76 @@ export default {
         }, 2000)
         this.skeletonloading = false
       }
+    },
+    // 获取待结算价格
+    settlement() {
+      let saleGoodsList = []
+
+      if (this.$route.query.type === 'shopcar') {
+        this.order.list.map((item, index) => {
+          saleGoodsList.push({
+            id: item.id,
+            saleNum: item.salesVolume,
+            salesGoodsSubs: item.saleGoodsSubs,
+            salesPrice: item.salesPrice,
+            version: item.version,
+            refConfig: item.refConfig,
+          })
+        })
+      } else {
+        saleGoodsList = [
+          {
+            id: this.order.id,
+            saleNum: 1,
+            salesGoodsSubs: this.order.salesGoodsSubVos,
+            salesPrice: this.order.salesPrice,
+            version: this.order.version,
+            refConfig: this.order.refConfig,
+          },
+        ]
+      }
+
+      order
+        .settlement(
+          { axios: this.$axios },
+          {
+            sceneType: 'ORDER_DISCOUNT_ACCOUNT',
+            saleGoodsList,
+
+            couponId: this.couponInfo.selectedItem.couponId,
+            couponUseCode: this.couponInfo.selectedItem.couponUseCode,
+          }
+        )
+        .then((result) => {
+          console.log('settlement', result)
+          // result.skuTotalPrice = result.skuTotalPrice / 100
+          // result.needPayTotalMoney = result.needPayTotalMoney / 100
+          this.settlementInfo = result
+        })
+        .catch((e) => {
+          this.loading = false
+          const msg = e.data.error
+          Toast({
+            message: msg,
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+            overlay: true,
+          })
+          console.error(e)
+        })
+    },
+    getGoodsSubById(goodsSubId) {
+      let goodsSub = {}
+      this.settlementInfo.saleGoodsList.forEach((goods) => {
+        goods.goodsList.forEach((item) => {
+          console.log(goodsSubId, item.goodsSubId)
+          if (item.goodsSubId === goodsSubId) {
+            goodsSub = item
+          }
+        })
+      })
+      console.log('goodsSub', goodsSub)
+      return goodsSub
     },
     async getProtocol(categoryCode) {
       if (!categoryCode) {
@@ -655,8 +689,18 @@ export default {
       })
       return arr
     },
+
     //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
+      this.settlementInfo.saleGoodsList.map((item) => {
+        return {
+          goodsId: item.id,
+          price: item.salesPrice,
+          goodsNum: item.salesVolume || 1,
+          goodsClassCode: item.classCode,
+        }
+      })
+
       const arr = this.order.list.map((x) => {
         return x.id
       })
@@ -704,16 +748,6 @@ export default {
               )
             })
             this.couponInfo.datalist = sortList
-            // if (sortList.length > 0) {
-            //   this.datalist = sortList
-            //   this.conpon = this.datalist[0]
-            //   this.$refs.conpon.radio = 0
-            //   this.$refs.conpon.checkarr = this.datalist[0]
-            //   this.$refs.conpon.num =
-            //     this.$refs.conpon.checkarr.marketingCouponVO.reducePrice
-            //   this.$refs.conpon.sum()
-            // } else {
-            // }
           } else {
             this.couponInfo.nolist = result.marketingCouponLogList
           }
@@ -760,6 +794,7 @@ export default {
       this.couponInfo.selectedItem = item || {}
       this.card.cardPrice = ''
       this.card.selectedItem = {}
+      this.settlement()
     },
     cardChange(price, num, item) {
       this.price = price
