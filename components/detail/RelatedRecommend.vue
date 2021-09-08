@@ -25,7 +25,7 @@
             </p>
             <div class="label">
               <span
-                v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1"
+                v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length>1"
                 class="label_item desc-label-tc"
                 >套餐</span
               >
