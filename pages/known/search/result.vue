@@ -104,10 +104,11 @@
         @load="onLoad"
       >
         <div v-if="searchList.length > 0" class="video-list">
-          <template v-for="(item, index) in searchList" @click="open(item)">
+          <template v-for="(item, index) in searchList">
             <small-video-item
               :key="index"
               :svideo-item="item"
+              @click.native="open(item)"
             ></small-video-item
           ></template>
         </div>
@@ -472,8 +473,14 @@ export default {
           })
         }
         if (isAndroid) {
+          // 回放
+          let path = '/live/PlayBackActivity'
+          if (type === 2) {
+            // 直播
+            path = '/live/audience'
+          }
           const androidRouterPath = {
-            path: '/live/PlayBackActivity',
+            path,
             parameter: {
               id: roomId,
             },
