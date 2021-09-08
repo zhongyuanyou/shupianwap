@@ -64,6 +64,7 @@
             </p>
             <p v-else class="money">
               {{
+                item.refConfig &&
                 item.refConfig.taskType != 'PRO_WANT_ORDER_DIGEST'
                   ? (item.salesPrice || item.price) + '元'
                   : '面议'
