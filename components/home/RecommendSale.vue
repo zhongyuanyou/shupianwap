@@ -133,6 +133,16 @@
                     ><span class="big-value">面议</span></span
                   > -->
                   <span class="sales-proce">
+                    <span
+                      v-if="
+                        item.priceType === 'PRO_FLOATING_PRICE' &&
+                        item.plannerRatio
+                      "
+                      class="big-value"
+                    >
+                      {{ item.plannerRatio / 100 }}%
+                      <span>服务费</span>
+                    </span>
                     <span class="big-value"
                       >{{ item.salesPrice || item.price || '面议' }}元</span
                     >
@@ -608,6 +618,9 @@ export default {
             font-family: PingFang SC;
             font-weight: bold;
             color: #ec5330;
+            span {
+              font-size: 24px;
+            }
           }
           .small-value {
             font-size: 22px;

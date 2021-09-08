@@ -41,7 +41,7 @@
         ></sp-tab>
       </template>
     </sp-tabs>
-    <div v-show="actTemplate === 'txtlist'" class="listbox">
+    <div v-show="actTab.template === 'txtlist'" class="listbox">
       <sp-list
         v-model="loading"
         :finished="finished"
@@ -60,10 +60,7 @@
         </div>
       </sp-list>
     </div>
-    <div
-      v-show="actTemplate === 'userlist'"
-      :class="userList.length !== 0 ? 'userlist' : ''"
-    >
+    <div v-show="actTab.template === 'userlist'" class="userlist">
       <sp-list
         v-model="loading"
         :finished="finished"
@@ -72,12 +69,12 @@
         error-text="请求失败，点击重新加载"
         @load="onLoad"
       >
-        <div v-for="item in userList" :key="item.id" class="list">
-          <User-item :user-item="item"></User-item>
-        </div>
+        <template v-for="item in userList">
+          <User-item :key="item.id" :user-item="item"></User-item>
+        </template>
       </sp-list>
     </div>
-    <div v-show="actTemplate === 'video'" class="videolist">
+    <div v-show="actTab.template === 'video'" class="videolist">
       <sp-list
         v-model="loading"
         :finished="finished"
@@ -92,12 +89,12 @@
           class="list"
           @click="open(item)"
         >
-          <video-item :video-item="item"></video-item>
+          <video-item :video-item="item" :code="actTab.code"></video-item>
           <div v-if="index + 1 !== searchList.length" class="line"></div>
         </div>
       </sp-list>
     </div>
-    <div v-show="actTemplate === 'svideo'" class="smallVideolist">
+    <div v-show="actTab.template === 'svideo'" class="smallVideolist">
       <sp-list
         v-model="loading"
         :finished="finished"
@@ -157,17 +154,22 @@ export default {
         {
           code: 'question',
           txt: '问题',
-          template: 'txtlist',
+          template: 'txtlist', // 页面展示template
+          apiCode: 'txt',
+          type: 1,
         },
         {
           code: 'article',
           txt: '文章',
           template: 'txtlist',
+          apiCode: 'txt',
+          type: 2,
         },
         {
           code: 'user',
           txt: '用户',
           template: 'userlist',
+          apiCode: 'user',
         },
       ],
       // app 页面对应分类
@@ -176,41 +178,55 @@ export default {
           code: 'question',
           txt: '问题',
           template: 'txtlist',
+          apiCode: 'txt',
+          type: 1,
         },
         {
           code: 'article',
           txt: '文章',
           template: 'txtlist',
+          apiCode: 'txt',
+          type: 2,
         },
         {
           code: 'live',
           txt: '直播',
           template: 'video',
+          apiCode: 'live',
+          type: 'LIVEING,WAIT_LIVE',
         },
         {
           code: 'vback',
           txt: '回放',
           template: 'video',
+          apiCode: 'live',
+          type: 'LIVE_END',
         },
         {
           code: 'video',
           txt: '短视频',
           template: 'video',
+          apiCode: 'video',
+          originalVideoType: 1,
         },
         {
           code: 'svideo',
           txt: '小视频',
           template: 'svideo',
+          apiCode: 'video',
+          originalVideoType: 2,
         },
         {
           code: 'course',
           txt: '大讲堂',
           template: 'video',
+          apiCode: 'course',
         },
         {
           code: 'user',
           txt: '用户',
           template: 'userlist',
+          apiCode: 'user',
         },
       ],
       tabIndex: '1',
@@ -221,7 +237,6 @@ export default {
       loading: false,
       finished: false,
       showPop: false,
-      originalVideoType: 1,
       Filed4: {
         type: 'functional',
         showCancelButton: false,
@@ -233,6 +248,14 @@ export default {
       isInApp: true,
       active: 0, // 当前tabIndex
       actTemplate: 'txtlist', // 默认展示分类模板
+      // 默认展示第一个
+      actTab: {
+        code: 'question',
+        txt: '问题',
+        template: 'txtlist',
+        apiCode: 'txt',
+        type: 1,
+      },
     }
   },
   computed: {
@@ -274,7 +297,6 @@ export default {
         query: { type: this.tabIndex, keyword: this.value },
       })
     },
-
     toDetail(id) {
       if (this.tabIndex === '2') {
         this.$router.push({
@@ -298,9 +320,7 @@ export default {
       if (this.isInApp) {
         curTabList = this.appClassify
       }
-      this.actTemplate = curTabList[this.active]
-        ? curTabList[this.active].template
-        : 'txtlist'
+      this.actTab = curTabList[this.active]
       // end: 赋值当前模板
       this.loading = true
       this.finished = false
@@ -310,28 +330,29 @@ export default {
       this.userList = []
     },
     async getSearchListApi() {
-      if (this.tabIndex === '6') {
-        this.originalVideoType = 2
-      } else {
-        this.originalVideoType = 1
+      if (!this.actTab.apiCode) {
+        this.$xToast.error('暂不支持此方法查询')
       }
       // 请求后台接口
       try {
-        const res = await this.$axios.post(knownApi.search.list, {
+        const res = await this.$axios.post(knownApi.search.listV2, {
           keyword: this.value,
-          type: parseInt(this.tabIndex),
+          type: this.actTab.type ? this.actTab.type : 99,
           limit: this.limit,
           page: this.page,
-          originalVideoType: this.originalVideoType,
+          originalVideoType: this.actTab.originalVideoType
+            ? this.actTab.originalVideoType
+            : 99,
+          apiCode: this.actTab.apiCode,
         })
         if (res.code === 200) {
           // 用户数据
-          if (this.tabIndex === '3') {
+          if (this.actTab.code === 'user') {
             res.data.records.forEach((item) => {
               item.custAttentionFlag = false
             })
             this.userList.push(...res.data.records)
-          } else if (this.tabIndex === '6') {
+          } else if (this.actTab.code === 'svideo') {
             res.data.records.forEach((item) => {
               item.custTotalCount = numChangeW(item.totalViewCount)
             })
@@ -532,18 +553,10 @@ export default {
     background: #fff;
     margin-top: 20px;
     padding-top: 40px;
-    .list {
-      display: flex;
-      padding-top: 20px;
-      align-items: center;
-      padding: 0 32px 40px 32px;
-      box-sizing: border-box;
-      margin-top: 16px;
-    }
   }
   .videolist {
-    background: #fff;
     .list {
+      background: #fff;
       .line {
         margin: 0 32px;
         height: 1px;

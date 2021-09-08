@@ -31,20 +31,24 @@
                   : item.name
               }}
             </h1>
-            <p v-if="item.salesGoodsSubVos" class="goods-sku">
+
+            <p v-if="item.skuExtInfo" class="goods-sku">
+              {{ item.skuExtInfo }}
+            </p>
+            <!-- <p v-if="item.salesGoodsSubVos" class="goods-sku">
               {{
                 item.salesGoodsSubVos.length
                   ? item.salesGoodsSubVos[0].goodsSubDetailsName
-                  : ''
+                  : item.skuExtInfo
               }}
             </p>
             <p v-if="item.saleGoodsSubs" class="goods-sku">
               {{
                 item.saleGoodsSubs.length
                   ? item.saleGoodsSubs[0].goodsSubDetailsName
-                  : ''
+                  : item.skuExtInfo
               }}
-            </p>
+            </p> -->
             <p class="price">
               <span v-if="order.orderType === 0"><b>面议</b></span>
               <span v-else
@@ -350,6 +354,11 @@ export default {
     }
   },
   computed: {
+    // 是否是服务商品
+    // 其他的是交易/销售/资源
+    isServerGoods() {
+      return this.order?.orderProTypeNo === 'PRO_CLASS_TYPE_SERVICE'
+    },
     // 是否先定金后服务
     isDeposit() {
       return (
@@ -440,14 +449,32 @@ export default {
             console.log('res', res)
             let num = 0
             data.orderSkuList.map((item) => {
+              let sku = {}
+              let refConfig = {}
+              if (item.skuDetailInfo) {
+                const skuDetailInfo = JSON.parse(item.skuDetailInfo)
+
+                sku = skuDetailInfo?.sku
+
+                refConfig = sku?.refConfig
+                console.log('skuDetailInfo', skuDetailInfo)
+              }
+
               const obj = {
                 name: item.spuHideName || item.spuName,
-                classCode: item.classCode,
-                classCodeName: item.classCodeName,
+                classifyOneNo: item.classifyOneNo,
+                classifyTwoNo: item.classifyTwoNo,
+                classCode: item.classifyThreeNo,
+
+                classCodeName: sku.className,
+                goodsNo: sku.goodsNo,
+                version: sku.version,
                 id: item.id,
+                refConfig,
                 skuCount: item.skuCount,
                 salesPrice: item.skuPrice,
                 salesGoodsSubVos: item.salesGoodsSubVos,
+                skuExtInfo: item.skuExtInfo,
               }
               num += parseInt(item.skuCount) || 0
               this.order.list.push(obj)
@@ -466,6 +493,8 @@ export default {
             }
 
             this.setPayMethod()
+
+            // this.settlement() // 调用接口结算，和获取会员价
           } else {
             this.$xToast.show('数据异常,请然后再试')
             // setTimeout(() => {
@@ -480,6 +509,71 @@ export default {
           // }, 2000)
         })
     },
+    // 获取待结算价格
+    settlement() {
+      const params = {
+        discountsType: 'COUPON_DISCOUNT', // 优惠劵
+        sceneType: 'TWEET_DISCOUNT_ACCOUNT', // 销售商品推单结算
+        // saleGoodsList,
+        // tradingGoodsList,
+
+        couponId: this.couponInfo.selectedItem.couponId,
+        couponUseCode: this.couponInfo.selectedItem.couponUseCode,
+      }
+      let saleGoodsList = []
+      let tradingGoodsList = []
+      if (this.isServerGoods) {
+        saleGoodsList = this.order.list.map((item) => {
+          return {
+            classCode: item.classCode,
+            classCodeLevel: [
+              item.classifyOneNo,
+              item.classifyTwoNo,
+              item.classCode,
+            ].join(','),
+            goodsNo: item.goodsNo,
+
+            id: item.id,
+            name: item.name,
+            refConfig: item.refConfig,
+            saleNum: item.skuCount,
+
+            salesGoodsSubs: item.salesGoodsSubVos,
+            version: item.version,
+            // priceType
+          }
+        })
+        params.saleGoodsList = saleGoodsList
+      } else {
+        tradingGoodsList = this.order.list.map((item) => {
+          return {
+            id: item.id,
+            goodsPrice: item.salesPrice,
+            saleNum: item.skuCount,
+          }
+        })
+        params.tradingGoodsList = tradingGoodsList
+      }
+
+      order
+        .discountsSettlement({ axios: this.$axios }, params)
+        .then((result) => {
+          console.log('settlement', result)
+          this.settlementInfo = result
+        })
+        .catch((e) => {
+          this.loading = false
+          const msg = e.data.error
+          Toast({
+            message: msg,
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+            overlay: true,
+          })
+          console.error(e)
+        })
+    },
+
     setPayMethod() {
       // this.Orderform.payType = this.order?.orderSplitAndCusVo?.payType
 
@@ -580,16 +674,6 @@ export default {
           this.Orderform.discount = new Array(1).fill(arr)
         }
 
-        // const discount = [
-        //   {
-        //     code: '', // ORDER_DISCOUNT_DISCOUNT:优惠券,ORDER_DISCOUNT_DISCOUT:折扣券，ORDER_DISCOUNT_ACTIVITY:活动优惠，ORDER_DISCOUNT_INTEGRAL:积分抵扣，ORDER_DISCOUNT_ENVELOPES:红包优惠,ORDER_DISCOUNT_BALANCE:余额优惠，ORDER_DISCOUNT_BUSINESS_AFFAIRS:商务优惠
-        //     value: '', // 优惠券的id逗号分隔
-        //     couponUseCode: '', // 优惠券编码
-        //     discountType: '', // COUPON_DISCOUNT  平台优惠券,BUSINESS_COUPON 商户优惠券
-        //     no: '', // 优惠劵id
-        //     quota: '', //  优惠额度
-        //   },
-        // ]
         order
           .commit_order(
             { axios: this.$axios },

@@ -217,5 +217,15 @@ const category = {
       url: CHIPS_PC_URL + '/yk/contract/v2/list.do',
     })
   },
+
+
+  discountsSettlement({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_PC_URL + '/yk/order/v2/discountsSettlement.do',
+    })
+  },
 }
 export default category
