@@ -73,13 +73,14 @@
             <p class="goods-name">
               {{ item.name }}
             </p>
-            <p
+            <!-- <p
               v-if="
                 (item.tag && item.tag.length) ||
                 (item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1) > 0
               "
               class="goods-tag"
-            >
+            > -->
+            <p class="goods-tag">
               <span
                 v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1"
                 class="tag-item tag-tc"

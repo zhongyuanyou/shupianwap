@@ -59,12 +59,11 @@
                 }}</span>
                 <span v-else>{{ item.salesGoodsOperatings.slogan }}</span>
               </div>
-              <div
-                v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length"
-                class="tags"
-              >
+              <div class="tags">
                 <div
-                  v-if="item.salesGoodsSubVos.length > 1"
+                  v-if="
+                    item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
+                  "
                   class="tag_item desc-label-tc"
                 >
                   套餐
