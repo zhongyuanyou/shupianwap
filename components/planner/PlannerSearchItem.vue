@@ -168,25 +168,25 @@ export default {
           }
         )
       } else {
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          const params = {
-            areaCode: this.city.code,
-            areaName: this.city.name,
-            customerUserId: this.$store.state.user.userId,
-            plannerId: this.itemData.mchUserId,
-            customerPhone: this.itemData.phone,
-            requireCode: '',
-            requireName: '',
-          }
-          try {
-            const data = await planner.newtel(params)
-            return data
-          } catch (error) {
-            console.error('getTel:', error)
-            return Promise.reject(error)
-          }
+        // const isLogin = await this.judgeLoginMixin()
+        // if (isLogin) {
+        const params = {
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          plannerId: this.itemData.mchUserId,
+          customerPhone: this.itemData.phone,
+          requireCode: '',
+          requireName: '',
         }
+        try {
+          const data = await planner.newtel(params)
+          return data
+        } catch (error) {
+          console.error('getTel:', error)
+          return Promise.reject(error)
+        }
+        // }
       }
     },
   },

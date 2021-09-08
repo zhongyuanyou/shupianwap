@@ -265,6 +265,9 @@ export default {
     userPhone() {
       return this.$store.state.user.userPhone || this.$cookies.get('userPhone')
     },
+    isPlus() {
+      return this.info?.member?.memberType === 'PLUS'
+    },
     nickName() {
       if (this.info.nickName) {
         if (this.info.nickName.indexOf('****') !== -1) {

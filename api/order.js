@@ -1,6 +1,6 @@
 'use strict'
 import { request } from '@/utils/request'
-import { CHIPS_APP_BASE_URL, CHIPS_WAP_BASE_URL, CHIPS_PC_URL } from '@/config/constant'
+import { CHIPS_APP_BASE_URL, CHIPS_WAP_BASE_URL, CHIPS_PC_URL, CRISPS_C_MIDDLE_SERVICE_API } from '@/config/constant'
 const category = {
   // 订单列表
   list({ axios }, params) {
@@ -95,16 +95,6 @@ const category = {
     })
   },
 
-  // 营销优惠结算v2
-  //  http://yapi.dgg.cn/project/452/interface/api/82297
-  settlement({ axios }, params) {
-    return request({
-      axios,
-      params,
-      method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/settlement.do', // CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
-    })
-  },
 
 
   /**
@@ -138,7 +128,6 @@ const category = {
 
   /**
    *CHIPS_PC_URL
-   'http://172.16.132.154:7001/service'
    * @param {*} param0
    * @param {*} params
    * @returns
@@ -218,7 +207,17 @@ const category = {
     })
   },
 
-
+  // 营销优惠结算v2，提交订单使用
+  //  http://yapi.dgg.cn/project/452/interface/api/82297
+  settlement({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_PC_URL + '/yk/order/v2/settlement.do', // CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
+    })
+  },
+  // 待提交订单结算
   discountsSettlement({ axios }, params) {
     return request({
       axios,
@@ -227,5 +226,18 @@ const category = {
       url: CHIPS_PC_URL + '/yk/order/v2/discountsSettlement.do',
     })
   },
+  // 待提交订单结算
+  settle_order_by_unsubmit({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CRISPS_C_MIDDLE_SERVICE_API + '/yk/settle/v3/settle_order_by_unsubmit.do',
+    })
+  },
+  settle_order_by_unsubmitStr: CRISPS_C_MIDDLE_SERVICE_API + '/yk/settle/v3/settle_order_by_unsubmit.do',
+
+
+
 }
 export default category
