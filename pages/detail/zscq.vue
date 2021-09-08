@@ -63,6 +63,16 @@
       <!--S 第一板块-->
       <Title :comment="commentdata[0].tit" @onComment="comment" />
       <!--E 第一板块-->
+      <!-- 页面中部广告位 -->
+      <PageMidAd/>
+      <!-- <div class="banner file_box">
+        <span class="text1">
+          <sp-image
+            src="https://cdn.shupian.cn/sp-pt/wap/images/d4b05q58tvc0000.png"
+          />
+        </span>
+        <span class="text1">新人可享受500元律师费返还优惠</span>
+      </div> -->
       <!--S 第二板块 领券 SKU-->
       <VouchersSelect ref="sku" />
       <!--E 第二板块 领券 SKU-->
@@ -114,7 +124,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import { Sticky, List, TopNavBar, ShareSheet } from '@chipspc/vant-dgg'
+import { Sticky, List, TopNavBar, ShareSheet, Image } from '@chipspc/vant-dgg'
 import ShareModal from '@/components/common/ShareModal.vue'
 import Banner from '~/components/detail/Banner.vue'
 import Title from '~/components/detail/Title1.vue'
@@ -130,6 +140,7 @@ import RelatedRecommend from '~/components/detail/RelatedRecommend.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import CaseNew from '~/components/detail/CaseNew'
+import PageMidAd from '~/components/detail/PageMidAd'
 import getUserSign from '~/utils/fingerprint'
 import { productDetailsApi, recommendApi, shopApi } from '~/api'
 import { copyToClipboard } from '~/utils/common'
@@ -142,6 +153,7 @@ export default {
     [TopNavBar.name]: TopNavBar,
     [Sticky.name]: Sticky,
     [List.name]: List,
+    [Image.name]: Image,
     [ShareSheet.name]: ShareSheet,
     Banner,
     Title,
@@ -158,6 +170,7 @@ export default {
     // OrderCase,
     OrderDynamic,
     CaseNew,
+    PageMidAd,
   },
   mixins: [imHandle, detailMixin],
   layout: 'keepAlive',
