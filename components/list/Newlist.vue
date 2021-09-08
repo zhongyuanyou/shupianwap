@@ -55,7 +55,10 @@
             <span>服务费</span>
           </p>
           <p
-            v-else-if="item.refConfig.taskType === 'PRO_WANT_ORDER_DIGEST'"
+            v-else-if="
+              item.refConfig &&
+              item.refConfig.taskType === 'PRO_WANT_ORDER_DIGEST'
+            "
             class="price"
           >
             面议

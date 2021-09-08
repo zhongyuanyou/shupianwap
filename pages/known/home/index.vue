@@ -279,7 +279,7 @@ export default {
           index: 2,
         },
         {
-          name: '视频',
+          name: '短视频',
           index: 5,
         },
         {
