@@ -7,7 +7,7 @@
           <div class="head">
             <h1>{{ item.contractName }}</h1>
             <p v-if="item.status == 'STRUTS_YWC'" style="color: #222222">
-              已完成
+              已签署
             </p>
             <p v-if="item.status == 'STRUTS_QSZ'" style="color: #4974f5">
               签署中
@@ -30,9 +30,7 @@
               <p class="title">合同编号：{{ item.documentNo }}</p>
             </div>
             <div class="cell">
-              <p class="title">
-                合同金额：{{ item.money ? '￥' + item.money : '-' }}
-              </p>
+              <p class="title">合同金额：{{ item.money | filterMoney }}</p>
             </div>
             <div class="cell">
               <p class="title">
@@ -70,12 +68,22 @@
   待归档
   STRUTS_DGD("STRUTS_DGD","待归档");
 */
+import changeMoney from '@/utils/changeMoney.js'
 import Head from '@/components/common/head/header'
 import contractApi from '@/api/contract'
 export default {
   name: 'OrderContract',
   components: {
     Head,
+  },
+  filters: {
+    filterMoney(val) {
+      if (!val) {
+        return '暂无'
+      } else {
+        return changeMoney.regFenToYuan(val) + '元'
+      }
+    },
   },
   data() {
     return {

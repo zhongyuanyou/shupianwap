@@ -11,7 +11,7 @@
       <div class="tit">
         <p>合同金额：</p>
         <p>
-          {{ item.money ? item.money + '元' : '暂无' }}
+          {{ item.money | filterMoney }}
         </p>
       </div>
       <div class="tit">
@@ -33,8 +33,19 @@
 </template>
 
 <script>
+import changeMoney from '@/utils/changeMoney.js'
+
 export default {
   name: 'ContractListcomponents',
+  filters: {
+    filterMoney(val) {
+      if (!val) {
+        return '暂无'
+      } else {
+        return changeMoney.regFenToYuan(val) + '元'
+      }
+    },
+  },
   props: {
     info: {
       // 是否是列表页

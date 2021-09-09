@@ -19,6 +19,8 @@ export const state = () => ({
   userPhone: '', // 用户电话=fullName 加密
   userPhoneFull: '', // 用户电话加密
   avatar: '', // 用户头像
+
+  customerID: '',// 客户id
 })
 export const mutations = {
   SET_USER(state, data = {}) {
@@ -44,9 +46,12 @@ export const mutations = {
     if (data.userType || data.type)
       state.userType = String(data.userType || data.type)
     state.avatar = String(data.avatar || AVATAR)
+    if (data.customerID) {
+      state.customerID = String(data.customerID)
+    }
   },
   CLEAR_USER(state) {
-    const clearKeys = ['token', 'userId', 'avatar', 'userNo', 'userName', 'userPhone', 'realStatus', 'mainAccountFull', 'userType']
+    const clearKeys = ['token', 'userId', 'avatar', 'userNo', 'userName', 'userPhone', 'realStatus', 'mainAccountFull', 'userType', 'customerID']
     clearKeys.forEach((key) => {
       this.$cookies.remove(key, {
         path: '/',
@@ -64,9 +69,11 @@ export const mutations = {
     state.userPhone = ''
     state.realStatus = ''
     state.mainAccountFull = ''
+    state.customerID = ''
     state.userInfo = {}
   },
   SET_INFO(state, data = {}) {
+    console.log('SET_INFO', data);
     this.$cookies.set('userNo', String(data.no), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
@@ -102,6 +109,13 @@ export const mutations = {
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       // domain: 'shupian.cn',
     })
+    this.$cookies.set('customerID', String(data?.customerInfo?.id || ''), {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7, // 过期时间
+      // domain: 'shupian.cn',
+    })
+
+
     state.userNo = data.no
     state.userName = data.nickName
     state.userType = data.type || data.userType
@@ -109,12 +123,15 @@ export const mutations = {
     state.realStatus = data.realStatus
     state.mainAccountFull = data.mainAccountFull
     state.avatar = data.url || AVATAR
+    state.customerID = data?.customerInfo?.id
+
     state.userInfo.userNo = data.no
     state.userInfo.userName = data.nickName
     state.userInfo.userPhone = data.fullName
     state.userInfo.realStatus = data.realStatus
     state.userInfo.mainAccountFull = data.mainAccountFull
     state.userInfo.avatar = data.url
+    state.userInfo.customerID = data?.customerInfo?.id
   },
 }
 

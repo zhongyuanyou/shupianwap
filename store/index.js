@@ -23,6 +23,8 @@ export const actions = {
     const userType = app.$cookies.get('userType', { path: '/' })
     const userName = app.$cookies.get('userName', { path: '/' })
     const avatar = app.$cookies.get('avatar', { path: '/' })
+    const customerID = app.$cookies.get('customerID', { path: '/' })
+
 
     commit('city/SET_CITY', currentCity || {})
     commit('city/SET_POSITION_CITY', positionCityName || '')
@@ -36,6 +38,7 @@ export const actions = {
         type: userType,
         nickName: userName,
         avatar: decodeURIComponent(avatar),
+        customerID
       })
   },
 }

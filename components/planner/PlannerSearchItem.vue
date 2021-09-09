@@ -170,10 +170,12 @@ export default {
       } else {
         // const isLogin = await this.judgeLoginMixin()
         // if (isLogin) {
+        console.log(this.$store.state.user)
         const params = {
           areaCode: this.city.code,
           areaName: this.city.name,
           customerUserId: this.$store.state.user.userId,
+          customerId: this.$store.state.user.customerID,
           plannerId: this.itemData.mchUserId,
           customerPhone: this.itemData.phone,
           requireCode: '',
@@ -181,6 +183,7 @@ export default {
         }
         try {
           const data = await planner.newtel(params)
+          console.log(data)
           return data
         } catch (error) {
           console.error('getTel:', error)
