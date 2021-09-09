@@ -2,7 +2,6 @@
   <section>
     <ShareModal
       v-show="
-        answerDetails.title &&
         answerDetails.flag == 1 &&
         answerDetails.status == 1 &&
         answerDetails.materialStatus == 1
