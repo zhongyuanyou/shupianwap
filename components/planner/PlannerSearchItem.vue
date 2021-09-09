@@ -170,6 +170,7 @@ export default {
       } else {
         // const isLogin = await this.judgeLoginMixin()
         // if (isLogin) {
+        console.log(this.$store.state.user)
         const params = {
           areaCode: this.city.code,
           areaName: this.city.name,
@@ -181,6 +182,7 @@ export default {
         }
         try {
           const data = await planner.newtel(params)
+          console.log(data)
           return data
         } catch (error) {
           console.error('getTel:', error)
