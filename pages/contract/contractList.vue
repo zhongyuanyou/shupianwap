@@ -60,7 +60,7 @@ export default {
       tabAct: 1,
       page: 1,
       limit: 10,
-      status: ['STRUTS_QSZ'],
+      status: ['STRUTS_QSZ'], // 签署中状态
       list: [],
       error: false,
       loading: false,
@@ -112,7 +112,9 @@ export default {
       this.error = false
       this.contractEmptyFlag = false
       if (this.tabAct === 1) {
+        // 状态签署中
         this.status = ['STRUTS_QSZ']
+        // 状态已完成
       } else {
         this.status = ['STRUTS_YWC']
       }
