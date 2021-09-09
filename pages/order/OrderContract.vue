@@ -7,7 +7,7 @@
           <div class="head">
             <h1>{{ item.contractName }}</h1>
             <p v-if="item.status == 'STRUTS_YWC'" style="color: #222222">
-              已完成
+              已签署
             </p>
             <p v-if="item.status == 'STRUTS_QSZ'" style="color: #4974f5">
               签署中
