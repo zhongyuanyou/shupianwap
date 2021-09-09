@@ -136,6 +136,7 @@ export default {
           areaCode: this.city.code,
           areaName: this.city.name,
           customerUserId: this.$store.state.user.userId,
+          customerId: this.$store.state.user.customerID,
           plannerId: mchUserId,
           customerPhone: this.$cookies.get('mainAccountFull', { path: '/' }),
           requireCode: this.sellingDetail.classCodeLevel.split(',')[0],
