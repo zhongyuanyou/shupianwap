@@ -171,13 +171,13 @@ export default {
         // const isLogin = await this.judgeLoginMixin()
         // if (isLogin) {
         const params = {
-          // areaCode: this.city.code,
-          // areaName: this.city.name,
-          // customerUserId: this.$store.state.user.userId,
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
           plannerId: this.itemData.mchUserId,
-          // customerPhone: this.itemData.phone,
-          // requireCode: '',
-          // requireName: '',
+          customerPhone: this.itemData.phone,
+          requireCode: '',
+          requireName: '',
         }
         try {
           const data = await planner.newtel(params)
