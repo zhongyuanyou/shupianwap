@@ -26,7 +26,7 @@
     <div class="btn">
       <p @click="toOrderDetail(item.businessId)">订单详情</p>
       <p @click.stop="toContractNext">
-        {{ item.status === 'STRUTS_YWC' ? '查看合同' : '签署合同' }}
+        {{ item.status === 'STRUTS_QSZ' ? '签署合同' : '查看合同' }}
       </p>
     </div>
   </div>
@@ -73,7 +73,7 @@ export default {
         contractId: this.item.id, // 合同id
         contractNo: this.item.documentNo, // 合同编码
       }
-      // 已完成状态
+      // 已完成状态 因为这里只有2中合同状态,已完成和签署中,所以可以用if else
       if (this.item.status === 'STRUTS_YWC') {
         queryParams.type = 'yl'
       } else {
