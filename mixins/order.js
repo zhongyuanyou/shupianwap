@@ -1406,11 +1406,8 @@ export default {
     },
     // 纠纷判断
     checkJjiufen(orderData) {
+      // 担保交易订单办理中展示纠纷按钮
       orderData = orderData || this.orderData
-      const jiufengStatus = [
-        'STAFF_WORK_ORDER_STATUS_CAN',
-        'STAFF_WORK_ORDER_STATUS_4',
-      ]
       const proceingOrderStatus = [
         'ORDER_ORDER_SALE_STATUS_HANDLING',
         'ORDER_ORDER_SALE_STATUS_HANDLED',
@@ -1424,9 +1421,9 @@ export default {
       orderData.disputeStatus =
         orderData.disputeStatus || orderData.orderSkuEsList[0].disputeStatus
       if (
-        orderData.disputeStatus &&
-        jiufengStatus.indexOf(orderData.disputeStatus) > -1 &&
-        proceingOrderStatus.indexOf(orderData.orderStatusNo) > -1
+        proceingOrderStatus.indexOf(orderData.orderStatusNo) > -1 &&
+        orderData.payType &&
+        orderData.payType === 'ORDER_PAY_MODE_SECURED'
       ) {
         return 1
       }
