@@ -53,8 +53,12 @@
               <h1>
                 {{ item.name }}
               </h1>
-              <div v-if="item.tag && item.tag.length > 0" class="tag">
-                <div v-if="item.salesGoodsSubVos.length > 1">套餐</div>
+              <div class="tag">
+                <div
+                  v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length"
+                >
+                  套餐
+                </div>
                 <p
                   v-for="(tagitem, tagindex) in item.tag"
                   v-show="tagitem.categoryCode === 'DSJTC20210514000042'"

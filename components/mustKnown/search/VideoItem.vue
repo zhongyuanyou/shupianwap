@@ -22,7 +22,9 @@
     <template v-else>
       <div class="lf_img">
         <img v-if="item.image" :src="item.image.split(',')[0]" alt="" />
-        <div class="time">{{ totime(item.duration) }}</div>
+        <div v-if="custCode !== 'course' && item.duration" class="time">
+          {{ totime(item.duration) }}
+        </div>
       </div>
       <div
         class="rt_content"

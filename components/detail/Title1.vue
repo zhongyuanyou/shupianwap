@@ -3,7 +3,10 @@
     <p class="title_btitle">{{ sellingGoodsData.name }}</p>
     <div class="title_tags">
       <span
-        v-if="sellingGoodsData.salesGoodsSubVos.length > 1"
+        v-if="
+          sellingGoodsData.salesGoodsSubVos &&
+          sellingGoodsData.salesGoodsSubVos.length
+        "
         class="title_tags_item title_tags_main"
         >套餐</span
       >

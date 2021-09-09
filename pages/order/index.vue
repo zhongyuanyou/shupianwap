@@ -376,11 +376,13 @@ export default {
     z-index: 2;
     overflow: hidden;
     border-bottom: 1px solid #f0f0f0;
-    .sp-tab--active {
-      color: rgba(73, 116, 245, 1);
+    .sp-tab {
+      font-size: 30px;
+      color: #999999;
     }
+
     .sp-tab--active .sp-tab__text {
-      color: #4974f5;
+      color: #222222;
       font-weight: bold;
     }
     .sp-tabs__line {
@@ -388,6 +390,7 @@ export default {
       width: 32px;
     }
   }
+
   .page-list {
     padding-bottom: 140px;
     margin-top: 88px;

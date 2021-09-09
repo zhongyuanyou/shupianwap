@@ -483,11 +483,11 @@ export default {
 
     text-align: center;
     .rule {
-      color: #4974f5;
+      color: #999999;
     }
     .invalid {
       margin-left: 64px;
-      color: #4974f5;
+      color: #999999;
     }
     .back {
       margin-right: 18px;

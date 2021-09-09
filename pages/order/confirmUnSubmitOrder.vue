@@ -26,7 +26,7 @@
           <div class="right">
             <h1 class="tit">
               {{
-                item.salesGoodsSubVos && item.salesGoodsSubVos.length
+                item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
                   ? item.salesGoodsSubVos[0].goodsSubName
                   : item.name
               }}
@@ -431,7 +431,7 @@ export default {
 
                 let sku = {}
                 let refConfig = {}
-
+                let categoryListLength = 0
                 if (item.skuDetailInfo) {
                   const skuDetailInfo = JSON.parse(item.skuDetailInfo)
                   console.log('skuDetailInfo', skuDetailInfo)
@@ -439,25 +439,33 @@ export default {
                   sku = skuDetailInfo?.sku
 
                   refConfig = sku?.refConfig
+
+                  if (
+                    item.classifyOneNo === 'FL20210425164438' &&
+                    skuDetailInfo?.tradeMark?.categoryList
+                  ) {
+                    categoryListLength =
+                      skuDetailInfo.tradeMark.categoryList.length
+                  }
                 }
 
                 const obj = {
                   name: item.spuHideName || item.spuName,
                   // classifyOneNo: item.classifyOneNo,
                   // classifyTwoNo: item.classifyTwoNo,
+                  classifyThreeNo: item.classifyThreeNo,
                   // classCode: item.classifyThreeNo,
 
                   // classCodeName: sku.className,
                   // goodsNo: sku.goodsNo,
                   // version: sku.version,
-                  // id: item.id,
+                  id: item.id,
                   // refConfig,
                   skuCount: item.skuCount,
                   salesPrice: item.skuPrice,
-                  // salesGoodsSubVos: item.salesGoodsSubVos,
-                  skuExtInfo: item.skuExtInfo,
 
-                  // orderSaleSubjectId,
+                  skuExtInfo: item.skuExtInfo,
+                  categoryListLength,
                 }
                 num += parseInt(item.skuCount) || 0
                 this.order.list.push(obj)
@@ -518,8 +526,6 @@ export default {
     },
 
     setPayMethod() {
-      // this.Orderform.payType = this.orde?.payType
-
       if (this.order.isSecuredTrade === 0) {
         this.payMethod.list = [
           { value: 'ORDER_PAY_MODE_ONLINE', text: '在线支付' },
@@ -706,21 +712,63 @@ export default {
       })
       return arr
     },
+    getSaleMoneyByID(orderSaleId) {
+      const saleSkuListOrder = this.order.saleSkuList.filter((item) => {
+        return orderSaleId === item.orderSaleId
+      })
+      const listOrder = this.order.list.filter((item) => {
+        return orderSaleId === item.id
+      })
+      if (saleSkuListOrder && saleSkuListOrder.orderSaleMoneys) {
+        if (listOrder && listOrder.categoryListLength) {
+          return (
+            parseFloat(saleSkuListOrder.orderSaleMoneys) *
+            listOrder.categoryListLength
+          )
+        }
+      }
+      return order.orderSaleMoneys || ''
+    },
+
     //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
-      const arr = this.settlementInfo.orderSkuList.map((x) => {
-        return x.orderSaleId
+      const arr = this.settlementInfo.productVo.map((x) => {
+        return x.id
       })
       const list = []
-      for (let i = 0; i < this.settlementInfo.orderSkuList.length; i++) {
+      this.settlementInfo.productVo.map((product) => {
+        const orderSaleId = product.id
+        // const tradeMarkPrice = this.getSaleMoneyByID(orderSaleId)
         const item = {
-          goodsId: this.settlementInfo.orderSkuList[i].orderSaleId,
-          price: this.settlementInfo.orderSkuList[i].skuPrice,
-          goodsNum: this.settlementInfo.orderSkuList[i].skuCount || 1,
-          // goodsClassCode: this.order.list[i].classifyTwoNo,
+          goodsId: orderSaleId,
+          price: product.price / product.goodsNumber,
+          goodsNum: product.goodsNumber || 1,
+          goodsClassCode: product.classCode,
+
+          // tradeMarkPrice: product.tradeMarkPrice,
+        }
+        if (product.tradeMarkPrice) {
+          item.tradeMarkPrice = product.tradeMarkPrice
         }
         list.push(item)
-      }
+      })
+
+      // for (let i = 0; i < this.settlementInfo.orderSkuList.length; i++) {
+      //   const orderSaleId = this.settlementInfo.orderSkuList[i].orderSaleId
+
+      //   const tradeMarkPrice = this.getSaleMoneyByID(orderSaleId)
+
+      //   const item = {
+      //     goodsId: orderSaleId,
+      //     price: this.settlementInfo.orderSkuList[i].skuPrice / 100,
+      //     goodsNum: this.settlementInfo.orderSkuList[i].skuCount || 1,
+      //     goodsClassCode: this.settlementInfo.orderSkuList[i].classifyThreeNo,
+      //   }
+      //   if (tradeMarkPrice) {
+      //     item.tradeMarkPrice = tradeMarkPrice
+      //   }
+      //   list.push(item)
+      // }
 
       coupon
         .findOrderCouponPage(

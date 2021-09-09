@@ -73,13 +73,14 @@
             <p class="goods-name">
               {{ item.name }}
             </p>
-            <p
+            <!-- <p
               v-if="
                 (item.tag && item.tag.length) ||
                 (item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1) > 0
               "
               class="goods-tag"
-            >
+            > -->
+            <p class="goods-tag">
               <span
                 v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1"
                 class="tag-item tag-tc"
@@ -110,6 +111,15 @@
             <div class="goods-price">
               <span
                 v-if="
+                  item.priceType === 'PRO_FLOATING_PRICE' && item.plannerRatio
+                "
+                class="money"
+              >
+                {{ item.plannerRatio / 100 }}%
+                <span class="small-value">服务费</span>
+              </span>
+              <span
+                v-else-if="
                   item.price == 0 ||
                   item.price === '0.00' ||
                   item.price === '0.0' ||
