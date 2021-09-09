@@ -548,6 +548,7 @@ export default {
           areaCode: this.city.code,
           areaName: this.city.name,
           customerUserId: this.$store.state.user.userId,
+          customerId: this.$store.state.user.customerID,
           plannerId: mchUserId,
           customerPhone: this.topPlannerInfo.phone || this.planerInfo.phone,
           requireCode: '',
@@ -558,7 +559,7 @@ export default {
           const telData = await planner.newtel(params)
           // 解密电话
           if (telData.status === 1) {
-            const tel = telData.operation
+            const tel = telData.phone
             window.location.href = `tel:${tel}`
           } else if (telData.status === 0) {
             Toast({

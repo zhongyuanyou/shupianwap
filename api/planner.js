@@ -73,7 +73,7 @@ const planner = {
     return request({
       params,
       method: 'post',
-      url: CRM_MIDDLE_APP + '/yk/outbound/shupiancall/bind_hidden.do',
+      url: CRM_MIDDLE_APP + '/nk/outbound/shupiancall/bind_hidden.do',
     })
     // return request({
     //   params,

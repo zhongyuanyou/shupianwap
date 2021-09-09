@@ -434,9 +434,9 @@ export default {
           }
         } else if (this.actTab.code === 'live') {
           // 直播间: 2 回放: 3
-          this.openLive(item.roomId, 2)
+          this.openLive(item.id, 2)
         } else if (this.actTab.code === 'vback') {
-          this.openLive(item.roomId, 3)
+          this.openLive(item.id, 3)
         }
       } else if (this.isInApp && this.appInfo.appCode === 'syscode') {
         this.showItem = false
