@@ -146,7 +146,11 @@
           <span v-if="order.orderType === 0" class="money_price"
             ><b>面议</b></span
           ><span v-else class="money_price"
-            ><b>{{ settlementInfo.orderTotalMoney }}</b
+            ><b>{{
+              (settlementInfo.orderTotalMoney ||
+                order.orderPayableMoneys ||
+                0) - (settlementInfo.orderDiscountMoney || 0)
+            }}</b
             >元</span
           >
           <span v-if="isDeposit" class="deposit_text"
