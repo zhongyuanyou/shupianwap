@@ -216,7 +216,7 @@
       :height="75"
       title="优惠"
       help="使用说明"
-      :origin-price="settlementInfo.orderTotalMoney"
+      :origin-price="tradeMarkPriceSum || settlementInfo.orderTotalMoney"
       :tablist="couponInfo.tablist"
       :datalist="couponInfo.datalist"
       :nolist="couponInfo.nolist"
@@ -373,6 +373,16 @@ export default {
     // 是否担保订单
     isSecuredTrade() {
       return this.order.isSecuredTrade === 1
+    },
+
+    tradeMarkPriceSum() {
+      let sum = 0
+      if (this.settlementInfo.productVo) {
+        this.settlementInfo.productVo.map((item) => {
+          sum += parseFloat(item.tradeMarkPrice || 0)
+        })
+      }
+      return sum
     },
   },
   mounted() {
