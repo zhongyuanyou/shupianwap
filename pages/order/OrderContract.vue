@@ -2,24 +2,28 @@
   <div class="contract">
     <Head ref="head" title="附件协议-合同列表"> </Head>
     <div class="listbox">
-      <div v-for="(item, index) in list" :key="index" class="list">
-        <template v-if="showContract(item.status)">
+      <template v-for="(item, index) in list">
+        <div v-if="showContract(item.status)" :key="index" class="list">
           <div class="head">
             <h1>{{ item.contractName }}</h1>
-            <p v-if="item.status == 'STRUTS_YWC'">已签署</p>
-            <p
-              v-if="item.status == 'STRUTS_QSZ'"
-              :style="{
-                color: item.status == 'STRUTS_QSZ' ? '#4974F5' : '#222222',
-              }"
-            >
+            <p v-if="item.status == 'STRUTS_YWC'" style="color: #222222">
+              已完成
+            </p>
+            <p v-if="item.status == 'STRUTS_QSZ'" style="color: #4974f5">
               签署中
             </p>
-            <p v-if="item.status == 'STRUTS_DSH'">待审核</p>
-            <p v-if="item.status == 'STRUTS_YJQ'">已拒签</p>
-            <p v-if="item.status == 'STRUTS_YYQ'">已逾期</p>
-            <p v-if="item.status == 'STRUTS_YZF'">已作废</p>
-            <p v-if="item.status == 'STRUTS_DGD'">待归档</p>
+            <p v-if="item.status == 'STRUTS_YJQ'" style="color: #222222">
+              已拒签
+            </p>
+            <p v-if="item.status == 'STRUTS_YYQ'" style="color: #222222">
+              已逾期
+            </p>
+            <p v-if="item.status == 'STRUTS_YZF'" style="color: #222222">
+              已作废
+            </p>
+            <p v-if="item.status == 'STRUTS_DGD'" style="color: #222222">
+              待归档
+            </p>
           </div>
           <div class="body">
             <div class="cell">
@@ -44,13 +48,28 @@
           <div class="btn" @click="goPreview(item)">
             {{ item.status == 'STRUTS_QSZ' ? '签署合同' : '查看合同' }}
           </div>
-        </template>
-      </div>
+        </div>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
+/*
+合同状态:
+  签署中
+  STRUTS_QSZ("STRUTS_QSZ","签署中"),
+  已完成
+  STRUTS_YWC("STRUTS_YWC","已完成"),
+  已逾期
+  STRUTS_YYQ("STRUTS_YYQ","已逾期"),
+  已作废
+  STRUTS_YZF("STRUTS_YZF","已作废"),
+  审核中
+  STRUTS_SHZ("STRUTS_SHZ","审核中"),
+  待归档
+  STRUTS_DGD("STRUTS_DGD","待归档");
+*/
 import Head from '@/components/common/head/header'
 import contractApi from '@/api/contract'
 export default {
@@ -72,6 +91,7 @@ export default {
   methods: {
     showContract(val) {
       // 草稿状态, 审核状态不显示,其余状态均显示合同
+      // STRUTS_CG STRUTS_SHZ_SH 这两个状态是为了匹配以前数据,草稿和商户平台审核以前有,现在没有这两个状态了
       if (
         val === 'STRUTS_CG' ||
         val === 'STRUTS_SHZ' ||
@@ -103,25 +123,21 @@ export default {
         })
     },
     goPreview(item) {
-      if (item.status === 'STRUTS_DSH') {
-        this.$xToast.error('合同正在审核中，请稍后~')
-        return
-      }
       const queryParams = {
         contractUrl: item.fileUrl,
         go: '-1',
         contractId: item.id, // 合同id
         contractNo: item.documentNo, // 合同编码
       }
-      // 已完成状态
-      if (item.status === 'STRUTS_YWC') {
-        queryParams.type = 'yl'
-      } else {
+      // 当为签署中时,才可以进行签署,其他状态只能够查看合同
+      if (item.status === 'STRUTS_QSZ') {
         // 甲方名称
         queryParams.signerName = item.partyaName
         // 甲方联系电话(加密)
         queryParams.contactWay = item.partyaTelephone
         queryParams.type = 'qs'
+      } else {
+        queryParams.type = 'yl'
       }
       this.$router.push({
         path: '/contract/preview',
@@ -186,7 +202,6 @@ export default {
       > .btn {
         line-height: 60px;
         text-align: center;
-        margin-top: 40px;
         width: 152px;
         height: 64px;
         background: #ffffff;

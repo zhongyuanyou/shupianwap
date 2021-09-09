@@ -111,6 +111,15 @@
             <div class="goods-price">
               <span
                 v-if="
+                  item.priceType === 'PRO_FLOATING_PRICE' && item.plannerRatio
+                "
+                class="money"
+              >
+                {{ item.plannerRatio / 100 }}%
+                <span class="small-value">服务费</span>
+              </span>
+              <span
+                v-else-if="
                   item.price == 0 ||
                   item.price === '0.00' ||
                   item.price === '0.0' ||

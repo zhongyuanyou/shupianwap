@@ -162,8 +162,9 @@ export default {
   position: relative;
 
   .item-lf {
-    width: 201px;
+    width: 195px;
     height: 212px;
+    margin-left: 10px;
     display: flex;
     // align-items: center;
     justify-content: center;
@@ -223,6 +224,7 @@ export default {
 
       .coupon_name {
         margin-left: -12px;
+        vertical-align: middle;
       }
       .coupon_type_name {
         background-image: linear-gradient(90deg, #fa6d5a 0%, #fa5741 100%);

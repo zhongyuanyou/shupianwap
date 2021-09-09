@@ -732,30 +732,43 @@ export default {
 
     //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
-      const arr = this.settlementInfo.orderSkuList.map((x) => {
-        return x.orderSaleId
+      const arr = this.settlementInfo.productVo.map((x) => {
+        return x.id
       })
       const list = []
-
-      for (let i = 0; i < this.settlementInfo.orderSkuList.length; i++) {
-        const orderSaleId = this.settlementInfo.orderSkuList[i].orderSaleId
-
-        const tradeMarkPrice = this.getSaleMoneyByID(orderSaleId)
-
-        // if (orderSaleId === this.settlementInfo.orderSkuList[i].orderSaleId) {
-        //   orderSaleMoneys
-        // }
+      this.settlementInfo.productVo.map((product) => {
+        const orderSaleId = product.id
+        // const tradeMarkPrice = this.getSaleMoneyByID(orderSaleId)
         const item = {
           goodsId: orderSaleId,
-          price: this.settlementInfo.orderSkuList[i].skuPrice / 100,
-          goodsNum: this.settlementInfo.orderSkuList[i].skuCount || 1,
-          goodsClassCode: this.settlementInfo.orderSkuList[i].classifyThreeNo,
+          price: product.price / product.goodsNumber,
+          goodsNum: product.goodsNumber || 1,
+          goodsClassCode: product.classCode,
+
+          // tradeMarkPrice: product.tradeMarkPrice,
         }
-        if (tradeMarkPrice) {
-          item.tradeMarkPrice = tradeMarkPrice
+        if (product.tradeMarkPrice) {
+          item.tradeMarkPrice = product.tradeMarkPrice
         }
         list.push(item)
-      }
+      })
+
+      // for (let i = 0; i < this.settlementInfo.orderSkuList.length; i++) {
+      //   const orderSaleId = this.settlementInfo.orderSkuList[i].orderSaleId
+
+      //   const tradeMarkPrice = this.getSaleMoneyByID(orderSaleId)
+
+      //   const item = {
+      //     goodsId: orderSaleId,
+      //     price: this.settlementInfo.orderSkuList[i].skuPrice / 100,
+      //     goodsNum: this.settlementInfo.orderSkuList[i].skuCount || 1,
+      //     goodsClassCode: this.settlementInfo.orderSkuList[i].classifyThreeNo,
+      //   }
+      //   if (tradeMarkPrice) {
+      //     item.tradeMarkPrice = tradeMarkPrice
+      //   }
+      //   list.push(item)
+      // }
 
       coupon
         .findOrderCouponPage(

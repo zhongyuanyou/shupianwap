@@ -70,16 +70,16 @@ const planner = {
     })
   },
   newtel(params) {
-    // return request({
-    //   params,
-    //   method: 'post',
-    //   url: CRM_MIDDLE_APP + '/yk/outbound/shupiancall/bind_hidden.do',
-    // })
     return request({
       params,
-      method: 'get',
-      url: CHIPS_PC_URL + '/nk/planner/v1/getPlannerTel.do',
+      method: 'post',
+      url: CRM_MIDDLE_APP + '/yk/outbound/shupiancall/bind_hidden.do',
     })
+    // return request({
+    //   params,
+    //   method: 'get',
+    //   url: CHIPS_PC_URL + '/nk/planner/v1/getPlannerTel.do',
+    // })
   },
   bindCustomer:
     '/crisps-marketing-web/yk/branchsell/copartner/v1/add_copartner_customer_bind.do',
