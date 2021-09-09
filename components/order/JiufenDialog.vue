@@ -2,11 +2,12 @@
   <div class="modal_area">
     <sp-dialog
       v-model="showJiufenModal"
-      confirm-button-text="复制"
+      confirm-button-text="复制链接"
       @confirm="copyLink"
     >
-      <p class="text_area">请复制下方链接在PC端打开，进行纠纷/售后</p>
-      <p class="url">{{ linkUrl }}</p>
+      <p class="text_area">
+        请复制下方链接在PC端打开，进行纠纷/售后 {{ linkUrl }}
+      </p>
     </sp-dialog>
   </div>
 </template>
@@ -50,6 +51,10 @@ export default {
   .text_area {
     font-size: 28px;
     color: #666;
+    font-size: 28px;
+    color: #222222;
+    text-align: center;
+    width: 100%;
   }
   .url {
     text-align: center;
@@ -57,10 +62,10 @@ export default {
     margin-top: 20px;
   }
   .modal_area {
-    width: 500px;
-    height: 200px;
-    border-radius: 16px;
-    background: white;
+    width: 540px;
+    height: 264px;
+    background: #ffffff;
+    border-radius: 24px;
   }
 }
 </style>
