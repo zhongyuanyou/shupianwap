@@ -146,7 +146,11 @@
           <span v-if="order.orderType === 0" class="money_price"
             ><b>面议</b></span
           ><span v-else class="money_price"
-            ><b>{{ settlementInfo.orderTotalMoney }}</b
+            ><b>{{
+              (settlementInfo.orderTotalMoney ||
+                order.orderPayableMoneys ||
+                0) - (settlementInfo.orderDiscountMoney || 0)
+            }}</b
             >元</span
           >
           <span v-if="isDeposit" class="deposit_text"
@@ -216,7 +220,7 @@
       :height="75"
       title="优惠"
       help="使用说明"
-      :origin-price="settlementInfo.orderTotalMoney"
+      :origin-price="tradeMarkPriceSum || settlementInfo.orderTotalMoney"
       :tablist="couponInfo.tablist"
       :datalist="couponInfo.datalist"
       :nolist="couponInfo.nolist"
@@ -373,6 +377,16 @@ export default {
     // 是否担保订单
     isSecuredTrade() {
       return this.order.isSecuredTrade === 1
+    },
+
+    tradeMarkPriceSum() {
+      let sum = 0
+      if (this.settlementInfo.productVo) {
+        this.settlementInfo.productVo.map((item) => {
+          sum += parseFloat(item.tradeMarkPrice || 0)
+        })
+      }
+      return sum
     },
   },
   mounted() {

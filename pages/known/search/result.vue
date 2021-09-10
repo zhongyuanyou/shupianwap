@@ -243,7 +243,6 @@ export default {
         confirmButtonText: '好的',
       },
       showItem: true,
-      isInApp: true,
       active: 0, // 当前tabIndex
       actTemplate: 'txtlist', // 默认展示分类模板
       // 默认展示第一个
@@ -260,7 +259,7 @@ export default {
     ...mapState({
       userInfo: (state) => state.user, // 登录的用户信息
       userId: (state) => state.user.userId, // userId 用于判断登录
-      // isInApp: (state) => state.app.isInApp, // 是否app中
+      isInApp: (state) => state.app.isInApp, // 是否app中
       appInfo: (state) => state.app.appInfo, // app信息
       // isApplets: (state) => state.app.isApplets,
     }),
@@ -434,9 +433,9 @@ export default {
           }
         } else if (this.actTab.code === 'live') {
           // 直播间: 2 回放: 3
-          this.openLive(item.roomId, 2)
+          this.openLive(item.id, 2)
         } else if (this.actTab.code === 'vback') {
-          this.openLive(item.roomId, 3)
+          this.openLive(item.id, 3)
         }
       } else if (this.isInApp && this.appInfo.appCode === 'syscode') {
         this.showItem = false
