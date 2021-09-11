@@ -549,7 +549,10 @@ export default {
         case 'tel':
           if (this.isInApp) {
             this.$appFn.dggBindHiddenPhone(
-              { plannerId: data.mchUserId },
+              {
+                plannerId: data.mchUserId,
+                customerId: this.$store.state.user.customerID || '',
+              },
               (res) => {
                 const { code } = res || {}
                 if (code !== 200) {
