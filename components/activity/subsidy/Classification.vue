@@ -1,13 +1,5 @@
 <template >
   <sp-sticky class="tabs-box" :offset-top="headerHeight">
-    <!-- <div v-if="hasCity || activityTypeOptions.length == 0" class="drop_down">
-      <div class="drop_down_title" @click="swichCityHandle">
-        {{ cityName ? cityName : '定位中' }}
-      </div>
-
-      <div class="drop_down_icon"></div>
-    </div> -->
-
     <ul class="tabs-box-items">
       <li
         v-for="(item, index) in activityTypeOptions"
@@ -28,14 +20,6 @@ export default {
     [Sticky.name]: Sticky,
   },
   props: {
-    hasCity: {
-      type: Boolean,
-      default: false,
-    },
-    cityName: {
-      type: String,
-      default: '',
-    },
     headerHeight: {
       type: Number,
       default: 0,
@@ -48,10 +32,7 @@ export default {
       type: Array,
       default: () => [],
     },
-    swichCityHandle: {
-      type: Function,
-      default() {},
-    },
+
     menuTab: {
       type: Function,
       default() {},
@@ -81,53 +62,21 @@ export default {
 <style lang="less" scoped>
 .tabs-box {
   font-family: PingFangSC-Medium, PingFangSC-Regular, PingFang SC;
-  height: 96px;
-  line-height: 96px;
+  height: 128px;
+  line-height: 128px;
   font-size: 0;
 
   ::v-deep .sp-sticky {
     overflow: hidden;
-    background: #f8f8f8;
+    background: #ffffff;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     // padding: 0px 20px;
-    height: 96px;
-    line-height: 96px;
+    height: 128px;
+    line-height: 128px;
     &.sp-sticky--fixed {
       border-radius: 0 0 0 0;
-    }
-  }
-
-  .drop_down {
-    height: 56px;
-
-    border: 1px solid #4974f5;
-    border-radius: 32px;
-
-    display: flex;
-    align-items: center;
-    padding: 0 24px;
-    margin-left: 20px;
-    .drop_down_title {
-      white-space: nowrap;
-
-      font-weight: bold;
-      color: #ffffff;
-      line-height: 56px;
-
-      font-family: PingFangSC-Medium;
-      font-size: 30px;
-      color: #4974f5;
-      letter-spacing: 0;
-    }
-    .drop_down_icon {
-      background: url('https://cdn.shupian.cn/sp-pt/wap/images/3obtk0xjgos0000.png');
-      width: 15px;
-      height: 10px;
-      margin-left: 8px;
-      background-size: 100% 100%;
-      -moz-background-size: 100% 100%;
     }
   }
 
@@ -137,9 +86,6 @@ export default {
 
     overflow-x: scroll;
 
-    // height: 96px;
-    // line-height: 96px;
-
     &::-webkit-scrollbar {
       width: 0 !important;
       height: 0 !important;
@@ -148,33 +94,41 @@ export default {
       // display: inline-block;
       white-space: nowrap;
 
-      margin-right: 40px;
+      margin-right: 23px;
 
-      font-size: 32px;
+      font-size: 26px;
       color: #999999;
+      background: #f5f5f5;
       letter-spacing: 0;
       cursor: pointer;
+
+      height: 64px;
+      line-height: 64px;
+      padding: 0px 42px;
+      border-radius: 32px;
     }
     .active {
       position: relative;
       font-weight: bold;
-      color: #222222;
+      color: #ffffff;
+      font-size: 30px;
+      background-image: linear-gradient(139deg, #2f5fe4 0%, #2b52c2 100%);
     }
-    .active::after {
-      content: '';
-      position: absolute;
-      bottom: 28px;
-      right: 0;
+    // .active::after {
+    //   content: '';
+    //   position: absolute;
+    //   bottom: 28px;
+    //   right: 0;
 
-      width: 60px;
-      height: 12px;
-      background-image: linear-gradient(
-        270deg,
-        rgba(73, 116, 245, 0) 0%,
-        #4974f5 100%
-      );
-      border-radius: 6px;
-    }
+    //   width: 60px;
+    //   height: 12px;
+    //   background-image: linear-gradient(
+    //     270deg,
+    //     rgba(73, 116, 245, 0) 0%,
+    //     #4974f5 100%
+    //   );
+    //   border-radius: 6px;
+    // }
   }
 }
 </style>
