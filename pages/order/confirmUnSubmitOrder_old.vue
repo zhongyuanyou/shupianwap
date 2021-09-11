@@ -22,14 +22,14 @@
     </sp-skeleton>
     <div v-if="!skeletonloading" class="allbox">
       <div class="data-content">
-        <div
-          v-for="(item, index) in settlementInfo.productVo"
-          :key="index"
-          class="list"
-        >
+        <div v-for="(item, index) in order.list" :key="index" class="list">
           <div class="right">
             <h1 class="tit">
-              {{ item.name }}
+              {{
+                item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
+                  ? item.salesGoodsSubVos[0].goodsSubName
+                  : item.name
+              }}
             </h1>
 
             <p v-if="item.skuExtInfo" class="goods-sku">
@@ -37,13 +37,13 @@
             </p>
 
             <p class="price">
-              <span v-if="isIntendedOrder"><b>面议</b></span>
+              <span v-if="order.orderType === 0"><b>面议</b></span>
               <span v-else
-                ><b>{{ item.price }}</b
+                ><b>{{ item.salesPrice }}</b
                 >元</span
               >
 
-              <i>{{ 'x' + item.goodsNumber }}</i>
+              <i>{{ 'x' + item.skuCount }}</i>
             </p>
           </div>
         </div>
@@ -58,7 +58,7 @@
           </div>
           <div class="deposit_content">
             定金尾款：定金 {{ settlementInfo.depositAmount }}元，<span
-              v-if="isIntendedOrder"
+              v-if="order.orderType === 0"
               >尾款 面议</span
             ><span v-else>尾款 {{ settlementInfo.orderBalanceMoney }}元</span>
           </div>
@@ -68,7 +68,7 @@
           <!-- 服务完结收费的意向单 -->
           <div class="deposit_tips">温馨提示：该订单先服务后收费</div>
           <div class="deposit_content">
-            <span v-if="isIntendedOrder">总价：面议</span>
+            <span v-if="order.orderType === 0">总价：面议</span>
             <span v-else>总价 {{ settlementInfo.orderTotalMoney }}元</span>
           </div>
         </div>
@@ -89,15 +89,17 @@
         <CellGroup>
           <Cell
             title="商品及服务总数"
-            :value="settlementInfo.orderSkuTotalCount || 0 + '件'"
+            :value="order.num || order.goodsTotal || 0 + '件'"
             value-class="black"
           />
           <Cell
             title="商品金额"
             :value="
-              isIntendedOrder
+              order.orderType === 0
                 ? '面议'
-                : (settlementInfo.orderTotalMoney || 0) + '元'
+                : (settlementInfo.orderTotalMoney ||
+                    order.orderPayableMoneys ||
+                    0) + '元'
             "
             value-class="black"
           />
@@ -141,18 +143,19 @@
 
         <p class="money">
           合计：
-          <span v-if="isIntendedOrder" class="money_price"
+          <span v-if="order.orderType === 0" class="money_price"
             ><b>面议</b></span
           ><span v-else class="money_price"
             ><b>{{
-              (settlementInfo.orderTotalMoney || 0) -
-              (settlementInfo.orderDiscountMoney || 0)
+              (settlementInfo.orderTotalMoney ||
+                order.orderPayableMoneys ||
+                0) - (settlementInfo.orderDiscountMoney || 0)
             }}</b
             >元</span
           >
           <span v-if="isDeposit" class="deposit_text"
             >（定金 {{ settlementInfo.depositAmount }}元，<span
-              v-if="isIntendedOrder"
+              v-if="order.orderType === 0"
               class="deposit_text"
               >尾款 面议</span
             ><span v-else class="deposit_text"
@@ -178,7 +181,7 @@
                 class="protocol_name"
                 @click.stop="goagr('protocol100008')"
                 >《薯片平台订单协议》</span
-              ><span v-if="settlementInfo.isSecuredTrade === 1">
+              ><span v-if="order.isSecuredTrade === 1">
                 和<span
                   class="protocol_name"
                   @click.stop="goagr('protocol100044')"
@@ -290,7 +293,7 @@ export default {
       radio: '', // 选中协议
       checkboxProtocol: [], // 选中协议
       order: {},
-
+      orderData: {},
       settlementInfo: {},
       // num: 0,
 
@@ -329,6 +332,7 @@ export default {
         text: '', // '在线支付',
       },
 
+      price: '',
       Orderform: {
         orderAgreementIds: [],
 
@@ -341,48 +345,38 @@ export default {
       skeletonloading: true,
       editShow: false,
       productList: [],
-
-      requestOnce: false,
     }
   },
   computed: {
     // 是否是服务商品
     // 其他的是交易/销售/资源
     isServerGoods() {
-      return this.settlementInfo?.orderProTypeNo === 'PRO_CLASS_TYPE_SERVICE'
+      return this.order?.orderProTypeNo === 'PRO_CLASS_TYPE_SERVICE'
     },
     // 是否先定金后服务
     isDeposit() {
-      return (
-        this.settlementInfo?.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
-      )
+      return this.order?.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
     },
     // 服务完结收费
     isServiceFinshed() {
-      return (
-        this.settlementInfo?.cusOrderPayType === 'PRO_PRE_SERVICE_FINISHED_PAY'
-      )
+      return this.order?.cusOrderPayType === 'PRO_PRE_SERVICE_FINISHED_PAY'
     },
     // 节点付费
     isNodes() {
-      return (
-        this.settlementInfo?.cusOrderPayType ===
-        'PRO_PRE_SERVICE_POST_PAY_BY_NODE'
-      )
+      return this.order?.cusOrderPayType === 'PRO_PRE_SERVICE_POST_PAY_BY_NODE'
     },
     // 先付款后服务
     isBeforePay() {
-      return this.settlementInfo?.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE'
+      return this.order?.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE'
     },
 
     // 是否是意向单
     isIntendedOrder() {
-      return this.settlementInfo.orderType !=='BUSINESS_ORDER'
-      // return this.isIntendedOrder
+      return this.order.orderType === 0
     },
     // 是否担保订单
     isSecuredTrade() {
-      return parseInt(this.settlementInfo.isSecuredTrade) === 1
+      return this.order.isSecuredTrade === 1
     },
 
     tradeMarkPriceSum() {
@@ -414,48 +408,114 @@ export default {
 
     asyncData() {
       this.skeletonloading = false
-      this.settlement() // 调用接口结算，和获取会员价
 
-      // orderApi
-      //   .getDetailByCusOrderId(
-      //     { axios: this.axios },
-      //     {
-      //       cusOrderId: this.$route.query.cusOrderId,
-      //       id: this.$route.query.cusOrderId,
+      orderApi
+        .getDetailByCusOrderId(
+          { axios: this.axios },
+          {
+            cusOrderId: this.$route.query.cusOrderId,
+            id: this.$route.query.cusOrderId,
 
-      //       isSkuDetailInfo: true,
-      //       isSkuImages: true,
-      //     }
-      //   )
-      //   .then((res) => {
-      //     console.log('res', res)
-      //     const data = res.data
+            isSkuDetailInfo: true,
+            isSkuImages: true,
+          }
+        )
+        .then((res) => {
+          console.log('res', res)
+          const data = res.data
 
-      //     if (data) {
-      //       data.list = []
+          if (data) {
+            data.list = []
+            // data.depositAmount = data.depositAmount / 100 || 0
+            // data.lastAount = data.lastAount / 100 || 0
+            // data.orderTotalMoney = data.cusOrderTotalMoney / 100 || 0
+            // data.orderPayableMoney = data.cusOrderPayableMoney / 100 || 0
+            this.order = data
+            this.orderData = res
 
-      //       this.order = data
+            let num = 0
 
-      //     } else {
-      //       this.$xToast.show('数据异常,请然后再试')
-      //       // setTimeout(() => {
-      //       //   this.$router.back(-1)
-      //       // }, 2000)
-      //     }
-      //   })
-      //   .catch(() => {
-      //     this.$xToast.show('服务器异常,请然后再试')
-      //     // setTimeout(() => {
-      //     //   this.$router.back(-1)
-      //     // }, 2000)
-      //   })
+            data.orderList.map((order) => {
+              this.order.orderType = order.orderType
+              this.order.orderProTypeNo = order.orderProTypeNo
+              order.orderSkuList.map((item) => {
+                this.order.isSecuredTrade = item.isSecuredTrade
+
+                item.skuPrice = item.skuPrice / 100 || 0
+
+                let sku = {}
+                let refConfig = {}
+                let categoryListLength = 0
+                if (item.skuDetailInfo) {
+                  const skuDetailInfo = JSON.parse(item.skuDetailInfo)
+                  console.log('skuDetailInfo', skuDetailInfo)
+
+                  sku = skuDetailInfo?.sku
+
+                  refConfig = sku?.refConfig
+
+                  if (
+                    item.classifyOneNo === 'FL20210425164438' &&
+                    skuDetailInfo?.tradeMark?.categoryList
+                  ) {
+                    categoryListLength =
+                      skuDetailInfo.tradeMark.categoryList.length
+                  }
+                }
+
+                const obj = {
+                  name: item.spuHideName || item.spuName,
+                  // classifyOneNo: item.classifyOneNo,
+                  // classifyTwoNo: item.classifyTwoNo,
+                  classifyThreeNo: item.classifyThreeNo,
+                  // classCode: item.classifyThreeNo,
+
+                  // classCodeName: sku.className,
+                  // goodsNo: sku.goodsNo,
+                  // version: sku.version,
+                  id: item.id,
+                  // refConfig,
+                  skuCount: item.skuCount,
+                  salesPrice: item.skuPrice,
+
+                  skuExtInfo: item.skuExtInfo,
+                  categoryListLength,
+                }
+                num += parseInt(item.skuCount) || 0
+                this.order.list.push(obj)
+              })
+            })
+
+            this.order.num = num // this.order.list.length
+            this.price = this.settlementInfo.orderTotalMoney
+
+            if (order.isSecuredTrade === 1) {
+              this.getProtocol('protocol100044')
+            }
+
+            this.setPayMethod()
+
+            this.settlement() // 调用接口结算，和获取会员价
+          } else {
+            this.$xToast.show('数据异常,请然后再试')
+            // setTimeout(() => {
+            //   this.$router.back(-1)
+            // }, 2000)
+          }
+        })
+        .catch(() => {
+          this.$xToast.show('服务器异常,请然后再试')
+          // setTimeout(() => {
+          //   this.$router.back(-1)
+          // }, 2000)
+        })
     },
 
     // 获取待结算价格
     settlement() {
       order
         .settle_order_by_unsubmit(
-         { axios: this.$axios },
+          {},
           {
             orderId: this.$route.query.cusOrderId,
             couponUseCode: this.couponInfo.selectedItem.couponUseCode,
@@ -465,42 +525,34 @@ export default {
         .then((result) => {
           console.log('result', result)
           this.settlementInfo = result
-
-          if (this.requestOnce === false) {
+          if (this.couponInfo.datalist.length === 0) {
             // 意向单不使用优惠券
             if (!this.isIntendedOrder) {
               this.getInitData(5) // 获取优惠券
               this.getInitData(6)
             }
-            if (this.settlementInfo.isSecuredTrade === 1) {
-              this.getProtocol('protocol100044')
-            }
-
-            this.setPayMethod()
-            this.requestOnce = true
           }
         })
         .catch((error) => {
-          console.log('settle_order_by_unsubmit',error)
-          this.$xToast.warning('服务器异常,请然后再试')
+          console.log(error)
+          this.$xToast.show('服务器异常,请然后再试')
         })
     },
 
     setPayMethod() {
-      if (parseInt(this.settlementInfo.isSecuredTrade) === 0) {
+      if (this.order.isSecuredTrade === 0) {
         this.payMethod.list = [
           { value: 'ORDER_PAY_MODE_ONLINE', text: '在线支付' },
           { value: 'ORDER_PAY_MODE_OFFLINE', text: '线下支付' },
         ]
-      } else if (parseInt(this.settlementInfo.isSecuredTrade) === 1) {
+      } else if (this.order.isSecuredTrade === 1) {
         this.payMethod.list = [
           { value: 'ORDER_PAY_MODE_SECURED', text: '担保交易' },
         ]
       }
-      // 选择优惠券重新赋值待优化
-      if (this.settlementInfo?.payType) {
+      if (this.order?.payType) {
         const pay = this.payMethod.list.find((item) => {
-          return item.value === this.settlementInfo?.payType
+          return item.value === this.order?.payType
         })
         if (pay && pay.value) {
           this.payMethod.text = pay.text
@@ -674,6 +726,23 @@ export default {
       })
       return arr
     },
+    getSaleMoneyByID(orderSaleId) {
+      const saleSkuListOrder = this.order.saleSkuList.filter((item) => {
+        return orderSaleId === item.orderSaleId
+      })
+      const listOrder = this.order.list.filter((item) => {
+        return orderSaleId === item.id
+      })
+      if (saleSkuListOrder && saleSkuListOrder.orderSaleMoneys) {
+        if (listOrder && listOrder.categoryListLength) {
+          return (
+            parseFloat(saleSkuListOrder.orderSaleMoneys) *
+            listOrder.categoryListLength
+          )
+        }
+      }
+      return order.orderSaleMoneys || ''
+    },
 
     //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
@@ -683,7 +752,7 @@ export default {
       const list = []
       this.settlementInfo.productVo.map((product) => {
         const orderSaleId = product.id
-
+        // const tradeMarkPrice = this.getSaleMoneyByID(orderSaleId)
         const item = {
           goodsId: orderSaleId,
           price: product.price / product.goodsNumber,
@@ -697,6 +766,23 @@ export default {
         }
         list.push(item)
       })
+
+      // for (let i = 0; i < this.settlementInfo.orderSkuList.length; i++) {
+      //   const orderSaleId = this.settlementInfo.orderSkuList[i].orderSaleId
+
+      //   const tradeMarkPrice = this.getSaleMoneyByID(orderSaleId)
+
+      //   const item = {
+      //     goodsId: orderSaleId,
+      //     price: this.settlementInfo.orderSkuList[i].skuPrice / 100,
+      //     goodsNum: this.settlementInfo.orderSkuList[i].skuCount || 1,
+      //     goodsClassCode: this.settlementInfo.orderSkuList[i].classifyThreeNo,
+      //   }
+      //   if (tradeMarkPrice) {
+      //     item.tradeMarkPrice = tradeMarkPrice
+      //   }
+      //   list.push(item)
+      // }
 
       coupon
         .findOrderCouponPage(
@@ -717,7 +803,7 @@ export default {
             this.couponInfo.datalist = result.marketingCouponLogList
             const sortList1 = this.getDisPrice(
               result.marketingCouponLogList,
-              this.settlementInfo.orderPayableMoney
+              this.order.cusOrderPayableMoney || this.order.cusOrderTotalMoney
             )
             const sortList = sortList1.sort((a, b) => {
               return (
@@ -726,6 +812,16 @@ export default {
               )
             })
             this.couponInfo.datalist = sortList
+            // if (sortList.length > 0) {
+            //   this.datalist = sortList
+            //   this.conpon = this.datalist[0]
+            //   this.$refs.conpon.radio = 0
+            //   this.$refs.conpon.checkarr = this.datalist[0]
+            //   this.$refs.conpon.num =
+            //     this.$refs.conpon.checkarr.marketingCouponVO.reducePrice
+            //   this.$refs.conpon.sum()
+            // } else {
+            // }
           } else {
             this.couponInfo.nolist = result.marketingCouponLogList
           }
@@ -757,6 +853,7 @@ export default {
     },
 
     conponChange(price, num, item) {
+      this.price = price
       this.couponInfo.couponPrice = num
       this.couponInfo.selectedItem = item || {}
       this.card.cardPrice = ''
@@ -764,6 +861,7 @@ export default {
       this.settlement()
     },
     cardChange(price, num, item) {
+      this.price = price
       this.couponInfo.couponPrice = ''
       this.couponInfo.selectedItem = {}
       this.card.cardPrice = num
