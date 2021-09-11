@@ -839,6 +839,8 @@ export default {
             plannerId: this.detailData.id,
             requireCode: this.requireCode,
             requireName: this.requireName,
+
+            customerId: this.$store.state.user.customerID || '',
           },
           (res) => {
             const { code } = res || {}

@@ -517,17 +517,23 @@ export default {
       console.log('mchUserId', mchUserId)
       try {
         if (this.isInApp) {
-          this.$appFn.dggBindHiddenPhone({ plannerId: mchUserId }, (res) => {
-            const { code } = res || {}
-            if (code !== 200) {
-              this.$xToast.show({
-                message: '拨号失败！',
-                duration: 1000,
-                forbidClick: true,
-                icon: 'toast_ic_remind',
-              })
+          this.$appFn.dggBindHiddenPhone(
+            {
+              plannerId: mchUserId,
+              customerId: this.$store.state.user.customerID || '',
+            },
+            (res) => {
+              const { code } = res || {}
+              if (code !== 200) {
+                this.$xToast.show({
+                  message: '拨号失败！',
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+              }
             }
-          })
+          )
           return
         }
 
