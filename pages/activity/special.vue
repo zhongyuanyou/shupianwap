@@ -12,13 +12,13 @@
       :background-color="`rgba(255,255,255,${headBkOpacity})`"
       @onHeightChange="onHeightChange"
     >
-      <Head
+      <Head2
         :class-state="ClassState"
         code="protocol100046"
         title="99特卖"
         :back="uPGoBack"
         :search="clickInputHandle"
-      ></Head>
+      ></Head2>
 
       <!-- <div class="search_container">
         <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
@@ -139,7 +139,7 @@ import activityMixin from '@/mixins/activityMixin.js'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 import Recommend from '~/components/activity/Recommend.vue'
 import Card from '~/components/activity/Card.vue'
-import Head from '~/components/activity/Head.vue'
+import Head2 from '~/components/activity/Head2.vue'
 import NoData from '@/components/activity/NoData.vue'
 import Classification from '@/components/activity/Classification.vue'
 export default {
@@ -155,7 +155,7 @@ export default {
     [PullRefresh.name]: PullRefresh,
 
     Recommend,
-    Head,
+    Head2,
     Card,
     NoData,
     Classification,
