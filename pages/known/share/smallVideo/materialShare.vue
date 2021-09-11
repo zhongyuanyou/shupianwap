@@ -95,7 +95,6 @@ import knownApi from '@/api/known'
 import { planner } from '@/api'
 import ShareModal from '@/components/common/ShareModal.vue'
 import PlannerBottom from '@/components/mustKnown/share/PlannerBottom.vue'
-import detailLinkMixin from '@/mixins/todetail'
 export default {
   name: 'KnownSmallVideo',
   components: {
@@ -106,7 +105,6 @@ export default {
     PlannerBottom,
     ShareModal,
   },
-  mixins: [detailLinkMixin],
   data() {
     return {
       id: '', // 分享id

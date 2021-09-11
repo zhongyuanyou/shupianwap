@@ -138,6 +138,7 @@ module.exports = {
     { src: '@/plugins/clear-emoij', ssr: false },
     { src: '@/plugins/sp-api', ssr: false },
     { src: '@/plugins/echarts', ssr: false },
+    { src: '@/plugins/to-goods-detail', ssr: false },
   ],
   router: {
     middleware: 'appDock',
