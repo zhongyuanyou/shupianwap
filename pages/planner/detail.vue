@@ -857,7 +857,7 @@ export default {
           areaCode: this.city.code,
           areaName: this.city.name,
           customerUserId: this.$store.state.user.userId,
-          customerId: this.$store.state.user.customerID,
+          customerId: this.$store.state.user.customerID || '',
           plannerId: this.detailData.id,
           customerPhone:
             this.$store.state.user.mainAccountFull ||
