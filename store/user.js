@@ -46,7 +46,6 @@ export const mutations = {
         // domain: 'shupian.cn',
       })
     }
-
     state.userInfo = data
     state.token = String(data.token)
     state.userId = String(data.userId)
