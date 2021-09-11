@@ -139,13 +139,14 @@ export default {
         const telData = await planner.newtel({
           areaCode: this.city.code,
           areaName: this.city.name,
-          customerUserId: this.$store.state.user.userId,
-          customerId: this.$store.state.user.customerID,
+          customerUserId: this.$store.state.user.userId || '',
+          customerId: this.$store.state.user.customerID || '',
 
           plannerId: mchUserId,
           customerPhone:
             this.$store.state.user.mainAccountFull ||
-            this.$cookies.get('mainAccountFull', { path: '/' }),
+            this.$cookies.get('mainAccountFull', { path: '/' }) ||
+            '',
           requireCode: '',
           requireName: '',
           // id: mchUserId,
