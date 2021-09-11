@@ -62,8 +62,8 @@ export default {
 <style lang="less" scoped>
 .tabs-box {
   font-family: PingFangSC-Medium, PingFangSC-Regular, PingFang SC;
-  height: 96px;
-  line-height: 96px;
+  height: 128px;
+  line-height: 128px;
   font-size: 0;
 
   ::v-deep .sp-sticky {
@@ -73,8 +73,8 @@ export default {
     justify-content: flex-start;
     align-items: center;
     // padding: 0px 20px;
-    height: 96px;
-    line-height: 96px;
+    height: 128px;
+    line-height: 128px;
     &.sp-sticky--fixed {
       border-radius: 0 0 0 0;
     }

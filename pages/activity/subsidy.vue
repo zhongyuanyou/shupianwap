@@ -197,14 +197,14 @@ export default {
   .content_container {
     position: relative;
     margin-top: -24px;
-    background: #f8f8f8;
+    // background: #f8f8f8;
     border-radius: 24px;
     overflow: hidden;
 
     .container-body {
       background: #f8f8f8;
       z-index: 1;
-      padding: 0 20px;
+      // padding: 0 20px;
       &::after {
         display: block;
         clear: both;
