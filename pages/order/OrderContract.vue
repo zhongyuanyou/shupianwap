@@ -2,50 +2,68 @@
   <div class="contract">
     <Head ref="head" title="附件协议-合同列表"> </Head>
     <div class="listbox">
-      <div v-for="(item, index) in list" :key="index" class="list">
-        <div class="head">
-          <h1>{{ item.contractName }}</h1>
-          <p v-if="item.status == 'STRUTS_YWC'" style="color: #222222">
-            已签署
-          </p>
-          <p v-if="item.status == 'STRUTS_QSZ'" style="color: #4974f5">
-            签署中
-          </p>
-          <p v-if="item.status == 'STRUTS_YJQ'" style="color: #222222">
-            已拒签
-          </p>
-          <p v-if="item.status == 'STRUTS_YYQ'" style="color: #222222">
-            已逾期
-          </p>
-          <p v-if="item.status == 'STRUTS_YZF'" style="color: #222222">
-            已作废
-          </p>
-          <p v-if="item.status == 'STRUTS_DGD'" style="color: #222222">
-            待归档
-          </p>
-        </div>
-        <div class="body">
-          <div class="cell">
-            <p class="title">合同编号：{{ item.documentNo }}</p>
-          </div>
-          <div class="cell">
-            <p class="title">合同金额：{{ item.money | filterMoney }}</p>
-          </div>
-          <div class="cell">
-            <p class="title">
-              合同类型：{{
-                item.contractTypeName ? item.contractTypeName : '-'
-              }}
+      <template v-if="list.length">
+        <div v-for="(item, index) in list" :key="index" class="list">
+          <div class="head">
+            <h1>{{ item.contractName }}</h1>
+            <p v-if="item.status == 'STRUTS_YWC'" style="color: #222222">
+              已签署
+            </p>
+            <p v-if="item.status == 'STRUTS_QSZ'" style="color: #4974f5">
+              签署中
+            </p>
+            <p v-if="item.status == 'STRUTS_YJQ'" style="color: #222222">
+              已拒签
+            </p>
+            <p v-if="item.status == 'STRUTS_YYQ'" style="color: #222222">
+              已逾期
+            </p>
+            <p v-if="item.status == 'STRUTS_YZF'" style="color: #222222">
+              已作废
+            </p>
+            <p v-if="item.status == 'STRUTS_DGD'" style="color: #222222">
+              待归档
             </p>
           </div>
-          <div class="cell">
-            <p class="title">签署时间：{{ item.signCompleteTime || '-' }}</p>
+          <div class="body">
+            <div class="cell">
+              <p class="title">合同编号：{{ item.documentNo }}</p>
+            </div>
+            <div class="cell">
+              <p class="title">合同金额：{{ item.money | filterMoney }}</p>
+            </div>
+            <div class="cell">
+              <p class="title">
+                合同类型：{{
+                  item.contractTypeName ? item.contractTypeName : '-'
+                }}
+              </p>
+            </div>
+            <div class="cell">
+              <p class="title">签署时间：{{ item.signCompleteTime || '-' }}</p>
+            </div>
+          </div>
+          <div class="btn" @click="goPreview(item)">
+            {{ item.status == 'STRUTS_QSZ' ? '签署合同' : '查看合同' }}
           </div>
         </div>
-        <div class="btn" @click="goPreview(item)">
-          {{ item.status == 'STRUTS_QSZ' ? '签署合同' : '查看合同' }}
+      </template>
+      <template v-else>
+        <div class="no-data">
+          <img
+            :src="
+              $resizeImg(
+                340,
+                340,
+                'https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png'
+              )
+            "
+            alt=""
+            srcset=""
+          />
+          <p>暂无合同</p>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -79,7 +97,7 @@ export default {
       if (!val) {
         return '暂无'
       } else {
-        return changeMoney.regFenToYuan(val) + '元'
+        return '¥' + changeMoney.regFenToYuan(val)
       }
     },
   },
@@ -207,6 +225,28 @@ export default {
         font-weight: 400;
         color: #222222;
         margin-left: auto;
+      }
+    }
+    .no-data {
+      width: 100%;
+      height: 100vh;
+      background: white;
+      position: fixed;
+      left: 0;
+      top: 0;
+      img {
+        width: 340px;
+        height: 340px;
+        margin: 20vh auto 40px auto;
+        display: block;
+      }
+      p {
+        height: 29px;
+        font-size: 30px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #1a1a1a;
+        text-align: center;
       }
     }
   }

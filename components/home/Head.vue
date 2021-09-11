@@ -7,7 +7,12 @@
       class="bg-area"
       :class="fiexdBannerData.length ? 'bg-area2' : 'bg-activity'"
     >
-      <span class="logo"></span>
+      <my-icon
+        name="logo"
+        size="0.36rem"
+        color="#f5f5f5"
+        class="sp_logo"
+      ></my-icon>
       <span class="span-2">薯片</span>
       <span class="span-3">·</span>
       <span class="span-4">企业服务大平台</span>
@@ -183,11 +188,9 @@ export default {
       font-size: 30px;
       font-weight: bold;
     }
-    .logo {
+    .sp_logo {
       width: 40px;
       height: 40px;
-      background: url(https://cdn.shupian.cn/sp-pt/wap/exhzqp9t6jk0000.png)
-        no-repeat center center;
       background-size: 100% 100%;
       position: absolute;
       left: 20px;

@@ -45,7 +45,12 @@
                     <div class="coupon_price">
                       {{ item.marketingCouponVO.reducePrice }}
                     </div>
-                    <div v-if="item.useType === 1" class="can_use">无门槛</div>
+                    <div
+                      v-if="item.marketingCouponVO.fullPrice"
+                      class="can_use"
+                    >
+                      无门槛
+                    </div>
                     <div v-else class="can_use">
                       满{{ item.marketingCouponVO.fullPrice }}元可用
                     </div>
@@ -55,7 +60,12 @@
                       {{ getDiscount(item.marketingCouponVO.discount) }}
                       <span>折</span>
                     </div>
-                    <div v-if="item.useType === 1" class="can_use">无门槛</div>
+                    <div
+                      v-if="item.marketingCouponVO.fullPrice"
+                      class="can_use"
+                    >
+                      无门槛
+                    </div>
                     <div v-else class="can_use">
                       满{{ item.marketingCouponVO.fullPrice }}元可用
                     </div>
@@ -131,7 +141,12 @@
                     <div class="coupon_price">
                       {{ item.marketingCouponVO.reducePrice }}
                     </div>
-                    <div v-if="item.useType === 1" class="can_use">无门槛</div>
+                    <div
+                      v-if="item.marketingCouponVO.fullPrice == 0"
+                      class="can_use"
+                    >
+                      无门槛
+                    </div>
                     <div v-else class="can_use">
                       满{{ item.marketingCouponVO.fullPrice }}元可用
                     </div>
@@ -141,7 +156,12 @@
                       {{ getDiscount(item.marketingCouponVO.discount) }}
                       <span>折</span>
                     </div>
-                    <div v-if="item.useType === 1" class="can_use">无门槛</div>
+                    <div
+                      v-if="item.marketingCouponVO.fullPrice == 0"
+                      class="can_use"
+                    >
+                      无门槛
+                    </div>
                     <div v-else class="can_use">
                       满{{ item.marketingCouponVO.fullPrice }}元可用
                     </div>
