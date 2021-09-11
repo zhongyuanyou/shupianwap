@@ -94,6 +94,12 @@ export default {
     async handleTel(mchUserId) {
       console.log('mchUserId', mchUserId)
       try {
+        this.$xToast.show({
+          message: '为了持续为您提供服务，规划师可能会主动联系您',
+          duration: 2000,
+          forbidClick: true,
+        })
+        await planner.awaitTip()
         if (this.isInApp) {
           this.$appFn.dggBindHiddenPhone(
             {
@@ -120,7 +126,10 @@ export default {
           customerUserId: this.$store.state.user.userId,
           customerId: this.$store.state.user.customerID || '',
           plannerId: mchUserId,
-          customerPhone: this.planerInfo.phone,
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }) ||
+            '',
           requireCode: '',
           requireName: '',
         }

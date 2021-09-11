@@ -88,11 +88,13 @@ export default {
     background-size: 100% auto;
     -moz-background-size: 100% auto;
     .left-back {
-      display: flex;
+      // display: flex;
 
-      align-items: center;
-      margin: 0 32px;
-      min-width: 150px;
+      // align-items: center;
+      // margin: 0 32px;
+      min-width: 104px;
+      text-align: center;
+
       .back_icon {
         width: 40px;
         height: 40px;
@@ -111,7 +113,6 @@ export default {
       font-family: PingFang SC;
       font-weight: bold;
       // color: #1a1a1a;
-      text-align: center;
 
       // max-width: 450px;
       overflow: hidden;
@@ -120,7 +121,6 @@ export default {
 
       div {
         flex: 1;
-        text-align: center;
       }
     }
     .right {

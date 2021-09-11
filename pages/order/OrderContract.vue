@@ -2,52 +2,50 @@
   <div class="contract">
     <Head ref="head" title="附件协议-合同列表"> </Head>
     <div class="listbox">
-      <template v-for="(item, index) in list">
-        <div v-if="showContract(item.status)" :key="index" class="list">
-          <div class="head">
-            <h1>{{ item.contractName }}</h1>
-            <p v-if="item.status == 'STRUTS_YWC'" style="color: #222222">
-              已签署
-            </p>
-            <p v-if="item.status == 'STRUTS_QSZ'" style="color: #4974f5">
-              签署中
-            </p>
-            <p v-if="item.status == 'STRUTS_YJQ'" style="color: #222222">
-              已拒签
-            </p>
-            <p v-if="item.status == 'STRUTS_YYQ'" style="color: #222222">
-              已逾期
-            </p>
-            <p v-if="item.status == 'STRUTS_YZF'" style="color: #222222">
-              已作废
-            </p>
-            <p v-if="item.status == 'STRUTS_DGD'" style="color: #222222">
-              待归档
+      <div v-for="(item, index) in list" :key="index" class="list">
+        <div class="head">
+          <h1>{{ item.contractName }}</h1>
+          <p v-if="item.status == 'STRUTS_YWC'" style="color: #222222">
+            已签署
+          </p>
+          <p v-if="item.status == 'STRUTS_QSZ'" style="color: #4974f5">
+            签署中
+          </p>
+          <p v-if="item.status == 'STRUTS_YJQ'" style="color: #222222">
+            已拒签
+          </p>
+          <p v-if="item.status == 'STRUTS_YYQ'" style="color: #222222">
+            已逾期
+          </p>
+          <p v-if="item.status == 'STRUTS_YZF'" style="color: #222222">
+            已作废
+          </p>
+          <p v-if="item.status == 'STRUTS_DGD'" style="color: #222222">
+            待归档
+          </p>
+        </div>
+        <div class="body">
+          <div class="cell">
+            <p class="title">合同编号：{{ item.documentNo }}</p>
+          </div>
+          <div class="cell">
+            <p class="title">合同金额：{{ item.money | filterMoney }}</p>
+          </div>
+          <div class="cell">
+            <p class="title">
+              合同类型：{{
+                item.contractTypeName ? item.contractTypeName : '-'
+              }}
             </p>
           </div>
-          <div class="body">
-            <div class="cell">
-              <p class="title">合同编号：{{ item.documentNo }}</p>
-            </div>
-            <div class="cell">
-              <p class="title">合同金额：{{ item.money | filterMoney }}</p>
-            </div>
-            <div class="cell">
-              <p class="title">
-                合同类型：{{
-                  item.contractTypeName ? item.contractTypeName : '-'
-                }}
-              </p>
-            </div>
-            <div class="cell">
-              <p class="title">签署时间：{{ item.signCompleteTime || '-' }}</p>
-            </div>
-          </div>
-          <div class="btn" @click="goPreview(item)">
-            {{ item.status == 'STRUTS_QSZ' ? '签署合同' : '查看合同' }}
+          <div class="cell">
+            <p class="title">签署时间：{{ item.signCompleteTime || '-' }}</p>
           </div>
         </div>
-      </template>
+        <div class="btn" @click="goPreview(item)">
+          {{ item.status == 'STRUTS_QSZ' ? '签署合同' : '查看合同' }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -97,18 +95,6 @@ export default {
     this.getorder()
   },
   methods: {
-    showContract(val) {
-      // 草稿状态, 审核状态不显示,其余状态均显示合同
-      // STRUTS_CG STRUTS_SHZ_SH 这两个状态是为了匹配以前数据,草稿和商户平台审核以前有,现在没有这两个状态了
-      if (
-        val === 'STRUTS_CG' ||
-        val === 'STRUTS_SHZ' ||
-        val === 'STRUTS_SHZ_SH'
-      ) {
-        return false
-      }
-      return true
-    },
     getorder() {
       contractApi
         .contartlist(
@@ -116,6 +102,7 @@ export default {
           {
             cusUserId: this.$store.state.user.userId, // 用户id
             businessId: this.order.orderId, // 订单id
+            statusList: ['STRUTS_QSZ', 'STRUTS_YWC'], // 签署中,已完成
             page: this.page,
             limit: this.limit,
           }
