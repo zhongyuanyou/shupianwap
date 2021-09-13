@@ -34,13 +34,10 @@
     </div>
     <div class="title_bottom">
       <p
-        v-if="
-          sellingGoodsData.priceType === 'PRO_FLOATING_PRICE' &&
-          sellingGoodsData.salesPrice
-        "
+        v-if="sellingGoodsData.priceType === 'PRO_FLOATING_PRICE'"
         class="title_bottom_money"
       >
-        {{ sellingGoodsData.salesPrice }}%
+        {{ sellingGoodsData.salesPrice || sellingGoodsData.price }}%
         <span>服务费</span>
       </p>
       <span v-else class="title_bottom_money">{{

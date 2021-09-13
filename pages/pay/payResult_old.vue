@@ -110,12 +110,10 @@
             </p>
             <div class="goods-price">
               <span
-                v-if="
-                  item.priceType === 'PRO_FLOATING_PRICE' && item.salesPrice
-                "
+                v-if="item.priceType === 'PRO_FLOATING_PRICE'"
                 class="money"
               >
-                {{ item.salesPrice }}%
+                {{ item.salesPrice || item.price }}%
                 <span class="small-value">服务费</span>
               </span>
               <span
