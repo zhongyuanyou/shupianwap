@@ -66,7 +66,36 @@ export default ({ app, store }) => {
     })
   })
   app.router.beforeEach((to, from, next) => {
-    console.log('to.name', to.name)
+    if (to.name === 'detail') {
+      // 跳转至服务商品详情页路由重定向处理
+      if (to.query && to.query.classCodeOne) {
+        const code1 = to.query.classCodeOne
+        let detailUrl = '/detail'
+        if (code1 === 'FL20210425164438' || code1 === 'FL20210425164496') {
+          // 商标或专利跳转至知识产权详情页
+          detailUrl = '/detail/server/zscq'
+        } else if (code1 === 'FL20210425164558') {
+          // 融资
+          detailUrl = '/detail/server/financing'
+        } else if (
+          code1 === 'FL20210604312000' ||
+          code1 === 'FL20210428166370'
+        ) {
+          // 法律
+          detailUrl = '/detail/server/law'
+        } else if (
+          code1 === 'FL20210526292003' ||
+          code1 === 'FL20210425164016'
+        ) {
+          // IT 互联网
+          detailUrl = '/detail/server/internet'
+        }
+        next({
+          path: detailUrl,
+          query: { productId: to.query.productId },
+        })
+      }
+    }
     if (process.client) {
       const loginRoutePath = '/login' // 登录路由
       const defaultRoutePath = '/' // 首页路由

@@ -48,12 +48,6 @@ export default {
     CaseExamplesList,
   },
   mixins: [imHandle],
-  data() {
-    return {
-      showCase: false,
-      caseData: {},
-    }
-  },
   props: {
     // 钻展规划师
     plannerDetail: {
@@ -62,6 +56,12 @@ export default {
         return {}
       },
     },
+  },
+  data() {
+    return {
+      showCase: false,
+      caseData: {},
+    }
   },
   // created() {
   //   this.caseData =
