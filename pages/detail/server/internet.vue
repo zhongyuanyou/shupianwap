@@ -3,55 +3,8 @@
     <!-- 委托模块 -->
     <ShareModal />
     <div class="template">
-      <!--S 导航栏-->
-      <sp-sticky
-        z-index="5"
-        :class="{
-          scroTopStyle: Boolean(opacity),
-        }"
-        @scroll="scrollHandle"
-      >
-        <sp-top-nav-bar
-          ellipsis
-          :background="`rgba(255,255,255,0)`"
-          @on-click-left="onClickLeft"
-        >
-          <template #left>
-            <div v-if="!isShare">
-              <my-icon name="nav_ic_back" size="0.4rem" color="#fff"></my-icon>
-            </div>
-          </template>
-          <template #right>
-            <div>
-              <my-icon
-                :class="sellingDetail.isSave ? 'icon-red' : ''"
-                style="margin-right: 0.36rem"
-                :name="sellingDetail.isSave ? 'shoucang_mian' : 'shoucang'"
-                size="0.4rem"
-                :color="sellingDetail.isSave ? '#ec5330' : '#fff'"
-                @click.native="handleClickSave"
-              />
-            </div>
-            <div>
-              <my-icon
-                style="margin-right: 0.36rem"
-                name="nav_ic_shop"
-                size="0.4rem"
-                color="#fff"
-                @click.native="addCart"
-              />
-            </div>
-            <div>
-              <my-icon
-                name="nav_ic_share"
-                size="0.4rem"
-                color="#fff"
-                @click.native="onClickRight"
-              />
-            </div>
-          </template>
-        </sp-top-nav-bar>
-      </sp-sticky>
+      <!-- header 头 -->
+      <PlannerHeader />
       <!--E 导航栏-->
       <!--S banner-->
       <Banner :images="imgFileIdPaths" />
@@ -129,10 +82,10 @@ import TcPlanners from '~/components/detail/TcPlanners1.vue'
 import ServiceDetail from '~/components/detail/ServiceDetail.vue'
 import RelatedRecommend from '~/components/detail/RelatedRecommend.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
-import MyIcon from '~/components/common/myIcon/MyIcon'
 import CaseNew from '~/components/detail/CaseNew'
 import PageMidAd from '~/components/detail/server/PageMidAd'
 import getUserSign from '~/utils/fingerprint'
+import PlannerHeader from '~/components/detail/server/PlannerHeader'
 import { productDetailsApi, recommendApi, shopApi } from '~/api'
 import { copyToClipboard } from '~/utils/common'
 import imHandle from '~/mixins/imHandle'
@@ -155,12 +108,12 @@ export default {
     RelatedRecommend,
     bottomBar,
     // MemberPrice,
-    MyIcon,
     CommentBox,
     // OrderCase,
     OrderDynamic,
     CaseNew,
     PageMidAd,
+    PlannerHeader,
   },
   mixins: [imHandle, detailMixin],
   layout: 'keepAlive',
@@ -168,24 +121,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.scroTopStyle {
-  ::v-deep.sp-sticky {
-    border: 1px solid #f4f4f4;
-    .sp-top-nav-bar {
-      background-color: #fff !important;
-      .spiconfont {
-        color: #1a1a1a !important;
-      }
-      // #icon-red {
-      //   color: #4974f5 !important;
-      // }
-      .icon-red {
-        color: #ec5330 !important;
-      }
-    }
-  }
-}
-
 .template {
   width: 100%;
   height: 100%;
