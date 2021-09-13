@@ -1,15 +1,9 @@
 <template>
   <div class="container">
-    <!-- <div
-      v-if="isInApp"
-      class="app_header_fill"
-      style="height: 0.6rem; background-color: #1e1e1e"
-    ></div> -->
-
     <HeadWrapper
       :fill="false"
-      :line="ClassState == 0 ? true : false"
-      :background-color="`rgba(255,255,255,${headBkOpacity})`"
+      :line="false"
+      :background-color="`rgba(19,29,61,${headBkOpacity})`"
       @onHeightChange="onHeightChange"
     >
       <Head2
@@ -27,30 +21,10 @@
 
     <div ref="fill_container" class="img_container">
       <img width="100%" :src="imageHead" alt="" />
-      <!-- <div
-        class="rule"
-        :class="{ rule_in_app: isInApp }"
-        @click="$router.push('/login/protocol?categoryCode=' + ruleCode)"
-      >
-        规则
-      </div> -->
-      <div v-if="isTimerShow" class="count-down">
-        <div class="down-time">
-          <div>距本场结束还剩</div>
-          <div class="time">{{ time.day }}</div>
-          <div>天</div>
-          <div class="time">{{ time.hour }}</div>
-          <div>:</div>
-          <div class="time">{{ time.min }}</div>
-          <div>:</div>
-          <div class="time">{{ time.sec }}</div>
-        </div>
-      </div>
     </div>
 
     <div class="content_container">
       <Recommend
-        title="爆款单品"
         :parse-price="parsePrice"
         :list="recommendProductList"
         @jump="
@@ -92,6 +66,7 @@
                   :end-time="endTime"
                   :item="item"
                   :parse-price="parsePrice"
+                  :first="index == 0"
                   :last="activityProductList.length - 1 == index"
                   @click.native="jumpProductDetail(item)"
                 ></Card>
@@ -213,52 +188,6 @@ export default {
     position: relative;
     min-height: 300px;
     background: #f8f8f8;
-    .count-down {
-      position: absolute;
-      top: 74.8%;
-      transform: translate(0, -50%);
-      width: 100%;
-
-      font-size: 24px;
-      color: #ffedcb;
-      letter-spacing: 0;
-      line-height: 24px;
-
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-
-      .down-time {
-        font-size: 24px;
-        font-family: PingFangSC-Medium, PingFang SC;
-
-        color: #ffedcb;
-        line-height: 24px;
-
-        letter-spacing: 2px;
-        display: flex;
-        align-items: center;
-
-        .time {
-          // min-width: 36px;
-
-          padding: 0 5px;
-          min-width: 36px;
-          height: 36px;
-          line-height: 36px;
-          background-image: linear-gradient(139deg, #7e9fff 0%, #4974f5 100%);
-          border-radius: 4px;
-
-          font-family: Bebas;
-          font-size: 24px;
-          color: #fff;
-          text-align: center;
-          margin: 0 8px;
-          letter-spacing: 0;
-        }
-      }
-    }
 
     .rule {
       // header的z-index是999
