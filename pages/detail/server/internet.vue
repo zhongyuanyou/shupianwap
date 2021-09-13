@@ -1,7 +1,7 @@
 <template>
   <section>
+    <!-- 委托模块 -->
     <ShareModal />
-    <!-- <DetailTemplate scene-id1="app-fwcpxq-01" scene-id2="app-jycpxq-02" /> -->
     <div class="template">
       <!--S 导航栏-->
       <sp-sticky
