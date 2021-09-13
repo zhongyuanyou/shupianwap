@@ -11,7 +11,9 @@
       <sp-top-nav-bar
         ellipsis
         :background="`rgba(255,255,255,0)`"
-        :style="{ padding:isInApp? `${appInfo.statusBarHeight}px 0 0 0`:'0' }"
+        :style="{
+          padding: isInApp ? `${appInfo.statusBarHeight}px 0 0 0` : '0',
+        }"
         @on-click-left="onClickLeft"
       >
         <template #left>
@@ -80,7 +82,7 @@
     <!--E 第五板块 推荐规划师-->
     <!--S  精选案例-->
     <!-- <OrderCase></OrderCase> -->
-    <CaseNew />
+    <CaseNew :planner-detail="tcPlannerBooth" />
     <!--E  精选案例-->
     <!--S 第十板块 服务详情-->
     <ServiceDetail

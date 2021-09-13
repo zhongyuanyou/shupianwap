@@ -64,7 +64,7 @@
       <ServeDetailTitle />
       <!--E 第一板块-->
       <!-- 页面中部广告位 -->
-      <PageMidAd />
+      <PageMidAd :ad-location-code="'ad100399'" />
       <!-- <div class="banner file_box">
         <span class="text1">
           <sp-image
@@ -74,11 +74,11 @@
         <span class="text1">新人可享受500元律师费返还优惠</span>
       </div> -->
       <!--S 第二板块 领券 SKU-->
-      
+
       <VouchersSelect ref="sku" :planner-detail="tcPlannerBooth" />
       <!--E 第二板块 领券 SKU-->
       <!--S 第三板块 包含项目-->
-      <ContainProject />
+      <!-- <ContainProject /> -->
       <!--E 第三板块 包含项目-->
       <!--S 第三板块 包含服务-->
       <ContainContent />
@@ -93,7 +93,7 @@
       <!--E 第五板块 推荐规划师-->
       <!--S  精选案例-->
       <!-- <OrderCase></OrderCase> -->
-      <CaseNew />
+      <CaseNew :planner-detail="tcPlannerBooth" />
       <!--E  精选案例-->
       <!--S 第十板块 服务详情-->
       <ServiceDetail
@@ -133,7 +133,7 @@ import CommentBox from '~/components/detail/CommentBox.vue'
 import OrderCase from '~/components/detail/OrderCase.vue'
 import OrderDynamic from '~/components/detail/OrderDynamic.vue'
 import VouchersSelect from '~/components/detail/server/NewVouchersSelect.vue'
-import ContainProject from '~/components/detail/ContainProject.vue'
+// import ContainProject from '~/components/detail/ContainProject.vue'
 import ContainContent from '~/components/detail/ContainContent.vue'
 import TcPlanners from '~/components/detail/TcPlanners1.vue'
 import ServiceDetail from '~/components/detail/ServiceDetail.vue'
@@ -141,7 +141,7 @@ import RelatedRecommend from '~/components/detail/RelatedRecommend.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import CaseNew from '~/components/detail/CaseNew'
-import PageMidAd from '~/components/detail/PageMidAd'
+import PageMidAd from '~/components/detail/server/PageMidAd'
 import getUserSign from '~/utils/fingerprint'
 import { productDetailsApi, recommendApi, shopApi } from '~/api'
 import { copyToClipboard } from '~/utils/common'
@@ -159,7 +159,7 @@ export default {
     Banner,
     ServeDetailTitle,
     VouchersSelect,
-    ContainProject,
+    // ContainProject,
     ContainContent,
     TcPlanners,
     ServiceDetail,

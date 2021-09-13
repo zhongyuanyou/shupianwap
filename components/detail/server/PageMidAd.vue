@@ -38,7 +38,7 @@ export default {
     }
   },
   mounted() {
-    this.getAdlist('ad100399')
+    this.getAdlist(this.adLocationCode || 'ad100399')
   },
   methods: {
     getAdlist(transAdCode) {
