@@ -111,11 +111,11 @@
             <div class="goods-price">
               <span
                 v-if="
-                  item.priceType === 'PRO_FLOATING_PRICE' && item.plannerRatio
+                  item.priceType === 'PRO_FLOATING_PRICE' && item.salesPrice
                 "
                 class="money"
               >
-                {{ item.plannerRatio / 100 }}%
+                {{ item.salesPrice }}%
                 <span class="small-value">服务费</span>
               </span>
               <span

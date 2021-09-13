@@ -31,7 +31,7 @@
             </p>
             <div class="label">
               <span
-                v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length>1"
+                v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1"
                 class="label_item desc-label-tc"
                 >套餐</span
               >
@@ -54,12 +54,10 @@
               </p>
             </div>
             <p
-              v-if="
-                item.priceType === 'PRO_FLOATING_PRICE' && item.plannerRatio
-              "
+              v-if="item.priceType === 'PRO_FLOATING_PRICE' && item.salesPrice"
               class="money"
             >
-              {{ item.plannerRatio / 100 }}%
+              {{ item.salesPrice }}%
               <span>服务费</span>
             </p>
             <p v-else class="money">

@@ -36,11 +36,11 @@
       <p
         v-if="
           sellingGoodsData.priceType === 'PRO_FLOATING_PRICE' &&
-          sellingGoodsData.plannerRatio
+          sellingGoodsData.salesPrice
         "
         class="title_bottom_money"
       >
-        {{ sellingGoodsData.plannerRatio / 100 }}%
+        {{ sellingGoodsData.salesPrice }}%
         <span>服务费</span>
       </p>
       <span v-else class="title_bottom_money">{{

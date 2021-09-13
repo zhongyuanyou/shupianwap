@@ -129,11 +129,11 @@
                     <span
                       v-if="
                         item.priceType === 'PRO_FLOATING_PRICE' &&
-                        item.plannerRatio
+                        item.salesPrice
                       "
                       class="big-value"
                     >
-                      {{ item.plannerRatio / 100 }}%
+                      {{ item.salesPrice }}%
                       <span>服务费</span>
                     </span>
                     <span class="big-value"
