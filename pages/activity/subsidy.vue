@@ -2,8 +2,8 @@
   <div class="container">
     <HeadWrapper
       :fill="false"
-      :line="ClassState == 0 ? true : false"
-      :background-color="`rgba(255,255,255,${headBkOpacity})`"
+      :line="false"
+      :background-color="`rgba(19,29,61,${headBkOpacity})`"
       @onHeightChange="onHeightChange"
     >
       <Head
@@ -21,12 +21,13 @@
 
     <div ref="fill_container" class="img_container">
       <img width="100%" :src="imageHead" alt="" />
-      <!-- :list="recommendProductList" -->
+      <!--
+        本页面未使用推荐商品，从分类的列表取前三个商品展示
+        :list="recommendProductList" -->
       <Recommend
         class="recommend"
-        title="爆款单品"
         :parse-price="parsePrice"
-        :list="[{}, {}]"
+        :list="RecommendList"
         @jump="
           (item) => {
             jumpProductDetail(item)
@@ -67,6 +68,7 @@
                 <Card
                   v-for="(item, index) in activityProductList"
                   :key="index"
+                  :first="index == 0"
                   :last="activityProductList.length - 1 == index"
                   :item="item"
                   :parse-price="parsePrice"
@@ -132,6 +134,12 @@ export default {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
       appInfo: (state) => state.app.appInfo,
+
+      RecommendList() {
+        if (this.activityProductList.length >= 3) {
+          return this.activityProductList.slice(0, 3)
+        }
+      },
     }),
     userInfo() {
       return this.$store.state.user
@@ -194,24 +202,27 @@ export default {
     position: relative;
     min-height: 300px;
     background: #f8f8f8;
-
+    width: 100%;
+    overflow: hidden;
     .recommend {
       position: absolute;
       bottom: 21%;
       //bottom: 242px;
-      width: 100%;
+      // width: 100%;
+      left: -40px;
+      right: -40px;
     }
   }
 
   .content_container {
     position: relative;
-    margin-top: -24px;
+    margin-top: -96px;
     // background: #f8f8f8;
     border-radius: 24px;
     overflow: hidden;
 
     .container-body {
-      background: #f8f8f8;
+      background: #fff;
       z-index: 1;
       // padding: 0 20px;
       &::after {
@@ -220,6 +231,7 @@ export default {
       }
       .body-content {
         min-height: 80vh;
+        padding: 0 20px;
       }
     }
   }
