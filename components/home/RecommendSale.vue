@@ -127,16 +127,22 @@
                   > -->
                   <span class="sales-proce">
                     <span
-                      v-if="
-                        item.priceType === 'PRO_FLOATING_PRICE' &&
-                        item.plannerRatio
+                      v-if="item.priceType === 'PRO_FLOATING_PRICE'"
+                      class="big-value"
+                    >
+                      {{ item.salesPrice || item.price }}%
+                      <span>服务费</span>
+                    </span>
+                    <span
+                      v-else-if="
+                        item.refConfig &&
+                        item.refConfig.taskType === 'PRO_WANT_ORDER_DIGEST'
                       "
                       class="big-value"
                     >
-                      {{ item.plannerRatio / 100 }}%
-                      <span>服务费</span>
+                      面议
                     </span>
-                    <span class="big-value"
+                    <span v-else class="big-value"
                       >{{ item.salesPrice || item.price || '面议' }}元</span
                     >
                   </span>
