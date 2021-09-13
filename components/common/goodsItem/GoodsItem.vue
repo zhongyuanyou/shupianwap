@@ -212,7 +212,7 @@ export default {
     jumpUrl() {
       if (this.goodstype.type === 'serve') {
         this.$router.push(
-          `/detail/serviceDetails?productId=${this.itemData.id}`
+          `/detail?productId=${this.itemData.id}`
         )
       } else {
         this.$router.push(

@@ -33,7 +33,7 @@
       <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
     </div>
     <!--    多个服务商品时不显示SKU-->
-    <div
+    <!-- <div
       v-if="goodsSubDetailsName.length === 1 && skuResult.length > 0"
       class="cell"
       @click="openSku"
@@ -44,6 +44,24 @@
           <span class="hide">{{
             goodsSubDetailsName[0]['goodsSubDetailsName']
           }}</span>
+        </div>
+      </div>
+      <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
+    </div> -->
+    <div
+      v-if="sellingGoodsData.salesGoodsSubVos.length"
+      class="cell"
+      @click="openServeItem"
+    >
+      <div class="cell_left">
+        <div class="label">服务</div>
+        <div class="content">
+          <span class="hide"
+            >{{
+              sellingGoodsData.salesGoodsSubVos[0].productName ||
+              sellingGoodsData.salesGoodsSubVos[0].goodsSubName
+            }},{{ skuResult.length && skuResult[0].attrValList[0].name }}</span
+          >
         </div>
       </div>
       <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
@@ -158,6 +176,41 @@
         </div>
       </div>
     </sp-popup>
+    <!-- 基础商品服务项弹窗 -->
+    <sp-popup
+      v-model="serveModalShow"
+      round
+      closeable
+      padding
+      position="bottom"
+      :style="{ padding: '0.4rem 0.4rem' }"
+      class="serve_popup"
+    >
+      <p class="pop_title">服务项目</p>
+      <div
+        v-for="(subItem, subIndex) in sellingGoodsData.salesGoodsSubVos"
+        :key="subIndex"
+        class="goods_sub_item"
+      >
+        <div class="goods_name_area">
+          <p class="goods_sub_name">{{ subItem.goodsSubName }}</p>
+          <p class="goods_sub_sku">
+            {{ skuResult.length && skuResult[subIndex].attrValList[0].name }}
+          </p>
+        </div>
+        <div v-if="subItem.serviceItems.length" class="serve_list">
+          <p class="serve_name">服务项目</p>
+          <p
+            v-for="(serverItem, serverIndex) in subItem.serviceItems"
+            :key="serverIndex"
+            class="goods_sub_server"
+          >
+            <span>{{ serverIndex + 1 }}、</span>
+            <span>{{ serverItem.serviceItemName }}</span>
+          </p>
+        </div>
+      </div>
+    </sp-popup>
     <sp-popup
       v-model="skuShow"
       round
@@ -265,10 +318,11 @@ export default {
   },
   data() {
     return {
+      serveModalShow: false,
       serviceTag: [
-        { text: '服务保持踩踩踩', title: '实名认证律师' },
-        { text: '服务保持踩踩踩', title: '未履约可退款' },
-        { text: '服务保持踩踩踩', title: '不满意可申诉' },
+        // { text: '服务保持踩踩踩', title: '实名认证律师' },
+        // { text: '服务保持踩踩踩', title: '未履约可退款' },
+        // { text: '服务保持踩踩踩', title: '不满意可申诉' },
       ],
       type: 1, // 1 加入购物车、立即购买  2 加入购物车  3 立即购买
       vouchers: '',
@@ -504,6 +558,9 @@ export default {
     },
     openSku() {
       this.skuShow = true
+    },
+    openServeItem() {
+      this.serveModalShow = true
     },
     //  获取SKU属性
     async getServiceAttr(goodsSubDetailsName) {
@@ -1042,6 +1099,55 @@ export default {
         span {
           color: #4974f5;
         }
+      }
+    }
+  }
+}
+// 服务项弹窗
+.serve_popup {
+  font-size: 24px;
+  .pop_title {
+    width: 100%;
+    font-size: 40px;
+    color: #1a1a1a;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+  }
+  .goods_sub_item {
+    margin-top: 40px;
+    width: 100%;
+    .goods_name_area {
+      background: #f8f8f8;
+      border-radius: 8px;
+      padding: 10px 20px;
+      .goods_sub_name {
+        font-size: 28px;
+        color: #222222;
+        line-height: 38px;
+        margin-bottom: 10px;
+      }
+      .goods_sub_sku {
+        font-size: 26px;
+        color: #555555;
+        line-height: 36px;
+      }
+    }
+    .serve_list {
+      padding: 0 20px;
+      margin-top: 20px;
+      .serve_name {
+        font-size: 26px;
+        color: #555555;
+        line-height: 36px;
+      }
+      .goods_sub_server {
+        margin-top: 10px;
+        font-size: 24px;
+        color: #999999;
+        line-height: 34px;
       }
     }
   }
