@@ -42,25 +42,40 @@
               name="nav_ic_share"
               size="0.4rem"
               color="#fff"
-              @click.native="onClickRight"
+              @click.native="handleShare"
             />
           </div>
         </template>
       </sp-top-nav-bar>
     </sp-sticky>
+    <sp-share-sheet
+      v-model="showShare"
+      title="立即分享给好友"
+      :options="shareOptions"
+      @select="onSelect"
+    />
   </section>
 </template>
 
 <script>
+import { Sticky, TopNavBar, ShareSheet } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
+import { copyToClipboard } from '~/utils/common'
 import { shopApi } from '~/api'
 
 export default {
   name: 'GoodDetailPlannerHeader',
+  components: {
+    [TopNavBar.name]: TopNavBar,
+    [Sticky.name]: Sticky,
+    [ShareSheet.name]: ShareSheet,
+  },
   data() {
     return {
       scrollTopY: 0, // 距离顶部移动距离
       isShare: false, // 判断是否从分享页面过来,有分享页面标识;如果有,则不显示回退标识
+      showShare: false, // 是否弹起分享组件
+      shareOptions: [{ name: '复制链接', icon: 'link' }],
     }
   },
   computed: {
@@ -168,6 +183,17 @@ export default {
           console.log('err', err)
           this.$xToast.error('收藏失败')
         })
+    },
+    handleShare() {
+      this.showShare = true
+    },
+    onSelect() {
+      const result = copyToClipboard(location.href)
+      if (result) {
+        this.$xToast.success('链接复制成功')
+        return
+      }
+      this.$xToast.error('链接复制失败,请重试')
     },
   },
 }

@@ -3,13 +3,8 @@
     <!-- 委托模块 -->
     <ShareModal />
     <div class="template">
-      <!-- header 头 -->
+      <!-- header-->
       <PlannerHeader />
-      <!--E 导航栏-->
-      <!--S banner-->
-      <Banner :images="imgFileIdPaths" />
-      <!--S banner-->
-
       <!--start 会员价 -->
       <!-- <MemberPrice></MemberPrice> -->
 
@@ -68,9 +63,8 @@
 
 <script>
 import { mapActions } from 'vuex'
-import { Sticky, List, TopNavBar, ShareSheet } from '@chipspc/vant-dgg'
+import { List, TopNavBar } from '@chipspc/vant-dgg'
 import ShareModal from '@/components/common/ShareModal.vue'
-import Banner from '~/components/detail/Banner.vue'
 import Title from '~/components/detail/Title1.vue'
 import CommentBox from '~/components/detail/CommentBox.vue'
 import OrderCase from '~/components/detail/OrderCase.vue'
@@ -95,10 +89,7 @@ export default {
   components: {
     ShareModal,
     [TopNavBar.name]: TopNavBar,
-    [Sticky.name]: Sticky,
     [List.name]: List,
-    [ShareSheet.name]: ShareSheet,
-    Banner,
     Title,
     VouchersSelect,
     // ContainProject,
