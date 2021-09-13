@@ -74,7 +74,7 @@
         <span class="text1">新人可享受500元律师费返还优惠</span>
       </div> -->
       <!--S 第二板块 领券 SKU-->
-      <VouchersSelect ref="sku" />
+      <VouchersSelect ref="sku" :planner-detail="tcPlannerBooth" />
       <!--E 第二板块 领券 SKU-->
       <!--S 第三板块 包含项目-->
       <ContainProject />

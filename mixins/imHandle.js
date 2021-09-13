@@ -8,6 +8,7 @@ import { Toast } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import config from '@/config'
 import { userinfoApi, afterSaleApi } from '@/api'
+
 export default {
   computed: {
     ...mapState({
@@ -17,6 +18,7 @@ export default {
       userType: (state) => state.user.userType,
       imExample: (state) => state.im.imExample, // IM 实例
       isApplets: (state) => state.app.isApplets, // 是否在小程序中
+      city: (state) => state.city.currentCity,
     }),
   },
   methods: {
@@ -325,6 +327,56 @@ export default {
           }
         })
       }
+    },
+    /**
+     * @author tangdaibing
+     * @description: IM 创建与发送商品模板消息
+     * @param mchUserId 规划师商户用户id
+     * @param type 规划师用户类型
+     * @param goodsInfo 商品信息
+     * @since 2021/09/13
+     */
+    // 调起IM
+    // 发送模板消息(带图片)
+    sendTemplateMsgWithImg(mchUserId, type, goodsInfo) {
+      // const isLogin = await this.judgeLoginMixin()
+      // if (isLogin) {
+      // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
+      // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
+      const intentionType = {}
+      intentionType[goodsInfo.classCode] = goodsInfo.classCodeName
+      // 意向城市
+      const intentionCity = {}
+      intentionCity[this.city.code] = this.city.name
+      const sessionParams = {
+        imUserId: mchUserId, // 商户用户ID
+        imUserType: type, // 用户类型
+        requireCode: goodsInfo.classCodeLevel.split(',')[0],
+        ext: {
+          intentionType, // 意向业务 非必传
+          intentionCity, // 意向城市 非必传
+          recommendId: '',
+          recommendAttrJson: {},
+          startUserType: 'cps-app', //
+        },
+      }
+      const msgParams = {
+        sendType: 0, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
+        msgType: 'im_tmplate', // 消息类型
+        extContent: this.$route.query, // 路由参数
+        productName: goodsInfo.name, // 产品名称
+        productContent: goodsInfo.salesGoodsOperatings.productDescribe, // 产品信息
+        price: `${goodsInfo.salesPrice}元`, // 价格
+        forwardAbstract: '[商品详情]',
+        routerId: 'IMRouter_APP_ProductDetail_Service', // 路由ID
+        imageUrl:
+          goodsInfo.salesGoodsOperatings.clientDetails[0].imgFileIdPaths[0], // 产品图片
+        unit: goodsInfo.salesPrice.split('.')[1], // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+      }
+      this.sendTemplateMsgMixin({ sessionParams, msgParams })
+      // } else {
+      //   this.$router.push('/login')
+      // }
     },
   },
 }

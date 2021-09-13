@@ -56,7 +56,18 @@
         class="my_icon"
       ></my-icon>
       线下优惠可咨询规划师
-      <sp-button class="im_btn">询优惠</sp-button>
+      <sp-button
+        v-if="plannerDetail.mchUserId"
+        class="im_btn"
+        @click="
+          sendTemplateMsgWithImg(
+            plannerDetail.mchUserId,
+            plannerDetail.type,
+            sellingGoodsData
+          )
+        "
+        >询优惠</sp-button
+      >
     </div>
     <sp-popup
       v-model="show"
@@ -243,6 +254,15 @@ export default {
     [Button.name]: Button,
   },
   mixins: [imHandle],
+  props: {
+    // 钻展规划师
+    plannerDetail: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
+  },
   data() {
     return {
       serviceTag: [
