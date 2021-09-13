@@ -187,20 +187,17 @@ export default {
   }
   .rt_content {
     width: 402px;
+    height: 135px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     &.z-course {
       margin-top: -5px;
     }
     .title {
       color: #222222;
       font: bold 30px/42px PingFangSC-Medium, PingFang SC;
-      margin-bottom: 15px;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      word-break: break-all;
-      height: 84px;
+      .textOverflow(2);
     }
     .name_time {
       display: flex;
