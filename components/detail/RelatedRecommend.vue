@@ -47,11 +47,8 @@
                 }}
               </p>
             </div>
-            <p
-              v-if="item.priceType === 'PRO_FLOATING_PRICE' && item.salesPrice"
-              class="money"
-            >
-              {{ item.salesPrice }}%
+            <p v-if="item.priceType === 'PRO_FLOATING_PRICE'" class="money">
+              {{ item.salesPrice || item.price }}%
               <span>服务费</span>
             </p>
             <p v-else class="money">

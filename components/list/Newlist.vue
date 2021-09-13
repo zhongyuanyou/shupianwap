@@ -51,11 +51,8 @@
           <p v-if="item.attr" class="describe">
             {{ item.attr }}
           </p>
-          <p
-            v-if="item.priceType === 'PRO_FLOATING_PRICE' && item.salesPrice"
-            class="price"
-          >
-            {{ item.salesPrice }}%
+          <p v-if="item.priceType === 'PRO_FLOATING_PRICE'" class="price">
+            {{ item.salesPrice || item.price }}%
             <span>服务费</span>
           </p>
           <p
