@@ -21,19 +21,21 @@
 
     <div ref="fill_container" class="img_container">
       <img width="100%" :src="imageHead" alt="" />
-    </div>
-
-    <div class="content_container">
+      <!-- :list="recommendProductList" -->
       <Recommend
+        class="recommend"
         title="爆款单品"
         :parse-price="parsePrice"
-        :list="recommendProductList"
+        :list="[{}, {}]"
         @jump="
           (item) => {
             jumpProductDetail(item)
           }
         "
       ></Recommend>
+    </div>
+
+    <div class="content_container">
       <client-only>
         <Classification
           :has-city="hasCity && isService"
@@ -85,7 +87,7 @@ import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
 import activityMixin from '@/mixins/activityMixin.js'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
-import Recommend from '~/components/activity/Recommend.vue'
+import Recommend from '~/components/activity/subsidy/Recommend.vue'
 import Card from '~/components/activity/subsidy/Card.vue'
 import Head from '~/components/activity/subsidy/Head.vue'
 import NoData from '@/components/activity/NoData.vue'
@@ -192,6 +194,13 @@ export default {
     position: relative;
     min-height: 300px;
     background: #f8f8f8;
+
+    .recommend {
+      position: absolute;
+      bottom: 15.133%;
+      //bottom: 242px;
+      width: 100%;
+    }
   }
 
   .content_container {

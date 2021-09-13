@@ -89,7 +89,7 @@
         <CellGroup>
           <Cell
             title="商品及服务总数"
-            :value="settlementInfo.orderSkuTotalCount || 0 + '件'"
+            :value="goodsNumberSum + '件'"
             value-class="black"
           />
           <Cell
@@ -141,8 +141,7 @@
 
         <p class="money">
           合计：
-          <span v-if="isIntendedOrder" class="money_price"
-            ><b>面议</b></span
+          <span v-if="isIntendedOrder" class="money_price"><b>面议</b></span
           ><span v-else class="money_price"
             ><b>{{
               (settlementInfo.orderTotalMoney || 0) -
@@ -377,7 +376,7 @@ export default {
 
     // 是否是意向单
     isIntendedOrder() {
-      return this.settlementInfo.orderType !=='BUSINESS_ORDER'
+      return this.settlementInfo.orderType !== 'BUSINESS_ORDER'
       // return this.isIntendedOrder
     },
     // 是否担保订单
@@ -390,6 +389,16 @@ export default {
       if (this.settlementInfo.productVo) {
         this.settlementInfo.productVo.map((item) => {
           sum += parseFloat(item.tradeMarkPrice || 0)
+        })
+      }
+      return sum
+    },
+
+    goodsNumberSum() {
+      let sum = 0
+      if (this.settlementInfo.productVo) {
+        this.settlementInfo.productVo.map((item) => {
+          sum += parseFloat(item.goodsNumber || 0)
         })
       }
       return sum
@@ -455,7 +464,7 @@ export default {
     settlement() {
       order
         .settle_order_by_unsubmit(
-         { axios: this.$axios },
+          { axios: this.$axios },
           {
             orderId: this.$route.query.cusOrderId,
             couponUseCode: this.couponInfo.selectedItem.couponUseCode,
@@ -481,7 +490,7 @@ export default {
           }
         })
         .catch((error) => {
-          console.log('settle_order_by_unsubmit',error)
+          console.log('settle_order_by_unsubmit', error)
           this.$xToast.warning('服务器异常,请然后再试')
         })
     },
