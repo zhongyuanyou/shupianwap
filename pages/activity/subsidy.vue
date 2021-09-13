@@ -197,7 +197,7 @@ export default {
 
     .recommend {
       position: absolute;
-      bottom: 15.133%;
+      bottom: 21%;
       //bottom: 242px;
       width: 100%;
     }
