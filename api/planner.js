@@ -7,7 +7,7 @@
  * @FilePath: /chips-wap/client/api/planner.js
  */
 'use strict'
-
+import { Toast } from '@chipspc/vant-dgg'
 import { CHIPS_WAP_BASE_URL, CRM_MIDDLE_APP, CHIPS_PC_URL } from '../config/constant'
 
 import { request } from '@/utils/request'
@@ -69,7 +69,16 @@ const planner = {
       url: CHIPS_WAP_BASE_URL + '/nk/planner/v1/tel.do',
     })
   },
+
+  awaitTip(time = 1500) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve()
+      }, time)
+    })
+  },
   newtel(params) {
+
     return request({
       params,
       method: 'post',

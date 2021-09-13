@@ -239,13 +239,22 @@ export default {
       try {
         // const isLogin = await this.judgeLoginMixin()
         // if (isLogin) {
+        this.$xToast.show({
+          message: '为了持续为您提供服务，规划师可能会主动联系您',
+          duration: 2000,
+          forbidClick: true,
+        })
+        await planner.awaitTip()
         const telData = await planner.newtel({
           areaCode: this.city.code,
           areaName: this.city.name,
           customerUserId: this.$store.state.user.userId,
-          customerId: this.$store.state.user.customerID,
+          customerId: this.$store.state.user.customerID || '',
           plannerId: mchUserId,
-          customerPhone: this.$cookies.get('mainAccountFull', { path: '/' }),
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }) ||
+            '',
           requireCode: this.sellingGoodsData.classCodeLevel.split(',')[0],
           requireName: '',
           // id: mchUserId,

@@ -12,55 +12,28 @@
       :background-color="`rgba(255,255,255,${headBkOpacity})`"
       @onHeightChange="onHeightChange"
     >
-      <Head
+      <Head2
         :class-state="ClassState"
         code="protocol100046"
         title="99特卖"
         :back="uPGoBack"
         :search="clickInputHandle"
-      ></Head>
-
-      <!-- <div class="search_container">
-        <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
-
-          <div class="left-back" @click="uPGoBack">
-            <my-icon
-              name="nav_ic_back"
-              class="back_icon"
-              size="0.4rem"
-              color="#FFFFFF"
-            ></my-icon>
-          </div>
-          <div class="search-box"></div>
-          <div class="right">
-            <my-icon
-              class="search-icon"
-              name="sear_ic_sear"
-              size="0.4rem"
-              color="#FFFFFF"
-              @click.native="clickInputHandle"
-            ></my-icon>
-            <span
-              class="rule"
-              @click="
-                $router.push('/login/protocol?categoryCode=protocol100046')
-              "
-              >规则</span
-            >
-          </div>
-        </div>
-      </div> -->
+        :click-input-handle="clickInputHandle"
+        :has-city="hasCity && isService"
+        :activity-type-options="activityTypeOptions"
+        :city-name="cityName"
+      ></Head2>
     </HeadWrapper>
 
     <div ref="fill_container" class="img_container">
       <img width="100%" :src="imageHead" alt="" />
-      <div
+      <!-- <div
         class="rule"
         :class="{ rule_in_app: isInApp }"
         @click="$router.push('/login/protocol?categoryCode=' + ruleCode)"
       >
         规则
-      </div>
+      </div> -->
       <div v-if="isTimerShow" class="count-down">
         <div class="down-time">
           <div>距本场结束还剩</div>
@@ -139,9 +112,11 @@ import activityMixin from '@/mixins/activityMixin.js'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
 import Recommend from '~/components/activity/Recommend.vue'
 import Card from '~/components/activity/Card.vue'
-import Head from '~/components/activity/Head.vue'
+import Head2 from '~/components/activity/special/Head2.vue'
+import Classification from '@/components/activity/special/Classification.vue'
+
 import NoData from '@/components/activity/NoData.vue'
-import Classification from '@/components/activity/Classification.vue'
+
 export default {
   name: 'Special',
   layout: 'default',
@@ -155,7 +130,7 @@ export default {
     [PullRefresh.name]: PullRefresh,
 
     Recommend,
-    Head,
+    Head2,
     Card,
     NoData,
     Classification,
@@ -166,8 +141,9 @@ export default {
       specType: 'HDZT_ZTTYPE_TM',
 
       hasCity: true,
-      imageHead: '',
-      imageHeadDefault: this.$ossImgSetV2('5yxoyjyfaxk0000.jpg'),
+      imageHead: this.$ossImgSetV2('eamtgtje0rk0000.png'),
+
+      imageHeadDefault: this.$ossImgSetV2('eamtgtje0rk0000.png'),
       headerHeight: 0,
 
       headBkOpacity: 0,

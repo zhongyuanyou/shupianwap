@@ -2,8 +2,8 @@
   <div class="contract">
     <Head ref="head" title="附件协议-合同列表"> </Head>
     <div class="listbox">
-      <template v-for="(item, index) in list">
-        <div v-if="showContract(item.status)" :key="index" class="list">
+      <template v-if="list.length">
+        <div v-for="(item, index) in list" :key="index" class="list">
           <div class="head">
             <h1>{{ item.contractName }}</h1>
             <p v-if="item.status == 'STRUTS_YWC'" style="color: #222222">
@@ -48,6 +48,22 @@
           </div>
         </div>
       </template>
+      <template v-else>
+        <div class="no-data">
+          <img
+            :src="
+              $resizeImg(
+                340,
+                340,
+                'https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png'
+              )
+            "
+            alt=""
+            srcset=""
+          />
+          <p>暂无合同</p>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -81,7 +97,7 @@ export default {
       if (!val) {
         return '暂无'
       } else {
-        return changeMoney.regFenToYuan(val) + '元'
+        return '¥' + changeMoney.regFenToYuan(val)
       }
     },
   },
@@ -97,18 +113,6 @@ export default {
     this.getorder()
   },
   methods: {
-    showContract(val) {
-      // 草稿状态, 审核状态不显示,其余状态均显示合同
-      // STRUTS_CG STRUTS_SHZ_SH 这两个状态是为了匹配以前数据,草稿和商户平台审核以前有,现在没有这两个状态了
-      if (
-        val === 'STRUTS_CG' ||
-        val === 'STRUTS_SHZ' ||
-        val === 'STRUTS_SHZ_SH'
-      ) {
-        return false
-      }
-      return true
-    },
     getorder() {
       contractApi
         .contartlist(
@@ -116,6 +120,7 @@ export default {
           {
             cusUserId: this.$store.state.user.userId, // 用户id
             businessId: this.order.orderId, // 订单id
+            statusList: ['STRUTS_QSZ', 'STRUTS_YWC'], // 签署中,已完成
             page: this.page,
             limit: this.limit,
           }
@@ -220,6 +225,28 @@ export default {
         font-weight: 400;
         color: #222222;
         margin-left: auto;
+      }
+    }
+    .no-data {
+      width: 100%;
+      height: 100vh;
+      background: white;
+      position: fixed;
+      left: 0;
+      top: 0;
+      img {
+        width: 340px;
+        height: 340px;
+        margin: 20vh auto 40px auto;
+        display: block;
+      }
+      p {
+        height: 29px;
+        font-size: 30px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #1a1a1a;
+        text-align: center;
       }
     }
   }

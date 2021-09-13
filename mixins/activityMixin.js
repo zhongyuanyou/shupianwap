@@ -384,6 +384,8 @@ export default {
     },
     // 通过广告位获取banner图
     getAdvertisingData() {
+      if (this.imageHead) { return }
+
       if (!this.advertCode) {
         console.log('未配置广告位');
         this.imageHead = this.imageHead || this.imageHeadDefault
