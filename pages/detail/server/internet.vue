@@ -1,7 +1,7 @@
 <template>
   <section>
+    <!-- 委托模块 -->
     <ShareModal />
-    <!-- <DetailTemplate scene-id1="app-fwcpxq-01" scene-id2="app-jycpxq-02" /> -->
     <div class="template">
       <!--S 导航栏-->
       <sp-sticky
@@ -63,11 +63,12 @@
       <!--S 第一板块-->
       <Title :comment="commentdata[0].tit" @onComment="comment" />
       <!--E 第一板块-->
+      <PageMidAd :ad-location-code="'ad100399'" />
       <!--S 第二板块 领券 SKU-->
       <VouchersSelect ref="sku" :planner-detail="tcPlannerBooth" />
       <!--E 第二板块 领券 SKU-->
       <!--S 第三板块 包含项目-->
-      <ContainProject />
+      <!-- <ContainProject /> -->
       <!--E 第三板块 包含项目-->
       <!--S 第三板块 包含服务-->
       <ContainContent />
@@ -82,7 +83,7 @@
       <!--E 第五板块 推荐规划师-->
       <!--S  精选案例-->
       <!-- <OrderCase></OrderCase> -->
-      <CaseNew />
+      <CaseNew :planner-detail="tcPlannerBooth" />
       <!--E  精选案例-->
       <!--S 第十板块 服务详情-->
       <ServiceDetail
@@ -122,7 +123,7 @@ import CommentBox from '~/components/detail/CommentBox.vue'
 import OrderCase from '~/components/detail/OrderCase.vue'
 import OrderDynamic from '~/components/detail/OrderDynamic.vue'
 import VouchersSelect from '~/components/detail/server/NewVouchersSelect.vue'
-import ContainProject from '~/components/detail/ContainProject.vue'
+// import ContainProject from '~/components/detail/ContainProject.vue'
 import ContainContent from '~/components/detail/ContainContent.vue'
 import TcPlanners from '~/components/detail/TcPlanners1.vue'
 import ServiceDetail from '~/components/detail/ServiceDetail.vue'
@@ -130,6 +131,7 @@ import RelatedRecommend from '~/components/detail/RelatedRecommend.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import CaseNew from '~/components/detail/CaseNew'
+import PageMidAd from '~/components/detail/server/PageMidAd'
 import getUserSign from '~/utils/fingerprint'
 import { productDetailsApi, recommendApi, shopApi } from '~/api'
 import { copyToClipboard } from '~/utils/common'
@@ -146,7 +148,7 @@ export default {
     Banner,
     Title,
     VouchersSelect,
-    ContainProject,
+    // ContainProject,
     ContainContent,
     TcPlanners,
     ServiceDetail,
@@ -158,6 +160,7 @@ export default {
     // OrderCase,
     OrderDynamic,
     CaseNew,
+    PageMidAd,
   },
   mixins: [imHandle, detailMixin],
   layout: 'keepAlive',

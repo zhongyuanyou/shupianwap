@@ -17,6 +17,10 @@
 </template>
 
 <script>
+/**
+ * @author tangdaibing
+ * @description 服务商品详情页页面中部广告位
+ */
 import { Swipe, SwipeItem } from '@chipspc/vant-dgg'
 import adJumpHandle from '~/mixins/adJumpHandle'
 import { publicApi } from '@/api/index'
@@ -38,7 +42,7 @@ export default {
     }
   },
   mounted() {
-    this.getAdlist('ad100399')
+    this.getAdlist(this.adLocationCode || 'ad100399')
   },
   methods: {
     getAdlist(transAdCode) {

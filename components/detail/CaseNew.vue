@@ -11,17 +11,51 @@
       :item="caseData"
       @click.native="toDetail('/caseExamples/details')"
     ></CaseExamplesList>
+    <div class="zixun_area">
+      <div class="inner">
+        <my-icon
+          name="popup_ic_closeb"
+          size="0.28rem"
+          color="#4873F4"
+        ></my-icon>
+        没找到你想看的案例？
+        <sp-button
+          v-if="plannerDetail.mchUserId"
+          class="im_btn"
+          @click="
+            sendTemplateMsgWithImg(
+              plannerDetail.mchUserId,
+              plannerDetail.type,
+              sellingGoodsData
+            )
+          "
+        >
+          去咨询</sp-button
+        >
+      </div>
+    </div>
   </div>
 </template>
 <script>
-import { Image } from '@chipspc/vant-dgg'
+import { Image, Button } from '@chipspc/vant-dgg'
 import { caseApi } from '@/api/index'
 import CaseExamplesList from '@/components/caseExamples/index/List.vue'
-
+import imHandle from '~/mixins/imHandle'
 export default {
   components: {
     [Image.name]: Image,
+    [Button.name]: Button,
     CaseExamplesList,
+  },
+  mixins: [imHandle],
+  props: {
+    // 钻展规划师
+    plannerDetail: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
   },
   data() {
     return {
@@ -34,6 +68,9 @@ export default {
   //     this.caselist[Math.floor(Math.random() * this.caselist.length)]
   // },
   computed: {
+    sellingGoodsData() {
+      return this.$store.state.sellingGoodsDetail.sellingGoodsData
+    },
     // 产品详情
     classCodeLevelList() {
       if (this.$route.path.match('transactionDetails')) {
@@ -130,7 +167,7 @@ export default {
 .case {
   background: #fff;
   border-bottom: 24px solid #f8f8f8;
-
+  padding-bottom: 40px;
   .case-title {
     padding: 48px 40px 0;
     font-size: 40px;
@@ -146,6 +183,36 @@ export default {
   }
   .case_examples {
     margin-top: 0;
+  }
+
+  .zixun_area {
+    padding: 0 40px;
+    border-radius: 4px;
+    overflow: hidden;
+    .inner {
+      background: #f2f5ff;
+      border-radius: 4px;
+      font-size: 28px;
+      color: #1a1a1a;
+      letter-spacing: 0;
+      width: 100%;
+      height: 86px;
+      padding: 16px 20px;
+      overflow: hidden;
+      line-height: 54px;
+      .im_btn {
+        float: right;
+        padding: 0 30px;
+        height: 56px;
+        background: #ffffff;
+        border: 1px solid #4974f5;
+        border-radius: 4px;
+        font-size: 24px;
+        color: #4974f5;
+        letter-spacing: 0;
+        text-align: center;
+      }
+    }
   }
 }
 </style>

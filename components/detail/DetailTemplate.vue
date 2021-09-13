@@ -97,7 +97,7 @@
     <Question />
     <!--E 第七板块 常见问题-->
     <!-- <CaseNew /> -->
-    <CaseNew />
+    <CaseNew :planner-detail="tcPlannerBooth" />
     <!--S 第八板块 成功案例-->
     <!-- <Case /> -->
     <!--E 第八板块 成功案例-->
