@@ -128,7 +128,7 @@ export default {
 
       swiperOptions: {
         slidesPerView: 3,
-        spaceBetween: 30,
+        spaceBetween: 32,
         centeredSlides: true,
         loop: true,
         autoplay: true,
@@ -154,35 +154,27 @@ export default {
   border-radius: 24px;
 
   font-size: 0;
-  .flex {
-    display: flex;
-    align-items: center;
-    // align-items: flex-start;
-  }
-  .flex_1 {
-    flex: 1;
-  }
-  ::v-deep .swiper-slide {
-    text-align: center;
-    font-size: 18px;
-    background: #fff;
 
-    /* Center slide text vertically */
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    -webkit-justify-content: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    -webkit-align-items: center;
-    align-items: center;
-    transition: 300ms;
-    transform: scale(0.8);
-  }
+  // ::v-deep .swiper-slide {
+  //   text-align: center;
+  //   font-size: 18px;
+  //   background: #fff;
+
+  //   display: -webkit-box;
+  //   display: -ms-flexbox;
+  //   display: -webkit-flex;
+  //   display: flex;
+  //   -webkit-box-pack: center;
+  //   -ms-flex-pack: center;
+  //   -webkit-justify-content: center;
+  //   justify-content: center;
+  //   -webkit-box-align: center;
+  //   -ms-flex-align: center;
+  //   -webkit-align-items: center;
+  //   align-items: center;
+  //   transition: 300ms;
+  //   transform: scale(0.9);
+  // }
   ::v-deep .swiper-slide-active,
   ::v-deep .swiper-slide-duplicate-active {
     transform: scale(1);
@@ -212,46 +204,12 @@ export default {
       display: inline-block;
       width: 100%;
 
-      // width: calc(33% - 10px);
-
       overflow: hidden;
-
-      // max-width: 215px;
 
       background: #f7f7f7;
       border-radius: 12px;
       text-align: center;
 
-      .skuName {
-        font-weight: bold;
-        font-size: 24px;
-        color: #222222;
-        text-align: center;
-        line-height: 28px;
-        height: 56px;
-        padding: 0 20px;
-        .textOverflow(2);
-      }
-      .priceContainer {
-        font-size: 20px;
-        color: #555555;
-        text-align: center;
-        line-height: 28px;
-
-        letter-spacing: 0;
-        margin: 12px;
-        & > span {
-          display: inline-block;
-        }
-      }
-      .price {
-        font-family: PingFangSC-Regular;
-        color: #ec5330;
-        font-weight: bold;
-      }
-      .unit {
-        color: #ec5330;
-      }
       .img_container {
         position: relative;
         .hot {
@@ -270,6 +228,36 @@ export default {
           border-radius: 4px;
           overflow: hidden;
         }
+      }
+      .skuName {
+        font-weight: bold;
+        font-size: 24px;
+        color: #222222;
+        text-align: left;
+        line-height: 28px;
+        height: 56px;
+        padding: 0 20px;
+        .textOverflow(2);
+      }
+      .priceContainer {
+        font-size: 20px;
+        color: #555555;
+        text-align: left;
+        line-height: 28px;
+
+        letter-spacing: 0;
+        margin: 12px;
+        & > span {
+          display: inline-block;
+        }
+      }
+      .price {
+        font-family: PingFangSC-Regular;
+        color: #ec5330;
+        font-weight: bold;
+      }
+      .unit {
+        color: #ec5330;
       }
     }
   }

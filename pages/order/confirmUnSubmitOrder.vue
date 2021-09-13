@@ -138,7 +138,7 @@
             @click="openCardFn()"
           /> -->
         </CellGroup>
-
+        <!--  settlementInfo.orderPayableMoney  -->
         <p class="money">
           合计：
           <span v-if="isIntendedOrder" class="money_price"><b>面议</b></span
@@ -210,19 +210,20 @@
     </div>
 
     <LoadingCenter v-show="loading" />
-    <Popup
+    <PopupUnSubmit
       ref="conpon"
       :show="couponInfo.popupshow"
       :height="75"
       title="优惠"
       help="使用说明"
+      :cus-order-id="$route.query.cusOrderId"
       :origin-price="tradeMarkPriceSum || settlementInfo.orderTotalMoney"
       :tablist="couponInfo.tablist"
       :datalist="couponInfo.datalist"
       :nolist="couponInfo.nolist"
       @change="conponChange"
       @close="close"
-    ></Popup>
+    ></PopupUnSubmit>
     <PayMethodPopup
       :show="payMethod.show"
       :list="payMethod.list"
@@ -258,7 +259,7 @@ import {
   CheckboxGroup,
 } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header.vue'
-import Popup from '@/components/PlaceOrder/Popup.vue'
+import PopupUnSubmit from '@/components/PlaceOrder/PopupUnSubmit.vue'
 import CardPopup from '@/components/PlaceOrder/CardPopup.vue'
 import PayMethodPopup from '@/components/PlaceOrder/PayMethodPopup.vue'
 
@@ -277,7 +278,7 @@ export default {
     CellGroup,
     Checkbox,
     // CheckboxGroup,
-    Popup,
+    PopupUnSubmit,
     CardPopup,
     PayMethodPopup,
     [Skeleton.name]: Skeleton,
@@ -424,40 +425,6 @@ export default {
     asyncData() {
       this.skeletonloading = false
       this.settlement() // 调用接口结算，和获取会员价
-
-      // orderApi
-      //   .getDetailByCusOrderId(
-      //     { axios: this.axios },
-      //     {
-      //       cusOrderId: this.$route.query.cusOrderId,
-      //       id: this.$route.query.cusOrderId,
-
-      //       isSkuDetailInfo: true,
-      //       isSkuImages: true,
-      //     }
-      //   )
-      //   .then((res) => {
-      //     console.log('res', res)
-      //     const data = res.data
-
-      //     if (data) {
-      //       data.list = []
-
-      //       this.order = data
-
-      //     } else {
-      //       this.$xToast.show('数据异常,请然后再试')
-      //       // setTimeout(() => {
-      //       //   this.$router.back(-1)
-      //       // }, 2000)
-      //     }
-      //   })
-      //   .catch(() => {
-      //     this.$xToast.show('服务器异常,请然后再试')
-      //     // setTimeout(() => {
-      //     //   this.$router.back(-1)
-      //     // }, 2000)
-      //   })
     },
 
     // 获取待结算价格
