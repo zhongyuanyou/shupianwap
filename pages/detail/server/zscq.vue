@@ -74,6 +74,7 @@
         <span class="text1">新人可享受500元律师费返还优惠</span>
       </div> -->
       <!--S 第二板块 领券 SKU-->
+      
       <VouchersSelect ref="sku" :planner-detail="tcPlannerBooth" />
       <!--E 第二板块 领券 SKU-->
       <!--S 第三板块 包含项目-->
@@ -131,7 +132,7 @@ import ServeDetailTitle from '~/components/detail/ServeDetailTitle.vue'
 import CommentBox from '~/components/detail/CommentBox.vue'
 import OrderCase from '~/components/detail/OrderCase.vue'
 import OrderDynamic from '~/components/detail/OrderDynamic.vue'
-import VouchersSelect from '~/components/detail/NewVouchersSelect.vue'
+import VouchersSelect from '~/components/detail/server/NewVouchersSelect.vue'
 import ContainProject from '~/components/detail/ContainProject.vue'
 import ContainContent from '~/components/detail/ContainContent.vue'
 import TcPlanners from '~/components/detail/TcPlanners1.vue'
@@ -175,6 +176,9 @@ export default {
   mixins: [imHandle, detailMixin],
   layout: 'keepAlive',
   watchQuery: ['productId'],
+  mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'ItDetail' })
+  },
 }
 </script>
 <style lang="less" scoped>

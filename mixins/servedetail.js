@@ -249,6 +249,7 @@ export default {
   methods: {
     ...mapActions({
       POSITION_CITY: 'city/POSITION_CITY',
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
     // shouchang
     handleClickSave() {

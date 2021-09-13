@@ -1418,8 +1418,8 @@ export default {
         'ORDER_ORDER_SERVER_STATUS_HANDLING',
         'ORDER_ORDER_SERVER_STATUS_HANDLED',
       ]
-      orderData.disputeStatus =
-        orderData.disputeStatus || orderData.orderSkuEsList[0].disputeStatus
+      // orderData.disputeStatus =
+      //   orderData.disputeStatus || orderData.orderSkuEsList[0].disputeStatus
       if (
         proceingOrderStatus.indexOf(orderData.orderStatusNo) > -1 &&
         orderData.payType &&

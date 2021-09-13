@@ -64,7 +64,7 @@
       <Title :comment="commentdata[0].tit" @onComment="comment" />
       <!--E 第一板块-->
       <!--S 第二板块 领券 SKU-->
-      <VouchersSelect ref="sku" />
+      <VouchersSelect ref="sku" :planner-detail="tcPlannerBooth" />
       <!--E 第二板块 领券 SKU-->
       <!--S 第三板块 包含项目-->
       <ContainProject />
@@ -121,7 +121,7 @@ import Title from '~/components/detail/Title1.vue'
 import CommentBox from '~/components/detail/CommentBox.vue'
 import OrderCase from '~/components/detail/OrderCase.vue'
 import OrderDynamic from '~/components/detail/OrderDynamic.vue'
-import VouchersSelect from '~/components/detail/NewVouchersSelect.vue'
+import VouchersSelect from '~/components/detail/server/NewVouchersSelect.vue'
 import ContainProject from '~/components/detail/ContainProject.vue'
 import ContainContent from '~/components/detail/ContainContent.vue'
 import TcPlanners from '~/components/detail/TcPlanners1.vue'
