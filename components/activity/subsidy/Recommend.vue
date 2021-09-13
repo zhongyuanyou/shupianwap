@@ -16,12 +16,12 @@
             <div class="list_item">
               <div class="img_container">
                 <img
-                  src="https://cdn.shupian.cn/sp-pt/wap/images/snvfwuqf4rk000.png"
+                  src="https://cdn.shupian.cn/sp-pt/wap/images/64t0fajm5dw0000.png"
                   class="hot"
                 />
-                <sp-image
+                <img
                   class="picture"
-                  fit="cover"
+                  mode="aspectFill"
                   :src="
                     item.imageUrl
                       ? $resizeImg(250, 250, item.imageUrl)
@@ -29,15 +29,14 @@
                   "
                   alt="薯片科技"
                   @click="$emit('preview', item)"
-                ></sp-image>
+                ></img>
               </div>
               <div class="skuName">{{ item.skuName }}</div>
               <div
                 v-if="parsePrice(item.specialPrice) !== '面议'"
                 class="priceContainer"
               >
-                <span>低至</span
-                ><span class="price">{{
+                 <span class="price">{{
                   item.specialUnit
                     ? parseFloat(item.specialNewPrice)
                     : parseFloat(item.specialPrice)
@@ -127,11 +126,13 @@ export default {
       defaultImg: 'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
 
       swiperOptions: {
+        autoplay: true,
+        speed: 400,
+
         slidesPerView: 3,
-        spaceBetween: 32,
+        spaceBetween: 0,
         centeredSlides: true,
         loop: true,
-        autoplay: true,
       },
     }
   },
@@ -155,51 +156,42 @@ export default {
 
   font-size: 0;
 
-  // ::v-deep .swiper-slide {
-  //   text-align: center;
-  //   font-size: 18px;
-  //   background: #fff;
+  ::v-deep .swiper-slide {
+    text-align: center;
+    font-size: 18px;
 
-  //   display: -webkit-box;
-  //   display: -ms-flexbox;
-  //   display: -webkit-flex;
-  //   display: flex;
-  //   -webkit-box-pack: center;
-  //   -ms-flex-pack: center;
-  //   -webkit-justify-content: center;
-  //   justify-content: center;
-  //   -webkit-box-align: center;
-  //   -ms-flex-align: center;
-  //   -webkit-align-items: center;
-  //   align-items: center;
-  //   transition: 300ms;
-  //   transform: scale(0.9);
-  // }
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    transition: 300ms;
+    transform-origin: center 76.8%;
+    transform: scale(0.832);
+  }
   ::v-deep .swiper-slide-active,
   ::v-deep .swiper-slide-duplicate-active {
     transform: scale(1);
   }
   ::v-deep .swiper-slide-prev {
-    background-image: linear-gradient(
-      180deg,
-      rgba(19, 30, 62, 0) 0%,
-      #0b1327 100%
-    );
+    mask-image: linear-gradient(to top, rgba(19, 30, 62, 0) 0%, #0b1327 100%);
+
     border-radius: 24px;
   }
   ::v-deep .swiper-slide-next {
-    background-image: linear-gradient(
-      180deg,
-      rgba(19, 30, 62, 0) 0%,
-      #0b1327 100%
-    );
+    mask-image: linear-gradient(to top, rgba(19, 30, 62, 0) 0%, #0b1327 100%);
     border-radius: 24px;
   }
   .list {
     overflow: hidden;
 
-    .list_container {
-    }
     .list_item {
       display: inline-block;
       width: 100%;
@@ -207,46 +199,47 @@ export default {
       overflow: hidden;
 
       background: #f7f7f7;
-      border-radius: 12px;
+      border-radius: 24px;
       text-align: center;
 
       .img_container {
         position: relative;
+        padding: 12px 12px 20px;
+
         .hot {
           position: absolute;
           z-index: 1;
-          left: 17px;
-          top: 0;
+          left: 12px;
+          top: 12px;
 
-          width: 30px;
+          width: 60px;
         }
         .picture {
-          margin: 25px auto 24px;
-
-          max-width: 126px;
-          height: 120px;
-          border-radius: 4px;
+          width: 100%;
+          // width: 266px;
+          border-radius: 10px;
           overflow: hidden;
         }
       }
       .skuName {
-        font-weight: bold;
-        font-size: 24px;
+        font-size: 26px;
         color: #222222;
+        line-height: 36px;
+
+        font-weight: bold;
         text-align: left;
-        line-height: 28px;
-        height: 56px;
+
+        height: 72px;
         padding: 0 20px;
         .textOverflow(2);
       }
       .priceContainer {
-        font-size: 20px;
         color: #555555;
         text-align: left;
         line-height: 28px;
 
         letter-spacing: 0;
-        margin: 12px;
+        margin: 12px 12px 24px;
         & > span {
           display: inline-block;
         }
@@ -255,9 +248,12 @@ export default {
         font-family: PingFangSC-Regular;
         color: #ec5330;
         font-weight: bold;
+        font-size: 40px;
       }
       .unit {
         color: #ec5330;
+        font-size: 22px;
+        font-weight: bold;
       }
     }
   }

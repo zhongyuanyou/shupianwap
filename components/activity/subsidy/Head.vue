@@ -6,12 +6,12 @@
           name="nav_ic_back"
           class="back_icon"
           size="0.4rem"
-          :color="classState == 0 ? '#1A1A1A' : '#fff'"
+          :color="'#fff'"
         ></my-icon>
       </div>
       <div
         class="search-box"
-        :style="{ color: classState == 0 ? '#1A1A1A' : '#fff' }"
+        :style="{ color: '#fff' }"
         @click="clickInputHandle"
       >
         <div>
@@ -35,18 +35,14 @@
           class="search-icon"
           name="zuobiao_mian"
           size="0.24rem"
-          :color="classState == 0 ? '#1A1A1A' : '#fff'"
+          :color="'#fff'"
         ></my-icon>
-        <span
-          class="city"
-          :style="{ color: classState == 0 ? '#1A1A1A' : '#fff' }"
-          >{{ cityName }}</span
-        >
+        <span class="city" :style="{ color: '#fff' }">{{ cityName }}</span>
         <my-icon
           class="search-icon"
           name="sear_ic_open"
           size="0.1rem"
-          :color="classState == 0 ? '#1A1A1A' : '#fff'"
+          :color="'#fff'"
         ></my-icon>
       </div>
     </div>
@@ -110,7 +106,7 @@ export default {
   .search {
     display: flex;
     align-items: center;
-    padding: 10px 0;
+    padding: 34px 0 34px;
 
     .left-back {
       display: flex;

@@ -1,5 +1,5 @@
 <template>
-  <div class="body-content-items" :class="{ last: last }">
+  <div class="body-content-items" :class="{ first: first, last: last }">
     <div class="left-content">
       <div v-if="endTime && endTime.sec" class="left-countdown">
         距结束 {{ endTime.hour }}:{{ endTime.min }}:{{ endTime.sec }}
@@ -77,7 +77,10 @@ export default {
         return {}
       },
     },
-
+    first: {
+      type: Boolean,
+      default: false,
+    },
     last: {
       type: Boolean,
       default: false,
@@ -114,9 +117,11 @@ export default {
   justify-content: space-between;
   height: 276px;
   width: 100%;
-  padding: 28px 20px;
-  margin-bottom: 20px;
-  border-radius: 24px;
+  padding: 32px 0px;
+  border-bottom: 1px solid #f4f4f4;
+}
+.body-content-items.first {
+  padding: 0px 0px 32px;
 }
 .body-content-items.last {
   margin-bottom: 0px;
