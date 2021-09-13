@@ -93,7 +93,6 @@ import { List, Image } from '@chipspc/vant-dgg'
 import { recommendApi } from '@/api'
 import { request } from '@/utils/request'
 import fingerprint from '@/utils/fingerprint'
-import detailLinkMixin from '@/mixins/todetail'
 const DEFAULT_PAGE = {
   limit: 10,
   page: 1,
@@ -106,7 +105,6 @@ export default {
     [List.name]: List,
     [Image.name]: Image,
   },
-  mixins: [detailLinkMixin],
   props: {
     mchDetailId: {
       // 商户id

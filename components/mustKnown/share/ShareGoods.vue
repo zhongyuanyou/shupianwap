@@ -68,13 +68,11 @@
 
 <script>
 import { Image } from '@chipspc/vant-dgg'
-import detailLinkMixin from '@/mixins/todetail'
 export default {
   name: 'EvaluateList',
   components: {
     [Image.name]: Image,
   },
-  mixins: [detailLinkMixin],
   props: {
     type: {
       type: String,

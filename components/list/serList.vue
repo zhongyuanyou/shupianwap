@@ -69,14 +69,12 @@
 <script>
 import { PullRefresh, List } from '@chipspc/vant-dgg'
 import { goods } from '@/api/index'
-import detailLinkMixin from '@/mixins/todetail'
 export default {
   name: 'Newlist',
   components: {
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
   },
-  mixins: [detailLinkMixin],
   props: {
     searchtext: {
       type: String,

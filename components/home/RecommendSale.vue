@@ -173,7 +173,6 @@ import getUserSign from '@/utils/fingerprint'
 import { recommendApi, dict } from '@/api'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 import adJumpHandle from '~/mixins/adJumpHandle'
-import detailLinkMixin from '@/mixins/todetail'
 export default {
   components: {
     [Swipe.name]: Swipe,
@@ -183,7 +182,7 @@ export default {
     [Sticky.name]: Sticky,
     LoadingDown,
   },
-  mixins: [adJumpHandle, detailLinkMixin],
+  mixins: [adJumpHandle],
   data() {
     return {
       isFixed: false,

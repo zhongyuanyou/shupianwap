@@ -43,7 +43,7 @@ export const mutations = {
       this.$cookies.set('customerID', String(data.customerID), {
         path: '/',
         maxAge: 60 * 60 * 24 * 7, // 过期时间
-        // domain: 'shupian.cn',
+        domain: 'shupian.cn',
       })
     }
     state.userInfo = data
