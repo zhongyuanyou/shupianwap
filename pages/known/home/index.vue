@@ -554,16 +554,20 @@ export default {
       console.log('点击了发布')
     },
     async getList() {
-      // if (this.active === 0) {
+      // 类型：1问题  2文章 3回答
+      const params = {
+        types: [this.active],
+        userIds: this.homeUserId || this.userInfo.userId,
+        currentUserId: this.userInfo.userId,
+        page: this.page,
+        limit: this.limit,
+      }
+      if (this.active === 0) {
+        params.types = [1, 2, 3]
+      }
       const { code, message, data } = await this.$axios.post(
         knownApi.home.list,
-        {
-          types: [this.active],
-          userIds: this.homeUserId || this.userInfo.userId,
-          currentUserId: this.userInfo.userId,
-          page: this.page,
-          limit: this.limit,
-        }
+        params
       )
       if (code === 200) {
         this.list = this.list.concat(data.rows)
