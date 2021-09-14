@@ -1,11 +1,6 @@
 <template>
   <div>
-    <div
-      :key="bottomHeight > 90 ? 'choose-topic2' : ''"
-      class="choose-topic"
-      :style="{ bottom: bottomHeight + 'px' }"
-      @click="openModal"
-    >
+    <div class="choose-topic" @click="openModal">
       <p v-if="!topics.length">
         <my-icon
           name="spiconfont-nav_ic_abb"
@@ -119,7 +114,6 @@ export default {
       submitFlag: false, // 设置是否更新result数据
       backupResult: [],
       backupId: '',
-      bottomHeight: 65,
     }
   },
   watch: {
@@ -146,9 +140,6 @@ export default {
   */
   mounted() {
     this.topicApi()
-    if (this.$route.query.platForm === 'mpass' && !window.AlipayJSBridge) {
-      this.bottomHeight = 96
-    }
   },
   /*
   beforeDestroy() {
@@ -282,7 +273,9 @@ export default {
   color: #4974f5;
   background: white;
   border-top: 1px solid #f4f4f4;
-  z-index: 1;
+  z-index: 99;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
   .item {
     margin-right: 10px;
   }
