@@ -377,7 +377,7 @@ export default {
 
     // 是否是意向单
     isIntendedOrder() {
-      return this.settlementInfo.orderType !== 'BUSINESS_ORDER'
+      return parseInt(this.settlementInfo.orderType) === 0
       // return this.isIntendedOrder
     },
     // 是否担保订单
