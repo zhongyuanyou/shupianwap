@@ -78,7 +78,7 @@ export default {
     },
     cityName: {
       type: String,
-      default: '',
+      default: '定位中',
     },
     activityTypeOptions: {
       type: Array,
@@ -106,7 +106,7 @@ export default {
   .search {
     display: flex;
     align-items: center;
-    padding: 10px 0;
+    padding: 34px 0 34px;
 
     .left-back {
       display: flex;

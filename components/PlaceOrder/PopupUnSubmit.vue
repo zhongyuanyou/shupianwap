@@ -43,7 +43,10 @@
                 <div class="left">
                   <div v-if="item.marketingCouponVO.couponType === 1">
                     <div class="coupon_price">
-                      {{ item.marketingCouponVO.reducePrice }}
+                      {{ formatPrice(item.marketingCouponVO.reducePrice) }}
+                      <span v-if="item.marketingCouponVO.reducePrice >= 10000"
+                        >万</span
+                      >
                     </div>
                     <div
                       v-if="item.marketingCouponVO.fullPrice"
@@ -80,19 +83,7 @@
                       {{ item.marketingCouponVO.couponName }}
                     </h1>
                     <div class="goods-types">
-                      <p v-if="item.marketingCouponVO.useType === 1">
-                        全场通用
-                      </p>
-                      <p v-if="item.marketingCouponVO.useType === 2">
-                        仅限指定品类使用
-                      </p>
-                      <p v-if="item.marketingCouponVO.useType === 3">
-                        {{
-                          item.marketingCouponVO.productName
-                            ? item.marketingCouponVO.productName + '-可用'
-                            : '仅限指定商品使用'
-                        }}
-                      </p>
+                      <p>{{ formatUseType(item) }}</p>
                     </div>
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
@@ -139,7 +130,10 @@
                 <div class="left">
                   <div v-if="item.marketingCouponVO.couponType === 1">
                     <div class="coupon_price">
-                      {{ item.marketingCouponVO.reducePrice }}
+                      {{ formatPrice(item.marketingCouponVO.reducePrice) }}
+                      <span v-if="item.marketingCouponVO.reducePrice >= 10000"
+                        >万</span
+                      >
                     </div>
                     <div
                       v-if="item.marketingCouponVO.fullPrice == 0"
@@ -176,19 +170,7 @@
                       {{ item.marketingCouponVO.couponName }}
                     </h1>
                     <div class="goods-types">
-                      <p v-if="item.marketingCouponVO.useType === 1">
-                        全场通用
-                      </p>
-                      <p v-if="item.marketingCouponVO.useType === 2">
-                        仅限指定品类使用
-                      </p>
-                      <p v-else-if="item.marketingCouponVO.useType === 3">
-                        {{
-                          item.marketingCouponVO.productName
-                            ? item.marketingCouponVO.productName + '-可用'
-                            : '仅限指定商品使用'
-                        }}
-                      </p>
+                      <p>{{ formatUseType(item) }}</p>
                     </div>
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
@@ -363,6 +345,28 @@ export default {
 
   mounted() {},
   methods: {
+    // 将价格转为万元
+    formatPrice(price) {
+      const p = parseFloat(price)
+      if (p >= 10000) {
+        return parseFloat((p / 10000).toFixed(2))
+      }
+      return p
+    },
+    formatUseType(item) {
+      if (item.marketingCouponVO.useType === 1) {
+        return '全场通用'
+      } else if (item.marketingCouponVO.useType === 2) {
+        return '仅限指定品类使用'
+      } else if (item.marketingCouponVO.useType === 3) {
+        if (item.marketingCouponVO.productName) {
+          return item.marketingCouponVO.productName + '-可用'
+        }
+        return '仅限指定商品使用'
+      }
+      return ''
+    },
+
     // 获取待结算价格
     settlement() {
       this.loading = true
@@ -396,6 +400,7 @@ export default {
         query: { categoryCode },
       })
     },
+
     getDiscount(count) {
       return Number(count) / 100
     },
@@ -560,6 +565,11 @@ export default {
               position: relative;
               // text-overflow: ellipsis;
               // white-space: nowrap;
+              span {
+                position: absolute;
+                font-size: 28px;
+                bottom: 0;
+              }
             }
             .can_use {
               margin-top: 14px;
