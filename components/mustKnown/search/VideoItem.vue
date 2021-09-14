@@ -36,7 +36,7 @@
           <!-- {{ item.videoName }} -->
         </div>
         <div v-if="custCode === 'video'" class="name_time">
-          <div class="name">{{ item.createrName }}</div>
+          <div class="name">{{ item.authorName }}</div>
           <div class="time">
             {{ timeSplice(item.createTime) }}
           </div>
@@ -206,6 +206,8 @@ export default {
       .name {
         color: #555555;
         font: bold 26px/36px PingFangSC-Medium, PingFang SC;
+        max-width: 150px;
+        .mixin-text-oneoverflow();
       }
       .time {
         color: #999999;
