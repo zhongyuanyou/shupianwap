@@ -1,6 +1,8 @@
 <template>
   <div class="need">
-    <p class="need_title">猜您需要</p>
+    <sp-sticky ref="tabCurveRef" :offset-top="searchDomHeight" class="top">
+      <p class="need_title">猜您需要</p>
+    </sp-sticky>
     <sp-skeleton :row="20" :loading="needLoading">
       <div
         v-for="(item, index) in productData"
@@ -67,12 +69,13 @@
 </template>
 
 <script>
-import { Image, Skeleton } from '@chipspc/vant-dgg'
+import { Image, Skeleton, Sticky } from '@chipspc/vant-dgg'
 export default {
   name: 'RelatedRecommend',
   components: {
     [Image.name]: Image,
     [Skeleton.name]: Skeleton,
+    [Sticky.name]: Sticky,
   },
   props: {
     productData: {
@@ -83,6 +86,7 @@ export default {
   data() {
     return {
       needLoading: true,
+      searchDomHeight: 0,
     }
   },
   computed: {
@@ -112,6 +116,20 @@ export default {
   padding: 48px 40px 0 40px;
   ::v-deep.sp-skeleton {
     margin-top: 64px;
+  }
+  ::v-deep.top {
+    width: 100%;
+    z-index: 2;
+    .sp-sticky--fixed {
+      width: 100%;
+      position: fixed;
+      top: 80px;
+      left: 0;
+      padding-left: 40px;
+      height: 70px;
+      background: white;
+      box-shadow: 0px 1px 0px 0px #f4f4f4;
+    }
   }
   &_title {
     font-size: 40px;
