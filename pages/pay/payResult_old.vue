@@ -113,7 +113,7 @@
                 v-if="item.priceType === 'PRO_FLOATING_PRICE'"
                 class="money"
               >
-                {{ item.salesPrice || item.price }}%
+                {{ getServerPrice(item.salesPrice || item.price) }}%
                 <span class="small-value">服务费</span>
               </span>
               <span
@@ -217,6 +217,18 @@ export default {
     this.init()
   },
   methods: {
+    getServerPrice(price) {
+      let newPrice = ''
+      if (typeof price === 'string' && price.match('.')) {
+        const arr = price.split('.')
+        if (Number(arr[1]) > 0) {
+          newPrice = price
+        } else {
+          newPrice = arr[0]
+        }
+      }
+      return newPrice
+    },
     init() {
       this.payMoney = localStorage.getItem('payMoney')
       this.findRecomList()

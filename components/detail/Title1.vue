@@ -37,7 +37,9 @@
         v-if="sellingGoodsData.priceType === 'PRO_FLOATING_PRICE'"
         class="title_bottom_money"
       >
-        {{ sellingGoodsData.salesPrice || sellingGoodsData.price }}%
+        {{
+          getServerPrice(sellingGoodsData.salesPrice || sellingGoodsData.price)
+        }}%
         <span>服务费</span>
       </p>
       <span v-else class="title_bottom_money">{{
@@ -80,6 +82,21 @@ export default {
     },
   },
   methods: {
+    getServerPrice(price) {
+      let newPrice = ''
+      if (typeof price !== 'string') price = String(price)
+      if (price.match('.')) {
+        const arr = price.split('.')
+        if (Number(arr[1]) > 0) {
+          newPrice = price
+        } else {
+          newPrice = arr[0]
+        }
+      } else {
+        newPrice = price
+      }
+      return newPrice
+    },
     handleShowPriceRed() {
       this.$refs.priceR.show = true
     },
