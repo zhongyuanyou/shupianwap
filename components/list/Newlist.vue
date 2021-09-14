@@ -114,13 +114,16 @@ export default {
   methods: {
     getServerPrice(price) {
       let newPrice = ''
-      if (typeof price === 'string' && price.match('.')) {
+      if (typeof price !== 'string') price = String(price)
+      if (price.match('.')) {
         const arr = price.split('.')
         if (Number(arr[1]) > 0) {
           newPrice = price
         } else {
           newPrice = arr[0]
         }
+      } else {
+        newPrice = price
       }
       return newPrice
     },
