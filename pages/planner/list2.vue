@@ -795,10 +795,9 @@ export default {
       if (mchName) {
         params.mchName = mchName
       }
-      params.mchClasses = 'MERCHANT_B' // 商户类型
+      params.mchClasses = ['MERCHANT_B'] // 商户类型
       params[sortObj.key] = sortObj.sortValue // 排序参数
       params.roleCodes = ['salesman']
-      console.log('获取列表入参', params)
       try {
         const data = await planner.listV2(params)
         if (this.refreshing) {
