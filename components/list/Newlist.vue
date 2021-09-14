@@ -52,7 +52,7 @@
             {{ item.attr }}
           </p>
           <p v-if="item.priceType === 'PRO_FLOATING_PRICE'" class="price">
-            {{ item.salesPrice || item.price }}%
+            {{ getServerPrice(item.salesPrice || item.price) }}%
             <span>服务费</span>
           </p>
           <p
@@ -112,6 +112,21 @@ export default {
   //   this.getlist()
   // },
   methods: {
+    getServerPrice(price) {
+      let newPrice = ''
+      if (typeof price !== 'string') price = String(price)
+      if (price.match('.')) {
+        const arr = price.split('.')
+        if (Number(arr[1]) > 0) {
+          newPrice = price
+        } else {
+          newPrice = arr[0]
+        }
+      } else {
+        newPrice = price
+      }
+      return newPrice
+    },
     godeatil(item) {
       this.$router.push({
         path: '/detail',

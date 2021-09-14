@@ -10,7 +10,15 @@
           }}</span>
           <span v-if="item.couponType === 2" class="coupon_price_unit">折</span>
 
-          <span v-else-if="item.couponType === 1">{{ item.reducePrice }}</span>
+          <span v-else-if="item.couponType === 1">{{
+            formatPrice(item.reducePrice)
+          }}</span>
+
+          <span
+            v-if="item.couponType === 1 && item.reducePrice >= 10000"
+            class="coupon_price_unit"
+            >万</span
+          >
         </div>
         <div v-if="item.fullPrice == 0" class="can_use">无门槛</div>
         <div v-else-if="item.fullPrice" class="can_use">
@@ -76,6 +84,14 @@ export default {
   },
 
   methods: {
+    // 将价格转为万元
+    formatPrice(price) {
+      const p = parseFloat(price)
+      if (p >= 10000) {
+        return parseFloat((p / 10000).toFixed(2))
+      }
+      return p
+    },
     // 获取状态对应的类名
     getStatusClassName() {
       if (this.couponType === 2) {
