@@ -368,12 +368,17 @@ export default {
             this.active = index
           }
         })
-      } else if (this.$store.state.app.isInApp) {
+      } else {
+        this.active = 1
+      }
+      /*
+      else if (this.$store.state.app.isInApp) {
         // 在企大顺app中默认显示推荐tab
         this.active = 1
       } else {
-        this.active = 2
+        this.active = 1
       }
+      */
     },
     toggleTabs() {},
     // 打开文章编辑框

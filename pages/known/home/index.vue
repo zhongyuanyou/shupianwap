@@ -1,6 +1,7 @@
 <template>
   <section>
     <ShareModal v-if="isShare" />
+    <LoadingCenter v-show="loadingData" />
     <div class="home_container">
       <div
         class="header"
@@ -202,6 +203,7 @@ import { domainUrl } from '~/config/index'
 import DownLoadArea from '@/components/common/downLoadArea'
 import ShareModal from '@/components/common/ShareModal'
 import { numChangeW } from '@/utils/common'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
 export default {
   layout: 'keepAlive',
@@ -218,6 +220,7 @@ export default {
     Item,
     DownLoadArea,
     ShareModal,
+    LoadingCenter,
   },
   async asyncData({ $axios, query, store, redirect }) {
     if (!query.homeUserId && !store.state.user.userId) {
@@ -298,6 +301,7 @@ export default {
       showPop: false,
       sourceType: 1,
       error: false,
+      loadingData: false, // 加载项
     }
   },
   computed: {
@@ -500,6 +504,10 @@ export default {
       }
     },
     tabChange() {
+      // 未加载完成数据直接不响应
+      if (this.loadingData) {
+        return
+      }
       this.page = 1
       this.list = []
       this.finished = false
@@ -554,37 +562,44 @@ export default {
       console.log('点击了发布')
     },
     async getList() {
-      // 类型：1问题  2文章 3回答
-      const params = {
-        types: [this.active],
-        userIds: this.homeUserId || this.userInfo.userId,
-        currentUserId: this.userInfo.userId,
-        page: this.page,
-        limit: this.limit,
-      }
-      if (this.active === 0) {
-        params.types = [1, 2, 3]
-      }
-      const { code, message, data } = await this.$axios.post(
-        knownApi.home.list,
-        params
-      )
-      if (code === 200) {
-        this.list = this.list.concat(data.rows)
-        if (this.active === 6) {
-          this.list.forEach((item) => {
-            item.custTotalCount = numChangeW(item.totalViewCount)
-          })
+      this.loadingData = true
+      try {
+        // 类型：1问题  2文章 3回答
+        const params = {
+          types: [this.active],
+          userIds: this.homeUserId || this.userInfo.userId,
+          currentUserId: this.userInfo.userId,
+          page: this.page,
+          limit: this.limit,
         }
-        this.loading = false
-        this.page++
-        if (this.page > data.totalPage) {
+        if (this.active === 0) {
+          params.types = [1, 2, 3]
+        }
+        const { code, message, data } = await this.$axios.post(
+          knownApi.home.list,
+          params
+        )
+        if (code === 200) {
+          this.list = this.list.concat(data.rows)
+          if (this.active === 6) {
+            this.list.forEach((item) => {
+              item.custTotalCount = numChangeW(item.totalViewCount)
+            })
+          }
+          this.loading = false
+          this.page++
+          if (this.page > data.totalPage) {
+            this.finished = true
+          }
+        } else {
+          console.log(message)
+          this.loading = false
           this.finished = true
         }
-      } else {
-        console.log(message)
-        this.loading = false
-        this.finished = true
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loadingData = false
       }
     },
     async getAdList() {
