@@ -36,6 +36,37 @@ const planner = {
     })
   },
 
+  /**
+   * @description 规划师列表接口 性能优化928 商户中心接口
+   * @param {string} plannerName 规划师姓名
+   * @param {Object} regionDto 区域
+   * @param {number} regionDto.codeState 区域类型
+   * @param {String[]} regionDto.regions 区域code
+   * @param {Object} sort 排序
+   * @param {string} sort.sortType 排序方式 "pointSort":积分排序, "reputationSort":好评率排序 , "payNumSort":成交次数排序
+   * @param {number} sort.value 排序类型 1:升序 ,  2:降序
+   * @param {string} userId 用户ID
+   * @param {number} status 在职状态(-1全部 0禁用/小黑屋 1启用 3离职）默认 全部
+   * @param {number} limit 当前页最多条数
+   * @param {number} page 当前页
+   * @returns {promise}
+   */
+  listNew(params) {
+    return request({
+      params,
+      method: 'post',
+      url: 'merchant-center-manager/yk/merchant/user//v3/get_mch_user_info_with_page.do',
+    })
+  },
+  // 中间层接口
+  listV2(params) {
+    return request({
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/nk/planner/v2/list.do',
+    })
+  },
+
   findListByCode(params) {
     return request({
       params,
@@ -56,7 +87,7 @@ const planner = {
       url: CHIPS_WAP_BASE_URL + '/nk/planner/v1/detail.do',
     })
   },
-  
+
   /**
    * @description 获取电话号码
    * @param {string} id 业务id  (如:商户id,商户用户id,联系人id)
