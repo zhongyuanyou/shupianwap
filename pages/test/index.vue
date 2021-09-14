@@ -31,8 +31,22 @@ export default {
     // 数据加密
     this.jiami()
     this.networkType = getNetworkType()
+    console.log('this.getServerPrice()', this.getServerPrice('9.000'))
+    // this.getServerPrice('90.00')
   },
   methods: {
+    getServerPrice(price) {
+      let newPrice = ''
+      if (typeof price === 'string' && price.match('.')) {
+        const arr = price.split('.')
+        if (Number(arr[1]) > 0) {
+          newPrice = price
+        } else {
+          newPrice = arr[0]
+        }
+      }
+      return newPrice
+    },
     onOversize() {
       this.$xToast.error('文件大小不能超过5M')
     },

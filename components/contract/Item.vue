@@ -33,7 +33,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import changeMoney from '@/utils/changeMoney.js'
+import { userinfoApi } from '@/api'
 
 export default {
   name: 'ContractListcomponents',
@@ -64,6 +66,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      userId: (state) => state.user.userId,
+    }),
     item() {
       return this.info
     },
@@ -87,17 +92,35 @@ export default {
       // 已完成状态 因为这里只有2中合同状态,已完成和签署中,所以可以用if else
       if (this.item.status === 'STRUTS_YWC') {
         queryParams.type = 'yl'
+        this.$router.push({
+          path: '/contract/preview',
+          query: queryParams,
+        })
       } else {
-        // 甲方名称
-        queryParams.signerName = this.item.partyaName
-        // 甲方联系电话(加密)
-        queryParams.contactWay = this.item.partyaTelephone
         queryParams.type = 'qs'
+        this.prepareComfirmContract(queryParams)
       }
-      this.$router.push({
-        path: '/contract/preview',
-        query: queryParams,
-      })
+    },
+    async prepareComfirmContract(item) {
+      try {
+        const params = {
+          id: this.userId,
+        }
+        const { code, data } = await this.$axios.get(userinfoApi.info, {
+          params,
+        })
+        if (code !== 200) {
+          throw new Error('获取用户信息失败')
+        }
+        item.signerName = data.fullName
+        item.contactWay = data.mainAccountFull
+        this.$router.push({
+          path: '/contract/preview',
+          query: item,
+        })
+      } catch (e) {
+        this.$xToast.error('获取用户信息失败')
+      }
     },
   },
 }

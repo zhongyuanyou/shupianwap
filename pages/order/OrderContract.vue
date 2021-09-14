@@ -84,9 +84,12 @@
   待归档
   STRUTS_DGD("STRUTS_DGD","待归档");
 */
+import { mapState } from 'vuex'
 import changeMoney from '@/utils/changeMoney.js'
 import Head from '@/components/common/head/header'
 import contractApi from '@/api/contract'
+import { userinfoApi } from '@/api'
+
 export default {
   name: 'OrderContract',
   components: {
@@ -108,6 +111,11 @@ export default {
       page: 1,
       limit: 500,
     }
+  },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userId,
+    }),
   },
   mounted() {
     this.getorder()
@@ -144,18 +152,36 @@ export default {
       }
       // 当为签署中时,才可以进行签署,其他状态只能够查看合同
       if (item.status === 'STRUTS_QSZ') {
-        // 甲方名称
-        queryParams.signerName = item.partyaName
-        // 甲方联系电话(加密)
-        queryParams.contactWay = item.partyaTelephone
         queryParams.type = 'qs'
+        this.prepareComfirmContract(queryParams)
       } else {
         queryParams.type = 'yl'
+        this.$router.push({
+          path: '/contract/preview',
+          query: queryParams,
+        })
       }
-      this.$router.push({
-        path: '/contract/preview',
-        query: queryParams,
-      })
+    },
+    async prepareComfirmContract(item) {
+      try {
+        const params = {
+          id: this.userId,
+        }
+        const { code, data } = await this.$axios.get(userinfoApi.info, {
+          params,
+        })
+        if (code !== 200) {
+          throw new Error('获取用户信息失败')
+        }
+        item.signerName = data.fullName
+        item.contactWay = data.mainAccountFull
+        this.$router.push({
+          path: '/contract/preview',
+          query: item,
+        })
+      } catch (e) {
+        this.$xToast.error('获取用户信息失败')
+      }
     },
   },
 }
