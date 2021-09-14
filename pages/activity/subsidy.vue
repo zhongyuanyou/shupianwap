@@ -120,8 +120,8 @@ export default {
       specType: 'HDZT_ZTTYPE_QWBT',
 
       hasCity: true,
-      imageHead: this.$ossImgSetV2('aa62skzhjw00000.png'),
-      imageHeadDefault: this.$ossImgSetV2('aay0oucfo840000.png'), // 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg',
+      imageHead: this.$ossImgSetV2('coxz4e42e0w0000.png'),
+      imageHeadDefault: this.$ossImgSetV2('coxz4e42e0w0000.png'), // 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg',
       headerHeight: 0,
       ClassState: 1,
       advertCode: 'ad100075',

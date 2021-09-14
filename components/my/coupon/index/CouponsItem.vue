@@ -156,7 +156,7 @@ export default {
   background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/5cx1r4tc3js0000.png');
   // background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/15vv9a0bvb1c000.png');
   .coupon_price {
-    margin-left: 16px !important;
+    // margin-left: 16px !important;
   }
 }
 // 未使用的背景
@@ -165,6 +165,11 @@ export default {
 }
 .not_coupon_data {
   background: #f5f5f5 !important;
+}
+.coupon_item.haveUse {
+  .item-lf {
+    margin-left: 10px;
+  }
 }
 
 .coupon_item {
@@ -180,7 +185,7 @@ export default {
   .item-lf {
     width: 195px;
     height: 212px;
-    margin-left: 10px;
+    margin-left: 0px;
     display: flex;
     // align-items: center;
     justify-content: center;
@@ -220,8 +225,8 @@ export default {
       height: 84px;
       // background-image: url('https://cdn.shupian.cn/sp-pt/wap/dcdo6nc5o6g0000.png');
       background-size: 100% 100%;
-      right: 0px;
-      top: 0px;
+      right: 10px;
+      top: 8px;
     }
     .title {
       font-size: 32px;
