@@ -49,7 +49,7 @@
                       >
                     </div>
                     <div
-                      v-if="item.marketingCouponVO.fullPrice"
+                      v-if="item.marketingCouponVO.fullPrice == 0"
                       class="can_use"
                     >
                       无门槛
@@ -64,7 +64,7 @@
                       <span>折</span>
                     </div>
                     <div
-                      v-if="item.marketingCouponVO.fullPrice"
+                      v-if="item.marketingCouponVO.fullPrice == 0"
                       class="can_use"
                     >
                       无门槛
