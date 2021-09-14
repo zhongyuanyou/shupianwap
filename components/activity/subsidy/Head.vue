@@ -78,7 +78,7 @@ export default {
     },
     cityName: {
       type: String,
-      default: '',
+      default: '定位中',
     },
     activityTypeOptions: {
       type: Array,

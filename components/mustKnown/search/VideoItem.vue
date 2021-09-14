@@ -36,7 +36,7 @@
           <!-- {{ item.videoName }} -->
         </div>
         <div v-if="custCode === 'video'" class="name_time">
-          <div class="name">{{ item.createrName }}</div>
+          <div class="name">{{ item.authorName }}</div>
           <div class="time">
             {{ timeSplice(item.createTime) }}
           </div>
@@ -187,20 +187,17 @@ export default {
   }
   .rt_content {
     width: 402px;
+    height: 135px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     &.z-course {
       margin-top: -5px;
     }
     .title {
       color: #222222;
       font: bold 30px/42px PingFangSC-Medium, PingFang SC;
-      margin-bottom: 15px;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      word-break: break-all;
-      height: 84px;
+      .textOverflow(2);
     }
     .name_time {
       display: flex;
@@ -209,6 +206,8 @@ export default {
       .name {
         color: #555555;
         font: bold 26px/36px PingFangSC-Medium, PingFang SC;
+        max-width: 150px;
+        .mixin-text-oneoverflow();
       }
       .time {
         color: #999999;

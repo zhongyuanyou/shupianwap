@@ -43,7 +43,10 @@
                 <div class="left">
                   <div v-if="item.marketingCouponVO.couponType === 1">
                     <div class="coupon_price">
-                      {{ item.marketingCouponVO.reducePrice }}
+                      {{ formatPrice(item.marketingCouponVO.reducePrice) }}
+                      <span v-if="item.marketingCouponVO.reducePrice >= 10000"
+                        >万</span
+                      >
                     </div>
                     <div
                       v-if="item.marketingCouponVO.fullPrice"
@@ -80,19 +83,7 @@
                       {{ item.marketingCouponVO.couponName }}
                     </h1>
                     <div class="goods-types">
-                      <p v-if="item.marketingCouponVO.useType === 1">
-                        全场通用
-                      </p>
-                      <p v-if="item.marketingCouponVO.useType === 2">
-                        仅限指定品类使用
-                      </p>
-                      <p v-if="item.marketingCouponVO.useType === 3">
-                        {{
-                          item.marketingCouponVO.productName
-                            ? item.marketingCouponVO.productName + '-可用'
-                            : '仅限指定商品使用'
-                        }}
-                      </p>
+                      <p>{{ formatUseType(item) }}</p>
                     </div>
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
@@ -139,7 +130,10 @@
                 <div class="left">
                   <div v-if="item.marketingCouponVO.couponType === 1">
                     <div class="coupon_price">
-                      {{ item.marketingCouponVO.reducePrice }}
+                      {{ formatPrice(item.marketingCouponVO.reducePrice) }}
+                      <span v-if="item.marketingCouponVO.reducePrice >= 10000"
+                        >万</span
+                      >
                     </div>
                     <div
                       v-if="item.marketingCouponVO.fullPrice == 0"
@@ -176,19 +170,7 @@
                       {{ item.marketingCouponVO.couponName }}
                     </h1>
                     <div class="goods-types">
-                      <p v-if="item.marketingCouponVO.useType === 1">
-                        全场通用
-                      </p>
-                      <p v-if="item.marketingCouponVO.useType === 2">
-                        仅限指定品类使用
-                      </p>
-                      <p v-else-if="item.marketingCouponVO.useType === 3">
-                        {{
-                          item.marketingCouponVO.productName
-                            ? item.marketingCouponVO.productName + '-可用'
-                            : '仅限指定商品使用'
-                        }}
-                      </p>
+                      <p>{{ formatUseType(item) }}</p>
                     </div>
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
@@ -362,6 +344,27 @@ export default {
 
   mounted() {},
   methods: {
+    // 将价格转为万元
+    formatPrice(price) {
+      const p = parseFloat(price)
+      if (p >= 10000) {
+        return parseFloat((p / 10000).toFixed(2))
+      }
+      return p
+    },
+    formatUseType(item) {
+      if (item.marketingCouponVO.useType === 1) {
+        return '全场通用'
+      } else if (item.marketingCouponVO.useType === 2) {
+        return '仅限指定品类使用'
+      } else if (item.marketingCouponVO.useType === 3) {
+        if (item.marketingCouponVO.productName) {
+          return item.marketingCouponVO.productName + '-可用'
+        }
+        return '仅限指定商品使用'
+      }
+      return ''
+    },
     handleProtocol(categoryCode) {
       this.$router.push({
         name: 'login-protocol',
@@ -371,36 +374,6 @@ export default {
     getDiscount(count) {
       return Number(count) / 100
     },
-    // sum() {
-    //   // 原价
-    //   const originPrice =
-    //     this.$route.query.type === 'shopcar'
-    //       ? this.$parent.order.skuTotalPrice
-    //       : this.$parent.order.salesPrice
-    //   // 售价
-    //   let price = 0
-
-    //   if (this.checkarr.marketingCouponVO.discount) {
-    //     price =
-    //       Number(originPrice) *
-    //       10000 *
-    //       (this.checkarr.marketingCouponVO.discount / 1000)
-    //     if (price % 100 === 0) {
-    //       price = price / 10000
-    //     } else {
-    //       price = (Math.floor(price / 100) + 1) / 100
-    //     }
-    //   } else {
-    //     price =
-    //       Number(originPrice) - this.checkarr.marketingCouponVO.reducePrice
-    //   }
-    //   // 折扣价
-    //   this.disPrice =
-    //     Math.ceil(Number(originPrice) * 100 - Number(price) * 100) / 100
-
-    //   // price计算后售价，disPrice折扣价，checkarr选择项
-    //   this.$emit('change', price, -this.disPrice, this.checkarr)
-    // },
     checkitem(item, index) {
       // this.checkarr = item
       if (this.radio === index) {
@@ -562,6 +535,11 @@ export default {
               position: relative;
               // text-overflow: ellipsis;
               // white-space: nowrap;
+              span {
+                position: absolute;
+                font-size: 28px;
+                bottom: 0;
+              }
             }
             .can_use {
               margin-top: 14px;

@@ -35,10 +35,14 @@
         >
           <div class="item-lf">
             <div v-if="item.couponType === 1">
-              <div class="coupon_price">{{ item.reducePrice }}</div>
+              <div class="coupon_price">
+                {{ formatPrice(item.reducePrice) }}
+                <span v-if="item.reducePrice >= 10000">万</span>
+              </div>
               <div v-if="item.fullPrice == 0" class="can_use">无门槛</div>
               <div v-else class="can_use">满{{ item.fullPrice }}元可用</div>
             </div>
+
             <div v-else>
               <div class="coupon_discount">
                 {{ getDiscount(item.discount) }}
@@ -81,13 +85,7 @@
               >{{ item.couponName }}
             </div>
             <div class="content" @click="popOver(index)">
-              <span v-if="item.useType === 1">全场通用</span>
-              <span v-if="item.useType === 2">仅限指定品类使用</span>
-              <span v-if="item.useType === 3">{{
-                item.productName
-                  ? item.productName + '-可用'
-                  : '仅限指定商品使用'
-              }}</span>
+              <span>{{ formatUseType(item) }}</span>
             </div>
             <div class="date">{{ item.serviceLife }}</div>
             <!-- 右侧显示 end-->
@@ -184,6 +182,26 @@ export default {
     clearTimeout(this.timer)
   },
   methods: {
+    formatPrice(price) {
+      const p = parseFloat(price)
+      if (p >= 10000) {
+        return parseFloat((p / 10000).toFixed(2))
+      }
+      return p
+    },
+    formatUseType(item) {
+      if (item.useType === 1) {
+        return '全场通用'
+      } else if (item.useType === 2) {
+        return '仅限指定品类使用'
+      } else if (item.useType === 3) {
+        if (item.productName) {
+          return item.productName + '-可用'
+        }
+        return '仅限指定商品使用'
+      }
+      return ''
+    },
     /**
      * 当有优惠券领取时间到期后，刷新数据
      */
@@ -526,6 +544,11 @@ export default {
         position: relative;
         // text-overflow: ellipsis;
         // white-space: nowrap;
+        span {
+          position: absolute;
+          font-size: 28px;
+          bottom: 0;
+        }
       }
       .coupon_remain {
         margin-top: 10px;

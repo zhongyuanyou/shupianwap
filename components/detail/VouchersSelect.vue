@@ -75,7 +75,10 @@
             >
               <div class="vouchers_item_left">
                 <div v-if="item.couponType === 1">
-                  <div class="coupon_price">{{ item.reducePrice }}</div>
+                  <div class="coupon_price">
+                    {{ formatPrice(item.reducePrice) }}
+                    <span v-if="item.reducePrice >= 10000">万</span>
+                  </div>
                   <div v-if="item.fullPrice == 0" class="can_use">无门槛</div>
                   <div v-else class="can_use">满{{ item.fullPrice }}元可用</div>
                 </div>
@@ -98,13 +101,7 @@
                   {{ item.couponName }}
                 </div>
                 <div class="vouchers_desc">
-                  <span v-if="item.useType === 1">全场通用</span>
-                  <span v-if="item.useType === 2">仅限指定品类使用</span>
-                  <span v-if="item.useType === 3">{{
-                    item.productName
-                      ? item.productName + '-可用'
-                      : '仅限指定商品使用'
-                  }}</span>
+                  <span>{{ formatUseType(item) }}</span>
                 </div>
                 <div class="vouchers_date">
                   {{ item.serviceLife }}
@@ -329,6 +326,27 @@ export default {
     }
   },
   methods: {
+    formatPrice(price) {
+      const p = parseFloat(price)
+      if (p >= 10000) {
+        return parseFloat((p / 10000).toFixed(2))
+      }
+      return p
+    },
+    formatUseType(item) {
+      if (item.useType === 1) {
+        return '全场通用'
+      } else if (item.useType === 2) {
+        return '仅限指定品类使用'
+      } else if (item.useType === 3) {
+        if (item.productName) {
+          return item.productName + '-可用'
+        }
+        return '仅限指定商品使用'
+      }
+      return ''
+    },
+
     getDiscount(count) {
       return Number(count) / 100
     },
@@ -774,9 +792,10 @@ export default {
           background-repeat: no-repeat;
           background-size: 100% 100%;
           .vouchers_item_left {
-            width: 200px;
-            padding-top: 30px;
+            width: 1.9rem;
+            padding-top: 0.3rem;
             text-align: center;
+            margin-left: 0.1rem;
             .coupon_price {
               //   height: 67px;
               font-size: 62px;
@@ -789,6 +808,11 @@ export default {
               position: relative;
               // text-overflow: ellipsis;
               // white-space: nowrap;
+              span {
+                position: absolute;
+                font-size: 28px;
+                bottom: 0;
+              }
             }
             .can_use {
               font-size: 24px;

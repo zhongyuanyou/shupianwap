@@ -1,4 +1,5 @@
 <template>
+  <!-- 官方补贴全网低价 -->
   <div class="container">
     <HeadWrapper
       :fill="false"
@@ -134,15 +135,15 @@ export default {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
       appInfo: (state) => state.app.appInfo,
-
-      RecommendList() {
-        if (this.activityProductList.length >= 3) {
-          return this.activityProductList.slice(0, 3)
-        }
-      },
     }),
     userInfo() {
       return this.$store.state.user
+    },
+    RecommendList() {
+      if (this.activityProductList.length >= 3) {
+        return this.activityProductList.slice(0, 3)
+      }
+      return []
     },
   },
   mounted() {
