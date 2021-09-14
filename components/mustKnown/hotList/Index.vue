@@ -120,7 +120,8 @@ export default {
           orderBy: 'totalBrowseCount=desc;',
           needContent: 0,
           contentTextLength: 60,
-        },
+          type: [1, 2],
+        }
       )
       if (code === 200) {
         if (data.rows.length > 0) {

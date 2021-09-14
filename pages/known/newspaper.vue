@@ -109,6 +109,7 @@ export default {
           page: 1,
           needContent: 0,
           contentTextLength: 60,
+          type: [1, 2],
         }
       )
       if (code === 200) {
