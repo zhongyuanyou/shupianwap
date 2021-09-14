@@ -42,7 +42,7 @@
                 ref="regionsDropdownItem"
                 :disabled="!regionsOption || !regionsOption.length"
                 :title-class="
-                  search.region.name != '区域' && !isChooseCategory
+                  search.region.name != '区域'
                     ? 'sp-dropdown-menu__title--selected '
                     : ''
                 "
@@ -62,9 +62,7 @@
                 ref="sortDropdown"
                 class="search__dropdown-sort"
                 :title-class="
-                  search.sortId > 0 && !isChooseCategory
-                    ? 'sp-dropdown-menu__title--selected'
-                    : ''
+                  search.sortId > 0 ? 'sp-dropdown-menu__title--selected' : ''
                 "
                 :title="search.sortText"
               >
@@ -93,7 +91,9 @@
                 ref="categoryCodeSelect"
                 :title="search.categoryCodeName"
                 :title-class="
-                  isChooseCategory ? 'sp-dropdown-menu__title--selected ' : ''
+                  search.categoryCodes
+                    ? 'sp-dropdown-menu__title--selected '
+                    : ''
                 "
                 class="search__dropdown-category"
               >
@@ -319,7 +319,6 @@ export default {
     formatSearch() {
       const { sortId, keywords, region } = this.search
       const sortObj = this.sortOption[sortId]
-      console.log('sortObj', sortObj)
       const code =
         region.name === '区域'
           ? this.isApplets
@@ -424,7 +423,6 @@ export default {
         this.categoryList = [{ name: '全部分类', code: 0 }].concat(res[0])
         if (this.$route.query && this.$route.query.categoryCode) {
           this.search.categoryCodes = this.$route.query.categoryCode
-          this.isChooseCategory = true
           this.categoryList.forEach((item, index) => {
             if (item.code === this.search.categoryCodes) {
               this.catogyActiveIndex = index
@@ -485,10 +483,6 @@ export default {
       this.uPGpBack()
     },
     handleRegionsSelect(data) {
-      console.log('区域选择', data)
-      this.catogyActiveIndex = 0
-      this.search.categoryCodeName = '全部分类'
-      this.isChooseCategory = false
       if (this.currentCity.code !== data[0].code) return
       const { code, name } = data[1] || {}
       this.search.region = {
@@ -507,7 +501,6 @@ export default {
       this.$refs.sortDropdown.toggle()
       this.catogyActiveIndex = 0
       this.search.categoryCodeName = '全部分类'
-      this.isChooseCategory = false
 
       this.handleSearch()
     },
