@@ -19,7 +19,7 @@
             class="search-icon"
             name="sear_ic_sear"
             size="0.28rem"
-            :color="classState == 0 ? '#D8D8D8' : '#fff'"
+            :color="'#ccc'"
             @click.native="search"
           ></my-icon>
           搜索商品

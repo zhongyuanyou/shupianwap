@@ -62,17 +62,34 @@
               "
               @load="onLoad"
             >
-              <div v-if="activityProductList && activityProductList.length > 0">
-                <Card
-                  v-for="(item, index) in activityProductList"
-                  :key="index"
-                  :end-time="endTime"
-                  :item="item"
-                  :parse-price="parsePrice"
-                  :first="index == 0"
-                  :last="activityProductList.length - 1 == index"
-                  @click.native="jumpProductDetail(item)"
-                ></Card>
+              <div
+                v-if="activityProductList && activityProductList.length > 0"
+                class="card-container"
+              >
+                <div class="card-colunm-1">
+                  <Card
+                    v-for="(item, index) in activityProductList_1"
+                    :key="index"
+                    class="card"
+                    :item="item"
+                    :parse-price="parsePrice"
+                    :first="index == 0"
+                    :last="activityProductList_1.length - 1 == index"
+                    @click.native="jumpProductDetail(item)"
+                  ></Card>
+                </div>
+                <div class="card-colunm-2">
+                  <Card
+                    v-for="(item, index) in activityProductList_2"
+                    :key="index"
+                    class="card"
+                    :item="item"
+                    :parse-price="parsePrice"
+                    :first="index == 0"
+                    :last="activityProductList_2.length - 1 == index"
+                    @click.native="jumpProductDetail(item)"
+                  ></Card>
+                </div>
               </div>
               <NoData :is-no-data="isNoData"></NoData>
             </sp-list>
@@ -143,6 +160,16 @@ export default {
         return this.activityProductList.slice(0, 3)
       }
       return []
+    },
+    activityProductList_1() {
+      return this.activityProductList.filter((item, index) => {
+        return index % 2 === 1
+      })
+    },
+    activityProductList_2() {
+      return this.activityProductList.filter((item, index) => {
+        return index % 2 === 0
+      })
     },
   },
 
@@ -247,6 +274,19 @@ export default {
       }
       .body-content {
         min-height: 80vh;
+      }
+
+      .card-container {
+        overflow: hidden;
+        display: flex;
+        .card-colunm-1 {
+          flex: 1;
+          padding-right: 10px;
+        }
+        .card-colunm-2 {
+          flex: 1;
+          padding-left: 10px;
+        }
       }
     }
   }

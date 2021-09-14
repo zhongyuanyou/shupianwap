@@ -173,6 +173,7 @@ export default {
         }
         .price_des {
           line-height: 22px;
+          font-weight: 600;
         }
         .price {
           font-family: PingFangSC-Regular;
