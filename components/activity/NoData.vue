@@ -31,7 +31,7 @@ export default {
   p {
     width: 100%;
     color: #222222;
-    font-size: 28px;
+    font-size: 30px;
   }
 }
 </style>
