@@ -160,6 +160,19 @@ export default {
     onHeightChange(height) {
       this.headerHeight = height
     },
+    setTopColor() {
+      if (this.isInApp) {
+        this.$appFn.dggChangeTopColor(
+          {
+            flags: 'light',
+          },
+          (res) => {
+            console.log('DGGSetColorRes', res)
+          }
+        )
+      }
+    },
+
     handleScroll() {
       const scrollHeight =
         document.documentElement.scrollTop || document.body.scrollTop // 滚动高度

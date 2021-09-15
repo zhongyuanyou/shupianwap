@@ -175,7 +175,7 @@ export default {
   .goods-name {
     font-size: 32px;
     line-height: 42px;
-    margin-bottom: 12px;
+    margin-bottom: 7px;
     font-weight: bold;
     color: #222222;
 

@@ -66,7 +66,7 @@ export default {
 }
 .goods {
   font-size: 0;
-  padding: 20px 20px 24px;
+  padding: 20px 20px 30px;
   margin-bottom: 20px;
   box-sizing: border-box;
   background-color: #fff;
@@ -79,7 +79,7 @@ export default {
   .goods-name {
     // height: 88px;
     font-family: PingFangSC-Medium;
-    font-size: bold;
+    font-weight: bold;
     font-size: 32px;
     color: #222222;
     letter-spacing: 0;
@@ -89,7 +89,7 @@ export default {
   .price-conainer {
     .price-value {
       font-family: PingFangSC-Medium;
-      font-size: bold;
+      font-weight: bold;
       font-size: 36px;
       color: #ec5330;
       letter-spacing: 0;
@@ -97,7 +97,7 @@ export default {
     }
     .price-unit {
       font-family: PingFangSC-Medium;
-      font-size: bold;
+      font-weight: bold;
       font-size: 22px;
       color: #ec5330;
       letter-spacing: 0;

@@ -185,6 +185,18 @@ export default {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
+    setTopColor() {
+      if (this.isInApp) {
+        this.$appFn.dggChangeTopColor(
+          {
+            flags: 'light',
+          },
+          (res) => {
+            console.log('DGGSetColorRes', res)
+          }
+        )
+      }
+    },
     onHeightChange(height) {
       this.headerHeight = height
     },

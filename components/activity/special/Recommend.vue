@@ -161,9 +161,8 @@ export default {
         }
         .priceContainer {
           font-size: 20px;
-          color: #222222;
           text-align: left;
-          line-height: 28px;
+          line-height: 35px;
 
           letter-spacing: 0;
           margin: 20px 12px 20px;
@@ -174,6 +173,8 @@ export default {
         .price_des {
           line-height: 22px;
           font-weight: 600;
+          color: #222222;
+          font-weight: bold;
         }
         .price {
           font-family: PingFangSC-Regular;
@@ -181,6 +182,7 @@ export default {
           font-weight: bold;
           font-size: 35px;
           letter-spacing: 0;
+          margin: 0 2px;
         }
         .unit {
           color: #ec5330;

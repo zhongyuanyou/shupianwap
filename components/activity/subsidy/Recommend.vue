@@ -229,17 +229,16 @@ export default {
         font-weight: bold;
         text-align: left;
 
-        height: 72px;
+        // height: 72px;
         padding: 0 20px;
         .textOverflow(2);
       }
       .priceContainer {
         color: #555555;
         text-align: left;
-        line-height: 28px;
 
         letter-spacing: 0;
-        margin: 12px 12px 24px;
+        margin: 12px 12px 30px;
         & > span {
           display: inline-block;
         }
@@ -249,6 +248,7 @@ export default {
         color: #ec5330;
         font-weight: bold;
         font-size: 40px;
+        line-height: 40px;
       }
       .unit {
         color: #ec5330;
