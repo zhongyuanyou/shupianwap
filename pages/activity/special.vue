@@ -143,7 +143,7 @@ export default {
 
       headBkOpacity: 0,
       ClassState: 1,
-      advertCode: 'ad100074',
+      advertCode: 'ad100115',
       ruleCode: 'protocol100046',
     }
   },

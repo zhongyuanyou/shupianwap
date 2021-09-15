@@ -124,7 +124,7 @@ export default {
       imageHeadDefault: this.$ossImgSetV2('coxz4e42e0w0000.png'), // 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg',
       headerHeight: 0,
       ClassState: 1,
-      advertCode: 'ad100075',
+      advertCode: 'ad100114',
       ruleCode: 'protocol100034',
 
       headBkOpacity: 0,
