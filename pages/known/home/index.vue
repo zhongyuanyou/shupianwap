@@ -104,6 +104,7 @@
             :finished="finished"
             finished-text="没有更多了"
             class="list_container"
+            :immediate-check="false"
             @load="getList"
           >
             <div v-for="(item, index) in list" :key="index">
@@ -120,7 +121,9 @@
                       :src="item.image.split(',')[0]"
                       alt=""
                     />
-                    <div class="time">{{ totime(item.duration) }}</div>
+                    <div v-if="!isNaN(item.duration)" class="time">
+                      {{ totime(item.duration) }}
+                    </div>
                   </div>
                   <div class="rt_content">
                     <div class="title">{{ item.videoName }}</div>
@@ -143,6 +146,7 @@
             finished-text="没有更多了"
             :error.sync="error"
             error-text="请求失败，点击重新加载"
+            :immediate-check="false"
             @load="getList"
           >
             <div v-if="list.length > 0" class="video-list">
@@ -322,6 +326,7 @@ export default {
   mounted() {
     this.isShare = this.$route.query.isShare
     this.getAdList()
+    this.getList()
     window.addEventListener('scroll', this.getScroll)
     // const userType = this.type || utils.getUserType(this.type)
     // 到时候这里改成5
@@ -902,6 +907,8 @@ export default {
               .name {
                 color: #555555;
                 font: bold 26px/36px PingFangSC-Medium, PingFang SC;
+                max-width: 150px;
+                .mixin-text-oneoverflow();
               }
               .time {
                 color: #999999;

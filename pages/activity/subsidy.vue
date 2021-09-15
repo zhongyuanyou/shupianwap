@@ -120,7 +120,7 @@ export default {
       specType: 'HDZT_ZTTYPE_QWBT',
 
       hasCity: true,
-      imageHead: this.$ossImgSetV2('coxz4e42e0w0000.png'),
+      imageHead: '', // this.$ossImgSetV2('coxz4e42e0w0000.png'),
       imageHeadDefault: this.$ossImgSetV2('coxz4e42e0w0000.png'), // 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg',
       headerHeight: 0,
       ClassState: 1,
@@ -140,10 +140,10 @@ export default {
       return this.$store.state.user
     },
     RecommendList() {
-      if (this.activityProductList.length >= 3) {
-        return this.activityProductList.slice(0, 3)
-      }
-      return []
+      // if (this.activityProductList.length >= 3) {
+      return this.activityProductList.slice(0, 3)
+      // }
+      // return []
     },
   },
   mounted() {
@@ -201,7 +201,7 @@ export default {
 
   .img_container {
     position: relative;
-    min-height: 300px;
+    min-height: 1088px;
     background: #f8f8f8;
     width: 100%;
     overflow: hidden;
