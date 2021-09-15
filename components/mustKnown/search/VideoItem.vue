@@ -33,21 +33,13 @@
         <div class="title">
           <p v-if="custCode === 'video'" v-html="item.videoNameHtml"></p>
           <p v-else v-html="item.courseNameHtml"></p>
-          <!-- {{ item.videoName }} -->
         </div>
-        <div v-if="custCode === 'video'" class="name_time">
+        <div class="name_time">
           <div class="name">{{ item.authorName }}</div>
           <div class="time">
             {{ timeSplice(item.createTime) }}
           </div>
         </div>
-        <template v-if="custCode === 'course'">
-          <div class="name_desc">
-            <div class="name">{{ item.authorName }}</div>
-            <div class="desc">{{ item.authorTile }}</div>
-          </div>
-          <div class="num_desc">{{ item.totalViewCount | numChange }} 人次</div>
-        </template>
       </div>
     </template>
   </div>
