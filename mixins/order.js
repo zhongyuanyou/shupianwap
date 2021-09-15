@@ -21,7 +21,7 @@ const ORDERSTATUSCODE = {
   2: 'ORDER_CUS_STATUS_PROGRESSING', // 进行中
   3: 'ORDER_CUS_STATUS_COMPLETED', // 已完成
   4: 'ORDER_CUS_STATUS_CANCELLED', // 已取消
-  5: 'ORDER_CUS_STATUS_UNSUBMITE',// 待提交
+  5: 'ORDER_CUS_STATUS_UNSUBMITE', // 待提交
 }
 
 // 支付类型CODE
@@ -31,7 +31,12 @@ const PAYTYPECODE = {
   3: 'PRO_PRE_SERVICE_POST_PAY_BY_NODE', // 按服务节点付费
   4: 'PRO_PRE_SERVICE_FINISHED_PAY', // 服务完结收费
 }
-
+// 客户单支付状态code
+const PAYSTATUSCODE = {
+  1: 'ORDER_CUS_PAY_STATUS_UN_PAID', // 未支付
+  2: 'ORDER_CUS_PAY_STATUS_PART_PAID', // 部分支付
+  3: 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID', // 支付完成
+}
 // 根据订单状态判断订单状态名称
 const orderStatusObj = {
   // 销售商品待提交
@@ -66,7 +71,6 @@ const orderStatusObj = {
     cripsName: '待提交',
     status: 'ORDER_CUS_STATUS_UNSUBMITE',
   },
-
 
   TRADE_STATUS_UN_PAID: {
     type: 'PRO_CLASS_TYPE_TRANSACTION',
@@ -251,7 +255,7 @@ export default {
         ORDER_CUS_STATUS_PROGRESSING: '办理中', // 进行中
         ORDER_CUS_STATUS_COMPLETED: '已完成', // 已完成
         ORDER_CUS_STATUS_CANCELLED: '已取消', // 已取消
-        ORDER_CUS_STATUS_UNSUBMITE: "待提交",
+        ORDER_CUS_STATUS_UNSUBMITE: '待提交',
       },
       // 客户单付款状态CODE对应文字
       PAYSTATUSCODENAME: {
@@ -590,9 +594,9 @@ export default {
             (orderArr[i].skuStatusNo === 'ORDER_ORDER_SALE_STATUS_HANDLED' ||
               orderArr[i].skuStatusNo === 'ORDER_ORDER_TRADE_STATUS_HANDLED' ||
               orderArr[i].skuStatusNo ===
-              'ORDER_ORDER_RESOURCE_STATUS_HANDLED' ||
+                'ORDER_ORDER_RESOURCE_STATUS_HANDLED' ||
               orderArr[i].skuStatusNo ===
-              'ORDER_ORDER_SERVER_STATUS_HANDLED') &&
+                'ORDER_ORDER_SERVER_STATUS_HANDLED') &&
             orderArr[i].payStatusNo === 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
           ) {
             if (orderArr[i].userConfirm === 0) {
@@ -603,9 +607,41 @@ export default {
       }
       return isShowConfirm
     },
-    // 判断是否显示付款按钮
+    /*
+     * @LastEditors: tang dai bing
+     * @LastEditTime: 2021-03-31
+     * @params:orderData 订单数据
+     * @Description:判断是否显示支付按钮，返回数据: false 不显示，1显示立即付款， 2显示支付余款
+     */
     isShowPayBtn() {
-      return orderUtils.isShowPayBtn(this.orderData)
+      const orderData = this.orderData
+      if (
+        orderData.isNeedPay &&
+        orderData.cusOrderPayStatusNo === PAYSTATUSCODE[1] &&
+        orderData.cusOrderStatusNo !== ORDERSTATUSCODE[3] &&
+        orderData.cusOrderStatusNo !== ORDERSTATUSCODE[4]
+      ) {
+        // 显示立即付款按钮的条件
+        // 1订单可付款
+        // 2客户单支付状态为待付款
+        // 3订单状态不等于已取消
+        // 3订单状态不等于已完成
+        return 1
+      } else if (
+        orderData.isNeedPay &&
+        orderData.cusOrderPayStatusNo === PAYSTATUSCODE[2] &&
+        orderData.cusOrderStatusNo !== ORDERSTATUSCODE[3] &&
+        orderData.cusOrderStatusNo !== ORDERSTATUSCODE[4]
+      ) {
+        // 显示支付余款的条件
+        // 1订单可付款
+        // 2客户单支付状态为部分付款
+        // 2订单状态不等于已取消
+        // 3订单状态不等于已完成
+        return 2
+      } else {
+        return false
+      }
     },
     // 判断订单状态 返回数字
     checkOrderStatus(code) {
@@ -1136,25 +1172,25 @@ export default {
       // 合同链接
       const contractUrl =
         this.orderData.contractVo2s &&
-          this.orderData.contractVo2s.length &&
-          (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
-            this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+        this.orderData.contractVo2s.length &&
+        (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
           ? this.orderData.contractVo2s[0].contractUrl
           : this.orderData.contractUrl
       // 合同ID
       const contractId =
         this.orderData.contractVo2s &&
-          this.orderData.contractVo2s.length &&
-          (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
-            this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+        this.orderData.contractVo2s.length &&
+        (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
           ? this.orderData.contractVo2s[0].contractId
           : this.orderData.contractId
       // 合同编号
       const contractNo =
         this.orderData.contractVo2s &&
-          this.orderData.contractVo2s.length &&
-          (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
-            this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+        this.orderData.contractVo2s.length &&
+        (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
           ? this.orderData.contractVo2s[0].contractNo
           : this.orderData.contractNo
       if (
