@@ -2,7 +2,7 @@
   <div v-if="isNoData" class="no-data">
     <img
       width="100%"
-      src="https://cdn.shupian.cn/sp-pt/wap/images/bzre7lw14o00000.png"
+      src="https://cdn.shupian.cn/sp-pt/wap/images/bwpm2il2fe80000.png"
       alt=""
       srcset=""
     />
@@ -21,17 +21,12 @@ export default {
 <style lang="less" scoped>
 .no-data {
   text-align: center;
-  padding-top: 10px;
+  // padding-top: 10px;
   img {
     display: block;
     width: 340px;
-    height: 340px;
-    margin: 0 auto;
-  }
-  p {
-    width: 100%;
-    color: #222222;
-    font-size: 30px;
+
+    margin: 148px auto 0px;
   }
 }
 </style>

@@ -249,5 +249,11 @@ export default {
       }
     }
   }
+
+  ::v-deep .sp-list__finished-text {
+    padding: 24px 0px;
+    line-height: 0.25rem;
+    text-align: center;
+  }
 }
 </style>
