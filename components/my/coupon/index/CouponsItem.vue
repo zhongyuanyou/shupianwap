@@ -167,6 +167,7 @@ export default {
   background: #f5f5f5 !important;
 }
 .coupon_item.haveUse {
+  height: 222px;
   .item-lf {
     margin-left: 10px;
   }

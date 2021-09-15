@@ -784,9 +784,9 @@ export default {
       .vouchers_list {
         .vouchers_item {
           display: flex;
-          margin-bottom: 20px;
+          margin-bottom: 4px;
           width: 670px;
-          height: 216px;
+          height: 222px;
           padding-bottom: 4px;
           background-image: url('https://cdn.shupian.cn/sp-pt/wap/g4kbai7wgrk0000.png');
           background-repeat: no-repeat;
@@ -891,7 +891,7 @@ export default {
                   #fa5741 100%
                 );
                 transform: scale(0.8);
-                transform-origin: 0 0.04rem;
+                transform-origin: 0 center;
                 line-height: 0;
                 padding: 0.2rem 0.08rem;
               }
@@ -899,7 +899,7 @@ export default {
                 background: #cccccc;
                 color: #ffffff;
                 transform: scale(0.8);
-                transform-origin: 0 0.04rem;
+                transform-origin: 0 center;
                 line-height: 0;
                 padding: 0.2rem 0.08rem;
               }

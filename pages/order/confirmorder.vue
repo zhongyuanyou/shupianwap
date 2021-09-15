@@ -112,7 +112,7 @@
         <CellGroup>
           <Cell
             title="商品及服务总数"
-            :value="order.num || order.goodsTotal || 0 + '件'"
+            :value="(order.num || order.goodsTotal || 0) + '件'"
             value-class="black"
           />
           <Cell
@@ -204,7 +204,7 @@
       </p>
        -->
       <p class="left">
-        应付:<span>
+        应付：<span>
           <b>{{ settlementInfo.needPayTotalMoney }}</b> 元</span
         >
       </p>
@@ -1012,6 +1012,7 @@ export default {
       }
       .black {
         color: #1a1a1a;
+        font-weight: bold;
       }
       .red {
         color: #ec5330;
@@ -1027,7 +1028,7 @@ export default {
           font-size: 22px;
           color: #ec5330;
           b {
-            font-size: 30px;
+            font-size: 36px;
           }
         }
       }

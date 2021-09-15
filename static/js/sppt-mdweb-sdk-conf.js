@@ -1,7 +1,9 @@
+var env = window.document.getElementsByName('DGG_ENV').length
+  ? window.document.getElementsByName('DGG_ENV')[0].content
+  : ''
 var SPPTMDCONFIG = {
   platform_type: 'Web', // 类型
-  app_name:
-    process.env.DGG_SERVER_ENV === 'beta' ? '薯片WAP-P' : '薯片WAP', // 名称
+  app_name: env === 'beta' ? '薯片WAP-P' : '薯片WAP', // 名称
   server_url: window.location.href.includes('https://m.shupian.cn')
     ? 'https://shence.dgg.cn:6443/sa?project=product'
     : 'https://shence.dgg.cn:6443/sa?project=default', // 请求地址, // 数据接收地址, // 请求地址

@@ -196,7 +196,7 @@
     </div>
     <div ref="foot" class="foot">
       <p class="left">
-        应付:<span>
+        应付：<span>
           <b v-if="isDeposit">{{ settlementInfo.depositAmount }}</b>
           <b v-else-if="isNodes">0</b>
           <b v-else-if="isServiceFinshed">0</b>
@@ -906,6 +906,7 @@ export default {
       }
       .black {
         color: #1a1a1a;
+        font-weight: bold;
       }
       .red {
         color: #ec5330;
