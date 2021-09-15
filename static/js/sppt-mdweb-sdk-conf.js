@@ -1,4 +1,6 @@
-var env = window.document.getElementsByTagName('meta')['DGG_ENV'].content
+var env = window.document.getElementsByName('DGG_ENV').length
+  ? window.document.getElementsByName('DGG_ENV')[0].content
+  : ''
 var SPPTMDCONFIG = {
   platform_type: 'Web', // 类型
   app_name: env === 'beta' ? '薯片WAP-P' : '薯片WAP', // 名称

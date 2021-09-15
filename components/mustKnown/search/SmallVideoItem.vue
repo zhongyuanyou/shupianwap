@@ -2,17 +2,19 @@
   <div class="item">
     <sp-image width="100%" height="6.61rem" fit="cover" :src="item.image" />
     <div class="content_box">
-      <div class="desc">
-        <div class="count">
-          <my-icon name="a-guankan2" color="#FFFFFF" size="0.32rem"></my-icon>
-          <div class="count-count">{{ item.custTotalCount | numChange }}</div>
+      <div class="content-txt">
+        <div class="desc">
+          <div class="count">
+            <my-icon name="a-guankan2" color="#FFFFFF" size="0.32rem"></my-icon>
+            <div class="count-count">{{ item.custTotalCount | numChange }}</div>
+          </div>
+          <div v-if="item.categoryName" class="classify">
+            {{ item.categoryName }}
+          </div>
         </div>
-        <div v-if="item.categoryName" class="classify">
-          {{ item.categoryName }}
+        <div class="tile">
+          {{ item.videoName }}
         </div>
-      </div>
-      <div class="tile">
-        {{ item.videoName }}
       </div>
     </div>
   </div>
@@ -73,45 +75,45 @@ export default {
       rgba(0, 0, 0, 0) 100%
     );
     border-radius: 0 0 4px 4px;
-    .desc {
+    .content-txt {
       position: absolute;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      top: 59px;
+      bottom: 20px;
       left: 20px;
       right: 20px;
-      .count {
+      .desc {
+        margin-bottom: 16px;
         display: flex;
         align-items: center;
-        &-count {
-          font-size: 24px;
-          color: #fff;
-          line-height: 1;
-          margin-left: 8px;
+        justify-content: space-between;
+        .count {
+          display: flex;
+          align-items: center;
+          &-count {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            line-height: 1;
+            margin-left: 8px;
+          }
+        }
+        .classify {
+          background: #fff;
+          padding: 4px 10px;
+          border-radius: 4px;
+          box-sizing: border-box;
+          font-size: 16px;
+          color: #000;
+          max-width: 50%;
+          .mixin-text-oneoverflow();
         }
       }
-      .classify {
-        background: #fff;
-        padding: 4px 10px;
-        border-radius: 4px;
-        box-sizing: border-box;
-        font-size: 16px;
-        color: #000;
-        max-width: 50%;
-        .mixin-text-oneoverflow();
+      .tile {
+        font-size: 36px;
+        line-height: 48px;
+        font-weight: bold;
+        color: #fff;
+        .textOverflow(2);
       }
-    }
-    .tile {
-      position: absolute;
-      right: 20px;
-      left: 20px;
-      top: 99px;
-      font-size: 36px;
-      line-height: 48px;
-      font-weight: bold;
-      color: #fff;
-      .textOverflow(2);
     }
   }
 }
