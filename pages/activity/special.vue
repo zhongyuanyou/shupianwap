@@ -136,7 +136,7 @@ export default {
       specType: 'HDZT_ZTTYPE_TM',
 
       hasCity: true,
-      imageHead: this.$ossImgSetV2('4rgd1t6d8aw0000.png'),
+      imageHead: '', // this.$ossImgSetV2('4rgd1t6d8aw0000.png'),
 
       imageHeadDefault: this.$ossImgSetV2('4rgd1t6d8aw0000.png'),
       headerHeight: 0,
@@ -163,12 +163,12 @@ export default {
     },
     activityProductList_1() {
       return this.activityProductList.filter((item, index) => {
-        return index % 2 === 1
+        return index % 2 === 0
       })
     },
     activityProductList_2() {
       return this.activityProductList.filter((item, index) => {
-        return index % 2 === 0
+        return index % 2 === 1
       })
     },
   },

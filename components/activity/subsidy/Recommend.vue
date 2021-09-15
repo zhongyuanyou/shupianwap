@@ -11,9 +11,9 @@
           <swiper-slide
             v-for="(item, index) of list"
             :key="index"
-            @click="jump(item)"
+
           >
-            <div class="list_item">
+            <div class="list_item"   @click="jump(item)">
               <div class="img_container">
                 <img
                   src="https://cdn.shupian.cn/sp-pt/wap/images/64t0fajm5dw0000.png"
@@ -28,7 +28,7 @@
                       : defaultImg
                   "
                   alt="薯片科技"
-                  @click="$emit('preview', item)"
+
                 ></img>
               </div>
               <div class="skuName">{{ item.skuName }}</div>
