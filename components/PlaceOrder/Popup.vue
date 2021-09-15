@@ -22,12 +22,12 @@
             @click="tabactivefn(item, index)"
           >
             <span>{{ item.name }}</span
-            ><b v-if="index == 0">{{ `(${datalist.length || 0})` }}</b>
-            <b v-else>{{ `(${nolist.length || 0})` }}</b>
+            ><span v-if="index == 0">{{ `(${datalist.length || 0})` }}</span>
+            <span v-else>{{ `(${nolist.length || 0})` }}</span>
             <i class="icon"></i>
           </p>
         </div>
-        <div class="calculation">
+        <div v-if="tabAct === 0" class="calculation">
           {{ disPrice ? '已选中优惠券，可抵扣' : '请选择优惠券' }}
           <span v-if="disPrice" class="red">{{ disPrice }}元</span>
         </div>
@@ -453,7 +453,7 @@ export default {
       }
       > .act {
         color: #4974f5;
-        font-weight: 600;
+        font-weight: bold;
         i {
           display: block;
         }
@@ -673,10 +673,10 @@ export default {
         height: 100%;
         > .nolist {
           height: 220px;
-          margin: 24px auto 0;
+          margin: 10px auto 0;
           width: 670px;
-          background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png)
-            no-repeat;
+          background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/5cx1r4tc3js0000.png');
+          // background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png) no-repeat;
           background-size: 100%;
           // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
           box-sizing: border-box;

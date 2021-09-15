@@ -3,12 +3,14 @@
     <HeadWrapper :line="true">
       <Head title="失效券"></Head>
     </HeadWrapper>
-    <div v-for="(item, index) of list" :key="index" class="coupon_list">
-      <CouponsItem
-        :item="item.marketingCouponVO || {}"
-        :coupon-type="2"
-        :log-type="item.logType"
-      ></CouponsItem>
+    <div class="coupon_container">
+      <div v-for="(item, index) of list" :key="index" class="coupon_list">
+        <CouponsItem
+          :item="item.marketingCouponVO || {}"
+          :coupon-type="2"
+          :log-type="item.logType"
+        ></CouponsItem>
+      </div>
     </div>
 
     <!-- <sp-list
@@ -182,8 +184,11 @@ export default {
       line-height: 30px;
     }
   }
+  .coupon_container {
+    margin-top: 30px;
+  }
   .coupon_list {
-    margin: 24px 40px 0;
+    margin: 4px 40px 0;
   }
   .rules_and_invalid {
     font-family: PingFangSC-Regular;

@@ -505,11 +505,11 @@ export default {
   height: auto;
   .coupon_item {
     position: relative;
-    height: 212px;
+    height: 222px;
     // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
     // background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
     background-size: 100% 100%;
-    margin: 24px 0;
+    margin: 4px 0 0;
     position: relative;
     .item-lf {
       width: 208px;
@@ -639,7 +639,7 @@ export default {
           color: #ffffff;
           background-image: linear-gradient(90deg, #fa6d5a 0%, #fa5741 100%);
           transform: scale(0.8);
-          transform-origin: 0 4px;
+          transform-origin: 0 center;
           line-height: 0;
           padding: 20px 6px;
         }
@@ -695,11 +695,12 @@ export default {
     }
     .receive {
       position: absolute;
-      right: 0;
-      top: 0;
+      right: 12px;
+      top: 8px;
       z-index: 1;
       width: 90px;
       height: 90px;
+      font-size: 0;
       img {
         width: 90px;
         height: 90px;
