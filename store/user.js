@@ -55,6 +55,7 @@ export const mutations = {
     state.avatar = String(data.avatar || AVATAR)
     if (data.customerID) {
       state.customerID = String(data.customerID)
+
     }
   },
   CLEAR_USER(state) {
@@ -116,11 +117,16 @@ export const mutations = {
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       // domain: 'shupian.cn',
     })
-    this.$cookies.set('customerID', String(data?.customerInfo?.id || ''), {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
-    })
+    if (data?.customerInfo?.id) {
+      this.$cookies.set('customerID', String(data?.customerInfo?.id || ''), {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7, // 过期时间
+        // domain: 'shupian.cn',
+      })
+      state.customerID = data?.customerInfo?.id
+      state.userInfo.customerID = data?.customerInfo?.id
+    }
+
 
 
     state.userNo = data.no
@@ -130,7 +136,6 @@ export const mutations = {
     state.realStatus = data.realStatus
     state.mainAccountFull = data.mainAccountFull
     state.avatar = data.url || AVATAR
-    state.customerID = data?.customerInfo?.id
 
     state.userInfo.userNo = data.no
     state.userInfo.userName = data.nickName
@@ -138,7 +143,7 @@ export const mutations = {
     state.userInfo.realStatus = data.realStatus
     state.userInfo.mainAccountFull = data.mainAccountFull
     state.userInfo.avatar = data.url
-    state.userInfo.customerID = data?.customerInfo?.id
+
   },
 }
 
@@ -163,9 +168,11 @@ export const actions = {
   },
 
   setUser({ commit }, data) {
+
     commit('SET_USER', data)
   },
   setInfo({ commit }, data) {
+
     commit('SET_INFO', data)
   },
 }
