@@ -238,10 +238,10 @@ export default {
     background: #f8f8f8;
     .recommend {
       position: absolute;
-      bottom: 2%;
-      left: 2%;
-      right: 2%;
-      margin: 2% 2% 0;
+      bottom: 2.6%;
+      left: 2.6%;
+      right: 2.6%;
+      margin: 2.6% 2.6% 0;
     }
     .rule {
       // header的z-index是999

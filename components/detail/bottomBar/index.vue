@@ -244,7 +244,23 @@ export default {
           duration: 2000,
           forbidClick: true,
         })
+        console.log('sellingGoodsData', {
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          customerId: this.$store.state.user.customerID || '',
+          plannerId: mchUserId,
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }) ||
+            '',
+          requireCode: this.sellingGoodsData.classCodeLevel.split(',')[0],
+          requireName: this.sellingGoodsData.classCodeLevelName.split('/')[0],
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+        })
         await planner.awaitTip()
+
         const telData = await planner.newtel({
           areaCode: this.city.code,
           areaName: this.city.name,
@@ -256,10 +272,11 @@ export default {
             this.$cookies.get('mainAccountFull', { path: '/' }) ||
             '',
           requireCode: this.sellingGoodsData.classCodeLevel.split(',')[0],
-          requireName: '',
+          requireName: this.sellingGoodsData.classCodeLevelName.split('/')[0],
           // id: mchUserId,
           // sensitiveInfoType: 'MCH_USER',
         })
+
         // 解密电话
         if (telData.status === 1) {
           const tel = telData.phone
