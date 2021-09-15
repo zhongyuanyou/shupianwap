@@ -162,7 +162,7 @@ export default {
 
         font-weight: bold;
         font-size: 28px;
-
+        vertical-align: middle;
         letter-spacing: 0;
         text-align: right;
         line-height: 28px;

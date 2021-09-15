@@ -156,10 +156,10 @@ export default {
       return this.$store.state.user
     },
     RecommendList() {
-      if (this.activityProductList.length >= 3) {
-        return this.activityProductList.slice(0, 3)
-      }
-      return []
+      // if (this.activityProductList.length >= 3) {
+      return this.activityProductList.slice(0, 3)
+      // }
+      // return []
     },
     activityProductList_1() {
       return this.activityProductList.filter((item, index) => {
@@ -185,6 +185,18 @@ export default {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
+    setTopColor() {
+      if (this.isInApp) {
+        this.$appFn.dggChangeTopColor(
+          {
+            flags: 'light',
+          },
+          (res) => {
+            console.log('DGGSetColorRes', res)
+          }
+        )
+      }
+    },
     onHeightChange(height) {
       this.headerHeight = height
     },
@@ -289,6 +301,11 @@ export default {
         }
       }
     }
+  }
+  ::v-deep .sp-list__finished-text {
+    padding: 24px 0px;
+    line-height: 0.25rem;
+    text-align: center;
   }
 }
 </style>

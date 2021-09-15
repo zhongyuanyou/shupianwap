@@ -160,6 +160,19 @@ export default {
     onHeightChange(height) {
       this.headerHeight = height
     },
+    setTopColor() {
+      if (this.isInApp) {
+        this.$appFn.dggChangeTopColor(
+          {
+            flags: 'light',
+          },
+          (res) => {
+            console.log('DGGSetColorRes', res)
+          }
+        )
+      }
+    },
+
     handleScroll() {
       const scrollHeight =
         document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
@@ -235,6 +248,12 @@ export default {
         padding: 0 20px;
       }
     }
+  }
+
+  ::v-deep .sp-list__finished-text {
+    padding: 24px 0px;
+    line-height: 0.25rem;
+    text-align: center;
   }
 }
 </style>

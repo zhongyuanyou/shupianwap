@@ -167,6 +167,7 @@ export default {
         text-align: right;
         line-height: 28px;
         margin: 0 12px;
+        vertical-align: middle;
       }
     }
   }
