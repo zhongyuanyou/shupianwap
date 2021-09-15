@@ -2,7 +2,7 @@
   <div class="item">
     <h1 v-html="item.titleHtml"></h1>
     <div class="box">
-      <div :style="{ 'padding-right': item.contentImageUrl ? '210px' : '0' }">
+      <div :class="[item.contentImageUrl ? 'z-img' : '']">
         <p v-html="item.contentTextHtml"></p>
         <div v-if="item.contentImageUrl" class="num">
           <span>{{ item.applaudCount }} 赞同</span>
@@ -58,8 +58,9 @@ export default {
 
 <style lang="less" scoped>
 .item {
-  > h1 {
+  h1 {
     font-size: 36px;
+    line-height: 48px;
     font-weight: bold;
     color: #222222;
     display: -webkit-box;
@@ -67,13 +68,17 @@ export default {
     -webkit-line-clamp: 2;
     overflow: hidden;
   }
-  > .box {
+  .box {
     margin-top: 18px;
-    align-items: center;
     position: relative;
-    > div {
-      padding-right: 210px;
-      > p {
+    div {
+      &.z-img {
+        padding-right: 222px;
+        p {
+          height: 84px;
+        }
+      }
+      p {
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
@@ -81,19 +86,20 @@ export default {
         font-size: 30px;
         font-weight: 400;
         color: #555555;
+        line-height: 42px;
       }
-      > .num {
+      .num {
         width: 464px;
         display: flex;
         align-items: center;
         margin-top: 16px;
-        > span {
+        span {
           font-size: 24px;
           font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
           color: #999999;
         }
-        > i {
+        i {
           width: 4px;
           height: 4px;
           background: #999999;
@@ -103,7 +109,7 @@ export default {
         }
       }
     }
-    > img {
+    img {
       position: absolute;
       right: 0;
       top: 0;
@@ -111,22 +117,21 @@ export default {
       height: 127px;
       background: #d8d8d8;
       border-radius: 12px;
-      margin-left: 32px;
       object-fit: cover;
     }
   }
-  > .num {
+  .num {
     width: 464px;
     display: flex;
     align-items: center;
     margin-top: 16px;
-    > span {
+    span {
       font-size: 24px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: #999999;
     }
-    > i {
+    i {
       width: 4px;
       height: 4px;
       background: #999999;
