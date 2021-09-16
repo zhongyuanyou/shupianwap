@@ -136,6 +136,8 @@ export default {
     display: flex;
 
     overflow-x: scroll;
+    align-items: center;
+    height: 3rem;
 
     // height: 96px;
     // line-height: 96px;
@@ -143,6 +145,7 @@ export default {
     &::-webkit-scrollbar {
       width: 0 !important;
       height: 0 !important;
+      display: none;
     }
     .li-tab {
       // display: inline-block;
