@@ -136,9 +136,9 @@ export default {
       specType: 'HDZT_ZTTYPE_TM',
 
       hasCity: true,
-      imageHead: '', // this.$ossImgSetV2('4rgd1t6d8aw0000.png'),
+      imageHead: '', // this.$ossImgSetV2('720ewx0kml00000.png'),
 
-      imageHeadDefault: this.$ossImgSetV2('4rgd1t6d8aw0000.png'),
+      imageHeadDefault: this.$ossImgSetV2('720ewx0kml00000.png'),
       headerHeight: 0,
 
       headBkOpacity: 0,
@@ -238,10 +238,10 @@ export default {
     background: #f8f8f8;
     .recommend {
       position: absolute;
-      bottom: 2.6%;
-      left: 2.6%;
-      right: 2.6%;
-      margin: 2.6% 2.6% 0;
+      bottom: 0;
+      left: 20px;
+      right: 20px;
+      // margin: 2.6% 2.6% 0;
     }
     .rule {
       // header的z-index是999
