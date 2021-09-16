@@ -52,14 +52,20 @@
               >{{ item.spuHideName || item.spuName }}</span
             >
             <span v-else class="name">{{ item.spuName }}</span>
-            <span
+            <!-- <span
               v-if="
                 checkPayType() !== 2 && checkPayType() !== 4 && !item.orderType
               "
               class="money1"
             >
               {{ item.skuPrice }}元
+            </span> -->
+            <!-- 2021-09-28版本改动去掉价格显示判断条件 -->
+            <span v-if="orderData.orderType === 0" class="money1">
+              预计
+              <span> {{ item.skuPrice }}元 </span>
             </span>
+            <span v-else class="money1"> {{ item.skuPrice }}元 </span>
           </p>
           <!-- 交易和资源取skuDetailInfo -->
           <!-- 销售和服务取skuExtInfo -->
@@ -105,9 +111,11 @@
       <p v-if="checkPayType() === 2" class="inner">
         <!-- 意向单显示预计 -->
         <span v-if="orderData.orderType === 0">预计</span>
-        <span v-else>总价</span>
-        <span class="price1 price"> {{ orderData.orderTotalMoney }}元，</span>
-        <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元，</span>
+        <!-- <span v-else>总价</span> -->
+        <span v-if="orderData.orderType === 0" class="price1 price">
+          {{ orderData.orderTotalMoney }}元，</span
+        >
+        <!-- <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元，</span> -->
         <!-- 已支付定金未支付尾款,客户单付款状态为部分支付时显示已付定金 -->
         <span
           v-if="
@@ -124,7 +132,7 @@
             orderData.cusOrderPayStatusNo ===
             'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
           "
-          class="allready_pay"
+          class="should-pay"
         >
           合计
           <span class="price3 price"> {{ orderData.orderTotalMoney }} </span>元
@@ -160,8 +168,8 @@
       </p>
       <!-- 其他付费方式展示效果一样 -->
       <p v-else class="inner">
-        <span class="price1"> 总价 {{ orderData.orderTotalMoney }}元，</span>
-        <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元，</span>
+        <!-- <span class="price1"> 总价 {{ orderData.orderTotalMoney }}元，</span>
+        <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元，</span> -->
         <span v-if="isShowPayBtn() == 1" class="should-pay">
           应付款
           <span class="price3"> {{ orderData.orderPayableMoney }}</span

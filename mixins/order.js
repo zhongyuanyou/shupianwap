@@ -573,11 +573,20 @@ export default {
     },
     // 判断客户单状态类型 1待付款 2进行中 3已完成 4已取消
     checkCusOrderStatus() {
-      return orderUtils.checkCusOrderStatus(this.orderData.cusOrderStatusNo)
+      const cusOrderStatusNo = this.orderData.cusOrderStatusNo
+      if (!cusOrderStatusNo) return 0
+      for (const key in ORDERSTATUSCODE) {
+        if (ORDERSTATUSCODE[key] === cusOrderStatusNo) return Number(key)
+      }
     },
-    // 判断是否显示取消订单按钮
+    /*
+     * @ LastEditors: tang dai bing
+     * @ Description:根据不同的订单状态和支付状态判断显示不同的订单操作按钮和支付按钮
+     */
     isShowCanCelBtn() {
-      return orderUtils.isShowCanCelBtn(this.orderData)
+      // 当且仅当客户订单状态为待付款并且支付状态为未支付时展示取消订单按钮
+      return this.orderData.cusOrderStatusNo === ORDERSTATUSCODE[1]
+      // && orderData.orderPayStatusNo === PAYSTATUSCODE[1]  暂时修改逻辑放出取消订单按钮
     },
     // 判断是否显示确认订单按钮
     isShowConfirmBtn(data) {
@@ -609,7 +618,6 @@ export default {
     },
     /*
      * @LastEditors: tang dai bing
-     * @LastEditTime: 2021-03-31
      * @params:orderData 订单数据
      * @Description:判断是否显示支付按钮，返回数据: false 不显示，1显示立即付款， 2显示支付余款
      */
@@ -643,6 +651,7 @@ export default {
         return false
       }
     },
+
     // 判断订单状态 返回数字
     checkOrderStatus(code) {
       const ALLSTATUS = {

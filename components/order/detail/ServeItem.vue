@@ -48,7 +48,7 @@
           {{ item.spuHideName || item.spuName }}</span
         >
         <span v-else class="name"> {{ item.spuName }}</span>
-        <span v-if="cusOrderPayType !== 2 && orderType" class="money1">
+        <span class="money1">
           {{ changeMoney(item.skuPrice || item.skuPrice) }}元
         </span>
       </p>

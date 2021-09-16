@@ -25,20 +25,12 @@
         <div class="price-area">
           <!-- 定金尾款付费 -->
           <!-- 服务完结收费 -->
-          <div v-if="checkPayType() === 2 || checkPayType() === 4">
+          <div>
             <p>
               <span> 商品总额 </span>
-              <span v-if="orderData.orderType === 0" class="money"> 面议</span>
-              <span v-else class="price1"
-                >{{ orderData.orderTotalMoney }}元</span
-              >
-            </p>
-          </div>
-          <div v-else>
-            <p>
-              <span> 商品总额 </span>
-              <span class="money">
-                {{ orderData.orderTotalMoney }}
+              <span>
+                <span v-if="orderData.orderType === 0"> 预计</span>
+                <span class="money">{{ orderData.orderTotalMoney }}</span>
                 元
               </span>
             </p>
@@ -72,8 +64,21 @@
           </span>
         </p> -->
         </div>
-        <!-- 当订单已取消时不显示总金额 -->
-        <p v-if="cusOrderStatusType !== 4" class="last-money">
+        <!-- 当订单已取消时不显示总金额 先付款后服务和服务完结收费-->
+        <p
+          v-if="
+            cusOrderStatusType !== 4 &&
+            (orderData.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
+              orderData.cusOrderPayType === 'PRO_PRE_SERVICE_POST_PAY_BY_NODE')
+          "
+          class="last-money"
+        >
+          <span
+            v-if="
+              orderData.cusOrderPayStatusNo ===
+              'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
+            "
+          ></span>
           {{ shouldPayText }}
           <span
             v-if="
@@ -82,8 +87,8 @@
             "
             class="pay-money"
           >
-            面议</span
-          >
+            {{ orderData.orderPayableMoney }}
+          </span>
           <span v-else class="pay-money"
             >{{ orderData.orderPayableMoney
             }}<span style="font-weight: 400; font-size: 12px">元</span>
@@ -96,6 +101,55 @@
             元
           </span>
         </p> -->
+      </div>
+      <!-- 定金尾款付费 -->
+      <div
+        v-if="
+          cusOrderStatusType !== 4 &&
+          orderData.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
+        "
+        class="order_text order-area"
+      >
+        <p class="oder_toast">
+          温馨提示：该订单先支付定金在业务办理完成后支付尾款
+        </p>
+        <p>
+          定金尾款：定金 {{ orderData.depositAmount }}元<span
+            v-if="
+              orderData.cusOrderPayStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
+            "
+            >(已支付)</span
+          >
+          ，<span
+            v-if="
+              orderData.cusOrderPayStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
+            "
+            >待支付</span
+          >尾款
+          <span> {{ orderData.lastAount }}元</span>
+        </p>
+        <p v-if="isShowPayBtn() === 1" class="last-money">
+          应付金额
+          <span class="pay-money">{{ orderData.depositAmount }}</span>
+        </p>
+        <p v-if="isShowPayBtn() === 2" class="last-money">
+          <span class="pay-money">{{ orderData.lastAount }}</span>
+        </p>
+      </div>
+      <!-- 先服务后付款 -->
+      <div
+        v-if="
+          cusOrderStatusType !== 4 &&
+          orderData.cusOrderPayType === 'PRO_PRE_SERVICE_FINISHED_PAY'
+        "
+        class="order_text order-area"
+      >
+        <p class="oder_toast">温馨提示：该订单可享受业务办理完成后付费</p>
+        <p class="color:#222222">先服务后付款</p>
+        <p v-if="isShowPayBtn() === 1" class="last-money">
+          应付金额
+          <span class="pay-money">{{ orderData.orderPayableMoney }}</span>
+        </p>
       </div>
       <div
         v-if="
@@ -710,7 +764,29 @@ export default {
     font-size: 36px;
   }
 }
-
+.order_text {
+  font-size: 28px;
+  line-height: 44px;
+  padding: 30px 40px 20px 40px;
+  background: white;
+  font-size: 26px;
+  color: #222222;
+  letter-spacing: 0;
+  line-height: 36px;
+  margin-bottom: 40px;
+  .oder_toast {
+    font-size: 24px;
+    color: #999999;
+    line-height: 34px;
+  }
+  p {
+    border: none;
+    margin-bottom: 20px;
+  }
+  .last-money {
+    padding: 20px 0 20px 0;
+  }
+}
 .order-info {
   background: white;
   padding: 40px;
