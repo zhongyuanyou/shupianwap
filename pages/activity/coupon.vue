@@ -517,7 +517,7 @@ export default {
       padding-left: 6px;
       float: left;
       .coupon_discount {
-        font-size: 72px;
+        font-size: 42px;
         font-family: Bebas;
         font-weight: 400;
         color: #ffffff;
@@ -534,7 +534,7 @@ export default {
       }
       .coupon_price {
         //   height: 67px;
-        font-size: 62px;
+        font-size: 42px;
         font-family: Bebas;
         font-weight: 400;
         color: #ffffff;
@@ -599,6 +599,8 @@ export default {
         }
       }
       .can_use {
+        margin-top: 0.3rem;
+
         font-size: 24px;
         font-family: PingFang SC;
         font-weight: 400;
@@ -627,6 +629,7 @@ export default {
         padding-bottom: 12px;
         margin-right: 30px;
         position: relative;
+        z-index: 2;
         span {
           position: absolute;
           border-radius: 4px;

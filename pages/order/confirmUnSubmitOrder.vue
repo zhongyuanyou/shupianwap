@@ -20,7 +20,11 @@
       :loading="skeletonloading"
     >
     </sp-skeleton>
-    <div v-if="!skeletonloading" class="allbox">
+    <div
+      v-if="!skeletonloading"
+      :class="isInApp ? 'allbox2' : ''"
+      class="allbox"
+    >
       <div class="data-content">
         <div
           v-for="(item, index) in settlementInfo.productVo"
@@ -194,9 +198,9 @@
         </Checkbox>
       </div>
     </div>
-    <div ref="foot" class="foot">
+    <div ref="foot" :class="isInApp ? 'foot2' : ''" class="foot">
       <p class="left">
-        应付：<span>
+        应付:<span>
           <b v-if="isDeposit">{{ settlementInfo.depositAmount }}</b>
           <b v-else-if="isNodes">0</b>
           <b v-else-if="isServiceFinshed">0</b>
@@ -258,6 +262,7 @@ import {
   Skeleton,
   CheckboxGroup,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import Head from '@/components/common/head/header.vue'
 import PopupUnSubmit from '@/components/PlaceOrder/PopupUnSubmit.vue'
 import CardPopup from '@/components/PlaceOrder/CardPopup.vue'
@@ -346,6 +351,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
     // 是否是服务商品
     // 其他的是交易/销售/资源
     isServerGoods() {
@@ -906,7 +914,6 @@ export default {
       }
       .black {
         color: #1a1a1a;
-        font-weight: bold;
       }
       .red {
         color: #ec5330;
@@ -970,6 +977,12 @@ export default {
         }
       }
     }
+  }
+  .allbox2 {
+    height: calc(100vh - 88px - 88px) !important;
+  }
+  .foot2 {
+    height: 168px !important;
   }
   > .foot {
     padding: 0 40px;
