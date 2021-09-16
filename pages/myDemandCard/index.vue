@@ -50,7 +50,7 @@ import { WorkTab, WorkTabs, Button } from '@chipspc/vant-dgg'
 import { mapMutations, mapState } from 'vuex'
 import Header from '@/components/common/head/header'
 export default {
-  layout: 'keepAlive',
+  layout: 'default',
   name: 'NeedCard',
   components: {
     [WorkTab.name]: WorkTab,
@@ -196,7 +196,7 @@ export default {
   .banner-nav {
     background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/cyfejr5z9fk0000.jpg');
     background-size: 100% 100%;
-    width: 750px;
+    width: 100%;
     height: 358px;
     position: relative;
     font-family: PingFang SC;
