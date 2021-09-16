@@ -1,5 +1,9 @@
 <template>
-  <div v-if="list.length > 0" class="box">
+  <div
+    v-if="list.length > 0"
+    class="box"
+    :style="{ backgroundImage: `url(${bkImage})` }"
+  >
     <div class="list">
       <div class="list_container">
         <div
@@ -64,6 +68,8 @@ export default {
   },
   data() {
     return {
+      bkImage: this.$ossImgSetV2('6k2pzryukzw0000.png'),
+
       defaultImg: 'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
       imgTags: [
         'https://cdn.shupian.cn/sp-pt/wap/images/ahzxvufoqrk000.png',
@@ -88,11 +94,12 @@ export default {
 .box {
   font-family: PingFangSC;
   // margin: 24px 20px 0;
-  // padding: 20px;
+  padding: 20px;
 
   border-radius: 24px;
 
   font-size: 0;
+  background-size: 100% 100%;
 
   .list {
     overflow: hidden;
