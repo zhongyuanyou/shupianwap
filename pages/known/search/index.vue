@@ -224,7 +224,6 @@ export default {
         height: 88px;
         width: 100%;
         position: relative;
-        border-bottom: 1px solid #ccc;
         > .clock {
           display: block;
           margin-right: 24px;

@@ -196,7 +196,6 @@ export default {
       }
       > .body {
         padding-bottom: 40px;
-        border-bottom: 1px solid #f4f4f4;
         .cell {
           margin-top: 40px;
           > .title {
