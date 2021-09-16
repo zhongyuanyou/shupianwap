@@ -170,6 +170,7 @@ export default {
   height: 222px;
   .item-lf {
     margin-left: 10px;
+    height: 222px;
   }
 }
 
@@ -195,7 +196,7 @@ export default {
     .coupon_price {
       //   height: 67px;
       white-space: nowrap;
-      font-size: 72px;
+      font-size: 42px;
       font-family: Bebas;
       font-weight: 400;
       color: #ffffff;
@@ -230,6 +231,8 @@ export default {
       top: 8px;
     }
     .title {
+      position: relative;
+      z-index: 1;
       font-size: 32px;
       line-height: 44px;
       font-family: PingFang SC;

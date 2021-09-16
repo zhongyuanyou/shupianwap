@@ -22,12 +22,12 @@
             @click="tabactivefn(item, index)"
           >
             <span>{{ item.name }}</span
-            ><b v-if="index == 0">{{ `(${datalist.length || 0})` }}</b>
-            <b v-else>{{ `(${nolist.length || 0})` }}</b>
+            ><span v-if="index == 0">{{ `(${datalist.length || 0})` }}</span>
+            <span v-else>{{ `(${nolist.length || 0})` }}</span>
             <i class="icon"></i>
           </p>
         </div>
-        <div class="calculation">
+        <div v-if="tabAct === 0" class="calculation">
           {{ disPrice ? '已选中优惠券，可抵扣' : '请选择优惠券' }}
           <span v-if="disPrice" class="red">{{ disPrice }}元</span>
         </div>
@@ -483,7 +483,7 @@ export default {
       }
       > .act {
         color: #4974f5;
-        font-weight: 600;
+        font-weight: bold;
         i {
           display: block;
         }
@@ -508,9 +508,9 @@ export default {
         overflow-y: auto;
         padding: 0 40px;
         > .list {
-          margin: 24px auto 0;
+          margin: 10px auto 0;
           width: 670px;
-          height: 212px;
+          height: 220px;
           background: #ffffff;
           // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
           box-sizing: border-box;
@@ -518,7 +518,7 @@ export default {
 
           background: url('https://cdn.shupian.cn/sp-pt/wap/g4kbai7wgrk0000.png')
             no-repeat;
-          background-size: 100%;
+          background-size: 100% 100%;
           ::v-deep.sp-radio__icon--checked .sp-icon {
             color: #fff;
             background-color: #4974f5 !important;
@@ -538,7 +538,7 @@ export default {
             padding-top: 20px;
             box-sizing: border-box;
             .coupon_discount {
-              font-size: 62px;
+              font-size: 42px;
               font-family: Bebas;
               font-weight: 400;
               color: #ffffff;
@@ -555,7 +555,7 @@ export default {
             }
             .coupon_price {
               //   height: 67px;
-              font-size: 62px;
+              font-size: 42px;
               font-family: Bebas;
               font-weight: 400;
               color: #ffffff;
@@ -617,7 +617,7 @@ export default {
                   left: 0;
                   font-weight: normal;
                   transform: scale(0.83);
-                  transform-origin: 0 0;
+                  transform-origin: 0 center;
                   color: #ffffff;
                   background-image: linear-gradient(
                     90deg,
@@ -699,15 +699,16 @@ export default {
     }
     .nodatabox {
       height: calc(67vh - 324px);
+      padding-top: 20px;
       .listbox {
         height: 100%;
         > .nolist {
           height: 220px;
-          margin: 24px auto 0;
+          margin: 10px auto 0;
           width: 670px;
-          background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png)
-            no-repeat;
-          background-size: 100%;
+          background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/5cx1r4tc3js0000.png');
+          // background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png) no-repeat;
+          background-size: 100% 100%;
           // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
           box-sizing: border-box;
           > .top {
@@ -720,7 +721,7 @@ export default {
               padding-top: 20px;
               box-sizing: border-box;
               .coupon_discount {
-                font-size: 72px;
+                font-size: 42px;
                 font-family: Bebas;
                 font-weight: 400;
                 color: #ffffff;
@@ -737,7 +738,7 @@ export default {
               }
               .coupon_price {
                 //   height: 67px;
-                font-size: 62px;
+                font-size: 42px;
                 font-family: Bebas;
                 font-weight: 400;
                 color: #ffffff;
@@ -747,6 +748,11 @@ export default {
                 position: relative;
                 // text-overflow: ellipsis;
                 // white-space: nowrap;
+                span {
+                  position: absolute;
+                  font-size: 28px;
+                  bottom: 0;
+                }
               }
               .can_use {
                 margin-top: 14px;
@@ -784,6 +790,7 @@ export default {
                   white-space: nowrap;
                   font-weight: normal;
                   position: relative;
+                  z-index: 2;
                   padding-left: 80px;
                   .type-name {
                     text-align: center;
@@ -798,7 +805,7 @@ export default {
                     top: 2px;
                     font-weight: normal;
                     transform: scale(0.83);
-                    transform-origin: 0 0;
+                    transform-origin: 0 center;
                     background: #cccccc;
                     color: #ffffff;
                     text-align: center;
