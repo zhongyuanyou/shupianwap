@@ -1,17 +1,12 @@
 <template>
   <div ref="orderPage" class="order-page">
-    <Header
-      v-if="!isInApp && !isApplets"
-      title="我的订单"
-      :hide-back="true"
-      :hide-shadow="true"
-    >
+    <Header title="我的订单" :hide-back="true" :hide-shadow="true">
       <template #right>
         <div class="btn-car" @click="toCar">购物车</div>
       </template>
     </Header>
     <div
-      v-show="orderPageType!=='submit'"
+      v-show="orderPageType !== 'submit'"
       class="top-nav"
       :style="{ top: !isInApp && !isApplets ? '44px' : '0' }"
     >
@@ -27,7 +22,7 @@
     <div
       ref="scrollView"
       class="page-list"
-      :class="orderPageType==='submit' ? 'page-list2' : ''"
+      :class="orderPageType === 'submit' ? 'page-list2' : ''"
       @scroll="scollChange"
     >
       <div class="scroll-inner">

@@ -20,7 +20,11 @@
       :loading="skeletonloading"
     >
     </sp-skeleton>
-    <div v-if="!skeletonloading" class="allbox">
+    <div
+      v-if="!skeletonloading"
+      :class="isInApp ? 'allbox2' : ''"
+      class="allbox"
+    >
       <div class="data-content">
         <div
           v-for="(item, index) in settlementInfo.productVo"
@@ -194,9 +198,9 @@
         </Checkbox>
       </div>
     </div>
-    <div ref="foot" class="foot">
+    <div ref="foot" :class="isInApp ? 'foot2' : ''" class="foot">
       <p class="left">
-        应付：<span>
+        应付:<span>
           <b v-if="isDeposit">{{ settlementInfo.depositAmount }}</b>
           <b v-else-if="isNodes">0</b>
           <b v-else-if="isServiceFinshed">0</b>
@@ -258,6 +262,7 @@ import {
   Skeleton,
   CheckboxGroup,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import Head from '@/components/common/head/header.vue'
 import PopupUnSubmit from '@/components/PlaceOrder/PopupUnSubmit.vue'
 import CardPopup from '@/components/PlaceOrder/CardPopup.vue'
@@ -346,6 +351,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
     // 是否是服务商品
     // 其他的是交易/销售/资源
     isServerGoods() {
@@ -597,17 +605,19 @@ export default {
                   path: '/order',
                   query: {},
                 })
-              } else if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
-                // 线下付款
+              } else if (
+                this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE' ||
+                result.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE'
+              ) {
+                // 线下付款或先付款后服务 PRO_PRE_PAY_POST_SERVICE;
                 this.$router.replace({
                   path: '/order',
                   query: {},
                 })
               } else if (
-                result.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
                 result.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
               ) {
-                // 先付款后服务 PRO_PRE_PAY_POST_SERVICE;先定金后尾款 PRO_PRE_DEPOSIT_POST_OTHERS;
+                // 先定金后尾款 PRO_PRE_DEPOSIT_POST_OTHERS;
                 this.$router.replace({
                   path: '/pay/payType',
                   query: {
@@ -906,7 +916,6 @@ export default {
       }
       .black {
         color: #1a1a1a;
-        font-weight: bold;
       }
       .red {
         color: #ec5330;
@@ -970,6 +979,12 @@ export default {
         }
       }
     }
+  }
+  .allbox2 {
+    height: calc(100vh - 168px - 88px) !important;
+  }
+  .foot2 {
+    height: 168px !important;
   }
   > .foot {
     padding: 0 40px;
