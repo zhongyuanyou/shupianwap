@@ -55,7 +55,9 @@
                       无门槛
                     </div>
                     <div v-else class="can_use">
-                      满{{ item.marketingCouponVO.fullPrice }}元可用
+                      满{{
+                        formatPrice(item.marketingCouponVO.fullPrice, true)
+                      }}可用
                     </div>
                   </div>
                   <div v-else>
@@ -70,7 +72,9 @@
                       无门槛
                     </div>
                     <div v-else class="can_use">
-                      满{{ item.marketingCouponVO.fullPrice }}元可用
+                      满{{
+                        formatPrice(item.marketingCouponVO.fullPrice, true)
+                      }}可用
                     </div>
                   </div>
                 </div>
@@ -142,7 +146,9 @@
                       无门槛
                     </div>
                     <div v-else class="can_use">
-                      满{{ item.marketingCouponVO.fullPrice }}元可用
+                      满{{
+                        formatPrice(item.marketingCouponVO.fullPrice, true)
+                      }}可用
                     </div>
                   </div>
                   <div v-else>
@@ -346,10 +352,16 @@ export default {
   mounted() {},
   methods: {
     // 将价格转为万元
-    formatPrice(price) {
-      const p = parseFloat(price)
+    formatPrice(price, haveUnit) {
+      let p = parseFloat(price)
+      let unit = '元'
       if (p >= 10000) {
-        return parseFloat((p / 10000).toFixed(2))
+        unit = '万'
+        p = parseFloat((p / 10000).toFixed(2))
+      }
+
+      if (haveUnit) {
+        return p + unit
       }
       return p
     },
@@ -549,7 +561,7 @@ export default {
               margin-bottom: 10px;
               span {
                 position: absolute;
-                font-size: 28px;
+                font-size: 26px;
                 bottom: 0;
               }
             }
@@ -567,7 +579,7 @@ export default {
               // white-space: nowrap;
               span {
                 position: absolute;
-                font-size: 28px;
+                font-size: 26px;
                 bottom: 0;
               }
             }
@@ -732,7 +744,7 @@ export default {
                 margin-bottom: 10px;
                 span {
                   position: absolute;
-                  font-size: 28px;
+                  font-size: 26px;
                   bottom: 0;
                 }
               }
@@ -750,7 +762,7 @@ export default {
                 // white-space: nowrap;
                 span {
                   position: absolute;
-                  font-size: 28px;
+                  font-size: 26px;
                   bottom: 0;
                 }
               }
