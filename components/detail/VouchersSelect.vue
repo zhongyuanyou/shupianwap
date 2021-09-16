@@ -80,7 +80,9 @@
                     <span v-if="item.reducePrice >= 10000">万</span>
                   </div>
                   <div v-if="item.fullPrice == 0" class="can_use">无门槛</div>
-                  <div v-else class="can_use">满{{ item.fullPrice }}元可用</div>
+                  <div v-else class="can_use">
+                    满{{ formatPrice(item.fullPrice, true) }}可用
+                  </div>
                 </div>
                 <div v-else>
                   <div class="coupon_discount">
@@ -88,7 +90,9 @@
                     <span>折</span>
                   </div>
                   <div v-if="item.fullPrice == 0" class="can_use">无门槛</div>
-                  <div v-else class="can_use">满{{ item.fullPrice }}元可用</div>
+                  <div v-else class="can_use">
+                    满{{ formatPrice(item.fullPrice, true) }}可用
+                  </div>
                 </div>
               </div>
               <div class="vouchers_item_right">
@@ -326,10 +330,16 @@ export default {
     }
   },
   methods: {
-    formatPrice(price) {
-      const p = parseFloat(price)
+    formatPrice(price, haveUnit) {
+      let p = parseFloat(price)
+      let unit = '元'
       if (p >= 10000) {
-        return parseFloat((p / 10000).toFixed(2))
+        unit = '万'
+        p = parseFloat((p / 10000).toFixed(2))
+      }
+
+      if (haveUnit) {
+        return p + unit
       }
       return p
     },
@@ -810,7 +820,7 @@ export default {
               // white-space: nowrap;
               span {
                 position: absolute;
-                font-size: 28px;
+                font-size: 26px;
                 bottom: 0;
               }
             }
