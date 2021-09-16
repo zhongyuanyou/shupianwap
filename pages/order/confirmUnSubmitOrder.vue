@@ -359,6 +359,13 @@ export default {
     isServerGoods() {
       return this.settlementInfo?.orderProTypeNo === 'PRO_CLASS_TYPE_SERVICE'
     },
+    // 是否交易商品，下单后直接跳转列表
+    isTRANSACTION() {
+      return (
+        this.settlementInfo?.orderProTypeNo === 'PRO_CLASS_TYPE_TRANSACTION'
+      )
+    },
+
     // 是否先定金后服务
     isDeposit() {
       return (
@@ -600,23 +607,29 @@ export default {
               })
             }
             setTimeout(() => {
-              if (this.payMethod.value === 'ORDER_PAY_MODE_SECURED') {
+              if (this.isTRANSACTION) {
+                // 交易商品
+                this.$router.replace({
+                  path: '/order',
+                  query: {},
+                })
+              } else if (this.payMethod.value === 'ORDER_PAY_MODE_SECURED') {
+                // 担保交易
+                this.$router.replace({
+                  path: '/order',
+                  query: {},
+                })
+              } else if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
+                // 线下付款
                 this.$router.replace({
                   path: '/order',
                   query: {},
                 })
               } else if (
-                this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE' ||
-                result.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE'
-              ) {
-                // 线下付款或先付款后服务 PRO_PRE_PAY_POST_SERVICE;
-                this.$router.replace({
-                  path: '/order',
-                  query: {},
-                })
-              } else if (
+                result.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
                 result.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
               ) {
+                // 先付款后服务 PRO_PRE_PAY_POST_SERVICE;
                 // 先定金后尾款 PRO_PRE_DEPOSIT_POST_OTHERS;
                 this.$router.replace({
                   path: '/pay/payType',
