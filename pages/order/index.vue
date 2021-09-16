@@ -1,6 +1,6 @@
 <template>
   <div ref="orderPage" class="order-page">
-    <Header title="我的订单" :hide-back="true" :hide-shadow="true">
+    <Header title="我的订单" :hide-back="!isInApp" :hide-shadow="true">
       <template #right>
         <div class="btn-car" @click="toCar">购物车</div>
       </template>
