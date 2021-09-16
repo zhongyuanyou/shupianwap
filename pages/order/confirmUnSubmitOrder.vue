@@ -605,17 +605,19 @@ export default {
                   path: '/order',
                   query: {},
                 })
-              } else if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
-                // 线下付款
+              } else if (
+                this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE' ||
+                result.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE'
+              ) {
+                // 线下付款或先付款后服务 PRO_PRE_PAY_POST_SERVICE;
                 this.$router.replace({
                   path: '/order',
                   query: {},
                 })
               } else if (
-                result.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
                 result.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
               ) {
-                // 先付款后服务 PRO_PRE_PAY_POST_SERVICE;先定金后尾款 PRO_PRE_DEPOSIT_POST_OTHERS;
+                // 先定金后尾款 PRO_PRE_DEPOSIT_POST_OTHERS;
                 this.$router.replace({
                   path: '/pay/payType',
                   query: {
