@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <div class="c-header">
     <sp-sticky
       z-index="5"
       :class="{
@@ -54,7 +54,7 @@
       :options="shareOptions"
       @select="onSelect"
     />
-  </section>
+  </div>
 </template>
 
 <script>
@@ -200,18 +200,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.scroTopStyle {
-  ::v-deep.sp-sticky {
-    border: 1px solid #f4f4f4;
-    .sp-top-nav-bar {
-      background-color: #fff !important;
-      .spiconfont {
-        color: #1a1a1a !important;
-      }
-      .icon-red {
-        color: #ec5330 !important;
-      }
-    }
-  }
-}
+@import '~@css/pages/detail/c-header.less';
 </style>
