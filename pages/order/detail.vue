@@ -29,6 +29,14 @@
             <p>
               <span> 商品总额 </span>
               <span>
+                <span
+                  v-if="
+                    goodsSkuDetail &&
+                    goodsSkuDetail.sku &&
+                    goodsSkuDetail.sku.targetRate
+                  "
+                  >(含服务费{{ goodsSkuDetail.sku.targetRate }}%)</span
+                >
                 <span v-if="orderData.orderType === 0"> 预计</span>
                 <span class="money">{{ orderData.orderTotalMoney }}</span>
                 元
@@ -490,6 +498,7 @@ export default {
   mixins: [OrderMixins],
   data() {
     return {
+      goodsSkuDetail: '',
       showHead: false,
       canCelReasonName: '',
       loading: true,
@@ -609,6 +618,12 @@ export default {
               item.skuDetailInfo = orders[i].skuDetailInfo
             })
             arr1 = arr1.concat(orders[i].skuDetails)
+          }
+          this.goodsSkuDetail = JSON.parse(arr1[0].skuDetailInfo)
+          if (this.goodsSkuDetail.sku.targetRate) {
+            this.goodsSkuDetail.sku.targetRate = parseFloat(
+              this.goodsSkuDetail.sku.targetRate
+            )
           }
           this.orderData.orderSkuList = arr1
           this.getChildOrders(this.orderData)
