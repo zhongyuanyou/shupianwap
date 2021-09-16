@@ -518,7 +518,7 @@ export default {
       .listbox {
         height: calc(100% - 180px);
         overflow-y: auto;
-        padding: 0 40px;
+        // padding: 0 40px;
         > .list {
           margin: 10px auto 0;
           width: 670px;
