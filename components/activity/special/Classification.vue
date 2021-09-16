@@ -16,7 +16,7 @@
         :class="{ active: index == currentIndex }"
         @click="menuTab(item, index)"
       >
-        {{ item.labelName }}
+        <span>{{ item.labelName }}</span>
       </li>
     </ul>
   </sp-sticky>
@@ -157,9 +157,15 @@ export default {
       color: #999999;
       letter-spacing: 0;
       cursor: pointer;
+
+      & > span {
+        position: relative;
+        z-index: 1;
+      }
     }
     .active {
       position: relative;
+      z-index: 0;
       font-weight: bold;
       color: #222222;
     }
