@@ -36,26 +36,40 @@
         <span>当前选择</span>
       </div>
       <!-- S 当前定位城市 -->
-      <div v-if="!isInApp" class="position-city">
-        <div v-if="!positionStatus" class="no-position">
-          <my-icon
-            name="toast_ic_remind"
-            size="0.32rem"
-            color="#cccccc"
-          ></my-icon>
-          <span>无法定位到当前城市</span>
+      <div class="position-city">
+        <div v-if="dataType === 1">
+          <div v-if="!positionStatus1" class="no-position">
+            <my-icon
+              name="toast_ic_remind"
+              size="0.32rem"
+              color="#cccccc"
+            ></my-icon>
+            <span>无法定位到当前城市</span>
+          </div>
+          <div v-else class="position-success">
+            <strong @click="choosePositionCity(positionCityName1)">{{
+              positionCityName1
+            }}</strong>
+            <span>GPS定位</span>
+            <p v-if="positionStatus1 === 1">未开通服务</p>
+          </div>
         </div>
-        <div v-else class="position-success">
-          <strong
-            v-if="dataType === 1"
-            @click="choosePositionCity(positionCityName1)"
-            >{{ positionCityName1 }}</strong
-          >
-          <strong v-else @click="choosePositionCity(positionCityName)">{{
-            positionCityName
-          }}</strong>
-          <span>GPS定位</span>
-          <p v-if="positionStatus === 1">未开通服务</p>
+        <div v-else>
+          <div v-if="!positionStatus" class="no-position">
+            <my-icon
+              name="toast_ic_remind"
+              size="0.32rem"
+              color="#cccccc"
+            ></my-icon>
+            <span>无法定位到当前城市</span>
+          </div>
+          <div v-else class="position-success">
+            <strong @click="choosePositionCity(positionCityName)">{{
+              positionCityName
+            }}</strong>
+            <span>GPS定位</span>
+            <p v-if="positionStatus === 1">未开通服务</p>
+          </div>
         </div>
         <a href="javascript:void(0);" @click="positionCity">重新定位</a>
       </div>
@@ -142,6 +156,7 @@ export default {
       positionCityName: (state) => state.city.positionCityName, // 当前定位城市
       positionCityName1: (state) => state.city1.positionCityName, // 当前定位城市
       positionStatus: (state) => state.city.positionStatus, // 定位状态（0：定位失败 1：定位成功但未开通该城市服务 2：定位成功且有对应的城市服务）
+      positionStatus1: (state) => state.city1.positionStatus, // 定位状态（0：定位失败 1：定位成功但未开通该城市服务 2：定位成功且有对应的城市服务）
       isInApp: (state) => state.app.isInApp, // 是否在app中打开此页
     }),
   },
