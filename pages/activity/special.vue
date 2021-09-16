@@ -136,7 +136,7 @@ export default {
       specType: 'HDZT_ZTTYPE_TM',
 
       hasCity: true,
-      imageHead: this.$ossImgSetV2('720ewx0kml00000.png'),
+      imageHead: '', // this.$ossImgSetV2('720ewx0kml00000.png'),
 
       imageHeadDefault: this.$ossImgSetV2('720ewx0kml00000.png'),
       headerHeight: 0,
