@@ -20,30 +20,30 @@ export const state = () => ({
   userPhoneFull: '', // 用户电话加密
   avatar: '', // 用户头像
 
-  customerID: '',// 客户id
+  customerID: '', // 客户id
 })
 export const mutations = {
   SET_USER(state, data = {}) {
     this.$cookies.set('token', String(data.token), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.set('userId', String(data.userId), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.set('userType', String(data.userType || data.type), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     if (data.customerID) {
       this.$cookies.set('customerID', String(data.customerID), {
         path: '/',
         maxAge: 60 * 60 * 24 * 7, // 过期时间
-        // domain: 'shupian.cn',
+        domain: 'shupian.cn',
       })
     }
     state.userInfo = data
@@ -55,11 +55,21 @@ export const mutations = {
     state.avatar = String(data.avatar || AVATAR)
     if (data.customerID) {
       state.customerID = String(data.customerID)
-
     }
   },
   CLEAR_USER(state) {
-    const clearKeys = ['token', 'userId', 'avatar', 'userNo', 'userName', 'userPhone', 'realStatus', 'mainAccountFull', 'userType', 'customerID']
+    const clearKeys = [
+      'token',
+      'userId',
+      'avatar',
+      'userNo',
+      'userName',
+      'userPhone',
+      'realStatus',
+      'mainAccountFull',
+      'userType',
+      'customerID',
+    ]
     clearKeys.forEach((key) => {
       this.$cookies.remove(key, {
         path: '/',
@@ -81,53 +91,51 @@ export const mutations = {
     state.userInfo = {}
   },
   SET_INFO(state, data = {}) {
-    console.log('SET_INFO', data);
+    console.log('SET_INFO', data)
     this.$cookies.set('userNo', String(data.no), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.set('userName', data.nickName, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.set('userPhone', data.decodePhone, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.set('realStatus', data.realStatus, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.set('mainAccountFull', data.mainAccountFull, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.set('avatar', data.url || AVATAR, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     this.$cookies.set('userType', String(data.type || data.userType), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      // domain: 'shupian.cn',
+      domain: 'shupian.cn',
     })
     if (data?.customerInfo?.id) {
       this.$cookies.set('customerID', String(data?.customerInfo?.id || ''), {
         path: '/',
         maxAge: 60 * 60 * 24 * 7, // 过期时间
-        // domain: 'shupian.cn',
+        domain: 'shupian.cn',
       })
       state.customerID = data?.customerInfo?.id
       state.userInfo.customerID = data?.customerInfo?.id
     }
-
-
 
     state.userNo = data.no
     state.userName = data.nickName
@@ -143,7 +151,6 @@ export const mutations = {
     state.userInfo.realStatus = data.realStatus
     state.userInfo.mainAccountFull = data.mainAccountFull
     state.userInfo.avatar = data.url
-
   },
 }
 
@@ -168,11 +175,9 @@ export const actions = {
   },
 
   setUser({ commit }, data) {
-
     commit('SET_USER', data)
   },
   setInfo({ commit }, data) {
-
     commit('SET_INFO', data)
   },
 }
