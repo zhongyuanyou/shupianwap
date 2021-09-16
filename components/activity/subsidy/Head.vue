@@ -133,7 +133,6 @@ export default {
       flex: 1;
 
       font-family: PingFang SC;
-      font-weight: bold;
 
       overflow: hidden;
       text-overflow: ellipsis;
