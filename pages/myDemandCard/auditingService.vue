@@ -46,9 +46,7 @@ export default {
   font-family: PingFang SC;
   background-color: #fff;
   /deep/ .my-head {
-    width: @spread-page-width;
-    left: 50%;
-    margin-left: -375px;
+    width:100%;
   }
 }
 </style>
