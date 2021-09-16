@@ -90,6 +90,7 @@ export default function ({ $axios, redirect, app, store }) {
 
   $axios.interceptors.response.use(
     (response) => {
+      console.log('response', response)
       const result = response.data
       const code = result.code
       console.log('process.env.DGG_SERVER_ENV:', process.env.DGG_SERVER_ENV)
@@ -112,9 +113,9 @@ export default function ({ $axios, redirect, app, store }) {
           return result
         }
       } else {
-        if (process.env.DGG_SERVER_ENV === 'production' && code !== 200) {
-          result.message = '您的网络开小差了，请稍后再试！'
-        }
+        // if (process.env.DGG_SERVER_ENV === 'production' && code !== 200) {
+        //   result.message = '您的网络开小差了，请稍后再试！'
+        // }
         return result
       }
     },

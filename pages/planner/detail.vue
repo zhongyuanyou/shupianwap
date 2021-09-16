@@ -816,7 +816,7 @@ export default {
     },
     onClickLeft() {
       console.log('nav onClickLeft')
-      this.uPGoBack()
+      this.$back()
     },
     onClickRight() {
       console.log('nav onClickRight')
@@ -1040,12 +1040,6 @@ export default {
         // }
       }
     },
-
-    // 平台不同，跳转方式不同
-    uPGoBack() {
-      this.$router.back(-1)
-    },
-
     // app获取用户信息
     getUserInfo() {
       return new Promise((resolve, reject) => {
