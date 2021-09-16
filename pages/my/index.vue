@@ -74,7 +74,7 @@
           v-for="(item, index) in orderTabs"
           :key="index"
           class="my_order_type_list"
-          @click="clickTab(++index)"
+          @click="clickServiceTabs(item)"
         >
           <div class="icon">
             <my-icon :name="item.iconName" color="#4E78F5" size="0.44rem">
@@ -102,140 +102,6 @@
       </div>
     </div>
     <!--E 我的订单-->
-    <!--S 按钮区-->
-    <!-- <div class="my_btns">
-      <div
-        class="my_btns_item"
-        @click="handleClick('/contract/contractList', 'login')"
-      >
-        <div class="my_btns_item_icon">
-          <my-icon
-            name="gerenzhongxin_hetongicon"
-            size="0.36rem"
-            color="#4F9BFF"
-          />
-        </div>
-        <div class="my_btns_item_con">
-          我的合同
-          <div class="item_lf">
-            <my-icon
-              name="order_ic_listnext"
-              size="0.24rem"
-              color="#CCCCCC"
-              class="myIcon"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="my_btns_item" @click="handleClick('/my/coupon', 'login')">
-        <div class="my_btns_item_icon">
-          <my-icon
-            name="gerenzhongxin_youhuiquanicon"
-            size="0.36rem"
-            color="#FFA416"
-          />
-        </div>
-        <div class="my_btns_item_con">
-          我的优惠券
-          <div class="item_lf">
-            <my-icon
-              name="order_ic_listnext"
-              size="0.24rem"
-              color="#CCCCCC"
-              class="myIcon"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="my_btns_item" @click="handleClick('/my/interviewRecord')">
-        <div class="my_btns_item_icon">
-          <my-icon name="caifang_mian" size="0.36rem" color="#4974f5" />
-        </div>
-        <div class="my_btns_item_con no_line">
-          面谈记录
-          <div class="item_lf">
-            <my-icon
-              name="order_ic_listnext"
-              size="0.24rem"
-              color="#CCCCCC"
-              class="myIcon"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="my_btns_item" @click="linkAuth">
-        <div class="my_btns_item_icon">
-          <my-icon name="shimingrenzheng" size="0.36rem" color="#00B365" />
-        </div>
-        <div class="my_btns_item_con">
-          实名认证
-          <div class="item_lf">
-            <span>{{
-              info.realStatus === 'NO_AUTHENTICATION'
-                ? '未实名认证'
-                : info.realStatus === 'AUTHENTICATION_SUCCESS'
-                ? '已实名认证'
-                : info.realStatus === 'AUTHENTICATION_ING'
-                ? '认证中'
-                : '未实名认证'
-            }}</span>
-            <my-icon
-              name="order_ic_listnext"
-              size="0.24rem"
-              color="#CCCCCC"
-              class="myIcon"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="my_btns_item" @click="handleClick('/my/help')">
-        <div class="my_btns_item_icon">
-          <my-icon name="per_ic_help" size="0.36rem" color="#00B365" />
-        </div>
-        <div class="my_btns_item_con">
-          帮助中心
-          <div class="item_lf">
-            <my-icon
-              name="order_ic_listnext"
-              size="0.24rem"
-              color="#CCCCCC"
-              class="myIcon"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="my_btns_item" @click="handleClick('/my/complain')">
-        <div class="my_btns_item_icon">
-          <my-icon name="per_ic_debunk" size="0.36rem" color="#10BBB8" />
-        </div>
-        <div class="my_btns_item_con">
-          我要吐槽
-          <div class="item_lf">
-            <my-icon
-              name="order_ic_listnext"
-              size="0.24rem"
-              color="#CCCCCC"
-              class="myIcon"
-            />
-          </div>
-        </div>
-        <div class="my_btns_item" @click="handleClick('/my/wallet')">
-          <div class="my_btns_item_icon">
-            <my-icon name="caifang_mian" size="0.36rem" color="#4974f5" />
-          </div>
-          <div class="my_btns_item_con no_line">
-            我的钱包
-            <div class="item_lf">
-              <my-icon
-                name="zhifu"
-                size="0.24rem"
-                color="#CCCCCC"
-                class="myIcon"
-              />
-            </div>
-          </div>
-        </div>
-      </div> -->
 
     <!--S 我的服务-->
     <div class="my_order">
@@ -264,9 +130,6 @@
     </div>
     <!--E 我的服务-->
 
-    <!--S 按钮区-->
-
-    <!--S 按钮区-->
     <!--S 退出登录-->
     <div class="exit_btn">
       <sp-button v-if="userId" type="default" @click="showExit"
@@ -324,27 +187,33 @@ export default {
         {
           iconName: 'per_ic_payment',
           name: '待付款',
+          url: '/order?type=1',
         },
         {
           iconName: 'per_ic_handle',
           name: '办理中',
+          url: '/order?type=2',
         },
         {
           iconName: 'per_ic_complete',
           name: '已完成',
+          url: '/order?type=3',
         },
         // {
         //   iconName: 'per_ic_cancel',
         //   name: '已取消',
+        //  url: '/order?type=4',
         // },
         {
           iconName: 'daipingjia',
           name: '待评价',
           type: 'daipingjia',
+          url: '/my/evaluate',
         },
         // {
         //   iconName: 'per_ic_tksh',
         //   name: '退款/售后',
+        // url:'/my/afterSale/list'
         // },
       ],
       imgList: {
@@ -411,19 +280,16 @@ export default {
     CollectionTabs() {
       return [
         {
-          // iconName: 'gerenzhongxin_hetongicon',
           name: '合同',
           img: this.$ossImgSetV2(this.imgList.contract),
           url: '/contract/contractList',
         },
         {
-          // iconName: 'shoucang',
           name: '收藏',
           img: this.$ossImgSetV2(this.imgList.collection),
           url: '/my/collection',
         },
         {
-          // iconName: 'gerenzhongxin_youhuiquanicon',
           name: '优惠券',
           img: this.$ossImgSetV2(this.imgList.coupon),
           url: '/my/coupon',
@@ -450,43 +316,36 @@ export default {
 
       return [
         {
-          // iconName: 'caifang_mian',
           name: '发票中心',
           img: this.$ossImgSetV2(this.imgList.invoice),
           url: '/order/invoice',
         },
         {
-          // iconName: 'caifang_mian',
           name: '面谈记录',
           img: this.$ossImgSetV2(this.imgList.mianTanJiLu),
           url: '/my/interviewRecord',
         },
         {
-          // iconName: 'shimingrenzheng',
           name: realStatus, // 实名认证
           img: this.$ossImgSetV2(this.imgList.real),
           url: realUrl,
         },
         {
-          // iconName: 'per_ic_help',
           name: '帮助中心',
           img: this.$ossImgSetV2(this.imgList.help),
           url: '/my/help',
         },
         {
-          // iconName: 'per_ic_debunk',
           name: '我要吐槽',
           img: this.$ossImgSetV2(this.imgList.complain),
           url: '/my/complain',
         },
         {
-          // iconName: 'per_ic_about',
           name: '关于我们',
           img: this.$ossImgSetV2(this.imgList.about),
           url: '/my/about',
         },
         {
-          // iconName: 'per_ic_about',
           name: '我的钱包',
           img: this.$ossImgSetV2(this.imgList.qianbao),
           url: '/my/wallet',
@@ -545,6 +404,7 @@ export default {
       if (this.token) {
         item.url && this.$router.push({ path: item.url })
       } else {
+        this.$store.dispatch('user/clearUser')
         this.$router.push({
           path: '/login',
           query: {
@@ -553,55 +413,11 @@ export default {
         })
       }
     },
-    clickTab(index) {
-      // 进入待评价页面
-      if (index === 4) {
-        if (this.token) {
-          this.$router.push({ path: '/my/evaluate' })
-        } else {
-          this.$router.push({
-            path: '/login',
-            query: {
-              redirect: '/my/evaluate',
-            },
-          })
-        }
-        return
-      }
-      if (index === 5) {
-        if (this.token) {
-          this.$router.push({ path: '/my/afterSale/list' })
-        } else {
-          this.$router.push({
-            path: '/login',
-            query: {
-              redirect: '/my/afterSale/list',
-            },
-          })
-        }
-        return
-      }
-      // console.log('index', index)
-      if (this.token) {
-        this.$router.push({
-          path: '/order',
-          query: {
-            type: index,
-          },
-        })
-      } else {
-        this.$router.push({
-          path: '/login',
-          query: {
-            redirect: '/order',
-            type: index,
-          },
-        })
-      }
-    },
+
     handleAvatar() {
       // 点击头像
       if (!this.userId) {
+        this.$store.dispatch('user/clearUser')
         this.$router.push({
           name: 'login',
           query: { redirect: this.$route.fullPath },
@@ -610,13 +426,7 @@ export default {
         this.$router.push('/my/information')
       }
     },
-    // handleClickLogin() {
-    //   if (this.token) return
-    //   this.$router.push({
-    //     name: 'login',
-    //     query: { redirect: this.$route.fullPath },
-    //   })
-    // },
+
     async getUserInfo() {
       if (!this.info && !this.info.fullName) {
         this.loading = true

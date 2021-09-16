@@ -7,7 +7,7 @@
       <div class="commodityConsult-containner-userInfo">
         <a
           href="javascript:void(0);"
-          @click="plannerInfoUrlJump(plannerDetail.mchUserId)"
+          @click="plannerInfoUrlJump(plannerDetail)"
         >
           <sp-image
             width="0.8rem"
@@ -20,7 +20,7 @@
         <div class="commodityConsult-containner-userInfo-name">
           <a
             href="javascript:void(0);"
-            @click="plannerInfoUrlJump(plannerDetail.mchUserId)"
+            @click="plannerInfoUrlJump(plannerDetail)"
           >
             <p :class="{ isTitle: plannerDetail.postName ? false : true }">
               {{ plannerDetail.userName }}
@@ -33,6 +33,14 @@
       </div>
       <div class="commodityConsult-containner-handle">
         <sp-button
+          v-md:p_IMClick
+          data-even_name="p_IMClick"
+          data-im_type="售前"
+          :data-recommend_number="plannerDetail.dggPlannerRecomLog || ''"
+          :data-planner_number="plannerDetail.userCenterNo"
+          :data-planner_name="plannerDetail.userName"
+          :data-crisps_fraction="plannerDetail.point"
+          data-track_code="SPW000162"
           type="primary"
           @click="
             sendTemplateMsgWithImg(plannerDetail.mchUserId, plannerDetail.type)
@@ -40,7 +48,18 @@
         >
           在线咨询
         </sp-button>
-        <sp-button type="info" @click="handleTel(plannerDetail.mchUserId)">
+        <sp-button
+          v-md:p_IMClick
+          data-even_name="p_IMClick"
+          data-im_type="售前"
+          :data-recommend_number="plannerDetail.dggPlannerRecomLog || ''"
+          :data-planner_number="plannerDetail.userCenterNo"
+          :data-planner_name="plannerDetail.userName"
+          :data-crisps_fraction="plannerDetail.point"
+          data-track_code="SPW000162"
+          type="info"
+          @click="handleTel(plannerDetail.mchUserId)"
+        >
           电话联系
         </sp-button>
       </div>
@@ -87,6 +106,12 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      isPlannerShare: false,
+      sharePlaner: {},
+    }
+  },
   computed: {
     // 产品详情
     proDetail() {
@@ -96,7 +121,7 @@ export default {
       return this.$store.state.city.currentCity
     },
     plannerDetail() {
-      if (this.sharePlaner) {
+      if (this.isPlannerShare) {
         return this.sharePlaner
       } else {
         return this.plannerInfo
@@ -104,8 +129,11 @@ export default {
     },
   },
   mounted() {
-    if (this.$route.query.isShare && this.$route.plannerId) {
-      this.getPlanerInfo(this.$route.plannerId)
+    if (this.$route.query.plannerId || this.$route.query.mchUserId) {
+      this.getPlanerInfo(
+        this.$route.query.plannerId || this.$route.query.mchUserId
+      )
+      this.isPlannerShare = true
     }
   },
   methods: {
@@ -126,11 +154,19 @@ export default {
       })
     },
     // 规划师详情跳转
-    plannerInfoUrlJump(mchUserId) {
+    plannerInfoUrlJump(item) {
+      // 处理埋点
+      window.spptMd.spptTrackRow('p_plannerBoothClick', {
+        track_code: 'SPW000159',
+        planner_number: item.userCenterNo,
+        planner_name: item.userName,
+        crisps_fraction: item.point,
+        recommend_number: item.dggPlannerRecomLog || '',
+      })
       this.$router.push({
         path: '/planner/detail',
         query: {
-          mchUserId,
+          mchUserId: item.mchUserId,
           requireCode: this.proDetail.classCodeLevelList[0],
           requireName: '',
         },
@@ -139,43 +175,54 @@ export default {
     // 拨打电话
     async handleTel(mchUserId) {
       try {
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          const telData = await planner.newtel({
-            areaCode: this.city.code,
-            areaName: this.city.name,
-            customerUserId: this.$store.state.user.userId,
-            plannerId: mchUserId,
-            customerPhone: this.$cookies.get('mainAccountFull', { path: '/' }),
-            requireCode: this.proDetail.classCodeLevel.split(',')[0],
-            requireName: '',
-            // id: mchUserId,
-            // sensitiveInfoType: 'MCH_USER',
-          })
-          // 解密电话
-          if (telData.status === 1) {
-            const tel = telData.phone
-            window.location.href = `tel://${tel}`
-          } else if (telData.status === 0) {
-            Toast({
-              message: '当前人员已禁用，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-          } else if (telData.status === 3) {
-            Toast({
-              message: '当前人员已离职，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-          }
-        } else {
+        // const isLogin = await this.judgeLoginMixin()
+        // if (isLogin) {
+        this.$xToast.show({
+          message: '为了持续为您提供服务，规划师可能会主动联系您',
+          duration: 2000,
+          forbidClick: true,
+        })
+        await planner.awaitTip()
+        const telData = await planner.newtel({
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          customerId: this.$store.state.user.customerID || '',
+          plannerId: mchUserId,
+
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }) ||
+            '',
+          requireCode: this.proDetail.classCodeLevel.split(',')[0],
+          requireName: '',
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+        })
+        // 解密电话
+        if (telData.status === 1) {
+          const tel = telData.phone
+          window.location.href = `tel://${tel}`
+        } else if (telData.status === 0) {
           Toast({
-            message: '请先登录账号',
+            message: '当前人员已禁用，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+        } else if (telData.status === 3) {
+          Toast({
+            message: '当前人员已离职，无法拨打电话',
             iconPrefix: 'sp-iconfont',
             icon: 'popup_ic_fail',
           })
         }
+        // } else {
+        //   Toast({
+        //     message: '请先登录账号',
+        //     iconPrefix: 'sp-iconfont',
+        //     icon: 'popup_ic_fail',
+        //   })
+        // }
       } catch (err) {
         // Toast({
         //   message: '未获取到划师联系方式',

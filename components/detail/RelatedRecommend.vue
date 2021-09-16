@@ -45,9 +45,26 @@
             </div>
 
             <div class="desc">
-              <p>{{ item.salesGoodsOperatings.slogan }}</p>
+              <p>
+                {{
+                  item.salesGoodsOperatings
+                    ? item.salesGoodsOperatings.slogan
+                    : ''
+                }}
+              </p>
             </div>
-            <p class="money">{{ item.salesPrice || item.price }}元</p>
+            <p v-if="item.priceType === 'PRO_FLOATING_PRICE'" class="money">
+              {{ getServerPrice(item.salesPrice || item.price) }}%
+              <span>服务费</span>
+            </p>
+            <p v-else class="money">
+              {{
+                item.refConfig &&
+                item.refConfig.taskType != 'PRO_WANT_ORDER_DIGEST'
+                  ? (item.salesPrice || item.price) + '元'
+                  : '面议'
+              }}
+            </p>
           </div>
         </nuxt-link>
       </div>
@@ -80,6 +97,21 @@ export default {
     },
   },
   methods: {
+    getServerPrice(price) {
+      let newPrice = ''
+      if (typeof price !== 'string') price = String(price)
+      if (price.match('.')) {
+        const arr = price.split('.')
+        if (Number(arr[1]) > 0) {
+          newPrice = price
+        } else {
+          newPrice = arr[0]
+        }
+      } else {
+        newPrice = price
+      }
+      return newPrice
+    },
     getItemList(list) {
       const listArr = []
       list.forEach((item) => {
@@ -185,6 +217,9 @@ export default {
         font-weight: bold;
         color: #ec5330;
         margin-top: 10px;
+        span {
+          font-size: 24px;
+        }
       }
     }
   }

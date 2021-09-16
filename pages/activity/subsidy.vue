@@ -1,9 +1,10 @@
 <template>
+  <!-- 官方补贴全网低价 -->
   <div class="container">
     <HeadWrapper
       :fill="false"
-      :line="ClassState == 0 ? true : false"
-      :background-color="`rgba(255,255,255,${headBkOpacity})`"
+      :line="false"
+      :background-color="`rgba(19,29,61,${headBkOpacity})`"
       @onHeightChange="onHeightChange"
     >
       <Head
@@ -12,74 +13,31 @@
         title="官方补贴"
         :back="uPGoBack"
         :search="clickInputHandle"
+        :click-input-handle="clickInputHandle"
+        :has-city="hasCity && isService"
+        :activity-type-options="activityTypeOptions"
+        :city-name="cityName"
       ></Head>
-
-      <!-- <div class="search_container">
-        <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
-          <div class="left-back" @click="uPGoBack">
-            <my-icon
-              name="nav_ic_back"
-              class="back_icon"
-              size="0.4rem"
-              color="#FFFFFF"
-            ></my-icon>
-          </div>
-          <div class="search-box"></div>
-          <div class="right">
-            <my-icon
-              class="search-icon"
-              name="sear_ic_sear"
-              size="0.4rem"
-              color="#FFFFFF"
-              @click.native="clickInputHandle"
-            ></my-icon>
-            <span
-              class="rule"
-              @click="
-                $router.push('/login/protocol?categoryCode=protocol100034')
-              "
-              >规则</span
-            >
-          </div>
-        </div>
-      </div> -->
     </HeadWrapper>
 
     <div ref="fill_container" class="img_container">
       <img width="100%" :src="imageHead" alt="" />
-      <div
-        class="rule"
-        :class="{ rule_in_app: isInApp }"
-        @click="$router.push('/login/protocol?categoryCode=' + ruleCode)"
-      >
-        规则
-      </div>
-      <div class="count-down">
-        <div class="down-time">
-          <span>已累计补贴</span>
-          <span class="time">3</span>
-          <span class="time">2</span>
-          <span class="time">4</span>
-          <span class="time">5</span>
-          <span class="time">8</span>
-          <span class="time">9</span>
-          <span>万</span>
-        </div>
-        <div class="des">- 按照商品销量 · 好评率 · 服务等综合设计 -</div>
-      </div>
-    </div>
-
-    <div class="content_container">
+      <!--
+        本页面未使用推荐商品，从分类的列表取前三个商品展示
+        :list="recommendProductList" -->
       <Recommend
-        title="爆款单品"
+        class="recommend"
         :parse-price="parsePrice"
-        :list="recommendProductList"
+        :list="RecommendList"
         @jump="
           (item) => {
             jumpProductDetail(item)
           }
         "
       ></Recommend>
+    </div>
+
+    <div class="content_container">
       <client-only>
         <Classification
           :has-city="hasCity && isService"
@@ -111,6 +69,7 @@
                 <Card
                   v-for="(item, index) in activityProductList"
                   :key="index"
+                  :first="index == 0"
                   :last="activityProductList.length - 1 == index"
                   :item="item"
                   :parse-price="parsePrice"
@@ -131,11 +90,11 @@ import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
 import activityMixin from '@/mixins/activityMixin.js'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
-import Recommend from '~/components/activity/Recommend.vue'
-import Card from '~/components/activity/Card.vue'
-import Head from '~/components/activity/Head.vue'
+import Recommend from '~/components/activity/subsidy/Recommend.vue'
+import Card from '~/components/activity/subsidy/Card.vue'
+import Head from '~/components/activity/subsidy/Head.vue'
 import NoData from '@/components/activity/NoData.vue'
-import Classification from '@/components/activity/Classification.vue'
+import Classification from '@/components/activity/subsidy/Classification.vue'
 export default {
   name: 'Subsidy',
   layout: 'default',
@@ -161,11 +120,11 @@ export default {
       specType: 'HDZT_ZTTYPE_QWBT',
 
       hasCity: true,
-      imageHead: '',
-      imageHeadDefault: this.$ossImgSetV2('aay0oucfo840000.png'), // 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg',
+      imageHead: '', // this.$ossImgSetV2('coxz4e42e0w0000.png'),
+      imageHeadDefault: this.$ossImgSetV2('coxz4e42e0w0000.png'), // 'https://cdn.shupian.cn/sp-pt/wap/images/c0mhpvuyb2o0000.jpg',
       headerHeight: 0,
       ClassState: 1,
-      advertCode: 'ad100075',
+      advertCode: 'ad100114',
       ruleCode: 'protocol100034',
 
       headBkOpacity: 0,
@@ -179,6 +138,12 @@ export default {
     }),
     userInfo() {
       return this.$store.state.user
+    },
+    RecommendList() {
+      // if (this.activityProductList.length >= 3) {
+      return this.activityProductList.slice(0, 3)
+      // }
+      // return []
     },
   },
   mounted() {
@@ -195,6 +160,19 @@ export default {
     onHeightChange(height) {
       this.headerHeight = height
     },
+    setTopColor() {
+      if (this.isInApp) {
+        this.$appFn.dggChangeTopColor(
+          {
+            flags: 'light',
+          },
+          (res) => {
+            console.log('DGGSetColorRes', res)
+          }
+        )
+      }
+    },
+
     handleScroll() {
       const scrollHeight =
         document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
@@ -236,110 +214,46 @@ export default {
 
   .img_container {
     position: relative;
-    min-height: 300px;
+    min-height: 1088px;
     background: #f8f8f8;
-    .count-down {
+    width: 100%;
+    overflow: hidden;
+    .recommend {
       position: absolute;
-
-      width: 100%;
-      top: 66.2%;
-
-      // margin-top: 53%;
-
-      font-size: 24px;
-      color: #ffedcb;
-      letter-spacing: 0;
-      line-height: 24px;
-      text-align: center;
-      // display: flex;
-      // flex-direction: row;
-      // justify-content: center;
-      // align-items: center;
-
-      .down-time {
-        font-size: 24px;
-        font-family: PingFangSC-Medium, PingFang SC;
-
-        color: #ffedcb;
-        line-height: 24px;
-
-        letter-spacing: 2px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        .time {
-          // min-width: 36px;
-
-          padding: 0 5px;
-          min-width: 36px;
-          height: 36px;
-          line-height: 36px;
-          background-image: linear-gradient(139deg, #7e9fff 0%, #4974f5 100%);
-          border-radius: 4px;
-
-          font-family: Bebas;
-          font-size: 24px;
-          color: #fff;
-          text-align: center;
-          margin: 0 4px;
-        }
-      }
-      .des {
-        opacity: 0.3;
-        font-family: PingFangSC-Regular;
-        font-size: 20px;
-        color: #ffffff;
-        letter-spacing: 0;
-        margin-top: 47px;
-      }
-    }
-
-    .rule {
-      // header的z-index是999
-      z-index: 1000;
-      background: rgba(255, 255, 255, 0.2);
-
-      border-radius: 100px 0 0 100px;
-
-      opacity: 0.9;
-      font-family: PingFangSC-Regular;
-      font-size: 24px;
-      color: #ffffff;
-      letter-spacing: 0;
-      line-height: 40px;
-
-      position: absolute;
-      right: 0;
-      top: 40px;
-      height: 40px;
-      width: 96px;
-      text-align: center;
-    }
-    .rule_in_app {
-      top: 100px;
+      bottom: 21%;
+      //bottom: 242px;
+      // width: 100%;
+      left: -40px;
+      right: -40px;
     }
   }
 
   .content_container {
     position: relative;
-    margin-top: -24px;
-    background: #f8f8f8;
+    margin-top: -96px;
+    // background: #f8f8f8;
     border-radius: 24px;
     overflow: hidden;
 
     .container-body {
-      background: #f8f8f8;
+      background: #fff;
       z-index: 1;
-      padding: 0 20px;
+      // padding: 0 20px;
       &::after {
         display: block;
         clear: both;
       }
       .body-content {
         min-height: 80vh;
+        padding: 0 20px;
       }
     }
+  }
+
+  ::v-deep .sp-list__finished-text {
+    padding: 24px 0px;
+    line-height: 0.25rem;
+    text-align: center;
   }
 }
 </style>

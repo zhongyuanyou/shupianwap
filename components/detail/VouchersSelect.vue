@@ -75,7 +75,10 @@
             >
               <div class="vouchers_item_left">
                 <div v-if="item.couponType === 1">
-                  <div class="coupon_price">{{ item.reducePrice }}</div>
+                  <div class="coupon_price">
+                    {{ formatPrice(item.reducePrice) }}
+                    <span v-if="item.reducePrice >= 10000">万</span>
+                  </div>
                   <div v-if="item.fullPrice == 0" class="can_use">无门槛</div>
                   <div v-else class="can_use">满{{ item.fullPrice }}元可用</div>
                 </div>
@@ -84,6 +87,8 @@
                     {{ getDiscount(item.discount) }}
                     <span>折</span>
                   </div>
+                  <div v-if="item.fullPrice == 0" class="can_use">无门槛</div>
+                  <div v-else class="can_use">满{{ item.fullPrice }}元可用</div>
                 </div>
               </div>
               <div class="vouchers_item_right">
@@ -96,13 +101,7 @@
                   {{ item.couponName }}
                 </div>
                 <div class="vouchers_desc">
-                  {{
-                    item.useType == 2
-                      ? '仅限指定品类使用'
-                      : item.useType == 3
-                      ? '仅限指定商品使用'
-                      : ''
-                  }}
+                  <span>{{ formatUseType(item) }}</span>
                 </div>
                 <div class="vouchers_date">
                   {{ item.serviceLife }}
@@ -199,6 +198,7 @@
 import { Cell, Popup, Safeguard, Image } from '@chipspc/vant-dgg'
 import { coupon, productDetailsApi } from '@/api'
 import imHandle from '~/mixins/imHandle'
+import { CHIPS_WAP_BASE_URL } from '@/config/constant'
 // 数组排序
 function xier(arr) {
   let interval = parseInt(arr.length / 2) // 分组间隔设置
@@ -326,6 +326,27 @@ export default {
     }
   },
   methods: {
+    formatPrice(price) {
+      const p = parseFloat(price)
+      if (p >= 10000) {
+        return parseFloat((p / 10000).toFixed(2))
+      }
+      return p
+    },
+    formatUseType(item) {
+      if (item.useType === 1) {
+        return '全场通用'
+      } else if (item.useType === 2) {
+        return '仅限指定品类使用'
+      } else if (item.useType === 3) {
+        if (item.productName) {
+          return item.productName + '-可用'
+        }
+        return '仅限指定商品使用'
+      }
+      return ''
+    },
+
     getDiscount(count) {
       return Number(count) / 100
     },
@@ -415,21 +436,38 @@ export default {
     },
     // 领取优惠券
     async getCoupons(id, status) {
-      // 点击立即购买
       const isLogin = await this.judgeLoginMixin()
       if (isLogin) {
         if (status === 0) {
           const params = {
             couponId: id,
           }
-          coupon
-            .receiveCoupon({ axios: this.$axios }, params)
+          this.$axios
+            .post(
+              `${CHIPS_WAP_BASE_URL}/yk/coupon/v2/receive_coupon.do`,
+              params
+            )
             .then((res) => {
               this.$xToast.success('优惠券领取成功')
-              this.$store.commit(
-                'sellingGoodsDetail/SET_SELLING_COUPONLIST',
-                id
-              )
+
+              let couponStatus = 0
+              if (res && res.code === 200) {
+                this.$xToast.success('领取成功')
+                couponStatus = 2
+              } else if (res && res.code === 510) {
+                // 重复领取
+                couponStatus = 2
+                this.$xToast.error(res.message || '领取失败')
+              } else {
+                // res.code === 500
+                couponStatus = 1
+                this.$xToast.error(res.message || '领取失败')
+              }
+
+              this.$store.commit('sellingGoodsDetail/SET_SELLING_COUPONLIST', {
+                cid: id,
+                couponStatus,
+              })
             })
             .catch((err) => {
               console.log(err)
@@ -746,17 +784,18 @@ export default {
       .vouchers_list {
         .vouchers_item {
           display: flex;
-          margin-bottom: 20px;
+          margin-bottom: 4px;
           width: 670px;
-          height: 216px;
+          height: 222px;
           padding-bottom: 4px;
           background-image: url('https://cdn.shupian.cn/sp-pt/wap/g4kbai7wgrk0000.png');
           background-repeat: no-repeat;
           background-size: 100% 100%;
           .vouchers_item_left {
-            width: 200px;
-            padding-top: 30px;
+            width: 1.9rem;
+            padding-top: 0.3rem;
             text-align: center;
+            margin-left: 0.1rem;
             .coupon_price {
               //   height: 67px;
               font-size: 62px;
@@ -769,6 +808,11 @@ export default {
               position: relative;
               // text-overflow: ellipsis;
               // white-space: nowrap;
+              span {
+                position: absolute;
+                font-size: 28px;
+                bottom: 0;
+              }
             }
             .can_use {
               font-size: 24px;
@@ -778,15 +822,23 @@ export default {
               text-align: center;
             }
             .coupon_discount {
-              font-size: 72px;
+              // font-size: 72px;
+              // font-family: Bebas;
+              // font-weight: 400;
+              // color: #ffffff;
+              // text-align: center;
+              // padding-top: 24px;
+              // position: relative;
+              // padding-right: 20px;
+              // margin-bottom: 10px;
+              font-size: 62px;
               font-family: Bebas;
               font-weight: 400;
               color: #ffffff;
               text-align: center;
-              padding-top: 24px;
+              padding-top: 20px;
+              overflow: hidden;
               position: relative;
-              padding-right: 20px;
-              margin-bottom: 10px;
               span {
                 position: absolute;
                 font-size: 28px;
@@ -839,7 +891,7 @@ export default {
                   #fa5741 100%
                 );
                 transform: scale(0.8);
-                transform-origin: 0 0.04rem;
+                transform-origin: 0 center;
                 line-height: 0;
                 padding: 0.2rem 0.08rem;
               }
@@ -847,7 +899,7 @@ export default {
                 background: #cccccc;
                 color: #ffffff;
                 transform: scale(0.8);
-                transform-origin: 0 0.04rem;
+                transform-origin: 0 center;
                 line-height: 0;
                 padding: 0.2rem 0.08rem;
               }
@@ -857,8 +909,15 @@ export default {
               font-size: 24px;
               width: 251px;
               line-height: 32px;
-              min-height: 56px;
-              margin-bottom: 10px;
+              min-height: 64px;
+              margin-bottom: 6px;
+
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-line-clamp: 2;
+              -webkit-box-orient: vertical;
+              word-break: break-all;
             }
             .vouchers_date {
               color: #999999;

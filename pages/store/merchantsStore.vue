@@ -183,11 +183,9 @@
                 <span>{{ data.name }}</span>
               </p>
               <p class="label">
-                <span
-                  v-for="(ta, taindex) in data.tags"
-                  :key="taindex"
-                  >{{ ta }}</span
-                >
+                <span v-for="(ta, taindex) in data.tags" :key="taindex">{{
+                  ta
+                }}</span>
               </p>
               <p class="type">
                 <span
@@ -389,7 +387,6 @@ export default {
     // }
   },
   mounted() {
-    console.log(this.appInfo.statusBarHeight, '4444444444444')
     window.addEventListener('scroll', this.handleScroll)
     if (this.isInApp) {
       if (this.userInfo.userId && this.userInfo.token) {
@@ -462,6 +459,14 @@ export default {
         if (data.code !== 200) {
           throw new Error(data.message)
         }
+        if (this.isInApp) {
+          this.mdAppViewScreen(data.data)
+        }
+        data.data.planners.forEach((item) => {
+          if (item) {
+            this.mdPlannerStore(item)
+          }
+        })
         // MCH_SERVICE_DATA 商户服务数据
         // PLANNER_RECOMMEND 规划师推荐
         // MCH_BASE_INFO 商户基础信息
@@ -511,7 +516,7 @@ export default {
         }
         const { data, code, message } = await this.$axios.post(
           storeApi.recommendGoods,
-          params,
+          params
         )
         if (code !== 200) {
           throw new Error(message)
@@ -539,6 +544,8 @@ export default {
             plannerId: this.detailData.id,
             requireCode: this.requireCode,
             requireName: this.requireName,
+
+            customerId: this.$store.state.user.customerID || '',
           },
           (res) => {
             const { code } = res || {}
@@ -568,46 +575,54 @@ export default {
     },
     async bindhidden() {
       try {
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          const telData = await planner.newtel({
-            areaCode: this.city.code,
-            areaName: this.city.name,
-            customerUserId: this.$store.state.user.userId,
-            plannerId: this.detailData.id,
-            customerPhone:
-              this.$store.state.user.mainAccountFull ||
-              this.$cookies.get('mainAccountFull', { path: '/' }),
-            requireCode: this.requireCode,
-            requireName: this.requireName,
-            // id: mchUserId,
-            // sensitiveInfoType: 'MCH_USER',
-          })
-          // 解密电话
-          if (telData.status === 1) {
-            this.uPCall(telData)
-          } else if (telData.status === 0) {
-            Toast({
-              message: '当前人员已禁用，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-            return ''
-          } else if (telData.status === 3) {
-            Toast({
-              message: '当前人员已离职，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-            return ''
-          }
-        } else {
+        // const isLogin = await this.judgeLoginMixin()
+        // if (isLogin) {
+        this.$xToast.show({
+          message: '为了持续为您提供服务，规划师可能会主动联系您',
+          duration: 2000,
+          forbidClick: true,
+        })
+        await planner.awaitTip()
+        const telData = await planner.newtel({
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          customerId: this.$store.state.user.customerID || '',
+          plannerId: this.detailData.id,
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }) ||
+            '',
+          requireCode: this.requireCode,
+          requireName: this.requireName,
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+        })
+        // 解密电话
+        if (telData.status === 1) {
+          this.uPCall(telData)
+        } else if (telData.status === 0) {
           Toast({
-            message: '请先登录账号',
+            message: '当前人员已禁用，无法拨打电话',
             iconPrefix: 'sp-iconfont',
             icon: 'popup_ic_fail',
           })
+          return ''
+        } else if (telData.status === 3) {
+          Toast({
+            message: '当前人员已离职，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+          return ''
         }
+        // } else {
+        //   Toast({
+        //     message: '请先登录账号',
+        //     iconPrefix: 'sp-iconfont',
+        //     icon: 'popup_ic_fail',
+        //   })
+        // }
       } catch (err) {
         Toast({
           message: '未获取到划师联系方式',
@@ -697,6 +712,12 @@ export default {
       }
     },
     linkPlanner(item) {
+      // 处理规划师展位点击
+      window.spptMd.spptTrackRow('p_plannerBoothClick', {
+        track_code: this.isInApp ? 'SPP001156' : 'SPW000155',
+        planner_name: item.name,
+        crisps_fraction: item.point,
+      })
       this.urlData.pageStatus !== 'preview' &&
         this.$router.push({
           path: '/planner/detail',
@@ -737,6 +758,22 @@ export default {
           storeId: this.detailData.id,
           pageStatus,
         },
+      })
+    },
+    mdAppViewScreen(info) {
+      // 处理埋点逻辑
+      window.spptMd.spptTrackRow('$AppViewScreen', {
+        track_code: 'SPP001154',
+        content_type: '店铺',
+        planner_shop_id: info.id,
+      })
+    },
+    mdPlannerStore(info) {
+      // 处理曝光埋点
+      window.spptMd.spptTrackRow('p_plannerBoothVisit', {
+        track_code: this.isInApp ? 'SPP001155' : 'SPW000154',
+        planner_name: info.name,
+        crisps_fraction: info.score,
       })
     },
   },

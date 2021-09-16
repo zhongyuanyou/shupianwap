@@ -4,7 +4,13 @@
     <div class="contentBg">
       <div class="content">
         <div class="iconBg">
-          <img :src="$ossImgSet(160, 160, 'g6trabnxtg80000.png')" alt="" />
+          <!-- <img :src="$ossImgSet(160, 160, 'g6trabnxtg80000.png')" alt="" /> -->
+          <my-icon
+            name="logo_chaotuoyuan"
+            size="1.6rem"
+            class="sp_logo"
+            color="#4974F5"
+          ></my-icon>
         </div>
         <span class="versionText">当前版本：V 1.2</span>
       </div>
@@ -91,7 +97,6 @@ export default {
         display: flex;
         width: 160px;
         height: 160px;
-        background: #4974f5;
         border-radius: 40px;
         align-items: center;
         justify-content: center;

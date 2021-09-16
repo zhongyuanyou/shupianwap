@@ -5,7 +5,7 @@
       <div class="recommend_tp_more">
         <nuxt-link
           :to="{
-            path: 'search/searchgoods',
+            path: '/search/searchgoods',
             query: {
               typeCode: detailType,
             },

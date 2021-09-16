@@ -416,7 +416,17 @@
     >
       <sp-bottombar safe-area-inset-bottom>
         <div class="footer-body">
-          <div class="phone" @click="goShop">
+          <div
+            v-md:p_plannerBoothClick
+            class="phone"
+            data-even_name="p_plannerBoothClick"
+            :data-track_code="isInApp ? 'SPP001148' : 'SPW000147'"
+            :data-recommend_number="newDetailData.dggPlannerRecomLog || ''"
+            :data-planner_number="newDetailData.userNo"
+            :data-planner_name="newDetailData.userName"
+            :data-crisps_fraction="newDetailData.point"
+            @click="goShop"
+          >
             <i
               class="spiconfont spiconfont-xiaodian"
               style="font-size: 19px"
@@ -534,16 +544,13 @@ export default {
         return
       }
       const params = { id: mchUserId }
-      const newData = await $axios.get(
-        storeApi.plannerDetail,
-        {
-          params: {
-            mchUserId,
-            dataFlg: '1',
-            cardType: 'plannerCode',
-          },
+      const newData = await $axios.get(storeApi.plannerDetail, {
+        params: {
+          mchUserId,
+          dataFlg: '1',
+          cardType: 'plannerCode',
         },
-      )
+      })
       if (newData.code === 200) {
         if (newData.data.status === 'BUSINESS_CARD_STATUS_ON_SHELF') {
           console.log(
@@ -622,7 +629,6 @@ export default {
       active: '', // tab状态
     }
   },
-
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
@@ -833,6 +839,8 @@ export default {
             plannerId: this.detailData.id,
             requireCode: this.requireCode,
             requireName: this.requireName,
+
+            customerId: this.$store.state.user.customerID || '',
           },
           (res) => {
             const { code } = res || {}
@@ -845,46 +853,53 @@ export default {
     },
     async bindhidden() {
       try {
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          const telData = await planner.newtel({
-            areaCode: this.city.code,
-            areaName: this.city.name,
-            customerUserId: this.$store.state.user.userId,
-            plannerId: this.detailData.id,
-            customerPhone:
-              this.$store.state.user.mainAccountFull ||
-              this.$cookies.get('mainAccountFull', { path: '/' }),
-            requireCode: this.requireCode,
-            requireName: this.requireName,
-            // id: mchUserId,
-            // sensitiveInfoType: 'MCH_USER',
-          })
-          // 解密电话
-          if (telData.status === 1) {
-            this.uPCall(telData)
-          } else if (telData.status === 0) {
-            Toast({
-              message: '当前人员已禁用，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-            return ''
-          } else if (telData.status === 3) {
-            Toast({
-              message: '当前人员已离职，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-            return ''
-          }
-        } else {
+        // const isLogin = await this.judgeLoginMixin()
+        // if (isLogin) {
+        this.$xToast.show({
+          message: '为了持续为您提供服务，规划师可能会主动联系您',
+          duration: 2000,
+          forbidClick: true,
+        })
+        await planner.awaitTip()
+        const telData = await planner.newtel({
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          customerId: this.$store.state.user.customerID || '',
+          plannerId: this.detailData.id,
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }),
+          requireCode: this.requireCode,
+          requireName: this.requireName,
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+        })
+        // 解密电话
+        if (telData.status === 1) {
+          this.uPCall(telData)
+        } else if (telData.status === 0) {
           Toast({
-            message: '请先登录账号',
+            message: '当前人员已禁用，无法拨打电话',
             iconPrefix: 'sp-iconfont',
             icon: 'popup_ic_fail',
           })
+          return ''
+        } else if (telData.status === 3) {
+          Toast({
+            message: '当前人员已离职，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+          return ''
         }
+        // } else {
+        //   Toast({
+        //     message: '请先登录账号',
+        //     iconPrefix: 'sp-iconfont',
+        //     icon: 'popup_ic_fail',
+        //   })
+        // }
       } catch (err) {
         Toast({
           message: '未获取到划师联系方式',
@@ -1028,25 +1043,6 @@ export default {
 
     // 平台不同，跳转方式不同
     uPGoBack() {
-      if (this.isInApp) {
-        this.$appFn.dggCloseWebView((res) => {
-          if (!res || res.code !== 200) {
-            this.$xToast.show({
-              message: '返回失败',
-              duration: 1000,
-              icon: 'toast_ic_error',
-              forbidClick: true,
-            })
-          }
-        })
-        return
-      }
-
-      // 在浏览器里 返回, 若没返回记录了，就跳转到首页
-      if (window && window.history && window.history.length <= 1) {
-        this.$router.replace('/')
-        return
-      }
       this.$router.back(-1)
     },
 

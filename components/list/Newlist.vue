@@ -34,8 +34,12 @@
           <h1>
             {{ item.name }}
           </h1>
-          <div v-if="item.tag && item.tag.length > 0" class="tag">
-            <div v-if="item.salesGoodsSubVos.length > 1">套餐</div>
+          <div class="tag">
+            <div
+              v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1"
+            >
+              套餐
+            </div>
             <p
               v-for="(tagitem, tagindex) in item.tag"
               v-show="tagitem.categoryCode === 'DSJTC20210514000042'"
@@ -47,7 +51,20 @@
           <p v-if="item.attr" class="describe">
             {{ item.attr }}
           </p>
-          <p class="price">
+          <p v-if="item.priceType === 'PRO_FLOATING_PRICE'" class="price">
+            {{ getServerPrice(item.salesPrice || item.price) }}%
+            <span>服务费</span>
+          </p>
+          <p
+            v-else-if="
+              item.refConfig &&
+              item.refConfig.taskType === 'PRO_WANT_ORDER_DIGEST'
+            "
+            class="price"
+          >
+            面议
+          </p>
+          <p v-else class="price">
             {{ item.price === '0.00' ? '面议' : item.price
             }}<span v-if="item.price !== '0.00'">元</span>
           </p>
@@ -95,6 +112,21 @@ export default {
   //   this.getlist()
   // },
   methods: {
+    getServerPrice(price) {
+      let newPrice = ''
+      if (typeof price !== 'string') price = String(price)
+      if (price.match('.')) {
+        const arr = price.split('.')
+        if (Number(arr[1]) > 0) {
+          newPrice = price
+        } else {
+          newPrice = arr[0]
+        }
+      } else {
+        newPrice = price
+      }
+      return newPrice
+    },
     godeatil(item) {
       this.$router.push({
         path: '/detail',

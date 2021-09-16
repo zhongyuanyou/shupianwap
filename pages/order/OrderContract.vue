@@ -2,84 +2,111 @@
   <div class="contract">
     <Head ref="head" title="附件协议-合同列表"> </Head>
     <div class="listbox">
-      <div v-for="(item, index) in list" :key="index" class="list">
-        <div class="head">
-          <h1>{{ item.contractName }}</h1>
-          <p v-if="item.contractStatus == 'STRUTS_YWC'">已签署</p>
-          <p
-            v-if="item.contractStatus == 'STRUTS_CG'"
-            :style="{
-              color: item.contractStatus == 'STRUTS_CG' ? '#FE8C29' : '#222222',
-            }"
-          >
-            待签署
-          </p>
-          <p
-            v-if="item.contractStatus == 'STRUTS_QSZ'"
-            :style="{
-              color:
-                item.contractStatus == 'STRUTS_QSZ' ? '#4974F5' : '#222222',
-            }"
-          >
-            签署中
-          </p>
-          <p v-if="item.contractStatus == 'STRUTS_DSH'">待审核</p>
-          <p v-if="item.contractStatus == 'STRUTS_YJQ'">已拒签</p>
-          <p v-if="item.contractStatus == 'STRUTS_YYQ'">已逾期</p>
-          <p v-if="item.contractStatus == 'STRUTS_YZF'">已作废</p>
-        </div>
-        <div class="body">
-          <div class="cell">
-            <p class="title">合同编号：{{ item.contractNo }}</p>
-          </div>
-          <div class="cell">
-            <p class="title">合同金额：￥{{ item.contractMoney }}</p>
-          </div>
-          <div class="cell">
-            <p class="title">
-              合同类型：{{
-                item.isAppendixContract == 0 ? '通用合同' : '产品附件'
-              }}
+      <template v-if="list.length">
+        <div v-for="(item, index) in list" :key="index" class="list">
+          <div class="head">
+            <h1>{{ item.contractName }}</h1>
+            <p v-if="item.status == 'STRUTS_YWC'" style="color: #222222">
+              已签署
+            </p>
+            <p v-if="item.status == 'STRUTS_QSZ'" style="color: #4974f5">
+              签署中
+            </p>
+            <p v-if="item.status == 'STRUTS_YJQ'" style="color: #222222">
+              已拒签
+            </p>
+            <p v-if="item.status == 'STRUTS_YYQ'" style="color: #222222">
+              已逾期
+            </p>
+            <p v-if="item.status == 'STRUTS_YZF'" style="color: #222222">
+              已作废
+            </p>
+            <p v-if="item.status == 'STRUTS_DGD'" style="color: #222222">
+              待归档
             </p>
           </div>
-          <div class="cell">
-            <p class="title">签署时间：{{ item.contractSignedTime || '-' }}</p>
+          <div class="body">
+            <div class="cell">
+              <p class="title">合同编号：{{ item.documentNo }}</p>
+            </div>
+            <div class="cell">
+              <p class="title">合同金额：{{ item.money | filterMoney }}</p>
+            </div>
+            <div class="cell">
+              <p class="title">
+                合同类型：{{
+                  item.contractTypeName ? item.contractTypeName : '-'
+                }}
+              </p>
+            </div>
+            <div class="cell">
+              <p class="title">签署时间：{{ item.signCompleteTime || '-' }}</p>
+            </div>
+          </div>
+          <div class="btn" @click="goPreview(item)">
+            {{ item.status == 'STRUTS_QSZ' ? '签署合同' : '查看合同' }}
           </div>
         </div>
-        <div
-          v-if="
-            item.contractStatus == 'STRUTS_YWC' ||
-            item.contractStatus == 'STRUTS_QSZ' ||
-            item.contractStatus == 'STRUTS_CG' ||
-            item.contractStatus == 'STRUTS_DSH'
-          "
-          class="btn"
-          @click="goPreview(item)"
-        >
-          {{
-            item.contractStatus == 'STRUTS_CG' ||
-            item.contractStatus == 'STRUTS_QSZ'
-              ? '签署合同'
-              : '查看合同'
-          }}
+      </template>
+      <template v-else>
+        <div class="no-data">
+          <img
+            :src="
+              $resizeImg(
+                340,
+                340,
+                'https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png'
+              )
+            "
+            alt=""
+            srcset=""
+          />
+          <p>暂无合同</p>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
+/*
+合同状态:
+  签署中
+  STRUTS_QSZ("STRUTS_QSZ","签署中"),
+  已完成
+  STRUTS_YWC("STRUTS_YWC","已完成"),
+  已逾期
+  STRUTS_YYQ("STRUTS_YYQ","已逾期"),
+  已作废
+  STRUTS_YZF("STRUTS_YZF","已作废"),
+  审核中
+  STRUTS_SHZ("STRUTS_SHZ","审核中"),
+  待归档
+  STRUTS_DGD("STRUTS_DGD","待归档");
+*/
+import changeMoney from '@/utils/changeMoney.js'
 import Head from '@/components/common/head/header'
-import orderApi from '@/api/order'
+import contractApi from '@/api/contract'
 export default {
   name: 'OrderContract',
   components: {
     Head,
   },
+  filters: {
+    filterMoney(val) {
+      if (!val) {
+        return '暂无'
+      } else {
+        return '¥' + changeMoney.regFenToYuan(val)
+      }
+    },
+  },
   data() {
     return {
       list: [],
       order: this.$route.query,
+      page: 1,
+      limit: 500,
     }
   },
   mounted() {
@@ -87,53 +114,48 @@ export default {
   },
   methods: {
     getorder() {
-      orderApi
-        .annexList(
+      contractApi
+        .contartlist(
           { axios: this.axios },
           {
-            id: this.$store.state.user.userInfo.userId,
-            orderId: this.order.orderId,
-            page: 1,
-            limit: 500,
-            operateSourcePlat: 'COMDIC_PLATFORM_CRISPS',
+            cusUserId: this.$store.state.user.userId, // 用户id
+            businessId: this.order.orderId, // 订单id
+            statusList: ['STRUTS_QSZ', 'STRUTS_YWC'], // 签署中,已完成
+            page: this.page,
+            limit: this.limit,
           }
         )
         .then((res) => {
           this.list = res.records
         })
         .catch((err) => {
-          this.$xToast.error(err.message || '查询失败，请稍后重试')
-          const that = this
-          setTimeout(function () {
-            that.$router.back(-1)
-          }, 2000)
+          this.$xToast.show('查询合同列表失败', 2000, false, () => {
+            this.$back()
+          })
+          console.log('错误信息err', err)
         })
     },
     goPreview(item) {
-      if (item.contractStatus === 'STRUTS_DSH') {
-        this.$xToast.error('合同正在审核中，请稍后~')
-      } else if (item.contractStatus === 'STRUTS_YWC') {
-        this.$router.push({
-          path: '/contract/preview',
-          query: {
-            contractUrl: item.contractUrl,
-            type: 'yl',
-          },
-        })
-      } else {
-        this.$router.push({
-          path: '/contract/preview',
-          query: {
-            contractUrl: item.contractUrl,
-            contractId: item.contractId,
-            contractNo: item.contractNo,
-            signerName: item.contractFirstName,
-            contactWay: item.contractFirstPhone,
-            type: 'qs',
-            go: '-1',
-          },
-        })
+      const queryParams = {
+        contractUrl: item.fileUrl,
+        go: '-1',
+        contractId: item.id, // 合同id
+        contractNo: item.documentNo, // 合同编码
       }
+      // 当为签署中时,才可以进行签署,其他状态只能够查看合同
+      if (item.status === 'STRUTS_QSZ') {
+        // 甲方名称
+        queryParams.signerName = item.partyaName
+        // 甲方联系电话(加密)
+        queryParams.contactWay = item.partyaTelephone
+        queryParams.type = 'qs'
+      } else {
+        queryParams.type = 'yl'
+      }
+      this.$router.push({
+        path: '/contract/preview',
+        query: queryParams,
+      })
     },
   },
 }
@@ -174,7 +196,6 @@ export default {
       }
       > .body {
         padding-bottom: 40px;
-        border-bottom: 1px solid #f4f4f4;
         .cell {
           margin-top: 40px;
           > .title {
@@ -193,7 +214,6 @@ export default {
       > .btn {
         line-height: 60px;
         text-align: center;
-        margin-top: 40px;
         width: 152px;
         height: 64px;
         background: #ffffff;
@@ -204,6 +224,28 @@ export default {
         font-weight: 400;
         color: #222222;
         margin-left: auto;
+      }
+    }
+    .no-data {
+      width: 100%;
+      height: 100vh;
+      background: white;
+      position: fixed;
+      left: 0;
+      top: 0;
+      img {
+        width: 340px;
+        height: 340px;
+        margin: 20vh auto 40px auto;
+        display: block;
+      }
+      p {
+        height: 29px;
+        font-size: 30px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #1a1a1a;
+        text-align: center;
       }
     }
   }

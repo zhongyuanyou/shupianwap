@@ -163,7 +163,9 @@ export default {
       }
     },
     initData() {
-      this.indexImg = this.$route.query.indexImg || 'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png'
+      this.indexImg =
+        this.$route.query.indexImg ||
+        'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png'
       this.orderName = this.$route.query.orderName
       this.orderDesc = this.$route.query.orderDesc
     },

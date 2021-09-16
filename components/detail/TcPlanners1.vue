@@ -130,43 +130,54 @@ export default {
     async handleTel(mchUserId) {
       // 规划师拨号需要先登录
       try {
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          const telData = await planner.newtel({
-            areaCode: this.city.code,
-            areaName: this.city.name,
-            customerUserId: this.$store.state.user.userId,
-            plannerId: mchUserId,
-            customerPhone: this.$cookies.get('mainAccountFull', { path: '/' }),
-            requireCode: this.sellingDetail.classCodeLevel.split(',')[0],
-            requireName: '',
-            // id: mchUserId,
-            // sensitiveInfoType: 'MCH_USER',
-          })
-          // 解密电话
-          if (telData.status === 1) {
-            const tel = telData.phone
-            window.location.href = `tel://${tel}`
-          } else if (telData.status === 0) {
-            Toast({
-              message: '当前人员已禁用，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-          } else if (telData.status === 3) {
-            Toast({
-              message: '当前人员已离职，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-          }
-        } else {
+        // const isLogin = await this.judgeLoginMixin()
+        // if (isLogin) {
+        this.$xToast.show({
+          message: '为了持续为您提供服务，规划师可能会主动联系您',
+          duration: 2000,
+          forbidClick: true,
+        })
+        console.log('sellingDetail', this.sellingDetail)
+        await planner.awaitTip()
+        const telData = await planner.newtel({
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          customerId: this.$store.state.user.customerID || '',
+          plannerId: mchUserId,
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }) ||
+            '',
+          requireCode: this.sellingDetail.classCodeLevel.split(',')[0],
+          requireName: this.sellingDetail.classCodeLevelName.split('/')[0],
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+        })
+        // 解密电话
+        if (telData.status === 1) {
+          const tel = telData.phone
+          window.location.href = `tel://${tel}`
+        } else if (telData.status === 0) {
           Toast({
-            message: '请先登录账号',
+            message: '当前人员已禁用，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+        } else if (telData.status === 3) {
+          Toast({
+            message: '当前人员已离职，无法拨打电话',
             iconPrefix: 'sp-iconfont',
             icon: 'popup_ic_fail',
           })
         }
+        // } else {
+        //   Toast({
+        //     message: '请先登录账号',
+        //     iconPrefix: 'sp-iconfont',
+        //     icon: 'popup_ic_fail',
+        //   })
+        // }
       } catch (err) {
         console.log(err)
         Toast({
@@ -184,6 +195,7 @@ export default {
       // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
       // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
       // 意向业务
+
       const intentionType = {}
       intentionType[this.sellingDetail.classCode] =
         this.sellingDetail.classCodeName
@@ -192,7 +204,7 @@ export default {
       intentionCity[this.city.code] = this.city.name
       const sessionParams = {
         requireCode: this.sellingDetail.classCodeLevel.split(',')[0],
-        requireName: '',
+        requireName: this.sellingDetail.classCodeLevelName.split(',')[0],
         imUserId: mchUserId, // 商户用户ID
         imUserType: type, // 用户类型
         ext: {

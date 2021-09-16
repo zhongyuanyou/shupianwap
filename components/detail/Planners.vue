@@ -183,10 +183,21 @@ export default {
     },
     async handleTel(mchUserId) {
       try {
+        this.$xToast.show({
+          message: '为了持续为您提供服务，规划师可能会主动联系您',
+          duration: 2000,
+          forbidClick: true,
+        })
+        await planner.awaitTip()
         const telData = await planner.newtel({
           areaCode: this.city.code,
           areaName: this.city.name,
           customerUserId: this.$store.state.user.userId,
+          customerId: this.$store.state.user.customerID || '',
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }) ||
+            '',
           plannerId: mchUserId,
           requireCode: '',
           requireName: '',

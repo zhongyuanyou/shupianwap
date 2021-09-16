@@ -161,11 +161,9 @@
                     <span>{{ data.name }}</span>
                   </p>
                   <p class="label">
-                    <span
-                      v-for="(ta, taindex) in data.tags"
-                      :key="taindex"
-                      >{{ ta }}</span
-                    >
+                    <span v-for="(ta, taindex) in data.tags" :key="taindex">{{
+                      ta
+                    }}</span>
                   </p>
                   <p class="type">
                     <span
@@ -191,10 +189,10 @@
           <sp-bottombar-button
             v-md:p_IMClick
             data-im_type="售前"
-            :data-planner_number="IMDetailData.id"
+            :data-planner_number="IMDetailData.userCenterNo"
             :data-planner_name="IMDetailData.name"
             :data-crisps_fraction="IMDetailData.point"
-            :data-track_code="isInApp ? 'SPP000040' : 'SPW000036'"
+            :data-track_code="isInApp ? 'SPP001149' : 'SPW000148'"
             type="primary"
             text="电话联系"
             :disabled="!IMDetailData.id"
@@ -203,10 +201,10 @@
           <sp-bottombar-button
             v-md:p_IMClick
             data-im_type="售前"
-            :data-planner_number="IMDetailData.id"
+            :data-planner_number="IMDetailData.userCenterNo"
             :data-planner_name="IMDetailData.name"
             :data-crisps_fraction="IMDetailData.point"
-            :data-track_code="isInApp ? 'SPP000040' : 'SPW000036'"
+            :data-track_code="isInApp ? 'SPP001149' : 'SPW000148'"
             type="info"
             text="在线联系"
             :disabled="!IMDetailData.id"
@@ -445,11 +443,14 @@ export default {
         // 详情接口
         const { data, code, message } = await this.$axios.get(
           storeApi.plannerStoreInfo,
-          { params },
+          { params }
         )
 
         if (code !== 200) {
           throw new Error(message)
+        }
+        if (this.isInApp) {
+          this.mdAppViewScreen(data)
         }
         this.active =
           (data.modules.length > 0 &&
@@ -472,6 +473,9 @@ export default {
         // IM数据
         const IMData = await planner.detail(IMParams)
         this.IMDetailData = IMData || {}
+        if (IMData) {
+          this.mdPlannerStore(IMData)
+        }
         return data
       } catch (error) {
         this.$xToast.show({
@@ -496,7 +500,7 @@ export default {
         }
         const { data, code, message } = await this.$axios.post(
           storeApi.recommendGoods,
-          params,
+          params
         )
         if (code !== 200) {
           throw new Error(message)
@@ -539,6 +543,8 @@ export default {
             plannerId: this.detailData.id,
             requireCode: this.requireCode,
             requireName: this.requireName,
+
+            customerId: this.$store.state.user.customerID || '',
           },
           (res) => {
             const { code } = res || {}
@@ -684,46 +690,54 @@ export default {
     },
     async bindhidden() {
       try {
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          const telData = await planner.newtel({
-            areaCode: this.city.code,
-            areaName: this.city.name,
-            customerUserId: this.$store.state.user.userId,
-            plannerId: this.IMDetailData.id,
-            customerPhone:
-              this.$store.state.user.mainAccountFull ||
-              this.$cookies.get('mainAccountFull', { path: '/' }),
-            requireCode: this.requireCode,
-            requireName: this.requireName,
-            // id: mchUserId,
-            // sensitiveInfoType: 'MCH_USER',
-          })
-          // 解密电话
-          if (telData.status === 1) {
-            this.uPCall(telData)
-          } else if (telData.status === 0) {
-            Toast({
-              message: '当前人员已禁用，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-            return ''
-          } else if (telData.status === 3) {
-            Toast({
-              message: '当前人员已离职，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-            return ''
-          }
-        } else {
+        // const isLogin = await this.judgeLoginMixin()
+        // if (isLogin) {
+        this.$xToast.show({
+          message: '为了持续为您提供服务，规划师可能会主动联系您',
+          duration: 2000,
+          forbidClick: true,
+        })
+        await planner.awaitTip()
+        const telData = await planner.newtel({
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          customerId: this.$store.state.user.customerID || '',
+          plannerId: this.IMDetailData.id,
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }) ||
+            '',
+          requireCode: this.requireCode,
+          requireName: this.requireName,
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+        })
+        // 解密电话
+        if (telData.status === 1) {
+          this.uPCall(telData)
+        } else if (telData.status === 0) {
           Toast({
-            message: '请先登录账号',
+            message: '当前人员已禁用，无法拨打电话',
             iconPrefix: 'sp-iconfont',
             icon: 'popup_ic_fail',
           })
+          return ''
+        } else if (telData.status === 3) {
+          Toast({
+            message: '当前人员已离职，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+          return ''
         }
+        // } else {
+        //   Toast({
+        //     message: '请先登录账号',
+        //     iconPrefix: 'sp-iconfont',
+        //     icon: 'popup_ic_fail',
+        //   })
+        // }
       } catch (err) {
         Toast({
           message: '未获取到划师联系方式',
@@ -821,6 +835,24 @@ export default {
       } else {
         this.titleStatus = true
       }
+    },
+    mdAppViewScreen(info) {
+      // 处理埋点逻辑
+      window.spptMd.spptTrackRow('$AppViewScreen', {
+        track_code: 'SPP001146',
+        content_type: '店铺',
+        planner_shop_id: info.id,
+      })
+    },
+    mdPlannerStore(info) {
+      // 处理曝光埋点
+      window.spptMd.spptTrackRow('p_plannerBoothVisit', {
+        track_code: this.isInApp ? 'SPP001147' : 'SPW000146',
+        planner_number: info.userCenterNo,
+        planner_name: info.name,
+        crisps_fraction: info.point,
+        recommend_number: info.dggPlannerRecomLog || '',
+      })
     },
   },
   head() {

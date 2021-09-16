@@ -35,10 +35,14 @@
         >
           <div class="item-lf">
             <div v-if="item.couponType === 1">
-              <div class="coupon_price">{{ item.reducePrice }}</div>
+              <div class="coupon_price">
+                {{ formatPrice(item.reducePrice) }}
+                <span v-if="item.reducePrice >= 10000">万</span>
+              </div>
               <div v-if="item.fullPrice == 0" class="can_use">无门槛</div>
               <div v-else class="can_use">满{{ item.fullPrice }}元可用</div>
             </div>
+
             <div v-else>
               <div class="coupon_discount">
                 {{ getDiscount(item.discount) }}
@@ -80,28 +84,24 @@
                 >{{ item.couponType === 1 ? '满减券' : '折扣券' }}</span
               >{{ item.couponName }}
             </div>
-            <div ref="textpro" class="content" @click="popOver(index)">
-              <span v-if="item.useType === 1">全场通用</span>
-              <span v-if="item.useType === 2">仅限指定品类使用</span>
-              <span v-if="item.useType === 3">仅限指定商品使用</span>
+            <div class="content" @click="popOver(index)">
+              <span>{{ formatUseType(item) }}</span>
             </div>
             <div class="date">{{ item.serviceLife }}</div>
             <!-- 右侧显示 end-->
           </div>
           <div class="item-btn">
-            <button
+            <span
               v-if="item.couponStatus === 0"
               class="my-coupon"
               @click="operation_coupon(item)"
             >
               立即领取
-            </button>
-            <button v-if="item.couponStatus === 1" class="no-coupon">
+            </span>
+            <span v-if="item.couponStatus === 1" class="no-coupon">
               已领完
-            </button>
-            <button v-if="item.couponStatus === 2" class="no-use">
-              已领取
-            </button>
+            </span>
+            <span v-if="item.couponStatus === 2" class="no-use"> 已领取 </span>
           </div>
           <div v-if="item.couponStatus === 2" class="receive">
             <img
@@ -162,6 +162,8 @@ export default {
       limit: 100,
       nomore: false,
       isLogin: '',
+
+      timer: null,
     }
   },
   computed: {
@@ -175,31 +177,53 @@ export default {
   mounted() {
     this.getAdvertisingData()
     this.getInitCouponData()
-    // this.getInitCouponData()
-    // if (this.isInApp) {
-    //   if (this.userInfo.userId && this.userInfo.token) {
-    //     console.log('无token')
-    //     this.getInitCouponData()
-    //   } else {
-    //     this.$appFn.dggGetUserInfo((res) => {
-    //       console.log('调用app获取信息', res)
-    //       if (res.code === 200) {
-    //         // 兼容启大顺参数返回
-    //         this.$store.dispatch(
-    //           'user/setUser',
-    //           typeof res.data === 'string' ? JSON.parse(res.data) : res.data
-    //         )
-    //         this.getInitCouponData()
-    //       } else {
-    //         this.getInitCouponData()
-    //       }
-    //     })
-    //   }
-    // } else {
-    //   this.getInitCouponData()
-    // }
+  },
+  destroyed() {
+    clearTimeout(this.timer)
   },
   methods: {
+    formatPrice(price) {
+      const p = parseFloat(price)
+      if (p >= 10000) {
+        return parseFloat((p / 10000).toFixed(2))
+      }
+      return p
+    },
+    formatUseType(item) {
+      if (item.useType === 1) {
+        return '全场通用'
+      } else if (item.useType === 2) {
+        return '仅限指定品类使用'
+      } else if (item.useType === 3) {
+        if (item.productName) {
+          return item.productName + '-可用'
+        }
+        return '仅限指定商品使用'
+      }
+      return ''
+    },
+    /**
+     * 当有优惠券领取时间到期后，刷新数据
+     */
+    setRefresh() {
+      clearTimeout(this.timer)
+
+      const list = [...this.responseData]
+      if (list.length > 0) {
+        list.sort((a, b) => {
+          return a.receiveEndDate - b.receiveEndDate
+        })
+
+        const time = list[0].receiveEndDate - Date.now()
+        if (time > 0) {
+          console.log('添加刷新计时器', time, 'ms')
+          this.timer = setTimeout(() => {
+            console.log('刷新页面数据')
+            this.getInitCouponData()
+          }, time)
+        }
+      }
+    },
     getRemainPercent(data) {
       if (data.countSum > 0 && data.countSur > 0) {
         return Math.ceil((Number(data.countSur) * 100) / Number(data.countSum))
@@ -272,20 +296,24 @@ export default {
           couponId: item.id,
         })
         .then((res) => {
+          console.log(res)
           this.loading = false
           if (res && res.code === 200) {
             Toast('领取成功')
-            this.page = 1
-            this.getInitCouponData()
-            this.nomore = false
+
+            item.couponStatus = 2
+          } else if (res && res.code === 510) {
+            // 重复领取
+            item.couponStatus = 2
+            this.$xToast.error(res.message || '领取失败')
           } else {
-            Toast.fail({
-              duration: 2000,
-              message: res.message || '领取失败',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
+            // res.code === 500
+            item.couponStatus = 1
+            this.$xToast.error(res.message || '领取失败')
           }
+          this.page = 1
+          this.getInitCouponData()
+          this.nomore = false
         })
         .catch((err) => {
           this.loading = false
@@ -360,6 +388,9 @@ export default {
           // this.notUsedCount = result.notUsedCount
           // this.invalidCount = result.invalidCount
           this.responseData = dataArr
+
+          this.setRefresh()
+
           this.loading = false
           if (result.length < this.limit) {
             this.nomore = true
@@ -374,6 +405,7 @@ export default {
           }
         })
     },
+
     popOver(index) {
       const l = this.responseData.length
       for (let i = 0; i < l; i++) {
@@ -473,11 +505,11 @@ export default {
   height: auto;
   .coupon_item {
     position: relative;
-    height: 212px;
+    height: 222px;
     // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
     // background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
     background-size: 100% 100%;
-    margin: 24px 0;
+    margin: 4px 0 0;
     position: relative;
     .item-lf {
       width: 208px;
@@ -512,6 +544,11 @@ export default {
         position: relative;
         // text-overflow: ellipsis;
         // white-space: nowrap;
+        span {
+          position: absolute;
+          font-size: 28px;
+          bottom: 0;
+        }
       }
       .coupon_remain {
         margin-top: 10px;
@@ -551,6 +588,7 @@ export default {
             transform: scale(0.7);
             transform-origin: 14px 14px;
             text-align: left;
+            white-space: nowrap;
           }
         }
         .no-num {
@@ -566,6 +604,7 @@ export default {
         font-weight: 400;
         color: #ffffff;
         text-align: center;
+        white-space: nowrap;
       }
     }
     .item-rt {
@@ -600,7 +639,7 @@ export default {
           color: #ffffff;
           background-image: linear-gradient(90deg, #fa6d5a 0%, #fa5741 100%);
           transform: scale(0.8);
-          transform-origin: 0 4px;
+          transform-origin: 0 center;
           line-height: 0;
           padding: 20px 6px;
         }
@@ -620,12 +659,15 @@ export default {
         font-weight: 400;
         color: #555555;
         line-height: 32px;
-        margin-bottom: 30px;
+
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
+        padding-right: 1.88rem;
+        min-height: 64px;
+        margin-bottom: 8px;
       }
       .date {
         font-size: 24px;
@@ -653,30 +695,33 @@ export default {
     }
     .receive {
       position: absolute;
-      right: 0;
-      top: 0;
+      right: 12px;
+      top: 8px;
       z-index: 1;
       width: 90px;
       height: 90px;
+      font-size: 0;
       img {
         width: 90px;
         height: 90px;
       }
     }
     .item-btn {
-      width: 150px;
+      width: 132px;
       height: 54px;
       font-size: 24px;
       position: absolute;
-      right: 40px;
+      right: 50px;
       // top: 55%;
       bottom: 54px;
-      margin-top: -10px;
-      button {
+      span {
         display: block;
         width: 100%;
         height: 100%;
+        line-height: 54px;
         font-size: 0.24rem;
+        white-space: nowrap;
+        text-align: center;
         &.my-coupon {
           background: #ec5330;
           border-radius: 27px;

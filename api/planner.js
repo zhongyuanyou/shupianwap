@@ -7,8 +7,8 @@
  * @FilePath: /chips-wap/client/api/planner.js
  */
 'use strict'
-
-import { CHIPS_WAP_BASE_URL, CRM_MIDDLE_APP } from '../config/constant'
+import { Toast } from '@chipspc/vant-dgg'
+import { CHIPS_WAP_BASE_URL, CRM_MIDDLE_APP, CHIPS_PC_URL } from '../config/constant'
 
 import { request } from '@/utils/request'
 
@@ -56,7 +56,7 @@ const planner = {
       url: CHIPS_WAP_BASE_URL + '/nk/planner/v1/detail.do',
     })
   },
-  
+
   /**
    * @description 获取电话号码
    * @param {string} id 业务id  (如:商户id,商户用户id,联系人id)
@@ -69,12 +69,26 @@ const planner = {
       url: CHIPS_WAP_BASE_URL + '/nk/planner/v1/tel.do',
     })
   },
+
+  awaitTip(time = 1500) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve()
+      }, time)
+    })
+  },
   newtel(params) {
+
     return request({
       params,
       method: 'post',
-      url: CRM_MIDDLE_APP + '/yk/outbound/shupiancall/bind_hidden.do',
+      url: CRM_MIDDLE_APP + '/nk/outbound/shupiancall/bind_hidden.do',
     })
+    // return request({
+    //   params,
+    //   method: 'get',
+    //   url: CHIPS_PC_URL + '/nk/planner/v1/getPlannerTel.do',
+    // })
   },
   bindCustomer:
     '/crisps-marketing-web/yk/branchsell/copartner/v1/add_copartner_customer_bind.do',

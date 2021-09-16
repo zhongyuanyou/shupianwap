@@ -29,7 +29,7 @@
 
 <script>
 import { Button } from '@chipspc/vant-dgg'
-import TradeItem from './TradeItem'
+import TradeItem from './TradeItem.vue'
 export default {
   components: {
     [Button.name]: Button,

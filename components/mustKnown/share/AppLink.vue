@@ -1,6 +1,11 @@
 <template>
   <div class="m-known-share appdown">
-    <img :src="$ossImgSetV2('g6trabnxtg80000.png')" class="logo" />
+    <my-icon
+      name="logo_chaotuoyuan"
+      size="0.8rem"
+      class="sp_logo"
+      color="#4974F5"
+    ></my-icon>
     <div class="desc">
       <div class="desc-name">薯片APP</div>
       <div class="desc-desc">企业服务大平台</div>
@@ -123,7 +128,7 @@ export default {
   height: 120px;
   padding: 0 28px;
   background: #fff;
-  .logo {
+  .sp_logo {
     height: 80px;
     width: 80px;
   }

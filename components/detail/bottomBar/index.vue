@@ -1,11 +1,22 @@
 <template>
   <div
     class="commodityConsult"
-    :style="{ opacity: plannerInfo.mchUserId ? 1 : 0 }"
+    :style="{
+      opacity: plannerDetail.mchUserId || plannerDetail.id ? 1 : 0,
+    }"
   >
     <div class="commodityConsult-containner">
       <div class="commodityConsult-containner-userInfo">
-        <a @click="plannerInfoUrlJump(plannerDetail.mchUserId)">
+        <a
+          v-md:p_plannerBoothClick
+          data-even_name="p_plannerBoothClick"
+          data-track_code="SPW000032"
+          :data-recommend_number="plannerDetail.dggPlannerRecomLog || ''"
+          :data-planner_number="plannerDetail.userCenterNo"
+          :data-planner_name="plannerDetail.userName"
+          :data-crisps_fraction="plannerDetail.point"
+          @click="plannerInfoUrlJump(plannerDetail.mchUserId)"
+        >
           <sp-image
             width="0.8rem"
             height="0.8rem"
@@ -96,7 +107,8 @@ export default {
       type: 1,
       article: {}, // 下单协议信息
       carSub: null,
-      sharePlaner: null,
+      sharePlaner: {},
+      isPlannerShare: false,
     }
   },
   computed: {
@@ -135,7 +147,7 @@ export default {
       },
     }),
     plannerDetail() {
-      if (this.sharePlaner) {
+      if (this.isPlannerShare) {
         return this.sharePlaner
       } else {
         return this.plannerInfo
@@ -143,8 +155,11 @@ export default {
     },
   },
   mounted() {
-    if (this.$route.query.isShare && this.$route.plannerId) {
-      this.getPlanerInfo(this.$route.plannerId)
+    if (this.$route.query.plannerId || this.$route.query.mchUserId) {
+      this.getPlanerInfo(
+        this.$route.query.plannerId || this.$route.query.mchUserId
+      )
+      this.isPlannerShare = true
     }
     // this.getPlanerInfo('607997736314102930')
   },
@@ -202,6 +217,8 @@ export default {
             path: '/order/confirmorder',
             query: {
               productId: this.sellingGoodsData.id,
+              plannerId:
+                this.$route.query.plannerId || this.$route.query.mchUserId,
             },
           })
         } else {
@@ -220,45 +237,72 @@ export default {
     async handleTel(mchUserId) {
       // 规划师拨号需要先登录
       try {
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          const telData = await planner.newtel({
-            areaCode: this.city.code,
-            areaName: this.city.name,
-            customerUserId: this.$store.state.user.userId,
-            plannerId: mchUserId,
-            customerPhone: this.$cookies.get('mainAccountFull', { path: '/' }),
-            requireCode: this.sellingGoodsData.classCodeLevel.split(',')[0],
-            requireName: '',
-            // id: mchUserId,
-            // sensitiveInfoType: 'MCH_USER',
-          })
-          // 解密电话
-          if (telData.status === 1) {
-            const tel = telData.phone
-            window.location.href = `tel://${tel}`
-          } else if (telData.status === 0) {
-            Toast({
-              message: '当前人员已禁用，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-          } else if (telData.status === 3) {
-            Toast({
-              message: '当前人员已离职，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-          } else {
-            console.log(telData)
-          }
-        } else {
+        // const isLogin = await this.judgeLoginMixin()
+        // if (isLogin) {
+        this.$xToast.show({
+          message: '为了持续为您提供服务，规划师可能会主动联系您',
+          duration: 2000,
+          forbidClick: true,
+        })
+        console.log('sellingGoodsData', {
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          customerId: this.$store.state.user.customerID || '',
+          plannerId: mchUserId,
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }) ||
+            '',
+          requireCode: this.sellingGoodsData.classCodeLevel.split(',')[0],
+          requireName: this.sellingGoodsData.classCodeLevelName.split('/')[0],
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+        })
+        await planner.awaitTip()
+
+        const telData = await planner.newtel({
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          customerId: this.$store.state.user.customerID || '',
+          plannerId: mchUserId,
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }) ||
+            '',
+          requireCode: this.sellingGoodsData.classCodeLevel.split(',')[0],
+          requireName: this.sellingGoodsData.classCodeLevelName.split('/')[0],
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+        })
+
+        // 解密电话
+        if (telData.status === 1) {
+          const tel = telData.phone
+          window.location.href = `tel://${tel}`
+        } else if (telData.status === 0) {
           Toast({
-            message: '请先登录账号',
+            message: '当前人员已禁用，无法拨打电话',
             iconPrefix: 'sp-iconfont',
             icon: 'popup_ic_fail',
           })
+        } else if (telData.status === 3) {
+          Toast({
+            message: '当前人员已离职，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+        } else {
+          console.log(telData)
         }
+        // } else {
+        //   Toast({
+        //     message: '请先登录账号',
+        //     iconPrefix: 'sp-iconfont',
+        //     icon: 'popup_ic_fail',
+        //   })
+        // }
       } catch (err) {
         console.log(err)
         Toast({

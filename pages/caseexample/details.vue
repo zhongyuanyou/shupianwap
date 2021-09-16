@@ -92,7 +92,6 @@
 
     <!--E 评论-->
     <CommentBox
-      v-if="commentdata.length > 0"
       :list="commentdata"
       @preview="previewImg"
     />

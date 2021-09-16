@@ -80,14 +80,7 @@
                 <p class="goods-name">
                   {{ item.name }}
                 </p>
-                <p
-                  v-if="
-                    (item.tag && item.tag.length) ||
-                    (item.salesGoodsSubVos &&
-                      item.salesGoodsSubVos.length > 1) > 0
-                  "
-                  class="goods-tag"
-                >
+                <p class="goods-tag">
                   <span
                     v-if="
                       item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
@@ -133,7 +126,23 @@
                     ><span class="big-value">面议</span></span
                   > -->
                   <span class="sales-proce">
-                    <span class="big-value"
+                    <span
+                      v-if="item.priceType === 'PRO_FLOATING_PRICE'"
+                      class="big-value"
+                    >
+                      {{ getServerPrice(item.salesPrice || item.price) }}%
+                      <span>服务费</span>
+                    </span>
+                    <span
+                      v-else-if="
+                        item.refConfig &&
+                        item.refConfig.taskType === 'PRO_WANT_ORDER_DIGEST'
+                      "
+                      class="big-value"
+                    >
+                      面议
+                    </span>
+                    <span v-else class="big-value"
                       >{{ item.salesPrice || item.price || '面议' }}元</span
                     >
                   </span>
@@ -224,6 +233,21 @@ export default {
     }
   },
   methods: {
+    getServerPrice(price) {
+      let newPrice = ''
+      if (typeof price !== 'string') price = String(price)
+      if (price.match('.')) {
+        const arr = price.split('.')
+        if (Number(arr[1]) > 0) {
+          newPrice = price
+        } else {
+          newPrice = arr[0]
+        }
+      } else {
+        newPrice = price
+      }
+      return newPrice
+    },
     getTabData() {
       dict
         .findCmsCode(
@@ -285,41 +309,36 @@ export default {
         pageNo: this.tabBtn[index].page,
         pageSize: this.tabBtn[index].limit,
       }
-      this.$axios
-        .post(recommendApi.saleList, params)
-        .then((res) => {
-          this.loadingList = false
-          this.loading = false
-          if (res.code === 200) {
-            this.tabBtn[index].noData = res.data.records.length === 0
+      this.$axios.post(recommendApi.saleList, params).then((res) => {
+        this.loadingList = false
+        this.loading = false
+        if (res.code === 200) {
+          this.tabBtn[index].noData = res.data.records.length === 0
 
-            res.data.records.map((item) => {
-              if (item.img) {
-                item.img =
-                  item.img +
-                  '?x-oss-process=image/resize,m_fill,w_300,h_300,limit_0'
-              }
-            })
-            console.log('res.data.records', res.data.records)
+          res.data.records.map((item) => {
+            if (item.img) {
+              item.img =
+                item.img +
+                '?x-oss-process=image/resize,m_fill,w_300,h_300,limit_0'
+            }
+          })
+          console.log('res.data.records', res.data.records)
 
-            if (this.tabBtn[index].page === 1) {
-              this.tabBtn[index].goodsList = res.data.records
-            } else {
-              this.tabBtn[index].goodsList = this.tabBtn[
-                index
-              ].goodsList.concat(res.data.records)
-            }
-            // 加载更多时无更多数据
-            if (
-              !res.data.records.length &&
-              this.tabBtn[index].goodsList.length
-            ) {
-              this.tabBtn[index].noMore = true
-            }
+          if (this.tabBtn[index].page === 1) {
+            this.tabBtn[index].goodsList = res.data.records
           } else {
-            this.tabBtn[index].page--
+            this.tabBtn[index].goodsList = this.tabBtn[index].goodsList.concat(
+              res.data.records
+            )
           }
-        })
+          // 加载更多时无更多数据
+          if (!res.data.records.length && this.tabBtn[index].goodsList.length) {
+            this.tabBtn[index].noMore = true
+          }
+        } else {
+          this.tabBtn[index].page--
+        }
+      })
     },
     priceRest(index = 0, price) {
       const isFlot = price.indexOf('.')
@@ -620,6 +639,9 @@ export default {
             font-family: PingFang SC;
             font-weight: bold;
             color: #ec5330;
+            span {
+              font-size: 24px;
+            }
           }
           .small-value {
             font-size: 22px;

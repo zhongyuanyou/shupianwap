@@ -58,8 +58,12 @@ module.exports = {
         name: '360-fullscreen',
         content: 'true',
       },
+      {
+        name: 'DGG_ENV',
+        content: process.env.DGG_SERVER_ENV,
+      },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon_new.ico' }],
     script: [
       {
         src: 'https://webapi.amap.com/maps?v=1.4.4&key=5111f49d979a509f1e96420a1b456ff4',

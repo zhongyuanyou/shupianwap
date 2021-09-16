@@ -3,7 +3,10 @@
     <p class="title_btitle">{{ sellingGoodsData.name }}</p>
     <div class="title_tags">
       <span
-        v-if="sellingGoodsData.salesGoodsSubVos.length > 1"
+        v-if="
+          sellingGoodsData.salesGoodsSubVos &&
+          sellingGoodsData.salesGoodsSubVos.length
+        "
         class="title_tags_item title_tags_main"
         >套餐</span
       >
@@ -30,8 +33,19 @@
       <sp-icon name="arrow" class="icon" />
     </div>
     <div class="title_bottom">
-      <span class="title_bottom_money">{{
-        sellingGoodsData.salesPrice !== '0.00'
+      <p
+        v-if="sellingGoodsData.priceType === 'PRO_FLOATING_PRICE'"
+        class="title_bottom_money"
+      >
+        {{
+          getServerPrice(sellingGoodsData.salesPrice || sellingGoodsData.price)
+        }}%
+        <span>服务费</span>
+      </p>
+      <span v-else class="title_bottom_money">{{
+        sellingGoodsData.salesPrice !== '0.00' &&
+        sellingGoodsData.refConfig &&
+        sellingGoodsData.refConfig.taskType != 'PRO_WANT_ORDER_DIGEST'
           ? sellingGoodsData.salesPrice + '元'
           : '面议'
       }}</span>
@@ -68,6 +82,21 @@ export default {
     },
   },
   methods: {
+    getServerPrice(price) {
+      let newPrice = ''
+      if (typeof price !== 'string') price = String(price)
+      if (price.match('.')) {
+        const arr = price.split('.')
+        if (Number(arr[1]) > 0) {
+          newPrice = price
+        } else {
+          newPrice = arr[0]
+        }
+      } else {
+        newPrice = price
+      }
+      return newPrice
+    },
     handleShowPriceRed() {
       this.$refs.priceR.show = true
     },
@@ -157,6 +186,9 @@ export default {
       color: #ec5330;
       font-size: 44px;
       line-height: 52px;
+      span {
+        font-size: 22px;
+      }
     }
     &_num {
       color: #999999;

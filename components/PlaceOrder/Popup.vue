@@ -4,7 +4,6 @@
       v-model="show"
       position="bottom"
       :close-on-click-overlay="false"
-      :style="{ height: '70%' }"
       round
       @click-overlay="close(false)"
     >
@@ -23,12 +22,12 @@
             @click="tabactivefn(item, index)"
           >
             <span>{{ item.name }}</span
-            ><b v-if="index == 0">{{ `(${datalist.length || 0})` }}</b>
-            <b v-else>{{ `(${nolist.length || 0})` }}</b>
+            ><span v-if="index == 0">{{ `(${datalist.length || 0})` }}</span>
+            <span v-else>{{ `(${nolist.length || 0})` }}</span>
             <i class="icon"></i>
           </p>
         </div>
-        <div class="calculation">
+        <div v-if="tabAct === 0" class="calculation">
           {{ disPrice ? '已选中优惠券，可抵扣' : '请选择优惠券' }}
           <span v-if="disPrice" class="red">{{ disPrice }}元</span>
         </div>
@@ -44,9 +43,17 @@
                 <div class="left">
                   <div v-if="item.marketingCouponVO.couponType === 1">
                     <div class="coupon_price">
-                      {{ item.marketingCouponVO.reducePrice }}
+                      {{ formatPrice(item.marketingCouponVO.reducePrice) }}
+                      <span v-if="item.marketingCouponVO.reducePrice >= 10000"
+                        >万</span
+                      >
                     </div>
-                    <div v-if="item.useType === 1" class="can_use">无门槛</div>
+                    <div
+                      v-if="item.marketingCouponVO.fullPrice == 0"
+                      class="can_use"
+                    >
+                      无门槛
+                    </div>
                     <div v-else class="can_use">
                       满{{ item.marketingCouponVO.fullPrice }}元可用
                     </div>
@@ -55,6 +62,15 @@
                     <div class="coupon_discount">
                       {{ getDiscount(item.marketingCouponVO.discount) }}
                       <span>折</span>
+                    </div>
+                    <div
+                      v-if="item.marketingCouponVO.fullPrice == 0"
+                      class="can_use"
+                    >
+                      无门槛
+                    </div>
+                    <div v-else class="can_use">
+                      满{{ item.marketingCouponVO.fullPrice }}元可用
                     </div>
                   </div>
                 </div>
@@ -67,19 +83,8 @@
                       {{ item.marketingCouponVO.couponName }}
                     </h1>
                     <div class="goods-types">
-                      <p v-if="item.marketingCouponVO.useType === 1">
-                        全场通用
-                      </p>
-                      <p v-if="item.marketingCouponVO.useType === 2">
-                        仅限指定品类使用
-                      </p>
-                      <p v-if="item.marketingCouponVO.useType === 3">
-                        仅限指定商品使用
-                      </p>
+                      <p>{{ formatUseType(item) }}</p>
                     </div>
-                    <!-- <p v-if="item.marketingCouponVO.useType === 1">
-                      全场通用
-                    </p> -->
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
                   <div class="right">
@@ -114,7 +119,7 @@
               <p>暂无优惠券</p>
             </div>
             <div v-if="datalist.length > 0" class="btn">
-              <p @click="close()">确定</p>
+              <p @click="submit">确定</p>
             </div>
           </div>
         </div>
@@ -125,9 +130,17 @@
                 <div class="left">
                   <div v-if="item.marketingCouponVO.couponType === 1">
                     <div class="coupon_price">
-                      {{ item.marketingCouponVO.reducePrice }}
+                      {{ formatPrice(item.marketingCouponVO.reducePrice) }}
+                      <span v-if="item.marketingCouponVO.reducePrice >= 10000"
+                        >万</span
+                      >
                     </div>
-                    <div v-if="item.useType === 1" class="can_use">无门槛</div>
+                    <div
+                      v-if="item.marketingCouponVO.fullPrice == 0"
+                      class="can_use"
+                    >
+                      无门槛
+                    </div>
                     <div v-else class="can_use">
                       满{{ item.marketingCouponVO.fullPrice }}元可用
                     </div>
@@ -136,6 +149,15 @@
                     <div class="coupon_discount">
                       {{ getDiscount(item.marketingCouponVO.discount) }}
                       <span>折</span>
+                    </div>
+                    <div
+                      v-if="item.marketingCouponVO.fullPrice == 0"
+                      class="can_use"
+                    >
+                      无门槛
+                    </div>
+                    <div v-else class="can_use">
+                      满{{ item.marketingCouponVO.fullPrice }}元可用
                     </div>
                   </div>
                 </div>
@@ -148,15 +170,7 @@
                       {{ item.marketingCouponVO.couponName }}
                     </h1>
                     <div class="goods-types">
-                      <p v-if="item.marketingCouponVO.useType === 1">
-                        全场通用
-                      </p>
-                      <p v-if="item.marketingCouponVO.useType === 2">
-                        仅限指定品类使用
-                      </p>
-                      <p v-else-if="item.marketingCouponVO.useType === 3">
-                        仅限指定商品使用
-                      </p>
+                      <p>{{ formatUseType(item) }}</p>
                     </div>
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
@@ -185,7 +199,9 @@
             >《薯片用户服务协议》</a
           >和<a class="protocol_name" @click="handleProtocol('protocol100121')"
             >《薯片隐私协议》</a
-          >和《权限使用规则》各条款，包括但不限于: 各条款，包括但不限于: <br />
+          >和<a class="protocol_name" @click="handleProtocol('protocol100014')"
+            >《权限使用规则》</a
+          >各条款，包括但不限于: <br />
           为了向您提供即时通讯、内容分享等服务，我们需要收集您的设备信息、操作日志等个人信息。你可以在“设置中查看、变更、删除个人信息并管理您的授权。”
           如果您不同意本协议的修改，请立即停止访问或使用本网站或取消已经获得的服务；如果您选择继续访问或使用本网站，则视为您已接受本协议。
         </div>
@@ -265,56 +281,41 @@ export default {
         return []
       },
     },
+    originPrice: {
+      type: [Number, String],
+      default: 0,
+    },
   },
   data() {
     return {
       tabAct: 0,
       checkarr: '',
       radio: null,
-      selectedCoupon: {},
-      disPrice: 0,
+
+      // disPrice: 0,
 
       TipsShow: false,
-      // num: 0,
     }
   },
   computed: {
-    num() {
-      if (this.checkarr.marketingCouponVO) {
-        if (this.checkarr.marketingCouponVO.couponType === 1) {
-          return this.checkarr.marketingCouponVO.reducePrice
-        } else {
-          const price =
-            this.$route.query.type === 'shopcar'
-              ? this.$parent.order.skuTotalPrice
-              : this.$parent.order.salesPrice
-          const discount =
-            parseFloat(this.checkarr.marketingCouponVO.discount) / 100
+    // 折算后售价
+    price() {
+      // 原价
+      // const originPrice =
+      //   this.$route.query.type === 'shopcar'
+      //     ? this.$parent.order.skuTotalPrice
+      //     : this.$parent.order.salesPrice
 
-          const discountNum = ((10 - discount) / 10) * price
-          return Math.ceil(discountNum * 100) / 100
-        }
-      }
-      return 0
-    },
-  },
-
-  mounted() {},
-  methods: {
-    getDiscount(count) {
-      return Number(count) / 100
-    },
-    sum() {
-      const originPrice =
-        this.$route.query.type === 'shopcar'
-          ? this.$parent.order.skuTotalPrice
-          : this.$parent.order.salesPrice
       let price = 0
-      if (this.selectedCoupon.marketingCouponVO.discount) {
+      if (!this.checkarr.marketingCouponVO) {
+        return this.originPrice
+      }
+
+      if (this.checkarr.marketingCouponVO.discount) {
         price =
-          Number(originPrice) *
+          Number(this.originPrice) *
           10000 *
-          (this.selectedCoupon.marketingCouponVO.discount / 1000)
+          (this.checkarr.marketingCouponVO.discount / 1000)
         if (price % 100 === 0) {
           price = price / 10000
         } else {
@@ -322,41 +323,59 @@ export default {
         }
       } else {
         price =
-          Number(originPrice) -
-          this.selectedCoupon.marketingCouponVO.reducePrice
+          Number(this.originPrice) - this.checkarr.marketingCouponVO.reducePrice
       }
-      this.disPrice =
-        Math.ceil(Number(originPrice) * 100 - Number(price) * 100) / 100
+      return price
+    },
 
-      this.$emit('change', price, -this.disPrice, this.checkarr)
+    // 折扣价
+    disPrice() {
+      // 原价
+      // const originPrice =
+      //   this.$route.query.type === 'shopcar'
+      //     ? this.$parent.order.skuTotalPrice
+      //     : this.$parent.order.salesPrice
+      return (
+        Math.ceil(Number(this.originPrice) * 100 - Number(this.price) * 100) /
+        100
+      )
+    },
+  },
 
-      // order
-      //   .getcalculation(
-      //     { axios: this.$axios },
-      //     {
-      //       price:
-      //         this.$route.query.type === 'shopcar'
-      //           ? this.$parent.order.skuTotalPrice
-      //           : this.$parent.order.salesPrice,
-      //       culation: this.num,
-      //     }
-      //   )
-      //   .then((result) => {
-      //     this.$emit('change', result, -this.num, this.checkarr)
-
-      //     this.close()
-      //   })
-      //   .catch((e) => {
-      //     Toast({
-      //       message: e.data.error,
-      //       iconPrefix: 'sp-iconfont',
-      //       icon: 'popup_ic_fail',
-      //       overlay: true,
-      //     })
-      //   })
+  mounted() {},
+  methods: {
+    // 将价格转为万元
+    formatPrice(price) {
+      const p = parseFloat(price)
+      if (p >= 10000) {
+        return parseFloat((p / 10000).toFixed(2))
+      }
+      return p
+    },
+    formatUseType(item) {
+      if (item.marketingCouponVO.useType === 1) {
+        return '全场通用'
+      } else if (item.marketingCouponVO.useType === 2) {
+        return '仅限指定品类使用'
+      } else if (item.marketingCouponVO.useType === 3) {
+        if (item.marketingCouponVO.productName) {
+          return item.marketingCouponVO.productName + '-可用'
+        }
+        return '仅限指定商品使用'
+      }
+      return ''
+    },
+    handleProtocol(categoryCode) {
+      this.$router.push({
+        name: 'login-protocol',
+        query: { categoryCode },
+      })
+    },
+    getDiscount(count) {
+      return Number(count) / 100
     },
     checkitem(item, index) {
-      this.selectedCoupon = item
+      // this.checkarr = item
       if (this.radio === index) {
         this.checkarr = ''
         this.radio = -1
@@ -364,10 +383,14 @@ export default {
         this.checkarr = item
         this.radio = index
       }
-      this.sum()
     },
-    close(data) {
-      this.$emit('close', data)
+    close() {
+      this.$emit('close')
+    },
+    submit() {
+      // price计算后售价，disPrice折扣价，checkarr选择项
+      this.$emit('change', this.price, -this.disPrice, this.checkarr)
+      this.close()
     },
     tabactivefn(item, index) {
       this.tabAct = index
@@ -430,7 +453,7 @@ export default {
       }
       > .act {
         color: #4974f5;
-        font-weight: 600;
+        font-weight: bold;
         i {
           display: block;
         }
@@ -451,7 +474,7 @@ export default {
     .databox {
       height: calc(67vh - 324px);
       .listbox {
-        height: calc(100% - 130px);
+        height: calc(100% - 180px);
         overflow-y: auto;
         padding: 0 40px;
         > .list {
@@ -485,12 +508,12 @@ export default {
             padding-top: 20px;
             box-sizing: border-box;
             .coupon_discount {
-              font-size: 72px;
+              font-size: 62px;
               font-family: Bebas;
               font-weight: 400;
               color: #ffffff;
               text-align: center;
-              padding-top: 34px;
+              padding-top: 27px;
               position: relative;
               padding-right: 20px;
               margin-bottom: 10px;
@@ -512,6 +535,11 @@ export default {
               position: relative;
               // text-overflow: ellipsis;
               // white-space: nowrap;
+              span {
+                position: absolute;
+                font-size: 28px;
+                bottom: 0;
+              }
             }
             .can_use {
               margin-top: 14px;
@@ -569,17 +597,28 @@ export default {
                 }
               }
               .goods-types {
-                height: 20px;
-              }
-              p {
+                min-height: 64px;
                 font-size: 24px;
                 font-weight: 400;
                 color: #555555;
-                margin-top: 9px;
+                margin-top: 6px;
+
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                word-break: break-all;
               }
+
               > .date {
+                font-size: 24px;
+                font-weight: 400;
+
+                margin-top: 8px;
+
                 color: #999999;
-                margin-top: 36px;
+
                 transform: scale(0.83);
                 transform-origin: left center;
               }
@@ -629,15 +668,15 @@ export default {
       }
     }
     .nodatabox {
-      height: calc(76vh - 324px);
+      height: calc(67vh - 324px);
       .listbox {
         height: 100%;
         > .nolist {
           height: 220px;
-          margin: 24px auto 0;
+          margin: 10px auto 0;
           width: 670px;
-          background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png)
-            no-repeat;
+          background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/5cx1r4tc3js0000.png');
+          // background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png) no-repeat;
           background-size: 100%;
           // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
           box-sizing: border-box;
@@ -736,16 +775,23 @@ export default {
                   }
                 }
                 .goods-types {
-                  min-height: 20px;
-                }
-                p {
+                  min-height: 64px;
                   font-size: 24px;
                   font-weight: 400;
                   color: #555555;
-                  margin-top: 9px;
+                  margin-top: 6px;
+
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 2;
+                  -webkit-box-orient: vertical;
+                  word-break: break-all;
                 }
+
                 > .date {
-                  margin-top: 36px;
+                  font-size: 24px;
+                  margin-top: 8px;
                   color: #999999;
                   transform: scale(0.83);
                   transform-origin: left center;
