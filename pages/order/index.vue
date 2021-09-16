@@ -364,6 +364,9 @@ export default {
 <style lang="less" scoped>
 .btn-car {
   margin-right: 40px;
+  font-size: 32px;
+  color: #222222;
+  font-weight: bold;
 }
 .order-page {
   min-height: 100%;
