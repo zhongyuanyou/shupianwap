@@ -22,7 +22,7 @@
     <div
       ref="scrollView"
       class="page-list"
-      :class="orderPageType === 'submit' ? 'page-list2' : ''"
+      :class="isInApp ? 'page-list2' : ''"
       @scroll="scollChange"
     >
       <div class="scroll-inner">

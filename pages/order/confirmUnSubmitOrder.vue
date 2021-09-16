@@ -609,22 +609,13 @@ export default {
             setTimeout(() => {
               if (this.isTRANSACTION) {
                 // 交易商品
-                this.$router.replace({
-                  path: '/order',
-                  query: {},
-                })
+                this.jumpToOrder()
               } else if (this.payMethod.value === 'ORDER_PAY_MODE_SECURED') {
                 // 担保交易
-                this.$router.replace({
-                  path: '/order',
-                  query: {},
-                })
+                this.jumpToOrder()
               } else if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
                 // 线下付款
-                this.$router.replace({
-                  path: '/order',
-                  query: {},
-                })
+                this.jumpToOrder()
               } else if (
                 result.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
                 result.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
@@ -640,10 +631,7 @@ export default {
                 })
               } else {
                 // 意向单和担保交易等 回到订单列表
-                this.$router.replace({
-                  path: '/order',
-                  query: {},
-                })
+                this.jumpToOrder()
               }
             }, 2000)
           })
@@ -660,7 +648,43 @@ export default {
           })
       }
     },
-
+    jumpToOrder() {
+      this.$router.replace({
+        path: '/order',
+        query: {},
+      })
+      // if (!this.isInApp) {
+      //   this.$router.replace({
+      //     path: '/order',
+      //     query: {},
+      //   })
+      // } else {
+      //   const iOSRouter = {
+      //     path: 'CPSCustomer:CPSCustomer/CPSOrderViewController///push/animation',
+      //     parameter: {
+      //       listType: 0,
+      //       isPush: 1,
+      //     },
+      //   }
+      //   const androidRouter = {
+      //     path: '/cpsc/order/orderList',
+      //     parameter: {
+      //       orderIndex: 0,
+      //     },
+      //   }
+      //   const iOSRouterStr = JSON.stringify(iOSRouter)
+      //   const androidRouterStr = JSON.stringify(androidRouter)
+      //   this.$appFn.dggJumpRoute(
+      //     {
+      //       iOSRouter: iOSRouterStr,
+      //       androidRouter: androidRouterStr,
+      //     },
+      //     (res) => {
+      //       console.log(res)
+      //     }
+      //   )
+      // }
+    },
     // 对优惠金额进行排序
     getDisPrice(arr, price) {
       arr.forEach((element) => {
