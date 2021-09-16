@@ -979,7 +979,7 @@ export default {
     }
   }
   .allbox2 {
-    height: calc(100vh - 168px - 88px) !important;
+    height: calc(100vh - 228px - 88px) !important;
   }
   .foot2 {
     height: 168px !important;
