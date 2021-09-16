@@ -131,8 +131,9 @@ export default {
           slogan: '快速转让',
           productDescript: '公司/商标/专利/网店/新媒',
           buttonText: '我要转让',
-          linkType: 1,
-          wapLink: '/search/searchResult?keywords=商标',
+          linkType: 2,
+          // wapLink: '/search/searchResult?keywords=商标',
+          materialLink: 'https://mtg.shupian.cn/spread/promotionHome/exchangeSquare',
         },
         {
           productName: '企服必懂',
