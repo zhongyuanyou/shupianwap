@@ -5,9 +5,8 @@ import { activityApi } from '~/api'
 export default {
   computed: {
     ...mapState({
-      cityName: (state) => state.city1.currentCity.name,
-      cityCode: (state) => state.city1.currentCity.code, // 专题页定位
-      cityCode1: (state) => state.city1.currentCity.code, // 全站定位
+      cityName: (state) => state.city1.currentCity.name || '成都市',
+      cityCode: (state) => state.city1.currentCity.code || '510100', // 专题页定位
       isInApp: (state) => state.app.isInApp,
       appInfo: (state) => state.app.appInfo, // app信息
     }),
@@ -50,7 +49,7 @@ export default {
       activityProductList: [],
       currentIndex: 0,
       currentTab: {
-        cityCode: this.cityCode || this.cityCode1,
+        cityCode: this.cityCode,
         cityName: this.cityName,
         id: '',
         labelName: this.allText,
@@ -87,11 +86,6 @@ export default {
   async mounted() {
     // 初始化定位
     this.setTopColor()
-    if (!this.cityCode || !this.cityCode1) {
-      await this.POSITION_CITY1({
-        type: 'init',
-      })
-    }
     this.getAdvertisingData()
     await this.getMenuTabs() // 获取tab
     await this.getRecommendProductList() // 获取推荐商品
@@ -210,10 +204,10 @@ export default {
         platformCode: this.platformCode,
       }
       // if (this.hasCity) {
-      //   params.cityCodes = this.cityCode || this.cityCode1 || this.defaultCityCode
+      //   params.cityCodes = this.cityCode || this.defaultCityCode || this.defaultCityCodeCode
       // }
       // 前端放开，后台校验城市，如果是交易产品后台就不带城市查询
-      params.cityCodes = this.cityCode || this.cityCode1 || this.defaultCityCode
+      params.cityCodes = this.cityCode  || this.defaultCityCode
 
       await this.$axios
         .get(activityApi.activityTypeOptions, {
@@ -242,7 +236,7 @@ export default {
             this.productType = res.data.productType || ''
 
             this.activityTypeOptions.unshift({
-              cityCode: this.cityCode || this.cityCode1,
+              cityCode: this.cityCode || this.defaultCityCode,
               cityName: this.cityName,
               id: '',
               labelName: this.allText,
@@ -283,10 +277,10 @@ export default {
           terminalCode: this.terminalCode,
         }
         // if (this.hasCity) {
-        //   params.cityCode = this.cityCode || this.cityCode1
+        //   params.cityCode = this.cityCode || this.defaultCityCode
         // }
         // 前端放开，后台校验城市，如果是交易产品后台就不带城市查询
-        params.cityCode = this.cityCode || this.cityCode1
+        params.cityCode = this.cityCode || this.defaultCityCode
         if (this.currentTab.id !== '') {
           params.labelId = this.currentTab.id
         }
@@ -355,7 +349,7 @@ export default {
           terminalCode: this.terminalCode,
         }
         // 前端放开，后台校验城市，如果是交易产品后台就不带城市查询
-        params.cityCode = this.cityCode || this.cityCode1
+        params.cityCode = this.cityCode || this.defaultCityCode
 
         this.$axios
           .get(activityApi.activityProductList, { params })
