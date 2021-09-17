@@ -28,6 +28,10 @@ export const GOODSLIST =
   'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg' // 产品列表默认图片
 export const AVATAR =
   'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png' // 产品列表默认图片
+export const PlannerHeadList =
+  'https://cdn.shupian.cn/sp-pt/wap/images/excoo9w1n2o0000.png' // 规划师默认头像 列表页
+export const PlanerHeadRatio =
+  'https://cdn.shupian.cn/sp-pt/wap/images/5txo1h53beo0000.png' // 规划师默认头像 园
 export const APPISPROD = false // APP是否上线
 export const HELP_CLASS_CODE = {
   // 帮助中心分类code

@@ -112,7 +112,7 @@
         <CellGroup>
           <Cell
             title="商品及服务总数"
-            :value="order.num || order.goodsTotal || 0 + '件'"
+            :value="(order.num || order.goodsTotal || 0) + '件'"
             value-class="black"
           />
           <Cell
@@ -204,7 +204,7 @@
       </p>
        -->
       <p class="left">
-        应付:<span>
+        应付：<span>
           <b>{{ settlementInfo.needPayTotalMoney }}</b> 元</span
         >
       </p>
@@ -528,7 +528,7 @@ export default {
         })
         .catch((e) => {
           this.loading = false
-          const msg = e.data.error
+          const msg = e?.data?.error
           Toast({
             message: msg,
             iconPrefix: 'sp-iconfont',
@@ -750,11 +750,18 @@ export default {
       })
       const list = []
       for (let i = 0; i < this.order.list.length; i++) {
-        const id = this.order.list[i].salesGoodsSubVos[0].goodsSubId
+        let itemPrice = this.order.list[i].salesPrice
+        if (
+          this.order.list[i].salesGoodsSubVos &&
+          this.order.list[i].salesGoodsSubVos.length > 0
+        ) {
+          const id = this.order.list[i].salesGoodsSubVos[0].goodsSubId
+          itemPrice = this.getGoodsSubById(id).salesPrice
+        }
 
         const item = {
           goodsId: this.order.list[i].id,
-          price: this.getGoodsSubById(id).salesPrice, // this.order.list[i].salesPrice,
+          price: itemPrice, // this.order.list[i].salesPrice,
           goodsNum: this.order.list[i].salesVolume || 1,
           goodsClassCode: this.order.list[i].classCode,
         }
@@ -1005,6 +1012,7 @@ export default {
       }
       .black {
         color: #1a1a1a;
+        font-weight: bold;
       }
       .red {
         color: #ec5330;
@@ -1020,7 +1028,7 @@ export default {
           font-size: 22px;
           color: #ec5330;
           b {
-            font-size: 30px;
+            font-size: 36px;
           }
         }
       }

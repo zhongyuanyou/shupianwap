@@ -1,6 +1,6 @@
 <template >
   <div class="search_container">
-    <div class="search">
+    <div class="search" :class="{ inApp: this.$store.state.app.isInApp }">
       <div class="left-back" @click="back">
         <my-icon
           name="nav_ic_back"
@@ -103,6 +103,9 @@ export default {
 </script>
 <style lang="less" scoped>
 .search_container {
+  .search.inApp {
+    padding: 10px 0 34px;
+  }
   .search {
     display: flex;
     align-items: center;
@@ -130,7 +133,6 @@ export default {
       flex: 1;
 
       font-family: PingFang SC;
-      font-weight: bold;
 
       overflow: hidden;
       text-overflow: ellipsis;
@@ -167,6 +169,7 @@ export default {
         text-align: right;
         line-height: 28px;
         margin: 0 12px;
+        vertical-align: middle;
       }
     }
   }

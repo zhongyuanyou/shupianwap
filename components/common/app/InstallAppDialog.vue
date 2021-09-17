@@ -10,9 +10,10 @@
   <div class="install-app-dialog">
     <RecommendDialog v-model="visible" v-bind="$attrs" v-on="$listeners">
       <div class="install-app">
-        <img
-          :src="$ossImgSet(160, 160, 'g6trabnxtg80000.png')"
-          alt=""
+        <my-icon
+          name="logo_chaotuoyuan"
+          size="1.6rem"
+          color="#4974F5"
           class="install-app_logo"
         />
         <h4 class="install-app_title">薯片找人APP</h4>

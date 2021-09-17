@@ -20,7 +20,11 @@
       :loading="skeletonloading"
     >
     </sp-skeleton>
-    <div v-if="!skeletonloading" class="allbox">
+    <div
+      v-if="!skeletonloading"
+      :class="isInApp ? 'allbox2' : ''"
+      class="allbox"
+    >
       <div class="data-content">
         <div
           v-for="(item, index) in settlementInfo.productVo"
@@ -194,7 +198,7 @@
         </Checkbox>
       </div>
     </div>
-    <div ref="foot" class="foot">
+    <div ref="foot" :class="isInApp ? 'foot2' : ''" class="foot">
       <p class="left">
         应付:<span>
           <b v-if="isDeposit">{{ settlementInfo.depositAmount }}</b>
@@ -258,6 +262,7 @@ import {
   Skeleton,
   CheckboxGroup,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import Head from '@/components/common/head/header.vue'
 import PopupUnSubmit from '@/components/PlaceOrder/PopupUnSubmit.vue'
 import CardPopup from '@/components/PlaceOrder/CardPopup.vue'
@@ -346,11 +351,21 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
     // 是否是服务商品
     // 其他的是交易/销售/资源
     isServerGoods() {
       return this.settlementInfo?.orderProTypeNo === 'PRO_CLASS_TYPE_SERVICE'
     },
+    // 是否交易商品，下单后直接跳转列表
+    isTRANSACTION() {
+      return (
+        this.settlementInfo?.orderProTypeNo === 'PRO_CLASS_TYPE_TRANSACTION'
+      )
+    },
+
     // 是否先定金后服务
     isDeposit() {
       return (
@@ -592,22 +607,21 @@ export default {
               })
             }
             setTimeout(() => {
-              if (this.payMethod.value === 'ORDER_PAY_MODE_SECURED') {
-                this.$router.replace({
-                  path: '/order',
-                  query: {},
-                })
+              if (this.isTRANSACTION) {
+                // 交易商品
+                this.jumpToOrder()
+              } else if (this.payMethod.value === 'ORDER_PAY_MODE_SECURED') {
+                // 担保交易
+                this.jumpToOrder()
               } else if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
                 // 线下付款
-                this.$router.replace({
-                  path: '/order',
-                  query: {},
-                })
+                this.jumpToOrder()
               } else if (
                 result.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
                 result.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
               ) {
-                // 先付款后服务 PRO_PRE_PAY_POST_SERVICE;先定金后尾款 PRO_PRE_DEPOSIT_POST_OTHERS;
+                // 先付款后服务 PRO_PRE_PAY_POST_SERVICE;
+                // 先定金后尾款 PRO_PRE_DEPOSIT_POST_OTHERS;
                 this.$router.replace({
                   path: '/pay/payType',
                   query: {
@@ -617,10 +631,7 @@ export default {
                 })
               } else {
                 // 意向单和担保交易等 回到订单列表
-                this.$router.replace({
-                  path: '/order',
-                  query: {},
-                })
+                this.jumpToOrder()
               }
             }, 2000)
           })
@@ -637,7 +648,43 @@ export default {
           })
       }
     },
-
+    jumpToOrder() {
+      this.$router.replace({
+        path: '/order',
+        query: {},
+      })
+      // if (!this.isInApp) {
+      //   this.$router.replace({
+      //     path: '/order',
+      //     query: {},
+      //   })
+      // } else {
+      //   const iOSRouter = {
+      //     path: 'CPSCustomer:CPSCustomer/CPSOrderViewController///push/animation',
+      //     parameter: {
+      //       listType: 0,
+      //       isPush: 1,
+      //     },
+      //   }
+      //   const androidRouter = {
+      //     path: '/cpsc/order/orderList',
+      //     parameter: {
+      //       orderIndex: 0,
+      //     },
+      //   }
+      //   const iOSRouterStr = JSON.stringify(iOSRouter)
+      //   const androidRouterStr = JSON.stringify(androidRouter)
+      //   this.$appFn.dggJumpRoute(
+      //     {
+      //       iOSRouter: iOSRouterStr,
+      //       androidRouter: androidRouterStr,
+      //     },
+      //     (res) => {
+      //       console.log(res)
+      //     }
+      //   )
+      // }
+    },
     // 对优惠金额进行排序
     getDisPrice(arr, price) {
       arr.forEach((element) => {
@@ -969,6 +1016,12 @@ export default {
         }
       }
     }
+  }
+  .allbox2 {
+    height: calc(100vh - 228px - 88px) !important;
+  }
+  .foot2 {
+    height: 168px !important;
   }
   > .foot {
     padding: 0 40px;

@@ -40,7 +40,9 @@
                 <span v-if="item.reducePrice >= 10000">万</span>
               </div>
               <div v-if="item.fullPrice == 0" class="can_use">无门槛</div>
-              <div v-else class="can_use">满{{ item.fullPrice }}元可用</div>
+              <div v-else class="can_use">
+                满{{ formatPrice(item.fullPrice, true) }}可用
+              </div>
             </div>
 
             <div v-else>
@@ -182,13 +184,21 @@ export default {
     clearTimeout(this.timer)
   },
   methods: {
-    formatPrice(price) {
-      const p = parseFloat(price)
+    // 将价格转为万元
+    formatPrice(price, haveUnit) {
+      let p = parseFloat(price)
+      let unit = '元'
       if (p >= 10000) {
-        return parseFloat((p / 10000).toFixed(2))
+        unit = '万'
+        p = parseFloat((p / 10000).toFixed(2))
+      }
+
+      if (haveUnit) {
+        return p + unit
       }
       return p
     },
+
     formatUseType(item) {
       if (item.useType === 1) {
         return '全场通用'
@@ -505,11 +515,11 @@ export default {
   height: auto;
   .coupon_item {
     position: relative;
-    height: 212px;
+    height: 222px;
     // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
     // background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
     background-size: 100% 100%;
-    margin: 24px 0;
+    margin: 4px 0 0;
     position: relative;
     .item-lf {
       width: 208px;
@@ -517,7 +527,7 @@ export default {
       padding-left: 6px;
       float: left;
       .coupon_discount {
-        font-size: 72px;
+        font-size: 42px;
         font-family: Bebas;
         font-weight: 400;
         color: #ffffff;
@@ -528,13 +538,13 @@ export default {
         margin-bottom: 10px;
         span {
           position: absolute;
-          font-size: 28px;
+          font-size: 26px;
           bottom: 0;
         }
       }
       .coupon_price {
         //   height: 67px;
-        font-size: 62px;
+        font-size: 42px;
         font-family: Bebas;
         font-weight: 400;
         color: #ffffff;
@@ -546,7 +556,7 @@ export default {
         // white-space: nowrap;
         span {
           position: absolute;
-          font-size: 28px;
+          font-size: 26px;
           bottom: 0;
         }
       }
@@ -599,6 +609,8 @@ export default {
         }
       }
       .can_use {
+        margin-top: 0.3rem;
+
         font-size: 24px;
         font-family: PingFang SC;
         font-weight: 400;
@@ -627,6 +639,7 @@ export default {
         padding-bottom: 12px;
         margin-right: 30px;
         position: relative;
+        z-index: 2;
         span {
           position: absolute;
           border-radius: 4px;
@@ -639,7 +652,7 @@ export default {
           color: #ffffff;
           background-image: linear-gradient(90deg, #fa6d5a 0%, #fa5741 100%);
           transform: scale(0.8);
-          transform-origin: 0 4px;
+          transform-origin: 0 center;
           line-height: 0;
           padding: 20px 6px;
         }
@@ -695,11 +708,12 @@ export default {
     }
     .receive {
       position: absolute;
-      right: 0;
-      top: 0;
+      right: 12px;
+      top: 8px;
       z-index: 1;
       width: 90px;
       height: 90px;
+      font-size: 0;
       img {
         width: 90px;
         height: 90px;

@@ -58,7 +58,7 @@
             name="cross"
             class="close"
             size="0.3rem"
-            color="#CCCCCC"
+            color="#000000"
             @click.stop="del(index)"
           />
         </li>
@@ -216,7 +216,7 @@ export default {
       flex-wrap: wrap;
       justify-content: space-between;
       margin-left: 32px;
-      > li {
+      li {
         display: flex;
         font-size: 30px;
         color: #222222;

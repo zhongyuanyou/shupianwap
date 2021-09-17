@@ -18,10 +18,7 @@
           fit="cover"
           class="planner-search-item__avatar-image"
           lazy-load
-          :src="
-            itemData.img ||
-            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
-          "
+          :src="$resizeImg(320, 320, itemData.img || PlannerHeadList)"
         />
       </div>
       <div class="planner-search-item__detail">
@@ -78,6 +75,7 @@
 <script>
 import { Button, Image, Tag } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
+import { PlannerHeadList } from '~/config/constant'
 import { planner } from '@/api'
 import imHandle from '@/mixins/imHandle'
 import { parseTel } from '~/utils/common'
@@ -98,7 +96,9 @@ export default {
     },
   },
   data() {
-    return {}
+    return {
+      PlannerHeadList,
+    }
   },
   computed: {
     ...mapState({

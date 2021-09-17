@@ -20,7 +20,7 @@
                 round
                 fit="cover"
                 lazy-load
-                :src="`${item.portrait}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`"
+                :src="$resizeImg(80, 80, item.portrait || PlannerHeadList)"
               />
             </a>
             <div class="info">
@@ -84,6 +84,7 @@
 <script>
 import { Image, Button, Toast, Skeleton } from '@chipspc/vant-dgg'
 import { planner } from '~/api'
+import { PlannerHeadList } from '~/config/constant'
 import imHandle from '~/mixins/imHandle'
 
 export default {
@@ -105,6 +106,11 @@ export default {
         return {}
       },
     },
+  },
+  data() {
+    return {
+      PlannerHeadList,
+    }
   },
   computed: {
     city() {
@@ -137,6 +143,7 @@ export default {
           duration: 2000,
           forbidClick: true,
         })
+        console.log('sellingDetail', this.sellingDetail)
         await planner.awaitTip()
         const telData = await planner.newtel({
           areaCode: this.city.code,
@@ -149,7 +156,7 @@ export default {
             this.$cookies.get('mainAccountFull', { path: '/' }) ||
             '',
           requireCode: this.sellingDetail.classCodeLevel.split(',')[0],
-          requireName: '',
+          requireName: this.sellingDetail.classCodeLevelName.split('/')[0],
           // id: mchUserId,
           // sensitiveInfoType: 'MCH_USER',
         })
@@ -194,6 +201,7 @@ export default {
       // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
       // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
       // 意向业务
+
       const intentionType = {}
       intentionType[this.sellingDetail.classCode] =
         this.sellingDetail.classCodeName
@@ -202,7 +210,7 @@ export default {
       intentionCity[this.city.code] = this.city.name
       const sessionParams = {
         requireCode: this.sellingDetail.classCodeLevel.split(',')[0],
-        requireName: '',
+        requireName: this.sellingDetail.classCodeLevelName.split(',')[0],
         imUserId: mchUserId, // 商户用户ID
         imUserType: type, // 用户类型
         ext: {

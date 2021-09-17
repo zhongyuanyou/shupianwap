@@ -540,7 +540,7 @@ export default {
       if (this.isInApp) {
         this.$appFn.dggBindHiddenPhone(
           {
-            plannerId: this.detailData.id,
+            plannerId: this.IMDetailData.id,
             requireCode: this.requireCode,
             requireName: this.requireName,
 

@@ -85,19 +85,22 @@ export default {
     display: flex;
 
     overflow-x: scroll;
+    align-items: center;
+    height: 3rem;
 
     &::-webkit-scrollbar {
       width: 0 !important;
       height: 0 !important;
+      display: none;
     }
     .li-tab {
       // display: inline-block;
       white-space: nowrap;
 
       margin-right: 23px;
-
+      font-weight: bold;
       font-size: 26px;
-      color: #999999;
+      color: #222222;
       background: #f5f5f5;
       letter-spacing: 0;
       cursor: pointer;

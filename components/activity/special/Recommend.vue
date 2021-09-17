@@ -1,7 +1,9 @@
 <template>
-  <div v-if="list.length > 0" class="box">
-    <div v-if="title" class="title">{{ title }}</div>
-
+  <div
+    v-if="list.length > 0"
+    class="box"
+    :style="{ backgroundImage: `url(${bkImage})` }"
+  >
     <div class="list">
       <div class="list_container">
         <div
@@ -22,7 +24,7 @@
               @click="$emit('preview', item)"
             ></sp-image>
           </div>
-          <!-- <div class="skuName">{{ item.skuName }}</div> -->
+
           <div
             v-if="parsePrice(item.specialPrice) !== '面议'"
             class="priceContainer"
@@ -55,11 +57,6 @@ export default {
     // SpIcon: Icon,
   },
   props: {
-    title: {
-      type: String,
-      default: '',
-    },
-
     list: {
       type: Array,
       default: () => [],
@@ -71,6 +68,8 @@ export default {
   },
   data() {
     return {
+      bkImage: this.$ossImgSetV2('6k2pzryukzw0000.png'),
+
       defaultImg: 'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
       imgTags: [
         'https://cdn.shupian.cn/sp-pt/wap/images/ahzxvufoqrk000.png',
@@ -95,38 +94,25 @@ export default {
 .box {
   font-family: PingFangSC;
   // margin: 24px 20px 0;
-  // padding: 20px;
+  padding: 20px;
 
   border-radius: 24px;
 
   font-size: 0;
-  .flex {
-    display: flex;
-    align-items: center;
-    // align-items: flex-start;
-  }
-  .flex_1 {
-    flex: 1;
-  }
-
-  .title {
-    font-weight: bold;
-    font-size: 32px;
-    color: #222222;
-    margin-bottom: 28px;
-  }
+  background-size: 100% 100%;
 
   .list {
     overflow: hidden;
 
     .list_container {
-      display: flex;
-
       .list_item:nth-child(2) {
-        margin: 0 2.267%;
+        margin: 0 16px;
       }
       .list_item {
-        flex: 1;
+        display: inline-block;
+        white-space: nowrap;
+        width: 31.5%;
+        width: calc((100% - 34px) / 3);
         padding: 8px;
 
         overflow: hidden;
@@ -149,21 +135,11 @@ export default {
             overflow: hidden;
           }
         }
-        .skuName {
-          font-weight: bold;
-          font-size: 24px;
-          color: #222222;
-          text-align: left;
-          line-height: 28px;
-          height: 56px;
-          padding: 0 20px;
-          .textOverflow(2);
-        }
+
         .priceContainer {
           font-size: 20px;
-          color: #222222;
           text-align: left;
-          line-height: 28px;
+          line-height: 35px;
 
           letter-spacing: 0;
           margin: 20px 12px 20px;
@@ -174,6 +150,8 @@ export default {
         .price_des {
           line-height: 22px;
           font-weight: 600;
+          color: #222222;
+          font-weight: bold;
         }
         .price {
           font-family: PingFangSC-Regular;
@@ -181,6 +159,7 @@ export default {
           font-weight: bold;
           font-size: 35px;
           letter-spacing: 0;
+          margin: 0 2px;
         }
         .unit {
           color: #ec5330;

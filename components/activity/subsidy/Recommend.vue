@@ -7,12 +7,9 @@
           class="my-swipe"
           :autoplay="true"
           :options="swiperOptions"
+          @clickSlide="handleClickSlide"
         >
-          <swiper-slide
-            v-for="(item, index) of list"
-            :key="index"
-            @click="jump(item)"
-          >
+          <swiper-slide v-for="(item, index) of list" :key="index">
             <div class="list_item">
               <div class="img_container">
                 <img
@@ -28,15 +25,14 @@
                       : defaultImg
                   "
                   alt="薯片科技"
-                  @click="$emit('preview', item)"
-                ></img>
+                />
               </div>
               <div class="skuName">{{ item.skuName }}</div>
               <div
                 v-if="parsePrice(item.specialPrice) !== '面议'"
                 class="priceContainer"
               >
-                 <span class="price">{{
+                <span class="price">{{
                   item.specialUnit
                     ? parseFloat(item.specialNewPrice)
                     : parseFloat(item.specialPrice)
@@ -122,6 +118,7 @@ export default {
     },
   },
   data() {
+    const _this = this
     return {
       defaultImg: 'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
 
@@ -140,6 +137,10 @@ export default {
   methods: {
     commentfn() {
       this.$emit('onComment')
+    },
+    handleClickSlide(index, reallyIndex) {
+      console.log(index, reallyIndex, this.list[reallyIndex])
+      this.jump(this.list[reallyIndex])
     },
     jump(item) {
       this.$emit('jump', item)
@@ -229,17 +230,16 @@ export default {
         font-weight: bold;
         text-align: left;
 
-        height: 72px;
+        // height: 72px;
         padding: 0 20px;
         .textOverflow(2);
       }
       .priceContainer {
         color: #555555;
         text-align: left;
-        line-height: 28px;
 
         letter-spacing: 0;
-        margin: 12px 12px 24px;
+        margin: 12px 12px 30px;
         & > span {
           display: inline-block;
         }
@@ -249,6 +249,7 @@ export default {
         color: #ec5330;
         font-weight: bold;
         font-size: 40px;
+        line-height: 40px;
       }
       .unit {
         color: #ec5330;

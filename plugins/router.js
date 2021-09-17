@@ -48,6 +48,9 @@ const infoList = [
   'NeedCard',
   'my-coupon',
   'myDemandCard',
+  'order',
+  'order-confirmUnSubmitOrder',
+  'order-detail',
 ]
 // const getInfo = function () {
 //   return new Promise(function (resolve, reject) {

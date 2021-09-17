@@ -22,7 +22,7 @@
         </div>
         <div v-if="item.fullPrice == 0" class="can_use">无门槛</div>
         <div v-else-if="item.fullPrice" class="can_use">
-          满{{ item.fullPrice }}元可用
+          满{{ formatPrice(item.fullPrice, true) }}可用
         </div>
       </div>
       <div class="item-rt">
@@ -39,6 +39,7 @@
         </div>
         <div class="content">
           {{ getuseTypeName(item.useType, item) }}
+
           <!-- item.useType === 1
               ? '全品类通用'
               : item.useType === 2
@@ -85,10 +86,16 @@ export default {
 
   methods: {
     // 将价格转为万元
-    formatPrice(price) {
-      const p = parseFloat(price)
+    formatPrice(price, haveUnit) {
+      let p = parseFloat(price)
+      let unit = '元'
       if (p >= 10000) {
-        return parseFloat((p / 10000).toFixed(2))
+        unit = '万'
+        p = parseFloat((p / 10000).toFixed(2))
+      }
+
+      if (haveUnit) {
+        return p + unit
       }
       return p
     },
@@ -167,8 +174,10 @@ export default {
   background: #f5f5f5 !important;
 }
 .coupon_item.haveUse {
+  height: 222px;
   .item-lf {
     margin-left: 10px;
+    height: 222px;
   }
 }
 
@@ -194,14 +203,14 @@ export default {
     .coupon_price {
       //   height: 67px;
       white-space: nowrap;
-      font-size: 72px;
+      font-size: 42px;
       font-family: Bebas;
       font-weight: 400;
       color: #ffffff;
       text-align: center;
       // padding-top: 27px;
       .coupon_price_unit {
-        font-size: 36px;
+        font-size: 26px;
         margin-left: -6px;
       }
     }
@@ -229,6 +238,8 @@ export default {
       top: 8px;
     }
     .title {
+      position: relative;
+      z-index: 1;
       font-size: 32px;
       line-height: 44px;
       font-family: PingFang SC;
