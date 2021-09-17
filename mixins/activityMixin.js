@@ -87,7 +87,7 @@ export default {
   async mounted() {
     // 初始化定位
     this.setTopColor()
-    if (!this.cityCode || this.cityCode1) {
+    if (!this.cityCode || !this.cityCode1) {
       await this.POSITION_CITY1({
         type: 'init',
       })
