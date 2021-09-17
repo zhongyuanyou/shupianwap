@@ -31,7 +31,12 @@ const PAYTYPECODE = {
   3: 'PRO_PRE_SERVICE_POST_PAY_BY_NODE', // 按服务节点付费
   4: 'PRO_PRE_SERVICE_FINISHED_PAY', // 服务完结收费
 }
-
+// 客户单支付状态code
+const PAYSTATUSCODE = {
+  1: 'ORDER_CUS_PAY_STATUS_UN_PAID', // 未支付
+  2: 'ORDER_CUS_PAY_STATUS_PART_PAID', // 部分支付
+  3: 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID', // 支付完成
+}
 // 根据订单状态判断订单状态名称
 const orderStatusObj = {
   // 销售商品待提交
@@ -573,11 +578,20 @@ export default {
     },
     // 判断客户单状态类型 1待付款 2进行中 3已完成 4已取消
     checkCusOrderStatus() {
-      return orderUtils.checkCusOrderStatus(this.orderData.cusOrderStatusNo)
+      const cusOrderStatusNo = this.orderData.cusOrderStatusNo
+      if (!cusOrderStatusNo) return 0
+      for (const key in ORDERSTATUSCODE) {
+        if (ORDERSTATUSCODE[key] === cusOrderStatusNo) return Number(key)
+      }
     },
-    // 判断是否显示取消订单按钮
+    /*
+     * @ LastEditors: tang dai bing
+     * @ Description:根据不同的订单状态和支付状态判断显示不同的订单操作按钮和支付按钮
+     */
     isShowCanCelBtn() {
-      return orderUtils.isShowCanCelBtn(this.orderData)
+      // 当且仅当客户订单状态为待付款并且支付状态为未支付时展示取消订单按钮
+      return this.orderData.cusOrderStatusNo === ORDERSTATUSCODE[1]
+      // && orderData.orderPayStatusNo === PAYSTATUSCODE[1]  暂时修改逻辑放出取消订单按钮
     },
     // 判断是否显示确认订单按钮
     isShowConfirmBtn(data) {
@@ -607,10 +621,42 @@ export default {
       }
       return isShowConfirm
     },
-    // 判断是否显示付款按钮
+    /*
+     * @LastEditors: tang dai bing
+     * @params:orderData 订单数据
+     * @Description:判断是否显示支付按钮，返回数据: false 不显示，1显示立即付款， 2显示支付余款
+     */
     isShowPayBtn() {
-      return orderUtils.isShowPayBtn(this.orderData)
+      const orderData = this.orderData
+      if (
+        orderData.isNeedPay &&
+        orderData.cusOrderPayStatusNo === PAYSTATUSCODE[1] &&
+        orderData.cusOrderStatusNo !== ORDERSTATUSCODE[3] &&
+        orderData.cusOrderStatusNo !== ORDERSTATUSCODE[4]
+      ) {
+        // 显示立即付款按钮的条件
+        // 1订单可付款
+        // 2客户单支付状态为待付款
+        // 3订单状态不等于已取消
+        // 3订单状态不等于已完成
+        return 1
+      } else if (
+        orderData.isNeedPay &&
+        orderData.cusOrderPayStatusNo === PAYSTATUSCODE[2] &&
+        orderData.cusOrderStatusNo !== ORDERSTATUSCODE[3] &&
+        orderData.cusOrderStatusNo !== ORDERSTATUSCODE[4]
+      ) {
+        // 显示支付余款的条件
+        // 1订单可付款
+        // 2客户单支付状态为部分付款
+        // 2订单状态不等于已取消
+        // 3订单状态不等于已完成
+        return 2
+      } else {
+        return false
+      }
     },
+
     // 判断订单状态 返回数字
     checkOrderStatus(code) {
       const ALLSTATUS = {

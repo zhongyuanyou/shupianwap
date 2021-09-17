@@ -41,8 +41,8 @@
             </p>
 
             <p class="price">
-              <span v-if="isIntendedOrder"><b>面议</b></span>
-              <span v-else
+              <span v-if="isIntendedOrder"><b>预计</b></span>
+              <span
                 ><b>{{ item.price }}</b
                 >元</span
               >
