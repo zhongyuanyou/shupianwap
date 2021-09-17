@@ -7,7 +7,7 @@ export default {
     ...mapState({
       cityName: (state) => state.city1.currentCity.name,
       cityCode: (state) => state.city1.currentCity.code, // 专题页定位
-      cityCode2: (state) => state.city1.currentCity.code, // 全站定位
+      cityCode1: (state) => state.city1.currentCity.code, // 全站定位
       isInApp: (state) => state.app.isInApp,
       appInfo: (state) => state.app.appInfo, // app信息
     }),
