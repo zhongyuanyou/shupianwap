@@ -152,12 +152,11 @@ module.exports = {
   router: {
     middleware: 'appDock',
   },
-  buildModules: ['@nuxtjs/eslint-module'],
+  buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/style-resources'], // 修改 style-resources 在运行时处理
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
     // '@nuxtjs/sentry',
-    '@nuxtjs/style-resources',
     ['cookie-universal-nuxt', { parseJSON: true }],
   ],
   // sentry: {
