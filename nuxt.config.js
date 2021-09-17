@@ -1,6 +1,7 @@
 'use strict'
 
 const path = require('path')
+const { resolve } = require('path')
 
 const BASE = require('./config/index.js')
 const NODE_ENV = process.env.NODE_ENV
@@ -111,6 +112,9 @@ module.exports = {
     ],
   },
   loading: { color: '#4974F5' },
+  alias: {
+    '@css': resolve(__dirname, './assets/css'),
+  },
   css: [
     'assets/css/reset.css',
     'assets/icons/iconfont.css',
@@ -140,7 +144,7 @@ module.exports = {
     { src: '@/plugins/vue-quill-editor', ssr: false },
     { src: '@/plugins/vue-prototype', ssr: false },
     { src: '@/plugins/clear-emoij', ssr: false },
-    { src: '@/plugins/echarts', ssr:false },
+    { src: '@/plugins/echarts', ssr: false },
     { src: '@/plugins/sp-api', ssr: false },
     { src: '@/plugins/echarts', ssr: false },
     { src: '@/plugins/to-goods-detail', ssr: false },

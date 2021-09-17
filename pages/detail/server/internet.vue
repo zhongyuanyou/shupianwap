@@ -4,7 +4,7 @@
     <ShareModal />
     <div class="template">
       <!-- header-->
-      <PlannerHeader />
+      <Header />
       <!--start 会员价 -->
       <!-- <MemberPrice></MemberPrice> -->
 
@@ -50,13 +50,6 @@
       </sp-list>
       <!--E 第十板块 猜你需要-->
       <bottomBar :im-jump-query="imJumpQuery" :planner-info="tcPlannerBooth" />
-      <!--    分享组件-->
-      <sp-share-sheet
-        v-model="showShare"
-        title="立即分享给好友"
-        :options="shareOptions"
-        @select="onSelect"
-      />
     </div>
   </section>
 </template>
@@ -79,7 +72,7 @@ import bottomBar from '@/components/detail/bottomBar/index.vue'
 import CaseNew from '~/components/detail/CaseNew'
 import PageMidAd from '~/components/detail/server/PageMidAd'
 import getUserSign from '~/utils/fingerprint'
-import PlannerHeader from '~/components/detail/server/PlannerHeader'
+import Header from '~/components/detail/server/Header'
 import { productDetailsApi, recommendApi, shopApi } from '~/api'
 import { copyToClipboard } from '~/utils/common'
 import imHandle from '~/mixins/imHandle'
@@ -104,7 +97,7 @@ export default {
     OrderDynamic,
     CaseNew,
     PageMidAd,
-    PlannerHeader,
+    Header,
   },
   mixins: [imHandle, detailMixin],
   layout: 'keepAlive',
