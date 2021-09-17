@@ -62,7 +62,7 @@ export const actions = {
     try {
       const { code, data } = await getPositonCity()
       // 定位成功,且匹配到开通服务的站点
-      if (code === 200) {
+      if (code === 200 && data.code && data.code !== [] && data.code !== '0') {
         commit('SET_POSITION_CITY', data.name)
         commit('SET_POSITION_CODE', data.code)
 
