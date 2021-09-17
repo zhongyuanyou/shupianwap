@@ -59,58 +59,41 @@ export const actions = {
         forbidClick: false,
       })
     }
+    try {
+      const { code, data } = await getPositonCity()
+      // 定位成功,且匹配到开通服务的站点
+      if (code === 200) {
+        commit('SET_POSITION_CITY', data.name)
+        commit('SET_POSITION_CODE', data.code)
 
-    const { code, data, message } = await getPositonCity()
-    // 定位成功,且匹配到开通服务的站点
-    console.log('getPositonCity', code, data, message)
-    if (code === 200) {
-      commit('SET_POSITION_CITY', data.name)
-      commit('SET_POSITION_CODE', data.code)
-
-      commit('SET_POSITION_STATUS', 2)
-      if (type === 'rest') {
-        myToast.hideLoading()
-        myToast.success('定位成功')
-        return
+        commit('SET_POSITION_STATUS', 2)
+        if (type === 'rest') {
+          myToast.hideLoading()
+          myToast.success('定位成功')
+          return
+        }
+        // 切换当前选择城市到定位的城市
+        commit('SET_CITY', {
+          name: data.name,
+          code: data.code,
+          pid: data.pid,
+          pname: data.pname,
+        })
+      } else {
+        commit('SET_CITY', state.defaultCity)
+        commit('SET_POSITION_CITY', state.defaultCity.name)
+        commit('SET_POSITION_CODE', state.defaultCity.code)
+        // 定位失败
+        if (type === 'rest') {
+          myToast.hideLoading()
+          myToast.error('定位失败，建议检查GPS是否打开或清除浏览器缓存再试')
+        }
       }
-      // 切换当前选择城市到定位的城市
-      commit('SET_CITY', {
-        name: data.name,
-        code: data.code,
-        pid: data.pid,
-        pname: data.pname,
-      })
-      return
-    }
-    // 定位成功，但未匹配到开通服务的站点
-    if (code === 5003) {
-      commit('SET_POSITION_STATUS', 1)
-      if (type === 'rest') {
-        myToast.hideLoading()
-        myToast.success('定位成功')
-        return
-      }
-      // 若是重新定位，定位后不重置当前城市
+    } catch (error) {
       commit('SET_CITY', state.defaultCity)
       commit('SET_POSITION_CITY', state.defaultCity.name)
       commit('SET_POSITION_CODE', state.defaultCity.code)
-
-      return
     }
-
-    // 定位失败
-    if (type === 'rest') {
-      myToast.hideLoading()
-      myToast.error('定位失败，建议检查GPS是否打开或清除浏览器缓存再试')
-    }
-    console.log(message)
-    // 定位失败，设置默认城市为成都
-    commit('SET_POSITION_CITY', state.defaultCity.name)
-    commit('SET_POSITION_CODE', state.defaultCity.code)
-
-    commit('SET_POSITION_STATUS', 0)
-    if (type === 'rest' && state.currentCity.name) return // 若是重新定位，定位失败并且当前有已选城市不重置当前城市
-    commit('SET_CITY', state.defaultCity)
   },
   setCode({ commit }, code) {
     commit('SET_CODE', code)
