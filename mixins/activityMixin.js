@@ -407,12 +407,6 @@ export default {
             }
           } else {
             this.imageHead = this.imageHead || this.imageHeadDefault
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
           }
         })
         .catch((err) => {
