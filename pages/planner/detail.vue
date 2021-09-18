@@ -68,7 +68,10 @@
                       width="1.2rem"
                       height="1.2rem"
                       fit="cover"
-                      :src="$resizeImg(120,120,newDetailData.image || PlannerHeadList)"
+                      :src="
+                        newDetailData.image ||
+                        'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
+                      "
                     />
                     <span
                       v-if="!!newDetailData.title"
@@ -600,7 +603,7 @@ export default {
   },
   data() {
     return {
-      PlannerHeadList ,
+      PlannerHeadList,
       loading: true,
       urlData: this.$route.query,
       detailData: {},
