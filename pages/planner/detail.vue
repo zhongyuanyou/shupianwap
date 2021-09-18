@@ -70,7 +70,7 @@
                       fit="cover"
                       :src="
                         newDetailData.image ||
-                        'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
+                        'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_241,h_241,limit_0'
                       "
                     />
                     <span
