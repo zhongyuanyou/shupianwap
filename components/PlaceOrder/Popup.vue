@@ -55,7 +55,9 @@
                       无门槛
                     </div>
                     <div v-else class="can_use">
-                      满{{ item.marketingCouponVO.fullPrice }}元可用
+                      满{{
+                        formatPrice(item.marketingCouponVO.fullPrice, true)
+                      }}可用
                     </div>
                   </div>
                   <div v-else>
@@ -70,7 +72,9 @@
                       无门槛
                     </div>
                     <div v-else class="can_use">
-                      满{{ item.marketingCouponVO.fullPrice }}元可用
+                      满{{
+                        formatPrice(item.marketingCouponVO.fullPrice, true)
+                      }}可用
                     </div>
                   </div>
                 </div>
@@ -142,7 +146,9 @@
                       无门槛
                     </div>
                     <div v-else class="can_use">
-                      满{{ item.marketingCouponVO.fullPrice }}元可用
+                      满{{
+                        formatPrice(item.marketingCouponVO.fullPrice, true)
+                      }}可用
                     </div>
                   </div>
                   <div v-else>
@@ -157,7 +163,9 @@
                       无门槛
                     </div>
                     <div v-else class="can_use">
-                      满{{ item.marketingCouponVO.fullPrice }}元可用
+                      满{{
+                        formatPrice(item.marketingCouponVO.fullPrice, true)
+                      }}可用
                     </div>
                   </div>
                 </div>
@@ -345,10 +353,16 @@ export default {
   mounted() {},
   methods: {
     // 将价格转为万元
-    formatPrice(price) {
-      const p = parseFloat(price)
+    formatPrice(price, haveUnit) {
+      let p = parseFloat(price)
+      let unit = '元'
       if (p >= 10000) {
-        return parseFloat((p / 10000).toFixed(2))
+        unit = '万'
+        p = parseFloat((p / 10000).toFixed(2))
+      }
+
+      if (haveUnit) {
+        return p + unit
       }
       return p
     },
@@ -476,11 +490,11 @@ export default {
       .listbox {
         height: calc(100% - 180px);
         overflow-y: auto;
-        padding: 0 40px;
+
         > .list {
-          margin: 24px auto 0;
+          margin: 10px auto 0;
           width: 670px;
-          height: 212px;
+          height: 220px;
           background: #ffffff;
           // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
           box-sizing: border-box;
@@ -508,7 +522,7 @@ export default {
             padding-top: 20px;
             box-sizing: border-box;
             .coupon_discount {
-              font-size: 62px;
+              font-size: 42px;
               font-family: Bebas;
               font-weight: 400;
               color: #ffffff;
@@ -519,13 +533,13 @@ export default {
               margin-bottom: 10px;
               span {
                 position: absolute;
-                font-size: 28px;
+                font-size: 26px;
                 bottom: 0;
               }
             }
             .coupon_price {
               //   height: 67px;
-              font-size: 62px;
+              font-size: 42px;
               font-family: Bebas;
               font-weight: 400;
               color: #ffffff;
@@ -537,7 +551,7 @@ export default {
               // white-space: nowrap;
               span {
                 position: absolute;
-                font-size: 28px;
+                font-size: 26px;
                 bottom: 0;
               }
             }
@@ -587,7 +601,7 @@ export default {
                   left: 0;
                   font-weight: normal;
                   transform: scale(0.83);
-                  transform-origin: 0 0;
+                  transform-origin: 0 center;
                   color: #ffffff;
                   background-image: linear-gradient(
                     90deg,
@@ -669,6 +683,7 @@ export default {
     }
     .nodatabox {
       height: calc(67vh - 324px);
+      padding-top: 20px;
       .listbox {
         height: 100%;
         > .nolist {
@@ -677,7 +692,7 @@ export default {
           width: 670px;
           background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/5cx1r4tc3js0000.png');
           // background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png) no-repeat;
-          background-size: 100%;
+          background-size: 100% 100%;
           // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
           box-sizing: border-box;
           > .top {
@@ -690,7 +705,7 @@ export default {
               padding-top: 20px;
               box-sizing: border-box;
               .coupon_discount {
-                font-size: 72px;
+                font-size: 42px;
                 font-family: Bebas;
                 font-weight: 400;
                 color: #ffffff;
@@ -701,13 +716,13 @@ export default {
                 margin-bottom: 10px;
                 span {
                   position: absolute;
-                  font-size: 28px;
+                  font-size: 26px;
                   bottom: 0;
                 }
               }
               .coupon_price {
                 //   height: 67px;
-                font-size: 62px;
+                font-size: 42px;
                 font-family: Bebas;
                 font-weight: 400;
                 color: #ffffff;
@@ -717,6 +732,11 @@ export default {
                 position: relative;
                 // text-overflow: ellipsis;
                 // white-space: nowrap;
+                span {
+                  position: absolute;
+                  font-size: 26px;
+                  bottom: 0;
+                }
               }
               .can_use {
                 margin-top: 14px;
@@ -768,7 +788,7 @@ export default {
                     top: 2px;
                     font-weight: normal;
                     transform: scale(0.83);
-                    transform-origin: 0 0;
+                    transform-origin: 0 center;
                     background: #cccccc;
                     color: #ffffff;
                     text-align: center;

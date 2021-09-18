@@ -16,7 +16,7 @@
         :class="{ active: index == currentIndex }"
         @click="menuTab(item, index)"
       >
-        {{ item.labelName }}
+        <span>{{ item.labelName }}</span>
       </li>
     </ul>
   </sp-sticky>
@@ -136,6 +136,8 @@ export default {
     display: flex;
 
     overflow-x: scroll;
+    align-items: center;
+    height: 3rem;
 
     // height: 96px;
     // line-height: 96px;
@@ -143,6 +145,7 @@ export default {
     &::-webkit-scrollbar {
       width: 0 !important;
       height: 0 !important;
+      display: none;
     }
     .li-tab {
       // display: inline-block;
@@ -154,9 +157,15 @@ export default {
       color: #999999;
       letter-spacing: 0;
       cursor: pointer;
+
+      & > span {
+        position: relative;
+        z-index: 1;
+      }
     }
     .active {
       position: relative;
+      z-index: 0;
       font-weight: bold;
       color: #222222;
     }

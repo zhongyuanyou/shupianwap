@@ -219,6 +219,27 @@ export default {
         }
         const data = await category.home({ axios: this.$axios }, params)
         this.loading = false
+        const len = data.categoryList.length
+        if (len) {
+          data.categoryList[len - 1].children = [
+            {
+              code: 'FL20201224136319',
+              name: '公司交易',
+            },
+            {
+              code: 'FL20201224136273',
+              name: '商标交易',
+            },
+            {
+              code: 'FL20201224136341',
+              name: '专利交易',
+            },
+            {
+              code: 'FL20201224136348',
+              name: '资质交易',
+            },
+          ]
+        }
         this.categoryList = data.categoryList
         this.recommendData = data.recommendData
         this.$nextTick(() => {

@@ -68,10 +68,7 @@
                       width="1.2rem"
                       height="1.2rem"
                       fit="cover"
-                      :src="
-                        newDetailData.image ||
-                        'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
-                      "
+                      :src="$resizeImg(80,80,newDetailData.image || PlannerHeadList)"
                     />
                     <span
                       v-if="!!newDetailData.title"
@@ -491,6 +488,7 @@ import {
   ShareSheet,
   Toast,
 } from '@chipspc/vant-dgg'
+import { PlannerHeadList } from '~/config/constant'
 import Header from '@/components/common/head/header'
 import SpToast from '@/components/common/spToast/SpToast'
 // import RecommendList from '@/components/planner/RecommendList'
@@ -602,6 +600,7 @@ export default {
   },
   data() {
     return {
+      PlannerHeadList ,
       loading: true,
       urlData: this.$route.query,
       detailData: {},
@@ -816,7 +815,7 @@ export default {
     },
     onClickLeft() {
       console.log('nav onClickLeft')
-      this.uPGoBack()
+      this.$back()
     },
     onClickRight() {
       console.log('nav onClickRight')
@@ -1040,12 +1039,6 @@ export default {
         // }
       }
     },
-
-    // 平台不同，跳转方式不同
-    uPGoBack() {
-      this.$router.back(-1)
-    },
-
     // app获取用户信息
     getUserInfo() {
       return new Promise((resolve, reject) => {

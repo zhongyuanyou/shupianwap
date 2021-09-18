@@ -78,9 +78,16 @@ const planner = {
     })
   },
   newtel(params) {
+    console.log('params', params);
+    const info = {}
+    for (const key in params) {
+      if (params[key] && params[key] !== 'undefined' && params[key] !== 'null') {
+        info[key] = params[key]
+      }
+    }
 
     return request({
-      params,
+      params: info,
       method: 'post',
       url: CRM_MIDDLE_APP + '/nk/outbound/shupiancall/bind_hidden.do',
     })
