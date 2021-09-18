@@ -449,12 +449,6 @@ export default {
               this.productAdvertDataTwo = adImg01.concat(adImg02)
             }
           } else {
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
           }
         })
         .catch((err) => {

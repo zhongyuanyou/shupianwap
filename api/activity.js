@@ -5,6 +5,6 @@ import { CHIPS_WAP_BASE_URL } from '../config/constant'
 const activityApi = {
   activityTypeOptions: `${CHIPS_WAP_BASE_URL}/nk/activity/v1/activity_type_options.do`, // 活动选项
   activityProductList: `${CHIPS_WAP_BASE_URL}/nk/activity/v1/activity_product_list.do`, // 活动产品列表
-  activityAdvertising: `${CHIPS_WAP_BASE_URL}/nk/activity/v1/advertising.do`, // 广告位
+  activityAdvertising: `${CHIPS_WAP_BASE_URL}/nk/activity/v1/advertising.do`, // 广告位， // 这个接口被uc系浏览器拦截了，uc会返回空数据
 }
 export { activityApi }
