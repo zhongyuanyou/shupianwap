@@ -116,7 +116,8 @@ module.exports = {
     '@css': resolve(__dirname, './assets/css'),
   },
   css: [
-    'assets/css/reset.css',
+    'assets/css/setup/reset.css',
+    'assets/css/setup/global.less',
     'assets/icons/iconfont.css',
     'assets/iconsNew/iconfont.css',
     'assets/icons630/iconfont.css',
@@ -129,7 +130,7 @@ module.exports = {
     'video.js/dist/video-js.min.css',
   ],
   styleResources: {
-    less: 'assets/styles/variables.less',
+    less: ['./assets/css/abstracts/*.less', './assets/css/vars/*.less'],
   },
   plugins: [
     { src: '@/plugins/axios', ssr: true },
