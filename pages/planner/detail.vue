@@ -68,7 +68,7 @@
                       width="1.2rem"
                       height="1.2rem"
                       fit="cover"
-                      :src="$resizeImg(80,80,newDetailData.image || PlannerHeadList)"
+                      :src="$resizeImg(120,120,newDetailData.image || PlannerHeadList)"
                     />
                     <span
                       v-if="!!newDetailData.title"
