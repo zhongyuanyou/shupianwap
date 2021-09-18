@@ -11,6 +11,7 @@
             class="list"
             :error.sync="error"
             error-text="请求失败，点击重新加载"
+            :immediate-check="false"
             @load="onLoad"
           >
             <div
@@ -56,6 +57,7 @@
             class="list"
             :error.sync="error"
             error-text="请求失败，点击重新加载"
+            :immediate-check="false"
             @load="onLoad"
           >
             <div
@@ -114,6 +116,9 @@ export default {
     ...mapState({
       userId: (state) => state.user.userId, // userId 用于判断登录
     }),
+  },
+  mounted() {
+    this.onLoad()
   },
   methods: {
     changeTab() {
