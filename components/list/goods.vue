@@ -42,6 +42,7 @@ import Newlist from '@/components/list/Newlist.vue'
 import Filters from '@/components/list/filters.vue'
 import searchList from '@/mixins/searchList'
 import { goods } from '@/api/index'
+
 export default {
   name: 'JyGoods',
   components: {
@@ -132,7 +133,12 @@ export default {
       }
       this.itemsclass[0].id = 1
       this.itemsclass[0].code = this.classcode.navcode
-      this.formData.class = this.itemsclass
+      const newarr = JSON.parse(JSON.stringify(this.itemsclass))
+      const initFilterCodes = newarr[1].services.slice(
+        1,
+        this.itemsclass[1].services.length
+      )
+      this.formData.class = [this.itemsclass[0], { services: initFilterCodes }]
     } else if (this.classcode.navcode) {
       this.itemsclass[0].id = 1
       this.itemsclass[0].code = this.classcode.navcode
@@ -246,12 +252,12 @@ export default {
       }
     },
     getlist() {
+      console.log('this.formDatathis.formDatathis.formData', this.formData)
       goods
         .transactionList({ axios: this.$axios }, this.formData)
         .then((data) => {
           if (this.formData.needTypes === 1) {
             this.items = data
-            console.log('this.items', this.items)
             this.classification = Array.isArray(data.typeData)
               ? data.typeData
               : data.typeData.children
@@ -261,8 +267,6 @@ export default {
             this.sortFilterList = Array.isArray(data.sortFilter)
               ? data.sortFilter
               : data.sortFilter.children
-            console.log('this.priceList.priceList')
-            console.log(this.priceList)
             if (this.classcode && this.isOne) {
               for (let i = 0; i < this.items.typeData.length; i++) {
                 if (this.classcode.navcode === this.items.typeData[i].code) {
