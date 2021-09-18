@@ -16,7 +16,7 @@
             round
             fit="cover"
             lazy-load
-            :src="`${item.portrait}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`"
+            :src="$resizeImg(80, 80, item.portrait || PlannerHeadList)"
           />
         </a>
         <div class="info">
@@ -82,6 +82,7 @@ import { Image, Button, Toast, Skeleton } from '@chipspc/vant-dgg'
 import { parseTel } from '~/utils/common'
 import { planner } from '~/api'
 import imHandle from '~/mixins/imHandle'
+import { PlannerHeadList } from '~/config/constant'
 import { codeTranslate } from '~/utils/codeTranslate'
 
 export default {
@@ -109,6 +110,11 @@ export default {
         return {}
       },
     },
+  },
+  data() {
+    return {
+      PlannerHeadList,
+    }
   },
   computed: {
     city() {
