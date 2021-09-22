@@ -73,7 +73,16 @@
             <div class="tips__item">服务专业</div>
           </div>
         </div>
-        <div class="planner__avatars"></div>
+        <div class="planner__avatars">
+          <div class="avatars-main">
+            <img
+              class="avatars-main__big"
+              src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+            />
+            <img class="avatars-main__star" :src="hdStarImg" />
+          </div>
+          <div class="avatars-list"></div>
+        </div>
       </div>
     </div>
     <sp-share-sheet
@@ -102,6 +111,7 @@ export default {
   data() {
     return {
       hdImg: pageGoodDetail.headbg,
+      hdStarImg: pageGoodDetail.headAvatarStar,
       scrollTopY: 0, // 距离顶部移动距离
       isShare: false, // 判断是否从分享页面过来,有分享页面标识;如果有,则不显示回退标识
       showShare: false, // 是否弹起分享组件

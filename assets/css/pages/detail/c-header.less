@@ -87,6 +87,32 @@
       &__avatars {
         flex-shrink: 0;
         width: 148px;
+        display: flex;
+        .avatars-main {
+          width: 148px;
+          height: 148px;
+          position: relative;
+          &__big {
+            position: absolute;
+            top: -52px;
+            z-index: 2;
+            box-shadow: 0px -8px #fff;
+            width: 148px;
+            height: 148px;
+            object-fit: cover;
+            border-radius: 100%;
+          }
+          &__star {
+            position: absolute;
+            bottom: 52px;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 100%;
+            z-index: 3;
+          }
+        }
       }
     }
   }
