@@ -12,4 +12,4 @@ const pageGoodDetail = {
   headbg: 'https://cdn.shupian.cn/sp-pt/wap/images/2pxcr859fbi0000.png',
 }
 
-export default { pageGoodDetail }
+export { pageGoodDetail }
