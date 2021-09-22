@@ -25,7 +25,7 @@
 <script>
 import { Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
-import CommentItem from '@/components/detail/CommentItem'
+import CommentItem from '@/components/detail/comment/CommentItem'
 import { evaluateApi } from '@/api'
 // mock data
 
