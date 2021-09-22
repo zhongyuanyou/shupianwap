@@ -1,53 +1,90 @@
 <template>
   <div class="c-header">
-    <sp-sticky
-      z-index="5"
-      :class="{
-        scroTopStyle: Boolean(scrollTopY),
-      }"
-      @scroll="scrollHandle"
-    >
-      <sp-top-nav-bar
-        ellipsis
-        :background="`rgba(255,255,255,0)`"
-        @on-click-left="onClickLeft"
-      >
-        <template #left>
-          <div v-if="!isShare">
-            <my-icon name="nav_ic_back" size="0.4rem" color="#fff"></my-icon>
+    <div class="header">
+      <div class="bgcontent" :style="{ 'background-image': `url(${hdImg})` }">
+        <sp-sticky
+          z-index="5"
+          :class="{
+            scroTopStyle: Boolean(scrollTopY),
+          }"
+          @scroll="scrollHandle"
+        >
+          <sp-top-nav-bar
+            ellipsis
+            :background="`rgba(255,255,255,0)`"
+            @on-click-left="onClickLeft"
+          >
+            <template #left>
+              <div v-if="!isShare">
+                <my-icon
+                  name="nav_ic_back"
+                  size="0.4rem"
+                  color="#1A1A1A"
+                ></my-icon>
+              </div>
+            </template>
+            <template #right>
+              <div>
+                <my-icon
+                  :class="goodDetail.isSave ? 'icon-red' : ''"
+                  style="margin-right: 0.36rem"
+                  :name="goodDetail.isSave ? 'shoucang_mian' : 'shoucang'"
+                  size="0.4rem"
+                  :color="goodDetail.isSave ? '#ec5330' : '#1A1A1A'"
+                  @click.native="handleCollect"
+                />
+              </div>
+              <div>
+                <my-icon
+                  style="margin-right: 0.36rem"
+                  name="nav_ic_shop"
+                  size="0.4rem"
+                  color="#1A1A1A"
+                  @click.native="addCart"
+                />
+              </div>
+              <div>
+                <my-icon
+                  name="nav_ic_share"
+                  size="0.4rem"
+                  color="#1A1A1A"
+                  @click.native="handleShare"
+                />
+              </div>
+            </template>
+          </sp-top-nav-bar>
+        </sp-sticky>
+        <div class="bgcontent__spaceholder"></div>
+      </div>
+      <div class="planner">
+        <div class="planner__info">
+          <div class="name">
+            <div class="name__name">谢知之</div>
+            <div class="name__score"><span>110</span>薯片分</div>
           </div>
-        </template>
-        <template #right>
-          <div>
-            <my-icon
-              :class="goodDetail.isSave ? 'icon-red' : ''"
-              style="margin-right: 0.36rem"
-              :name="goodDetail.isSave ? 'shoucang_mian' : 'shoucang'"
-              size="0.4rem"
-              :color="goodDetail.isSave ? '#ec5330' : '#fff'"
-              @click.native="handleCollect"
+          <div class="tips">
+            <div class="tips__item">服务专业</div>
+            <div class="tips__item">服务专业服务专业服务专业</div>
+            <div class="tips__item">服务专业</div>
+            <div class="tips__item">服务专业</div>
+            <div class="tips__item">服务专业</div>
+            <div class="tips__item">服务专业服务专业服务专业</div>
+            <div class="tips__item">服务专业</div>
+            <div class="tips__item">服务专业</div>
+          </div>
+        </div>
+        <div class="planner__avatars">
+          <div class="avatars-main">
+            <img
+              class="avatars-main__big"
+              src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
             />
+            <img class="avatars-main__star" :src="hdStarImg" />
           </div>
-          <div>
-            <my-icon
-              style="margin-right: 0.36rem"
-              name="nav_ic_shop"
-              size="0.4rem"
-              color="#fff"
-              @click.native="addCart"
-            />
-          </div>
-          <div>
-            <my-icon
-              name="nav_ic_share"
-              size="0.4rem"
-              color="#fff"
-              @click.native="handleShare"
-            />
-          </div>
-        </template>
-      </sp-top-nav-bar>
-    </sp-sticky>
+          <div class="avatars-list"></div>
+        </div>
+      </div>
+    </div>
     <sp-share-sheet
       v-model="showShare"
       title="立即分享给好友"
@@ -62,6 +99,7 @@ import { Sticky, TopNavBar, ShareSheet } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { copyToClipboard } from '~/utils/common'
 import { shopApi } from '~/api'
+import { pageGoodDetail } from '~/utils/static/imgs.js'
 
 export default {
   name: 'GoodDetailPlannerHeader',
@@ -72,6 +110,8 @@ export default {
   },
   data() {
     return {
+      hdImg: pageGoodDetail.headbg,
+      hdStarImg: pageGoodDetail.headAvatarStar,
       scrollTopY: 0, // 距离顶部移动距离
       isShare: false, // 判断是否从分享页面过来,有分享页面标识;如果有,则不显示回退标识
       showShare: false, // 是否弹起分享组件
@@ -94,7 +134,7 @@ export default {
   methods: {
     // 移动距离顶部的距离
     scrollHandle({ scrollTop }) {
-      if (scrollTop > 216) {
+      if (scrollTop > 222) {
         this.scrollTopY = 1
       } else {
         this.scrollTopY = 0

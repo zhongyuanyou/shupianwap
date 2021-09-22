@@ -10,6 +10,7 @@
 // 商品详情页面
 const pageGoodDetail = {
   headbg: 'https://cdn.shupian.cn/sp-pt/wap/images/2pxcr859fbi0000.png',
+  headAvatarStar: 'https://cdn.shupian.cn/sp-pt/wap/images/8wso9j09ej40000.png	',
 }
 
-export default { pageGoodDetail }
+export { pageGoodDetail }
