@@ -14821,19 +14821,22 @@ vary@^1.1.2, vary@~1.1.2:
   resolved "https://registry.npm.taobao.org/vary/download/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
-vconsole@^3.3.4:
-  version "3.7.0"
-  resolved "https://registry.nlark.com/vconsole/download/vconsole-3.7.0.tgz?cache=0&sync_timestamp=1622108067970&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fvconsole%2Fdownload%2Fvconsole-3.7.0.tgz#7b347fc635eb09646bb50f0ce0cbfba1852af1b1"
-  integrity sha1-ezR/xjXrCWRrtQ8M4Mv7oYUq8bE=
-  dependencies:
-    copy-text-to-clipboard "^3.0.1"
-    core-js "^3.11.0"
-    mutation-observer "^1.0.3"
-
 vconsole@^3.5.1:
   version "3.9.0"
   resolved "https://registry.nlark.com/vconsole/download/vconsole-3.9.0.tgz?cache=0&sync_timestamp=1626420160382&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fvconsole%2Fdownload%2Fvconsole-3.9.0.tgz#342933825caa484890635aeacfe72ffc2c72f60e"
   integrity sha1-NCkzglyqSEiQY1rqz+cv/Cxy9g4=
+  dependencies:
+    "@fortawesome/free-solid-svg-icons" "^5.15.3"
+    cookie-storage "^6.1.0"
+    copy-text-to-clipboard "^3.0.1"
+    core-js "^3.11.0"
+    mutation-observer "^1.0.3"
+    svelte-fa "^2.2.1"
+
+vconsole@^3.9.1:
+  version "3.9.1"
+  resolved "https://registry.nlark.com/vconsole/download/vconsole-3.9.1.tgz#41c9d311e14a1a68566a1be5243a8667f4c345d3"
+  integrity sha1-QcnTEeFKGmhWahvlJDqGZ/TDRdM=
   dependencies:
     "@fortawesome/free-solid-svg-icons" "^5.15.3"
     cookie-storage "^6.1.0"

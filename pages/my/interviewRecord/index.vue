@@ -1,6 +1,6 @@
 <template>
   <div class="interview">
-    <Header v-if="!isInApp" title="面谈记录">
+    <Header title="面谈记录">
       <template #left>
         <div @click="back">
           <my-icon

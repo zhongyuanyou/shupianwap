@@ -65,12 +65,14 @@
       <!--E 第一板块-->
       <PageMidAd :ad-location-code="'ad100399'" />
       <!--S 第二板块 领券 SKU-->
-      <VouchersSelect ref="sku" :planner-detail="tcPlannerBooth" />
+      <VouchersSelect ref="sku" />
       <!--E 第二板块 领券 SKU-->
       <!--S 第三板块 包含项目-->
       <!-- <ContainProject /> -->
       <!--E 第三板块 包含项目-->
       <!--S 第三板块 包含服务-->
+      <!-- 攻略 -->
+      <RecConten category-code="con100189" />
       <ContainContent />
       <!--E 第三板块 包含服务-->
       <!--S 评论-->
@@ -83,7 +85,7 @@
       <!--E 第五板块 推荐规划师-->
       <!--S  精选案例-->
       <!-- <OrderCase></OrderCase> -->
-      <CaseNew :planner-detail="tcPlannerBooth" />
+      <CaseNew />
       <!--E  精选案例-->
       <!--S 第十板块 服务详情-->
       <ServiceDetail
@@ -101,7 +103,7 @@
         <RelatedRecommend ref="remNeed" :product-data="recommendProduct" />
       </sp-list>
       <!--E 第十板块 猜你需要-->
-      <bottomBar :im-jump-query="imJumpQuery" :planner-info="tcPlannerBooth" />
+      <bottomBar :im-jump-query="imJumpQuery" />
       <!--    分享组件-->
       <sp-share-sheet
         v-model="showShare"
@@ -128,6 +130,7 @@ import ContainContent from '~/components/detail/ContainContent.vue'
 import TcPlanners from '~/components/detail/TcPlanners1.vue'
 import ServiceDetail from '~/components/detail/ServiceDetail.vue'
 import RelatedRecommend from '~/components/detail/RelatedRecommend.vue'
+import RecConten from '@/components/detail/server/law/recContent.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import CaseNew from '~/components/detail/CaseNew'
@@ -147,6 +150,7 @@ export default {
     [ShareSheet.name]: ShareSheet,
     Banner,
     Title,
+    RecConten,
     VouchersSelect,
     // ContainProject,
     ContainContent,

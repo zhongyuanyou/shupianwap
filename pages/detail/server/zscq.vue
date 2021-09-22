@@ -75,7 +75,7 @@
       </div> -->
       <!--S 第二板块 领券 SKU-->
 
-      <VouchersSelect ref="sku" :planner-detail="tcPlannerBooth" />
+      <VouchersSelect ref="sku" />
       <!--E 第二板块 领券 SKU-->
       <!--S 第三板块 包含项目-->
       <!-- <ContainProject /> -->
@@ -93,7 +93,7 @@
       <!--E 第五板块 推荐规划师-->
       <!--S  精选案例-->
       <!-- <OrderCase></OrderCase> -->
-      <CaseNew :planner-detail="tcPlannerBooth" />
+      <CaseNew />
       <!--E  精选案例-->
       <!--S 第十板块 服务详情-->
       <ServiceDetail

@@ -491,7 +491,10 @@ export default {
       })
       if (plannerRes.code === 200) {
         this.tcPlannerBooth = plannerRes.data.records[0]
-        console.log('tcPlannerBooth', this.tcPlannerBooth)
+        this.$store.dispatch(
+          'planner/setRecPlanner',
+          plannerRes.data.records[0]
+        )
       }
     },
     // 购物车

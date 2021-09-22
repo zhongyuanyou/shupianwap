@@ -19,19 +19,7 @@
           color="#4873F4"
         ></my-icon>
         没找到你想看的案例？
-        <sp-button
-          v-if="plannerDetail.mchUserId"
-          class="im_btn"
-          @click="
-            sendTemplateMsgWithImg(
-              plannerDetail.mchUserId,
-              plannerDetail.type,
-              sellingGoodsData
-            )
-          "
-        >
-          去咨询</sp-button
-        >
+        <imBtn class="im_btn" btn-text="去咨询" />
       </div>
     </div>
   </div>
@@ -40,14 +28,14 @@
 import { Image, Button } from '@chipspc/vant-dgg'
 import { caseApi } from '@/api/index'
 import CaseExamplesList from '@/components/caseExamples/index/List.vue'
-import imHandle from '~/mixins/imHandle'
+import imBtn from '@/components/detail/common/RecImBtn'
 export default {
   components: {
     [Image.name]: Image,
     [Button.name]: Button,
     CaseExamplesList,
+    imBtn,
   },
-  mixins: [imHandle],
   props: {
     // 钻展规划师
     plannerDetail: {

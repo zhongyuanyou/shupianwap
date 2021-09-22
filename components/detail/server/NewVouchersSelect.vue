@@ -86,18 +86,7 @@
         class="my_icon"
       ></my-icon>
       线下优惠可咨询规划师
-      <sp-button
-        v-if="plannerDetail.mchUserId"
-        class="im_btn"
-        @click="
-          sendTemplateMsgWithImg(
-            plannerDetail.mchUserId,
-            plannerDetail.type,
-            sellingGoodsData
-          )
-        "
-        >询优惠</sp-button
-      >
+      <imBtn btn-text="询优惠" />
     </div>
     <sp-popup
       v-model="show"
@@ -286,7 +275,7 @@
 <script>
 import { Cell, Popup, Safeguard, Image, Button } from '@chipspc/vant-dgg'
 import { coupon, productDetailsApi } from '@/api'
-import imHandle from '~/mixins/imHandle'
+import imBtn from '@/components/detail/common/RecImBtn'
 import { CHIPS_WAP_BASE_URL } from '@/config/constant'
 // 数组排序
 function xier(arr) {
@@ -317,16 +306,7 @@ export default {
     [Safeguard.name]: Safeguard,
     [Image.name]: Image,
     [Button.name]: Button,
-  },
-  mixins: [imHandle],
-  props: {
-    // 钻展规划师
-    plannerDetail: {
-      type: Object,
-      default() {
-        return {}
-      },
-    },
+    imBtn,
   },
   data() {
     return {
@@ -350,6 +330,11 @@ export default {
     }
   },
   computed: {
+    plannerDetail() {
+      return this.$store.state.planner.isShare
+        ? this.$store.state.planner.sharePlannerInfo
+        : this.$store.state.planner.recodBottomPlanner
+    },
     sellingGoodsData() {
       // 获取客户端展示信息
       return this.$store.state.sellingGoodsDetail.sellingGoodsData

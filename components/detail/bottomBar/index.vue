@@ -89,12 +89,6 @@ export default {
   },
   mixins: [imHandle],
   props: {
-    plannerInfo: {
-      type: Object,
-      default: () => {
-        return {}
-      },
-    },
     imJumpQuery: {
       type: Object,
       default: () => {
@@ -112,6 +106,11 @@ export default {
     }
   },
   computed: {
+    plannerDetail() {
+      return this.$store.state.planner.isShare
+        ? this.$store.state.planner.sharePlannerInfo
+        : this.$store.state.planner.recodBottomPlanner
+    },
     // 产品详情
     proDetail() {
       return this.$store.state.tcProductDetail.detailData
@@ -146,13 +145,6 @@ export default {
         }
       },
     }),
-    plannerDetail() {
-      if (this.isPlannerShare) {
-        return this.sharePlaner
-      } else {
-        return this.plannerInfo
-      }
-    },
   },
   mounted() {
     if (this.$route.query.plannerId || this.$route.query.mchUserId) {
@@ -177,6 +169,7 @@ export default {
           ...obj,
           ...res,
         }
+        this.$store.dispatch('planner/SET_SHARE_PLANNER', this.sharePlaner)
         this.$forceUpdate()
       })
     },
