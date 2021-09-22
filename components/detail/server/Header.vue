@@ -74,14 +74,23 @@
           </div>
         </div>
         <div class="planner__avatars">
-          <div class="avatars-main">
+          <div class="avatars">
             <img
-              class="avatars-main__big"
+              class="avatars__big"
               src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
             />
-            <img class="avatars-main__star" :src="hdStarImg" />
+            <img class="avatars__star" :src="hdStarImg" />
+            <img
+              class="avatars__list"
+              src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+            /><img
+              class="avatars__list avatars__list--two"
+              src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+            /><img
+              class="avatars__list avatars__list--three"
+              src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+            />
           </div>
-          <div class="avatars-list"></div>
         </div>
       </div>
     </div>
