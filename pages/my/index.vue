@@ -219,7 +219,7 @@ export default {
       imgList: {
         tx: '2exrifx8gxes000.png', // 头像
         edit: '72tvzeql0iw0000.png', // 编辑
-        plus: '895bdylh5rg000.png', //
+        plus: 'e52dg6xuqns0000.png', //
 
         shop: 'f04le88sqm80000.png', // 购物车
         yuYue: '7jk7c04dsa00000.png', // 预约
