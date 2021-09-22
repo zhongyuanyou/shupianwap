@@ -1,55 +1,62 @@
 <template>
   <div class="c-header">
-    <div class="bgcontent">
-      <sp-sticky
-        z-index="5"
-        :class="{
-          scroTopStyle: Boolean(scrollTopY),
-        }"
-        @scroll="scrollHandle"
-      >
-        <sp-top-nav-bar
-          ellipsis
-          :background="`rgba(255,255,255,0)`"
-          @on-click-left="onClickLeft"
+    <div class="header">
+      <div class="bgcontent" :style="{ 'background-image': `url(${hdImg})` }">
+        <sp-sticky
+          z-index="5"
+          :class="{
+            scroTopStyle: Boolean(scrollTopY),
+          }"
+          @scroll="scrollHandle"
         >
-          <template #left>
-            <div v-if="!isShare">
-              <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
-            </div>
-          </template>
-          <template #right>
-            <div>
-              <my-icon
-                :class="goodDetail.isSave ? 'icon-red' : ''"
-                style="margin-right: 0.36rem"
-                :name="goodDetail.isSave ? 'shoucang_mian' : 'shoucang'"
-                size="0.4rem"
-                :color="goodDetail.isSave ? '#ec5330' : '#1A1A1A'"
-                @click.native="handleCollect"
-              />
-            </div>
-            <div>
-              <my-icon
-                style="margin-right: 0.36rem"
-                name="nav_ic_shop"
-                size="0.4rem"
-                color="#1A1A1A"
-                @click.native="addCart"
-              />
-            </div>
-            <div>
-              <my-icon
-                name="nav_ic_share"
-                size="0.4rem"
-                color="#1A1A1A"
-                @click.native="handleShare"
-              />
-            </div>
-          </template>
-        </sp-top-nav-bar>
-      </sp-sticky>
-      <div class="bgcontent__spaceholder"></div>
+          <sp-top-nav-bar
+            ellipsis
+            :background="`rgba(255,255,255,0)`"
+            @on-click-left="onClickLeft"
+          >
+            <template #left>
+              <div v-if="!isShare">
+                <my-icon
+                  name="nav_ic_back"
+                  size="0.4rem"
+                  color="#1A1A1A"
+                ></my-icon>
+              </div>
+            </template>
+            <template #right>
+              <div>
+                <my-icon
+                  :class="goodDetail.isSave ? 'icon-red' : ''"
+                  style="margin-right: 0.36rem"
+                  :name="goodDetail.isSave ? 'shoucang_mian' : 'shoucang'"
+                  size="0.4rem"
+                  :color="goodDetail.isSave ? '#ec5330' : '#1A1A1A'"
+                  @click.native="handleCollect"
+                />
+              </div>
+              <div>
+                <my-icon
+                  style="margin-right: 0.36rem"
+                  name="nav_ic_shop"
+                  size="0.4rem"
+                  color="#1A1A1A"
+                  @click.native="addCart"
+                />
+              </div>
+              <div>
+                <my-icon
+                  name="nav_ic_share"
+                  size="0.4rem"
+                  color="#1A1A1A"
+                  @click.native="handleShare"
+                />
+              </div>
+            </template>
+          </sp-top-nav-bar>
+        </sp-sticky>
+        <div class="bgcontent__spaceholder"></div>
+      </div>
+      <div class="planner"></div>
     </div>
     <sp-share-sheet
       v-model="showShare"
@@ -94,13 +101,12 @@ export default {
     },
   },
   mounted() {
-    console.log(`output aaa :${JSON.stringify(pageGoodDetail)}`)
     this.isShare = this.$route.query.isShare
   },
   methods: {
     // 移动距离顶部的距离
     scrollHandle({ scrollTop }) {
-      if (scrollTop > 216) {
+      if (scrollTop > 222) {
         this.scrollTopY = 1
       } else {
         this.scrollTopY = 0
