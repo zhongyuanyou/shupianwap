@@ -40,6 +40,54 @@
       height: 248px;
       padding: 0 40px;
       padding-top: 16px;
+      display: flex;
+      &__info {
+        width: 562px;
+        .name {
+          height: 62px;
+          display: flex;
+          align-items: baseline;
+          &__name {
+            font-weight: bold;
+            font-size: 44px;
+            line-height: 62px;
+            color: #1a1a1a;
+          }
+          &__score {
+            span {
+              font-weight: bold;
+            }
+            margin-left: 16px;
+            color: #555555;
+            font-size: 26px;
+            line-height: 36px;
+          }
+        }
+        .tips {
+          display: flex;
+          flex-wrap: wrap;
+          margin-top: 30px;
+          height: 92px;
+          overflow: hidden;
+          &__item {
+            height: 40px;
+            background: #f1ece2;
+            border-radius: 20px;
+            color: #947e4c;
+            font-size: 22px;
+            font-weight: bold;
+            max-width: 216px;
+            padding: 5px 20px;
+            margin-right: 12px;
+            margin-bottom: 12px;
+            .mixin-text-oneoverflow();
+          }
+        }
+      }
+      &__avatars {
+        flex-shrink: 0;
+        width: 148px;
+      }
     }
   }
 }

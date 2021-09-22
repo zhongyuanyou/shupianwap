@@ -56,7 +56,25 @@
         </sp-sticky>
         <div class="bgcontent__spaceholder"></div>
       </div>
-      <div class="planner"></div>
+      <div class="planner">
+        <div class="planner__info">
+          <div class="name">
+            <div class="name__name">谢知之</div>
+            <div class="name__score"><span>110</span>薯片分</div>
+          </div>
+          <div class="tips">
+            <div class="tips__item">服务专业</div>
+            <div class="tips__item">服务专业服务专业服务专业</div>
+            <div class="tips__item">服务专业</div>
+            <div class="tips__item">服务专业</div>
+            <div class="tips__item">服务专业</div>
+            <div class="tips__item">服务专业服务专业服务专业</div>
+            <div class="tips__item">服务专业</div>
+            <div class="tips__item">服务专业</div>
+          </div>
+        </div>
+        <div class="planner__avatars"></div>
+      </div>
     </div>
     <sp-share-sheet
       v-model="showShare"
