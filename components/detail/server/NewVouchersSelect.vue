@@ -66,7 +66,7 @@
       </div>
       <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
     </div>
-    <div
+    <!-- <div
       v-if="
         sellingGoodsData.salesGoodsSubVos &&
         sellingGoodsData.salesGoodsSubVos.length === 1
@@ -77,7 +77,7 @@
         <div class="label">服务周期</div>
         <div class="content">一个月</div>
       </div>
-    </div>
+    </div> -->
     <div class="cell youhui">
       <my-icon
         name="gerenzhongxin_youhuiquanicon"

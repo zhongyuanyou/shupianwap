@@ -5,7 +5,8 @@
       <span
         v-if="
           sellingGoodsData.salesGoodsSubVos &&
-          sellingGoodsData.salesGoodsSubVos.length
+          sellingGoodsData.salesGoodsSubVos.length &&
+          sellingGoodsData.salesGoodsSubVos.length > 1
         "
         class="title_tags_item title_tags_main"
         >套餐</span

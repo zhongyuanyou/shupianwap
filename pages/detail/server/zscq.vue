@@ -9,7 +9,7 @@
       <!-- <MemberPrice></MemberPrice> -->
 
       <!--S 第一板块-->
-      <ServeDetailTitle />
+      <Title />
       <!--E 第一板块-->
       <!-- 页面中部广告位 -->
       <PageMidAd :ad-location-code="'ad100399'" />
@@ -73,7 +73,7 @@ import { mapActions } from 'vuex'
 import { Sticky, List, TopNavBar, ShareSheet, Image } from '@chipspc/vant-dgg'
 import ShareModal from '@/components/common/ShareModal.vue'
 import Banner from '~/components/detail/Banner.vue'
-import ServeDetailTitle from '~/components/detail/ServeDetailTitle.vue'
+import Title from '~/components/detail/server/Title.vue'
 import CommentBox from '~/components/detail/comment/CommentBox.vue'
 import OrderCase from '~/components/detail/OrderCase.vue'
 import OrderDynamic from '~/components/detail/OrderDynamic.vue'
@@ -103,7 +103,7 @@ export default {
     [List.name]: List,
     [Image.name]: Image,
     [ShareSheet.name]: ShareSheet,
-    ServeDetailTitle,
+    Title,
     VouchersSelect,
     // ContainProject,
     ContainContent,

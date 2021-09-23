@@ -55,7 +55,9 @@
               </h1>
               <div class="tag">
                 <div
-                  v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length"
+                  v-if="
+                    item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
+                  "
                 >
                   套餐
                 </div>
