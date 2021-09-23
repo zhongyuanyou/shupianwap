@@ -27,6 +27,8 @@
       <!--S 第五板块 推荐规划师-->
       <TcPlanners :recommend-planner="planners" />
       <!--E 第五板块 推荐规划师-->
+      <!-- 热门咨询 -->
+      <HotConsult />
       <!--S  精选案例-->
       <CaseNew :planner-detail="tcPlannerBooth" />
       <!--E  精选案例-->
@@ -65,6 +67,7 @@ import bottomBar from '@/components/detail/bottomBar/index.vue'
 import CaseNew from '~/components/detail/CaseNew'
 import PageMidAd from '~/components/detail/server/PageMidAd'
 import Header from '~/components/detail/server/Header'
+import HotConsult from '~/components/detail/server/HotConsult'
 import imHandle from '~/mixins/imHandle'
 import detailMixin from '~/mixins/servedetail'
 export default {
@@ -85,6 +88,7 @@ export default {
     CaseNew,
     PageMidAd,
     Header,
+    HotConsult,
   },
   mixins: [imHandle, detailMixin],
   layout: 'keepAlive',
