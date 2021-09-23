@@ -73,6 +73,8 @@
       <!--S 第三板块 包含服务-->
       <!-- 攻略 -->
       <RecConten category-code="con100189" />
+      <!-- 律师 -->
+      <RecLawyer />
       <ContainContent />
       <!--E 第三板块 包含服务-->
       <!--S 评论-->
@@ -131,6 +133,7 @@ import TcPlanners from '~/components/detail/TcPlanners1.vue'
 import ServiceDetail from '~/components/detail/ServiceDetail.vue'
 import RelatedRecommend from '~/components/detail/RelatedRecommend.vue'
 import RecConten from '@/components/detail/server/law/recContent.vue'
+import RecLawyer from '@/components/detail/server/law/recLawyer.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import CaseNew from '~/components/detail/CaseNew'
@@ -161,6 +164,7 @@ export default {
     // MemberPrice,
     MyIcon,
     CommentBox,
+    RecLawyer,
     // OrderCase,
     OrderDynamic,
     CaseNew,

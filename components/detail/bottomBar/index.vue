@@ -22,7 +22,10 @@
             height="0.8rem"
             round
             fit="cover"
-            :src="plannerDetail.portrait"
+            :src="
+              plannerDetail.portrait ||
+              'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png'
+            "
           />
         </a>
         <div class="commodityConsult-containner-userInfo-name">
@@ -169,7 +172,7 @@ export default {
           ...obj,
           ...res,
         }
-        this.$store.dispatch('planner/SET_SHARE_PLANNER', this.sharePlaner)
+        this.$store.dispatch('planner/setSharePlanner', this.sharePlaner)
         this.$forceUpdate()
       })
     },

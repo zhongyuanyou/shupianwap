@@ -244,7 +244,6 @@ export default {
             !this.$store.state.user.userInfo.token ||
             !this.$store.state.user.token
           ) {
-            console.log('更新用户信息')
             const token = this.$cookies.get('token', {
               path: '/',
             })
@@ -263,14 +262,16 @@ export default {
             const avatar = this.$cookies.get('avatar', {
               path: '/',
             })
-            this.$store.dispatch('user/setUser', {
-              token,
-              userId,
-              userName,
-              userType,
-              userPhone,
-              avatar,
-            })
+            if (token && token !== 'undefined') {
+              this.$store.dispatch('user/setUser', {
+                token,
+                userId,
+                userName,
+                userType,
+                userPhone,
+                avatar,
+              })
+            }
           }
         }
       },

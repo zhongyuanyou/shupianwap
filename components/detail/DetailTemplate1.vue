@@ -11,9 +11,6 @@
       <sp-top-nav-bar
         ellipsis
         :background="`rgba(255,255,255,0)`"
-        :style="{
-          padding: isInApp ? `${appInfo.statusBarHeight}px 0 0 0` : '0',
-        }"
         @on-click-left="onClickLeft"
       >
         <template #left>
@@ -56,10 +53,6 @@
     <!--S banner-->
     <Banner :images="imgFileIdPaths" />
     <!--S banner-->
-
-    <!--start 会员价 -->
-    <!-- <MemberPrice></MemberPrice> -->
-
     <!--S 第一板块-->
     <Title :comment="commentdata[0].tit" @onComment="comment" />
     <!--E 第一板块-->
@@ -82,7 +75,7 @@
     <!--E 第五板块 推荐规划师-->
     <!--S  精选案例-->
     <!-- <OrderCase></OrderCase> -->
-    <CaseNew :planner-detail="tcPlannerBooth" />
+    <CaseNew />
     <!--E  精选案例-->
     <!--S 第十板块 服务详情-->
     <ServiceDetail
@@ -113,7 +106,7 @@
 
 <script>
 import { TopNavBar, Sticky, List, ShareSheet } from '@chipspc/vant-dgg'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import Banner from '~/components/detail/Banner.vue'
 import Title from '~/components/detail/Title1.vue'
 import CommentBox from '~/components/detail/CommentBox.vue'
@@ -126,8 +119,6 @@ import TcPlanners from '~/components/detail/TcPlanners1.vue'
 import ServiceDetail from '~/components/detail/ServiceDetail.vue'
 import RelatedRecommend from '~/components/detail/RelatedRecommend.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
-// import MemberPrice from '@/components/detail/memberPrice/MemberPrice.vue'
-
 import CaseNew from '~/components/detail/CaseNew'
 
 import getUserSign from '~/utils/fingerprint'
@@ -151,7 +142,6 @@ export default {
     ServiceDetail,
     RelatedRecommend,
     bottomBar,
-    // MemberPrice,
     MyIcon,
     CommentBox,
     // OrderCase,
@@ -336,12 +326,6 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      isInApp: (state) => state.app.isInApp,
-      appInfo: (state) => state.app.appInfo, // app信息
-      userInfo: (state) => state.user.userInfo,
-      isApplets: (state) => state.app.isApplets,
-    }),
     sellingDetail() {
       // 获取客户端展示信息
       return this.$store.state.sellingGoodsDetail.sellingGoodsData
