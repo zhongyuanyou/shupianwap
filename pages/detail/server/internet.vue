@@ -9,7 +9,7 @@
       <!-- <MemberPrice></MemberPrice> -->
 
       <!--S 第一板块-->
-      <Title :comment="commentdata[0].tit" @onComment="comment" />
+      <Title :comment="comments" @onComment="commentHandler" />
       <!--E 第一板块-->
       <PageMidAd :ad-location-code="'ad100399'" />
       <!--S 第二板块 领券 SKU-->
@@ -22,15 +22,18 @@
       <ContainContent />
       <!--E 第三板块 包含服务-->
       <!--S 评论-->
-      <CommentBox id="comment" :list="commentdata" />
+      <CommentBox
+        id="comment"
+        :comment="comments.records[0]"
+        :good-id="sellingDetail.id"
+      />
       <!--E 评论-->
       <!--S 动态 -->
       <OrderDynamic></OrderDynamic>
       <!--S 第五板块 推荐规划师-->
-      <TcPlanners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
+      <TcPlanners :recommend-planner="planners" />
       <!--E 第五板块 推荐规划师-->
       <!--S  精选案例-->
-      <!-- <OrderCase></OrderCase> -->
       <CaseNew :planner-detail="tcPlannerBooth" />
       <!--E  精选案例-->
       <!--S 第十板块 服务详情-->
@@ -49,32 +52,26 @@
         <RelatedRecommend ref="remNeed" :product-data="recommendProduct" />
       </sp-list>
       <!--E 第十板块 猜你需要-->
-      <bottomBar :im-jump-query="imJumpQuery" :planner-info="tcPlannerBooth" />
+      <bottomBar :planner-info="tcPlannerBooth" />
     </div>
   </section>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
 import { List, TopNavBar } from '@chipspc/vant-dgg'
 import ShareModal from '@/components/common/ShareModal.vue'
-import Title from '~/components/detail/Title1.vue'
-import CommentBox from '~/components/detail/CommentBox.vue'
-import OrderCase from '~/components/detail/OrderCase.vue'
+import Title from '~/components/detail/server/Title.vue'
+import CommentBox from '~/components/detail/comment/CommentBox.vue'
 import OrderDynamic from '~/components/detail/OrderDynamic.vue'
 import VouchersSelect from '~/components/detail/server/NewVouchersSelect.vue'
-// import ContainProject from '~/components/detail/ContainProject.vue'
 import ContainContent from '~/components/detail/ContainContent.vue'
-import TcPlanners from '~/components/detail/TcPlanners1.vue'
+import TcPlanners from '~/components/detail/server/TcPlanners.vue'
 import ServiceDetail from '~/components/detail/ServiceDetail.vue'
 import RelatedRecommend from '~/components/detail/RelatedRecommend.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
 import CaseNew from '~/components/detail/CaseNew'
 import PageMidAd from '~/components/detail/server/PageMidAd'
-import getUserSign from '~/utils/fingerprint'
 import Header from '~/components/detail/server/Header'
-import { productDetailsApi, recommendApi, shopApi } from '~/api'
-import { copyToClipboard } from '~/utils/common'
 import imHandle from '~/mixins/imHandle'
 import detailMixin from '~/mixins/servedetail'
 export default {
@@ -102,6 +99,22 @@ export default {
   mixins: [imHandle, detailMixin],
   layout: 'keepAlive',
   watchQuery: ['productId'],
+  data() {
+    return {
+      comments: {
+        totalCount: 0, // 初始化评论字段,防止程序报错
+        records: [],
+      },
+    }
+  },
+  computed: {
+    sellingDetail() {
+      // 获取客户端展示信息
+      return this.$store.state.sellingGoodsDetail.sellingGoodsData
+    },
+  },
+  mounted() {},
+  methods: {},
 }
 </script>
 <style lang="less" scoped>

@@ -109,6 +109,7 @@ import { mapState } from 'vuex'
 import { copyToClipboard } from '~/utils/common'
 import { shopApi } from '~/api'
 import { pageGoodDetail } from '~/utils/static/imgs.js'
+import imHandle from '~/mixins/imHandle'
 
 export default {
   name: 'GoodDetailPlannerHeader',
@@ -117,6 +118,7 @@ export default {
     [Sticky.name]: Sticky,
     [ShareSheet.name]: ShareSheet,
   },
+  mixins: [imHandle],
   data() {
     return {
       hdImg: pageGoodDetail.headbg,
@@ -232,6 +234,16 @@ export default {
           console.log('err', err)
           this.$xToast.error('收藏失败')
         })
+    },
+    // 购物车
+    async addCart() {
+      // 点击立即购买
+      const isLogin = await this.judgeLoginMixin()
+      if (isLogin) {
+        this.$router.push({
+          path: '/shopCart',
+        })
+      }
     },
     handleShare() {
       this.showShare = true
