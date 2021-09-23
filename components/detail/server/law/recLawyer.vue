@@ -4,10 +4,12 @@
     <div class="s_area">
       <sp-swipe :autoplay="3000">
         <sp-swipe-item v-for="(item, index) in lawerList" :key="index">
-          <sp-image
-            fit="cover"
-            :src="`${item}?x-oss-process=image/resize,m_fill,w_750,h_520,limit_0`"
-          />
+          <sp-image :src="$resizeImg(220, 220, item.image)" class="l_head" />
+          <div class="l_infos">
+            <p>
+              {{ item.name }}
+            </p>
+          </div>
         </sp-swipe-item>
         <!-- <template #indicator>
           <div class="custom-indicator">

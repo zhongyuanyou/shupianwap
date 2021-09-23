@@ -64,7 +64,6 @@
 <script>
 import { Sticky, List, TopNavBar, ShareSheet } from '@chipspc/vant-dgg'
 import ShareModal from '@/components/common/ShareModal.vue'
-import Banner from '~/components/detail/Banner.vue'
 import Title from '~/components/detail/server/Title.vue'
 import CommentBox from '~/components/detail/comment/CommentBox.vue'
 import OrderCase from '~/components/detail/OrderCase.vue'
