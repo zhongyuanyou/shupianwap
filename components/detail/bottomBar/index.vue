@@ -88,14 +88,6 @@ export default {
     [Button.name]: Button,
   },
   mixins: [imHandle],
-  props: {
-    imJumpQuery: {
-      type: Object,
-      default: () => {
-        return {}
-      },
-    },
-  },
   data() {
     return {
       type: 1,

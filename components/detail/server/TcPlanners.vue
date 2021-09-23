@@ -100,12 +100,6 @@ export default {
       type: Array,
       default: () => [],
     },
-    imJumpQuery: {
-      type: Object,
-      default: () => {
-        return {}
-      },
-    },
   },
   data() {
     return {
