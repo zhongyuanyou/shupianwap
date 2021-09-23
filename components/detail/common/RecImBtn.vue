@@ -41,9 +41,7 @@ export default {
       return this.$store.state.sellingGoodsDetail.sellingGoodsData
     },
   },
-  mounted() {
-    console.log('rouyter', this.$route)
-  },
+  mounted() {},
 }
 </script>
 
