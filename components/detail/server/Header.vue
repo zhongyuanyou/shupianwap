@@ -65,15 +65,20 @@
               >薯片分
             </div>
           </div>
-          <div class="tips">
-            <div class="tips__item">服务专业</div>
-            <div class="tips__item">服务专业服务专业服务专业</div>
-            <div class="tips__item">服务专业</div>
-            <div class="tips__item">服务专业</div>
-            <div class="tips__item">服务专业</div>
-            <div class="tips__item">服务专业服务专业服务专业</div>
-            <div class="tips__item">服务专业</div>
-            <div class="tips__item">服务专业</div>
+          <div
+            v-if="
+              Array.isArray(custRecPlanner.tagNameList) &&
+              custRecPlanner.tagNameList.length
+            "
+            class="tips"
+          >
+            <div
+              v-for="(item, i) in custRecPlanner.tagNameList"
+              :key="i"
+              class="tips__item"
+            >
+              {{ item }}
+            </div>
           </div>
         </div>
         <div class="planner__avatars">
@@ -81,14 +86,17 @@
             <img class="avatars__big" :src="custRecPlanner.portrait" />
             <img class="avatars__star" :src="hdStarImg" />
             <img
+              v-for="(item, i) in custPlanners"
+              :key="i"
               class="avatars__list"
-              src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-            /><img
-              class="avatars__list avatars__list--two"
-              src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-            /><img
-              class="avatars__list avatars__list--three"
-              src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
+              :class="[
+                i === 1
+                  ? 'avatars__list--two'
+                  : i === 2
+                  ? 'avatars__list--three'
+                  : '',
+              ]"
+              :src="item.portrait"
             />
           </div>
         </div>
@@ -127,6 +135,13 @@ export default {
         return {}
       },
     },
+    // 多个钻展规划师
+    planners: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
   },
   data() {
     return {
@@ -149,6 +164,15 @@ export default {
     },
     custRecPlanner() {
       return this.recPlanner
+    },
+    custPlanners() {
+      if (Array.isArray(this.planners) && this.planners.length) {
+        const temp = this.planners
+        // 只取3个人
+        return temp.slice(0, 3)
+      } else {
+        return []
+      }
     },
   },
   mounted() {
