@@ -58,14 +58,14 @@
 import { mapActions } from 'vuex'
 import { List, TopNavBar } from '@chipspc/vant-dgg'
 import ShareModal from '@/components/common/ShareModal.vue'
-import Title from '~/components/detail/Title1.vue'
+import Title from '~/components/detail/server/Title.vue'
 import CommentBox from '~/components/detail/comment/CommentBox.vue'
 import OrderCase from '~/components/detail/OrderCase.vue'
 import OrderDynamic from '~/components/detail/OrderDynamic.vue'
 import VouchersSelect from '~/components/detail/server/NewVouchersSelect.vue'
 // import ContainProject from '~/components/detail/ContainProject.vue'
 import ContainContent from '~/components/detail/ContainContent.vue'
-import TcPlanners from '~/components/detail/TcPlanners1.vue'
+import TcPlanners from '~/components/detail/server/TcPlanners.vue'
 import ServiceDetail from '~/components/detail/ServiceDetail.vue'
 import RelatedRecommend from '~/components/detail/RelatedRecommend.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
@@ -73,7 +73,7 @@ import CaseNew from '~/components/detail/CaseNew'
 import PageMidAd from '~/components/detail/server/PageMidAd'
 import getUserSign from '~/utils/fingerprint'
 import Header from '~/components/detail/server/Header'
-import { productDetailsApi, recommendApi, shopApi } from '~/api'
+import { productDetailsApi, recommendApi, shopApi, evaluateApi } from '~/api'
 import { copyToClipboard } from '~/utils/common'
 import imHandle from '~/mixins/imHandle'
 import detailMixin from '~/mixins/servedetail'
@@ -102,6 +102,40 @@ export default {
   mixins: [imHandle, detailMixin],
   layout: 'keepAlive',
   watchQuery: ['productId'],
+  data() {
+    return {
+      comments: {
+        totalCount: 0, // 初始化评论字段,防止程序报错
+        records: [],
+      },
+    }
+  },
+  mounted() {
+    // 获取评价
+    this.getCommentsApi()
+  },
+  methods: {
+    // 得到评价内容
+    async getCommentsApi() {
+      try {
+        const params = {
+          start: 1,
+          limit: 10,
+          ext1: this.sellingDetail.id, // 商品id
+        }
+        const { data, code, message } = await this.$axios.post(
+          evaluateApi.getGoodsEvaluate,
+          params
+        )
+        if (code !== 200) {
+          throw new Error(message)
+        }
+        this.comments = data
+      } catch (e) {
+        console.log(e)
+      }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>
