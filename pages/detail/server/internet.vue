@@ -5,9 +5,6 @@
     <div class="template">
       <!-- header-->
       <Header />
-      <!--start 会员价 -->
-      <!-- <MemberPrice></MemberPrice> -->
-
       <!--S 第一板块-->
       <Title :comment="comments" @onComment="commentHandler" />
       <!--E 第一板块-->
@@ -15,9 +12,6 @@
       <!--S 第二板块 领券 SKU-->
       <VouchersSelect ref="sku" :planner-detail="tcPlannerBooth" />
       <!--E 第二板块 领券 SKU-->
-      <!--S 第三板块 包含项目-->
-      <!-- <ContainProject /> -->
-      <!--E 第三板块 包含项目-->
       <!--S 第三板块 包含服务-->
       <ContainContent />
       <!--E 第三板块 包含服务-->
@@ -41,7 +35,6 @@
         comp-type="sc"
         :detail-data="sellingDetail.salesGoodsOperatings.clientDetails[0]"
       />
-      <!--S 第十板块 服务详情-->
       <!--S 第十板块 猜你需要-->
       <sp-list
         v-model="loading"
@@ -82,15 +75,12 @@ export default {
     [List.name]: List,
     Title,
     VouchersSelect,
-    // ContainProject,
     ContainContent,
     TcPlanners,
     ServiceDetail,
     RelatedRecommend,
     bottomBar,
-    // MemberPrice,
     CommentBox,
-    // OrderCase,
     OrderDynamic,
     CaseNew,
     PageMidAd,
@@ -100,20 +90,8 @@ export default {
   layout: 'keepAlive',
   watchQuery: ['productId'],
   data() {
-    return {
-      comments: {
-        totalCount: 0, // 初始化评论字段,防止程序报错
-        records: [],
-      },
-    }
+    return {}
   },
-  computed: {
-    sellingDetail() {
-      // 获取客户端展示信息
-      return this.$store.state.sellingGoodsDetail.sellingGoodsData
-    },
-  },
-  mounted() {},
   methods: {},
 }
 </script>
