@@ -59,8 +59,11 @@
       <div class="planner">
         <div class="planner__info">
           <div class="name">
-            <div class="name__name">谢知之</div>
-            <div class="name__score"><span>110</span>薯片分</div>
+            <div class="name__name">{{ custRecPlanner.userName }}</div>
+            <div class="name__score">
+              <span>{{ custRecPlanner.point }}</span
+              >薯片分
+            </div>
           </div>
           <div class="tips">
             <div class="tips__item">服务专业</div>
@@ -75,10 +78,7 @@
         </div>
         <div class="planner__avatars">
           <div class="avatars">
-            <img
-              class="avatars__big"
-              src="https://cdn.shupian.cn/cms/du7tol34xm80000.jpg"
-            />
+            <img class="avatars__big" :src="custRecPlanner.portrait" />
             <img class="avatars__star" :src="hdStarImg" />
             <img
               class="avatars__list"
@@ -119,6 +119,15 @@ export default {
     [ShareSheet.name]: ShareSheet,
   },
   mixins: [imHandle],
+  props: {
+    // 钻展规划师
+    recPlanner: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
+  },
   data() {
     return {
       hdImg: pageGoodDetail.headbg,
@@ -137,6 +146,9 @@ export default {
     // 这里有可能为服务商品,有可能为交易商品。所以在这里重新赋值
     goodDetail() {
       return this.sellingDetail
+    },
+    custRecPlanner() {
+      return this.recPlanner
     },
   },
   mounted() {

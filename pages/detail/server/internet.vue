@@ -4,7 +4,7 @@
     <ShareModal />
     <div class="template">
       <!-- header-->
-      <Header />
+      <Header :rec-planner="tcPlannerBooth" />
       <!--S 第一板块-->
       <Title :comment="comments" @onComment="commentHandler" />
       <!--E 第一板块-->
