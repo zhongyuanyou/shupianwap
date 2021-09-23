@@ -171,8 +171,6 @@
     <client-only>
       <openApp />
     </client-only>
-    <!-- E 内容 -->
-    <LoadingCenter v-show="loadingWx" />
   </div>
 </template>
 
@@ -199,9 +197,8 @@ import SearchPopup from '@/components/planner/SearchPopup'
 import PlannerSearchItem from '@/components/planner/PlannerSearchItem.vue'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 import imHandle from '@/mixins/imHandle'
-import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
-import { planner, dict, goods, wxcustomer } from '@/api'
+import { planner, dict, goods } from '@/api'
 import { callPhone, parseTel } from '@/utils/common'
 
 const SORT_CONFIG = [
@@ -266,7 +263,6 @@ export default {
     SearchPopup,
     PlannerSearchItem,
     LoadingDown,
-    LoadingCenter,
     Search,
   },
   layout: 'keepAlive',
@@ -290,7 +286,6 @@ export default {
       regionsOption: [],
       refreshing: false,
       loading: true,
-      loadingWx: false,
       error: false,
       finished: false,
       pageOption: DEFAULT_PAGE,
@@ -704,8 +699,6 @@ export default {
               name: userName,
               userId: mchUserId,
               userType: type,
-              userCenterId: data.userCenterId,
-              mchDetailId: data.mchDetailId,
             },
             (res) => {
               const { code } = res || {}
@@ -722,109 +715,17 @@ export default {
           console.error('uPIM error:', error)
         }
       } else {
-        // 判断跳转IM还是微信
-        this.getJumpMode(data)
-        // const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
-        // // const isLogin = await this.judgeLoginMixin()
-        // // if (isLogin) {
-        // this.creatImSessionMixin({
-        //   imUserId: mchUserId,
-        //   imUserType,
-        // })
-        // // }
-      }
-    },
-    /**
-     * @description 获取跳转方式
-     */
-    getJumpMode(data) {
-      this.loadingWx = true
-      const { mchUserId, mchDetailId, type } = data
-      if (!mchDetailId) {
-        this.loadingWx = false
-        console.log('mchDetailId不存在,直接跳IM')
         const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
-        // IM平台
+        // const isLogin = await this.judgeLoginMixin()
+        // if (isLogin) {
         this.creatImSessionMixin({
           imUserId: mchUserId,
           imUserType,
         })
-        return
+        // }
       }
-      wxcustomer
-        .getJumpMode({
-          merchantId: mchDetailId,
-        })
-        .then((res) => {
-          const { jumpButton = null } = res
-          this.loadingWx = false
-          if (jumpButton) {
-            // IM平台
-            if (jumpButton === 'WX') {
-              // WX: 微信客服
-              this.toWechat(data)
-            } else {
-              const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
-              // IM平台
-              this.creatImSessionMixin({
-                imUserId: mchUserId,
-                imUserType,
-              })
-            }
-            return
-          }
-          Toast({
-            message: res.message || '网络异常，稍后重试',
-            iconPrefix: 'sp-iconfont',
-            icon: 'popup_ic_fail',
-          })
-        })
-        .catch((err) => {
-          this.loadingWx = false
-          Toast({
-            message: err || '网络异常，稍后重试',
-            iconPrefix: 'sp-iconfont',
-            icon: 'popup_ic_fail',
-          })
-        })
     },
-    /**
-     * @description 获取微信客服链接
-     * @param crispsUserId 薯片用户ID
-     * @param plannerId 规划师ID（mchUserId）商户中心ID
-     * @param channel  渠道   H5(h5)/MINI(小程序)
-     * @param userCenterId  规划师用户中心ID
-     */
-    toWechat(data) {
-      const { mchUserId, userCenterId } = data
-      const { userId = '' } = this.userInfo
-      wxcustomer
-        .getWechatUrl({
-          crispsUserId: userId,
-          plannerId: mchUserId,
-          channel: 'H5',
-          userCenterId,
-        })
-        .then((res) => {
-          const { serviceLink = null } = res
-          if (serviceLink) {
-            serviceLink && (window.location.href = serviceLink)
-            return
-          }
-          Toast({
-            message: res.message || '网络异常，稍后重试',
-            iconPrefix: 'sp-iconfont',
-            icon: 'popup_ic_fail',
-          })
-        })
-        .catch((err) => {
-          Toast({
-            message: err || '网络异常，稍后重试',
-            iconPrefix: 'sp-iconfont',
-            icon: 'popup_ic_fail',
-          })
-        })
-    },
+
     // app获取用户信息
     getUserInfo() {
       return new Promise((resolve, reject) => {
