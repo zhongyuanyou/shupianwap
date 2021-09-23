@@ -1,67 +1,14 @@
 <template>
   <section>
     <ShareModal />
-    <!-- <DetailTemplate scene-id1="app-fwcpxq-01" scene-id2="app-jycpxq-02" /> -->
     <div class="template">
-      <!--S 导航栏-->
-      <sp-sticky
-        z-index="5"
-        :class="{
-          scroTopStyle: Boolean(opacity),
-        }"
-        @scroll="scrollHandle"
-      >
-        <sp-top-nav-bar
-          ellipsis
-          :background="`rgba(255,255,255,0)`"
-          @on-click-left="onClickLeft"
-        >
-          <template #left>
-            <div v-if="!isShare">
-              <my-icon name="nav_ic_back" size="0.4rem" color="#fff"></my-icon>
-            </div>
-          </template>
-          <template #right>
-            <div>
-              <my-icon
-                :class="sellingDetail.isSave ? 'icon-red' : ''"
-                style="margin-right: 0.36rem"
-                :name="sellingDetail.isSave ? 'shoucang_mian' : 'shoucang'"
-                size="0.4rem"
-                :color="sellingDetail.isSave ? '#ec5330' : '#fff'"
-                @click.native="handleClickSave"
-              />
-            </div>
-            <div>
-              <my-icon
-                style="margin-right: 0.36rem"
-                name="nav_ic_shop"
-                size="0.4rem"
-                color="#fff"
-                @click.native="addCart"
-              />
-            </div>
-            <div>
-              <my-icon
-                name="nav_ic_share"
-                size="0.4rem"
-                color="#fff"
-                @click.native="onClickRight"
-              />
-            </div>
-          </template>
-        </sp-top-nav-bar>
-      </sp-sticky>
-      <!--E 导航栏-->
-      <!--S banner-->
-      <Banner :images="imgFileIdPaths" />
-      <!--S banner-->
-
+      <!-- header-->
+      <Header :rec-planner="tcPlannerBooth" />
       <!--start 会员价 -->
       <!-- <MemberPrice></MemberPrice> -->
 
       <!--S 第一板块-->
-      <Title :comment="commentdata[0].tit" @onComment="comment" />
+      <Title :comment="comments" @onComment="commentHandler" />
       <!--E 第一板块-->
       <PageMidAd :ad-location-code="'ad100399'" />
       <!--S 第二板块 领券 SKU-->
@@ -78,12 +25,16 @@
       <ContainContent />
       <!--E 第三板块 包含服务-->
       <!--S 评论-->
-      <CommentBox id="comment" :list="commentdata" />
+      <CommentBox
+        id="comment"
+        :comment="comments.records[0]"
+        :good-id="sellingDetail.id"
+      />
       <!--E 评论-->
       <!--S 动态 -->
       <OrderDynamic></OrderDynamic>
       <!--S 第五板块 推荐规划师-->
-      <TcPlanners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
+      <TcPlanners :recommend-planner="planners" />
       <!--E 第五板块 推荐规划师-->
       <!--S  精选案例-->
       <!-- <OrderCase></OrderCase> -->
@@ -105,20 +56,12 @@
         <RelatedRecommend ref="remNeed" :product-data="recommendProduct" />
       </sp-list>
       <!--E 第十板块 猜你需要-->
-      <bottomBar :im-jump-query="imJumpQuery" />
-      <!--    分享组件-->
-      <sp-share-sheet
-        v-model="showShare"
-        title="立即分享给好友"
-        :options="shareOptions"
-        @select="onSelect"
-      />
+      <bottomBar :planner-info="tcPlannerBooth" />
     </div>
   </section>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
 import { Sticky, List, TopNavBar, ShareSheet } from '@chipspc/vant-dgg'
 import ShareModal from '@/components/common/ShareModal.vue'
 import Banner from '~/components/detail/Banner.vue'
@@ -143,6 +86,8 @@ import { productDetailsApi, recommendApi, shopApi } from '~/api'
 import { copyToClipboard } from '~/utils/common'
 import imHandle from '~/mixins/imHandle'
 import detailMixin from '~/mixins/servedetail'
+import Header from '~/components/detail/server/Header'
+
 export default {
   name: 'ItDetail',
   components: {
@@ -151,7 +96,6 @@ export default {
     [Sticky.name]: Sticky,
     [List.name]: List,
     [ShareSheet.name]: ShareSheet,
-    Banner,
     Title,
     RecConten,
     VouchersSelect,
@@ -162,13 +106,13 @@ export default {
     RelatedRecommend,
     bottomBar,
     // MemberPrice,
-    MyIcon,
     CommentBox,
     RecLawyer,
     // OrderCase,
     OrderDynamic,
     CaseNew,
     PageMidAd,
+    Header,
   },
   mixins: [imHandle, detailMixin],
   layout: 'keepAlive',
@@ -176,24 +120,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.scroTopStyle {
-  ::v-deep.sp-sticky {
-    border: 1px solid #f4f4f4;
-    .sp-top-nav-bar {
-      background-color: #fff !important;
-      .spiconfont {
-        color: #1a1a1a !important;
-      }
-      // #icon-red {
-      //   color: #4974f5 !important;
-      // }
-      .icon-red {
-        color: #ec5330 !important;
-      }
-    }
-  }
-}
-
 .template {
   width: 100%;
   height: 100%;
