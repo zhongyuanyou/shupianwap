@@ -242,6 +242,7 @@ const billStatusCodesObj = {
 export default {
   data() {
     return {
+      showJiufenModal: false,
       remainTotalPayIds: '', // 分批支付剩余支付批次id
       addOrderXy: {},
       tranXy: {},
@@ -450,6 +451,10 @@ export default {
           this.$xToast.error(err.message || '获取支付信息失败')
           console.error(err)
         })
+    },
+    // 纠纷弹窗
+    handleShowJiufen() {
+      this.$refs.jiufenModal.showJiufenModal = true
     },
     // 判断是分批支付还是全款支付等
     checkCusBatchPayType() {
@@ -677,10 +682,10 @@ export default {
     // 判断订单售后状态 是否展示售后按钮 展示何种售后按钮 0不售后 1退款售后 可售后 2 售后中 3售后完成 4 部分锁定 5已锁定
     checkAfterSaleStatus(orderData) {
       orderData = orderData || this.orderData || this.orderDetail
-      // 售后延期
-      if (orderData) {
-        return 0
-      }
+      // // 售后延期
+      // if (orderData) {
+      //   return 0
+      // }
       // 1.意向单、担保交易订单不展示售后按钮，
       if (
         orderData.orderType === 0 ||
@@ -1443,6 +1448,30 @@ export default {
             orderId: orderData.id,
           },
         })
+      }
+    },
+    // 纠纷判断
+    checkJjiufen(orderData) {
+      // 担保交易订单办理中展示纠纷按钮
+      orderData = orderData || this.orderData
+      const proceingOrderStatus = [
+        'ORDER_ORDER_SALE_STATUS_HANDLING',
+        'ORDER_ORDER_SALE_STATUS_HANDLED',
+        'ORDER_ORDER_TRADE_STATUS_HANDLING',
+        'ORDER_ORDER_TRADE_STATUS_HANDLED',
+        'ORDER_ORDER_RESOURCE_STATUS_HANDLING',
+        'ORDER_ORDER_RESOURCE_STATUS_HANDLED',
+        'ORDER_ORDER_SERVER_STATUS_HANDLING',
+        'ORDER_ORDER_SERVER_STATUS_HANDLED',
+      ]
+      // orderData.disputeStatus =
+      //   orderData.disputeStatus || orderData.orderSkuEsList[0].disputeStatus
+      if (
+        proceingOrderStatus.indexOf(orderData.orderStatusNo) > -1 &&
+        orderData.payType &&
+        orderData.payType === 'ORDER_PAY_MODE_SECURED'
+      ) {
+        return 1
       }
     },
   },

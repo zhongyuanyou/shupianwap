@@ -1,16 +1,12 @@
 <template>
   <div ref="orderPage" class="order-page">
-    <Header
-      v-if="!isInApp && !isApplets"
-      title="我的订单"
-      :hide-back="true"
-      :hide-shadow="true"
-    >
+    <Header title="我的订单" :hide-back="!isInApp" :hide-shadow="true">
       <template #right>
         <div class="btn-car" @click="toCar">购物车</div>
       </template>
     </Header>
     <div
+      v-show="orderPageType !== 'submit'"
       class="top-nav"
       :style="{ top: !isInApp && !isApplets ? '44px' : '0' }"
     >
@@ -23,7 +19,12 @@
         <sp-tab name="ORDER_CUS_STATUS_CANCELLED" title="已取消"></sp-tab>
       </sp-tabs>
     </div>
-    <div ref="scrollView" class="page-list" @scroll="scollChange">
+    <div
+      ref="scrollView"
+      class="page-list"
+      :class="isInApp ? 'page-list2' : ''"
+      @scroll="scollChange"
+    >
       <div class="scroll-inner">
         <sp-skeleton
           v-for="val in 10"
@@ -109,6 +110,7 @@
         >
       </p>
     </sp-dialog>
+    <JiufenModal ref="jiufenModal" />
   </div>
 </template>
 
@@ -119,6 +121,7 @@ import Header from '@/components/common/head/header.vue'
 import OrderItem from '@/components/order/OrderItem.vue'
 import CancelOrder from '@/components/order/CancelOrder.vue' // 取消订单弹窗
 import PayModal from '@/components/order/PayModal.vue' // 支付弹窗
+import JiufenModal from '@/components/order/JiufenDialog.vue'
 import Bottombar from '@/components/common/nav/Bottombar.vue'
 import orderApi from '@/api/order'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
@@ -136,6 +139,7 @@ export default {
     Bottombar,
     PayModal,
     LoadingCenter,
+    JiufenModal,
   },
   mixins: [OrderMixins],
   data() {
@@ -151,6 +155,7 @@ export default {
       fromPage: 'orderList',
       noMore: false,
       loadingMore: false,
+      orderPageType: '',
     }
   },
   computed: {
@@ -179,6 +184,10 @@ export default {
       } else if (pageType === '5') {
         this.selectedOrderStatus = 'ORDER_CUS_STATUS_UNSUBMITE'
       }
+    }
+    this.orderPageType = this.$route.query.orderType
+    if (this.orderPageType) {
+      this.selectedOrderStatus = 'ORDER_CUS_STATUS_UNSUBMITE'
     }
     this.getOrderList()
     // 获取下单协议
@@ -296,7 +305,6 @@ export default {
     },
     handleClickItem(type, order) {
       this.initItem(order)
-      console.log(order)
       switch (type) {
         case 1:
           // 取消订单 首先判断是否有关联订单
@@ -340,6 +348,10 @@ export default {
           // 未提交转提交订单
           this.toSubmitOrder(order)
           break
+        case 10:
+          // 未提交转提交订单
+          this.handleShowJiufen(order)
+          break
       }
     },
     toSubmitOrder(order) {
@@ -358,6 +370,9 @@ export default {
 <style lang="less" scoped>
 .btn-car {
   margin-right: 40px;
+  font-size: 32px;
+  color: #222222;
+  font-weight: bold;
 }
 .order-page {
   min-height: 100%;
@@ -390,6 +405,9 @@ export default {
     margin-top: 88px;
     height: calc(100vh - 200px);
     overflow-y: scroll;
+  }
+  .page-list2 {
+    margin-top: 0 !important;
   }
 }
 .no-data-area {

@@ -26,7 +26,7 @@
           <div class="right">
             <h1 class="tit">
               {{
-                item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
+                item.salesGoodsSubVos && item.salesGoodsSubVos.length
                   ? item.salesGoodsSubVos[0].goodsSubName
                   : item.name
               }}
@@ -45,30 +45,66 @@
                   : ''
               }}
             </p>
-
-            <p v-if="item.salesGoodsSubVos" class="price">
+            <!-- <p class="tag">{{ item.classCodeName }}</p> -->
+            <p class="price">
               <span
-                ><b>{{
-                  getGoodsSubById(item.salesGoodsSubVos[0].goodsSubId)
-                    .salesPrice
-                }}</b
+                ><b>{{ item.salesPrice }}</b
                 >元</span
               >
               <i>{{
                 $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
               }}</i>
             </p>
-            <p v-if="item.saleGoodsSubs" class="price">
-              <span
-                ><b>{{
-                  getGoodsSubById(item.saleGoodsSubs[0].goodsSubId).salesPrice
-                }}</b
-                >元</span
+            <!--
+            <div v-if="$route.query.type === 'shopcar'" class="list">
+              <div
+                v-for="(listitem, listindex) in item.saleGoodsSubs"
+                :key="listindex"
               >
-              <i>{{
-                $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
-              }}</i>
-            </p>
+                <p class="name">{{ listitem.goodsSubName || '-' }}</p>
+                <p class="data">{{ listitem.goodsSubDetailsName || '-' }}</p>
+                <p class="price">
+                  {{ `x1` }}
+                </p>
+              </div>
+            </div>
+            <div v-else class="list">
+              <div
+                v-for="(listitem, listindex) in item.salesGoodsSubVos"
+                :key="listindex"
+              >
+                <p class="name">
+                  <span v-if="listitem.goodsType === 'PRO_CLASS_TYPE_SALES'">
+                    销售产品
+                  </span>
+                  <span
+                    v-else-if="listitem.goodsType === 'PRO_CLASS_TYPE_SERVICE'"
+                  >
+                    服务产品
+                  </span>
+                  <span
+                    v-else-if="
+                      listitem.goodsType === 'PRO_CLASS_TYPE_SERVICE_RESOURCE'
+                    "
+                  >
+                    服务资源
+                  </span>
+                  <span
+                    v-else-if="
+                      listitem.goodsType === 'PRO_CLASS_TYPE_TRANSACTION'
+                    "
+                  >
+                    交易资源
+                  </span>
+                </p>
+                <p class="data">{{ listitem.goodsSubName }}</p>
+                <p class="price">
+                  {{ listitem.settlementPriceEdit }}
+                  {{ `x1` }}
+                </p>
+              </div>
+            </div>
+             -->
           </div>
         </div>
         <div class="inpbox">
@@ -112,7 +148,7 @@
         <CellGroup>
           <Cell
             title="商品及服务总数"
-            :value="(order.num || order.goodsTotal || 0) + '件'"
+            :value="order.num || order.goodsTotal || 0 + '件'"
             value-class="black"
           />
           <Cell
@@ -174,13 +210,6 @@
             is-link
             @click="gocontractedit()"
           />
-          <Cell
-            title="支付方式"
-            :value="payMethod.text"
-            is-link
-            value-class="black"
-            @click="openPayMethod"
-          />
         </CellGroup>
       </div>
       <div class="agreement">
@@ -204,7 +233,7 @@
       </p>
        -->
       <p class="left">
-        应付：<span>
+        应付:<span>
           <b>{{ settlementInfo.needPayTotalMoney }}</b> 元</span
         >
       </p>
@@ -224,9 +253,7 @@
       title="优惠"
       help="使用说明"
       :origin-price="
-        $route.query.type === 'shopcar'
-          ? order.skuTotalPrice
-          : settlementInfo.skuTotalPrice
+        $route.query.type === 'shopcar' ? order.skuTotalPrice : order.salesPrice
       "
       :tablist="couponInfo.tablist"
       :datalist="couponInfo.datalist"
@@ -234,13 +261,7 @@
       @change="conponChange"
       @close="close"
     ></Popup>
-    <PayMethodPopup
-      :show="payMethod.show"
-      :list="payMethod.list"
-      :value="payMethod.value"
-      @change="payMethodPopupChange"
-      @close="closePayMethod"
-    ></PayMethodPopup>
+
     <CardPopup
       ref="cardPopup"
       :show="card.show"
@@ -272,8 +293,6 @@ import Popup from '@/components/PlaceOrder/Popup.vue'
 import CardPopup from '@/components/PlaceOrder/CardPopup.vue'
 import Contract from '@/components/PlaceOrder/contract.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
-import PayMethodPopup from '@/components/PlaceOrder/PayMethodPopup.vue'
-
 import { productDetailsApi, auth, shopCart } from '@/api'
 import cardApi from '@/api/card'
 import { coupon, order, actCard } from '@/api/index'
@@ -290,7 +309,6 @@ export default {
     [Skeleton.name]: Skeleton,
     LoadingCenter,
     Contract,
-    PayMethodPopup,
   },
   data() {
     return {
@@ -330,16 +348,6 @@ export default {
         ],
         datalist: [], // 支持的列表
         nolist: [], // 不支持的列表
-      },
-      payMethod: {
-        show: false,
-        list: [
-          { value: 'ORDER_PAY_MODE_ONLINE', text: '在线支付' },
-          { value: 'ORDER_PAY_MODE_OFFLINE', text: '线下支付' },
-          // { value: 'ORDER_PAY_MODE_SECURED', text: '担保交易' },
-        ],
-        value: 'ORDER_PAY_MODE_ONLINE', // 'ORDER_PAY_MODE_ONLINE',
-        text: '在线支付', // '在线支付',
       },
 
       contaract: '',
@@ -404,7 +412,8 @@ export default {
           this.order.list = this.order.productVo
           this.price = this.order.skuTotalPrice
           this.skeletonloading = false
-
+          this.getInitData(5)
+          this.getInitData(6)
           this.settlement()
         })
         .catch((e) => {
@@ -449,6 +458,8 @@ export default {
           this.order.list.push(obj)
           this.order.num = this.order.list.length
           this.price = this.order.salesPrice
+          this.getInitData(5)
+          this.getInitData(6)
 
           this.productList = new Array(1).fill({
             categoryCode: data.classCodeLevel.split(',')[0],
@@ -517,18 +528,13 @@ export default {
         )
         .then((result) => {
           console.log('settlement', result)
-          // result.skuTotalPrice = result.skuTotalPrice / 100
-          // result.needPayTotalMoney = result.needPayTotalMoney / 100
+          result.skuTotalPrice = result.skuTotalPrice / 100
+          result.needPayTotalMoney = result.needPayTotalMoney / 100
           this.settlementInfo = result
-
-          if (this.couponInfo.datalist.length === 0) {
-            this.getInitData(5)
-            this.getInitData(6)
-          }
         })
         .catch((e) => {
           this.loading = false
-          const msg = e?.data?.error
+          const msg = e.data.error
           Toast({
             message: msg,
             iconPrefix: 'sp-iconfont',
@@ -538,19 +544,7 @@ export default {
           console.error(e)
         })
     },
-    getGoodsSubById(goodsSubId) {
-      let goodsSub = {}
-      this.settlementInfo.saleGoodsList.forEach((goods) => {
-        goods.goodsList.forEach((item) => {
-          console.log(goodsSubId, item.goodsSubId)
-          if (item.goodsSubId === goodsSubId) {
-            goodsSub = item
-          }
-        })
-      })
-      console.log('goodsSub', goodsSub)
-      return goodsSub
-    },
+    getGoodsSubId() {},
     async getProtocol(categoryCode) {
       if (!categoryCode) {
         this.$xToast.warning('请传入需要获取的协议!')
@@ -652,8 +646,7 @@ export default {
           }
           this.Orderform.discount = new Array(1).fill(arr)
         }
-
-        this.Orderform.payType = this.payMethod.value // 'ORDER_PAY_MODE_ONLINE'
+        this.Orderform.payType = 'ORDER_PAY_MODE_ONLINE'
         this.Orderform.cusOrderPayType = cusOrderPayType
         this.Orderform.isFromCart = isFromCart
         this.Orderform.orderProvinceNo = this.$store.state.city.defaultCity.pid
@@ -678,33 +671,20 @@ export default {
           .placeOrder({ axios: this.$axios }, this.Orderform)
           .then((result) => {
             this.loading = false
-
-            if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
-              this.$xToast.error('请前往线下银行网点进行支付！')
-            } else {
-              Toast({
-                message: '下单成功',
-                iconPrefix: 'sp-iconfont',
-                icon: 'popup_ic_success',
-                overlay: true,
-              })
-            }
+            Toast({
+              message: '下单成功',
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_success',
+              overlay: true,
+            })
             setTimeout(() => {
-              if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
-                // 线下付款
-                this.$router.replace({
-                  path: '/order',
-                  query: {},
-                })
-              } else {
-                this.$router.replace({
-                  path: '/pay/payType',
-                  query: {
-                    fromPage: 'orderList',
-                    cusOrderId: result.cusOrderId,
-                  },
-                })
-              }
+              this.$router.replace({
+                path: '/pay/payType',
+                query: {
+                  fromPage: 'orderList',
+                  cusOrderId: result.cusOrderId,
+                },
+              })
             }, 2000)
           })
           .catch((e) => {
@@ -736,6 +716,25 @@ export default {
 
     //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
+      // brandPrice: ""
+      // classCode: "FL20210425163710"
+      // classCodeLevel: "FL20210425163708,FL20210425163709,FL20210425163710"
+      // discountMoney: "0"
+      // goodsList: [{productContractorProfits: "250", brandItemVos: [], goodsId: "1379373728185897714",…}]
+      // goodsNo: ""
+      // id: "1379373728185897714"
+      // name: "会员商品"
+      // needPayTotalMoney: "1500"
+      // saleGoodsContractorProfits: "250"
+      // saleGoodsContractorProfitsSum: "250"
+      // saleGoodsOverseas: "80"
+      // saleGoodsOverseasSum: "80"
+      // saleNum: 1
+      // settlementPriceEdit: "700"
+      // skuTotalPrice: "1500"
+      // skuTotalPriceSum: "1500"
+      // version: "0
+
       this.settlementInfo.saleGoodsList.map((item) => {
         return {
           goodsId: item.id,
@@ -750,18 +749,9 @@ export default {
       })
       const list = []
       for (let i = 0; i < this.order.list.length; i++) {
-        let itemPrice = this.order.list[i].salesPrice
-        if (
-          this.order.list[i].salesGoodsSubVos &&
-          this.order.list[i].salesGoodsSubVos.length > 0
-        ) {
-          const id = this.order.list[i].salesGoodsSubVos[0].goodsSubId
-          itemPrice = this.getGoodsSubById(id).salesPrice
-        }
-
         const item = {
           goodsId: this.order.list[i].id,
-          price: itemPrice, // this.order.list[i].salesPrice,
+          price: this.order.list[i].salesPrice,
           goodsNum: this.order.list[i].salesVolume || 1,
           goodsClassCode: this.order.list[i].classCode,
         }
@@ -780,8 +770,7 @@ export default {
             findType: index,
             userId: this.$store.state.user.userId,
             actionId: arr,
-            orderPrice: this.settlementInfo.needPayTotalMoney,
-            // getGoodsSubById(item.salesGoodsSubVos[0].goodsSubId).salesPrice
+            orderPrice: price,
             orderByWhere: 'createTime=desc',
             limit: 50,
             page: 1,
@@ -857,24 +846,12 @@ export default {
       this.card.cardPrice = num
       this.card.selectedItem = item || {}
     },
-    payMethodPopupChange(item) {
-      this.payMethod.value = item.value
-      this.payMethod.text = item.text
-    },
-
     openPopupfn() {
       this.couponInfo.popupshow = true
     },
     openCardFn() {
       this.card.show = true
     },
-    openPayMethod() {
-      this.payMethod.show = true
-    },
-    closePayMethod() {
-      this.payMethod.show = false
-    },
-
     close() {
       this.couponInfo.popupshow = false
     },
@@ -1012,7 +989,6 @@ export default {
       }
       .black {
         color: #1a1a1a;
-        font-weight: bold;
       }
       .red {
         color: #ec5330;
@@ -1028,7 +1004,7 @@ export default {
           font-size: 22px;
           color: #ec5330;
           b {
-            font-size: 36px;
+            font-size: 30px;
           }
         }
       }
@@ -1037,9 +1013,6 @@ export default {
       margin-top: 24px;
       background: #fff;
       .ys {
-        color: #1a1a1a;
-      }
-      .black {
         color: #1a1a1a;
       }
     }

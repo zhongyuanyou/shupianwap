@@ -782,7 +782,7 @@ export default {
 .order_text {
   font-size: 28px;
   line-height: 44px;
-  padding: 30px 40px 20px 40px;
+  padding: 20px 40px 20px 40px;
   background: white;
   font-size: 26px;
   color: #222222;
@@ -796,7 +796,7 @@ export default {
   }
   p {
     border: none;
-    margin-bottom: 20px;
+    margin: 10px 0;
   }
   .last-money {
     padding: 20px 0 20px 0;
