@@ -1,3 +1,4 @@
+@import 'var.less';
 @componentsName: c-header;
 
 .@{componentsName} {
@@ -17,6 +18,7 @@
     }
   }
   .header {
+    .c-space-mixin();
     .bgcontent {
       position: relative;
       background-repeat: no-repeat;

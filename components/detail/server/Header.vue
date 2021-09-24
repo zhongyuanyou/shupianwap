@@ -120,7 +120,7 @@ import { pageGoodDetail } from '~/utils/static/imgs.js'
 import imHandle from '~/mixins/imHandle'
 
 export default {
-  name: 'GoodDetailPlannerHeader',
+  name: 'GoodDetailHeader',
   components: {
     [TopNavBar.name]: TopNavBar,
     [Sticky.name]: Sticky,
