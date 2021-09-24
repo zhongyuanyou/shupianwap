@@ -339,6 +339,7 @@ export default {
     // 调起IM
     // 发送模板消息(带图片)
     sendTemplateMsgWithImg(mchUserId, type, goodsInfo) {
+      console.log('goodsInfo', goodsInfo)
       // const isLogin = await this.judgeLoginMixin()
       // if (isLogin) {
       // 服务产品路由ID：IMRouter_APP_ProductDetail_Service

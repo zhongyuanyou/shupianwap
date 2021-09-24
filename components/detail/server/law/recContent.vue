@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div v-if="cList.length" class="container">
     <h3 class="c_title">维权攻略</h3>
     <div class="c_list">
       <div

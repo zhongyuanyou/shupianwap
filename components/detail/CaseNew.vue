@@ -116,11 +116,9 @@ export default {
       caseApi
         .case_list(params)
         .then((res) => {
-          console.log('案例列表', res)
           if (res.records && res.records.length) {
             this.showCase = true
             this.caseData = res.records[0]
-            console.log('this.caseData', this.caseData)
           }
         })
         .catch((err) => {
@@ -131,7 +129,6 @@ export default {
       this.$router.push('/caseexample/details?id=' + this.caseData.id)
     },
     toALL() {
-      console.log('classCodeLevelList', this.classCodeLevelList)
       let query = {}
       if (this.classCodeLevelList && this.classCodeLevelList.length > 0) {
         query = {

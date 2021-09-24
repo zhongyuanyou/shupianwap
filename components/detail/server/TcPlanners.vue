@@ -1,91 +1,97 @@
 <template>
-  <div class="container">
+  <div v-if="recommendPlanner.length" class="planners">
     <p class="planners_title">推荐规划师</p>
-    <div class="planners">
-      <sp-skeleton :row="6" :loading="recommendPlanner.length == 0">
-        <div
-          v-for="(item, index) in recommendPlanner"
-          :key="item.userCenterId"
-          class="planners_item"
-          :style="{ marginTop: index === 0 ? '0.42rem' : '0.66rem' }"
-        >
-          <div class="planners_item_lf">
-            <a
-              href="javascript:void(0);"
-              @click="plannerInfoUrlJump(item.mchUserId)"
-            >
-              <sp-image
-                width="0.8rem"
-                height="0.8rem"
-                round
-                fit="cover"
-                lazy-load
-                :src="$resizeImg(80, 80, item.portrait || PlannerHeadList)"
-              />
+    <!-- <sp-skeleton :row="6" :loading="recommendPlanner.length == 0"> -->
+    <div
+      v-for="(item, index) in recommendPlanner"
+      :key="item.userCenterId"
+      class="planners_item"
+      :style="{ marginTop: index === 0 ? '0.42rem' : '0.66rem' }"
+    >
+      <div class="planners_item_lf">
+        <a href="javascript:void(0);" @click="plannerInfoUrlJump(item)">
+          <sp-image
+            width="0.8rem"
+            height="0.8rem"
+            round
+            fit="cover"
+            lazy-load
+            :src="$resizeImg(80, 80, item.portrait || PlannerHeadList)"
+          />
+        </a>
+        <div class="info">
+          <div class="info_tp">
+            <a href="javascript:void(0);" @click="plannerInfoUrlJump(item)">
+              <p class="name">{{ item.userName }}</p>
             </a>
-            <div class="info">
-              <div class="info_tp">
-                <a
-                  href="javascript:void(0);"
-                  @click="plannerInfoUrlJump(item.mchUserId)"
-                >
-                  <p class="name">{{ item.userName }}</p>
-                </a>
-                <!-- <i v-if="item.postName" class="gold_icon">
-                  {{ item.postName }}
-                </i> -->
-                <i class="gold_icon"> 金牌规划师 </i>
-              </div>
-              <div class="info_bot">
-                <span class="num">{{ Number(item.point) }}</span
-                ><span class="txt"
-                  >薯片分 | {{ Number(item.payNum) }} 服务次数</span
-                >
-              </div>
-            </div>
+            <i v-if="item.postName ? true : false" class="gold_icon">
+              {{ item.postName }}
+            </i>
           </div>
-          <div class="planners_item_rt">
-            <sp-button
-              round
-              class="contact-btn"
-              @click="sendTemplateMsgWithImg(item.mchUserId, item.type)"
-              ><my-icon
-                class=""
-                name="notify_ic_chat"
-                size="0.424rem"
-                color="#4974F5"
-            /></sp-button>
-            <sp-button
-              round
-              class="contact-btn"
-              @click="handleTel(item.mchUserId)"
-              ><my-icon
-                class=""
-                name="notify_ic_tel"
-                size="0.423rem"
-                color="#4974F5"
-            /></sp-button>
+          <div class="info_bot">
+            <span class="num">{{ Number(item.point) }}</span
+            ><span class="txt">薯片分 | {{ Number(item.payNum) }}次服务</span>
+          </div>
+          <div class="info_bot_last">
+            <span
+              v-for="(tagItem, tagIndex) in item.tagNameList"
+              :key="tagIndex"
+            >
+              {{ tagItem }}
+            </span>
           </div>
         </div>
-      </sp-skeleton>
+      </div>
+      <div class="planners_item_rt">
+        <sp-button
+          v-md:p_IMClick
+          data-even_name="p_IMClick"
+          round
+          class="contact-btn"
+          data-im_type="售前"
+          :data-recommend_number="item.dggPlannerRecomLog || ''"
+          :data-planner_number="item.userCenterNo"
+          :data-planner_name="item.userName"
+          :data-crisps_fraction="item.point"
+          data-track_code="SPW000157"
+          @click="sendTemplateMsgWithImg(item.mchUserId, item.type, goodsInfo)"
+          ><my-icon
+            class=""
+            name="notify_ic_chat"
+            size="0.424rem"
+            color="#4974F5"
+        /></sp-button>
+        <sp-button
+          v-md:p_IMClick
+          round
+          class="contact-btn"
+          data-even_name="p_IMClick"
+          data-im_type="售前"
+          :data-recommend_number="item.dggPlannerRecomLog || ''"
+          :data-planner_number="item.userCenterNo"
+          :data-planner_name="item.userName"
+          :data-crisps_fraction="item.point"
+          data-track_code="SPW000157"
+          @click="handleTel(item.mchUserId)"
+          ><my-icon
+            class=""
+            name="notify_ic_tel"
+            size="0.423rem"
+            color="#4974F5"
+        /></sp-button>
+      </div>
     </div>
-    <!--    <p class="planners_sub_title">您的疑问，第一时间为您解答</p>-->
-    <!--    <div class="planners_question">-->
-    <!--      <input-->
-    <!--        type="text"-->
-    <!--        class="planners_question_input"-->
-    <!--        placeholder="请输入您想咨询的问题"-->
-    <!--      />-->
-    <!--      <div class="planners_question_bt">提问</div>-->
-    <!--    </div>-->
+    <!-- </sp-skeleton> -->
   </div>
 </template>
 
 <script>
 import { Image, Button, Toast, Skeleton } from '@chipspc/vant-dgg'
+import { parseTel } from '~/utils/common'
 import { planner } from '~/api'
-import { PlannerHeadList } from '~/config/constant'
 import imHandle from '~/mixins/imHandle'
+import { PlannerHeadList } from '~/config/constant'
+import { codeTranslate } from '~/utils/codeTranslate'
 
 export default {
   name: 'TcPlanners',
@@ -98,7 +104,110 @@ export default {
   props: {
     recommendPlanner: {
       type: Array,
-      default: () => [],
+      default: () => [
+        {
+          dggPlannerRecomLog: '22',
+          isAdmin: 0,
+          mchDetailId: '607997736314103030',
+          mchNo: 'PBU2031003',
+          mchUserId: '1118746589975071711',
+          officeAddressId: '607997736314106032',
+          payNum: 0,
+          phone:
+            '8E0AAED6CBC517BFAC3D8B65C2B4CD14*DGGJGZX*ca348ymOYo94+YZbc443636VCIwWrXtc228NCA==',
+          point: '5',
+          portrait:
+            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
+          profilePhotoId: '',
+          recentCompany: '企大顺测试一公司',
+          registerTime: '2021-05-18 17:15:05',
+          serveNum: 0,
+          status: 1,
+          statusName: '启用',
+          tagNameList: ['工商变更', '公司注册', '工商注册'],
+          type: 'MERCHANT_B',
+          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
+          userCenterId: '767839377378277605',
+          userCenterNo: 'U2120180102',
+          userCenterStatus: 1,
+          userCenterStatusName: '正常',
+          userName: '谢欢',
+        },
+        {
+          dggPlannerRecomLog: '22',
+          isAdmin: 0,
+          mchDetailId: '607997736314103030',
+          mchNo: 'PBU2031003',
+          mchUserId: '1118746589975071711',
+          officeAddressId: '607997736314106032',
+          payNum: 0,
+          phone:
+            '8E0AAED6CBC517BFAC3D8B65C2B4CD14*DGGJGZX*ca348ymOYo94+YZbc443636VCIwWrXtc228NCA==',
+          point: '5',
+          portrait:
+            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
+          profilePhotoId: '',
+          recentCompany: '企大顺测试一公司',
+          registerTime: '2021-05-18 17:15:05',
+          serveNum: 0,
+          status: 1,
+          statusName: '启用',
+          tagNameList: ['工商变更', '公司注册', '工商注册'],
+          type: 'MERCHANT_B',
+          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
+          userCenterId: '767839377378277605',
+          userCenterNo: 'U2120180102',
+          userCenterStatus: 1,
+          userCenterStatusName: '正常',
+          userName: '谢欢',
+        },
+        {
+          dggPlannerRecomLog: '22',
+          isAdmin: 0,
+          mchDetailId: '607997736314103030',
+          mchNo: 'PBU2031003',
+          mchUserId: '1118746589975071711',
+          officeAddressId: '607997736314106032',
+          payNum: 0,
+          phone:
+            '8E0AAED6CBC517BFAC3D8B65C2B4CD14*DGGJGZX*ca348ymOYo94+YZbc443636VCIwWrXtc228NCA==',
+          point: '5',
+          portrait:
+            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg',
+          profilePhotoId: '',
+          recentCompany: '企大顺测试一公司',
+          registerTime: '2021-05-18 17:15:05',
+          serveNum: 0,
+          status: 1,
+          statusName: '启用',
+          tagNameList: [
+            '工商变更',
+            '公司注册',
+            '工商注册',
+            '工商注册',
+            '工商注册',
+          ],
+          type: 'MERCHANT_B',
+          userCenterAuthStatus: 'AUTHENTICATION_SUCCESS',
+          userCenterId: '767839377378277605',
+          userCenterNo: 'U2120180102',
+          userCenterStatus: 1,
+          userCenterStatusName: '正常',
+          userName: '谢欢',
+        },
+      ],
+    },
+    imJumpQuery: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
+    operatingData: {
+      type: Object,
+      default: () => {
+        return {}
+      },
     },
   },
   data() {
@@ -110,25 +219,34 @@ export default {
     city() {
       return this.$store.state.city.currentCity
     },
-    // 产品详情
-    sellingDetail() {
-      // 获取客户端展示信息
+    goodsInfo() {
+      if (this.$route.path.match('detail/transactionDetails')) {
+        // 交易商品详情
+        return this.$store.state.tcProductDetail.detailData
+      }
       return this.$store.state.sellingGoodsDetail.sellingGoodsData
     },
   },
   methods: {
     // 规划师详情跳转
-    plannerInfoUrlJump(mchUserId) {
+    plannerInfoUrlJump(item) {
+      // 处理埋点
+      window.spptMd.spptTrackRow('p_plannerBoothClick', {
+        track_code: 'SPW000158',
+        planner_number: item.userCenterNo,
+        planner_name: item.userName,
+        crisps_fraction: item.point,
+        recommend_number: item.dggPlannerRecomLog || '',
+      })
       this.$router.push({
         path: '/planner/detail',
         query: {
-          mchUserId,
+          mchUserId: item.mchUserId,
+          requireCode: this.goodsInfo.classCodeLevelList[0],
         },
       })
     },
-    // 规划师拨号
     async handleTel(mchUserId) {
-      // 规划师拨号需要先登录
       try {
         // const isLogin = await this.judgeLoginMixin()
         // if (isLogin) {
@@ -137,7 +255,6 @@ export default {
           duration: 2000,
           forbidClick: true,
         })
-        console.log('sellingDetail', this.sellingDetail)
         await planner.awaitTip()
         const telData = await planner.newtel({
           areaCode: this.city.code,
@@ -149,8 +266,8 @@ export default {
             this.$store.state.user.mainAccountFull ||
             this.$cookies.get('mainAccountFull', { path: '/' }) ||
             '',
-          requireCode: this.sellingDetail.classCodeLevel.split(',')[0],
-          requireName: this.sellingDetail.classCodeLevelName.split('/')[0],
+          requireCode: this.goodsInfo.classCodeLevel.split(',')[0],
+          requireName: '',
           // id: mchUserId,
           // sensitiveInfoType: 'MCH_USER',
         })
@@ -187,66 +304,16 @@ export default {
         })
       }
     },
-    // 调起IM
-    // 发送模板消息(带图片)
-    sendTemplateMsgWithImg(mchUserId, type) {
-      // const isLogin = await this.judgeLoginMixin()
-      // if (isLogin) {
-      // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
-      // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
-      // 意向业务
-
-      const intentionType = {}
-      intentionType[this.sellingDetail.classCode] =
-        this.sellingDetail.classCodeName
-      // 意向城市
-      const intentionCity = {}
-      intentionCity[this.city.code] = this.city.name
-      const sessionParams = {
-        requireCode: this.sellingDetail.classCodeLevel.split(',')[0],
-        requireName: this.sellingDetail.classCodeLevelName.split(',')[0],
-        imUserId: mchUserId, // 商户用户ID
-        imUserType: type, // 用户类型
-        ext: {
-          intentionType, // 意向业务 非必传
-          intentionCity, // 意向城市 非必传
-          recommendId: '',
-          recommendAttrJson: {},
-          startUserType: 'cps-app', //
-        },
-      }
-      const msgParams = {
-        sendType: 0, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
-        msgType: 'im_tmplate', // 消息类型
-        extContent: this.$route.query, // 路由参数
-        productName: this.sellingDetail.name, // 产品名称
-        productContent: this.sellingDetail.salesGoodsOperatings.productDescribe, // 产品信息
-        price: this.sellingDetail.salesPrice, // 价格
-        forwardAbstract: '[商品详情]',
-        routerId: 'IMRouter_APP_ProductDetail_Service', // 路由ID
-        imageUrl:
-          this.sellingDetail.salesGoodsOperatings.clientDetails[0]
-            .imgFileIdPaths[0], // 产品图片
-        unit: this.sellingDetail.salesPrice.split('.')[1], // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
-      }
-      this.sendTemplateMsgMixin({ sessionParams, msgParams })
-      // } else {
-      //   this.$router.push('/login')
-      // }
-    },
   },
 }
 </script>
 
 <style lang="less" scoped>
-.container {
+.planners {
+  border-top: 24px solid #f8f8f8;
+  padding: 41px 40px 56px 40px;
   background-color: #fff;
   border-bottom: 24px solid #f8f8f8;
-  padding: 44px 0 0px;
-}
-.planners {
-  padding: 0 40px 64px 40px;
-  /*border-bottom: 1px solid #f4f4f4;*/
   ::v-deep.sp-skeleton {
     margin-top: 48px;
   }
@@ -294,31 +361,25 @@ export default {
     font-weight: bold;
     color: #1a1a1a;
     line-height: 52px;
-    padding: 0 40px;
   }
-  &_item {
+  .planners_item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-direction: row;
+    height: 120px;
     &_lf {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      a {
-        display: flex;
-      }
+      flex-direction: row;
       .info {
-        height: 80px;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        flex-direction: column;
+        height: 120px;
         margin-left: 24px;
-        &_tp {
+        .info_tp {
           display: flex;
           justify-content: flex-start;
-          align-items: center;
+          align-items: flex-start;
           flex-direction: row;
           height: 32px;
           .name {
@@ -332,17 +393,17 @@ export default {
             line-height: 32px;
           }
         }
-        &_bot {
+        .info_bot {
           font-size: 24px;
           font-family: PingFang SC;
           font-weight: 400;
           color: #1a1a1a;
           display: flex;
           justify-content: flex-start;
-          align-items: flex-end;
           flex-direction: row;
           height: 30px;
           line-height: 30px;
+          margin: 10px 0;
           .num {
             font-size: 30px;
             font-family: PingFang SC;
@@ -351,6 +412,25 @@ export default {
           }
           .txt {
             margin-left: 17px;
+          }
+        }
+        .info_bot_last {
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          height: 40px;
+          span {
+            font-size: 20px;
+            color: #5c7499;
+            letter-spacing: 0;
+            background: #f0f2f5;
+            border-radius: 4px;
+            padding: 4px 8px;
+            transform: scale(0.9);
+            transform-origin: 50% 50%;
+            margin-right: 6px;
+            float: left;
           }
         }
       }
@@ -373,37 +453,6 @@ export default {
           margin-right: 0;
         }
       }
-    }
-  }
-  &_sub_title {
-    color: #222222;
-    font-size: 36px;
-    font-weight: bold;
-    font-family: PingFang SC;
-    margin-top: 38px;
-    padding-left: 40px;
-  }
-  &_question {
-    margin-top: 40px;
-    display: flex;
-    justify-content: center;
-    input {
-      height: 80px;
-      width: 526px;
-      border: 1px solid #4974f5;
-      padding-left: 25px;
-      font-size: 28px;
-    }
-    &_bt {
-      width: 144px;
-      height: 80px;
-      background-color: #4974f5;
-      color: #ffffff;
-      font-size: 28px;
-      font-weight: bold;
-      font-family: PingFang SC;
-      text-align: center;
-      line-height: 80px;
     }
   }
 }

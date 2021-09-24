@@ -116,7 +116,7 @@ import Title from '~/components/detail/server/Title.vue'
 import CommentBox from '~/components/detail/comment/CommentBox.vue'
 import OrderCase from '~/components/detail/OrderCase.vue'
 import OrderDynamic from '~/components/detail/OrderDynamic.vue'
-import VouchersSelect from '~/components/detail/VouchersSelect.vue'
+import VouchersSelect from '@/components/detail/VouchersSelect'
 import ContainProject from '~/components/detail/ContainProject.vue'
 import ContainContent from '~/components/detail/ContainContent.vue'
 import TcPlanners from '~/components/detail/server/TcPlanners.vue'
@@ -460,7 +460,10 @@ export default {
       })
       if (plannerRes.code === 200) {
         this.tcPlannerBooth = plannerRes.data.records[0]
-        console.log('tcPlannerBooth', this.tcPlannerBooth)
+        this.$store.dispatch(
+          'planner/setRecPlanner',
+          plannerRes.data.records[0]
+        )
       }
     },
     // 购物车

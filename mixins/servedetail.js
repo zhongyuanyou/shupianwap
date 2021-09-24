@@ -99,7 +99,6 @@ export default {
     }),
     commentHandler() {
       const user = navigator.userAgent.toLowerCase()
-      console.log(user)
       if (
         user.match(/huawei/i) === 'huawei' ||
         user.match(/honor/i) === 'honor'
@@ -127,7 +126,6 @@ export default {
       if (!this.deviceId) {
         this.deviceId = await getUserSign()
       }
-      console.log('this.sellingDetail', this.sellingDetail)
 
       let formatId1 = '' // 产品二级分类
       let formatId2 = '' // 产品二级分类
@@ -205,7 +203,6 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            console.log('推荐规划师', this.planners)
             this.planners = res.data.records
           }
         })
