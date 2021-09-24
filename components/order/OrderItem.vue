@@ -45,7 +45,8 @@
           <p class="goods-name">
             <span
               v-if="
-                item.payStatusNo === 'ORDER_CUS_PAY_STATUS_UN_PAID' ||
+                (item.payStatusNo === 'ORDER_CUS_PAY_STATUS_UN_PAID' &&
+                  item.classifyOneName.match('公司')) ||
                 isUnSubmit(orderData)
               "
               class="name"
@@ -107,80 +108,106 @@
       </div>
     </div>
     <div v-if="!isUnSubmit(orderData)" class="total-price-area">
-      <!-- 定金尾款付费 -->
-      <p v-if="checkPayType() === 2" class="inner">
-        <!-- 意向单显示预计 -->
-        <span v-if="orderData.orderType === 0">预计</span>
-        <!-- <span v-else>总价</span> -->
-        <span v-if="orderData.orderType === 0" class="price1 price">
-          {{ orderData.orderTotalMoney }}元，</span
+      <div v-if="checkCusOrderStatus() === 4">
+        <p class="inner">
+          <span>
+            合计
+            <span class="price1 price"> {{ orderData.orderTotalMoney }} </span
+            >元
+          </span>
+        </p>
+      </div>
+      <section v-else>
+        <!-- 定金尾款付费 -->
+        <p v-if="checkPayType() === 2" class="inner">
+          <!-- 意向单显示预计 -->
+          <span class="should-pay">
+            <span v-if="orderData.orderType === 0">预计</span>
+            <!-- <span v-else>总价</span> -->
+            <span v-if="orderData.orderType === 0" class="price3 price">
+              {{ orderData.orderTotalMoney }}元</span
+            >
+          </span>
+          <!-- <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元，</span> -->
+          <!-- 已支付定金未支付尾款,客户单付款状态为部分支付时显示已付定金 -->
+          <span
+            v-if="
+              orderData.cusOrderPayStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
+            "
+            class="allready_pay"
+          >
+            定金
+            <span class="price3 price"> {{ orderData.depositAmount }} </span>元
+          </span>
+          <!-- 支付状态为完成支付时显示合计，不显示定金尾款等 -->
+          <span
+            v-if="
+              orderData.cusOrderPayStatusNo ===
+                'ORDER_CUS_PAY_STATUS_COMPLETED_PAID' ||
+              checkCusOrderStatus() === 4
+            "
+            class="should-pay"
+          >
+            合计
+            <span class="price3 price"> {{ orderData.orderTotalMoney }} </span
+            >元
+          </span>
+          <!-- 支付状态为未支付完成且客户单状态不等于已取消时显示预计尾款待支付 -->
+          <span
+            v-if="
+              orderData.cusOrderPayStatusNo !==
+                'ORDER_CUS_PAY_STATUS_COMPLETED_PAID' &&
+              checkCusOrderStatus() !== 4
+            "
+            class="allready_pay"
+          >
+            <span v-if="orderData.orderType === 0">预计</span>尾款待支付
+            <span class="price2 price"> {{ orderData.lastAount }}元，</span>
+          </span>
+          <span
+            v-if="isShowPayBtn() === 1 && checkCusOrderStatus() !== 4"
+            class="should-pay"
+          >
+            定金待支付
+            <span class="price3 price">{{ orderData.depositAmount }}</span
+            >元
+          </span>
+          <span
+            v-if="isShowPayBtn() === 2 && checkCusOrderStatus() !== 4"
+            class="should-pay"
+          >
+            <span v-if="orderData.orderType === 0">预计</span>尾款待支付
+            <span class="price3 price">{{ orderData.lastAount }}</span
+            >元
+          </span>
+        </p>
+        <!-- 服务完结收费的意向单 -->
+        <p
+          v-else-if="checkPayType() === 4 && orderData.orderType === 0"
+          class="inner"
         >
-        <!-- <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元，</span> -->
-        <!-- 已支付定金未支付尾款,客户单付款状态为部分支付时显示已付定金 -->
-        <span
-          v-if="
-            orderData.cusOrderPayStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
-          "
-          class="allready_pay"
-        >
-          定金
-          <span class="price3 price"> {{ orderData.depositAmount }} </span>元
-        </span>
-        <!-- 支付状态为完成支付时显示合计，不显示定金尾款等 -->
-        <span
-          v-if="
-            orderData.cusOrderPayStatusNo ===
-            'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
-          "
-          class="should-pay"
-        >
-          合计
-          <span class="price3 price"> {{ orderData.orderTotalMoney }} </span>元
-        </span>
-        <!-- 支付状态为未支付完成时显示预计尾款待支付 -->
-        <span
-          v-if="
-            orderData.cusOrderPayStatusNo !==
-            'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
-          "
-          class="allready_pay"
-        >
-          <span v-if="orderData.orderType === 0">预计</span>尾款待支付
-          <span class="price2 price"> {{ orderData.lastAount }}元，</span>
-        </span>
-        <span v-if="isShowPayBtn() === 1" class="should-pay">
-          定金待支付
-          <span class="price3 price">{{ orderData.depositAmount }}</span
-          >元
-        </span>
-        <span v-if="isShowPayBtn() === 2" class="should-pay">
-          <span v-if="orderData.orderType === 0">预计</span>尾款待支付
-          <span class="price3 price">{{ orderData.lastAount }}</span
-          >元
-        </span>
-      </p>
-      <!-- 服务完结收费的意向单 -->
-      <p
-        v-else-if="checkPayType() === 4 && orderData.orderType === 0"
-        class="inner"
-      >
-        <span class="price1"> 预计：{{ orderData.orderTotalMoney }}</span>
-      </p>
-      <!-- 其他付费方式展示效果一样 -->
-      <p v-else class="inner">
-        <!-- <span class="price1"> 总价 {{ orderData.orderTotalMoney }}元，</span>
+          <span class="should-pay">
+            <span>预计</span>
+            <!-- <span v-else>总价</span> -->
+            <span class="price3 price"> {{ orderData.orderTotalMoney }}元</span>
+          </span>
+        </p>
+        <!-- 其他付费方式展示效果一样 -->
+        <p v-else class="inner">
+          <!-- <span class="price1"> 总价 {{ orderData.orderTotalMoney }}元，</span>
         <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元，</span> -->
-        <span v-if="isShowPayBtn() == 1" class="should-pay">
-          应付款
-          <span class="price3"> {{ orderData.orderPayableMoney }}</span
-          >元
-        </span>
-        <span v-else class="should-pay">
-          合计
-          <span class="price3">{{ orderData.orderPayableMoney }}</span
-          >元
-        </span>
-      </p>
+          <span v-if="isShowPayBtn() == 1" class="should-pay">
+            应付款
+            <span class="price3"> {{ orderData.orderPayableMoney }}</span
+            >元
+          </span>
+          <span v-else class="should-pay">
+            合计
+            <span class="price3">{{ orderData.orderPayableMoney }}</span
+            >元
+          </span>
+        </p>
+      </section>
     </div>
     <div class="btn-area">
       <div v-if="!isUnSubmit(orderData)" class="inner">
