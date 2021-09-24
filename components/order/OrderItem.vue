@@ -155,7 +155,7 @@
             class="should-pay"
           >
             <span v-if="orderData.orderType === 0">预计</span>尾款待支付
-            <span class="price2 price"> {{ orderData.lastAount }}元，</span>
+            <span class="price2 price"> {{ orderData.lastAount }}元,</span>
           </span>
           <span
             v-if="isShowPayBtn() === 1 && checkCusOrderStatus() !== 4"
@@ -174,7 +174,7 @@
           <span class="should-pay">
             <span>预计</span>
             <!-- <span v-else>总价</span> -->
-            <span class="price3 price"> {{ orderData.orderTotalMoney }}元</span>
+            <span class="price3 price"> {{ orderData.orderTotalMoney }}</span>元
           </span>
         </p>
         <!-- 其他付费方式展示效果一样 -->
