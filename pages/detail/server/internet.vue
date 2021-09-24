@@ -48,6 +48,7 @@
       </sp-list>
       <!--E 第十板块 猜你需要-->
       <bottomBar :planner-info="tcPlannerBooth" />
+      <SiderConsult />
     </div>
   </section>
 </template>
@@ -67,7 +68,8 @@ import bottomBar from '@/components/detail/bottomBar/index.vue'
 import CaseNew from '~/components/detail/CaseNew'
 import PageMidAd from '~/components/detail/server/PageMidAd'
 import Header from '~/components/detail/server/Header'
-import HotConsult from '~/components/detail/server/HotConsult'
+import HotConsult from '~/components/detail/common/HotConsult'
+import SiderConsult from '~/components/detail/common/SiderConsult'
 import imHandle from '~/mixins/imHandle'
 import detailMixin from '~/mixins/servedetail'
 export default {
@@ -89,6 +91,7 @@ export default {
     PageMidAd,
     Header,
     HotConsult,
+    SiderConsult,
   },
   mixins: [imHandle, detailMixin],
   layout: 'keepAlive',

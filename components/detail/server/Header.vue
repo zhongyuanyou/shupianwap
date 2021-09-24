@@ -116,7 +116,7 @@ import { Sticky, TopNavBar, ShareSheet } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { copyToClipboard } from '~/utils/common'
 import { shopApi } from '~/api'
-import { pageGoodDetail } from '~/utils/static/imgs.js'
+import { goodDetail } from '~/utils/static/imgs.js'
 import imHandle from '~/mixins/imHandle'
 
 export default {
@@ -145,8 +145,8 @@ export default {
   },
   data() {
     return {
-      hdImg: pageGoodDetail.headbg,
-      hdStarImg: pageGoodDetail.headAvatarStar,
+      hdImg: goodDetail['c-header-bg'],
+      hdStarImg: goodDetail['c-header-avatarStar'],
       scrollTopY: 0, // 距离顶部移动距离
       isShare: false, // 判断是否从分享页面过来,有分享页面标识;如果有,则不显示回退标识
       showShare: false, // 是否弹起分享组件
