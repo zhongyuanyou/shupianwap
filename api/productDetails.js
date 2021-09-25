@@ -9,5 +9,9 @@ const productDetailsApi = {
   sellingGoodsDetail: `${CHIPS_WAP_BASE_URL}/nk/selling_goods/v2/detail.do`, // 销售商品详情
   findServiceAttr: `${CHIPS_WAP_BASE_URL}/nk/selling_goods/v2/find_service_attr.do`, // 查询产品SKU
   sales_product_details: `${CHIPS_PC_URL}/nk/product/v1/sales_product_details.do`, // 批量查询销售商品
+  financing: {
+    // 详情页中,融资对应api
+    get_city: `${CHIPS_WAP_BASE_URL}/nk/selling_goods/v1/financing_city_list.do`, // 查询城市
+  },
 }
 export default productDetailsApi

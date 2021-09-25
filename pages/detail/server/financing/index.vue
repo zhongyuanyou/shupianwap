@@ -73,7 +73,7 @@ import SiderConsult from '~/components/detail/common/SiderConsult'
 import imHandle from '~/mixins/imHandle'
 import detailMixin from '~/mixins/servedetail'
 export default {
-  name: 'ItDetail',
+  name: 'FinancingDetail',
   components: {
     ShareModal,
     [TopNavBar.name]: TopNavBar,
