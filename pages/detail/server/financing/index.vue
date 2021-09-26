@@ -6,7 +6,7 @@
       <!-- header-->
       <Header :rec-planner="tcPlannerBooth" :planners="planners" />
       <!--S 第一板块-->
-      <Title :comment="comments" @onComment="commentHandler" />
+      <Title :comment="comments" :type="type" @onComment="commentHandler" />
       <!--E 第一板块-->
       <PageMidAd :ad-location-code="'ad100399'" />
       <!--S 第二板块 领券 SKU-->
@@ -97,7 +97,9 @@ export default {
   layout: 'keepAlive',
   watchQuery: ['productId'],
   data() {
-    return {}
+    return {
+      type: 'financing', // 详情类型
+    }
   },
   methods: {},
 }
