@@ -6,15 +6,6 @@
         {{ item.tagValueName }}
       </div>
     </div>
-    <div
-      v-if="comment.records && comment.records.length"
-      class="comment"
-      @click="commentfn"
-    >
-      <p class="tit">{{ comment.records[0].evaluateContent }}</p>
-      <p class="num">共{{ comment.totalCount | count }}评价</p>
-      <sp-icon name="arrow" class="icon" />
-    </div>
     <!-- 融资贷款, 展示类型 -->
     <div v-if="type === 'financing'" class="title_bottom">
       <template v-if="sellingGoodsData.priceType === 'PRO_FLOATING_PRICE'">
@@ -74,14 +65,13 @@
 </template>
 
 <script>
-import { Image, Button, Icon } from '@chipspc/vant-dgg'
+import { Image, Button } from '@chipspc/vant-dgg'
 import PriceReduction from '~/components/detail/PriceReduction'
 export default {
   name: 'Title',
   components: {
     [Image.name]: Image,
     PriceReduction,
-    SpIcon: Icon,
     [Button.name]: Button,
   },
   filters: {
@@ -160,9 +150,6 @@ export default {
     handleShowPriceRed() {
       this.$refs.priceR.show = true
     },
-    commentfn() {
-      this.$emit('onComment')
-    },
   },
 }
 </script>
@@ -173,32 +160,6 @@ export default {
   padding: 40px 40px 32px 40px;
   background-color: #ffffff;
   border-bottom: 24px solid #f8f8f8;
-  > .comment {
-    margin-top: 32px;
-    height: 64px;
-    background: #ebf3ff;
-    border-radius: 4px;
-    font-size: 26px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: #4974f5;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    > .tit {
-      width: 410px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-    > .num {
-      width: 150px;
-      margin-left: 30px;
-    }
-    > .icon {
-      margin-left: auto;
-    }
-  }
   &_btitle {
     font-size: 44px;
     font-family: PingFang SC;

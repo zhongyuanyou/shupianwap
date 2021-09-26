@@ -97,20 +97,6 @@ export default {
       POSITION_CITY: 'city/POSITION_CITY',
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
-    commentHandler() {
-      const user = navigator.userAgent.toLowerCase()
-      if (
-        user.match(/huawei/i) === 'huawei' ||
-        user.match(/honor/i) === 'honor'
-      ) {
-        document.querySelector('#comment').scrollIntoView(true)
-        document.body.scrollTop = document.body.scrollTop - 250
-      } else {
-        document.querySelector('#comment').scrollIntoView(true)
-        document.documentElement.scrollTop =
-          document.documentElement.scrollTop - 250
-      }
-    },
     async onLoad() {
       // 假如未获取到站点信息,再获取地理位置
       if (!this.city.code) {

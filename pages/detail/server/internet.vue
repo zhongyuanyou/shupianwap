@@ -6,7 +6,7 @@
       <!-- header-->
       <Header :rec-planner="tcPlannerBooth" :planners="planners" />
       <!--S 第一板块-->
-      <Title :comment="comments" @onComment="commentHandler" />
+      <Title />
       <!--E 第一板块-->
       <PageMidAd :ad-location-code="'ad100399'" />
       <!--S 第二板块 领券 SKU-->
