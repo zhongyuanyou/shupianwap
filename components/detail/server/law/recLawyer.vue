@@ -18,7 +18,7 @@
                   {{ item.name }}
                 </span>
                 <span class="icon"></span>
-                <sp-button
+                <!-- <sp-button
                   class="l_btn_im"
                   @click="
                     sendTemplateMsgWithImg(
@@ -28,7 +28,7 @@
                     )
                   "
                   >立即咨询</sp-button
-                >
+                > -->
               </p>
               <p>
                 <span
