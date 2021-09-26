@@ -53,6 +53,7 @@
               >{{ item.spuHideName || item.spuName }}</span
             >
             <span v-else class="name">{{ item.spuName }}</span>
+            <span class="goods-num">×{{ item.skuCount }}</span>
             <!-- <span
               v-if="
                 checkPayType() !== 2 && checkPayType() !== 4 && !item.orderType
@@ -62,11 +63,6 @@
               {{ item.skuPrice }}元
             </span> -->
             <!-- 2021-09-28版本改动去掉价格显示判断条件 -->
-            <span v-if="orderData.orderType === 0" class="money1">
-              预计
-              <span> {{ item.skuPrice }}元 </span>
-            </span>
-            <span v-else class="money1"> {{ item.skuPrice }}元 </span>
           </p>
           <!-- 交易和资源取skuDetailInfo -->
           <!-- 销售和服务取skuExtInfo -->
@@ -81,7 +77,11 @@
             <span v-else class="sku-item">{{
               item.skuDetailValues || getSkus(item.skuExtInfo)
             }}</span>
-            <span class="goods-num">×{{ item.skuCount }}</span>
+          </p>
+          <p class="goods_price">
+            <span v-if="orderData.orderType === 0"> 预计</span>
+            <span class="money1"> {{ item.skuPrice }}</span
+            >元
           </p>
           <!-- 增值服务产品中心2期已去掉 2021.03.10 -->
           <!-- <div class="sku-sercice">
@@ -121,13 +121,6 @@
         <!-- 定金尾款付费 -->
         <p v-if="checkPayType() === 2" class="inner">
           <!-- 意向单显示预计 -->
-          <span class="should-pay">
-            <span v-if="orderData.orderType === 0">预计</span>
-            <!-- <span v-else>总价</span> -->
-            <span v-if="orderData.orderType === 0" class="price3 price">
-              {{ orderData.orderTotalMoney }}元</span
-            >
-          </span>
           <!-- <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元，</span> -->
           <!-- 已支付定金未支付尾款,客户单付款状态为部分支付时显示已付定金 -->
           <span
@@ -137,7 +130,7 @@
             class="allready_pay"
           >
             定金
-            <span class="price3 price"> {{ orderData.depositAmount }} </span>元
+            <span class="price3 price"> {{ orderData.depositAmount }} </span>元,
           </span>
           <!-- 支付状态为完成支付时显示合计，不显示定金尾款等 -->
           <span
@@ -159,10 +152,10 @@
                 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID' &&
               checkCusOrderStatus() !== 4
             "
-            class="allready_pay"
+            class="should-pay"
           >
             <span v-if="orderData.orderType === 0">预计</span>尾款待支付
-            <span class="price2 price"> {{ orderData.lastAount }}元，</span>
+            <span class="price2 price"> {{ orderData.lastAount }}元,</span>
           </span>
           <span
             v-if="isShowPayBtn() === 1 && checkCusOrderStatus() !== 4"
@@ -170,14 +163,6 @@
           >
             定金待支付
             <span class="price3 price">{{ orderData.depositAmount }}</span
-            >元
-          </span>
-          <span
-            v-if="isShowPayBtn() === 2 && checkCusOrderStatus() !== 4"
-            class="should-pay"
-          >
-            <span v-if="orderData.orderType === 0">预计</span>尾款待支付
-            <span class="price3 price">{{ orderData.lastAount }}</span
             >元
           </span>
         </p>
@@ -189,7 +174,7 @@
           <span class="should-pay">
             <span>预计</span>
             <!-- <span v-else>总价</span> -->
-            <span class="price3 price"> {{ orderData.orderTotalMoney }}元</span>
+            <span class="price3 price"> {{ orderData.orderTotalMoney }}</span>元
           </span>
         </p>
         <!-- 其他付费方式展示效果一样 -->
@@ -448,6 +433,12 @@ export default {
     .right {
       flex: 1;
       padding-left: 20px;
+      .goods_price {
+        font-size: 24px;
+        .money1 {
+          font-size: 28px;
+        }
+      }
     }
     .goods-name {
       display: flex;
@@ -461,9 +452,6 @@ export default {
         .textOverflow(2);
         padding-right: 20px;
       }
-      .money1 {
-        font-weight: normal;
-      }
     }
     .sku-info {
       font-size: 24px;
@@ -471,10 +459,11 @@ export default {
       font-weight: 400;
       color: #999999;
       margin: 10px 0 10px 0;
-      min-height: 64px;
-      .textOverflow(2);
+      height: 40px;
+      .textOverflow(1);
       .sku-item {
         margin-right: 10px;
+        .textOverflow(1);
       }
       .goods-num {
         display: block;

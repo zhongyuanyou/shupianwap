@@ -262,7 +262,7 @@ export default {
       PAYSTATUSCODENAME: {
         ORDER_CUS_PAY_STATUS_UN_PAID: '待付款',
         ORDER_CUS_PAY_STATUS_PART_PAID: '部分支付',
-        ORDER_CUS_PAY_STATUS_COMPLETED_PAID: '已完成',
+        ORDER_CUS_PAY_STATUS_COMPLETED_PAID: '支付完成',
       },
       // 客户单类型
       orderProTypeNoS: {
