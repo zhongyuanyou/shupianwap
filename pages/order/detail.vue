@@ -134,7 +134,7 @@
             "
             >待支付</span
           >尾款
-          <span> {{ orderData.lastAount }}元</span>
+          <span class="red_money"> {{ orderData.lastAount }}元</span>
         </p>
         <p v-if="isShowPayBtn() === 1" class="last-money">
           应付金额
@@ -778,6 +778,9 @@ export default {
     color: #ec5330;
     font-size: 36px;
   }
+}
+.red_money{
+  color: #ec5330;
 }
 .order_text {
   font-size: 28px;
