@@ -35,7 +35,7 @@
                     goodsSkuDetail.sku &&
                     goodsSkuDetail.sku.targetRate
                   "
-                  >(含服务费{{ goodsSkuDetail.sku.targetRate }}%)</span
+                  >(服务费{{ goodsSkuDetail.sku.targetRate }}%)</span
                 >
                 <span v-if="orderData.orderType === 0"> 预计</span>
                 <span class="money">{{ orderData.orderTotalMoney }}</span>
