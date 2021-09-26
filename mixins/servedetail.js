@@ -24,11 +24,6 @@ export default {
           withOperatingsFlg: 1,
           clientType: 'COMDIC_TERMINAL_APP',
         },
-        {
-          headers: {
-            'x-cache-control': 'cache',
-          },
-        }
       )
       if (code === 200) {
         sellingGoodsDetailData = data
@@ -120,12 +115,12 @@ export default {
       this.getrecommendProduct()
     },
     // 获取推荐交易产品
-    async getrecommendProduct() {
+    getrecommendProduct() {
       this.loading = true
       // 获取用户唯一标识
-      if (!this.deviceId) {
-        this.deviceId = await getUserSign()
-      }
+      // if (!this.deviceId) {
+      //   this.deviceId = await getUserSign()
+      // }
 
       let formatId1 = '' // 产品二级分类
       let formatId2 = '' // 产品二级分类
@@ -135,33 +130,56 @@ export default {
         formatId2 = this.sellingDetail.classCodeLevel.split(',')[1] // 产品二级分类
         formatId3 = this.sellingDetail.classCodeLevel.split(',')[2] // 产品三级分类
       }
+      // const params = {
+      //   userId: this.$cookies.get('userId', { path: '/' }), // 用户id
+      //   deviceId: this.deviceId, // 设备ID
+      //   formatId: formatId2 || formatId3 || formatId1, // 产品二级类别,没有二级类别用三级类别（首页等场景不需传，如其他场景能获取到必传）
+      //   classCode: formatId1,
+      //   areaCode: this.$store.state.city.currentCity.code || '510100', // 区域编码
+      //   sceneId: 'app-fwcpxq-01', // 场景ID
+      //   productId: this.sellingDetail.id, // 产品ID（产品详情页必传）
+      //   productType: 'PRO_CLASS_TYPE_SALES', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
+      //   title: this.sellingDetail.name, // 产品名称（产品详情页传、咨询页等）
+      //   platform: 'm', // 平台（app,m,pc）
+      //   formatIdOne: formatId1,
+      //   page: { pageNo: this.productPage, pageSize: this.productLimit },
+      // }
+      const params = {
+        sceneType: 2,
+        formatIdOne: formatId1,
+        formatId: formatId2,
+        productId: this.sellingDetail.id,
+        title: this.sellingDetail.name,
+        start: 1,
+        limit: this.productLimit,
+      }
+      let areaCode
+      const cityCode = this.$cookies.get('currentCity', {
+        path: '/',
+      })
+      if (cityCode && cityCode !== '{}') {
+        areaCode = JSON.parse(cityCode).code
+      } else {
+        areaCode = this.$store.state.city.defaultCity.code
+      }
       this.$axios
-        .post(recommendApi.saleList, {
-          userId: this.$cookies.get('userId', { path: '/' }), // 用户id
-          deviceId: this.deviceId, // 设备ID
-          formatId: formatId2 || formatId3 || formatId1, // 产品二级类别,没有二级类别用三级类别（首页等场景不需传，如其他场景能获取到必传）
-          classCode: formatId1,
-          areaCode: this.$store.state.city.currentCity.code || '510100', // 区域编码
-          sceneId: 'app-fwcpxq-01', // 场景ID
-          productId: this.sellingDetail.id, // 产品ID（产品详情页必传）
-          productType: 'PRO_CLASS_TYPE_SALES', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
-          title: this.sellingDetail.name, // 产品名称（产品详情页传、咨询页等）
-          platform: 'm', // 平台（app,m,pc）
-          formatIdOne: formatId1,
-          page: { pageNo: this.productPage, pageSize: this.productLimit },
+        .post(recommendApi.saleListApp, params, {
+          headers: {
+            terminalCode: 'COMDIC_TERMINAL_APP',
+            'X-Device-Code': this.deviceId,
+            'X-Req-Area': areaCode,
+          },
         })
         .then((res) => {
           if (res.code === 200) {
+            console.log('res', res)
             // 关闭骨架屏
             this.$refs.remNeed.needLoading = false
             this.productPage += 1
-            if (res.data.records.length === 0) {
+            if (res.data.length === 0) {
               this.finished = true
             }
-            this.productCount = res.data.totalCount // 推荐产品总条数
-            this.recommendProduct = [...this.recommendProduct].concat(
-              res.data.records
-            ) // 推荐产品列表
+            this.recommendProduct = [...this.recommendProduct].concat(res.data) // 推荐产品列表
             // 推荐产品最多加载30条
             if (this.recommendProduct.length >= 30) {
               this.finished = true
@@ -274,4 +292,5 @@ export default {
       }
     },
   },
+  watchQuery: ['productId'],
 }

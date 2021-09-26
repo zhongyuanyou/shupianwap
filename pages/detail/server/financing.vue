@@ -61,7 +61,7 @@
       <!-- <MemberPrice></MemberPrice> -->
 
       <!--S 第一板块-->
-      <Title :comment="commentdata[0].tit" @onComment="comment" />
+      <Title @onComment="comment" />
       <!--E 第一板块-->
       <PageMidAd :ad-location-code="'ad100399'" />
       <!--S 第二板块 领券 SKU-->
@@ -127,7 +127,7 @@ import VouchersSelect from '~/components/detail/server/NewVouchersSelect.vue'
 import ContainContent from '~/components/detail/ContainContent.vue'
 import TcPlanners from '~/components/detail/server/TcPlanners.vue'
 import ServiceDetail from '~/components/detail/ServiceDetail.vue'
-import RelatedRecommend from '~/components/detail/RelatedRecommend.vue'
+import RelatedRecommend from '~/components/detail/server/RelatedRecommend.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import CaseNew from '~/components/detail/CaseNew'

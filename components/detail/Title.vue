@@ -19,10 +19,7 @@
         />降价提醒
       </div>
     </div>
-    <p
-      v-if="proDetail.classCodeLevelList[0] === 'FL20201224136319'"
-      class="title_btitle"
-    >
+    <p v-if="proDetail.className.match('公司')" class="title_btitle">
       {{ proDetail.name || proDetail.showName }}
     </p>
     <p v-else class="title_btitle">

@@ -166,9 +166,6 @@ export default {
       this.loading = true
       this.$axios
         .get(homeApi.findSiteList, {
-          headers: {
-            'x-cache-control': 'cache',
-          },
         })
         .then((res) => {
           this.loading = false

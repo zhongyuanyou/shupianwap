@@ -43,7 +43,7 @@ export default function ({ $axios, redirect, app, store }) {
         token,
         contentType: config.headers['Content-Type'],
       })
-      config.headers = { ...signData }
+      Object.assign(config.headers, signData)
       // config.headers.sysCode = 'crisps-app-wap-bff-api'
       // 获取token
       if (token) {
@@ -81,6 +81,7 @@ export default function ({ $axios, redirect, app, store }) {
       } else {
         config.headers.areaCode = store.state.city.defaultCity.code
       }
+      console.log('config.headers', config.headers)
       return config
     },
     (error) => {
