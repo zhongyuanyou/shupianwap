@@ -47,7 +47,6 @@
           placeholder="请描述您的问题，有助于快速处理您的反馈额~(最少10个字符)"
           maxlength="200"
           @input="changeText"
-          @blur="textBlur"
         />
         <span class="complaint-content-label"
           >{{ formData.content.length }}/200</span
