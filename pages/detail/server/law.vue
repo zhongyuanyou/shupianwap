@@ -26,6 +26,7 @@
       <!--E 第三板块 包含服务-->
       <!--S 评论-->
       <CommentBox
+        v-if="Array.isArray(comments.records) && comments.records.length"
         id="comment"
         :comment="comments.records[0]"
         :good-id="sellingDetail.id"
