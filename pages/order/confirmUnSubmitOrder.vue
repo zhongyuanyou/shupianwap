@@ -987,6 +987,7 @@ export default {
         font-weight: bold;
       }
       > .money {
+        text-align: right;
         padding: 15px 30px;
         font-size: 28px;
         font-weight: 400;

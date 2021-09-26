@@ -80,7 +80,7 @@
           </p>
           <p class="goods_price">
             <span v-if="orderData.orderType === 0"> 预计</span>
-            <span class="money1"> {{ item.skuPrice }}</span
+            <span class="money1 money_num"> {{ item.skuPrice }}</span
             >元
           </p>
           <!-- 增值服务产品中心2期已去掉 2021.03.10 -->
@@ -112,7 +112,8 @@
         <p class="inner">
           <span>
             合计
-            <span class="price1 price"> {{ orderData.orderTotalMoney }} </span
+            <span class="price1 price money_num">
+              {{ orderData.orderTotalMoney }} </span
             >元
           </span>
         </p>
@@ -121,7 +122,7 @@
         <!-- 定金尾款付费 -->
         <p v-if="checkPayType() === 2" class="inner">
           <!-- 意向单显示预计 -->
-          <!-- <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元，</span> -->
+          <!-- <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元,</span> -->
           <!-- 已支付定金未支付尾款,客户单付款状态为部分支付时显示已付定金 -->
           <span
             v-if="
@@ -129,10 +130,12 @@
             "
             class="allready_pay"
           >
-            定金
-            <span class="price3 price"> {{ orderData.depositAmount }} </span>元,
+            定金<span class="price3 price money_num">{{
+              orderData.depositAmount
+            }}</span
+            >元,
           </span>
-          <!-- 支付状态为完成支付时显示合计，不显示定金尾款等 -->
+          <!-- 支付状态为完成支付时显示合计,不显示定金尾款等 -->
           <span
             v-if="
               orderData.cusOrderPayStatusNo ===
@@ -142,7 +145,8 @@
             class="should-pay"
           >
             合计
-            <span class="price3 price"> {{ orderData.orderTotalMoney }} </span
+            <span class="price3 price money_num">
+              {{ orderData.orderTotalMoney }} </span
             >元
           </span>
           <!-- 支付状态为未支付完成且客户单状态不等于已取消时显示预计尾款待支付 -->
@@ -154,15 +158,19 @@
             "
             class="should-pay"
           >
-            <span v-if="orderData.orderType === 0">预计</span>尾款待支付
-            <span class="price2 price"> {{ orderData.lastAount }}元,</span>
+            <span v-if="orderData.orderType === 0">预计</span>尾款待支付<span
+              class="price2 price money_num"
+            >
+              {{ orderData.lastAount }}</span
+            >元
           </span>
           <span
             v-if="isShowPayBtn() === 1 && checkCusOrderStatus() !== 4"
             class="should-pay"
           >
-            定金待支付
-            <span class="price3 price">{{ orderData.depositAmount }}</span
+            ,定金待支付<span class="price3 price money_num">{{
+              orderData.depositAmount
+            }}</span
             >元
           </span>
         </p>
@@ -174,21 +182,26 @@
           <span class="should-pay">
             <span>预计</span>
             <!-- <span v-else>总价</span> -->
-            <span class="price3 price"> {{ orderData.orderTotalMoney }}</span>元
+            <span class="price3 price money_num">
+              {{ orderData.orderTotalMoney }}</span
+            >元
           </span>
         </p>
         <!-- 其他付费方式展示效果一样 -->
         <p v-else class="inner">
-          <!-- <span class="price1"> 总价 {{ orderData.orderTotalMoney }}元，</span>
-        <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元，</span> -->
+          <!-- <span class="price1"> 总价 {{ orderData.orderTotalMoney }}元,</span>
+        <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元,</span> -->
           <span v-if="isShowPayBtn() == 1" class="should-pay">
             应付款
-            <span class="price3"> {{ orderData.orderPayableMoney }}</span
+            <span class="price3 money_num">
+              {{ orderData.orderPayableMoney }}</span
             >元
           </span>
           <span v-else class="should-pay">
             合计
-            <span class="price3">{{ orderData.orderPayableMoney }}</span
+            <span class="price3 money_num">{{
+              orderData.orderPayableMoney
+            }}</span
             >元
           </span>
         </p>
@@ -520,9 +533,12 @@ export default {
         font-size: 28px;
         .price3 {
           color: #222;
-          font-size: 28px;
           font-weight: 600;
         }
+      }
+      .money_num {
+        font-weight: 600;
+        font-size: 32px;
       }
     }
   }
