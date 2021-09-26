@@ -48,6 +48,8 @@
       <!-- <OrderCase></OrderCase> -->
       <CaseNew />
       <!--E  精选案例-->
+      <!-- 热门咨询 -->
+      <HotConsult />
       <!--S 第十板块 服务详情-->
       <ServiceDetail
         comp-type="sc"
@@ -65,15 +67,15 @@
       </sp-list>
       <!--E 第十板块 猜你需要-->
       <bottomBar :planner-info="tcPlannerBooth" />
+      <!-- 提问 -->
+      <SiderConsult />
     </div>
   </section>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
 import { Sticky, List, TopNavBar, ShareSheet, Image } from '@chipspc/vant-dgg'
 import ShareModal from '@/components/common/ShareModal.vue'
-import Banner from '~/components/detail/Banner.vue'
 import Title from '~/components/detail/server/Title.vue'
 import CommentBox from '~/components/detail/comment/CommentBox.vue'
 import OrderCase from '~/components/detail/OrderCase.vue'
@@ -85,15 +87,13 @@ import TcPlanners from '~/components/detail/server/TcPlanners.vue'
 import ServiceDetail from '~/components/detail/ServiceDetail.vue'
 import RelatedRecommend from '~/components/detail/RelatedRecommend.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
-import MyIcon from '~/components/common/myIcon/MyIcon'
 import CaseNew from '~/components/detail/CaseNew'
 import PageMidAd from '~/components/detail/server/PageMidAd'
-import getUserSign from '~/utils/fingerprint'
-import { productDetailsApi, recommendApi, shopApi } from '~/api'
-import { copyToClipboard } from '~/utils/common'
 import imHandle from '~/mixins/imHandle'
 import detailMixin from '~/mixins/servedetail'
 import Header from '~/components/detail/server/Header'
+import HotConsult from '~/components/detail/common/HotConsult'
+import SiderConsult from '~/components/detail/common/SiderConsult'
 
 export default {
   name: 'ItDetail',
@@ -119,6 +119,8 @@ export default {
     CaseNew,
     PageMidAd,
     Header,
+    HotConsult,
+    SiderConsult,
   },
   mixins: [imHandle, detailMixin],
   layout: 'keepAlive',

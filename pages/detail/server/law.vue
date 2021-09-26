@@ -41,6 +41,8 @@
       <!-- <OrderCase></OrderCase> -->
       <CaseNew />
       <!--E  精选案例-->
+      <!-- 热门咨询 -->
+      <HotConsult />
       <!--S 第十板块 服务详情-->
       <ServiceDetail
         comp-type="sc"
@@ -58,6 +60,8 @@
       </sp-list>
       <!--E 第十板块 猜你需要-->
       <bottomBar :planner-info="tcPlannerBooth" />
+      <!-- 提问 -->
+      <SiderConsult />
     </div>
   </section>
 </template>
@@ -67,7 +71,6 @@ import { Sticky, List, TopNavBar, ShareSheet } from '@chipspc/vant-dgg'
 import ShareModal from '@/components/common/ShareModal.vue'
 import Title from '~/components/detail/server/Title.vue'
 import CommentBox from '~/components/detail/comment/CommentBox.vue'
-import OrderCase from '~/components/detail/OrderCase.vue'
 import OrderDynamic from '~/components/detail/OrderDynamic.vue'
 import VouchersSelect from '~/components/detail/server/NewVouchersSelect.vue'
 // import ContainProject from '~/components/detail/ContainProject.vue'
@@ -78,12 +81,10 @@ import RelatedRecommend from '~/components/detail/RelatedRecommend.vue'
 import RecConten from '@/components/detail/server/law/recContent.vue'
 import RecLawyer from '@/components/detail/server/law/recLawyer.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
-import MyIcon from '~/components/common/myIcon/MyIcon'
 import CaseNew from '~/components/detail/CaseNew'
 import PageMidAd from '~/components/detail/server/PageMidAd'
-import getUserSign from '~/utils/fingerprint'
-import { productDetailsApi, recommendApi, shopApi } from '~/api'
-import { copyToClipboard } from '~/utils/common'
+import SiderConsult from '~/components/detail/common/SiderConsult'
+import HotConsult from '~/components/detail/common/HotConsult'
 import imHandle from '~/mixins/imHandle'
 import detailMixin from '~/mixins/servedetail'
 import Header from '~/components/detail/server/Header'
@@ -113,6 +114,8 @@ export default {
     CaseNew,
     PageMidAd,
     Header,
+    SiderConsult,
+    HotConsult,
   },
   mixins: [imHandle, detailMixin],
   layout: 'keepAlive',
