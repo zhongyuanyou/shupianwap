@@ -50,7 +50,7 @@ export default {
   name: 'GoodDetailSiderConsult',
   data() {
     return {
-      active: true,
+      active: false,
       questionIcon: goodDetail['c-siderConsult-questionIcon'],
     }
   },

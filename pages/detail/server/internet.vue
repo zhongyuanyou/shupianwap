@@ -6,7 +6,7 @@
       <!-- header-->
       <Header :rec-planner="tcPlannerBooth" :planners="planners" />
       <!--S 第一板块-->
-      <Title :comment="comments" @onComment="commentHandler" />
+      <Title />
       <!--E 第一板块-->
       <PageMidAd :ad-location-code="'ad100399'" />
       <!--S 第二板块 领券 SKU-->
@@ -17,6 +17,7 @@
       <!--E 第三板块 包含服务-->
       <!--S 评论-->
       <CommentBox
+        v-if="Array.isArray(comments.records) && comments.records.length"
         id="comment"
         :comment="comments.records[0]"
         :good-id="sellingDetail.id"
@@ -48,6 +49,7 @@
       </sp-list>
       <!--E 第十板块 猜你需要-->
       <bottomBar :planner-info="tcPlannerBooth" />
+      <!-- 提问 -->
       <SiderConsult />
     </div>
   </section>
@@ -111,17 +113,6 @@ export default {
   /*padding-bottom: 144px;*/
   ::v-deep .sp-hairline--bottom::after {
     border-bottom: none;
-  }
-}
-.company {
-  &_info {
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin-top: 15px;
   }
 }
 ::v-deep .sp-top-nav-bar__left,

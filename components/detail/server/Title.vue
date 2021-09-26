@@ -1,43 +1,41 @@
 <template>
   <div class="title">
     <p class="title_btitle">{{ sellingGoodsData.name }}</p>
-    <div class="title_tags">
-      <span
-        v-if="
-          sellingGoodsData.salesGoodsSubVos &&
-          sellingGoodsData.salesGoodsSubVos.length &&
-          sellingGoodsData.salesGoodsSubVos.length > 1
-        "
-        class="title_tags_item title_tags_main"
-        >套餐</span
+    <div v-if="tags.length" class="title_tags">
+      <div v-for="(item, index) in tags" :key="index" class="title_tags_item">
+        {{ item.tagValueName }}
+      </div>
+    </div>
+    <!-- 融资贷款, 展示类型 -->
+    <div v-if="type === 'financing'" class="title_bottom">
+      <template v-if="sellingGoodsData.priceType === 'PRO_FLOATING_PRICE'">
+        <div class="financing-content">
+          <div class="money">
+            {{
+              getServerPrice(
+                sellingGoodsData.salesPrice || sellingGoodsData.price
+              )
+            }}%
+            <span>服务费</span>
+          </div>
+          <div class="desc">按照实际贷款金额收取服务费</div>
+        </div>
+        <sp-button class="btn" type="primary" @click="linkCreditEvaluation">
+          额度估算
+        </sp-button></template
       >
-      <!--      <span-->
-      <!--        v-for="(item, index) in [-->
-      <!--          '千万补贴',-->
-      <!--          '1对1服务',-->
-      <!--          '视频看房',-->
-      <!--          '视频看房1',-->
-      <!--        ]"-->
-      <!--        :key="index"-->
-      <!--        class="title_tags_item"-->
-      <!--        :class="{ title_tags_main: index == 0 }"-->
-      <!--        >{{ item }}-->
-      <!--      </span>-->
+      <template v-else>
+        <span class="title_bottom_money">{{
+          sellingGoodsData.salesPrice !== '0.00' &&
+          sellingGoodsData.refConfig &&
+          sellingGoodsData.refConfig.taskType != 'PRO_WANT_ORDER_DIGEST'
+            ? sellingGoodsData.salesPrice + '元'
+            : '面议'
+        }}</span>
+      </template>
     </div>
-    <!--    <div class="title_desc">-->
-    <!--      公司注册是开始创业的第一步，-->
-    <!--      根据《中华人民共和国公司法》规定，注册公司时需要依法向注册公司时需要...-->
-    <!--    </div>-->
-    <div
-      v-if="comment.records && comment.records.length"
-      class="comment"
-      @click="commentfn"
-    >
-      <p class="tit">{{ comment.records[0].evaluateContent }}</p>
-      <p class="num">共{{ comment.totalCount | count }}评价</p>
-      <sp-icon name="arrow" class="icon" />
-    </div>
-    <div class="title_bottom">
+    <!-- 原来逻辑 -->
+    <div v-else class="title_bottom">
       <p
         v-if="sellingGoodsData.priceType === 'PRO_FLOATING_PRICE'"
         class="title_bottom_money"
@@ -58,19 +56,23 @@
         >销量 {{ sellingGoodsData.salesVolume }}</span
       > -->
     </div>
+    <!-- 融资贷款 apply -->
+    <div v-if="type === 'financing'" class="financing-apply">
+      已有超2万人申请
+    </div>
     <PriceReduction ref="priceR"></PriceReduction>
   </div>
 </template>
 
 <script>
-import { Image, Icon } from '@chipspc/vant-dgg'
+import { Image, Button } from '@chipspc/vant-dgg'
 import PriceReduction from '~/components/detail/PriceReduction'
 export default {
   name: 'Title',
   components: {
     [Image.name]: Image,
     PriceReduction,
-    SpIcon: Icon,
+    [Button.name]: Button,
   },
   filters: {
     count(val) {
@@ -93,16 +95,43 @@ export default {
         }
       },
     },
+    type: {
+      // 页面类型
+      type: String,
+      default: '',
+    },
   },
   data() {
-    return {}
+    return {
+      tags: [],
+    }
   },
   computed: {
     sellingGoodsData() {
       return this.$store.state.sellingGoodsDetail.sellingGoodsData
     },
   },
+  mounted() {
+    // 构建服务标签
+    if (
+      Array.isArray(this.sellingGoodsData.salesGoodsTags) &&
+      this.sellingGoodsData.salesGoodsTags.length
+    ) {
+      this.tags = this.sellingGoodsData.salesGoodsTags.reduce((acc, cur) => {
+        // 服务| 销售商品
+        if (cur.categoryCode === 'DSJTC20210514000042') {
+          acc.push(cur)
+        }
+        return acc
+      }, [])
+    }
+  },
   methods: {
+    linkCreditEvaluation() {
+      this.$router.push({
+        path: '/detail/server/financing/creditEvaluation',
+      })
+    },
     getServerPrice(price) {
       let newPrice = ''
       if (typeof price !== 'string') price = String(price)
@@ -121,9 +150,6 @@ export default {
     handleShowPriceRed() {
       this.$refs.priceR.show = true
     },
-    commentfn() {
-      this.$emit('onComment')
-    },
   },
 }
 </script>
@@ -131,35 +157,9 @@ export default {
 <style lang="less" scoped>
 .title {
   width: 100%;
-  padding: 60px 40px 45px 40px;
+  padding: 40px 40px 32px 40px;
   background-color: #ffffff;
   border-bottom: 24px solid #f8f8f8;
-  > .comment {
-    margin-top: 32px;
-    height: 64px;
-    background: #ebf3ff;
-    border-radius: 4px;
-    font-size: 26px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: #4974f5;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    > .tit {
-      width: 410px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-    > .num {
-      width: 150px;
-      margin-left: 30px;
-    }
-    > .icon {
-      margin-left: auto;
-    }
-  }
   &_btitle {
     font-size: 44px;
     font-family: PingFang SC;
@@ -169,7 +169,7 @@ export default {
     word-break: break-all;
   }
   &_tags {
-    margin-top: 15px;
+    margin-top: 18px;
     display: flex;
     &_item {
       height: 32px;
@@ -197,12 +197,7 @@ export default {
     font-family: PingFang SC;
   }
   &_bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-family: PingFang SC;
-    margin-top: 50px;
-    &_money {
+    .money-mixin() {
       font-weight: bold;
       color: #ec5330;
       font-size: 44px;
@@ -211,11 +206,47 @@ export default {
         font-size: 22px;
       }
     }
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: PingFang SC;
+    margin-top: 32px;
+    &_money {
+      .money-mixin();
+    }
     &_num {
       color: #999999;
       font-size: 24px;
       font-weight: 400;
     }
+    .financing-content {
+      .money {
+        .money-mixin();
+      }
+      .desc {
+        height: 34px;
+        font-size: 24px;
+        color: #999999;
+        line-height: 34px;
+      }
+    }
+    .btn {
+      background: #4974f5;
+      width: 168px;
+      height: 64px;
+      border-radius: 4px;
+      font-size: 30px;
+      color: #ffffff;
+      line-height: 42px;
+      font-weight: bold;
+      padding: 0;
+    }
+  }
+  .financing-apply {
+    margin-top: 65px;
+    font-size: 24px;
+    color: #222222;
+    line-height: 34px;
   }
 }
 </style>

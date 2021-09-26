@@ -60,7 +60,7 @@ const auth = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/nk/login//v1/check-sms-code',
+      url: CHIPS_WAP_BASE_URL + '/nk/login/v1/check-sms-code',
     })
   },
   /**
