@@ -5,7 +5,7 @@
       :offset-top="searchDomHeight"
       class="top"
     >
-      <p class="need_title">猜您需要</p>
+      <p class="need_title">相关推荐</p>
     </sp-sticky>
     <sp-skeleton :row="10" :loading="needLoading">
       <div class="recomend_goods_list">
