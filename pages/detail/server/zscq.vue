@@ -12,7 +12,7 @@
       <Title />
       <!--E 第一板块-->
       <!-- 页面中部广告位 -->
-      <PageMidAd :ad-location-code="'ad100399'" />
+      <PageMidAd />
       <!-- <div class="banner file_box">
         <span class="text1">
           <sp-image

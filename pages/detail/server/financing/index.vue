@@ -8,7 +8,7 @@
       <!--S 第一板块-->
       <Title :type="type" />
       <!--E 第一板块-->
-      <PageMidAd :ad-location-code="'ad100399'" />
+      <PageMidAd />
       <!--S 第二板块 领券 SKU-->
       <VouchersSelect ref="sku" :planner-detail="tcPlannerBooth" />
       <!--E 第二板块 领券 SKU-->
@@ -68,7 +68,7 @@ import ServiceDetail from '~/components/detail/ServiceDetail.vue'
 import RelatedRecommend from '~/components/detail/RelatedRecommend.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
 import CaseNew from '~/components/detail/CaseNew'
-import PageMidAd from '~/components/detail/server/PageMidAd'
+import PageMidAd from '@/components/detail/server/PageMidAd'
 import Header from '~/components/detail/server/Header'
 import HotConsult from '~/components/detail/common/HotConsult'
 import SiderConsult from '~/components/detail/common/SiderConsult'

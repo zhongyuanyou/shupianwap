@@ -33,7 +33,7 @@ export default {
   props: {
     adLocationCode: {
       type: String,
-      default: '',
+      default: 'ads10001', // 优惠券广告位
     },
   },
   data() {
@@ -66,5 +66,7 @@ export default {
   margin-bottom: 30px;
   width: 100%;
   height: 300px;
+  border-radius: 24px;
+  overflow: hidden;
 }
 </style>
