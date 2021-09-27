@@ -7,6 +7,8 @@
       <Header :rec-planner="tcPlannerBooth" :planners="planners" />
       <!--S 第一板块-->
       <Title :type="type" />
+      <!-- 产品信息 -->
+      <Info />
       <!--E 第一板块-->
       <PageMidAd />
       <!--S 第二板块 领券 SKU-->
@@ -64,6 +66,7 @@ import OrderDynamic from '~/components/detail/OrderDynamic.vue'
 import VouchersSelect from '~/components/detail/server/NewVouchersSelect.vue'
 import ContainContent from '~/components/detail/ContainContent.vue'
 import TcPlanners from '~/components/detail/server/TcPlanners.vue'
+import Info from '~/components/detail/server/Info.vue'
 import ServiceDetail from '~/components/detail/ServiceDetail.vue'
 import RelatedRecommend from '~/components/detail/server/RelatedRecommend.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
@@ -94,6 +97,7 @@ export default {
     Header,
     HotConsult,
     SiderConsult,
+    Info,
   },
   mixins: [imHandle, detailMixin],
   layout: 'keepAlive',
