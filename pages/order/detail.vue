@@ -33,7 +33,8 @@
                   v-if="
                     goodsSkuDetail &&
                     goodsSkuDetail.sku &&
-                    goodsSkuDetail.sku.targetRate
+                    goodsSkuDetail.sku.targetRate &&
+                    orderData.orderType === 0
                   "
                   >(服务费{{ goodsSkuDetail.sku.targetRate }}%)</span
                 >
@@ -404,7 +405,7 @@
             class="btn-pay"
             @click="handleClickPay()"
           >
-            立即付款
+            支付尾款
           </sp-button>
           <!-- 销售商品交易商品的确认按钮是在下边 -->
           <sp-button
@@ -779,8 +780,9 @@ export default {
     font-size: 36px;
   }
 }
-.red_money{
+.red_money {
   color: #ec5330;
+  font-weight: 600;
 }
 .order_text {
   font-size: 28px;
