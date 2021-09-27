@@ -30,7 +30,7 @@ export default {
   props: {
     adLocationCode: {
       type: String,
-      default: 'ads10001', // 优惠券广告位
+      default: 'ad10049', // 优惠券广告位
     },
   },
   data() {
