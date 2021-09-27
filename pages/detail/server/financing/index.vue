@@ -8,7 +8,7 @@
       <!--S 第一板块-->
       <Title :type="type" />
       <!-- 产品信息 -->
-      <Info />
+      <!-- <Info /> -->
       <!--E 第一板块-->
       <PageMidAd />
       <!--S 第二板块 领券 SKU-->
@@ -97,7 +97,7 @@ export default {
     Header,
     HotConsult,
     SiderConsult,
-    Info,
+    // Info,
   },
   mixins: [imHandle, detailMixin],
   layout: 'keepAlive',
