@@ -79,7 +79,7 @@
           <!-- 服务完结收费的意向单 -->
           <div class="deposit_tips">温馨提示：该订单可享受业务办理完成后付费</div>
           <div class="deposit_content">
-            <span>总价 {{ settlementInfo.orderTotalMoney }}元</span>
+            <span>先服务后付款</span>
           </div>
         </div>
         <div v-else class="deposit">
