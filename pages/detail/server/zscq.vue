@@ -49,7 +49,7 @@
       <CaseNew />
       <!--E  精选案例-->
       <!-- 热门咨询 -->
-      <HotConsult />
+      <!-- <HotConsult /> -->
       <!--S 第十板块 服务详情-->
       <ServiceDetail
         comp-type="sc"
@@ -68,7 +68,7 @@
       <!--E 第十板块 猜你需要-->
       <bottomBar :planner-info="tcPlannerBooth" />
       <!-- 提问 -->
-      <SiderConsult />
+      <!-- <SiderConsult /> -->
     </div>
   </section>
 </template>
@@ -119,8 +119,8 @@ export default {
     CaseNew,
     PageMidAd,
     Header,
-    HotConsult,
-    SiderConsult,
+    // HotConsult,
+    // SiderConsult,
   },
   mixins: [imHandle, detailMixin],
   layout: 'keepAlive',

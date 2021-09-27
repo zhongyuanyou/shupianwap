@@ -29,7 +29,7 @@
       <TcPlanners :recommend-planner="planners" />
       <!--E 第五板块 推荐规划师-->
       <!-- 热门咨询 -->
-      <HotConsult :planner-detail="tcPlannerBooth" />
+      <!-- <HotConsult :planner-detail="tcPlannerBooth" /> -->
       <!--S  精选案例-->
       <CaseNew :planner-detail="tcPlannerBooth" />
       <!--E  精选案例-->
@@ -50,7 +50,7 @@
       <!--E 第十板块 猜你需要-->
       <bottomBar :planner-info="tcPlannerBooth" />
       <!-- 提问 -->
-      <SiderConsult />
+      <!-- <SiderConsult /> -->
     </div>
   </section>
 </template>
@@ -92,8 +92,8 @@ export default {
     CaseNew,
     PageMidAd,
     Header,
-    HotConsult,
-    SiderConsult,
+    // HotConsult,
+    // SiderConsult,
   },
   mixins: [imHandle, detailMixin],
   layout: 'keepAlive',

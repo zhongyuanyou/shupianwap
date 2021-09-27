@@ -3,20 +3,20 @@
   <div class="c-hot-consult">
     <div class="title">
       <div class="title__name">热门咨询</div>
-      <div class="title__more">
+      <div class="title__more" style="display: none">
         <span>换一换</span>
         <my-icon name="gongju_huan" size="0.26rem"></my-icon>
       </div>
     </div>
     <div class="content">
-      <div class="content__item">
-        公司过户需要什么公司过户需要什么公司过户需要什么
+      <div
+        v-for="(item, i) in tepmList"
+        :key="i"
+        class="content__item"
+        @click="toIM(item)"
+      >
+        {{ item.content }}
       </div>
-      <div class="content__item">公司过户需要什么公司过?</div>
-      <div class="content__item">
-        公司过户需要什么公司过户需要什么公司过户需要什么
-      </div>
-      <div class="content__item">公司过户需要</div>
     </div>
     <div class="ask">
       <div class="ask__title">快速提问</div>
@@ -26,7 +26,7 @@
           placeholder="您的疑问第一时间为您解答"
           maxlength="20"
         />
-        <button>提问</button>
+        <button @click="toIM(item)">提问</button>
       </div>
     </div>
   </div>
@@ -34,6 +34,8 @@
 
 <script>
 import { Field, Button } from '@chipspc/vant-dgg'
+import imHandle from '~/mixins/imHandle'
+import { productDetailsApi } from '~/api'
 
 export default {
   name: 'GoodDetailHotConsult',
@@ -41,10 +43,56 @@ export default {
     [Field.name]: Field,
     [Button.name]: Button,
   },
+  mixins: [imHandle],
   data() {
     return {
       askVal: '',
+      tepmList: [
+        { content: '可以提供定制可以提供定制可以提供定制' },
+        { content: '可以提供定制可以提供定制可以提供定制' },
+        { content: '可以提供定制可以提供定制可以提供定制' },
+        { content: '可以提供定制可以提供定制可以提供定制' },
+      ],
     }
+  },
+  computed: {
+    recPlanner() {
+      return this.$store.state.planner.recodBottomPlanner
+    },
+    sellingGoodsData() {
+      return this.$store.state.sellingGoodsDetail.sellingGoodsData
+    },
+  },
+  mounted() {
+    this.productInformationContent()
+  },
+  methods: {
+    toIM(item) {
+      this.sendTextMessage(this.recPlanner.mchUserId)
+    },
+    async productInformationContent() {
+      try {
+        const key = this.sellingGoodsData.classCodeLevel.split(',')
+        const params = {
+          page: 1,
+          limit: 4,
+          twoLevelCategoryCode: key[1],
+          contentType: 1,
+        }
+        const { data, code, message } = await this.$axios.get(
+          productDetailsApi.productInformationContent,
+          { params }
+        )
+        if (code !== 200) {
+          throw new Error(message)
+        }
+        if (data.rows.length) {
+          this.tepmList = data
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
   },
 }
 </script>

@@ -18,7 +18,7 @@
             class="item"
             @click="toIM(item)"
           >
-            <div class="item__txt">{{ item }}</div>
+            <div class="item__txt">{{ item.content }}</div>
             <img :src="questionIcon" />
           </div>
         </div>
@@ -42,6 +42,7 @@
 import { Overlay } from '@chipspc/vant-dgg'
 import { goodDetail } from '~/utils/static/imgs.js'
 import imHandle from '~/mixins/imHandle'
+import { productDetailsApi } from '~/api'
 
 export default {
   name: 'GoodDetailSiderConsult',
@@ -54,10 +55,10 @@ export default {
       active: false,
       questionIcon: goodDetail['c-siderConsult-questionIcon'],
       tepmList: [
-        '可以提供定制可以提供定制可以提供定制',
-        '可以提供定制可以提供定制可以提供定制',
-        '可以提供定制可以提供定制可以提供定制',
-        '可以提供定制可以提供定制可以提供定制',
+        { content: '可以提供定制可以提供定制可以提供定制' },
+        { content: '可以提供定制可以提供定制可以提供定制' },
+        { content: '可以提供定制可以提供定制可以提供定制' },
+        { content: '可以提供定制可以提供定制可以提供定制' },
       ],
     }
   },
@@ -65,10 +66,39 @@ export default {
     recPlanner() {
       return this.$store.state.planner.recodBottomPlanner
     },
+    sellingGoodsData() {
+      return this.$store.state.sellingGoodsDetail.sellingGoodsData
+    },
+  },
+  mounted() {
+    this.productInformationContent()
   },
   methods: {
     toIM(item) {
       this.sendTextMessage(this.recPlanner.mchUserId)
+    },
+    async productInformationContent() {
+      try {
+        const key = this.sellingGoodsData.classCodeLevel.split(',')
+        const params = {
+          page: 1,
+          limit: 4,
+          twoLevelCategoryCode: key[1],
+          contentType: 1,
+        }
+        const { data, code, message } = await this.$axios.get(
+          productDetailsApi.productInformationContent,
+          { params }
+        )
+        if (code !== 200) {
+          throw new Error(message)
+        }
+        if (data.rows.length) {
+          this.tepmList = data
+        }
+      } catch (e) {
+        console.log(e)
+      }
     },
   },
 }
