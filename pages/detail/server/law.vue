@@ -33,7 +33,7 @@
       />
       <!--E 评论-->
       <!--S 动态 -->
-      <OrderDynamic></OrderDynamic>
+      <!-- <OrderDynamic></OrderDynamic> -->
       <!--S 第五板块 推荐规划师-->
       <TcPlanners :recommend-planner="planners" />
       <!--E 第五板块 推荐规划师-->
@@ -44,10 +44,10 @@
       <!-- 热门咨询 -->
       <HotConsult :list="queList" />
       <!--S 第十板块 服务详情-->
-      <ServiceDetail
+      <!-- <ServiceDetail
         comp-type="sc"
         :detail-data="sellingDetail.salesGoodsOperatings.clientDetails[0]"
-      />
+      />-->
       <!--S 第十板块 服务详情-->
       <!--S 第十板块 猜你需要-->
       <sp-list
@@ -103,14 +103,14 @@ export default {
     // ContainProject,
     ContainContent,
     TcPlanners,
-    ServiceDetail,
+    // ServiceDetail,
     RelatedRecommend,
     bottomBar,
     // MemberPrice,
     CommentBox,
     RecLawyer,
     // OrderCase,
-    OrderDynamic,
+    // OrderDynamic,
     CaseNew,
     PageMidAd,
     Header,

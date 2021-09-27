@@ -24,7 +24,7 @@
       />
       <!--E 评论-->
       <!--S 动态 -->
-      <OrderDynamic></OrderDynamic>
+      <!-- <OrderDynamic></OrderDynamic> -->
       <!--S 第五板块 推荐规划师-->
       <TcPlanners :recommend-planner="planners" />
       <!--E 第五板块 推荐规划师-->
@@ -34,10 +34,10 @@
       <CaseNew :planner-detail="tcPlannerBooth" />
       <!--E  精选案例-->
       <!--S 第十板块 服务详情-->
-      <ServiceDetail
+      <!-- <ServiceDetail
         comp-type="sc"
         :detail-data="sellingDetail.salesGoodsOperatings.clientDetails[0]"
-      />
+      /> -->
       <!--S 第十板块 猜你需要-->
       <sp-list
         v-model="loading"
@@ -84,11 +84,11 @@ export default {
     VouchersSelect,
     ContainContent,
     TcPlanners,
-    ServiceDetail,
+    // ServiceDetail,
     RelatedRecommend,
     bottomBar,
     CommentBox,
-    OrderDynamic,
+    // OrderDynamic,
     CaseNew,
     PageMidAd,
     Header,
