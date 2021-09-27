@@ -60,7 +60,7 @@ export default {
 <style lang="less">
 .ad_area {
   background: white;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   width: 100%;
   height: 132px;
   border-radius: 24px;

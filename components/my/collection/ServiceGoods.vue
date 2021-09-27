@@ -34,12 +34,6 @@
 
           <div v-if="type === 'Service'" class="desc-label">
             <span
-              v-if="info.salesGoodsSubVos && info.salesGoodsSubVos.length > 1"
-              class="desc-label-tc"
-            >
-              套餐
-            </span>
-            <span
               v-for="item of getSalesGoodsTags(info.salesGoodsTags)"
               :key="item.tagValueCode"
             >

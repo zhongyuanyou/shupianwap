@@ -6,14 +6,6 @@
     </p>
     <p class="goods_tag">
       <span
-        v-if="
-          goodsItem.salesGoodsSubVos && goodsItem.salesGoodsSubVos.length > 1
-        "
-        class="tc_tag"
-      >
-        套餐
-      </span>
-      <span
         v-for="(tagitem, tagindex) in goodsItem.tag"
         v-show="tagitem.categoryCode === 'DSJTC20210514000042'"
         :key="tagindex"
