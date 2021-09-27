@@ -1,6 +1,6 @@
 <template>
   <!-- 侧边栏提问 -->
-  <div class="sider-consult" :class="[active ? 'sider-consult--active' : '']">
+  <div class="sider-consult">
     <div v-if="!active" class="inactive" @click="active = !active">
       <my-icon
         name="tap_ic_pen_s"
@@ -9,64 +9,81 @@
         class="inactive__icon"
       ></my-icon>
     </div>
-    <div v-else class="active">
-      <div class="active__question">
-        <div class="item">
-          <div class="item__txt">可以提供定制可以提供定制可以提供定制</div>
-          <img :src="questionIcon" />
+    <sp-overlay :show="active" @click.stop="active = !active">
+      <div class="active">
+        <div class="active__question">
+          <div
+            v-for="(item, i) in tepmList"
+            :key="i"
+            class="item"
+            @click="toIM(item)"
+          >
+            <div class="item__txt">{{ item }}</div>
+            <img :src="questionIcon" />
+          </div>
         </div>
-        <div class="item">
-          <div class="item__txt">可以提供定制可以提供定制可以提供定制</div>
-          <img :src="questionIcon" />
-        </div>
-        <div class="item">
-          <div class="item__txt">可以提供定制可以提供定制可以提供定制</div>
-          <img :src="questionIcon" />
-        </div>
-        <div class="item">
-          <div class="item__txt">可以提供定制可以提供定制可以提供定制</div>
-          <img :src="questionIcon" />
-        </div>
-      </div>
-      <div class="active__btn--wrap">
-        <div class="active__btn" @click="active = !active">
-          <my-icon
-            name="tap_ic_pen_n"
-            size="0.12rem"
-            color="#4974F5"
-            class="active__icon"
-          ></my-icon>
-          <span>提问</span>
+        <div class="active__btn--wrap">
+          <div class="active__btn">
+            <my-icon
+              name="tap_ic_pen_n"
+              size="0.12rem"
+              color="#4974F5"
+              class="active__icon"
+            ></my-icon>
+            <span>提问</span>
+          </div>
         </div>
       </div>
-    </div>
+    </sp-overlay>
   </div>
 </template>
 
 <script>
+import { Overlay } from '@chipspc/vant-dgg'
 import { goodDetail } from '~/utils/static/imgs.js'
+import imHandle from '~/mixins/imHandle'
 
 export default {
   name: 'GoodDetailSiderConsult',
+  components: {
+    [Overlay.name]: Overlay,
+  },
+  mixins: [imHandle],
   data() {
     return {
       active: false,
       questionIcon: goodDetail['c-siderConsult-questionIcon'],
+      tepmList: [
+        '可以提供定制可以提供定制可以提供定制',
+        '可以提供定制可以提供定制可以提供定制',
+        '可以提供定制可以提供定制可以提供定制',
+        '可以提供定制可以提供定制可以提供定制',
+      ],
     }
+  },
+  computed: {
+    recPlanner() {
+      return this.$store.state.planner.recodBottomPlanner
+    },
+  },
+  methods: {
+    toIM(item) {
+      this.sendTextMessage(this.recPlanner.mchUserId)
+    },
   },
 }
 </script>
 
 <style lang="less" scoped>
 .sider-consult {
+  ::v-deep.sp-overlay {
+    background-color: unset;
+  }
   position: fixed;
   right: 0;
   bottom: 148px;
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
-  &--active {
-    right: 60px;
-  }
   .inactive {
     background: #fff;
     z-index: 1;
@@ -83,6 +100,9 @@ export default {
     }
   }
   .active {
+    position: fixed;
+    right: 60px;
+    bottom: 148px;
     z-index: 1;
     &__icon {
       margin-right: 8px;
