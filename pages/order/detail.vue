@@ -115,7 +115,9 @@
       <div
         v-if="
           cusOrderStatusType !== 4 &&
-          orderData.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
+          orderData.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
+          orderData.cusOrderPayStatusNo !==
+            'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
         "
         class="order_text order-area"
       >
