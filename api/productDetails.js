@@ -13,5 +13,6 @@ const productDetailsApi = {
     // 详情页中,融资对应api
     get_city: `${CHIPS_WAP_BASE_URL}/nk/selling_goods/v1/financing_city_list.do`, // 查询城市
   },
+  productInformationContent: `${CHIPS_WAP_BASE_URL}/nk/productCategory/v1/information_content.do`, // 查询产品提问|回答信息
 }
 export default productDetailsApi
