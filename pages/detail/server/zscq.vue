@@ -13,6 +13,9 @@
       <!--E 第一板块-->
       <!-- 页面中部广告位 -->
       <PageMidAd />
+      <div class="zxc">
+        <div class="inner" @click="toZC()"></div>
+      </div>
       <!-- <div class="banner file_box">
         <span class="text1">
           <sp-image
@@ -128,9 +131,31 @@ export default {
   mounted() {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'ItDetail' })
   },
+  methods: {
+    toZC() {
+      const link = window.location.href.includes('https://m.shupian.cn')
+        ? 'https://mtool.shupian.cn/policySubsidy/measure'
+        : 'https://tmtool.shupian.cn/policySubsidy/measure'
+      window.location.href = link
+    },
+  },
 }
 </script>
 <style lang="less" scoped>
+.zxc {
+  margin-bottom: 20px;
+  height: 250px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 32px 40px;
+  .inner {
+    width: 100%;
+    height: 100%;
+    background: url(https://cdn.shupian.cn/sp-pt/wap/images/6bng2cxycz00000.png)
+      no-repeat center center;
+    background-size: 100% 100%;
+  }
+}
 .template {
   width: 100%;
   height: 100%;
