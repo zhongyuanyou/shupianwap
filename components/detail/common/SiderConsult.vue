@@ -1,6 +1,6 @@
 <template>
   <!-- 侧边栏提问 -->
-  <div class="sider-consult">
+  <div v-if="questList.length" class="sider-consult">
     <div v-if="!active" class="inactive" @click="active = !active">
       <my-icon
         name="tap_ic_pen_s"
@@ -13,7 +13,7 @@
       <div class="active">
         <div class="active__question">
           <div
-            v-for="(item, i) in tepmList"
+            v-for="(item, i) in questList"
             :key="i"
             class="item"
             @click="toIM(item)"
@@ -42,7 +42,6 @@
 import { Overlay } from '@chipspc/vant-dgg'
 import { goodDetail } from '~/utils/static/imgs.js'
 import imHandle from '~/mixins/imHandle'
-import { productDetailsApi } from '~/api'
 
 export default {
   name: 'GoodDetailSiderConsult',
@@ -50,16 +49,19 @@ export default {
     [Overlay.name]: Overlay,
   },
   mixins: [imHandle],
+  props: {
+    // 多个钻展规划师
+    list: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
+  },
   data() {
     return {
       active: false,
       questionIcon: goodDetail['c-siderConsult-questionIcon'],
-      tepmList: [
-        { content: '可以提供定制可以提供定制可以提供定制' },
-        { content: '可以提供定制可以提供定制可以提供定制' },
-        { content: '可以提供定制可以提供定制可以提供定制' },
-        { content: '可以提供定制可以提供定制可以提供定制' },
-      ],
     }
   },
   computed: {
@@ -69,36 +71,14 @@ export default {
     sellingGoodsData() {
       return this.$store.state.sellingGoodsDetail.sellingGoodsData
     },
+    questList() {
+      return this.list
+    },
   },
-  mounted() {
-    this.productInformationContent()
-  },
+  mounted() {},
   methods: {
     toIM(item) {
       this.sendTextMessage(this.recPlanner.mchUserId)
-    },
-    async productInformationContent() {
-      try {
-        const key = this.sellingGoodsData.classCodeLevel.split(',')
-        const params = {
-          page: 1,
-          limit: 4,
-          twoLevelCategoryCode: key[1],
-          contentType: 1,
-        }
-        const { data, code, message } = await this.$axios.get(
-          productDetailsApi.productInformationContent,
-          { params }
-        )
-        if (code !== 200) {
-          throw new Error(message)
-        }
-        if (data.rows.length) {
-          this.tepmList = data
-        }
-      } catch (e) {
-        console.log(e)
-      }
     },
   },
 }

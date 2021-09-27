@@ -68,6 +68,7 @@ export default {
         totalCount: 0, // 初始化评论字段,防止程序报错
         records: [],
       },
+      queList: [], // 咨询,服务详情内容
     }
   },
   async mounted() {
@@ -86,6 +87,8 @@ export default {
     this.getRecPlanner()
     // 获取评价
     this.getCommentsApi()
+    // 获取咨询,以及提问
+    this.productInformationContent()
   },
   methods: {
     ...mapActions({
@@ -244,6 +247,29 @@ export default {
           'planner/setRecPlanner',
           plannerRes.data.records[0]
         )
+      }
+    },
+    async productInformationContent() {
+      try {
+        const key = this.sellingDetail.classCodeLevel.split(',')
+        const params = {
+          page: 1,
+          limit: 4,
+          twoLevelCategoryCode: key[1],
+          contentType: 1,
+        }
+        const { data, code, message } = await this.$axios.get(
+          productDetailsApi.productInformationContent,
+          { params }
+        )
+        if (code !== 200) {
+          throw new Error(message)
+        }
+        if (data.rows.length) {
+          this.queList = data.rows
+        }
+      } catch (e) {
+        console.log(e)
       }
     },
     // 获取商品图片
