@@ -89,7 +89,9 @@ export default {
         {
           title: '写评价',
         },
-        (res) => {}
+        (res) => {
+          console.log('设置标题res', res)
+        }
       )
       this.$appFn.dggGetUserInfo((res) => {
         if (res.code === 200 && res.data.userId && res.data.token) {
