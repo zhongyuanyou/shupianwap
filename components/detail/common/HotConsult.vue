@@ -1,6 +1,6 @@
 <template>
   <!-- 热门咨询组件 -->
-  <div class="c-hot-consult">
+  <div v-if="questList.length" class="c-hot-consult">
     <div class="title">
       <div class="title__name">热门咨询</div>
       <div class="title__more" style="display: none">
@@ -10,7 +10,7 @@
     </div>
     <div class="content">
       <div
-        v-for="(item, i) in tepmList"
+        v-for="(item, i) in questList"
         :key="i"
         class="content__item"
         @click="toIM(item)"
@@ -35,7 +35,6 @@
 <script>
 import { Field, Button } from '@chipspc/vant-dgg'
 import imHandle from '~/mixins/imHandle'
-import { productDetailsApi } from '~/api'
 
 export default {
   name: 'GoodDetailHotConsult',
@@ -44,6 +43,15 @@ export default {
     [Button.name]: Button,
   },
   mixins: [imHandle],
+  props: {
+    // 多个钻展规划师
+    list: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
+  },
   data() {
     return {
       askVal: '',
@@ -62,36 +70,14 @@ export default {
     sellingGoodsData() {
       return this.$store.state.sellingGoodsDetail.sellingGoodsData
     },
+    questList() {
+      return this.list
+    },
   },
-  mounted() {
-    this.productInformationContent()
-  },
+  mounted() {},
   methods: {
     toIM(item) {
       this.sendTextMessage(this.recPlanner.mchUserId)
-    },
-    async productInformationContent() {
-      try {
-        const key = this.sellingGoodsData.classCodeLevel.split(',')
-        const params = {
-          page: 1,
-          limit: 4,
-          twoLevelCategoryCode: key[1],
-          contentType: 1,
-        }
-        const { data, code, message } = await this.$axios.get(
-          productDetailsApi.productInformationContent,
-          { params }
-        )
-        if (code !== 200) {
-          throw new Error(message)
-        }
-        if (data.rows.length) {
-          this.tepmList = data
-        }
-      } catch (e) {
-        console.log(e)
-      }
     },
   },
 }
