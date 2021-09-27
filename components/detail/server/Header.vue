@@ -11,7 +11,11 @@
         >
           <sp-top-nav-bar
             ellipsis
-            :background="`rgba(255,255,255,0)`"
+            :background="
+              scrollDistance > 50
+                ? 'rgba(255,255,255,1)'
+                : 'rgba(255,255,255,0)'
+            "
             @on-click-left="onClickLeft"
           >
             <template #left>
@@ -149,6 +153,7 @@ export default {
   },
   data() {
     return {
+      scrollDistance: 0,
       hdImg: goodDetail['c-header-bg'],
       hdStarImg: goodDetail['c-header-avatarStar'],
       scrollTopY: 0, // 距离顶部移动距离
@@ -193,6 +198,7 @@ export default {
     },
     // 移动距离顶部的距离
     scrollHandle({ scrollTop }) {
+      this.scrollDistance = scrollTop
       if (scrollTop > 222) {
         this.scrollTopY = 1
       } else {
