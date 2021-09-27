@@ -78,7 +78,15 @@ export default {
   mounted() {},
   methods: {
     toIM(item) {
-      this.sendTextMessage(this.recPlanner.mchUserId)
+      const msgParams = {
+        extContent: this.$route.query, // 路由参数
+        forwardAbstract: '摘要信息',
+        content: item.content,
+      }
+      this.sendTextMessageV2({
+        mchUserId: this.recPlanner.mchUserId,
+        msgParams,
+      })
     },
   },
 }

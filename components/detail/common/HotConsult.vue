@@ -26,7 +26,7 @@
           placeholder="您的疑问第一时间为您解答"
           maxlength="20"
         />
-        <button @click="toIM(item)">提问</button>
+        <button @click="questIm">提问</button>
       </div>
     </div>
   </div>
@@ -77,7 +77,30 @@ export default {
   mounted() {},
   methods: {
     toIM(item) {
-      this.sendTextMessage(this.recPlanner.mchUserId)
+      const msgParams = {
+        extContent: this.$route.query, // 路由参数
+        forwardAbstract: '摘要信息',
+        content: item.content,
+      }
+      this.sendTextMessageV2({
+        mchUserId: this.recPlanner.mchUserId,
+        msgParams,
+      })
+    },
+    questIm() {
+      if (this.askVal.trim() === '') {
+        this.$xToast.warning('提问内容不能为空')
+        return
+      }
+      const msgParams = {
+        extContent: this.$route.query, // 路由参数
+        forwardAbstract: '摘要信息',
+        content: this.askVal.trim(),
+      }
+      this.sendTextMessageV2({
+        mchUserId: this.recPlanner.mchUserId,
+        msgParams,
+      })
     },
   },
 }
