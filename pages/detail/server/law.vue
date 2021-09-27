@@ -10,7 +10,7 @@
       <!--S 第一板块-->
       <Title />
       <!--E 第一板块-->
-      <PageMidAd :ad-location-code="'ad100399'" />
+      <PageMidAd />
       <!--S 第二板块 领券 SKU-->
       <VouchersSelect ref="sku" />
       <!--E 第二板块 领券 SKU-->
