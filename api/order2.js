@@ -1,4 +1,11 @@
 'use strict'
+/**
+ * ORDER_ORDER_RESOURCE_STATUS_HANDLED
+ * @author tangdaibing
+ * @description 性能优化版本APi 930
+ * @since 2021/09/28
+ * @lastEditDate 2021/09/28
+ * */
 import { request } from '@/utils/request'
 import { CHIPS_APP_BASE_URL, CHIPS_WAP_BASE_URL, CHIPS_PC_URL, CRISPS_C_MIDDLE_SERVICE_API } from '@/config/constant'
 const category = {
@@ -8,7 +15,7 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/order/v3/order_list.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order_performance/v1/order_list.do',
     })
   },
   // 客户单列表
@@ -17,7 +24,7 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/order_list.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order_performance/v1/cus_order_list.do',
     })
   },
   // 根据客户单id查询客户单详情
@@ -26,16 +33,16 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/cus_order_detail.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order_performance/v1/cus_order_detail.do',
     })
   },
-  // 客户单详情
+  // 订单详情
   getDetailByOrderId({ axios }, params) {
     return request({
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/order_detail.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order_performance/v1/order_detail.do',
     })
   },
   // 分批支付列表
@@ -44,7 +51,7 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/batch_pay_list.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order_performance/v1/batch_pay_list.do',
     })
   },
   // 取消订单
@@ -62,7 +69,7 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/confirm_order.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order_performance/v1/confirm_order.do',
     })
   },
   // 根据客户单id查询关联订单
@@ -71,7 +78,7 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/child_order.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order_performance/v1/child_order.do',
     })
   },
   // 获取账单明细 yk/order/find_pay_bill_details.do
@@ -91,7 +98,7 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/add_order.do', // CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order_performance/v1/add_order.do', // CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
     })
   },
 
@@ -110,10 +117,11 @@ const category = {
       params,
       method: 'post',
 
-      url: CHIPS_WAP_BASE_URL + '/yk/order/v1/commit_order.do', // CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order_performance/v1/commit_order.do', // CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
       // url: 'http://127.0.0.1:7001/service/yk/order/v1/commit_order.do',
     })
   },
+
 
 
   /**

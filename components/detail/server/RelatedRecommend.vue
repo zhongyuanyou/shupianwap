@@ -1,9 +1,13 @@
 <template>
   <div v-if="productData.length" class="need">
-    <sp-sticky ref="tabCurveRef" :offset-top="searchDomHeight" class="top">
+    <sp-sticky
+      ref="tabCurveRef"
+      :offset-top="searchDomHeight"
+      class="top"
+    >
       <p class="need_title">猜您需要</p>
     </sp-sticky>
-    <sp-skeleton :row="20">
+    <sp-skeleton :row="10" :loading="needLoading">
       <div class="recomend_goods_list">
         <div
           v-for="(item, index) in productData"
@@ -89,6 +93,7 @@ export default {
   },
   data() {
     return {
+      needLoading: true,
       searchDomHeight: 0,
     }
   },

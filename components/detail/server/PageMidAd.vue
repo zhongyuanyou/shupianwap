@@ -6,10 +6,7 @@
           href="javascript:void(0)"
           @click="adJumpHandleMixin(item.materialList[0])"
         >
-          <img
-            :src="$resizeImg(375, 150, item.materialList[0].materialUrl)"
-            alt=""
-          />
+          <img alt="" :src="item.materialList[0].materialUrl" />
         </a>
       </sp-swipe-item>
     </sp-swipe>
@@ -65,8 +62,20 @@ export default {
   background: white;
   margin-bottom: 30px;
   width: 100%;
-  height: 300px;
+  height: 132px;
   border-radius: 24px;
   overflow: hidden;
+  .sp-swipe {
+    width: 100%;
+    height: 100%;
+    .sp-swipe-item {
+      width: 100%;
+      height: 100%;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
 }
 </style>

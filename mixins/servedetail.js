@@ -23,7 +23,7 @@ export default {
           withGoodsSubFlg: 1,
           withOperatingsFlg: 1,
           clientType: 'COMDIC_TERMINAL_APP',
-        },
+        }
       )
       if (code === 200) {
         sellingGoodsDetailData = data
@@ -158,7 +158,6 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            console.log('res', res)
             // 关闭骨架屏
             this.$refs.remNeed.needLoading = false
             this.productPage += 1
@@ -166,6 +165,7 @@ export default {
               this.finished = true
             }
             this.recommendProduct = [...this.recommendProduct].concat(res.data) // 推荐产品列表
+            console.log('this.recommendProduct', this.recommendProduct)
             // 推荐产品最多加载30条
             if (this.recommendProduct.length >= 30) {
               this.finished = true
