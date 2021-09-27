@@ -431,6 +431,7 @@ export default {
             transform-origin: 50% 50%;
             margin-right: 6px;
             float: left;
+            margin-bottom: 20px;
           }
         }
       }

@@ -311,11 +311,6 @@ export default {
   data() {
     return {
       serveModalShow: false,
-      serviceTag: [
-        // { text: '服务保持踩踩踩', title: '实名认证律师' },
-        // { text: '服务保持踩踩踩', title: '未履约可退款' },
-        // { text: '服务保持踩踩踩', title: '不满意可申诉' },
-      ],
       type: 1, // 1 加入购物车、立即购买  2 加入购物车  3 立即购买
       vouchers: '',
       show: false,
@@ -339,27 +334,27 @@ export default {
       // 获取客户端展示信息
       return this.$store.state.sellingGoodsDetail.sellingGoodsData
     },
-    // serviceTag() {
-    //   const salesGoodsTags =
-    //     this.$store.state.sellingGoodsDetail.sellingGoodsData.salesGoodsTags
-    //   let serviceTag = []
-    //   if (salesGoodsTags) {
-    //     // 产品中心605版本筛选服务标签 code DSJTC20210514000043
-    //     serviceTag = salesGoodsTags
-    //       .filter((item) => {
-    //         return item.categoryCode === 'DSJTC20210514000042'
-    //       })
-    //       .map((item) => {
-    //         return {
-    //           text: item.ext1 || item.ext2 || item.ext3,
-    //           title: item.tagValueName,
-    //           icon: 'sp-iconfont sp-iconfont-security2',
-    //         }
-    //       })
-    //       .slice(0, 3)
-    //   }
-    //   return serviceTag
-    // },
+    serviceTag() {
+      const salesGoodsTags =
+        this.$store.state.sellingGoodsDetail.sellingGoodsData.salesGoodsTags
+      let serviceTag = []
+      if (salesGoodsTags) {
+        // 产品中心605版本筛选服务标签 code DSJTC20210514000043
+        serviceTag = salesGoodsTags
+          .filter((item) => {
+            return item.categoryCode === 'DSJTC20210514000042'
+          })
+          .map((item) => {
+            return {
+              text: item.ext1 || item.ext2 || item.ext3,
+              title: item.tagValueName,
+              icon: 'sp-iconfont sp-iconfont-security2',
+            }
+          })
+          .slice(0, 3)
+      }
+      return serviceTag
+    },
     // 优惠券列表
     coupon() {
       const list = []
