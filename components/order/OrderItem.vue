@@ -293,7 +293,7 @@
           type="default"
           class="btn-confirm"
           @click="handleClickItem(5)"
-          >立即付款</sp-button
+          >支付尾款</sp-button
         >
         <sp-button
           v-if="isShowConfirmBtn(orderData)"
