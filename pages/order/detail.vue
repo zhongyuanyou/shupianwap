@@ -479,7 +479,6 @@ import ServeList from '@/components/order/detail/ServeList.vue'
 import TradeList from '@/components/order/detail/TradeList.vue'
 import CancelOrder from '@/components/order/CancelOrder.vue' // 取消订单弹窗
 import PayModal from '@/components/order/PayModal.vue' // 支付弹窗
-import orderUtils from '@/utils/order'
 import orderApi from '@/api/order'
 import OrderMixins from '@/mixins/order'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
@@ -579,23 +578,20 @@ export default {
             this.orderData.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
             this.orderData.payStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
           ) {
-            // 先定金后尾款部分支付的订单状态为办理中
+            // 部分支付的订单状态为办理中
             this.orderData.statusName = '办理中'
-          } else {
-            this.orderData.statusName = this.getStatusName(
-              this.orderData.orderStatusNo
-            )
-          }
-          this.cusOrderStatusType = orderUtils.checkCusOrderStatus(
-            this.orderData.cusOrderStatusNo
-          )
-          if (this.cusOrderStatusType === 3) {
+          } else if (
+            this.orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_COMPLETED'
+          ) {
             this.orderData.statusName = '已完成'
           } else {
             this.orderData.statusName = this.getStatusName(
               this.orderData.orderStatusNo
             )
           }
+          this.cusOrderStatusType = this.checkCusOrderStatus(
+            this.orderData.cusOrderStatusNo
+          )
           if (
             this.orderData.orderSplitAndCusVo.cusOrderStatusNo !==
               'ORDER_CUS_STATUS_CANCELLED' &&

@@ -13,7 +13,6 @@
  * */
 
  import { auth } from '@/api'
- import orderUtils from '@/utils/order'
  import orderApi from '@/api/order'
  // 客户单状态code
  const ORDERSTATUSCODE = {
