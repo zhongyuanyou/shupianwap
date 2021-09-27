@@ -1,6 +1,6 @@
 <template>
   <div class="PlaceOrder">
-    <Head v-show="!editShow" ref="head" title="提交订单">
+    <Head v-show="!editShow" ref="head" title="确认订单">
       <template #left>
         <my-icon
           class="back-icon"
@@ -20,119 +20,111 @@
       :loading="skeletonloading"
     >
     </sp-skeleton>
-    <div
-      v-if="!skeletonloading"
-      :class="isInApp ? 'allbox2' : ''"
-      class="allbox"
-    >
+    <div v-if="!skeletonloading" class="allbox">
       <div class="data-content">
-        <div
-          v-for="(item, index) in settlementInfo.productVo"
-          :key="index"
-          class="list"
-        >
+        <div v-for="(item, index) in order.list" :key="index" class="list">
           <div class="right">
             <h1 class="tit">
-              {{ item.name }}
+              {{
+                item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
+                  ? item.salesGoodsSubVos[0].goodsSubName
+                  : item.name
+              }}
             </h1>
-
-            <p v-if="item.skuExtInfo" class="goods-sku">
-              {{ item.skuExtInfo }}
+            <p v-if="item.salesGoodsSubVos" class="goods-sku">
+              {{
+                item.salesGoodsSubVos.length
+                  ? item.salesGoodsSubVos[0].goodsSubDetailsName
+                  : ''
+              }}
+            </p>
+            <p v-if="item.saleGoodsSubs" class="goods-sku">
+              {{
+                item.saleGoodsSubs.length
+                  ? item.saleGoodsSubs[0].goodsSubDetailsName
+                  : ''
+              }}
             </p>
 
-            <p class="price">
-              <span>
-                <b
-                  v-if="
-                    goodsSkuDetail &&
-                    goodsSkuDetail.sku &&
-                    goodsSkuDetail.sku.targetRate
-                  "
-                  >(含服务费{{ goodsSkuDetail.sku.targetRate }}%)</b
-                >
-                <b v-if="isIntendedOrder">预计:</b>
-                <b class="price_text">{{ item.price }}</b
-                >元
-              </span>
-
-              <i>{{ 'x' + item.goodsNumber }}</i>
+            <p v-if="item.salesGoodsSubVos" class="price">
+              <span
+                ><b>{{
+                  getGoodsSubById(item.salesGoodsSubVos[0].goodsSubId)
+                    .salesPrice
+                }}</b
+                >元</span
+              >
+              <i>{{
+                $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
+              }}</i>
+            </p>
+            <p v-if="item.saleGoodsSubs" class="price">
+              <span
+                ><b>{{
+                  getGoodsSubById(item.saleGoodsSubs[0].goodsSubId).salesPrice
+                }}</b
+                >元</span
+              >
+              <i>{{
+                $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
+              }}</i>
             </p>
           </div>
         </div>
+        <div class="inpbox">
+          <Field
+            v-model="message"
+            rows="1"
+            autosize
+            label="备注留言"
+            type="textarea"
+            placeholder="建议提前先与规划师联系"
+            maxlength="50"
+          ></Field>
+        </div>
       </div>
-
-      <!-- 根据当前的付款模式，先付款后服务/先定金后尾款/先服务后付款/按节点付费，展示不同的模块 -->
-      <div>
-        <div v-if="isDeposit" class="deposit">
-          <!-- 先定金后尾款 -->
-          <div class="deposit_tips">
-            温馨提示：该订单先支付定金在业务办理完成后支付尾款
-          </div>
-          <div class="deposit_content">
-            定金尾款：定金 {{ settlementInfo.depositAmount }}元,<span
-              >尾款 {{ settlementInfo.orderBalanceMoney }}元</span
+      <!-- <div v-else class="data-content data-content1">
+          <div v-for="(item, index) in order.list" :key="index" class="list">
+            <h1><span>套餐</span>{{ item.name }}</h1>
+            <div
+              class="goods"
+              v-for="(goodsitem, goodsindex) in item.salesGoodsSubVos"
+              :key="goodsindex"
             >
+              <img src="item.img" alt="" class="left" />
+              <div class="right">
+                <h1></h1>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div v-else-if="isServiceFinshed" class="deposit">
-          <!-- 服务完结收费的意向单 -->
-          <div class="deposit_tips">温馨提示：该订单可享受业务办理完成后付费</div>
-          <div class="deposit_content">
-            <span>总价 {{ settlementInfo.orderTotalMoney }}元</span>
+          <div class="inpbox">
+            <Field
+              v-model="message"
+              rows="1"
+              autosize
+              label="备注留言"
+              type="textarea"
+              placeholder="建议提前先与规划师联系"
+            ></Field>
           </div>
-        </div>
-        <div v-else class="deposit">
-          <div class="deposit_tips">
-            温馨提示：{{
-              isNodes ? '该订单按服务节点付费' : '该订单先付款后服务'
-            }}
-          </div>
-          <div class="deposit_content">
-            总价 {{ settlementInfo.orderTotalMoney }}元，应付款{{
-              settlementInfo.orderPayableMoney
-            }}元
-          </div>
-        </div>
-      </div>
+        </div> -->
       <div class="news-content">
-        <p class="order_sku">
-          <span class="title">商品及服务总数</span>
-          <span class="value">
-            <b>{{ goodsNumberSum }}</b
-            >件
-          </span>
-        </p>
-        <p class="order_sku">
-          <span class="title">商品金额</span>
-          <span class="value">
-            <span v-if="isIntendedOrder">预计</span>
-            <b>{{ settlementInfo.orderTotalMoney }}</b
-            >元
-          </span>
-        </p>
         <CellGroup>
-          <!-- <Cell
+          <Cell
             title="商品及服务总数"
-            :value="goodsNumberSum + '件'"
+            :value="(order.num || order.goodsTotal || 0) + '件'"
             value-class="black"
           />
           <Cell
             title="商品金额"
-            :value="
-              isIntendedOrder
-                ? '预计' + (settlementInfo.orderTotalMoney || 0) + '元'
-                : (settlementInfo.orderTotalMoney || 0) + '元'
-            "
+            :value="settlementInfo.skuTotalPrice + '元'"
             value-class="black"
-          /> -->
-          <!-- 意向单不用优惠券 -->
+          />
           <Cell
-            v-if="!isIntendedOrder"
             title="优惠券"
             :value="
-              parseFloat(settlementInfo.orderDiscountMoney)
-                ? -settlementInfo.orderDiscountMoney + '元'
+              couponInfo.couponPrice
+                ? couponInfo.couponPrice + '元'
                 : couponInfo.datalist.length > 0
                 ? couponInfo.datalist.length + '个优惠券'
                 : '无可用'
@@ -163,88 +155,85 @@
             @click="openCardFn()"
           /> -->
         </CellGroup>
-        <!--  settlementInfo.orderPayableMoney  -->
         <p class="money">
           合计：
-          <span class="money_price">
-            <b class="money_text">{{
-              (settlementInfo.orderTotalMoney || 0) -
-              (settlementInfo.orderDiscountMoney || 0)
-            }}</b
-            >元 <b v-if="isIntendedOrder" class="toast_text">预计</b></span
-          >
-          <span v-if="isDeposit" class="deposit_text"
-            >（ 定金 {{ settlementInfo.depositAmount }}元，<span
-              class="deposit_text"
-              >尾款 {{ settlementInfo.orderBalanceMoney }}元</span
-            >）</span
-          >
+          <span>
+            <!-- <b>{{ order.salesPrice || order.skuTotalPrice }}</b> 元 -->
+            <b>{{ settlementInfo.needPayTotalMoney }}</b> 元
+          </span>
         </p>
       </div>
-      <div class="news-content">
-        <Cell
-          title="支付方式"
-          :value="payMethod.text"
-          is-link
-          value-class="black"
-          @click="openPayMethod"
-        />
+      <div class="contract">
+        <CellGroup>
+          <Cell
+            title="合同信息"
+            :value="
+              contaract.contractFirstPhone ? '已完善合同信息' : '完善合同信息'
+            "
+            :value-class="contaract.contractFirstPhone ? 'ys' : 'black'"
+            is-link
+            @click="gocontractedit()"
+          />
+          <Cell
+            title="支付方式"
+            :value="payMethod.text"
+            is-link
+            value-class="black"
+            @click="openPayMethod"
+          />
+        </CellGroup>
       </div>
       <div class="agreement">
         <Checkbox v-model="radio">
           <template>
             <p class="tit">
-              我已阅读过并知晓<span
-                class="protocol_name"
-                @click.stop="goagr('protocol100008')"
-                >《薯片平台订单协议》</span
-              ><span v-if="settlementInfo.isSecuredTrade === 1">
-                和<span
-                  class="protocol_name"
-                  @click.stop="goagr('protocol100044')"
-                  >《薯片平台担保交易支付服务协议》</span
-                >
-              </span>
-              <!-- 、<span class="protocol_name" @click="goagr('protocol100033')"
-                >《薯片平台交易委托协议》</span
-              >、<span class="protocol_name" @click="goagr('protocol100008')"
-                >《薯片平台订单协议》</span
-              > -->
+              我已阅读过并知晓<span @click.stop="goagr"
+                >《薯片平台用户交易下单协议》</span
+              >
             </p>
           </template>
         </Checkbox>
       </div>
     </div>
-    <div ref="foot" :class="isInApp ? 'foot2' : ''" class="foot">
-      <p class="left">
+    <div ref="foot" class="foot">
+      <!-- <p class="left">
         应付:<span>
-          <b v-if="isDeposit">{{ settlementInfo.depositAmount }}</b>
-          <b v-else-if="isNodes">0</b>
-          <b v-else-if="isServiceFinshed">0</b>
-          <b v-else-if="isBeforePay">{{ settlementInfo.orderPayableMoney }}</b>
-          元</span
+          <b>{{ price }}</b> 元</span
+        >
+        settlementInfo
+      </p>
+       -->
+      <p class="left">
+        应付：<span>
+          <b>{{ settlementInfo.needPayTotalMoney }}</b> 元</span
         >
       </p>
+
       <div class="right" :class="radio ? 'act' : ''" @click="placeOrder">
         提交订单
       </div>
     </div>
-
+    <div v-show="editShow" class="contractbox">
+      <Contract @goback="contractback" @sum="contractsum"></Contract>
+    </div>
     <LoadingCenter v-show="loading" />
-    <PopupUnSubmit
+    <Popup
       ref="conpon"
       :show="couponInfo.popupshow"
       :height="75"
       title="优惠"
       help="使用说明"
-      :cus-order-id="$route.query.cusOrderId"
-      :origin-price="tradeMarkPriceSum || settlementInfo.orderTotalMoney"
+      :origin-price="
+        $route.query.type === 'shopcar'
+          ? order.skuTotalPrice
+          : settlementInfo.skuTotalPrice
+      "
       :tablist="couponInfo.tablist"
       :datalist="couponInfo.datalist"
       :nolist="couponInfo.nolist"
       @change="conponChange"
       @close="close"
-    ></PopupUnSubmit>
+    ></Popup>
     <PayMethodPopup
       :show="payMethod.show"
       :list="payMethod.list"
@@ -252,7 +241,6 @@
       @change="payMethodPopupChange"
       @close="closePayMethod"
     ></PayMethodPopup>
-
     <CardPopup
       ref="cardPopup"
       :show="card.show"
@@ -277,44 +265,47 @@ import {
   Checkbox,
   Toast,
   Skeleton,
-  CheckboxGroup,
+  // CheckboxGroup,
 } from '@chipspc/vant-dgg'
-import { mapState } from 'vuex'
 import Head from '@/components/common/head/header.vue'
-import PopupUnSubmit from '@/components/PlaceOrder/PopupUnSubmit.vue'
+import Popup from '@/components/PlaceOrder/Popup.vue'
 import CardPopup from '@/components/PlaceOrder/CardPopup.vue'
+import Contract from '@/components/PlaceOrder/contract.vue'
+import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import PayMethodPopup from '@/components/PlaceOrder/PayMethodPopup.vue'
 
-import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { productDetailsApi, auth, shopCart } from '@/api'
 import cardApi from '@/api/card'
-import orderApi from '@/api/order2'
-import OrderMixins from '@/mixins/order'
-
-import { coupon, order, actCard } from '@/api/index'
+import order from '@/api/order2'
+import { coupon, actCard } from '@/api/index'
 export default {
   name: 'PlaceOrder',
   components: {
     Head,
+    Field,
     Cell,
     CellGroup,
     Checkbox,
-    // CheckboxGroup,
-    PopupUnSubmit,
+    Popup,
     CardPopup,
-    PayMethodPopup,
     [Skeleton.name]: Skeleton,
     LoadingCenter,
+    Contract,
+    PayMethodPopup,
   },
-  mixins: [OrderMixins],
   data() {
     return {
-      goodsSkuDetail: {},
-      radio: '', // 选中协议
-      checkboxProtocol: [], // 选中协议
-      order: {},
+      money: '1232',
 
-      settlementInfo: {},
+      radio: '', // 选中协议
+
+      message: '',
+      order: '',
+      settlementInfo: {
+        skuTotalPrice: 0,
+        needPayTotalMoney: 0,
+        saleGoodsList: [],
+      },
       // num: 0,
 
       couponInfo: {
@@ -324,7 +315,7 @@ export default {
         couponPrice: '', // 选择的优惠券对象
 
         tablist: [
-          { name: '可用优惠券', num: '', is: true },
+          { name: '可用优惠券', num: '12', is: true },
           { name: '不可用优惠券' },
         ],
         datalist: [],
@@ -335,7 +326,7 @@ export default {
         selectedItem: {}, // 选择的对象
         cardPrice: '', // 选择的card对象立减金额
         tablist: [
-          { name: '可用活动卡', num: '', is: true },
+          { name: '可用活动卡', num: '12', is: true },
           { name: '不可用活动卡' },
         ],
         datalist: [], // 支持的列表
@@ -344,186 +335,222 @@ export default {
       payMethod: {
         show: false,
         list: [
-          // { value: 'ORDER_PAY_MODE_ONLINE', text: '在线支付' },
-          // { value: 'ORDER_PAY_MODE_OFFLINE', text: '线下支付' },
+          { value: 'ORDER_PAY_MODE_ONLINE', text: '在线支付' },
+          { value: 'ORDER_PAY_MODE_OFFLINE', text: '线下支付' },
           // { value: 'ORDER_PAY_MODE_SECURED', text: '担保交易' },
         ],
-        value: '', // 'ORDER_PAY_MODE_ONLINE',
-        text: '', // '在线支付',
+        value: 'ORDER_PAY_MODE_ONLINE', // 'ORDER_PAY_MODE_ONLINE',
+        text: '在线支付', // '在线支付',
       },
 
+      contaract: '',
+      productId: this.$route.query.productId,
+      formData: {
+        orderByWhere: 'createTime=desc',
+        findType: 5,
+        userId: '767579686475123456',
+        actionId: this.productId,
+      },
+      price: '',
       Orderform: {
-        orderAgreementIds: [],
-
+        needSplitProPackageDataParam: [],
+        cusOrderPayType: '',
+        isFromCart: '',
+        cartIds: '',
+        orderProvinceNo: '',
+        orderCityNo: '',
+        orderLocationProvinceName: '',
+        orderLocationCityName: '',
+        orderAgreementIds: '',
+        customerOrderMark: '',
         discount: [],
-
         payType: 'ORDER_PAY_MODE_ONLINE',
       },
-
       loading: false,
       skeletonloading: true,
       editShow: false,
       productList: [],
-
-      requestOnce: false,
     }
   },
-  computed: {
-    ...mapState({
-      isInApp: (state) => state.app.isInApp,
-    }),
-    // 是否是服务商品
-    // 其他的是交易/销售/资源
-    isServerGoods() {
-      return this.settlementInfo?.orderProTypeNo === 'PRO_CLASS_TYPE_SERVICE'
-    },
-    // 是否交易商品，下单后直接跳转列表
-    isTRANSACTION() {
-      return (
-        this.settlementInfo?.orderProTypeNo === 'PRO_CLASS_TYPE_TRANSACTION'
-      )
-    },
-
-    // 是否先定金后服务
-    isDeposit() {
-      return (
-        this.settlementInfo?.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
-      )
-    },
-    // 服务完结收费
-    isServiceFinshed() {
-      return (
-        this.settlementInfo?.cusOrderPayType === 'PRO_PRE_SERVICE_FINISHED_PAY'
-      )
-    },
-    // 节点付费
-    isNodes() {
-      return (
-        this.settlementInfo?.cusOrderPayType ===
-        'PRO_PRE_SERVICE_POST_PAY_BY_NODE'
-      )
-    },
-    // 先付款后服务
-    isBeforePay() {
-      return this.settlementInfo?.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE'
-    },
-
-    // 是否是意向单
-    isIntendedOrder() {
-      return parseInt(this.settlementInfo.orderType) === 0
-      // return this.isIntendedOrder
-    },
-    // 是否担保订单
-    isSecuredTrade() {
-      return parseInt(this.settlementInfo.isSecuredTrade) === 1
-    },
-
-    tradeMarkPriceSum() {
-      let sum = 0
-      if (this.settlementInfo.productVo) {
-        this.settlementInfo.productVo.map((item) => {
-          sum += parseFloat(item.tradeMarkPrice || 0)
-        })
-      }
-      return sum
-    },
-
-    goodsNumberSum() {
-      let sum = 0
-      if (this.settlementInfo.productVo) {
-        this.settlementInfo.productVo.map((item) => {
-          sum += parseFloat(item.goodsNumber || 0)
-        })
-      }
-      return sum
-    },
-  },
   mounted() {
-    this.asyncData()
-
+    if (this.$route.query.type === 'shopcar') {
+      this.getcart()
+    } else {
+      this.asyncData()
+    }
     this.getProtocol('protocol100008')
   },
   methods: {
     onLeftClick() {
       this.$router.back()
     },
-    // 打开协议
-    goagr(categoryCode) {
+    // 打开《薯片平台用户交易下单协议》
+    goagr() {
       this.$router.push({
         name: 'login-protocol',
-        query: { categoryCode },
+        query: { categoryCode: 'protocol100008' },
       })
     },
+    // 购物车结算
+    getcart() {
+      const that = this
+      shopCart
+        .bill({
+          cartId: this.$route.query.cartIdsStr,
+          type: '1',
+        })
+        .then((result) => {
+          // result = JSON.parse(result.productVo)
+          this.order = result
+          this.order.list = this.order.productVo
+          this.price = this.order.skuTotalPrice
+          this.skeletonloading = false
 
-    asyncData() {
-      this.skeletonloading = false
-      this.settlement() // 调用接口结算，和获取会员价
+          this.settlement()
+        })
+        .catch((e) => {
+          if (e.code !== 200) {
+            this.$xToast.show(e.message)
+            console.error(e)
+            setTimeout(function () {
+              // that.$router.back(-1)
+            }, 2000)
+          }
+        })
     },
+    async asyncData() {
+      const that = this
+      this.skeletonloading = false
+      try {
+        const { code, message, data } = await this.$axios.post(
+          productDetailsApi.sellingGoodsDetail,
+          {
+            id: this.$route.query.productId,
+            configFlg: 1,
+            floatingFlg: 1,
+            withSalesSubsFlg: 1,
+            withTagsFlg: 1,
+            withGoodsSubFlg: 1,
+            withOperatingsFlg: 1,
+            clientType: 'COMDIC_TERMINAL_APP',
+          }
+        )
+        if (code === 200) {
+          const obj = {
+            name: data.name,
+            classCode: data.classCode,
+            classCodeName: data.classCodeName,
+            id: data.id,
+            salesPrice: data.salesPrice,
+            salesGoodsSubVos: data.salesGoodsSubVos,
+            salesGoodsOperatings: data.salesGoodsOperatings,
+          }
+          this.order = data
+          this.order.list = []
+          this.order.list.push(obj)
+          this.order.num = this.order.list.length
+          this.price = this.order.salesPrice
 
+          this.productList = new Array(1).fill({
+            categoryCode: data.classCodeLevel.split(',')[0],
+            productId: data.id,
+            productPrice: data.salesPrice,
+          })
+
+          this.settlement()
+          // this.getCardList()
+
+          console.log('productList', this.productList)
+        } else {
+          this.$xToast.show('服务器异常,请然后再试')
+          setTimeout(function () {
+            that.$router.back(-1)
+          }, 2000)
+          throw message
+        }
+      } catch (err) {
+        this.$xToast.show('请求数据失败，请稍后再试')
+        console.error(err)
+        setTimeout(function () {
+          that.$router.back(-1)
+        }, 2000)
+        this.skeletonloading = false
+      }
+    },
     // 获取待结算价格
     settlement() {
+      let saleGoodsList = []
+
+      if (this.$route.query.type === 'shopcar') {
+        this.order.list.map((item, index) => {
+          saleGoodsList.push({
+            id: item.id,
+            saleNum: item.salesVolume,
+            salesGoodsSubs: item.saleGoodsSubs,
+            salesPrice: item.salesPrice,
+            version: item.version,
+            refConfig: item.refConfig,
+          })
+        })
+      } else {
+        saleGoodsList = [
+          {
+            id: this.order.id,
+            saleNum: 1,
+            salesGoodsSubs: this.order.salesGoodsSubVos,
+            salesPrice: this.order.salesPrice,
+            version: this.order.version,
+            refConfig: this.order.refConfig,
+          },
+        ]
+      }
+
       order
-        .settle_order_by_unsubmit(
+        .settlement(
           { axios: this.$axios },
           {
-            orderId: this.$route.query.cusOrderId,
-            couponUseCode: this.couponInfo.selectedItem.couponUseCode,
+            sceneType: 'ORDER_DISCOUNT_ACCOUNT',
+            saleGoodsList,
+
             couponId: this.couponInfo.selectedItem.couponId,
+            couponUseCode: this.couponInfo.selectedItem.couponUseCode,
           }
         )
         .then((result) => {
-          this.goodsSkuDetail = JSON.parse(result.orderSkuList[0].skuDetailInfo)
-          if (this.goodsSkuDetail.sku.targetRate) {
-            this.goodsSkuDetail.sku.targetRate = parseFloat(
-              this.goodsSkuDetail.sku.targetRate
-            )
-          }
+          console.log('settlement', result)
+          // result.skuTotalPrice = result.skuTotalPrice / 100
+          // result.needPayTotalMoney = result.needPayTotalMoney / 100
           this.settlementInfo = result
 
-          if (this.requestOnce === false) {
-            // 意向单不使用优惠券
-            if (!this.isIntendedOrder) {
-              this.getInitData(5) // 获取优惠券
-              this.getInitData(6)
-            }
-            if (this.settlementInfo.isSecuredTrade === 1) {
-              this.getProtocol('protocol100044')
-            }
-
-            this.setPayMethod()
-            this.requestOnce = true
+          if (this.couponInfo.datalist.length === 0) {
+            this.getInitData(5)
+            this.getInitData(6)
           }
         })
-        .catch((error) => {
-          console.log('settle_order_by_unsubmit', error)
-          this.$xToast.warning('服务器异常,请然后再试')
+        .catch((e) => {
+          this.loading = false
+          const msg = e?.data?.error
+          Toast({
+            message: msg,
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+            overlay: true,
+          })
+          console.error(e)
         })
     },
-
-    setPayMethod() {
-      if (parseInt(this.settlementInfo.isSecuredTrade) === 0) {
-        this.payMethod.list = [
-          { value: 'ORDER_PAY_MODE_ONLINE', text: '在线支付' },
-          { value: 'ORDER_PAY_MODE_OFFLINE', text: '线下支付' },
-        ]
-      } else if (parseInt(this.settlementInfo.isSecuredTrade) === 1) {
-        this.payMethod.list = [
-          { value: 'ORDER_PAY_MODE_SECURED', text: '担保交易' },
-        ]
-      }
-      // 选择优惠券重新赋值待优化
-      if (this.settlementInfo?.payType) {
-        const pay = this.payMethod.list.find((item) => {
-          return item.value === this.settlementInfo?.payType
+    getGoodsSubById(goodsSubId) {
+      let goodsSub = {}
+      this.settlementInfo.saleGoodsList.forEach((goods) => {
+        goods.goodsList.forEach((item) => {
+          console.log(goodsSubId, item.goodsSubId)
+          if (item.goodsSubId === goodsSubId) {
+            goodsSub = item
+          }
         })
-        if (pay && pay.value) {
-          this.payMethod.text = pay.text
-          this.payMethod.value = pay.value
-        }
-      } else {
-        this.payMethod.text = this.payMethod.list[0].text
-        this.payMethod.value = this.payMethod.list[0].value
-      }
+      })
+      console.log('goodsSub', goodsSub)
+      return goodsSub
     },
     async getProtocol(categoryCode) {
       if (!categoryCode) {
@@ -538,7 +565,7 @@ export default {
         const data = await auth.protocol(params)
         const { rows = [] } = data || {}
         if (rows.length > 0) {
-          this.Orderform.orderAgreementIds.push(rows[0].id)
+          this.Orderform.orderAgreementIds = rows[0].id
         }
       } catch (error) {
         this.$xToast.error(error.message || '请求失败')
@@ -548,12 +575,6 @@ export default {
 
     // 提交订单
     placeOrder() {
-      if (this.Orderform.orderAgreementIds.length === 0) {
-        return this.$xToast.warning('协议获取失败!')
-      }
-      if (!this.payMethod.value) {
-        return this.$xToast.warning('请选择支付方式!')
-      }
       if (!this.radio) {
         Toast({
           message: '下单前，请先同意《薯片平台用户交易下单协议》',
@@ -561,6 +582,40 @@ export default {
         })
       } else {
         this.loading = true
+        if (this.$route.query.type === 'shopcar') {
+          const arr = []
+          for (let i = 0; i < this.order.list.length; i++) {
+            const sku = {
+              saleSkuId: this.order.list[i].id,
+              saleSkuName: this.order.list[i].name,
+              saleSkuVersionNo: this.order.list[i].version + '',
+              saleSkuPrice: this.order.list[i].salesPrice,
+              saleSkuCount: this.order.list[i].salesVolume,
+            }
+            arr.push(sku)
+            this.loading = false
+          }
+          this.Orderform.needSplitProPackageDataParam = arr
+        } else {
+          const sku = {
+            saleSkuId: this.order.id,
+            saleSkuName: this.order.name,
+            saleSkuVersionNo: this.order.version + '',
+            saleSkuPrice: this.order.salesPrice,
+            saleSkuCount: 1,
+          }
+          this.Orderform.needSplitProPackageDataParam = new Array(1).fill(sku)
+        }
+        let isFromCart = false
+        let cusOrderPayType
+        if (this.$route.query.type === 'shopcar') {
+          isFromCart = true
+          this.Orderform.cartIds = this.$route.query.cartIdsStr
+          cusOrderPayType = this.order.list[0].refConfig.payType
+        } else {
+          cusOrderPayType = this.order.refConfig.payType
+          isFromCart = false
+        }
 
         if (
           this.couponInfo.couponPrice &&
@@ -599,27 +654,32 @@ export default {
           this.Orderform.discount = new Array(1).fill(arr)
         }
 
-        order
-          .commit_order(
-            { axios: this.$axios },
-            {
-              orderAgreementIds: this.Orderform.orderAgreementIds.join(','), // 下单协议id，多个id用逗号隔开
-              discount: this.Orderform.discount, //
-              operateSourcePlat: 'COMDIC_PLATFORM_CRISPS', // 来源 薯片
-              operateTerminal: 'COMDIC_TERMINAL_WAP',
-              cusOrderId: this.$route.query.cusOrderId,
-              payType: this.payMethod.value, // 'ORDER_PAY_MODE_ONLINE', // 支付类型：线上支付：ORDER_PAY_MODE_ONLINE  线下支付：ORDER_PAY_MODE_OFFLINE
-            }
-          )
+        this.Orderform.payType = this.payMethod.value // 'ORDER_PAY_MODE_ONLINE'
+        this.Orderform.cusOrderPayType = cusOrderPayType
+        this.Orderform.isFromCart = isFromCart
+        this.Orderform.orderProvinceNo = this.$store.state.city.defaultCity.pid
+        this.Orderform.orderCityNo = this.$store.state.city.defaultCity.code
+        this.Orderform.orderLocationProvinceName =
+          this.$store.state.city.defaultCity.pname
+        this.Orderform.orderLocationCityName =
+          this.$store.state.city.defaultCity.name
+        this.Orderform.customerOrderMark = this.message
+        if (this.contaract) {
+          this.Orderform.contractFormParam = this.contaract
+          this.Orderform.contractFormParam.contractApplyWay = 'CUSTOMER'
+        }
+        if (this.$route.query.plannerId) {
+          this.Orderform.plannerId = this.$route.query.plannerId
+          this.Orderform.cusOrderModeNo = 'ORDER_CUS_MODE_SHARE'
+        }
+        if (!this.Orderform.orderAgreementIds) {
+          return this.$xToast.warning('协议获取失败!')
+        }
+        order.placeOrder({ axios: this.$axios }, this.Orderform)
           .then((result) => {
-            console.log('result', result)
             this.loading = false
 
-            if (this.payMethod.value === 'ORDER_PAY_MODE_SECURED') {
-              this.$xToast.error(
-                '该订单为担保交易订单，请访问薯片网站PC端进行付款！'
-              )
-            } else if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
+            if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
               this.$xToast.error('请前往线下银行网点进行支付！')
             } else {
               Toast({
@@ -630,21 +690,13 @@ export default {
               })
             }
             setTimeout(() => {
-              if (this.isTRANSACTION) {
-                // 交易商品
-                this.jumpToOrder()
-              } else if (this.payMethod.value === 'ORDER_PAY_MODE_SECURED') {
-                // 担保交易
-                this.jumpToOrder()
-              } else if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
+              if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
                 // 线下付款
-                this.jumpToOrder()
-              } else if (
-                result.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
-                result.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
-              ) {
-                // 先付款后服务 PRO_PRE_PAY_POST_SERVICE;
-                // 先定金后尾款 PRO_PRE_DEPOSIT_POST_OTHERS;
+                this.$router.replace({
+                  path: '/order',
+                  query: {},
+                })
+              } else {
                 this.$router.replace({
                   path: '/pay/payType',
                   query: {
@@ -652,9 +704,6 @@ export default {
                     cusOrderId: result.cusOrderId,
                   },
                 })
-              } else {
-                // 意向单和担保交易等 回到订单列表
-                this.jumpToOrder()
               }
             }, 2000)
           })
@@ -671,43 +720,7 @@ export default {
           })
       }
     },
-    jumpToOrder() {
-      this.$router.replace({
-        path: '/order',
-        query: {},
-      })
-      // if (!this.isInApp) {
-      //   this.$router.replace({
-      //     path: '/order',
-      //     query: {},
-      //   })
-      // } else {
-      //   const iOSRouter = {
-      //     path: 'CPSCustomer:CPSCustomer/CPSOrderViewController///push/animation',
-      //     parameter: {
-      //       listType: 0,
-      //       isPush: 1,
-      //     },
-      //   }
-      //   const androidRouter = {
-      //     path: '/cpsc/order/orderList',
-      //     parameter: {
-      //       orderIndex: 0,
-      //     },
-      //   }
-      //   const iOSRouterStr = JSON.stringify(iOSRouter)
-      //   const androidRouterStr = JSON.stringify(androidRouter)
-      //   this.$appFn.dggJumpRoute(
-      //     {
-      //       iOSRouter: iOSRouterStr,
-      //       androidRouter: androidRouterStr,
-      //     },
-      //     (res) => {
-      //       console.log(res)
-      //     }
-      //   )
-      // }
-    },
+
     // 对优惠金额进行排序
     getDisPrice(arr, price) {
       arr.forEach((element) => {
@@ -723,27 +736,43 @@ export default {
 
     //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
-      const arr = this.settlementInfo.productVo.map((x) => {
+      this.settlementInfo.saleGoodsList.map((item) => {
+        return {
+          goodsId: item.id,
+          price: item.salesPrice,
+          goodsNum: item.salesVolume || 1,
+          goodsClassCode: item.classCode,
+        }
+      })
+
+      const arr = this.order.list.map((x) => {
         return x.id
       })
       const list = []
-      this.settlementInfo.productVo.map((product) => {
-        const orderSaleId = product.id
+      for (let i = 0; i < this.order.list.length; i++) {
+        let itemPrice = this.order.list[i].salesPrice
+        if (
+          this.order.list[i].salesGoodsSubVos &&
+          this.order.list[i].salesGoodsSubVos.length > 0
+        ) {
+          const id = this.order.list[i].salesGoodsSubVos[0].goodsSubId
+          itemPrice = this.getGoodsSubById(id).salesPrice
+        }
 
         const item = {
-          goodsId: orderSaleId,
-          price: product.price / product.goodsNumber,
-          goodsNum: product.goodsNumber || 1,
-          goodsClassCode: product.classCode,
-
-          // tradeMarkPrice: product.tradeMarkPrice,
-        }
-        if (product.tradeMarkPrice) {
-          item.tradeMarkPrice = product.tradeMarkPrice
+          goodsId: this.order.list[i].id,
+          price: itemPrice, // this.order.list[i].salesPrice,
+          goodsNum: this.order.list[i].salesVolume || 1,
+          goodsClassCode: this.order.list[i].classCode,
         }
         list.push(item)
-      })
-
+      }
+      let price = 0
+      if (this.order.salesPrice) {
+        price = this.order.salesPrice
+      } else if (this.order.skuTotalPrice) {
+        price = this.order.skuTotalPrice
+      }
       coupon
         .findOrderCouponPage(
           { axios: this.$axios },
@@ -751,7 +780,8 @@ export default {
             findType: index,
             userId: this.$store.state.user.userId,
             actionId: arr,
-            orderPrice: this.settlementInfo.orderPayableMoney,
+            orderPrice: this.settlementInfo.needPayTotalMoney,
+            // getGoodsSubById(item.salesGoodsSubVos[0].goodsSubId).salesPrice
             orderByWhere: 'createTime=desc',
             limit: 50,
             page: 1,
@@ -763,7 +793,7 @@ export default {
             this.couponInfo.datalist = result.marketingCouponLogList
             const sortList1 = this.getDisPrice(
               result.marketingCouponLogList,
-              this.settlementInfo.orderPayableMoney
+              this.order.salesPrice || this.order.skuTotalPrice
             )
             const sortList = sortList1.sort((a, b) => {
               return (
@@ -801,8 +831,19 @@ export default {
           this.card.nolist = res || []
         })
     },
+    contractback() {
+      this.editShow = false
+    },
+    contractsum(val) {
+      this.contaract = val
+      this.editShow = false
+    },
+    gocontractedit() {
+      this.editShow = true
+    },
 
     conponChange(price, num, item) {
+      this.price = price
       this.couponInfo.couponPrice = num
       this.couponInfo.selectedItem = item || {}
       this.card.cardPrice = ''
@@ -810,6 +851,7 @@ export default {
       this.settlement()
     },
     cardChange(price, num, item) {
+      this.price = price
       this.couponInfo.couponPrice = ''
       this.couponInfo.selectedItem = {}
       this.card.cardPrice = num
@@ -819,6 +861,7 @@ export default {
       this.payMethod.value = item.value
       this.payMethod.text = item.text
     },
+
     openPopupfn() {
       this.couponInfo.popupshow = true
     },
@@ -826,14 +869,10 @@ export default {
       this.card.show = true
     },
     openPayMethod() {
-      if (this.payMethod.list.length === 1) {
-        return
-      }
-      if (this.payMethod.list.length) {
-        this.payMethod.show = true
-      } else {
-        this.$xToast.error('未获取到支付方式' || '')
-      }
+      this.payMethod.show = true
+    },
+    closePayMethod() {
+      this.payMethod.show = false
     },
 
     close() {
@@ -841,9 +880,6 @@ export default {
     },
     closeCard() {
       this.card.show = false
-    },
-    closePayMethod() {
-      this.payMethod.show = false
     },
   },
 }
@@ -907,17 +943,12 @@ export default {
             display: flex;
             margin-top: 31px;
             > span {
+              font-size: 28px;
+              font-weight: bold;
               color: #ec5330;
-              letter-spacing: 0;
-              line-height: 34px;
-              font-size: 24px;
-              font-weight: 400;
-              b {
-                font-weight: 400;
-              }
-              .price_text {
-                font-size: 28px;
-                font-weight: 600;
+              width: 40%;
+              > b {
+                font-size: 36px;
               }
             }
             > i {
@@ -981,82 +1012,34 @@ export default {
       }
       .black {
         color: #1a1a1a;
+        font-weight: bold;
       }
       .red {
         color: #ec5330;
         font-weight: bold;
       }
       > .money {
-        text-align: right;
         padding: 15px 30px;
+        text-align: right;
         font-size: 28px;
         font-weight: 400;
         color: #222222;
-        .money_price {
+        span {
           font-size: 22px;
           color: #ec5330;
-          .money_text {
+          b {
             font-size: 36px;
           }
-          b {
-            font-size: 30px;
-          }
-          .toast_text {
-            font-size: 24px;
-            font-weight: 400;
-            background: #fef0ed;
-            padding: 2px;
-          }
         }
-        .deposit_text {
-          color: #222222;
-          font-size: 22px;
-        }
-      }
-      .order_sku {
-        line-height: 44px;
-        display: flex;
-        justify-content: space-between;
-        padding: 40px 40px 0 30px;
-        .title {
-          font-size: 28px;
-          color: #222222;
-          letter-spacing: 0;
-          line-height: 28px;
-        }
-        .value {
-          font-size: 24px;
-          color: #222222;
-          letter-spacing: 0;
-          b {
-            font-size: 28px;
-          }
-        }
-      }
-    }
-    .deposit {
-      margin-top: 24px;
-      background: #fff;
-      padding: 36px 40px;
-      .deposit_tips {
-        font-family: PingFangSC-Regular;
-        font-size: 24px;
-        color: #999999;
-        line-height: 34px;
-      }
-      .deposit_content {
-        margin-top: 20px;
-        height: 40px;
-        font-family: PingFangSC-Regular;
-        font-size: 28px;
-        color: #222222;
-        letter-spacing: 0;
       }
     }
     > .contract {
       margin-top: 24px;
       background: #fff;
       .ys {
+        color: #1a1a1a;
+      }
+      .black {
         color: #1a1a1a;
       }
     }
@@ -1068,17 +1051,11 @@ export default {
         font-size: 28px;
         font-weight: 400;
         color: #222222;
-        > .protocol_name {
+        > span {
           color: #4974f5;
         }
       }
     }
-  }
-  .allbox2 {
-    height: calc(100vh - 228px - 88px) !important;
-  }
-  .foot2 {
-    height: 168px !important;
   }
   > .foot {
     padding: 0 40px;

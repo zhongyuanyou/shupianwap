@@ -242,6 +242,7 @@ const billStatusCodesObj = {
 export default {
   data() {
     return {
+      payOrderList: [], // 待付款的子订单
       showJiufenModal: false,
       remainTotalPayIds: '', // 分批支付剩余支付批次id
       addOrderXy: {},
@@ -333,6 +334,16 @@ export default {
     checkHasOtherOrder() {
       return this.orderData.orderList.length > 1
     },
+    // 判断是否有应付款的子订单
+    checkHasPayChildOrder() {
+      const newArr = JSON.parse(JSON.stringify(this.orderData.orderList))
+      this.payOrderList = newArr.filter((item) => {
+        return item.isNeedPay === 1
+      })
+      if (this.payOrderList.length > 1) {
+        return 1
+      }
+    },
     // 开始支付时判断
     startPay() {
       if (
@@ -358,26 +369,27 @@ export default {
       }
       if (this.fromPage === 'orderList' || this.fromPage === 'orderDetail') {
         // 同时判断有无关联订单
-        if (this.checkHasOtherOrder()) {
+        if (this.checkHasPayChildOrder()) {
           // 有关联订单时则打开提示弹窗
           this.loading = false
           if (this.$refs.cancleOrderModel) {
             this.$refs.cancleOrderModel.showPop = true
             this.$refs.cancleOrderModel.modalType = 2
           }
-          this.childOrderList = this.orderData.orderList
+          this.$refs.cancleOrderModel.orderList = this.payOrderList
           // 后续操作为关联弹窗点击立即付款后继续查询分批支付列表 走分批支付逻辑判断
         } else {
           // 无关联订单则直接走分批支付逻辑判断
           this.getBatchList()
         }
-      } else if (this.checkHasOtherOrder()) {
+      } else if (this.checkHasPayChildOrder()) {
         // 有关联订单时打开提示弹窗
         this.loading = false
         if (this.$refs.cancleOrderModel) {
           this.$refs.cancleOrderModel.showPop = true
           this.$refs.cancleOrderModel.modalType = 2
         }
+        this.$refs.cancleOrderModel.orderList = this.payOrderList
       } else if (this.payList.length === 1) {
         this.loading = false
         this.$router.push({
@@ -782,8 +794,12 @@ export default {
       if (this.fromPage === 'orderList') {
         const orderAgreementIds = order.orderAgreementIds
         if (this.opType === 'payMoney' && !orderAgreementIds) {
-          // 无协议则需先同意协议
-          this.showMydialog = true
+          if (!this.addOrderXy || !this.addOrderXy.id) {
+            this.$xToast.error('未获取到下单协议，请稍后重试！')
+          } else {
+            // 无协议则需先同意协议
+            this.showMydialog = true
+          }
           return
         }
         // if (this.checkContractIsOver(order) === 1) {
@@ -864,7 +880,7 @@ export default {
     // 同意协议
     confirmAggret(order) {
       this.loading = true
-      if (!this.addOrderXy.id || !this.tranXy.id) {
+      if (!this.addOrderXy || !this.addOrderXy.id || !this.tranXy.id) {
         this.$xToast.error('获取协议失败，请刷新重试')
         return
       }
@@ -910,11 +926,11 @@ export default {
     // 根据操作类型进行不同的任务
     switchOptionType() {
       if (this.$refs.cancleOrderModel) {
-        this.$refs.cancleOrderModel.orderList = this.orderData.orderList
         if (this.opType === 'cancelOrder') {
           // 弹出取消订单弹窗
           this.$refs.cancleOrderModel.showPop = true
           if (this.orderData.orderList.length > 1) {
+            this.$refs.cancleOrderModel.orderList = this.orderData.orderList
             this.$refs.cancleOrderModel.step = 1
           } else {
             this.$refs.cancleOrderModel.step = 2

@@ -123,7 +123,7 @@ import CancelOrder from '@/components/order/CancelOrder.vue' // 取消订单弹�
 import PayModal from '@/components/order/PayModal.vue' // 支付弹窗
 import JiufenModal from '@/components/order/JiufenDialog.vue'
 import Bottombar from '@/components/common/nav/Bottombar.vue'
-import orderApi from '@/api/order'
+import orderApi from '@/api/order2'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import OrderMixins from '@/mixins/order2'
 export default {
