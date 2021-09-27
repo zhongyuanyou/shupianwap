@@ -83,7 +83,11 @@
         </div>
         <div class="planner__avatars">
           <div class="avatars">
-            <img class="avatars__big" :src="custRecPlanner.portrait" />
+            <img
+              class="avatars__big"
+              :src="custRecPlanner.portrait"
+              @click="linkPlannerDetail"
+            />
             <img class="avatars__star" :src="hdStarImg" />
             <img
               v-for="(item, i) in custPlanners"
@@ -179,6 +183,14 @@ export default {
     this.isShare = this.$route.query.isShare
   },
   methods: {
+    linkPlannerDetail() {
+      this.$router.push({
+        path: '/planner/detail',
+        query: {
+          mchUserId: this.custRecPlanner.mchUserId,
+        },
+      })
+    },
     // 移动距离顶部的距离
     scrollHandle({ scrollTop }) {
       if (scrollTop > 222) {
