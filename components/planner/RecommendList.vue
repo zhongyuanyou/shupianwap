@@ -60,14 +60,6 @@
                 <span v-else>{{ item.salesGoodsOperatings.slogan }}</span>
               </div>
               <div class="tags">
-                <div
-                  v-if="
-                    item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
-                  "
-                  class="tag_item desc-label-tc"
-                >
-                  套餐
-                </div>
                 <span
                   v-for="(tagItem, index2) in item.salesGoodsTags"
                   v-show="tagItem.categoryCode === 'DSJTC20210514000042'"

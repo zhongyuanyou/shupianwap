@@ -27,11 +27,6 @@
             </p>
             <div class="label">
               <span
-                v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1"
-                class="label_item desc-label-tc"
-                >套餐</span
-              >
-              <span
                 v-for="(labelItem, index2) in item.salesGoodsTags"
                 v-show="labelItem.categoryCode === 'DSJTC20210514000042'"
                 :key="index2"

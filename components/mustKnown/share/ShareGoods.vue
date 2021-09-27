@@ -14,12 +14,6 @@
           </div>
           <div v-if="type === 'Service'" class="desc-label">
             <span
-              v-if="info.salesGoodsSubVos && info.salesGoodsSubVos.length > 1"
-              class="desc-label-tc"
-            >
-              套餐
-            </span>
-            <span
               v-for="item of info.salesGoodsTags"
               v-show="item.categoryCode === 'DSJTC20210514000042'"
               :key="item.tagValueCode"
