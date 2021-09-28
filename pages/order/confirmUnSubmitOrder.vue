@@ -89,7 +89,7 @@
         <div v-else class="deposit">
           <div class="deposit_tips">
             温馨提示：{{
-              isNodes ? '该订单按服务节点付费' : '该订单先付款后服务'
+              isNodes ? '该订单需要在给您办理业务期间付费' : '该订单先付款后服务'
             }}
           </div>
           <div class="deposit_content">
