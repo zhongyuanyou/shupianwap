@@ -90,7 +90,7 @@
             orderData.orderPayType === 'PRO_PRE_SERVICE_POST_PAY_BY_NODE' &&
             orderData.cusOrderPayStatusNo !== 'ORDER_CUS_PAY_STATUS_UN_PAID'
           "
-          class="last-money"
+          class="last-money last-money1"
         >
           实付金额
           <span class="pay-money">
@@ -106,7 +106,7 @@
             orderData.cusOrderPayStatusNo ===
               'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
           "
-          class="last-money"
+          class="last-money last-money2"
         >
           {{ shouldPayText }}
           <span
@@ -120,7 +120,7 @@
             <span style="font-weight: 400; font-size: 12px">元</span>
           </span>
           <span v-else class="pay-money">
-            {{ orderData.orderPaidMoney }
+            {{ orderData.orderPaidMoney }}
             <span style="font-weight: 400; font-size: 12px">元</span>
           </span>
         </p>
