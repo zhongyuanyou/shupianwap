@@ -41,7 +41,10 @@
       <span v-else-if="cusOrderStatusType == 4" class="text"> 已取消 </span> -->
     </p>
     <div v-if="cusOrderStatusType == 1" class="msg">
-      <section v-if="diff > 0">
+      <section v-if="orderData.payType === 'ORDER_PAY_MODE_OFFLINE'">
+        <p>请前往线下银行网点进行支付</p>
+      </section>
+      <section v-else-if="diff > 0">
         <p class="time">
           请在
           <span>{{ time.hour }}</span>
@@ -50,9 +53,6 @@
           >秒内支付
         </p>
         超时订单将自动关闭<br />
-      </section>
-      <section v-else-if="orderData.payType === 'ORDER_PAY_MODE_OFFLINE'">
-        <p>请前往线下银行网点进行支付</p>
       </section>
       <section v-else>
         <p>暂无支付信息</p>
