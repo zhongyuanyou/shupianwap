@@ -62,7 +62,9 @@
       </div>
 
       <!-- 根据当前的付款模式，先付款后服务/先定金后尾款/先服务后付款/按节点付费，展示不同的模块 -->
-      <div>
+      <div
+        v-if="settlementInfo.cusOrderPayType!=='PRO_PRE_PAY_POST_SERVICE'"
+      >
         <div v-if="isDeposit" class="deposit">
           <!-- 先定金后尾款 -->
           <div class="deposit_tips">
