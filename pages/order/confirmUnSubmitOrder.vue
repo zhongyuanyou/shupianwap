@@ -48,7 +48,7 @@
                     goodsSkuDetail.sku &&
                     goodsSkuDetail.sku.targetRate
                   "
-                  >(含服务费{{ goodsSkuDetail.sku.targetRate }}%)</b
+                  >(服务费{{ goodsSkuDetail.sku.targetRate }}%)</b
                 >
                 <b v-if="isIntendedOrder">预计:</b>
                 <b class="price_text">{{ item.price }}</b
