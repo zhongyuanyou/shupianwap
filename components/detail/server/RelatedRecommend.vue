@@ -1,10 +1,6 @@
 <template>
   <div v-if="productData.length" class="need">
-    <sp-sticky
-      ref="tabCurveRef"
-      :offset-top="searchDomHeight"
-      class="top"
-    >
+    <sp-sticky ref="tabCurveRef" :offset-top="searchDomHeight" class="top">
       <p class="need_title">相关推荐</p>
     </sp-sticky>
     <sp-skeleton :row="10" :loading="needLoading">
@@ -20,12 +16,15 @@
               <img :src="item.mchUserDataVO.photoPath" alt="" srcset="" />
             </div>
             <div class="planer_label">
-              <span
+              <div
                 v-for="(laberItem, laberIndex) in item.mchUserDataVO.tabs"
                 :key="laberIndex"
+                class="label_item"
               >
-                {{ laberItem }}
-              </span>
+                <span>
+                  {{ laberItem }}
+                </span>
+              </div>
             </div>
           </div>
           <p class="goods_name">
@@ -182,7 +181,14 @@ export default {
         }
         .planer_label {
           padding-left: 20px;
+          padding-top: 6px;
           flex: 1;
+          .label_item {
+            width: 100%;
+            height: 30px;
+            overflow: hidden;
+            margin-bottom: 10px;
+          }
           span {
             width: auto;
             height: 28px;
@@ -190,7 +196,6 @@ export default {
             border-radius: 4px;
             line-height: 28px;
             color: #947e4c;
-            margin-bottom: 10px;
             float: left;
             padding: 2px 6px;
             .textOverflow(1);
