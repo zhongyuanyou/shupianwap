@@ -62,9 +62,7 @@
       </div>
 
       <!-- 根据当前的付款模式，先付款后服务/先定金后尾款/先服务后付款/按节点付费，展示不同的模块 -->
-      <div
-        v-if="settlementInfo.cusOrderPayType!=='PRO_PRE_PAY_POST_SERVICE'"
-      >
+      <div v-if="settlementInfo.cusOrderPayType !== 'PRO_PRE_PAY_POST_SERVICE'">
         <div v-if="isDeposit" class="deposit">
           <!-- 先定金后尾款 -->
           <div class="deposit_tips">
@@ -89,14 +87,12 @@
         <div v-else class="deposit">
           <div class="deposit_tips">
             温馨提示：{{
-              isNodes ? '该订单需要在给您办理业务期间付费' : '该订单先付款后服务'
+              isNodes
+                ? '该订单需要在给您办理业务期间付费'
+                : '该订单先付款后服务'
             }}
           </div>
-          <div class="deposit_content">
-            总价 {{ settlementInfo.orderTotalMoney }}元，应付款{{
-              settlementInfo.orderPayableMoney
-            }}元
-          </div>
+          <div class="deposit_content">按业务办理节点付费</div>
         </div>
       </div>
       <div class="news-content">

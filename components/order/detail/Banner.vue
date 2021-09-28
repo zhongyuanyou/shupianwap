@@ -55,7 +55,7 @@
         </p>
         超时订单将自动关闭<br />
       </section>
-      <section v-else-if="orderData.payType==='ORDER_PAY_MODE_OFFLINE'">
+      <section v-else-if="orderData.payType === 'ORDER_PAY_MODE_OFFLINE'">
         <p>请前往线下银行网点进行支付</p>
       </section>
       <section v-else>
@@ -111,7 +111,7 @@ export default {
       default: '',
     },
     showPayBtn: {
-      type: Number,
+      type: [Number, Boolean],
       default: 0,
     },
     orderData: {

@@ -280,12 +280,12 @@ export default {
               arr[i].statusName = '已完成'
             } else {
               arr[i].statusName = this.getStatusName(arr[i].orderStatusNo)
-              if (arr[i].statusName === '待确认') {
-                if (this.isShowConfirmBtn(arr[i]) === 1) {
-                  this.orderData.statusName = '待确认'
-                } else {
-                  this.orderData.statusName = '办理中'
-                }
+            }
+            if (arr[i].statusName === '待确认') {
+              if (this.isShowConfirmBtn(arr[i]) === 1) {
+                arr[i].statusName.statusName = '待确认'
+              } else {
+                arr[i].statusName = '办理中'
               }
             }
           }
