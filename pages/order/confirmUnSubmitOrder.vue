@@ -167,8 +167,10 @@
           合计：
           <span class="money_price">
             <b class="money_text">{{
-              (settlementInfo.orderTotalMoney || 0) -
-              (settlementInfo.orderDiscountMoney || 0)
+              getEnablePayMoney(
+                settlementInfo.orderTotalMoney,
+                settlementInfo.orderDiscountMoney
+              )
             }}</b
             >元 <b v-if="isIntendedOrder" class="toast_text">预计</b></span
           >
@@ -443,6 +445,18 @@ export default {
     this.getProtocol('protocol100008')
   },
   methods: {
+    getEnablePayMoney(money1, money2) {
+      money1 = Number(money1) || 0
+      money2 = Number(money2) || 0
+      if (money1) {
+        money1 = money1 * 100
+      }
+      if (money2) {
+        money2 = money2 * 100
+      }
+      const diffMoney = money1 - money2
+      return diffMoney / 100
+    },
     onLeftClick() {
       this.$router.back()
     },
@@ -802,6 +816,8 @@ export default {
     },
 
     conponChange(price, num, item) {
+      console.log('price', price)
+      console.log('num', num)
       this.couponInfo.couponPrice = num
       this.couponInfo.selectedItem = item || {}
       this.card.cardPrice = ''

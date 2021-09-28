@@ -1,9 +1,5 @@
 <template>
-  <div
-    :id="showPayBtn ? 'banner1' : ''"
-    :class="'banner' + cusOrderStatusType"
-    class="banner"
-  >
+  <div :class="'banner' + cusOrderStatusType" class="banner">
     <my-icon
       class="back-icon"
       name="nav_ic_back"
@@ -37,14 +33,14 @@
         color="rgba(255, 255, 255, 1)"
       ></my-icon>
       <span class="text">{{
-        cusOrderStatusType === 1 || showPayBtn ? '等待付款' : statusName
+        cusOrderStatusType === 1 ? '等待付款' : statusName
       }}</span>
       <!-- <span v-if="cusOrderStatusType == 1" class="text"> 等待付款 </span>
       <span v-else-if="cusOrderStatusType == 2" class="text"> 办理中 </span>
       <span v-else-if="cusOrderStatusType == 3" class="text"> 已完成 </span>
       <span v-else-if="cusOrderStatusType == 4" class="text"> 已取消 </span> -->
     </p>
-    <div v-if="cusOrderStatusType == 1 || showPayBtn" class="msg">
+    <div v-if="cusOrderStatusType == 1" class="msg">
       <section v-if="diff > 0">
         <p class="time">
           请在

@@ -53,8 +53,10 @@
             </p>
             <p>
               <span> 优惠金额 </span>
-              <span class="money">
-                {{ orderData.orderDiscountMoney }}
+              <span>
+                <span class="money">
+                  - {{ orderData.orderDiscountMoney }}
+                </span>
                 元
               </span>
             </p>

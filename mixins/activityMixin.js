@@ -188,7 +188,6 @@ export default {
     },
 
     menuTab(item, index) {
-      this.init()
       this.currentIndex = index
       this.currentTab = item
       this.getProductList()
