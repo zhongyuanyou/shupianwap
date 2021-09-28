@@ -136,6 +136,8 @@ export default {
         case 'IM':
           data = {
             mchUserId: this.itemData.mchUserId,
+            userCenterId: this.itemData.userCenterId,
+            mchDetailId: this.itemData.mchDetailId,
             userName: this.itemData.userName,
             type: this.itemData.type,
           }
