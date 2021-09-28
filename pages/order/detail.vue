@@ -83,13 +83,26 @@
           </span>
         </p> -->
         </div>
+        <!-- 按节点付费办理完成后展示实付金额 -->
+        <p
+          v-if="
+            cusOrderStatusType === 3 &&
+            orderData.orderPayType === 'PRO_PRE_SERVICE_POST_PAY_BY_NODE' &&
+            orderData.cusOrderPayStatusNo !== 'ORDER_CUS_PAY_STATUS_UN_PAID'
+          "
+          class="last-money"
+        >
+          实付金额
+          <span class="pay-money">
+            {{ orderData.orderPaidMoney }}
+            <span style="font-weight: 400; font-size: 12px">元</span>
+          </span>
+        </p>
         <!-- 当订单已取消时不显示总金额 先付款后服务和服务完结收费-->
         <p
           v-if="
             (cusOrderStatusType !== 4 &&
-              (orderData.orderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
-                orderData.orderPayType ===
-                  'PRO_PRE_SERVICE_POST_PAY_BY_NODE')) ||
+              orderData.orderPayType === 'PRO_PRE_PAY_POST_SERVICE') ||
             orderData.cusOrderPayStatusNo ===
               'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
           "
@@ -107,7 +120,7 @@
             <span style="font-weight: 400; font-size: 12px">元</span>
           </span>
           <span v-else class="pay-money"
-            >{{ orderData.orderPayableMoney
+            >{{ orderData.orderPaidMoney
             }}<span style="font-weight: 400; font-size: 12px">元</span>
           </span>
         </p>
@@ -187,6 +200,23 @@
         <p class="oder_toast">温馨提示：该订单可享受业务办理完成后付费</p>
         <p class="color:#222222">先服务后付款</p>
         <p v-if="isShowPayBtn() === 1" class="last-money">
+          应付金额
+          <span class="pay-money">{{ orderData.orderPayableMoney }}</span>
+        </p>
+      </div>
+      <!-- 先服务按节点付费 -->
+      <div
+        v-if="
+          cusOrderStatusType !== 4 &&
+          orderData.orderPayType === 'PRO_PRE_SERVICE_POST_PAY_BY_NODE' &&
+          orderData.cusOrderPayStatusNo !==
+            'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
+        "
+        class="order_text order-area"
+      >
+        <p class="oder_toast">温馨提示：该订单需要在给您办理业务期间付费</p>
+        <p class="color:#222222">按业务办理节点付费</p>
+        <p v-if="isShowPayBtn()" class="last-money">
           应付金额
           <span class="pay-money">{{ orderData.orderPayableMoney }}</span>
         </p>
