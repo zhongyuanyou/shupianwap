@@ -7,7 +7,10 @@
         <span>
           <!-- 待确认 -->
           <span
-            v-if="orderData.statusName === '待确认'"
+            v-if="
+              orderData.statusName === '待确认' ||
+              orderData.statusName === '未付款'
+            "
             class="order-status status2"
             >{{ orderData.statusName }}</span
           >

@@ -3,11 +3,14 @@
     <Header v-show="showHead" title="订单详情"> </Header>
     <section v-if="hasData">
       <Banner
+        v-if="orderData.statusName"
         :order-status-code="orderData.orderSplitAndCusVo.cusOrderStatusNo"
         :cus-order-status-type="cusOrderStatusType"
         :cus-order-id="orderData.cusOrderId"
         :cus-order-cancel-reason="canCelReasonName"
         :status-name="orderData.statusName"
+        :show-pay-btn="showPayBtn"
+        :order-data="orderData"
         @getDetail="getDetail"
       />
       <div class="order-area">
@@ -17,7 +20,7 @@
           :order-data="orderData"
           :cus-order-status-type="cusOrderStatusType"
           :cus-order-pay-status-no="orderData.cusOrderPayStatusNo"
-          :cus-order-pay-type="cusOrderPayType"
+          :cus-order-pay-type="orderPayType"
           @confirmOrder="confirmOrder"
         />
         <!-- 交易/销售/资源 -->
@@ -77,8 +80,8 @@
         <p
           v-if="
             cusOrderStatusType !== 4 &&
-            (orderData.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
-              orderData.cusOrderPayType === 'PRO_PRE_SERVICE_POST_PAY_BY_NODE')
+            (orderData.orderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
+              orderData.orderPayType === 'PRO_PRE_SERVICE_POST_PAY_BY_NODE')
           "
           class="last-money"
         >
@@ -115,7 +118,7 @@
       <div
         v-if="
           cusOrderStatusType !== 4 &&
-          orderData.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
+          orderData.orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
           orderData.cusOrderPayStatusNo !==
             'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
         "
@@ -151,7 +154,7 @@
       <div
         v-if="
           cusOrderStatusType !== 4 &&
-          orderData.cusOrderPayType === 'PRO_PRE_SERVICE_FINISHED_PAY'
+          orderData.orderPayType === 'PRO_PRE_SERVICE_FINISHED_PAY'
         "
         class="order_text order-area"
       >
@@ -386,24 +389,14 @@
             查看合同
           </sp-button>
           <sp-button
-            v-if="
-              showPayBtn &&
-              orderData.isNeedPay == 1 &&
-              orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
-                'ORDER_CUS_PAY_STATUS_UN_PAID'
-            "
+            v-if="isShowPayBtn() === 1"
             class="btn-pay"
             @click="handleClickPay()"
           >
             立即付款
           </sp-button>
           <sp-button
-            v-if="
-              showPayBtn &&
-              orderData.isNeedPay == 1 &&
-              orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
-                'ORDER_CUS_PAY_STATUS_PART_PAID'
-            "
+            v-if="isShowPayBtn() === 2"
             class="btn-pay"
             @click="handleClickPay()"
           >
@@ -520,7 +513,7 @@ export default {
       paylistLength: 0,
       opType: '',
       shouldPayText: '',
-      cusOrderPayType: '', // 付费类型 1先付款后服务 2先定金后尾款 3服务节点收费 4服务完成收费
+      orderPayType: '', // 付费类型 1先付款后服务 2先定金后尾款 3服务节点收费 4服务完成收费
     }
   },
   computed: {
@@ -575,7 +568,7 @@ export default {
             : res.orderSplitAndCusVo
           this.orderData = Object.assign(cusDetail, res.data || res)
           if (
-            this.orderData.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
+            this.orderData.orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
             this.orderData.payStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
           ) {
             // 部分支付的订单状态为办理中
@@ -589,19 +582,20 @@ export default {
               this.orderData.orderStatusNo
             )
           }
+          this.showPayBtn = this.isShowPayBtn()
           this.cusOrderStatusType = this.checkCusOrderStatus(
             this.orderData.cusOrderStatusNo
           )
-          if (
-            this.orderData.orderSplitAndCusVo.cusOrderStatusNo !==
-              'ORDER_CUS_STATUS_CANCELLED' &&
-            this.orderData.orderSplitAndCusVo.cusOrderPayStatusNo !==
-              'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
-          ) {
-            // 当订单状态不为已取消且支付状态不为已完成时展示付款入口
-            this.showPayBtn = true
-          }
-          this.cusOrderPayType = this.checkPayType()
+          // if (
+          //   this.orderData.orderSplitAndCusVo.cusOrderStatusNo !==
+          //     'ORDER_CUS_STATUS_CANCELLED' &&
+          //   this.orderData.orderSplitAndCusVo.cusOrderPayStatusNo !==
+          //     'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
+          // ) {
+          //   // 当订单状态不为已取消且支付状态不为已完成时展示付款入口
+          //   this.showPayBtn = true
+          // }
+          this.orderPayType = this.checkPayType()
           if (
             this.orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
             'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'

@@ -77,7 +77,9 @@
 
         <div v-else-if="isServiceFinshed" class="deposit">
           <!-- 服务完结收费的意向单 -->
-          <div class="deposit_tips">温馨提示：该订单可享受业务办理完成后付费</div>
+          <div class="deposit_tips">
+            温馨提示：该订单可享受业务办理完成后付费
+          </div>
           <div class="deposit_content">
             <span>先服务后付款</span>
           </div>
@@ -128,7 +130,6 @@
           /> -->
           <!-- 意向单不用优惠券 -->
           <Cell
-            v-if="!isIntendedOrder"
             title="优惠券"
             :value="
               parseFloat(settlementInfo.orderDiscountMoney)

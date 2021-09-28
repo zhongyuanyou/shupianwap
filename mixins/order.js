@@ -684,9 +684,9 @@
      },
      // 判断客户单付费类型
      checkPayType() {
-       if (!this.orderData.cusOrderPayType) return 0
+       if (!this.orderData.orderPayType) return 0
        for (const key in PAYTYPECODE) {
-         if (PAYTYPECODE[key] === this.orderData.cusOrderPayType)
+         if (PAYTYPECODE[key] === this.orderData.orderPayType)
            return Number(key)
        }
      },
