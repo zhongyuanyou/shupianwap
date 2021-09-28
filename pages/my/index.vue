@@ -20,12 +20,12 @@
           <span class="nickName">{{
             userId ? nickName || '' : '登录/注册'
           }}</span>
-          <!-- <img
-            v-if="userId"
+          <img
+            v-if="isPlus"
             class="icon-plus"
             :src="$ossImgSetV2(imgList.plus)"
             alt=""
-          /> -->
+          />
         </span>
         <div v-if="userId" class="right" @click="toKnownHome">
           <span class="home">个人主页</span>
@@ -77,14 +77,8 @@
           @click="clickServiceTabs(item)"
         >
           <div class="icon">
-            <my-icon
-              v-if="item.iconName"
-              :name="item.iconName"
-              color="#4E78F5"
-              size="0.44rem"
-            >
+            <my-icon :name="item.iconName" color="#4E78F5" size="0.44rem">
             </my-icon>
-            <img v-else :src="item.img" class="order_icon" />
             <span
               v-if="item.type === 'daipingjia' && evaluateNumFlag !== 'none'"
               class="icon_daipingjia"
@@ -191,11 +185,6 @@ export default {
       // isShare: true,
       orderTabs: [
         {
-          name: '待提交',
-          img: 'https://cdn.shupian.cn/sp-pt/wap/images/wvqrjo623e8000.png',
-          url: '/order?type=5',
-        },
-        {
           iconName: 'per_ic_payment',
           name: '待付款',
           url: '/order?type=1',
@@ -230,7 +219,7 @@ export default {
       imgList: {
         tx: '2exrifx8gxes000.png', // 头像
         edit: '72tvzeql0iw0000.png', // 编辑
-        plus: '895bdylh5rg000.png', //
+        plus: 'e52dg6xuqns0000.png', //
 
         shop: 'f04le88sqm80000.png', // 购物车
         yuYue: '7jk7c04dsa00000.png', // 预约
@@ -275,6 +264,9 @@ export default {
     },
     userPhone() {
       return this.$store.state.user.userPhone || this.$cookies.get('userPhone')
+    },
+    isPlus() {
+      return this.info?.member?.memberType === 'PLUS'
     },
     nickName() {
       if (this.info.nickName) {
@@ -449,6 +441,7 @@ export default {
           id: this.userId || this.$cookies.get('userId', { path: '/' }),
         }
         const res = await this.$axios.get(userinfoApi.info, { params })
+
         this.loading = false
         if (res.code === 200 && res.data && typeof res.data === 'object') {
           this.info = res.data
@@ -643,7 +636,7 @@ export default {
       // align-items: center;
       // justify-content: space-between;
       // flex-wrap: wrap;
-      .my_order_type_list {
+      &_list {
         display: inline-block;
         width: 20%;
         min-width: 120px;
@@ -656,10 +649,6 @@ export default {
         position: relative;
         // flex-shrink: 0;
         // flex: 1;
-        .order_icon {
-          width: 44px;
-          height: 44px;
-        }
         .icon {
           position: relative;
           font-size: 0;
