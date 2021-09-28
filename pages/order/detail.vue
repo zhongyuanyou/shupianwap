@@ -37,11 +37,16 @@
                     goodsSkuDetail &&
                     goodsSkuDetail.sku &&
                     goodsSkuDetail.sku.targetRate &&
-                    orderData.orderType === 0
+                    orderData.orderType === 0 &&
+                    cusOrderStatusType !== 4
                   "
                   >(服务费{{ goodsSkuDetail.sku.targetRate }}%)</span
                 >
-                <span v-if="orderData.orderType === 0"> 预计</span>
+                <span
+                  v-if="orderData.orderType === 0 && cusOrderStatusType !== 4"
+                >
+                  预计</span
+                >
                 <span class="money">{{ orderData.orderTotalMoney }}</span>
                 元
               </span>
