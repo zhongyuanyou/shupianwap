@@ -90,7 +90,7 @@
             orderData.orderPayType === 'PRO_PRE_SERVICE_POST_PAY_BY_NODE' &&
             orderData.cusOrderPayStatusNo !== 'ORDER_CUS_PAY_STATUS_UN_PAID'
           "
-          class="last-money"
+          class="last-money last-money1"
         >
           实付金额
           <span class="pay-money">
@@ -100,13 +100,13 @@
         </p>
         <!-- 当订单已取消时不显示总金额 先付款后服务和服务完结收费-->
         <p
-          v-if="
+          v-else-if="
             (cusOrderStatusType !== 4 &&
               orderData.orderPayType === 'PRO_PRE_PAY_POST_SERVICE') ||
             orderData.cusOrderPayStatusNo ===
               'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
           "
-          class="last-money"
+          class="last-money last-money2"
         >
           {{ shouldPayText }}
           <span
@@ -119,9 +119,9 @@
             {{ orderData.orderPayableMoney }}
             <span style="font-weight: 400; font-size: 12px">元</span>
           </span>
-          <span v-else class="pay-money"
-            >{{ orderData.orderPaidMoney
-            }}<span style="font-weight: 400; font-size: 12px">元</span>
+          <span v-else class="pay-money">
+            {{ orderData.orderPaidMoney }}
+            <span style="font-weight: 400; font-size: 12px">元</span>
           </span>
         </p>
         <!-- <p class="last-money">
@@ -851,7 +851,6 @@ export default {
   color: #222222;
   letter-spacing: 0;
   line-height: 36px;
-  margin-bottom: 40px;
   .oder_toast {
     font-size: 24px;
     color: #999999;
