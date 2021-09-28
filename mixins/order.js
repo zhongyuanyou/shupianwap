@@ -1067,9 +1067,9 @@ export default {
           orderItem.orderPayableMoney
         )
       // 订单总金额 已减去优惠券的金额
-      if (orderItem.orderTotalMoney && orderItem.discountTotal) {
+      if (orderItem.orderTotalMoney && orderItem.orderDiscountMoney) {
         orderItem.shouldPayTotalMoney = this.regFenToYuan(
-          Number(orderItem.orderTotalMoney) - Number(orderItem.discountTotal)
+          Number(orderItem.orderTotalMoney) - Number(orderItem.orderDiscountMoney)
         )
       }
       if (orderItem.orderDiscountMoney)
