@@ -232,6 +232,52 @@ export default {
     if (!this.initData.fiexdNavData.length) {
       this.getHomeData()
     }
+    // 监听页面
+    window.addEventListener(
+      'pageshow',
+      (e) => {
+        if (
+          e.persisted ||
+          (window.performance && window.performance.navigation.type === 2)
+        ) {
+          if (
+            !this.$store.state.user.userInfo.token ||
+            !this.$store.state.user.token
+          ) {
+            const token = this.$cookies.get('token', {
+              path: '/',
+            })
+            const userId = this.$cookies.get('userId', {
+              path: '/',
+            })
+            const userName = this.$cookies.get('userName', {
+              path: '/',
+            })
+            const userType = this.$cookies.get('userType', {
+              path: '/',
+            })
+            const userPhone = this.$cookies.get('userPhone', {
+              path: '/',
+            })
+            const avatar = this.$cookies.get('avatar', {
+              path: '/',
+            })
+            if (token && token !== 'undefined') {
+              this.$store.dispatch('user/setUser', {
+                token,
+                userId,
+                userName,
+                userType,
+                userPhone,
+                avatar,
+              })
+            }
+          }
+        }
+      },
+      false
+    ) //
+    // 方法2:window.history.replaceState(null, '', window.location.href + '?timestamp=' + new Date().getTime());
   },
   methods: {
     // 用户手动关闭下载app提示弹框后，记录状态到cookie，刷新页面不再弹出，使用默认过期时间（关闭浏览器过期，下次再访问，再次弹出）
