@@ -121,7 +121,9 @@
           <span>
             合计
             <span class="price1 price money_num">
-              {{ orderData.orderTotalMoney }} </span
+              {{
+                orderData.shouldPayTotalMoney || orderData.orderTotalMoney
+              }} </span
             >元
           </span>
         </p>
@@ -154,7 +156,9 @@
           >
             合计
             <span class="price3 price money_num">
-              {{ orderData.orderTotalMoney }} </span
+              {{
+                orderData.shouldPayTotalMoney || orderData.orderTotalMoney
+              }} </span
             >元
           </span>
           <!-- 支付状态为未支付完成且客户单状态不等于已取消时显示预计尾款待支付 -->
@@ -191,13 +195,15 @@
             <span>预计</span>
             <!-- <span v-else>总价</span> -->
             <span class="price3 price money_num">
-              {{ orderData.orderTotalMoney }}</span
+              {{
+                orderData.shouldPayTotalMoney || orderData.orderTotalMoney
+              }}</span
             >元
           </span>
         </p>
         <!-- 其他付费方式展示效果一样 -->
         <p v-else class="inner">
-          <!-- <span class="price1"> 总价 {{ orderData.orderTotalMoney }}元,</span>
+          <!-- <span class="price1"> 总价 {{ orderData.shouldPayTotalMoney }}元,</span>
         <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元,</span> -->
           <span v-if="isShowPayBtn() == 1" class="should-pay">
             应付款

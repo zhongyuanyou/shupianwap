@@ -941,6 +941,7 @@ export default {
     },
     // 确认完成
     confirmOrder(orderSkuIds) {
+      console.log('this.orderData', this.orderData)
       if (this.fromPage === 'orderList') {
         const arr1 =
           this.orderData.orderSkuEsList || this.orderData.orderSkuList
@@ -949,7 +950,11 @@ export default {
         })
       } else if (this.fromPage === 'orderDetail' && !orderSkuIds) {
         const ids = []
-        this.orderData.orderSkuList.forEach((item) => {
+        const arr1 =
+          this.orderData.orderList ||
+          this.orderData.orderSkuEsList ||
+          this.orderData.orderSkuList
+        arr1.forEach((item) => {
           if (
             item.skuStatusNo === 'ORDER_ORDER_SALE_STATUS_HANDLED' ||
             item.skuStatusNo === 'ORDER_ORDER_TRADE_STATUS_HANDLED'
@@ -968,7 +973,7 @@ export default {
       }
       orderApi
         .confirmOrder({ axios: this.$axios }, params)
-        .then((res) => {
+        .then(() => {
           this.$xToast.success('操作成功')
           if (this.fromPage === 'orderList') this.getOrderList()
           else this.getDetail()
@@ -1060,6 +1065,12 @@ export default {
         orderItem.orderPayableMoney = this.regFenToYuan(
           orderItem.orderPayableMoney
         )
+      // 订单总金额 已减去优惠券的金额
+      if (orderItem.orderTotalMoney && orderItem.discountTotal) {
+        orderItem.shouldPayTotalMoney = this.regFenToYuan(
+          Number(orderItem.orderTotalMoney) - Number(orderItem.discountTotal)
+        )
+      }
       if (orderItem.orderDiscountMoney)
         // 优惠金额
         orderItem.orderDiscountMoney = this.regFenToYuan(
