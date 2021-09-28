@@ -62,7 +62,9 @@
       </div>
 
       <!-- 根据当前的付款模式，先付款后服务/先定金后尾款/先服务后付款/按节点付费，展示不同的模块 -->
-      <div>
+      <div
+        v-if="settlementInfo.cusOrderPayType!=='PRO_PRE_PAY_POST_SERVICE'"
+      >
         <div v-if="isDeposit" class="deposit">
           <!-- 先定金后尾款 -->
           <div class="deposit_tips">
@@ -77,7 +79,9 @@
 
         <div v-else-if="isServiceFinshed" class="deposit">
           <!-- 服务完结收费的意向单 -->
-          <div class="deposit_tips">温馨提示：该订单可享受业务办理完成后付费</div>
+          <div class="deposit_tips">
+            温馨提示：该订单可享受业务办理完成后付费
+          </div>
           <div class="deposit_content">
             <span>先服务后付款</span>
           </div>
@@ -85,7 +89,7 @@
         <div v-else class="deposit">
           <div class="deposit_tips">
             温馨提示：{{
-              isNodes ? '该订单按服务节点付费' : '该订单先付款后服务'
+              isNodes ? '该订单需要在给您办理业务期间付费' : '该订单先付款后服务'
             }}
           </div>
           <div class="deposit_content">
@@ -128,7 +132,6 @@
           /> -->
           <!-- 意向单不用优惠券 -->
           <Cell
-            v-if="!isIntendedOrder"
             title="优惠券"
             :value="
               parseFloat(settlementInfo.orderDiscountMoney)
