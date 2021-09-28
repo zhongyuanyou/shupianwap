@@ -120,10 +120,9 @@
         <p class="inner">
           <span>
             合计
-            <span class="price1 price money_num">
-              {{
-                orderData.shouldPayTotalMoney || orderData.orderTotalMoney
-              }} </span
+            <span class="price1 price money_num">{{
+              orderData.shouldPayTotalMoney || orderData.orderTotalMoney
+            }}</span
             >元
           </span>
         </p>
@@ -155,10 +154,9 @@
             class="should-pay"
           >
             合计
-            <span class="price3 price money_num">
-              {{
-                orderData.shouldPayTotalMoney || orderData.orderTotalMoney
-              }} </span
+            <span class="price3 price money_num">{{
+              orderData.shouldPayTotalMoney || orderData.orderTotalMoney
+            }}</span
             >元
           </span>
           <!-- 支付状态为未支付完成且客户单状态不等于已取消时显示预计尾款待支付 -->
@@ -214,7 +212,7 @@
           <span v-else class="should-pay">
             合计
             <span class="price3 money_num">{{
-              orderData.orderPayableMoney
+              orderData.shouldPayTotalMoney || orderData.orderTotalMoney
             }}</span
             >元
           </span>
