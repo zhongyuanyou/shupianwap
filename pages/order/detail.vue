@@ -84,18 +84,15 @@
         <!-- 当订单已取消时不显示总金额 先付款后服务和服务完结收费-->
         <p
           v-if="
-            cusOrderStatusType !== 4 &&
-            (orderData.orderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
-              orderData.orderPayType === 'PRO_PRE_SERVICE_POST_PAY_BY_NODE')
+            (cusOrderStatusType !== 4 &&
+              (orderData.orderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
+                orderData.orderPayType ===
+                  'PRO_PRE_SERVICE_POST_PAY_BY_NODE')) ||
+            orderData.cusOrderPayStatusNo ===
+              'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
           "
           class="last-money"
         >
-          <span
-            v-if="
-              orderData.cusOrderPayStatusNo ===
-              'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
-            "
-          ></span>
           {{ shouldPayText }}
           <span
             v-if="
@@ -105,6 +102,7 @@
             class="pay-money"
           >
             {{ orderData.orderPayableMoney }}
+            <span style="font-weight: 400; font-size: 12px">元</span>
           </span>
           <span v-else class="pay-money"
             >{{ orderData.orderPayableMoney
@@ -133,7 +131,17 @@
           温馨提示：该订单先支付定金在业务办理完成后支付尾款
         </p>
         <p>
-          定金尾款：定金 {{ orderData.depositAmount }}元<span
+          定金尾款：定金
+          <span
+            :class="
+              orderData.cusOrderPayStatusNo !== 'ORDER_CUS_PAY_STATUS_PART_PAID'
+                ? 'red_money'
+                : 'money_num'
+            "
+          >
+            {{ orderData.depositAmount }}元</span
+          >
+          <span
             v-if="
               orderData.cusOrderPayStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
             "
@@ -145,13 +153,22 @@
             "
             >待支付</span
           >尾款
-          <span class="red_money"> {{ orderData.lastAount }}元</span>
+          <span
+            :class="
+              orderData.cusOrderPayStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
+                ? 'red_money'
+                : 'money_num'
+            "
+          >
+            {{ orderData.lastAount }}元</span
+          >
         </p>
         <p v-if="isShowPayBtn() === 1" class="last-money">
           应付金额
           <span class="pay-money">{{ orderData.depositAmount }}</span>
         </p>
         <p v-if="isShowPayBtn() === 2" class="last-money">
+          应付金额
           <span class="pay-money">{{ orderData.lastAount }}</span>
         </p>
       </div>
@@ -159,7 +176,9 @@
       <div
         v-if="
           cusOrderStatusType !== 4 &&
-          orderData.orderPayType === 'PRO_PRE_SERVICE_FINISHED_PAY'
+          orderData.orderPayType === 'PRO_PRE_SERVICE_FINISHED_PAY' &&
+          orderData.cusOrderPayStatusNo !==
+            'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
         "
         class="order_text order-area"
       >
@@ -586,6 +605,13 @@ export default {
             this.orderData.statusName = this.getStatusName(
               this.orderData.orderStatusNo
             )
+            if (this.orderData.statusName === '待确认') {
+              if (this.isShowConfirmBtn(this.orderData) === 1) {
+                this.orderData.statusName = '待确认'
+              } else {
+                this.orderData.statusName = '办理中'
+              }
+            }
           }
           this.showPayBtn = this.isShowPayBtn()
           this.cusOrderStatusType = this.checkCusOrderStatus(
@@ -779,6 +805,9 @@ export default {
 }
 .red_money {
   color: #ec5330;
+  font-weight: 600;
+}
+.money_num {
   font-weight: 600;
 }
 .order_text {
