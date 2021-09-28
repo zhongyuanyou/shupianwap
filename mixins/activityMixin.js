@@ -36,7 +36,7 @@ export default {
     return {
       // const cityCode = window.sessionStorage.getItem('cityCode')
       // const cityName = window.sessionStorage.getItem('cityName')
-
+      changeTab: false, // 是否初始化
       endCountDownTimer: null,
       countDownTimer: null,
 
@@ -188,6 +188,9 @@ export default {
     },
 
     menuTab(item, index) {
+      this.page = 1
+      this.loading = true
+      this.changeTab = true
       this.currentIndex = index
       this.currentTab = item
       this.getProductList()
@@ -313,6 +316,10 @@ export default {
           console.log('productMethod', param, res)
           this.refreshing = false
           if (res.code === 200) {
+            if (this.changeTab) {
+              this.activityProductList = []
+              this.changeTab = false
+            }
             this.activityProductList = this.activityProductList.concat(
               res.data.rows
             )
@@ -383,10 +390,12 @@ export default {
     },
     // 通过广告位获取banner图
     getAdvertisingData() {
-      if (this.imageHead) { return }
+      if (this.imageHead) {
+        return
+      }
 
       if (!this.advertCode) {
-        console.log('未配置广告位');
+        console.log('未配置广告位')
         this.imageHead = this.imageHead || this.imageHeadDefault
         return
       }
@@ -398,7 +407,10 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            if (res.data.sortMaterialList.length && res.data.sortMaterialList[0].materialList.length) {
+            if (
+              res.data.sortMaterialList.length &&
+              res.data.sortMaterialList[0].materialList.length
+            ) {
               this.imageHead =
                 res.data.sortMaterialList[0].materialList[0].materialUrl
             } else {
