@@ -941,7 +941,6 @@ export default {
     },
     // 确认完成
     confirmOrder(orderSkuIds) {
-      console.log('this.orderData', this.orderData)
       if (this.fromPage === 'orderList') {
         const arr1 =
           this.orderData.orderSkuEsList || this.orderData.orderSkuList
@@ -951,13 +950,14 @@ export default {
       } else if (this.fromPage === 'orderDetail' && !orderSkuIds) {
         const ids = []
         const arr1 =
-          this.orderData.orderList ||
+          this.orderData.orderSkuList ||
           this.orderData.orderSkuEsList ||
-          this.orderData.orderSkuList
+          this.orderData.orderList
         arr1.forEach((item) => {
           if (
             item.skuStatusNo === 'ORDER_ORDER_SALE_STATUS_HANDLED' ||
-            item.skuStatusNo === 'ORDER_ORDER_TRADE_STATUS_HANDLED'
+            item.skuStatusNo === 'ORDER_ORDER_TRADE_STATUS_HANDLED' ||
+            item.skuStatusNo === 'ORDER_ORDER_SERVER_STATUS_HANDLED'
           )
             ids.push(item.id)
         })
@@ -966,6 +966,7 @@ export default {
       } else {
         orderSkuIds = new Array(1).fill(orderSkuIds)
       }
+      debugger
       const params = {
         orderSkuIds,
         operateSourcePlat: 'COMDIC_PLATFORM_CRISPS',

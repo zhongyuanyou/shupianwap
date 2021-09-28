@@ -379,7 +379,6 @@ export default {
         return 'status3'
       }
     },
-    confirmorder() {},
     handleClickItem(type) {
       this.$emit('handleClickItem', type, this.orderData)
     },
