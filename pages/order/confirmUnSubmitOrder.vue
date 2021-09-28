@@ -41,11 +41,19 @@
             </p>
 
             <p class="price">
-              <span v-if="isIntendedOrder"><b>面议</b></span>
-              <span v-else
-                ><b>{{ item.price }}</b
-                >元</span
-              >
+              <span>
+                <b
+                  v-if="
+                    goodsSkuDetail &&
+                    goodsSkuDetail.sku &&
+                    goodsSkuDetail.sku.targetRate
+                  "
+                  >(服务费{{ goodsSkuDetail.sku.targetRate }}%)</b
+                >
+                <b v-if="isIntendedOrder">预计:</b>
+                <b class="price_text">{{ item.price }}</b
+                >元
+              </span>
 
               <i>{{ 'x' + item.goodsNumber }}</i>
             </p>
@@ -54,44 +62,57 @@
       </div>
 
       <!-- 根据当前的付款模式，先付款后服务/先定金后尾款/先服务后付款/按节点付费，展示不同的模块 -->
-      <div>
+      <div v-if="settlementInfo.cusOrderPayType !== 'PRO_PRE_PAY_POST_SERVICE'">
         <div v-if="isDeposit" class="deposit">
           <!-- 先定金后尾款 -->
           <div class="deposit_tips">
             温馨提示：该订单先支付定金在业务办理完成后支付尾款
           </div>
           <div class="deposit_content">
-            定金尾款：定金 {{ settlementInfo.depositAmount }}元，<span
-              v-if="isIntendedOrder"
-              >尾款 面议</span
-            ><span v-else>尾款 {{ settlementInfo.orderBalanceMoney }}元</span>
+            定金尾款：定金 {{ settlementInfo.depositAmount }}元,<span
+              >尾款 {{ settlementInfo.orderBalanceMoney }}元</span
+            >
           </div>
         </div>
 
         <div v-else-if="isServiceFinshed" class="deposit">
           <!-- 服务完结收费的意向单 -->
-          <div class="deposit_tips">温馨提示：该订单先服务后收费</div>
+          <div class="deposit_tips">
+            温馨提示：该订单可享受业务办理完成后付费
+          </div>
           <div class="deposit_content">
-            <span v-if="isIntendedOrder">总价：面议</span>
-            <span v-else>总价 {{ settlementInfo.orderTotalMoney }}元</span>
+            <span>先服务后付款</span>
           </div>
         </div>
         <div v-else class="deposit">
           <div class="deposit_tips">
             温馨提示：{{
-              isNodes ? '该订单按服务节点付费' : '该订单先付款后服务'
+              isNodes
+                ? '该订单需要在给您办理业务期间付费'
+                : '该订单先付款后服务'
             }}
           </div>
-          <div class="deposit_content">
-            总价 {{ settlementInfo.orderTotalMoney }}元，应付款{{
-              settlementInfo.orderPayableMoney
-            }}元
-          </div>
+          <div class="deposit_content">按业务办理节点付费</div>
         </div>
       </div>
       <div class="news-content">
+        <p class="order_sku">
+          <span class="title">商品及服务总数</span>
+          <span class="value">
+            <b>{{ goodsNumberSum }}</b
+            >件
+          </span>
+        </p>
+        <p class="order_sku">
+          <span class="title">商品金额</span>
+          <span class="value">
+            <span v-if="isIntendedOrder">预计</span>
+            <b>{{ settlementInfo.orderTotalMoney }}</b
+            >元
+          </span>
+        </p>
         <CellGroup>
-          <Cell
+          <!-- <Cell
             title="商品及服务总数"
             :value="goodsNumberSum + '件'"
             value-class="black"
@@ -100,14 +121,13 @@
             title="商品金额"
             :value="
               isIntendedOrder
-                ? '面议'
+                ? '预计' + (settlementInfo.orderTotalMoney || 0) + '元'
                 : (settlementInfo.orderTotalMoney || 0) + '元'
             "
             value-class="black"
-          />
+          /> -->
           <!-- 意向单不用优惠券 -->
           <Cell
-            v-if="!isIntendedOrder"
             title="优惠券"
             :value="
               parseFloat(settlementInfo.orderDiscountMoney)
@@ -145,20 +165,18 @@
         <!--  settlementInfo.orderPayableMoney  -->
         <p class="money">
           合计：
-          <span v-if="isIntendedOrder" class="money_price"><b>面议</b></span
-          ><span v-else class="money_price"
-            ><b>{{
-              (settlementInfo.orderTotalMoney || 0) -
-              (settlementInfo.orderDiscountMoney || 0)
+          <span class="money_price">
+            <b class="money_text">{{
+              getEnablePayMoney(
+                settlementInfo.orderTotalMoney,
+                settlementInfo.orderDiscountMoney
+              )
             }}</b
-            >元</span
+            >元 <b v-if="isIntendedOrder" class="toast_text">预计</b></span
           >
           <span v-if="isDeposit" class="deposit_text"
-            >（定金 {{ settlementInfo.depositAmount }}元，<span
-              v-if="isIntendedOrder"
+            >（ 定金 {{ settlementInfo.depositAmount }}元，<span
               class="deposit_text"
-              >尾款 面议</span
-            ><span v-else class="deposit_text"
               >尾款 {{ settlementInfo.orderBalanceMoney }}元</span
             >）</span
           >
@@ -292,6 +310,7 @@ export default {
   mixins: [OrderMixins],
   data() {
     return {
+      goodsSkuDetail: {},
       radio: '', // 选中协议
       checkboxProtocol: [], // 选中协议
       order: {},
@@ -426,6 +445,18 @@ export default {
     this.getProtocol('protocol100008')
   },
   methods: {
+    getEnablePayMoney(money1, money2) {
+      money1 = Number(money1) || 0
+      money2 = Number(money2) || 0
+      if (money1) {
+        money1 = money1 * 100
+      }
+      if (money2) {
+        money2 = money2 * 100
+      }
+      const diffMoney = money1 - money2
+      return diffMoney / 100
+    },
     onLeftClick() {
       this.$router.back()
     },
@@ -454,7 +485,12 @@ export default {
           }
         )
         .then((result) => {
-          console.log('result', result)
+          this.goodsSkuDetail = JSON.parse(result.orderSkuList[0].skuDetailInfo)
+          if (this.goodsSkuDetail.sku.targetRate) {
+            this.goodsSkuDetail.sku.targetRate = parseFloat(
+              this.goodsSkuDetail.sku.targetRate
+            )
+          }
           this.settlementInfo = result
 
           if (this.requestOnce === false) {
@@ -780,6 +816,8 @@ export default {
     },
 
     conponChange(price, num, item) {
+      console.log('price', price)
+      console.log('num', num)
       this.couponInfo.couponPrice = num
       this.couponInfo.selectedItem = item || {}
       this.card.cardPrice = ''
@@ -884,12 +922,17 @@ export default {
             display: flex;
             margin-top: 31px;
             > span {
-              font-size: 28px;
-              font-weight: bold;
               color: #ec5330;
-              width: 40%;
-              > b {
-                font-size: 36px;
+              letter-spacing: 0;
+              line-height: 34px;
+              font-size: 24px;
+              font-weight: 400;
+              b {
+                font-weight: 400;
+              }
+              .price_text {
+                font-size: 28px;
+                font-weight: 600;
               }
             }
             > i {
@@ -959,21 +1002,50 @@ export default {
         font-weight: bold;
       }
       > .money {
-        padding: 15px 30px;
         text-align: right;
+        padding: 15px 30px;
         font-size: 28px;
         font-weight: 400;
         color: #222222;
         .money_price {
           font-size: 22px;
           color: #ec5330;
+          .money_text {
+            font-size: 36px;
+          }
           b {
             font-size: 30px;
+          }
+          .toast_text {
+            font-size: 24px;
+            font-weight: 400;
+            background: #fef0ed;
+            padding: 2px;
           }
         }
         .deposit_text {
           color: #222222;
           font-size: 22px;
+        }
+      }
+      .order_sku {
+        line-height: 44px;
+        display: flex;
+        justify-content: space-between;
+        padding: 40px 40px 0 30px;
+        .title {
+          font-size: 28px;
+          color: #222222;
+          letter-spacing: 0;
+          line-height: 28px;
+        }
+        .value {
+          font-size: 24px;
+          color: #222222;
+          letter-spacing: 0;
+          b {
+            font-size: 28px;
+          }
         }
       }
     }

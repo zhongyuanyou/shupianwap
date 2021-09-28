@@ -1,5 +1,5 @@
 <template>
-  <div class="banner" :class="'banner' + cusOrderStatusType">
+  <div :class="'banner' + cusOrderStatusType" class="banner">
     <my-icon
       class="back-icon"
       name="nav_ic_back"
@@ -27,7 +27,7 @@
         color="rgba(255, 255, 255, 1)"
       ></my-icon>
       <my-icon
-        v-if="cusOrderStatusType == 4"
+        v-if="cusOrderStatusType === 4"
         name="tixing"
         size="0.40rem"
         color="rgba(255, 255, 255, 1)"
@@ -51,6 +51,9 @@
         </p>
         超时订单将自动关闭<br />
       </section>
+      <section v-else-if="orderData.payType === 'ORDER_PAY_MODE_OFFLINE'">
+        <p>请前往线下银行网点进行支付</p>
+      </section>
       <section v-else>
         <p>暂无支付信息</p>
       </section>
@@ -73,8 +76,9 @@
 </template>
 
 <script>
-import orderUtils from '@/utils/order.js'
+import OrderMixins from '@/mixins/order'
 import payApi from '@/api/pay'
+import orderApi from '@/api/order'
 let timer
 export default {
   props: {
@@ -102,6 +106,16 @@ export default {
       type: String,
       default: '',
     },
+    showPayBtn: {
+      type: [Number, Boolean],
+      default: 0,
+    },
+    orderData: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
   },
   data() {
     return {
@@ -110,8 +124,11 @@ export default {
     }
   },
   mounted() {
-    if (this.cusOrderStatusType === 1) {
+    if (this.cusOrderStatusType === 1 || this.showPayBtn) {
       const that = this
+      if (this.orderData.cusOrderPayType === 'PRO_PRE_SERVICE_FINISHED_PAY') {
+        this.getBatchList()
+      }
       this.getEnablePayMoney()
     }
   },
@@ -119,6 +136,35 @@ export default {
     if (timer) clearInterval(timer)
   },
   methods: {
+    // 获取分批支付信息 订单列表页为点击付款之后进行的查询 详情页为页面加载时查询
+    getBatchList() {
+      this.loading = true
+      orderApi
+        .batchPayList(
+          { axios: this.$axios },
+          {
+            page: 1,
+            limit: 100,
+            cusOrderId: this.cusOrderId || this.orderData.cusOrderId,
+          }
+        )
+        .then((res) => {
+          // 客户单的分批支付信息
+          console.log('分批支付信息i查询', res)
+          const idsArr = []
+          res.forEach((element) => {
+            if (element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1') {
+              idsArr.push(element.id)
+            }
+          })
+          const batchIds = idsArr.join(',')
+        })
+        .catch((err) => {
+          this.loading = false
+          this.$xToast.error(err.message || '获取支付信息失败')
+          console.error(err)
+        })
+    },
     onLeftClick() {
       this.$router.go(-1)
     },
@@ -149,10 +195,6 @@ export default {
       }, 1000)
       // 每执行一次定时器就减少一秒
     },
-    // 判断客户单状态
-    checkCusOrderStatus() {
-      return orderUtils.checkCusOrderStatus(this.orderStatusCode)
-    },
     // 查询订单应付金额
     getEnablePayMoney() {
       const postData = {
@@ -181,6 +223,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+#banner1 {
+  background: linear-gradient(90deg, #fcaa2d, rgba(254, 140, 41, 1));
+}
 // 待支付背景
 .banner1 {
   background: linear-gradient(90deg, #fcaa2d, rgba(254, 140, 41, 1));

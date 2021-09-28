@@ -3,11 +3,14 @@
     <Header v-show="showHead" title="订单详情"> </Header>
     <section v-if="hasData">
       <Banner
+        v-if="orderData.statusName"
         :order-status-code="orderData.orderSplitAndCusVo.cusOrderStatusNo"
         :cus-order-status-type="cusOrderStatusType"
         :cus-order-id="orderData.cusOrderId"
         :cus-order-cancel-reason="canCelReasonName"
         :status-name="orderData.statusName"
+        :show-pay-btn="showPayBtn"
+        :order-data="orderData"
         @getDetail="getDetail"
       />
       <div class="order-area">
@@ -17,7 +20,7 @@
           :order-data="orderData"
           :cus-order-status-type="cusOrderStatusType"
           :cus-order-pay-status-no="orderData.cusOrderPayStatusNo"
-          :cus-order-pay-type="cusOrderPayType"
+          :cus-order-pay-type="orderPayType"
           @confirmOrder="confirmOrder"
         />
         <!-- 交易/销售/资源 -->
@@ -25,27 +28,35 @@
         <div class="price-area">
           <!-- 定金尾款付费 -->
           <!-- 服务完结收费 -->
-          <div v-if="checkPayType() === 2 || checkPayType() === 4">
+          <div>
             <p>
               <span> 商品总额 </span>
-              <span v-if="orderData.orderType === 0" class="money"> 面议</span>
-              <span v-else class="price1"
-                >{{ orderData.orderTotalMoney }}元</span
-              >
-            </p>
-          </div>
-          <div v-else>
-            <p>
-              <span> 商品总额 </span>
-              <span class="money">
-                {{ orderData.orderTotalMoney }}
+              <span>
+                <span
+                  v-if="
+                    goodsSkuDetail &&
+                    goodsSkuDetail.sku &&
+                    goodsSkuDetail.sku.targetRate &&
+                    orderData.orderType === 0 &&
+                    cusOrderStatusType !== 4
+                  "
+                  >(服务费{{ goodsSkuDetail.sku.targetRate }}%)</span
+                >
+                <span
+                  v-if="orderData.orderType === 0 && cusOrderStatusType !== 4"
+                >
+                  预计</span
+                >
+                <span class="money">{{ orderData.orderTotalMoney }}</span>
                 元
               </span>
             </p>
             <p>
               <span> 优惠金额 </span>
-              <span class="money">
-                {{ orderData.orderDiscountMoney }}
+              <span>
+                <span class="money">
+                  - {{ orderData.orderDiscountMoney }}
+                </span>
                 元
               </span>
             </p>
@@ -72,8 +83,18 @@
           </span>
         </p> -->
         </div>
-        <!-- 当订单已取消时不显示总金额 -->
-        <p v-if="cusOrderStatusType !== 4" class="last-money">
+        <!-- 当订单已取消时不显示总金额 先付款后服务和服务完结收费-->
+        <p
+          v-if="
+            (cusOrderStatusType !== 4 &&
+              (orderData.orderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
+                orderData.orderPayType ===
+                  'PRO_PRE_SERVICE_POST_PAY_BY_NODE')) ||
+            orderData.cusOrderPayStatusNo ===
+              'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
+          "
+          class="last-money"
+        >
           {{ shouldPayText }}
           <span
             v-if="
@@ -82,8 +103,9 @@
             "
             class="pay-money"
           >
-            面议</span
-          >
+            {{ orderData.orderPayableMoney }}
+            <span style="font-weight: 400; font-size: 12px">元</span>
+          </span>
           <span v-else class="pay-money"
             >{{ orderData.orderPayableMoney
             }}<span style="font-weight: 400; font-size: 12px">元</span>
@@ -96,6 +118,78 @@
             元
           </span>
         </p> -->
+      </div>
+      <!-- 定金尾款付费 -->
+      <div
+        v-if="
+          cusOrderStatusType !== 4 &&
+          orderData.orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
+          orderData.cusOrderPayStatusNo !==
+            'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
+        "
+        class="order_text order-area"
+      >
+        <p class="oder_toast">
+          温馨提示：该订单先支付定金在业务办理完成后支付尾款
+        </p>
+        <p>
+          定金尾款：定金
+          <span
+            :class="
+              orderData.cusOrderPayStatusNo !== 'ORDER_CUS_PAY_STATUS_PART_PAID'
+                ? 'red_money'
+                : 'money_num'
+            "
+          >
+            {{ orderData.depositAmount }}元</span
+          >
+          <span
+            v-if="
+              orderData.cusOrderPayStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
+            "
+            >(已支付)</span
+          >
+          ，<span
+            v-if="
+              orderData.cusOrderPayStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
+            "
+            >待支付</span
+          >尾款
+          <span
+            :class="
+              orderData.cusOrderPayStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
+                ? 'red_money'
+                : 'money_num'
+            "
+          >
+            {{ orderData.lastAount }}元</span
+          >
+        </p>
+        <p v-if="isShowPayBtn() === 1" class="last-money">
+          应付金额
+          <span class="pay-money">{{ orderData.depositAmount }}</span>
+        </p>
+        <p v-if="isShowPayBtn() === 2" class="last-money">
+          应付金额
+          <span class="pay-money">{{ orderData.lastAount }}</span>
+        </p>
+      </div>
+      <!-- 先服务后付款 -->
+      <div
+        v-if="
+          cusOrderStatusType !== 4 &&
+          orderData.orderPayType === 'PRO_PRE_SERVICE_FINISHED_PAY' &&
+          orderData.cusOrderPayStatusNo !==
+            'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
+        "
+        class="order_text order-area"
+      >
+        <p class="oder_toast">温馨提示：该订单可享受业务办理完成后付费</p>
+        <p class="color:#222222">先服务后付款</p>
+        <p v-if="isShowPayBtn() === 1" class="last-money">
+          应付金额
+          <span class="pay-money">{{ orderData.orderPayableMoney }}</span>
+        </p>
       </div>
       <div
         v-if="
@@ -321,28 +415,18 @@
             查看合同
           </sp-button>
           <sp-button
-            v-if="
-              showPayBtn &&
-              orderData.isNeedPay == 1 &&
-              orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
-                'ORDER_CUS_PAY_STATUS_UN_PAID'
-            "
+            v-if="isShowPayBtn() === 1"
             class="btn-pay"
             @click="handleClickPay()"
           >
             立即付款
           </sp-button>
           <sp-button
-            v-if="
-              showPayBtn &&
-              orderData.isNeedPay == 1 &&
-              orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
-                'ORDER_CUS_PAY_STATUS_PART_PAID'
-            "
+            v-if="isShowPayBtn() === 2"
             class="btn-pay"
             @click="handleClickPay()"
           >
-            立即付款
+            支付尾款
           </sp-button>
           <!-- 销售商品交易商品的确认按钮是在下边 -->
           <sp-button
@@ -414,7 +498,6 @@ import ServeList from '@/components/order/detail/ServeList.vue'
 import TradeList from '@/components/order/detail/TradeList.vue'
 import CancelOrder from '@/components/order/CancelOrder.vue' // 取消订单弹窗
 import PayModal from '@/components/order/PayModal.vue' // 支付弹窗
-import orderUtils from '@/utils/order'
 import orderApi from '@/api/order'
 import OrderMixins from '@/mixins/order'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
@@ -436,6 +519,7 @@ export default {
   mixins: [OrderMixins],
   data() {
     return {
+      goodsSkuDetail: '',
       showHead: false,
       canCelReasonName: '',
       loading: true,
@@ -455,7 +539,7 @@ export default {
       paylistLength: 0,
       opType: '',
       shouldPayText: '',
-      cusOrderPayType: '', // 付费类型 1先付款后服务 2先定金后尾款 3服务节点收费 4服务完成收费
+      orderPayType: '', // 付费类型 1先付款后服务 2先定金后尾款 3服务节点收费 4服务完成收费
     }
   },
   computed: {
@@ -510,36 +594,41 @@ export default {
             : res.orderSplitAndCusVo
           this.orderData = Object.assign(cusDetail, res.data || res)
           if (
-            this.orderData.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
+            this.orderData.orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
             this.orderData.payStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
           ) {
-            // 先定金后尾款部分支付的订单状态为办理中
+            // 部分支付的订单状态为办理中
             this.orderData.statusName = '办理中'
-          } else {
-            this.orderData.statusName = this.getStatusName(
-              this.orderData.orderStatusNo
-            )
-          }
-          this.cusOrderStatusType = orderUtils.checkCusOrderStatus(
-            this.orderData.cusOrderStatusNo
-          )
-          if (this.cusOrderStatusType === 3) {
+          } else if (
+            this.orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_COMPLETED'
+          ) {
             this.orderData.statusName = '已完成'
           } else {
             this.orderData.statusName = this.getStatusName(
               this.orderData.orderStatusNo
             )
+            if (this.orderData.statusName === '待确认') {
+              if (this.isShowConfirmBtn(this.orderData) === 1) {
+                this.orderData.statusName = '待确认'
+              } else {
+                this.orderData.statusName = '办理中'
+              }
+            }
           }
-          if (
-            this.orderData.orderSplitAndCusVo.cusOrderStatusNo !==
-              'ORDER_CUS_STATUS_CANCELLED' &&
-            this.orderData.orderSplitAndCusVo.cusOrderPayStatusNo !==
-              'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
-          ) {
-            // 当订单状态不为已取消且支付状态不为已完成时展示付款入口
-            this.showPayBtn = true
-          }
-          this.cusOrderPayType = this.checkPayType()
+          this.showPayBtn = this.isShowPayBtn()
+          this.cusOrderStatusType = this.checkCusOrderStatus(
+            this.orderData.cusOrderStatusNo
+          )
+          // if (
+          //   this.orderData.orderSplitAndCusVo.cusOrderStatusNo !==
+          //     'ORDER_CUS_STATUS_CANCELLED' &&
+          //   this.orderData.orderSplitAndCusVo.cusOrderPayStatusNo !==
+          //     'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
+          // ) {
+          //   // 当订单状态不为已取消且支付状态不为已完成时展示付款入口
+          //   this.showPayBtn = true
+          // }
+          this.orderPayType = this.checkPayType()
           if (
             this.orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
             'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
@@ -555,6 +644,12 @@ export default {
               item.skuDetailInfo = orders[i].skuDetailInfo
             })
             arr1 = arr1.concat(orders[i].skuDetails)
+          }
+          this.goodsSkuDetail = JSON.parse(arr1[0].skuDetailInfo)
+          if (this.goodsSkuDetail.sku.targetRate) {
+            this.goodsSkuDetail.sku.targetRate = parseFloat(
+              this.goodsSkuDetail.sku.targetRate
+            )
           }
           this.orderData.orderSkuList = arr1
           this.getChildOrders(this.orderData)
@@ -710,7 +805,36 @@ export default {
     font-size: 36px;
   }
 }
-
+.red_money {
+  color: #ec5330;
+  font-weight: 600;
+}
+.money_num {
+  font-weight: 600;
+}
+.order_text {
+  font-size: 28px;
+  line-height: 44px;
+  padding: 20px 40px 20px 40px;
+  background: white;
+  font-size: 26px;
+  color: #222222;
+  letter-spacing: 0;
+  line-height: 36px;
+  margin-bottom: 40px;
+  .oder_toast {
+    font-size: 24px;
+    color: #999999;
+    line-height: 34px;
+  }
+  p {
+    border: none;
+    margin: 10px 0;
+  }
+  .last-money {
+    padding: 20px 0 20px 0;
+  }
+}
 .order-info {
   background: white;
   padding: 40px;

@@ -77,8 +77,14 @@
           @click="clickServiceTabs(item)"
         >
           <div class="icon">
-            <my-icon :name="item.iconName" color="#4E78F5" size="0.44rem">
+            <my-icon
+              v-if="item.iconName"
+              :name="item.iconName"
+              color="#4E78F5"
+              size="0.44rem"
+            >
             </my-icon>
+            <img v-else :src="item.img" class="order_icon" />
             <span
               v-if="item.type === 'daipingjia' && evaluateNumFlag !== 'none'"
               class="icon_daipingjia"
@@ -184,6 +190,11 @@ export default {
       androdLink: 'cpsccustomer://',
       // isShare: true,
       orderTabs: [
+        {
+          name: '待提交',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/wvqrjo623e8000.png',
+          url: '/order?type=5',
+        },
         {
           iconName: 'per_ic_payment',
           name: '待付款',
@@ -632,7 +643,7 @@ export default {
       // align-items: center;
       // justify-content: space-between;
       // flex-wrap: wrap;
-      &_list {
+      .my_order_type_list {
         display: inline-block;
         width: 20%;
         min-width: 120px;
@@ -645,6 +656,10 @@ export default {
         position: relative;
         // flex-shrink: 0;
         // flex: 1;
+        .order_icon {
+          width: 44px;
+          height: 44px;
+        }
         .icon {
           position: relative;
           font-size: 0;

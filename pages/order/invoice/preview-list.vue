@@ -8,20 +8,25 @@
     <div class="preview_content">
       <client-only>
         <div class="preview_image">
-          <div
-            v-for="item of showList"
-            :key="item.id"
-            class="preview_image_item"
-            @click="toDetail(item)"
-          >
-            <div class="mask">点击查看电子发票</div>
+          <div v-for="item of list" :key="item.id" class="preview_image_item">
+            <div v-if="item.pdfUrl" class="mask" @click="toDetail(item)">
+              点击查看电子发票
+            </div>
             <Pdf
-              v-if="ShowPdf"
+              v-if="ShowPdf && item.pdfUrl"
               :autoplay="false"
               :src="item.pdfUrl"
               :page="1"
               class="pdf-set"
             />
+            <img
+              v-if="item.imgUrl"
+              :src="item.imgUrl"
+              alt=""
+              srcset=""
+              class="invoice_img"
+            />
+            <img v-if="item.ofdUrl" :src="item.ofdUrl" alt="" srcset="" />
           </div>
         </div>
       </client-only>
@@ -147,6 +152,7 @@ export default {
         })
 
       this.list = res || []
+      console.log('this.list', this.list)
     },
     toDetail(item) {
       this.$router.push({
@@ -182,6 +188,10 @@ export default {
     .preview_image_item {
       position: relative;
       margin-bottom: 40px;
+      .invoice_img {
+        width: 100%;
+        height: auto;
+      }
       .mask {
         position: absolute;
         top: 0;

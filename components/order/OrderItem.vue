@@ -8,6 +8,14 @@
           <!-- 待确认 -->
           <span
             v-if="
+              orderData.statusName === '待确认' ||
+              orderData.statusName === '未付款'
+            "
+            class="order-status status2"
+            >{{ orderData.statusName }}</span
+          >
+          <span
+            v-else-if="
               orderData.orderStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED'
             "
             class="order-status status3"
@@ -45,21 +53,24 @@
           <p class="goods-name">
             <span
               v-if="
-                item.payStatusNo === 'ORDER_CUS_PAY_STATUS_UN_PAID' ||
+                (item.payStatusNo === 'ORDER_CUS_PAY_STATUS_UN_PAID' &&
+                  item.classifyOneName.match('公司')) ||
                 isUnSubmit(orderData)
               "
               class="name"
               >{{ item.spuHideName || item.spuName }}</span
             >
             <span v-else class="name">{{ item.spuName }}</span>
-            <span
+            <span class="goods-num">×{{ item.skuCount }}</span>
+            <!-- <span
               v-if="
                 checkPayType() !== 2 && checkPayType() !== 4 && !item.orderType
               "
               class="money1"
             >
               {{ item.skuPrice }}元
-            </span>
+            </span> -->
+            <!-- 2021-09-28版本改动去掉价格显示判断条件 -->
           </p>
           <!-- 交易和资源取skuDetailInfo -->
           <!-- 销售和服务取skuExtInfo -->
@@ -74,7 +85,11 @@
             <span v-else class="sku-item">{{
               item.skuDetailValues || getSkus(item.skuExtInfo)
             }}</span>
-            <span class="goods-num">×{{ item.skuCount }}</span>
+          </p>
+          <p class="goods_price">
+            <span v-if="orderData.orderType === 0"> 预计</span>
+            <span class="money1 money_num"> {{ item.skuPrice }}</span
+            >元
           </p>
           <!-- 增值服务产品中心2期已去掉 2021.03.10 -->
           <!-- <div class="sku-sercice">
@@ -101,45 +116,104 @@
       </div>
     </div>
     <div v-if="!isUnSubmit(orderData)" class="total-price-area">
-      <!-- 定金尾款付费 -->
-      <p v-if="checkPayType() === 2" class="inner">
-        总价
-        <span v-if="orderData.orderType === 0" class="price1 price">
-          面议，</span
+      <div v-if="checkCusOrderStatus() === 4">
+        <p class="inner">
+          <span>
+            合计
+            <span class="price1 price money_num">
+              {{ orderData.orderTotalMoney }} </span
+            >元
+          </span>
+        </p>
+      </div>
+      <section v-else>
+        <!-- 定金尾款付费 -->
+        <p v-if="checkPayType() === 2" class="inner">
+          <!-- 意向单显示预计 -->
+          <!-- <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元,</span> -->
+          <!-- 已支付定金未支付尾款,客户单付款状态为部分支付时显示已付定金 -->
+          <span
+            v-if="
+              orderData.cusOrderPayStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
+            "
+            class="allready_pay"
+          >
+            定金<span class="price3 price money_num">{{
+              orderData.depositAmount
+            }}</span
+            >元,
+          </span>
+          <!-- 支付状态为完成支付时显示合计,不显示定金尾款等 -->
+          <span
+            v-if="
+              orderData.cusOrderPayStatusNo ===
+                'ORDER_CUS_PAY_STATUS_COMPLETED_PAID' ||
+              checkCusOrderStatus() === 4
+            "
+            class="should-pay"
+          >
+            合计
+            <span class="price3 price money_num">
+              {{ orderData.orderTotalMoney }} </span
+            >元
+          </span>
+          <!-- 支付状态为未支付完成且客户单状态不等于已取消时显示预计尾款待支付 -->
+          <span
+            v-if="
+              orderData.cusOrderPayStatusNo !==
+                'ORDER_CUS_PAY_STATUS_COMPLETED_PAID' &&
+              checkCusOrderStatus() !== 4
+            "
+            class="should-pay"
+          >
+            <span v-if="orderData.orderType === 0">预计</span>尾款待支付<span
+              class="price2 price money_num"
+            >
+              {{ orderData.lastAount }}</span
+            >元
+          </span>
+          <span
+            v-if="isShowPayBtn() === 1 && checkCusOrderStatus() !== 4"
+            class="should-pay"
+          >
+            ,定金待支付<span class="price3 price money_num">{{
+              orderData.depositAmount
+            }}</span
+            >元
+          </span>
+        </p>
+        <!-- 服务完结收费的意向单 -->
+        <p
+          v-else-if="checkPayType() === 4 && orderData.orderType === 0"
+          class="inner"
         >
-        <span v-else class="price1">{{ orderData.orderTotalMoney }}元，</span>
-        尾款
-        <span v-if="orderData.orderType === 0" class="price2 price">
-          面议，</span
-        >
-        <span v-else class="price2 price"> {{ orderData.lastAount }}元，</span>
-        <span class="should-pay">
-          定金
-          <span class="price3 price"> {{ orderData.depositAmount }} </span>元
-        </span>
-      </p>
-      <!-- 服务完结收费的意向单 -->
-      <p
-        v-else-if="checkPayType() === 4 && orderData.orderType === 0"
-        class="inner"
-      >
-        <span class="price1"> 总价：面议</span>
-      </p>
-      <!-- 其他付费方式展示效果一样 -->
-      <p v-else class="inner">
-        <span class="price1"> 总价 {{ orderData.orderTotalMoney }}元，</span>
-        <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元，</span>
-        <span v-if="isShowPayBtn() == 1" class="should-pay">
-          应付款
-          <span class="price3"> {{ orderData.orderPayableMoney }}</span
-          >元
-        </span>
-        <span v-else class="should-pay">
-          合计
-          <span class="price3">{{ orderData.orderPayableMoney }}</span
-          >元
-        </span>
-      </p>
+          <span class="should-pay">
+            <span>预计</span>
+            <!-- <span v-else>总价</span> -->
+            <span class="price3 price money_num">
+              {{ orderData.orderTotalMoney }}</span
+            >元
+          </span>
+        </p>
+        <!-- 其他付费方式展示效果一样 -->
+        <p v-else class="inner">
+          <!-- <span class="price1"> 总价 {{ orderData.orderTotalMoney }}元,</span>
+        <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元,</span> -->
+          <span v-if="isShowPayBtn() == 1" class="should-pay">
+            应付款
+            <span class="price3 money_num">
+              {{ orderData.orderPayableMoney }}</span
+            >元
+          </span>
+          <span v-else class="should-pay">
+            合计
+            <span class="price3 money_num">{{
+              orderData.orderPayableMoney
+            }}</span
+            >元
+          </span>
+        </p>
+      </section>
     </div>
     <div class="btn-area">
       <div v-if="!isUnSubmit(orderData)" class="inner">
@@ -156,6 +230,15 @@
           >查看发票</sp-button
         > -->
         <!-- 未支付订单可取消订单 根据订单状态判断-->
+        <sp-button
+          v-if="
+            checkJjiufen() === 1 &&
+            selectedOrderStatus === 'ORDER_CUS_STATUS_PROGRESSING'
+          "
+          class="btn-look"
+          @click="handleClickItem(10)"
+          >纠纷/售后</sp-button
+        >
         <sp-button
           v-if="
             checkAfterSaleStatus() === 1 &&
@@ -204,6 +287,7 @@
           @click="handleClickItem(2)"
           >签署合同</sp-button
         >
+        <!-- isShowPayBtn==1 支付定金或全款 -->
         <sp-button
           v-if="isShowPayBtn() == 1"
           type="default"
@@ -211,12 +295,13 @@
           @click="handleClickItem(4)"
           >立即付款</sp-button
         >
+        <!-- isShowPayBtn==2 支付余款或尾款 -->
         <sp-button
           v-if="isShowPayBtn() == 2"
           type="default"
           class="btn-confirm"
           @click="handleClickItem(5)"
-          >立即付款</sp-button
+          >支付尾款</sp-button
         >
         <sp-button
           v-if="isShowConfirmBtn(orderData)"
@@ -369,6 +454,12 @@ export default {
     .right {
       flex: 1;
       padding-left: 20px;
+      .goods_price {
+        font-size: 24px;
+        .money1 {
+          font-size: 28px;
+        }
+      }
     }
     .goods-name {
       display: flex;
@@ -382,9 +473,6 @@ export default {
         .textOverflow(2);
         padding-right: 20px;
       }
-      .money1 {
-        font-weight: normal;
-      }
     }
     .sku-info {
       font-size: 24px;
@@ -392,10 +480,11 @@ export default {
       font-weight: 400;
       color: #999999;
       margin: 10px 0 10px 0;
-      min-height: 64px;
-      .textOverflow(2);
+      height: 40px;
+      .textOverflow(1);
       .sku-item {
         margin-right: 10px;
+        .textOverflow(1);
       }
       .goods-num {
         display: block;
@@ -452,9 +541,12 @@ export default {
         font-size: 28px;
         .price3 {
           color: #222;
-          font-size: 28px;
           font-weight: 600;
         }
+      }
+      .money_num {
+        font-weight: 600;
+        font-size: 32px;
       }
     }
   }
