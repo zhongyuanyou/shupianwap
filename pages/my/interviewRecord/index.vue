@@ -1,6 +1,6 @@
 <template>
   <div class="interview">
-    <Header v-if="!isHideNav" title="面谈记录">
+    <Header v-if="!isHideNav || isHideNav !== '1'" title="面谈记录">
       <template #left>
         <div @click="back">
           <my-icon

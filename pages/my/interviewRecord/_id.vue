@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
     <div style="width: 100%">
-      <Header v-if="!isHideNav" title="面谈确认">
+      <Header v-if="!isHideNav || isHideNav !== '1'" title="面谈确认">
         <template #left>
           <div @click="back">
             <my-icon

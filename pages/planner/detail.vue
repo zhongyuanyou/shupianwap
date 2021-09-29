@@ -9,7 +9,10 @@
 
 <template>
   <div class="detail">
-    <div v-if="!isHideNav && !isApplets && titleStatus" class="head">
+    <div
+      v-if="(!isHideNav || isHideNav !== '1') && !isApplets && titleStatus"
+      class="head"
+    >
       <Header title="规划师">
         <template #left>
           <div v-if="urlData.isShare !== '1'">

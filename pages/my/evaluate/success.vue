@@ -1,6 +1,6 @@
 <template>
   <div class="m-evaluate success">
-    <Header v-if="!isHideNav" :hide-back="true">
+    <Header v-if="!isHideNav || isHideNav !== '1'" :hide-back="true">
       <template #right><div @click="back">完成</div></template>
     </Header>
     <div class="content-wrap">
