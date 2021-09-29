@@ -52,7 +52,7 @@
       <CaseNew />
       <!--E  精选案例-->
       <!-- 热门咨询 -->
-      <HotConsult :list="queList" />
+      <HotConsult :list="queList" :change-flag="queChangeFlag" />
       <!--S 第十板块 服务详情-->
       <!-- <ServiceDetail
         comp-type="sc"

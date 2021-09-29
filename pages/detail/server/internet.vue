@@ -29,7 +29,7 @@
       <TcPlanners :recommend-planner="planners" />
       <!--E 第五板块 推荐规划师-->
       <!-- 热门咨询 -->
-      <HotConsult :list="queList" />
+      <HotConsult :list="queList" :change-flag="queChangeFlag" />
       <!--S  精选案例-->
       <CaseNew :planner-detail="tcPlannerBooth" />
       <!--E  精选案例-->

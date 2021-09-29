@@ -373,6 +373,8 @@ export default {
       justify-content: flex-start;
       align-items: center;
       flex-direction: row;
+      flex: 1;
+      overflow: hidden;
       .info {
         height: 120px;
         margin-left: 24px;
@@ -437,6 +439,7 @@ export default {
       }
     }
     &_rt {
+      width: 210px;
       height: 80px;
       display: flex;
       justify-content: flex-end;
