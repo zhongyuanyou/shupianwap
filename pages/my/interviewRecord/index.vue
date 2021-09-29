@@ -226,6 +226,8 @@ export default {
     },
   },
   mounted() {
+    console.log('link', window?.location.href)
+    console.log('isHideNav', this.$route.query.isHideNav)
     if (this.isInApp) {
       // this.$appFn.dggSetTitle(
       //   {
