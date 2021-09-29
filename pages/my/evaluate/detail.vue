@@ -1,6 +1,6 @@
 <template>
   <div class="m-evaluate detail">
-    <Header title="评价详情" :fixed="true" />
+    <Header v-if="!isHideNav" title="评价详情" :fixed="true" />
     <div class="header-line"></div>
     <div class="info">
       <sp-image
@@ -124,6 +124,11 @@ export default {
       serverScore: 0, // 服务分
       evaluateTime: '',
     }
+  },
+  computed: {
+    isHideNav() {
+      return this.$route.query.isHideNav
+    },
   },
   mounted() {
     this.init()

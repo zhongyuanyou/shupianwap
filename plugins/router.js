@@ -69,7 +69,15 @@ export default ({ app, store }) => {
     })
   })
   app.router.beforeEach((to, from, next) => {
-    console.log('to.name', to.name)
+    const query = to.query
+    if (from.query && from.query.isHideNav && !query.isHideNav) {
+      query.isHideNav = 1
+      next({
+        path: to.path,
+        query,
+      })
+    }
+    console.log('to.query', to.query)
     if (process.client) {
       const loginRoutePath = '/login' // 登录路由
       const defaultRoutePath = '/' // 首页路由

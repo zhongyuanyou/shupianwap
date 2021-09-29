@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
     <div style="width: 100%">
-      <Header v-if="!isInApp" title="面谈确认">
+      <Header v-if="!isHideNav" title="面谈确认">
         <template #left>
           <div @click="back">
             <my-icon
@@ -160,6 +160,9 @@ export default {
       isInApp: (state) => state.app.isInApp,
       userId: (state) => state.user.userInfo.userId,
     }),
+    isHideNav() {
+      return this.$route.query.isHideNav
+    },
   },
   mounted() {
     if (this.isInApp) {
