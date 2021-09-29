@@ -26,6 +26,8 @@ const goodDetail = {
     'https://cdn.shupian.cn/sp-pt/wap/images/8wso9j09ej40000.png',
   'c-siderConsult-questionIcon':
     'https://cdn.shupian.cn/sp-pt/wap/images/5tfp3gne5q80000.png',
+  'c-caseNew-searchIcon':
+    'https://cdn.shupian.cn/sp-pt/wap/images/3n54r7af7tq0000.png	',
 }
 
 export { goodDetail }

@@ -22,7 +22,8 @@
             <img :src="questionIcon" />
           </div>
         </div>
-        <div class="active__btn--wrap">
+        <div class="active__wrap">
+          <div class="spaceholder">&nbsp;</div>
           <div class="active__btn">
             <my-icon
               name="tap_ic_pen_n"
@@ -75,7 +76,12 @@ export default {
       return this.list
     },
   },
-  mounted() {},
+  mounted() {
+    document.addEventListener('touchmove', this.addListen, true)
+  },
+  destroyed() {
+    document.removeEventListener('touchmove', this.addListen, true)
+  },
   methods: {
     toIM(item) {
       const msgParams = {
@@ -87,6 +93,9 @@ export default {
         mchUserId: this.recPlanner.mchUserId,
         msgParams,
       })
+    },
+    addListen() {
+      this.active = false
     },
   },
 }
@@ -112,6 +121,8 @@ export default {
     border-top-left-radius: 32px;
     border-bottom-left-radius: 32px;
     &__icon {
+      padding-bottom: constant(safe-area-inset-bottom);
+      padding-bottom: env(safe-area-inset-bottom);
       position: absolute;
       right: 14px;
       bottom: 22px;
@@ -122,28 +133,28 @@ export default {
     right: 60px;
     bottom: 148px;
     z-index: 1;
-    &__icon {
-      margin-right: 8px;
-    }
-    &__btn--wrap {
+    &__wrap {
       width: 410px;
       display: flex;
-      justify-content: end;
-    }
-    &__btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 64px;
-      width: 132px;
-      background: #fff;
-      border: 1px solid #dddddd;
-      box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.06);
-      border-radius: 32px;
-      span {
-        color: #1a1a1a;
-        font-size: 24px;
-        line-height: 33px;
+      justify-content: space-between;
+      .active__icon {
+        margin-right: 8px;
+      }
+      .active__btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 64px;
+        width: 132px;
+        background: #fff;
+        border: 1px solid #dddddd;
+        box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.06);
+        border-radius: 32px;
+        span {
+          color: #1a1a1a;
+          font-size: 24px;
+          line-height: 33px;
+        }
       }
     }
     &__question {
