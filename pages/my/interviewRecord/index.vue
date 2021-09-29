@@ -1,6 +1,6 @@
 <template>
   <div class="interview">
-    <Header v-if="!isInApp" title="面谈记录">
+    <Header title="面谈记录">
       <template #left>
         <div @click="back">
           <my-icon
@@ -224,12 +224,12 @@ export default {
   },
   mounted() {
     if (this.isInApp) {
-      this.$appFn.dggSetTitle(
-        {
-          title: '面谈记录',
-        },
-        (res) => {}
-      )
+      // this.$appFn.dggSetTitle(
+      //   {
+      //     title: '面谈记录',
+      //   },
+      //   (res) => {}
+      // )
       this.$appFn.dggGetUserInfo((res) => {
         if (res.code === 200 && res.data.userId && res.data.token) {
           this.$store.dispatch('user/setUser', res.data)

@@ -48,7 +48,7 @@
                     goodsSkuDetail.sku &&
                     goodsSkuDetail.sku.targetRate
                   "
-                  >(含服务费{{ goodsSkuDetail.sku.targetRate }}%)</b
+                  >(服务费{{ goodsSkuDetail.sku.targetRate }}%)</b
                 >
                 <b v-if="isIntendedOrder">预计:</b>
                 <b class="price_text">{{ item.price }}</b
@@ -62,9 +62,7 @@
       </div>
 
       <!-- 根据当前的付款模式，先付款后服务/先定金后尾款/先服务后付款/按节点付费，展示不同的模块 -->
-      <div
-        v-if="settlementInfo.cusOrderPayType!=='PRO_PRE_PAY_POST_SERVICE'"
-      >
+      <div v-if="settlementInfo.cusOrderPayType !== 'PRO_PRE_PAY_POST_SERVICE'">
         <div v-if="isDeposit" class="deposit">
           <!-- 先定金后尾款 -->
           <div class="deposit_tips">
@@ -89,14 +87,12 @@
         <div v-else class="deposit">
           <div class="deposit_tips">
             温馨提示：{{
-              isNodes ? '该订单需要在给您办理业务期间付费' : '该订单先付款后服务'
+              isNodes
+                ? '该订单需要在给您办理业务期间付费'
+                : '该订单先付款后服务'
             }}
           </div>
-          <div class="deposit_content">
-            总价 {{ settlementInfo.orderTotalMoney }}元，应付款{{
-              settlementInfo.orderPayableMoney
-            }}元
-          </div>
+          <div class="deposit_content">按业务办理节点付费</div>
         </div>
       </div>
       <div class="news-content">
@@ -171,8 +167,10 @@
           合计：
           <span class="money_price">
             <b class="money_text">{{
-              (settlementInfo.orderTotalMoney || 0) -
-              (settlementInfo.orderDiscountMoney || 0)
+              getEnablePayMoney(
+                settlementInfo.orderTotalMoney,
+                settlementInfo.orderDiscountMoney
+              )
             }}</b
             >元 <b v-if="isIntendedOrder" class="toast_text">预计</b></span
           >
@@ -447,6 +445,18 @@ export default {
     this.getProtocol('protocol100008')
   },
   methods: {
+    getEnablePayMoney(money1, money2) {
+      money1 = Number(money1) || 0
+      money2 = Number(money2) || 0
+      if (money1) {
+        money1 = money1 * 100
+      }
+      if (money2) {
+        money2 = money2 * 100
+      }
+      const diffMoney = money1 - money2
+      return diffMoney / 100
+    },
     onLeftClick() {
       this.$router.back()
     },
@@ -806,6 +816,8 @@ export default {
     },
 
     conponChange(price, num, item) {
+      console.log('price', price)
+      console.log('num', num)
       this.couponInfo.couponPrice = num
       this.couponInfo.selectedItem = item || {}
       this.card.cardPrice = ''

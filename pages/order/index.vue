@@ -280,6 +280,16 @@ export default {
             } else {
               arr[i].statusName = this.getStatusName(arr[i].orderStatusNo)
             }
+            if (
+              arr[i].statusName === '待确认' ||
+              arr[i].statusName === '办理中'
+            ) {
+              if (this.isShowConfirmBtn(arr[i]) === 1) {
+                arr[i].statusName = '待确认'
+              } else {
+                arr[i].statusName = '办理中'
+              }
+            }
           }
           if (this.page === 1) {
             this.list = arr

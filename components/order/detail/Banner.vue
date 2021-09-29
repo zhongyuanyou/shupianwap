@@ -1,9 +1,5 @@
 <template>
-  <div
-    :id="showPayBtn ? 'banner1' : ''"
-    :class="'banner' + cusOrderStatusType"
-    class="banner"
-  >
+  <div :class="'banner' + cusOrderStatusType" class="banner">
     <my-icon
       class="back-icon"
       name="nav_ic_back"
@@ -37,15 +33,18 @@
         color="rgba(255, 255, 255, 1)"
       ></my-icon>
       <span class="text">{{
-        cusOrderStatusType === 1 || showPayBtn ? '等待付款' : statusName
+        cusOrderStatusType === 1 ? '等待付款' : statusName
       }}</span>
       <!-- <span v-if="cusOrderStatusType == 1" class="text"> 等待付款 </span>
       <span v-else-if="cusOrderStatusType == 2" class="text"> 办理中 </span>
       <span v-else-if="cusOrderStatusType == 3" class="text"> 已完成 </span>
       <span v-else-if="cusOrderStatusType == 4" class="text"> 已取消 </span> -->
     </p>
-    <div v-if="cusOrderStatusType == 1 || showPayBtn" class="msg">
-      <section v-if="diff > 0">
+    <div v-if="cusOrderStatusType == 1" class="msg">
+      <section v-if="orderData.payType === 'ORDER_PAY_MODE_OFFLINE'">
+        <p>请前往线下银行网点进行支付</p>
+      </section>
+      <section v-else-if="diff > 0">
         <p class="time">
           请在
           <span>{{ time.hour }}</span>
@@ -54,9 +53,6 @@
           >秒内支付
         </p>
         超时订单将自动关闭<br />
-      </section>
-      <section v-else-if="orderData.payType==='ORDER_PAY_MODE_OFFLINE'">
-        <p>请前往线下银行网点进行支付</p>
       </section>
       <section v-else>
         <p>暂无支付信息</p>
@@ -111,7 +107,7 @@ export default {
       default: '',
     },
     showPayBtn: {
-      type: Number,
+      type: [Number, Boolean],
       default: 0,
     },
     orderData: {
