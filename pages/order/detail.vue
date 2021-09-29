@@ -111,8 +111,8 @@
           {{ shouldPayText }}
           <span
             v-if="
-              (checkPayType() === 2 || checkPayType() === 4) &&
-              orderData.orderType === 0
+              orderData.cusOrderPayStatusNo !==
+              'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
             "
             class="pay-money"
           >
