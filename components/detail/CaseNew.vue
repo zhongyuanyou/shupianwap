@@ -2,7 +2,7 @@
   <div v-if="showCase" class="case">
     <h1 class="case-title">
       精选案例
-      <span @click="toALL()"
+      <span style="display: none" @click="toALL()"
         >查看全部 <my-icon name="you" size="0.2rem"></my-icon
       ></span>
     </h1>
@@ -13,12 +13,10 @@
     ></CaseExamplesList>
     <div class="zixun_area">
       <div class="inner">
-        <my-icon
-          name="popup_ic_closeb"
-          size="0.28rem"
-          color="#4873F4"
-        ></my-icon>
-        没找到你想看的案例？
+        <div class="inner__desc">
+          <img :src="caseIcon" />
+          <span>没找到你想看的案例？</span>
+        </div>
         <imBtn class="im_btn" btn-text="去咨询" />
       </div>
     </div>
@@ -29,6 +27,8 @@ import { Image, Button } from '@chipspc/vant-dgg'
 import { caseApi } from '@/api/index'
 import CaseExamplesList from '@/components/caseExamples/index/List.vue'
 import imBtn from '@/components/detail/common/RecImBtn'
+import { goodDetail } from '~/utils/static/imgs.js'
+
 export default {
   components: {
     [Image.name]: Image,
@@ -49,6 +49,7 @@ export default {
     return {
       showCase: false,
       caseData: {},
+      caseIcon: goodDetail['c-caseNew-searchIcon'],
     }
   },
   // created() {
@@ -175,6 +176,9 @@ export default {
     border-radius: 4px;
     overflow: hidden;
     .inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       background: #f2f5ff;
       border-radius: 4px;
       font-size: 28px;
@@ -185,6 +189,16 @@ export default {
       padding: 16px 20px;
       overflow: hidden;
       line-height: 54px;
+      &__desc {
+        display: flex;
+        align-items: center;
+        img {
+          object-fit: cover;
+          width: 28px;
+          height: 28px;
+          margin-right: 12px;
+        }
+      }
       .im_btn {
         float: right;
         padding: 0 30px;
