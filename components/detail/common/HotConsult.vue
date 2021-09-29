@@ -3,20 +3,32 @@
   <div v-if="questList.length" class="c-hot-consult">
     <div class="title">
       <div class="title__name">热门咨询</div>
-      <div class="title__more" style="display: none">
+      <div v-show="queChangeFlag" class="title__more" @click="changeQue">
         <span>换一换</span>
         <my-icon name="gongju_huan" size="0.26rem"></my-icon>
       </div>
     </div>
     <div class="content">
-      <div
-        v-for="(item, i) in questList"
-        :key="i"
-        class="content__item"
-        @click="toIM(item)"
-      >
-        {{ item.content }}
-      </div>
+      <template v-if="initData">
+        <div
+          v-for="(item, i) in questList"
+          :key="i"
+          class="content__item"
+          @click="toIM(item)"
+        >
+          {{ item.content }}
+        </div>
+      </template>
+      <template v-else>
+        <div
+          v-for="(item, i) in tempList"
+          :key="i"
+          class="content__item"
+          @click="toIM(item)"
+        >
+          {{ item.content }}
+        </div>
+      </template>
     </div>
     <div class="ask">
       <div class="ask__title">快速提问</div>
@@ -35,6 +47,7 @@
 <script>
 import { Field, Button } from '@chipspc/vant-dgg'
 import imHandle from '~/mixins/imHandle'
+import { productDetailsApi } from '~/api'
 
 export default {
   name: 'GoodDetailHotConsult',
@@ -51,16 +64,19 @@ export default {
         return []
       },
     },
+    changeFlag: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
+      page: 2,
+      limit: 4,
+      changeFinished: false, // 换一换结束
+      initData: true, // 是否加载初始化数据
       askVal: '',
-      tepmList: [
-        { content: '可以提供定制可以提供定制可以提供定制' },
-        { content: '可以提供定制可以提供定制可以提供定制' },
-        { content: '可以提供定制可以提供定制可以提供定制' },
-        { content: '可以提供定制可以提供定制可以提供定制' },
-      ],
+      tempList: [],
     }
   },
   computed: {
@@ -73,8 +89,13 @@ export default {
     questList() {
       return this.list
     },
+    queChangeFlag() {
+      return this.changeFlag
+    },
   },
-  mounted() {},
+  mounted() {
+    console.log(`1213414: ${this.queChangeFlag}`)
+  },
   methods: {
     toIM(item) {
       const msgParams = {
@@ -101,6 +122,39 @@ export default {
         mchUserId: this.recPlanner.mchUserId,
         msgParams,
       })
+    },
+    changeQue() {
+      if (this.changeFinished) {
+        this.$xToast.warning('已经没有多余问题啦')
+        return
+      }
+      this.productInformationContent()
+    },
+    async productInformationContent() {
+      try {
+        const key = this.sellingGoodsData.classCodeLevel.split(',')
+        const params = {
+          page: this.page,
+          limit: this.limit,
+          twoLevelCategoryCode: key[1],
+          contentType: 1,
+        }
+        const { data, code, message } = await this.$axios.get(
+          productDetailsApi.productInformationContent,
+          { params }
+        )
+        if (code !== 200) {
+          throw new Error(message)
+        }
+        if (data.rows.length) {
+          this.tempList = data.rows
+          this.initData = false
+          this.changeFinished = data.totalPage === this.page
+          this.page++
+        }
+      } catch (e) {
+        console.log(e)
+      }
     },
   },
 }

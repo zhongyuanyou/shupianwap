@@ -69,6 +69,7 @@ export default {
         records: [],
       },
       queList: [], // 咨询,服务详情内容
+      queChangeFlag: false, // 咨询,服务换一换是否显示
     }
   },
   async mounted() {
@@ -267,6 +268,7 @@ export default {
         }
         if (data.rows.length) {
           this.queList = data.rows
+          this.queChangeFlag = data.totalPage !== 1
         }
       } catch (e) {
         console.log(e)
