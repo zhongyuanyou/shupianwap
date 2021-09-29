@@ -342,7 +342,7 @@ export default {
         // 产品中心605版本筛选服务标签 code DSJTC20210514000043
         serviceTag = salesGoodsTags
           .filter((item) => {
-            return item.categoryCode === 'DSJTC20210514000042'
+            return item.categoryCode === 'DSJTC20210514000043'
           })
           .map((item) => {
             return {
