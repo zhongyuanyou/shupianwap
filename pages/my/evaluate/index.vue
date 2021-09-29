@@ -1,6 +1,6 @@
 <template>
   <div class="m-evaluate list">
-    <Header title="评价中心" :fixed="true" />
+    <Header v-if="!isHideNav" title="评价中心" :fixed="true" />
     <sp-tabs v-model="active" @change="changeTab">
       <sp-tab title="待评价">
         <sp-list
@@ -67,6 +67,11 @@ export default {
       evaluateList: [], // 订单列表
       evaluateStatus: [1], // 默认查询待评价
     }
+  },
+  computed: {
+    isHideNav() {
+      return this.$route.query.isHideNav
+    },
   },
   beforeRouteLeave(to, from, next) {
     if (['my-evaluate-detail'].includes(to.name)) {
