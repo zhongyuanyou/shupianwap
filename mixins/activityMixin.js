@@ -36,7 +36,7 @@ export default {
     return {
       // const cityCode = window.sessionStorage.getItem('cityCode')
       // const cityName = window.sessionStorage.getItem('cityName')
-
+      changeTab: false, // 是否初始化
       endCountDownTimer: null,
       countDownTimer: null,
 
@@ -181,7 +181,9 @@ export default {
     },
 
     menuTab(item, index) {
-      this.init()
+      this.page = 1
+      this.loading = true
+      this.changeTab = true
       this.currentIndex = index
       this.currentTab = item
       this.getProductList()
@@ -307,6 +309,10 @@ export default {
           console.log('productMethod', param, res)
           this.refreshing = false
           if (res.code === 200) {
+            if (this.changeTab) {
+              this.activityProductList = []
+              this.changeTab = false
+            }
             this.activityProductList = this.activityProductList.concat(
               res.data.rows
             )

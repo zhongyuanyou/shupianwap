@@ -699,6 +699,8 @@ export default {
               name: userName,
               userId: mchUserId,
               userType: type,
+              userCenterId: data.userCenterId,
+              mchDetailId: data.mchDetailId,
             },
             (res) => {
               const { code } = res || {}
