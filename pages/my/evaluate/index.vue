@@ -1,6 +1,6 @@
 <template>
   <div class="m-evaluate list">
-    <Header v-if="!isHideNav" title="评价中心" :fixed="true" />
+    <Header v-if="!isHideNav || isHideNav !== '1'" title="评价中心" :fixed="true" />
     <sp-tabs v-model="active" @change="changeTab">
       <sp-tab title="待评价">
         <sp-list

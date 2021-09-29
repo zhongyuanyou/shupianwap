@@ -1,6 +1,6 @@
 <template>
   <div class="m-evaluate write">
-    <Header v-if="!isHideNav" title="评价">
+    <Header v-if="!isHideNav || isHideNav !== '1'" title="评价">
       <template #left>
         <div @click="back">
           <my-icon
