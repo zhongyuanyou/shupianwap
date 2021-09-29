@@ -966,7 +966,9 @@ export default {
       } else {
         orderSkuIds = new Array(1).fill(orderSkuIds)
       }
-      debugger
+      if (!orderSkuIds.length) {
+        return this.$xToast.warning('该订单未到确认完成节点！')
+      }
       const params = {
         orderSkuIds,
         operateSourcePlat: 'COMDIC_PLATFORM_CRISPS',
@@ -1069,7 +1071,8 @@ export default {
       // 订单总金额 已减去优惠券的金额
       if (orderItem.orderTotalMoney && orderItem.orderDiscountMoney) {
         orderItem.shouldPayTotalMoney = this.regFenToYuan(
-          Number(orderItem.orderTotalMoney) - Number(orderItem.orderDiscountMoney)
+          Number(orderItem.orderTotalMoney) -
+            Number(orderItem.orderDiscountMoney)
         )
       }
       if (orderItem.orderDiscountMoney)
