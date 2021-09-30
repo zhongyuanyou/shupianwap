@@ -66,14 +66,7 @@
       </div>
       <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
     </div>
-    <div
-      v-if="
-        sellingGoodsData.salesGoodsSubVos &&
-        sellingGoodsData.salesGoodsSubVos.length === 1 &&
-        sellingGoodsData.refConfig.handleCycleNumber
-      "
-      class="cell"
-    >
+    <div v-if="showServerCicle" class="cell">
       <div class="cell_left">
         <div class="label">服务周期</div>
         <div class="content">
@@ -337,6 +330,15 @@ export default {
       // 获取客户端展示信息
       return this.$store.state.sellingGoodsDetail.sellingGoodsData
     },
+    // 是否展示服务周期
+    showServerCicle() {
+      return (
+        this.sellingGoodsData.salesGoodsSubVos &&
+        this.sellingGoodsData.salesGoodsSubVos.length === 1 &&
+        this.sellingGoodsData.refConfig.handleCycleNumber &&
+        this.$route.path === '/detail/server/internet'
+      )
+    },
     serviceTag() {
       const salesGoodsTags =
         this.$store.state.sellingGoodsDetail.sellingGoodsData.salesGoodsTags
@@ -406,6 +408,7 @@ export default {
     },
   },
   mounted() {
+    console.log('this.$route.path', this.$route.path)
     this.couponPreferential()
     this.getSellingImg() // 获取商品图片
     //  当只有一个服务产品时获取SKU
