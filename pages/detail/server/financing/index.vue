@@ -11,8 +11,20 @@
       <!-- <Info /> -->
       <!--E 第一板块-->
       <PageMidAd />
+
+      <div class="youhui">
+        <my-icon
+          name="gerenzhongxin_youhuiquanicon"
+          size="0.36rem"
+          color="#EC5330"
+          class="my_icon"
+        ></my-icon>
+        线下优惠可咨询规划师
+        <imBtn btn-text="询优惠" />
+      </div>
+
       <!--S 第二板块 领券 SKU-->
-      <VouchersSelect ref="sku" :planner-detail="tcPlannerBooth" />
+      <!-- <VouchersSelect ref="sku" :planner-detail="tcPlannerBooth" /> -->
       <!--E 第二板块 领券 SKU-->
       <!--S 第三板块 包含服务-->
       <ContainContent />
@@ -63,7 +75,7 @@ import ShareModal from '@/components/common/ShareModal.vue'
 import Title from '~/components/detail/server/Title.vue'
 import CommentBox from '~/components/detail/comment/CommentBox.vue'
 import OrderDynamic from '~/components/detail/OrderDynamic.vue'
-import VouchersSelect from '~/components/detail/server/NewVouchersSelect.vue'
+// import VouchersSelect from '~/components/detail/server/NewVouchersSelect.vue'
 import ContainContent from '~/components/detail/ContainContent.vue'
 import TcPlanners from '~/components/detail/server/TcPlanners.vue'
 import Info from '~/components/detail/server/Info.vue'
@@ -77,6 +89,7 @@ import HotConsult from '~/components/detail/common/HotConsult'
 import SiderConsult from '~/components/detail/common/SiderConsult'
 import imHandle from '~/mixins/imHandle'
 import detailMixin from '~/mixins/servedetail'
+import imBtn from '@/components/detail/common/RecImBtn'
 export default {
   name: 'FinancingDetail',
   components: {
@@ -84,7 +97,6 @@ export default {
     [TopNavBar.name]: TopNavBar,
     [List.name]: List,
     Title,
-    VouchersSelect,
     ContainContent,
     TcPlanners,
     ServiceDetail,
@@ -97,6 +109,7 @@ export default {
     Header,
     HotConsult,
     SiderConsult,
+    imBtn,
     // Info,
   },
   mixins: [imHandle, detailMixin],
@@ -120,6 +133,35 @@ export default {
   /*padding-bottom: 144px;*/
   ::v-deep .sp-hairline--bottom::after {
     border-bottom: none;
+  }
+}
+.youhui {
+  width: 100%;
+  height: 132px;
+  background: #ffffff;
+  border-radius: 24px;
+  display: block;
+  padding: 20px 60px;
+  font-size: 28px;
+  color: #1a1a1a;
+  text-align: left;
+  line-height: 92px;
+  .my_icon {
+    float: left;
+    margin-right: 12px;
+  }
+  .im_btn {
+    float: right;
+    background: #ec5330;
+    border-radius: 8px;
+    width: 118px;
+    height: 56px;
+    text-align: center;
+    color: white;
+    font-size: 26px;
+    padding: 0;
+    line-height: 56px;
+    margin-top: 16px;
   }
 }
 ::v-deep .sp-top-nav-bar__left,
