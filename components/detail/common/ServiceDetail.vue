@@ -1,9 +1,9 @@
 <template>
-  <div v-if="detailData && detailData.clientDetail" class="container">
+  <div v-if="custDetail && custDetail.clientDetail" class="container">
     <p class="container_title">
-      {{ compType == 'tc' ? '产品详情' : '服务详情' }}
+      {{ title }}
     </p>
-    <div class="container_html" v-html="detailData.clientDetail"></div>
+    <div class="container_html" v-html="custDetail.clientDetail"></div>
   </div>
 </template>
 
@@ -18,15 +18,20 @@ export default {
         return {}
       },
     },
-    compType: {
+    title: {
       type: String,
-      default: 'tc',
+      default: '产品详情',
     },
   },
   data() {
     return {
       containerLoading: true,
     }
+  },
+  computed: {
+    custDetail() {
+      return this.detailData
+    },
   },
 }
 </script>

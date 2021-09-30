@@ -87,7 +87,7 @@
     />
     <!--E 第五板块 推荐规划师-->
     <ServiceDetail
-      comp-type="tc"
+      :title="serviceDetail"
       :detail-data="proDetail.goodsOperating.clientDetails[0]"
     />
     <!--S 第六板块 商品动态-->
@@ -154,7 +154,7 @@ import Basic from '~/components/detail/Basic'
 import Report from '~/components/detail/Report'
 import Commitment from '~/components/detail/Commitment'
 import TcPlanners from '~/components/detail/TcPlanners'
-import ServiceDetail from '~/components/detail/ServiceDetail'
+import ServiceDetail from '~/components/detail/common/ServiceDetail'
 import Dynamic from '~/components/detail/Dynamic'
 import Question from '~/components/detail/Question'
 // import Case from '~/components/detail/Case'
@@ -216,6 +216,7 @@ export default {
   },
   data() {
     return {
+      serviceDetail: '产品详情',
       opacity: 0,
       text1: '在线咨询',
       text2: '电话咨询',
