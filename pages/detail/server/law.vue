@@ -35,7 +35,7 @@
       <!--S 动态 -->
       <!-- <OrderDynamic></OrderDynamic> -->
       <!--S 第五板块 推荐规划师-->
-      <TcPlanners :recommend-planner="planners" />
+      <TcPlanners :recommend-planner="planners" t-title="推荐经纪人" />
       <!--E 第五板块 推荐规划师-->
       <!--S  精选案例-->
       <!-- <OrderCase></OrderCase> -->

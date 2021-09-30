@@ -1,6 +1,6 @@
 <template>
   <div v-if="recommendPlanner.length" class="planners">
-    <p class="planners_title">推荐规划师</p>
+    <p class="planners_title">{{ tTitle }}</p>
     <!-- <sp-skeleton :row="6" :loading="recommendPlanner.length == 0"> -->
     <div
       v-for="(item, index) in recommendPlanner"
@@ -102,6 +102,10 @@ export default {
   },
   mixins: [imHandle],
   props: {
+    tTitle: {
+      type: String,
+      default: '推荐规划师',
+    },
     recommendPlanner: {
       type: Array,
       default: () => [

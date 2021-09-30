@@ -207,27 +207,39 @@ export default {
         color: #222222;
         letter-spacing: 0;
         line-height: 40px;
-        margin-top: 10px;
+        margin-top: 20px;
         font-weight: 600;
         .textOverflow(2);
       }
       .goods_tags {
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        margin-top: 20px;
+        height: 40px;
         span {
+          white-space: nowrap;
+          overflow: hidden;
+          float: left;
+          width: auto;
+          display: block;
           font-size: 24px;
           color: #5c7499;
           letter-spacing: 0;
-          max-width: 120px;
-          width: 92px;
-          height: 28px;
+          height: auto;
           background: #f0f2f5;
           border-radius: 4px;
           padding: 4px 8px;
-          margin-right: 20px;
-          transform: scale(0.8);
-          transform-origin: 0;
+          transform: scale(0.84);
+          transform-origin: 80px 10px;
+          margin-left: -12px;
+          &::first-child {
+            margin-left: 0 !important;
+          }
         }
       }
       .goods_price {
+        margin-top: 30px;
         font-size: 24px;
         color: #ec5330;
         letter-spacing: 0;

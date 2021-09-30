@@ -69,7 +69,8 @@
     <div
       v-if="
         sellingGoodsData.salesGoodsSubVos &&
-        sellingGoodsData.salesGoodsSubVos.length === 1
+        sellingGoodsData.salesGoodsSubVos.length === 1 &&
+        sellingGoodsData.refConfig.handleCycleNumber
       "
       class="cell"
     >
