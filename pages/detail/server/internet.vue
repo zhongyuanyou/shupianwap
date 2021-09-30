@@ -15,6 +15,11 @@
       <!--S 第三板块 包含服务-->
       <ContainContent />
       <!--E 第三板块 包含服务-->
+      <!--S 第十板块 服务详情-->
+      <ServiceDetail
+        :title="serviceDetail"
+        :detail-data="sellingDetail.salesGoodsOperatings.clientDetails[0]"
+      />
       <!--S 评论-->
       <CommentBox
         v-if="Array.isArray(comments.records) && comments.records.length"
@@ -33,11 +38,6 @@
       <!--S  精选案例-->
       <CaseNew :planner-detail="tcPlannerBooth" />
       <!--E  精选案例-->
-      <!--S 第十板块 服务详情-->
-      <ServiceDetail
-        :title="serviceDetail"
-        :detail-data="sellingDetail.salesGoodsOperatings.clientDetails[0]"
-      />
       <!--S 第十板块 猜你需要-->
       <sp-list
         v-model="loading"
