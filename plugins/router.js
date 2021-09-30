@@ -69,6 +69,19 @@ export default ({ app, store }) => {
     })
   })
   app.router.beforeEach((to, from, next) => {
+    const query = to.query
+    if (
+      from.query &&
+      from.query.isHideNav &&
+      !query.isHideNav &&
+      from.query.isHideNav !== '0'
+    ) {
+      query.isHideNav = '1'
+      next({
+        path: to.path,
+        query,
+      })
+    }
     if (to.name === 'detail') {
       // 跳转至服务商品详情页路由重定向处理
       if (to.query && to.query.classCodeOne) {

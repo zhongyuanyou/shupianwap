@@ -1,6 +1,10 @@
 <template>
   <div class="m-evaluate detail">
-    <Header title="评价详情" :fixed="true" />
+    <Header
+      v-if="!isHideNav || isHideNav !== '1'"
+      title="评价详情"
+      :fixed="true"
+    />
     <div class="header-line"></div>
     <div class="info">
       <sp-image
@@ -46,6 +50,11 @@ export default {
       size: '2.1rem',
       info: {}, // 评价内容
     }
+  },
+  computed: {
+    isHideNav() {
+      return this.$route.query.isHideNav
+    },
   },
   mounted() {
     this.init()
