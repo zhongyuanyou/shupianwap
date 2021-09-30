@@ -93,35 +93,17 @@ export default {
       return this.changeFlag
     },
   },
-  mounted() {
-    console.log(`1213414: ${this.queChangeFlag}`)
-  },
+  mounted() {},
   methods: {
     toIM(item) {
-      const msgParams = {
-        extContent: this.$route.query, // 路由参数
-        forwardAbstract: '摘要信息',
-        content: item.content,
-      }
-      this.sendTextMessageV2({
-        mchUserId: this.recPlanner.mchUserId,
-        msgParams,
-      })
+      this.sendTextMessageV2(this.recPlanner.mchUserId, item.content)
     },
     questIm() {
       if (this.askVal.trim() === '') {
         this.$xToast.warning('提问内容不能为空')
         return
       }
-      const msgParams = {
-        extContent: this.$route.query, // 路由参数
-        forwardAbstract: '摘要信息',
-        content: this.askVal.trim(),
-      }
-      this.sendTextMessageV2({
-        mchUserId: this.recPlanner.mchUserId,
-        msgParams,
-      })
+      this.sendTextMessageV2(this.recPlanner.mchUserId, this.askVal.trim())
     },
     changeQue() {
       if (this.changeFinished) {

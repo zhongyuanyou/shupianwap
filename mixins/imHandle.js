@@ -329,9 +329,9 @@ export default {
       }
     },
     // 普通会话v2 | 可以通过普通模板发送消息
-    sendTextMessageV2({ mchUserId, msgParams }) {
+    // mchUserId: 规划师id; text: 消息
+    sendTextMessageV2(mchUserId, text) {
       const userInfo = this.$store.state.user.userInfo
-      // this.judgeLoginMixin(true).then((userInfo) => {
       if (userInfo) {
         const userInfo = this.$store.state.user.userInfo
         const userType = userInfo && userInfo.type ? userInfo.type : 'VISITOR'
@@ -355,10 +355,10 @@ export default {
               receiver: res.data.groupId, // 会话 id
               msgType: 'im_tmplate',
               senderName: userInfo.nickName || '访客', // 发送者昵称
-              extContent: JSON.stringify(msgParams.extContent), // 路由参数
+              extContent: JSON.stringify(this.$route.query), // 路由参数
               paramJsonStr: {
-                forwardAbstract: msgParams.forwardAbstract,
-                content: msgParams.content,
+                forwardAbstract: '摘要信息',
+                content: text,
                 disableForward: 0,
               },
             }

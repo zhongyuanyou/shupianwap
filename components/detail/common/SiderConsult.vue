@@ -85,15 +85,7 @@ export default {
   },
   methods: {
     toIM(item) {
-      const msgParams = {
-        extContent: this.$route.query, // 路由参数
-        forwardAbstract: '摘要信息',
-        content: item.content,
-      }
-      this.sendTextMessageV2({
-        mchUserId: this.recPlanner.mchUserId,
-        msgParams,
-      })
+      this.sendTextMessageV2(this.recPlanner.mchUserId, item.content)
     },
     addListen() {
       if (this.active) {
