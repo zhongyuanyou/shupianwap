@@ -43,6 +43,7 @@
 import { Overlay } from '@chipspc/vant-dgg'
 import { goodDetail } from '~/utils/static/imgs.js'
 import imHandle from '~/mixins/imHandle'
+import { debounce } from '~/utils/debounceThrottling'
 
 export default {
   name: 'GoodDetailSiderConsult',
@@ -77,7 +78,7 @@ export default {
     },
   },
   mounted() {
-    document.addEventListener('touchmove', this.addListen, true)
+    document.addEventListener('touchmove', debounce(this.addListen, 1000), true)
   },
   destroyed() {
     document.removeEventListener('touchmove', this.addListen, true)
@@ -95,7 +96,9 @@ export default {
       })
     },
     addListen() {
-      this.active = false
+      if (this.active) {
+        this.active = false
+      }
     },
   },
 }
