@@ -34,10 +34,10 @@
       <CaseNew :planner-detail="tcPlannerBooth" />
       <!--E  精选案例-->
       <!--S 第十板块 服务详情-->
-      <!-- <ServiceDetail
-        comp-type="sc"
+      <ServiceDetail
+        :title="serviceDetail"
         :detail-data="sellingDetail.salesGoodsOperatings.clientDetails[0]"
-      /> -->
+      />
       <!--S 第十板块 猜你需要-->
       <sp-list
         v-model="loading"
@@ -64,7 +64,7 @@ import OrderDynamic from '~/components/detail/OrderDynamic.vue'
 import VouchersSelect from '~/components/detail/server/NewVouchersSelect.vue'
 import ContainContent from '~/components/detail/ContainContent.vue'
 import TcPlanners from '~/components/detail/server/TcPlanners.vue'
-import ServiceDetail from '~/components/detail/ServiceDetail.vue'
+import ServiceDetail from '~/components/detail/common/ServiceDetail.vue'
 import RelatedRecommend from '~/components/detail/server/RelatedRecommend.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
 import CaseNew from '~/components/detail/CaseNew'
@@ -84,7 +84,7 @@ export default {
     VouchersSelect,
     ContainContent,
     TcPlanners,
-    // ServiceDetail,
+    ServiceDetail,
     RelatedRecommend,
     bottomBar,
     CommentBox,
@@ -99,7 +99,9 @@ export default {
   layout: 'keepAlive',
   watchQuery: ['productId'],
   data() {
-    return {}
+    return {
+      serviceDetail: '商品介绍',
+    }
   },
   methods: {},
 }

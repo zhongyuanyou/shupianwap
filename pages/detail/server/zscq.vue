@@ -55,7 +55,6 @@
       <HotConsult :list="queList" :change-flag="queChangeFlag" />
       <!--S 第十板块 服务详情-->
       <!-- <ServiceDetail
-        comp-type="sc"
         :detail-data="sellingDetail.salesGoodsOperatings.clientDetails[0]"
       /> -->
       <!--S 第十板块 服务详情-->
@@ -87,7 +86,7 @@ import VouchersSelect from '~/components/detail/server/NewVouchersSelect.vue'
 // import ContainProject from '~/components/detail/ContainProject.vue'
 import ContainContent from '~/components/detail/ContainContent.vue'
 import TcPlanners from '~/components/detail/server/TcPlanners.vue'
-import ServiceDetail from '~/components/detail/ServiceDetail.vue'
+import ServiceDetail from '~/components/detail/common/ServiceDetail.vue'
 import RelatedRecommend from '~/components/detail/server/RelatedRecommend.vue'
 import bottomBar from '@/components/detail/bottomBar/index.vue'
 import CaseNew from '~/components/detail/CaseNew'
