@@ -84,9 +84,11 @@ export default {
     getContentList() {
       this.$axios
         .get(commonApi.contentList, {
-          categoryCode: this.categoryCode,
-          page: 1,
-          limit: 20,
+          params: {
+            categoryCode: this.categoryCode,
+            page: 1,
+            limit: 20,
+          },
         })
         .then((res) => {
           if (res.code === 200) {
