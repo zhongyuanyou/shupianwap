@@ -21,7 +21,9 @@
           <div class="tile-desc__name">
             {{ info.choiceAnonymous ? '匿名用户' : info.userName }}
           </div>
-          <div class="tile-desc__date">{{ info.evaluateTime }}</div>
+          <div class="tile-desc__date">
+            {{ info.evaluateTime | filterDate }}
+          </div>
         </div>
         <img
           v-if="info.goodEvaluate"
@@ -45,7 +47,6 @@
             "
           ></my-icon>
         </template>
-        <div class="score-level">{{ info.averageScore | fliterLevel }}</div>
       </div>
       <div class="content">
         <div class="content-txt">
@@ -54,8 +55,9 @@
         <div v-if="info.imgs && info.imgs.length" class="content-img">
           <template v-for="(item, i) in info.imgs">
             <img
-              v-if="i < 3"
+              v-if="i < 6"
               :key="i"
+              :class="[(i + 1) % 3 === 0 ? 'z-last' : '']"
               :src="item.filepath"
               class="content-img__item"
             />
@@ -81,6 +83,8 @@
 </template>
 
 <script>
+import { formatDate } from '@/static/js/date'
+
 export default {
   name: 'Comment',
   filters: {
@@ -98,6 +102,9 @@ export default {
       } else {
         return ''
       }
+    },
+    filterDate(val) {
+      return formatDate(new Date(val), 'yyyy-MM-dd')
     },
   },
   props: {
@@ -231,13 +238,13 @@ export default {
         line-height: 38px;
       }
       &-img {
-        margin-top: 12px;
-        height: 184px;
         display: flex;
+        flex-wrap: wrap;
         &__item {
-          height: inherit;
+          height: 184px;
           width: 184px;
           border-radius: 8px;
+          margin-top: 12px;
           margin-right: 8px;
           &.z-last {
             margin-right: 0;
