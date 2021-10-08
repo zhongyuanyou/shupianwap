@@ -68,6 +68,7 @@ export default {
   mixins: [imHandle],
   data() {
     return {
+      headerBg: 'https://cdn.shupian.cn/sp-pt/wap/images/90c9a3bz7nk0000.png',
       lawerList: [],
     }
   },
@@ -174,7 +175,7 @@ export default {
       content: '金牌律师';
       bottom: 0;
       right: 0;
-      background: url(https://cdn.shupian.cn/sp-pt/wap/images/13vve2a9uwww000.png)
+      background: url(https://cdn.shupian.cn/sp-pt/wap/images/90c9a3bz7nk0000.png)
         no-repeat center center;
       background-size: 100% 100%;
       font-size: 28px;
@@ -182,6 +183,8 @@ export default {
       letter-spacing: 0;
       text-align: justify;
       line-height: 52px;
+      z-index: 1;
+      text-align: center;
     }
   }
   .inner_area {
@@ -210,6 +213,7 @@ export default {
         margin-bottom: 20px;
         width: 336px;
         .name {
+          padding-top: 2px;
           width: auto;
           float: left;
           font-weight: 600;

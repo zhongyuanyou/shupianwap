@@ -246,7 +246,7 @@ export default {
   background: #ffffff;
   border-radius: 24px;
   padding: 40px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   .c_title {
     height: 56px;
     font-size: 40px;

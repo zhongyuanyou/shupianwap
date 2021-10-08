@@ -27,7 +27,7 @@
       <!-- <VouchersSelect ref="sku" :planner-detail="tcPlannerBooth" /> -->
       <!--E 第二板块 领券 SKU-->
       <!--S 第三板块 包含服务-->
-      <ContainContent />
+      <!-- <ContainContent /> -->
       <!--E 第三板块 包含服务-->
       <!--S 第十板块 服务详情-->
       <ServiceDetail
@@ -76,7 +76,7 @@ import Title from '~/components/detail/server/Title.vue'
 import CommentBox from '~/components/detail/comment/CommentBox.vue'
 import OrderDynamic from '~/components/detail/OrderDynamic.vue'
 // import VouchersSelect from '~/components/detail/server/NewVouchersSelect.vue'
-import ContainContent from '~/components/detail/ContainContent.vue'
+// import ContainContent from '~/components/detail/ContainContent.vue'
 import TcPlanners from '~/components/detail/server/TcPlanners.vue'
 import Info from '~/components/detail/server/Info.vue'
 import ServiceDetail from '~/components/detail/common/ServiceDetail.vue'
@@ -97,7 +97,7 @@ export default {
     [TopNavBar.name]: TopNavBar,
     [List.name]: List,
     Title,
-    ContainContent,
+    // ContainContent,
     TcPlanners,
     ServiceDetail,
     RelatedRecommend,
