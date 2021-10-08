@@ -485,6 +485,12 @@ export default {
           }
         )
         .then((result) => {
+          this.payMethod.value = result.payType || 'ORDER_PAY_MODE_ONLINE'
+          if (result.payType === 'ORDER_PAY_MODE_ONLINE') {
+            this.payMethod.text = '在线支付'
+          } else {
+            this.payMethod.text = '线下支付'
+          }
           this.goodsSkuDetail = JSON.parse(result.orderSkuList[0].skuDetailInfo)
           if (this.goodsSkuDetail.sku.targetRate) {
             this.goodsSkuDetail.sku.targetRate = parseFloat(
@@ -656,15 +662,20 @@ export default {
                 result.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
                 result.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
               ) {
+                // 10.12优化内容
+                this.$router.replace({
+                  path: '/order',
+                  query: { type: 1 },
+                })
                 // 先付款后服务 PRO_PRE_PAY_POST_SERVICE;
                 // 先定金后尾款 PRO_PRE_DEPOSIT_POST_OTHERS;
-                this.$router.replace({
-                  path: '/pay/payType',
-                  query: {
-                    fromPage: 'orderList',
-                    cusOrderId: result.cusOrderId,
-                  },
-                })
+                // this.$router.replace({
+                //   path: '/pay/payType',
+                //   query: {
+                //     fromPage: 'orderList',
+                //     cusOrderId: result.cusOrderId,
+                //   },
+                // })
               } else {
                 // 意向单和担保交易等 回到订单列表
                 this.jumpToOrder()
