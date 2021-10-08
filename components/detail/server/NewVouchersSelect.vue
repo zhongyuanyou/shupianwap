@@ -33,21 +33,17 @@
       <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
     </div>
     <!--    多个服务商品时不显示SKU-->
-    <!-- <div
-      v-if="goodsSubDetailsName.length === 1 && skuResult.length > 0"
-      class="cell"
-      @click="openSku"
-    >
+    <div v-if="goodsSubDetailsName.length === 1" class="cell">
       <div class="cell_left">
-        <div class="label">选择</div>
+        <div class="label">已选</div>
         <div class="content">
           <span class="hide">{{
             goodsSubDetailsName[0]['goodsSubDetailsName']
           }}</span>
         </div>
       </div>
-      <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
-    </div> -->
+      <!-- <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" /> -->
+    </div>
     <div
       v-if="sellingGoodsData.salesGoodsSubVos.length"
       class="cell"
@@ -56,7 +52,12 @@
       <div class="cell_left">
         <div class="label">服务</div>
         <div class="content">
-          <span class="hide"
+          <span
+            v-if="sellingGoodsData.salesGoodsSubVos.length === 1"
+            class="hide"
+            >平台提供优质服务</span
+          >
+          <span v-else class="hide"
             >{{
               sellingGoodsData.salesGoodsSubVos[0].productName ||
               sellingGoodsData.salesGoodsSubVos[0].goodsSubName
@@ -408,6 +409,7 @@ export default {
           return item
         }
       })
+      console.log('serviceGoods', serviceGoods)
       return serviceGoods
     },
   },
