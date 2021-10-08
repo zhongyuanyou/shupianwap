@@ -41,11 +41,11 @@
         </div>
       </div>
       <div class="complaint-content">
-        <sp-field
+        <textarea
+          ref="content"
           v-model="formData.content"
           class="complaint-content-textarea"
           placeholder="请描述您的问题，有助于快速处理您的反馈额~(最少10个字符)"
-          type="textarea"
           maxlength="200"
         />
         <span class="complaint-content-label"
@@ -101,6 +101,8 @@ import { complain, commonApi, ossApi } from '~/api'
 import SpToast from '@/components/common/spToast/SpToast'
 import Header from '@/components/common/head/header'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import { debounce } from '~/utils/debounceThrottling'
+
 export default {
   layout: 'keepAlive',
   name: 'AddComplaint',
@@ -152,6 +154,17 @@ export default {
     }
   },
   mounted() {
+    const content = this.$refs.content
+    content.addEventListener(
+      'touchmove',
+      debounce(function () {}, 500),
+      true
+    )
+    content.addEventListener(
+      'click',
+      debounce(function () {}, 500),
+      true
+    )
     console.log('isInApp', this.isInApp)
     if (this.isInApp) {
       // 设置app导航名称
