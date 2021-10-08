@@ -13,9 +13,6 @@
       <!--E 第一板块-->
       <!-- 页面中部广告位 -->
       <PageMidAd />
-      <div class="zxc">
-        <div class="inner" @click="toZC()"></div>
-      </div>
       <!-- <div class="banner file_box">
         <span class="text1">
           <sp-image
@@ -27,12 +24,15 @@
       <!--S 第二板块 领券 SKU-->
 
       <VouchersSelect ref="sku" />
+      <div class="zxc">
+        <div class="inner" @click="toZC()"></div>
+      </div>
       <!--E 第二板块 领券 SKU-->
       <!--S 第三板块 包含项目-->
       <!-- <ContainProject /> -->
       <!--E 第三板块 包含项目-->
       <!--S 第三板块 包含服务-->
-      <ContainContent />
+      <!-- <ContainContent /> -->
       <!--E 第三板块 包含服务-->
       <!--S 评论-->
       <CommentBox
@@ -84,7 +84,7 @@ import OrderCase from '~/components/detail/OrderCase.vue'
 import OrderDynamic from '~/components/detail/OrderDynamic.vue'
 import VouchersSelect from '~/components/detail/server/NewVouchersSelect.vue'
 // import ContainProject from '~/components/detail/ContainProject.vue'
-import ContainContent from '~/components/detail/ContainContent.vue'
+// import ContainContent from '~/components/detail/ContainContent.vue'
 import TcPlanners from '~/components/detail/server/TcPlanners.vue'
 import ServiceDetail from '~/components/detail/common/ServiceDetail.vue'
 import RelatedRecommend from '~/components/detail/server/RelatedRecommend.vue'
@@ -109,7 +109,7 @@ export default {
     Title,
     VouchersSelect,
     // ContainProject,
-    ContainContent,
+    // ContainContent,
     TcPlanners,
     // ServiceDetail,
     RelatedRecommend,
@@ -142,7 +142,6 @@ export default {
 </script>
 <style lang="less" scoped>
 .zxc {
-  margin-bottom: 20px;
   height: 250px;
   background: #ffffff;
   border-radius: 24px;

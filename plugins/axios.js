@@ -81,7 +81,6 @@ export default function ({ $axios, redirect, app, store }) {
       } else {
         config.headers.areaCode = store.state.city.defaultCity.code
       }
-      console.log('config.headers', config.headers)
       return config
     },
     (error) => {

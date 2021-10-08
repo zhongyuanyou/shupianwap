@@ -60,7 +60,9 @@
             >{{
               sellingGoodsData.salesGoodsSubVos[0].productName ||
               sellingGoodsData.salesGoodsSubVos[0].goodsSubName
-            }},{{ skuResult.length && skuResult[0].attrValList[0].name }}</span
+            }},{{
+              sellingGoodsData.salesGoodsSubVos[0].goodsSubDetailsName
+            }}</span
           >
         </div>
       </div>
@@ -192,7 +194,7 @@
         <div class="goods_name_area">
           <p class="goods_sub_name">{{ subItem.goodsSubName }}</p>
           <p class="goods_sub_sku">
-            {{ skuResult.length && skuResult[subIndex].attrValList[0].name }}
+            {{ subItem.goodsSubDetailsName }}
           </p>
         </div>
         <div v-if="subItem.serviceItems.length" class="serve_list">
@@ -203,7 +205,9 @@
             class="goods_sub_server"
           >
             <span>{{ serverIndex + 1 }}、</span>
-            <span>{{ serverItem.serviceItemName }}</span>
+            <span>{{
+              serverItem.serviceItemName || serverItem.description
+            }}</span>
           </p>
         </div>
       </div>
@@ -576,6 +580,7 @@ export default {
         )
         if (skuResult.code === 200) {
           this.skuResult = skuResult.data
+          console.log('skuResult', this.skuResult)
         } else {
           throw skuResult.message
         }

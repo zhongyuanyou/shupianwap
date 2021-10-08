@@ -22,7 +22,7 @@
       <RecConten category-code="con100189" />
       <!-- 律师 -->
       <RecLawyer />
-      <ContainContent />
+      <!-- <ContainContent /> -->
       <!--E 第三板块 包含服务-->
       <!--S 评论-->
       <CommentBox
@@ -74,7 +74,7 @@ import CommentBox from '~/components/detail/comment/CommentBox.vue'
 import OrderDynamic from '~/components/detail/OrderDynamic.vue'
 import VouchersSelect from '~/components/detail/server/NewVouchersSelect.vue'
 // import ContainProject from '~/components/detail/ContainProject.vue'
-import ContainContent from '~/components/detail/ContainContent.vue'
+// import ContainContent from '~/components/detail/ContainContent.vue'
 import TcPlanners from '~/components/detail/server/TcPlanners.vue'
 import ServiceDetail from '~/components/detail/common/ServiceDetail.vue'
 import RelatedRecommend from '~/components/detail/server/RelatedRecommend.vue'
@@ -101,7 +101,7 @@ export default {
     RecConten,
     VouchersSelect,
     // ContainProject,
-    ContainContent,
+    // ContainContent,
     TcPlanners,
     // ServiceDetail,
     RelatedRecommend,
