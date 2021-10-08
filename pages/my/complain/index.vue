@@ -155,16 +155,10 @@ export default {
   },
   mounted() {
     const content = this.$refs.content
-    content.addEventListener(
-      'touchmove',
-      debounce(function () {}, 500),
-      true
-    )
-    content.addEventListener(
-      'click',
-      debounce(function () {}, 500),
-      true
-    )
+    // 定义wap 事件防抖
+    const debounceWarpFun = debounce(function () {}, 500)
+    content.addEventListener('touchmove', debounceWarpFun, true)
+    content.addEventListener('click', debounceWarpFun, true)
     console.log('isInApp', this.isInApp)
     if (this.isInApp) {
       // 设置app导航名称
