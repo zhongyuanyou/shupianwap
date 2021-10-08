@@ -73,7 +73,6 @@ export default {
     return {
       page: 2,
       limit: 4,
-      changeFinished: false, // 换一换结束
       initData: true, // 是否加载初始化数据
       askVal: '',
       tempList: [],
@@ -106,10 +105,6 @@ export default {
       this.sendTextMessageV2(this.recPlanner.mchUserId, this.askVal.trim())
     },
     changeQue() {
-      if (this.changeFinished) {
-        this.$xToast.warning('已经没有多余问题啦')
-        return
-      }
       this.productInformationContent()
     },
     async productInformationContent() {
@@ -131,7 +126,10 @@ export default {
         if (data.rows.length) {
           this.tempList = data.rows
           this.initData = false
-          this.changeFinished = data.totalPage === this.page
+          // 这里逻辑是指,当处于最后一页时,则重新开始
+          if (data.totalPage === this.page) {
+            this.page = 0
+          }
           this.page++
         }
       } catch (e) {
