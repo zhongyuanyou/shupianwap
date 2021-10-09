@@ -97,7 +97,8 @@
       <p class="popup_title">优惠</p>
       <p class="p1">优惠预估</p>
       <p class="p2">
-        使用以下优惠券后预估价<span>{{ couponPreferentialLine }}</span>元
+        使用以下优惠券后预估价<span>{{ couponPreferentialLine }}</span
+        >元
       </p>
       <div class="popup_box">
         <p class="vouchers_box_title">可领取优惠券</p>
@@ -397,13 +398,21 @@ export default {
         this.$store.state.sellingGoodsDetail.sellingGoodsData.salesPrice ||
           this.$store.state.sellingGoodsDetail.sellingGoodsData.price
       )
-      console.log('sortcouponList', sortcouponList)
       return sortcouponList
     },
     // 预估价
     couponPreferentialLine() {
-      if (this.coupon.length) {
-        return this.sellingGoodsData.salesPrice - this.coupon[0].reducePrice
+      // 过滤达到满减条件的优惠券
+      const canUseCoupon = JSON.parse(JSON.stringify(this.coupon)).filter(
+        (item) => {
+          return item.fullPrice < this.sellingGoodsData.salesPrice
+        }
+      )
+      if (canUseCoupon.length) {
+        let preFrice =
+          this.sellingGoodsData.salesPrice - canUseCoupon[0].reducePrice
+        if (preFrice < 0) preFrice = 0
+        return preFrice
       }
       return 0.0
     },
@@ -418,7 +427,6 @@ export default {
           return item
         }
       })
-      console.log('serviceGoods', serviceGoods)
       return serviceGoods
     },
   },
@@ -454,12 +462,10 @@ export default {
     couponPreferential() {
       const sellingGoodsData =
         this.$store.state.sellingGoodsDetail.sellingGoodsData
-      console.log('sellingGoodsData.couponList', sellingGoodsData.couponList)
       // 找出有效优惠券
       const couponList = sellingGoodsData.couponList.filter(
         (item) => item.couponStatus === 0 || item.couponStatus === 2
       )
-      console.log('couponList', couponList)
       if (couponList.length < 1) {
         this.vouchers = null
       } else {

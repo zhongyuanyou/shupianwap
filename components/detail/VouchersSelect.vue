@@ -241,7 +241,6 @@ export default {
       skuShow: false,
       safeguardShow: false,
       num: 1,
-      couponPreferentialLine: 0.0, // 优惠后的金额
       imgFileIdPaths: [
         'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg',
       ], // 商品图片
@@ -306,6 +305,22 @@ export default {
           this.$store.state.sellingGoodsDetail.sellingGoodsData.price
       )
       return sortcouponList
+    },
+    // 预估价
+    couponPreferentialLine() {
+      // 过滤达到满减条件的优惠券
+      const canUseCoupon = JSON.parse(JSON.stringify(this.coupon)).filter(
+        (item) => {
+          return item.fullPrice < this.sellingGoodsData.salesPrice
+        }
+      )
+      if (canUseCoupon.length) {
+        let preFrice =
+          this.sellingGoodsData.salesPrice - canUseCoupon[0].reducePrice
+        if (preFrice < 0) preFrice = 0
+        return preFrice
+      }
+      return 0.0
     },
     //  服务商品的SKU集合
     goodsSubDetailsName() {
@@ -397,8 +412,6 @@ export default {
         //  取最大优惠金额
         const salesPrice =
           sellingGoodsData.salesPrice - sortcouponList[0].reducePrice
-        const salesPriceRes = salesPrice >= 0 ? salesPrice : 0
-        this.couponPreferentialLine = salesPriceRes.toFixed('2')
         //  组装优惠券提示信息
         const info1 = sortcouponList[0]
         const info2 = sortcouponList[1]
