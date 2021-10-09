@@ -8,7 +8,7 @@
       <!--S 第一板块-->
       <Title :type="type" />
       <!-- 产品信息 -->
-      <!-- <Info /> -->
+      <Info />
       <!--E 第一板块-->
       <PageMidAd />
 
@@ -110,7 +110,7 @@ export default {
     HotConsult,
     SiderConsult,
     imBtn,
-    // Info,
+    Info,
   },
   mixins: [imHandle, detailMixin],
   layout: 'keepAlive',

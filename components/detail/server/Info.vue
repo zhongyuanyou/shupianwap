@@ -1,18 +1,12 @@
 <template>
-  <div class="c-info">
+  <div v-if="attr.length" class="c-info">
     <div class="title">
       <div class="title__name">产品信息</div>
     </div>
     <div class="content">
-      <div class="content__line">
-        <span class="label">贷款期数：</span><span class="text">12，36</span>
-      </div>
-      <div class="content__line">
-        <span class="label">月贷款利率：</span><span class="text">4.560%</span>
-      </div>
-      <div class="content__line">
-        <span class="label">还款方式：</span
-        ><span class="text">随借随还、先息后本</span>
+      <div v-for="(item, i) in attr" :key="i" class="content__line">
+        <div class="label">{{ `${item.name}:` }}</div>
+        <div class="text">{{ item.vals }}</div>
       </div>
     </div>
   </div>
@@ -25,7 +19,10 @@ export default {
   name: 'GoodDetailInfo',
   components: {},
   data() {
-    return {}
+    return {
+      tempAttr: ['还款方式', '月利息要求', '期望期限'], // 展示属性
+      attr: [],
+    }
   },
   computed: {
     ...mapState({
@@ -33,7 +30,19 @@ export default {
     }),
   },
   mounted() {
-    this.isShare = this.$route.query.isShare
+    const attr = this.sellingDetail.commonDetailAttrs
+    this.tempAttr.forEach((item) => {
+      const tempItemVals = []
+      attr.forEach((item1) => {
+        if (item1.attrName === item) {
+          tempItemVals.push(item1.attrValName)
+        }
+      })
+      this.attr.push({
+        name: item,
+        vals: tempItemVals.join(','),
+      })
+    })
   },
   methods: {},
 }
@@ -54,10 +63,14 @@ export default {
       margin-bottom: 20px;
       font-size: 30px;
       line-height: 42px;
+      display: flex;
+      align-items: flex-start;
       .label {
+        width: 180px;
         color: #999;
       }
       .text {
+        flex: 1;
         color: #222222;
       }
     }
