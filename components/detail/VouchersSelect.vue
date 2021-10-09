@@ -58,7 +58,7 @@
       <p class="popup_title">优惠</p>
       <p class="p1">优惠预估</p>
       <p class="p2">
-        使用以下优惠券后预估价<span>{{ couponPreferentialLine }}元</span>
+        使用以下优惠券后预估价<span>{{ couponPreferentialLine }}</span>元
       </p>
       <div class="popup_box">
         <p class="vouchers_box_title">可领取优惠券</p>
