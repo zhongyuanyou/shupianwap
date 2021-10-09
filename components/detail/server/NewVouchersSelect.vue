@@ -97,7 +97,7 @@
       <p class="popup_title">优惠</p>
       <p class="p1">优惠预估</p>
       <p class="p2">
-        使用以下优惠券后预估价<span>{{ couponPreferentialLine }}元</span>
+        使用以下优惠券后预估价<span>{{ couponPreferentialLine }}</span>元
       </p>
       <div class="popup_box">
         <p class="vouchers_box_title">可领取优惠券</p>
@@ -277,6 +277,7 @@
 import { Cell, Popup, Safeguard, Image, Button } from '@chipspc/vant-dgg'
 import { coupon, productDetailsApi } from '@/api'
 import imBtn from '@/components/detail/common/RecImBtn'
+import imHandle from '~/mixins/imHandle'
 import { CHIPS_WAP_BASE_URL } from '@/config/constant'
 // 数组排序
 function xier(arr) {
@@ -309,6 +310,7 @@ export default {
     [Button.name]: Button,
     imBtn,
   },
+  mixins: [imHandle],
   data() {
     return {
       serveModalShow: false,
@@ -318,7 +320,6 @@ export default {
       skuShow: false,
       safeguardShow: false,
       num: 1,
-      couponPreferentialLine: 0.0, // 优惠后的金额
       imgFileIdPaths: [
         'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg',
       ], // 商品图片
@@ -396,7 +397,15 @@ export default {
         this.$store.state.sellingGoodsDetail.sellingGoodsData.salesPrice ||
           this.$store.state.sellingGoodsDetail.sellingGoodsData.price
       )
+      console.log('sortcouponList', sortcouponList)
       return sortcouponList
+    },
+    // 预估价
+    couponPreferentialLine() {
+      if (this.coupon.length) {
+        return this.sellingGoodsData.salesPrice - this.coupon[0].reducePrice
+      }
+      return 0.0
     },
     //  服务商品的SKU集合
     goodsSubDetailsName() {
@@ -414,7 +423,6 @@ export default {
     },
   },
   mounted() {
-    console.log('this.$route.path', this.$route.path)
     this.couponPreferential()
     this.getSellingImg() // 获取商品图片
     //  当只有一个服务产品时获取SKU
@@ -446,11 +454,12 @@ export default {
     couponPreferential() {
       const sellingGoodsData =
         this.$store.state.sellingGoodsDetail.sellingGoodsData
+      console.log('sellingGoodsData.couponList', sellingGoodsData.couponList)
       // 找出有效优惠券
       const couponList = sellingGoodsData.couponList.filter(
         (item) => item.couponStatus === 0 || item.couponStatus === 2
       )
-      console.log('sellingGoodsData', sellingGoodsData)
+      console.log('couponList', couponList)
       if (couponList.length < 1) {
         this.vouchers = null
       } else {
@@ -460,11 +469,11 @@ export default {
           list2,
           sellingGoodsData.salesPrice || sellingGoodsData.price
         )
+        console.log('sortcouponList', sortcouponList)
         //  取最大优惠金额
         const salesPrice =
           sellingGoodsData.salesPrice - sortcouponList[0].reducePrice
         const salesPriceRes = salesPrice >= 0 ? salesPrice : 0
-        this.couponPreferentialLine = salesPriceRes.toFixed('2')
         //  组装优惠券提示信息
         const info1 = sortcouponList[0]
         const info2 = sortcouponList[1]

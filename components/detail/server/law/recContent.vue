@@ -13,7 +13,7 @@
           <div class="item_l">
             <div class="item_title">{{ item.title }}</div>
             <div class="item_author">
-              <span class="name">{{ nameList[item.id % 30] }}</span>
+              <span class="name">{{ item.thirdTypeName }}</span>
               <span class="time"> {{ getTime(item.createTime) }}</span>
             </div>
           </div>
@@ -24,7 +24,7 @@
         <div v-else class="item">
           <div class="item_title">{{ item.title }}</div>
           <div class="item_author">
-            <span class="name">{{ nameList[item.id % 30] }}</span>
+            <span class="name">{{ item.thirdTypeName }}</span>
             <span class="time"> {{ getTime(item.createTime) }}</span>
           </div>
         </div>
@@ -88,10 +88,17 @@ export default {
             categoryCode: this.categoryCode,
             page: 1,
             limit: 20,
+            categoryInfoType: 1,
           },
         })
         .then((res) => {
           if (res.code === 200) {
+            res.data.rows.forEach((element) => {
+              if (element.categoryName) {
+                const arr = element.categoryName.split('-')
+                element.thirdTypeName = arr[arr.length - 1]
+              }
+            })
             const arr = res.data.rows.sort(() => {
               return Math.random() - 0.5
             })
