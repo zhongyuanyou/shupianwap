@@ -198,9 +198,10 @@ export default {
       avatar: '', // 头像
       loading: true,
       url: config.baseURL,
+      imsysCode: config.imsysCode,
       listUrl: `${config.baseURL}/tac-external-platform-server/oss/find`,
       deleteUrl: `${config.baseURL}/tac-external-platform-server/oss/deleteSingle`,
-      callBackIUrl: `${config.baseURL}/tac-external-platform-server/oss/callback`,
+      callBackIUrl: `${config.baseURL}/tac-external-platform-server/oss/callback`
     }
   },
   computed: {
@@ -407,8 +408,12 @@ export default {
         }
       } catch (err) {}
     },
-    success(fileList) {
+    async success(fileList) {
       this.info.url = fileList.oss_filePath
+      // 刷新im头像
+      await this.$axios.post(userinfoApi.refreshBaseUser,
+        {imUserId: this.userId,
+        sysCode: this.imsysCode})
     },
   },
   head() {

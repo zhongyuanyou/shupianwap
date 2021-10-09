@@ -13,5 +13,6 @@ const userinfoApi = {
   delAddress: `${CHIPS_WAP_BASE_URL}/yk/address/v1/del_address.do`, // 删除收货地址
   getMap:`${CHIPS_WAP_BASE_URL}/nk/home/v1/gdmap.do`,
   info_decrypt: `${CHIPS_WAP_BASE_URL}/yk/user/v1/find_user_decrypt_by_id.do`, // 获取用户信息明文
+  refreshBaseUser: `/crispsimapi/api/v1/imserver/msg_user/refresh_base_user_msg.do`, // 获取用户信息明文
 }
 export { userinfoApi }
