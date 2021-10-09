@@ -53,17 +53,17 @@ export default {
     },
   },
   mounted() {
-    try {
+    this.$nextTick(() => {
       // 防止程序报错
-      this.$nextTick(() => {
+      try {
         const containerRefHeight = this.$refs.containerHtmlRef.offsetHeight
         if (containerRefHeight > 200) {
           this.showContainer = true
           this.heightContainer = '200px'
           this.overflowContainer = 'hidden'
         }
-      })
-    } catch (e) {}
+      } catch (e) {}
+    })
   },
   methods: {
     trigger() {
