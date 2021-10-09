@@ -19,10 +19,29 @@
         />
         <div class="tile-desc">
           <div class="tile-desc__name">
-            {{ info.choiceAnonymous ? '匿名用户' : info.userName }}
+            {{ filterUserName(info.userName) }}
           </div>
-          <div class="tile-desc__date">
-            {{ info.evaluateTime | filterDate }}
+          <div class="tile-desc__content">
+            <div class="score">
+              <div class="score-txt">评分</div>
+              <template v-for="(item, i) in 5">
+                <my-icon
+                  :key="i"
+                  class="score-star__item"
+                  :class="i === 4 ? 'z-last' : ''"
+                  name="dafen_mian"
+                  size="0.22rem"
+                  :color="
+                    i < Math.floor(info.averageScore / 100 / 2)
+                      ? '#FFB400'
+                      : '#F0F0F0'
+                  "
+                ></my-icon>
+              </template>
+            </div>
+            <div class="date">
+              {{ info.evaluateTime | filterDate }}
+            </div>
           </div>
         </div>
         <img
@@ -30,23 +49,6 @@
           :src="$ossImgSetV2('g31f5ub1prc0000.png')"
           class="tile-desc__icon"
         />
-      </div>
-      <div class="score">
-        <div class="score-txt">服务评分</div>
-        <template v-for="(item, i) in 5">
-          <my-icon
-            :key="i"
-            class="score-star__item"
-            :class="i === 4 ? 'z-last' : ''"
-            name="dafen_mian"
-            size="0.22rem"
-            :color="
-              i < Math.floor(info.averageScore / 100 / 2)
-                ? '#FFB400'
-                : '#F0F0F0'
-            "
-          ></my-icon>
-        </template>
       </div>
       <div class="content">
         <div class="content-txt">
@@ -136,6 +138,13 @@ export default {
         },
       })
     },
+    filterUserName(val) {
+      if (this.info.choiceAnonymous) {
+        return '匿名用户'
+      }
+      const startString = val.slice(0, 1)
+      return `${startString}**`
+    },
   },
 }
 </script>
@@ -191,10 +200,36 @@ export default {
           width: 380px;
           .mixin-text-oneoverflow();
         }
-        &__date {
-          color: #999999;
-          font-size: 24px;
-          line-height: 1;
+        &__content {
+          display: flex;
+          align-items: center;
+          .score {
+            margin-right: 24px;
+            display: flex;
+            align-items: center;
+            &-txt {
+              font-size: 24px;
+              line-height: 1;
+              color: #222;
+              margin-right: 16px;
+            }
+            &-star__item {
+              margin-right: 8px;
+              &.z-last {
+                margin-right: 16px;
+              }
+            }
+            &-level {
+              font-size: 22px;
+              line-height: 1;
+              color: #555555;
+            }
+          }
+          .date {
+            color: #999999;
+            font-size: 24px;
+            line-height: 1;
+          }
         }
         &__icon {
           object-fit: cover;
@@ -206,30 +241,8 @@ export default {
         }
       }
     }
-    .score {
-      margin-left: 100px;
-      display: flex;
-      align-items: center;
-      &-txt {
-        font-size: 24px;
-        line-height: 1;
-        color: #222;
-        margin-right: 16px;
-      }
-      &-star__item {
-        margin-right: 8px;
-        &.z-last {
-          margin-right: 16px;
-        }
-      }
-      &-level {
-        font-size: 22px;
-        line-height: 1;
-        color: #555555;
-      }
-    }
     .content {
-      margin-top: 24px;
+      margin-top: 13px;
       margin-left: 100px;
       &-txt {
         .textOverflow(3);
