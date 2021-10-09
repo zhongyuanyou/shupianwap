@@ -8,7 +8,7 @@
       />
       <div class="tile-desc">
         <div class="tile-desc__name">
-          {{ info.choiceAnonymous ? '匿名用户' : info.userName }}
+          {{ filterUserName(info.userName) }}
         </div>
       </div>
       <img
@@ -17,9 +17,9 @@
         class="tile-desc__icon"
       />
     </div>
-    <div class="date-wrap">{{ info.evaluateTime }}</div>
+    <div class="date-wrap">{{ info.evaluateTime | filterDate }}</div>
     <div class="score">
-      <div class="score-txt">服务评分</div>
+      <div class="score-txt">评分</div>
       <template v-for="(item, i1) in 5">
         <my-icon
           :key="i1"
@@ -32,21 +32,6 @@
           "
         ></my-icon>
       </template>
-      <div class="score-level">{{ info.averageScore | fliterLevel }}</div>
-    </div>
-    <div
-      v-if="
-        info && info.evaluateDimensionList && info.evaluateDimensionList.length
-      "
-      class="score-detail"
-    >
-      <div
-        v-for="(item, i) in info.evaluateDimensionList"
-        :key="i"
-        class="score-detail__item"
-      >
-        {{ item.name }}:{{ item.fraction }}分
-      </div>
     </div>
     <div class="content">
       <div
@@ -147,6 +132,8 @@
 </template>
 
 <script>
+import { formatDate } from '@/static/js/date'
+
 export default {
   name: 'GoodCommentItem',
   filters: {
@@ -164,6 +151,9 @@ export default {
       } else {
         return ''
       }
+    },
+    filterDate(val) {
+      return formatDate(new Date(val), 'yyyy-MM-dd')
     },
   },
   props: {
@@ -231,6 +221,13 @@ export default {
           this.showTipTxt = false
         }
       }
+    },
+    filterUserName(val) {
+      if (this.info.choiceAnonymous) {
+        return '匿名用户'
+      }
+      const startString = val.slice(0, 1)
+      return `${startString}**`
     },
   },
 }
@@ -305,19 +302,8 @@ export default {
       color: #555555;
     }
   }
-  .score-detail {
-    display: flex;
-    flex-wrap: wrap;
-    &__item {
-      margin-top: 12px;
-      line-height: 1;
-      font-size: 24px;
-      color: #999;
-      margin-right: 24px;
-    }
-  }
   .content {
-    margin-top: 24px;
+    margin-top: 25px;
     &-txt {
       color: #000000;
       font-size: 26px;
