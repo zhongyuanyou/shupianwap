@@ -76,7 +76,7 @@
           :list-url="CONFIG.listUrl"
           :delete-url="CONFIG.deleteUrl"
           :call-back-url="CONFIG.callBackUrl"
-          :max-count="3"
+          :max-count="5"
           :max-size="5 * 1024 * 1024"
           @onSuccess="success"
           @onDeleted="deleted"
@@ -688,13 +688,16 @@ export default {
 
     ::v-deep.van-uploader__wrapper {
       .van-uploader__preview {
-        margin: 0 32px 0 0;
+        margin: 0 32px 32px 0;
         .van-uploader__preview-image {
           width: 143px;
           height: 143px;
           background: #d8d8d8;
           border-radius: 8px;
         }
+      }
+      div:nth-child(4n + 0) {
+        margin-right: 0;
       }
       .van-uploader__upload {
         width: 143px;
