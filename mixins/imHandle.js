@@ -8,7 +8,21 @@ import { Toast } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import config from '@/config'
 import { userinfoApi, afterSaleApi } from '@/api'
-
+const getServerPrice = function (price) {
+  let newPrice = ''
+  if (typeof price !== 'string') price = String(price)
+  if (price.match('.')) {
+    const arr = price.split('.')
+    if (Number(arr[1]) > 0) {
+      newPrice = price
+    } else {
+      newPrice = arr[0]
+    }
+  } else {
+    newPrice = price
+  }
+  return newPrice
+}
 export default {
   computed: {
     ...mapState({
@@ -445,6 +459,10 @@ export default {
         imageUrl:
           goodsInfo.salesGoodsOperatings.clientDetails[0].imgFileIdPaths[0], // 产品图片
         unit: goodsInfo.salesPrice.split('.')[1], // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+      }
+      if (goodsInfo.priceType === 'PRO_FLOATING_PRICE') {
+        msgParams.price =
+          getServerPrice(goodsInfo.salesPrice || goodsInfo.price) + '%服务费'
       }
       this.sendTemplateMsgMixin({ sessionParams, msgParams })
       // } else {
