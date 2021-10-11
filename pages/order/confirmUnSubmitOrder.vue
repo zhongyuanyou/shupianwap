@@ -63,10 +63,7 @@
 
       <!-- 根据当前的付款模式，先付款后服务/先定金后尾款/先服务后付款/按节点付费，展示不同的模块 -->
       <div v-if="settlementInfo.cusOrderPayType !== 'PRO_PRE_PAY_POST_SERVICE'">
-        <div
-          v-if="isDeposit"
-          class="deposit"
-        >
+        <div v-if="isDeposit" class="deposit">
           <!-- 先定金后尾款 -->
           <div class="deposit_tips">
             温馨提示：该订单先支付定金在业务办理完成后支付尾款
@@ -660,6 +657,11 @@ export default {
                 result.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
               ) {
                 type = 1
+              } else if (
+                result.cusOrderPayType === 'PRO_PRE_SERVICE_FINISHED_PAY' ||
+                result.cusOrderPayType === 'PRO_PRE_SERVICE_POST_PAY_BY_NODE'
+              ) {
+                type = 2
               }
               this.jumpToOrder(type)
               // if (this.isTRANSACTION) {
