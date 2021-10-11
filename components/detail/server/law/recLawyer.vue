@@ -7,6 +7,7 @@
           v-for="(item, index) in lawerList"
           :key="index"
           class="l_s_item"
+          @click="toLawyerDetail(item.id,item.merchantUserId)"
         >
           <div class="l_header">
             <sp-image :src="$resizeImg(220, 220, item.image)" />
@@ -85,6 +86,16 @@ export default {
     this.getList()
   },
   methods: {
+    toLawyerDetail(id, merchantUserId) {
+      let url
+      if (location.href.match('tm.shupian.cn')) {
+        url = 'https://tlaw.shupian.cn/lawyer/businessCard'
+      } else {
+        url = 'https://law.shupian.cn/lawyer/businessCard'
+      }
+      window.location.href =
+        url + '?id=' + id + '&merchantUserId=' + merchantUserId
+    },
     getList() {
       this.$axios
         .post('/crisps-law-wap-bff-api/service/nk/law/v1/lawyerList.do', {
