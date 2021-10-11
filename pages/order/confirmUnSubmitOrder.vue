@@ -63,7 +63,10 @@
 
       <!-- 根据当前的付款模式，先付款后服务/先定金后尾款/先服务后付款/按节点付费，展示不同的模块 -->
       <div v-if="settlementInfo.cusOrderPayType !== 'PRO_PRE_PAY_POST_SERVICE'">
-        <div v-if="isDeposit" class="deposit">
+        <div
+          v-if="isDeposit"
+          class="deposit"
+        >
           <!-- 先定金后尾款 -->
           <div class="deposit_tips">
             温馨提示：该订单先支付定金在业务办理完成后支付尾款
@@ -92,7 +95,7 @@
                 : '该订单先付款后服务'
             }}
           </div>
-          <div class="deposit_content">按业务办理节点付费</div>
+          <div v-if="isNodes" class="deposit_content">按业务办理节点付费</div>
         </div>
       </div>
       <div class="news-content">
@@ -388,7 +391,9 @@ export default {
     // 是否先定金后服务
     isDeposit() {
       return (
-        this.settlementInfo?.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
+        this.settlementInfo?.cusOrderPayType ===
+          'PRO_PRE_DEPOSIT_POST_OTHERS' &&
+        this.settlementInfo.orderBalanceMoney > 0
       )
     },
     // 服务完结收费
@@ -649,37 +654,41 @@ export default {
               })
             }
             setTimeout(() => {
-              if (this.isTRANSACTION) {
-                // 交易商品
-                this.jumpToOrder()
-              } else if (this.payMethod.value === 'ORDER_PAY_MODE_SECURED') {
-                // 担保交易
-                this.jumpToOrder()
-              } else if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
-                // 线下付款
-                this.jumpToOrder()
-              } else if (
+              let type
+              if (
                 result.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
                 result.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
               ) {
-                // 10.12优化内容
-                this.$router.replace({
-                  path: '/order',
-                  query: { type: 1 },
-                })
-                // 先付款后服务 PRO_PRE_PAY_POST_SERVICE;
-                // 先定金后尾款 PRO_PRE_DEPOSIT_POST_OTHERS;
-                // this.$router.replace({
-                //   path: '/pay/payType',
-                //   query: {
-                //     fromPage: 'orderList',
-                //     cusOrderId: result.cusOrderId,
-                //   },
-                // })
-              } else {
-                // 意向单和担保交易等 回到订单列表
-                this.jumpToOrder()
+                type = 1
               }
+              this.jumpToOrder(type)
+              // if (this.isTRANSACTION) {
+              //   // 交易商品
+              //   this.jumpToOrder()
+              // } else if (this.payMethod.value === 'ORDER_PAY_MODE_SECURED') {
+              //   // 担保交易
+              //   this.jumpToOrder()
+              // } else if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
+              //   // 线下付款
+              //   this.jumpToOrder()
+              // } else if (
+              //   result.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
+              //   result.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
+              // ) {
+              //   this.jumpToOrder(1)
+              // 先付款后服务 PRO_PRE_PAY_POST_SERVICE;
+              // 先定金后尾款 PRO_PRE_DEPOSIT_POST_OTHERS;
+              // this.$router.replace({
+              //   path: '/pay/payType',
+              //   query: {
+              //     fromPage: 'orderList',
+              //     cusOrderId: result.cusOrderId,
+              //   },
+              // })
+              //   } else {
+              //     // 意向单和担保交易等 回到订单列表
+              //     this.jumpToOrder()
+              //   }
             }, 2000)
           })
           .catch((e) => {
@@ -695,10 +704,10 @@ export default {
           })
       }
     },
-    jumpToOrder() {
+    jumpToOrder(type) {
       this.$router.replace({
         path: '/order',
-        query: {},
+        query: { type },
       })
       // if (!this.isInApp) {
       //   this.$router.replace({
