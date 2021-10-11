@@ -25,13 +25,17 @@
         </sp-button></template
       >
       <template v-else>
-        <span class="title_bottom_money">{{
+        <!--<span class="title_bottom_money">{{
           sellingGoodsData.salesPrice !== '0.00' &&
           sellingGoodsData.refConfig &&
           sellingGoodsData.refConfig.taskType != 'PRO_WANT_ORDER_DIGEST'
             ? sellingGoodsData.salesPrice + '元'
             : '面议'
-        }}</span>
+        }}</span> -->
+        <div class="financing-text">已有超2万人申请</div>
+        <sp-button class="btn" type="primary" @click="linkCreditEvaluation">
+          额度估算
+        </sp-button>
       </template>
     </div>
     <!-- 原来逻辑 -->
@@ -57,7 +61,13 @@
       > -->
     </div>
     <!-- 融资贷款 apply -->
-    <div v-if="type === 'financing'" class="financing-apply">
+    <div
+      v-if="
+        type === 'financing' &&
+        sellingGoodsData.priceType === 'PRO_FLOATING_PRICE'
+      "
+      class="financing-apply"
+    >
       已有超2万人申请
     </div>
     <PriceReduction ref="priceR"></PriceReduction>
@@ -229,6 +239,11 @@ export default {
         color: #999999;
         line-height: 34px;
       }
+    }
+    .financing-text {
+      font-size: 24px;
+      color: #222222;
+      line-height: 34px;
     }
     .btn {
       background: #4974f5;
