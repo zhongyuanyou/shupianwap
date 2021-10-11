@@ -415,10 +415,11 @@ export default {
         }
       )
       if (canUseCoupon.length) {
-        let preFrice =
-          this.sellingGoodsData.salesPrice - canUseCoupon[0].reducePrice
+        const price1 = this.sellingGoodsData.salesPrice * 100
+        const price2 = canUseCoupon[0].reducePrice * 100
+        let preFrice = price1 - price2
         if (preFrice < 0) preFrice = 0
-        return preFrice
+        return preFrice / 100
       }
       return 0.0
     },

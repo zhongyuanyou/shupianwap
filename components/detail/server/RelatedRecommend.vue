@@ -11,7 +11,7 @@
           class="need_item"
           @click="toGoodsDeatil(item)"
         >
-          <div class="goods_item_top">
+          <div v-if="item.mchUserDataVO" class="goods_item_top">
             <div class="planer_header">
               <img :src="item.mchUserDataVO.photoPath" alt="" srcset="" />
             </div>
