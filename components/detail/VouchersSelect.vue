@@ -58,7 +58,8 @@
       <p class="popup_title">优惠</p>
       <p class="p1">优惠预估</p>
       <p class="p2">
-        使用以下优惠券后预估价<span>{{ couponPreferentialLine }}</span>元
+        使用以下优惠券后预估价<span>{{ couponPreferentialLine }}</span
+        >元
       </p>
       <div class="popup_box">
         <p class="vouchers_box_title">可领取优惠券</p>
@@ -278,29 +279,35 @@ export default {
       const list = []
       const couponList =
         this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList
-      try {
-        for (let i = 0; i < couponList.length; i++) {
-          const matchServiceLife = couponList[i].serviceLife.match('-')
-          if (matchServiceLife) {
-            const time0Obj = couponList[i].serviceLife.split('-')[0]
-            const time1Obj = couponList[i].serviceLife.split('-')[1]
-            const time0 = new Date(time0Obj).getTime()
-            const time1 = new Date(time1Obj).getTime() + 24 * 3600 * 1000
-            const time2 = new Date().getTime()
-            if (time0 <= time2 && time1 >= time2) {
-              list.push(couponList[i])
-            }
-          } else {
-            list.push(couponList[i])
-          }
-        }
-      } catch (error) {
-        console.log(error)
-      }
-      const list2 = JSON.parse(JSON.stringify(list))
+      // try {
+      //   for (let i = 0; i < couponList.length; i++) {
+      //     const matchServiceLife = couponList[i].serviceLife.match('-')
+      //     if (matchServiceLife) {
+      //       const time0Obj = couponList[i].serviceLife.split('-')[0]
+      //       const time1Obj = couponList[i].serviceLife.split('-')[1]
+      //       const time0 = new Date(time0Obj).getTime()
+      //       const time1 = new Date(time1Obj).getTime() + 24 * 3600 * 1000
+      //       const time2 = new Date().getTime()
+      //       if (time0 <= time2 && time1 >= time2) {
+      //         list.push(couponList[i])
+      //       }
+      //     } else {
+      //       list.push(couponList[i])
+      //     }
+      //   }
+      // } catch (error) {
+      //   console.log(error)
+      // }
+      // const list2 = JSON.parse(JSON.stringify(list))
+      // // 根据优惠金额对优惠券排序
+      // const sortcouponList = this.rangeDiscountPrice(
+      //   list2,
+      //   this.$store.state.sellingGoodsDetail.sellingGoodsData.salesPrice ||
+      //     this.$store.state.sellingGoodsDetail.sellingGoodsData.price
+      // )
       // 根据优惠金额对优惠券排序
       const sortcouponList = this.rangeDiscountPrice(
-        list2,
+        couponList,
         this.$store.state.sellingGoodsDetail.sellingGoodsData.salesPrice ||
           this.$store.state.sellingGoodsDetail.sellingGoodsData.price
       )

@@ -1,6 +1,9 @@
 <template>
   <div v-if="cList.length" class="container">
-    <h3 class="c_title">维权攻略</h3>
+    <h3 class="c_title">
+      维权攻略
+      <span>教你解决法律纠纷</span>
+    </h3>
     <div class="c_list">
       <div
         v-for="(item, index) in cList"
@@ -260,6 +263,10 @@ export default {
     color: #1a1a1a;
     letter-spacing: 0;
     margin-bottom: 20px;
+    span {
+      font-size: 24px;
+      font-weight: 400;
+    }
   }
   .c_list {
     .c_item {
