@@ -20,7 +20,24 @@ export default {
   components: {},
   data() {
     return {
-      tempAttr: ['还款方式', '月利息要求', '期望期限'], // 展示属性
+      tempAttr: [
+        {
+          key: '期望期限',
+          text: '贷款期数',
+        },
+        {
+          key: '期望额度',
+          text: '贷款额度',
+        },
+        {
+          key: '月利息要求',
+          text: '月贷款利率',
+        },
+        {
+          key: '还款方式',
+          text: '还款方式',
+        },
+      ], // 展示属性
       attr: [],
     }
   },
@@ -34,14 +51,16 @@ export default {
     this.tempAttr.forEach((item) => {
       const tempItemVals = []
       attr.forEach((item1) => {
-        if (item1.attrName === item) {
+        if (item1.attrName === item.key) {
           tempItemVals.push(item1.attrValName)
         }
       })
-      this.attr.push({
-        name: item,
-        vals: tempItemVals.join(','),
-      })
+      if (tempItemVals.length) {
+        this.attr.push({
+          name: item.text,
+          vals: tempItemVals.join(','),
+        })
+      }
     })
   },
   methods: {},
