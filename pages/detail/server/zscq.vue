@@ -42,15 +42,15 @@
         :good-id="sellingDetail.id"
       />
       <!--E 评论-->
+      <!--S  精选案例-->
+      <!-- <OrderCase></OrderCase> -->
+      <CaseNew />
+      <!--E  精选案例-->
       <!--S 动态 -->
       <!-- <OrderDynamic></OrderDynamic> -->
       <!--S 第五板块 推荐规划师-->
       <TcPlanners :recommend-planner="planners" />
       <!--E 第五板块 推荐规划师-->
-      <!--S  精选案例-->
-      <!-- <OrderCase></OrderCase> -->
-      <CaseNew />
-      <!--E  精选案例-->
       <!-- 热门咨询 -->
       <HotConsult :list="queList" :change-flag="queChangeFlag" />
       <!--S 第十板块 服务详情-->

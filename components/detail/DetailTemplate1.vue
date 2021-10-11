@@ -23,6 +23,10 @@
         :good-id="sellingDetail.id"
       />
       <!--E 评论-->
+      <!--S  精选案例-->
+      <CaseNew :planner-detail="tcPlannerBooth" />
+      <!--E  精选案例-->
+
       <!--S 动态 -->
       <!-- <OrderDynamic></OrderDynamic> -->
       <!--S 第五板块 推荐规划师-->
@@ -30,9 +34,6 @@
       <!--E 第五板块 推荐规划师-->
       <!-- 热门咨询 -->
       <HotConsult :list="queList" :change-flag="queChangeFlag" />
-      <!--S  精选案例-->
-      <CaseNew :planner-detail="tcPlannerBooth" />
-      <!--E  精选案例-->
       <!--S 第十板块 服务详情-->
       <!-- <ServiceDetail
         :detail-data="sellingDetail.salesGoodsOperatings.clientDetails[0]"
