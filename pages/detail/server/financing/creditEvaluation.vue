@@ -225,7 +225,7 @@ export default {
     return {
       // 页面规划师
       pagePlanner: {},
-      num: '0.00',
+      num: '0',
       pickerShow: false,
       pickerShowLoan: false,
       columns: [],
@@ -305,10 +305,10 @@ export default {
         finalPrice = 0
       }
       if (!finalPrice || isNaN(finalPrice) || finalPrice === 0) {
-        return '0.00'
+        return '0'
       }
       finalPrice = finalPrice * this.loanType
-      return finalPrice > 10000000 ? '10000000.00' : finalPrice.toFixed(2)
+      return finalPrice > 10000000 ? '10000000' : finalPrice
     },
     isShow() {
       if (this.phone && this.sms && this.cityName) {
