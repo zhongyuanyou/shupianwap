@@ -62,6 +62,7 @@
               :class="[(i + 1) % 3 === 0 ? 'z-last' : '']"
               :src="item.filepath"
               class="content-img__item"
+              @click="preview(item.filepath)"
             />
           </template>
         </div>
@@ -85,6 +86,7 @@
 </template>
 
 <script>
+import { ImagePreview } from '@chipspc/vant-dgg'
 import { formatDate } from '@/static/js/date'
 
 export default {
@@ -108,6 +110,9 @@ export default {
     filterDate(val) {
       return formatDate(new Date(val), 'yyyy-MM-dd')
     },
+  },
+  components: {
+    [ImagePreview.name]: ImagePreview,
   },
   props: {
     comment: {
@@ -147,6 +152,14 @@ export default {
       }
       const startString = val.slice(0, 1)
       return `${startString}**`
+    },
+    // 预览大图
+    preview(img) {
+      ImagePreview({
+        images: [img],
+        startPosition: 0,
+        closeable: true,
+      })
     },
   },
 }
