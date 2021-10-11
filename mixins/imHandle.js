@@ -365,45 +365,48 @@ export default {
         this.imExample.createSession(params, (res) => {
           if (res.code === 200) {
             const tepMsgParams = {
-              templateId: '6045e190ba0fd10006c2343f', // 模板 id
               receiver: res.data.groupId, // 会话 id
-              msgType: 'im_tmplate',
+              msgType: 'text',
               senderName: userInfo.nickName || '访客', // 发送者昵称
               extContent: JSON.stringify(this.$route.query), // 路由参数
-              paramJsonStr: {
-                forwardAbstract: '摘要信息',
-                content: text,
-                disableForward: 0,
+              content: {
+                text
               },
+              msgClass: 5,
+              receiveType:res.data.groupType
             }
             tepMsgParams.paramJsonStr = JSON.stringify(
               tepMsgParams.paramJsonStr
             )
-            this.imExample.sendTemplateMsg(tepMsgParams, (resData) => {
-              if (resData.code === 200) {
-                // 延时1s进入IM,避免模板消息未发生完成就已进入IM
-                this.$xToast.showLoading({ message: '正在联系规划师...' })
-                const timer = setTimeout(() => {
-                  clearTimeout(timer)
-                  this.$xToast.hideLoading()
-                  const myInfo = localStorage.getItem('myInfo')
-                    ? JSON.parse(localStorage.getItem('myInfo'))
-                    : {}
-                  const token = this.userType ? this.token : myInfo.token
-                  const userId = this.userType ? this.userId : myInfo.imUserId
-                  const userType = this.userType || 'VISITOR'
-                  if (this.isApplets) {
-                    window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}&isApplets=true`
-                  } else {
-                    window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}`
-                  }
-                }, 2000)
-              } else if (res.code === 5223) {
-                this.clearUserInfoAndJumpLoging()
-              } else {
-                this.$xToast.warning(resData.msg)
-              }
-            })
+            try {
+              this.imExample.sendMsg(tepMsgParams, (resData) => {
+                if (resData.code === 200) {
+                  // 延时1s进入IM,避免模板消息未发生完成就已进入IM
+                  this.$xToast.showLoading({ message: '正在联系规划师...' })
+                  const timer = setTimeout(() => {
+                    clearTimeout(timer)
+                    this.$xToast.hideLoading()
+                    const myInfo = localStorage.getItem('myInfo')
+                      ? JSON.parse(localStorage.getItem('myInfo'))
+                      : {}
+                    const token = this.userType ? this.token : myInfo.token
+                    const userId = this.userType ? this.userId : myInfo.imUserId
+                    const userType = this.userType || 'VISITOR'
+                    if (this.isApplets) {
+                      window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}&isApplets=true`
+                    } else {
+                      window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}`
+                    }
+                  }, 2000)
+                } else if (res.code === 5223) {
+                  this.clearUserInfoAndJumpLoging()
+                } else {
+                  this.$xToast.warning(resData.msg)
+                }
+              })
+            } catch (error) {
+              this.$xToast.error('网络出小差了，请稍后重试...' )
+            }
           } else if (res.code === 5223) {
             console.log('发送消息', res)
             this.clearUserInfoAndJumpLoging()

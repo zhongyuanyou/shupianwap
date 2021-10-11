@@ -1183,11 +1183,12 @@
     "@dgg/oss" "^1.0.0"
     ali-oss "6.9.1"
 
-"@dgg/sp-im-sdk@^1.0.0-beat39":
-  version "1.0.0-beat39"
-  resolved "http://tmobile.dgg188.cn/@dgg/sp-im-sdk/download/@dgg/sp-im-sdk-1.0.0-beat39.tgz#46f16238e8350f9c4b934c2d85688fcc0b78d31e"
-  integrity sha1-RvFiOOg1D5xLk0wthWiPzAt40x4=
+"@dgg/sp-im-sdk@2.0.1-beta3":
+  version "2.0.1-beta3"
+  resolved "http://tmobile.dgg188.cn/@dgg/sp-im-sdk/download/@dgg/sp-im-sdk-2.0.1-beta3.tgz#13a69e6007c5a887a83505fb3d834277f4c58ecc"
+  integrity sha1-E6aeYAfFqIeoNQX7PYNCd/TFjsw=
   dependencies:
+    fingerprintjs2 "^2.1.4"
     rollup-plugin-filesize "^9.0.2"
     rollup-plugin-serve "^1.0.4"
     rollup-plugin-uglify "^6.0.4"
@@ -7077,7 +7078,7 @@ findup-sync@^4.0.0:
     micromatch "^4.0.2"
     resolve-dir "^1.0.1"
 
-fingerprintjs2@^2.1.2:
+fingerprintjs2@^2.1.2, fingerprintjs2@^2.1.4:
   version "2.1.4"
   resolved "https://registry.npm.taobao.org/fingerprintjs2/download/fingerprintjs2-2.1.4.tgz#a39deb947aa187c098306a0b5dd41ceaa2e15fc5"
   integrity sha1-o53rlHqhh8CYMGoLXdQc6qLhX8U=

@@ -185,10 +185,12 @@ export default {
     },
   },
   mounted() {
-    // 定义一行间距
-    this.lineHeight = this.$refs.spaceholder.offsetHeight
-    this.$refs.spaceholder.style = 'display: none;'
     this.$nextTick(() => {
+      try {
+        // 定义一行间距
+        this.lineHeight = this.$refs.spaceholder.offsetHeight
+        this.$refs.spaceholder.style = 'display: none;'
+      } catch (e) {}
       this.renderView()
     })
   },
@@ -225,6 +227,9 @@ export default {
     filterUserName(val) {
       if (this.info.choiceAnonymous) {
         return '匿名用户'
+      }
+      if (!val) {
+        return '***'
       }
       const startString = val.slice(0, 1)
       return `${startString}**`

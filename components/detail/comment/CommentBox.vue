@@ -142,6 +142,9 @@ export default {
       if (this.info.choiceAnonymous) {
         return '匿名用户'
       }
+      if (!val) {
+        return '***'
+      }
       const startString = val.slice(0, 1)
       return `${startString}**`
     },

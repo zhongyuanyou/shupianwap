@@ -30,7 +30,7 @@
           </div>
           <div class="info_bot">
             <span class="num">{{ Number(item.point) }}</span
-            ><span class="txt">薯片分 | {{ Number(item.payNum) }}次服务</span>
+            ><span class="txt">薯片分 | {{ Number(item.payNum) }}服务次数</span>
           </div>
           <div class="info_bot_last">
             <span
