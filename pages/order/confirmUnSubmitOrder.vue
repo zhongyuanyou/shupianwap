@@ -63,7 +63,10 @@
 
       <!-- 根据当前的付款模式，先付款后服务/先定金后尾款/先服务后付款/按节点付费，展示不同的模块 -->
       <div v-if="settlementInfo.cusOrderPayType !== 'PRO_PRE_PAY_POST_SERVICE'">
-        <div v-if="isDeposit" class="deposit">
+        <div
+          v-if="isDeposit && settlementInfo.orderBalanceMoney > 0"
+          class="deposit"
+        >
           <!-- 先定金后尾款 -->
           <div class="deposit_tips">
             温馨提示：该订单先支付定金在业务办理完成后支付尾款
@@ -174,7 +177,9 @@
             }}</b
             >元 <b v-if="isIntendedOrder" class="toast_text">预计</b></span
           >
-          <span v-if="isDeposit" class="deposit_text"
+          <span
+            v-if="isDeposit && settlementInfo.orderBalanceMoney > 0"
+            class="deposit_text"
             >（ 定金 {{ settlementInfo.depositAmount }}元，<span
               class="deposit_text"
               >尾款 {{ settlementInfo.orderBalanceMoney }}元</span
@@ -219,7 +224,17 @@
     <div ref="foot" :class="isInApp ? 'foot2' : ''" class="foot">
       <p class="left">
         应付:<span>
-          <b v-if="isDeposit">{{ settlementInfo.depositAmount }}</b>
+          <b v-if="isDeposit && settlementInfo.orderBalanceMoney > 0">{{
+            settlementInfo.depositAmount
+          }}</b>
+          <b v-else-if="isDeposit && settlementInfo.orderBalanceMoney <= 0">
+            {{
+              getEnablePayMoney(
+                settlementInfo.orderTotalMoney,
+                settlementInfo.orderDiscountMoney
+              )
+            }}
+          </b>
           <b v-else-if="isNodes">0</b>
           <b v-else-if="isServiceFinshed">0</b>
           <b v-else-if="isBeforePay">{{ settlementInfo.orderPayableMoney }}</b>
@@ -289,7 +304,7 @@ import PayMethodPopup from '@/components/PlaceOrder/PayMethodPopup.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { productDetailsApi, auth, shopCart } from '@/api'
 import cardApi from '@/api/card'
-import orderApi from '@/api/order'
+import orderApi from '@/api/order2'
 import OrderMixins from '@/mixins/order'
 
 import { coupon, order, actCard } from '@/api/index'
@@ -388,9 +403,7 @@ export default {
     // 是否先定金后服务
     isDeposit() {
       return (
-        this.settlementInfo?.cusOrderPayType ===
-          'PRO_PRE_DEPOSIT_POST_OTHERS' &&
-        this.settlementInfo.orderBalanceMoney > 0
+        this.settlementInfo?.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
       )
     },
     // 服务完结收费
