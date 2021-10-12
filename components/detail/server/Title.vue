@@ -87,15 +87,15 @@
       > -->
     </div>
     <!-- 融资贷款 apply -->
-    <div
+    <template
       v-if="
         type === 'financing' &&
         sellingGoodsData.priceType === 'PRO_FLOATING_PRICE'
       "
-      class="financing-apply"
     >
-      已有超2万人申请
-    </div>
+      <div class="financing-line"></div>
+      <div class="financing-apply">已有超2万人申请</div>
+    </template>
     <PriceReduction ref="priceR"></PriceReduction>
   </div>
 </template>
@@ -308,8 +308,12 @@ export default {
       padding: 0;
     }
   }
+  .financing-line {
+    margin-top: 32px;
+    border-bottom: 1px solid #f4f4f4;
+  }
   .financing-apply {
-    margin-top: 65px;
+    margin-top: 32px;
     font-size: 24px;
     color: #222222;
     line-height: 34px;

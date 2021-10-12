@@ -30,6 +30,7 @@
         </div>
       </template>
     </div>
+    <div class="line"></div>
     <div class="ask">
       <div class="ask__title">快速提问</div>
       <div class="ask__input">
@@ -144,12 +145,12 @@ export default {
 @import '~@css/pages/detail/var.less';
 .c-hot-consult {
   .c-space-mixin();
-  padding: @c-padding;
   background: @c-bg;
   .title {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 40px 40px 0 40px;
     &__name {
       .c-title-font-mixin();
     }
@@ -161,6 +162,8 @@ export default {
   }
   .content {
     margin-top: 40px;
+    margin-bottom: 40px;
+    padding: 0 40px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -172,14 +175,18 @@ export default {
       font-size: 26px;
       line-height: 36px;
       color: #222;
-      text-align: center;
+      text-align: left;
       border-radius: 4px;
       margin-bottom: 20px;
       .mixin-text-oneoverflow();
     }
   }
+  .line {
+    border-bottom: 1px solid #f4f4f4;
+  }
   .ask {
-    margin-top: 61px;
+    margin-top: 40px;
+    padding: 0 40px 40px 40px;
     &__title {
       font-size: 36px;
       line-height: 50px;
