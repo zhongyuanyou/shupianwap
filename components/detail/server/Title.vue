@@ -69,13 +69,19 @@
         }}%
         <span>服务费</span>
       </p>
-      <span v-else class="title_bottom_money">{{
-        sellingGoodsData.salesPrice !== '0.00' &&
-        sellingGoodsData.refConfig &&
-        sellingGoodsData.refConfig.taskType != 'PRO_WANT_ORDER_DIGEST'
-          ? sellingGoodsData.salesPrice + '元'
-          : '面议'
-      }}</span>
+      <div v-else class="title_bottom_moneyV2">
+        <template
+          v-if="
+            sellingGoodsData.salesPrice !== '0.00' &&
+            sellingGoodsData.refConfig &&
+            sellingGoodsData.refConfig.taskType != 'PRO_WANT_ORDER_DIGEST'
+          "
+        >
+          {{ sellingGoodsData.salesPrice }}
+          <span class="unit">元</span>
+        </template>
+        <template v-else>面议</template>
+      </div>
       <!-- <span class="title_bottom_num"
         >销量 {{ sellingGoodsData.salesVolume }}</span
       > -->
@@ -256,6 +262,18 @@ export default {
     margin-top: 32px;
     &_money {
       .money-mixin();
+    }
+    &_moneyV2 {
+      letter-spacing: 0;
+      font-weight: bold;
+      font-size: 44px;
+      line-height: 62px;
+      color: #ec5330;
+      .unit {
+        font-weight: bold;
+        font-size: 24px;
+        line-height: 34px;
+      }
     }
     &_num {
       color: #999999;
