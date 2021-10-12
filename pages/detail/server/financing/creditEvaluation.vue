@@ -23,23 +23,25 @@
 
     <div class="content">
       <!-- 所在城市 -->
-      <div class="list-content">
+      <div class="list-content z-flex">
         <span class="title">所在城市</span>
-        <input
-          v-model="cityName"
-          type="text"
-          placeholder="优先选择工作地或户籍地"
-          readonly
-          class="city-input"
-          @focus="chooseShow"
-        />
-        <div class="icon-box" @click="chooseShow">
-          <my-icon
-            class="back-icon"
-            name="list_ic_next"
-            size="0.32rem"
-            color="#CCCCCC"
-          ></my-icon>
+        <div class="my-content">
+          <input
+            v-model="cityName"
+            type="text"
+            placeholder="优先选择工作地或户籍地"
+            readonly
+            class="city-input"
+            @focus="chooseShow"
+          />
+          <div class="icon-box" @click="chooseShow">
+            <my-icon
+              class="back-icon"
+              name="list_ic_next"
+              size="0.32rem"
+              color="#CCCCCC"
+            ></my-icon>
+          </div>
         </div>
       </div>
       <!-- 有无公积金 -->
@@ -126,23 +128,25 @@
         <span class="reimbursement-unit">元</span>
       </div>
       <!-- 贷款类型 -->
-      <div class="list-content">
+      <div class="list-content z-flex">
         <span class="title">贷款类型</span>
-        <input
-          v-model="loanTypeTxt"
-          type="text"
-          placeholder="请选择贷款类型"
-          readonly
-          class="city-input"
-          @focus="chooseShowLoan"
-        />
-        <div class="icon-box" @click="chooseShowLoan">
-          <my-icon
-            class="back-icon"
-            name="list_ic_next"
-            size="0.32rem"
-            color="#CCCCCC"
-          ></my-icon>
+        <div class="my-content">
+          <input
+            v-model="loanTypeTxt"
+            type="text"
+            placeholder="请选择贷款类型"
+            readonly
+            class="city-input"
+            @focus="chooseShowLoan"
+          />
+          <div class="icon-box" @click="chooseShowLoan">
+            <my-icon
+              class="back-icon"
+              name="list_ic_next"
+              size="0.32rem"
+              color="#CCCCCC"
+            ></my-icon>
+          </div>
         </div>
       </div>
     </div>
@@ -590,6 +594,11 @@ export default {
       align-items: center;
     }
     .list-content {
+      &.z-flex {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
       > span {
         display: block;
       }
@@ -609,6 +618,23 @@ export default {
         font-weight: 700;
         color: #222222;
         line-height: 45px;
+      }
+      .my-content {
+        display: flex;
+        align-items: center;
+        > input {
+          margin-right: 40px;
+          font-size: 32px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          line-height: 50px;
+          border: none;
+          color: #222222;
+          display: block;
+        }
+        > input:-ms-input-placeholder {
+          color: #999999;
+        }
       }
       > input {
         width: 238px;
@@ -652,10 +678,8 @@ export default {
         }
       }
       .icon-box {
-        width: 18px;
+        width: 32px;
         height: 32px;
-        // background: #cccccc;
-        margin-left: auto;
       }
       .city-input {
         width: 370px;

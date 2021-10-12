@@ -430,9 +430,6 @@ export default {
             font-weight: bold;
             color: #ec5330;
           }
-          .txt {
-            margin-left: 17px;
-          }
         }
         .info_bot_last {
           width: 100%;
