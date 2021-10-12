@@ -740,7 +740,6 @@ export default {
       height: 200px;
       background: #ffffff;
       .reimbursement-box {
-        border-bottom: 1px solid #f4f4f4;
         font-size: 0;
         .reimbursement-title {
           font-size: 32px;
