@@ -32,13 +32,7 @@
                 > -->
               </p>
               <p class="l_tags">
-                <span
-                  v-for="(labelItem, labelIndex) in item.labels"
-                  :key="labelIndex"
-                >
-                  {{ labelItem.field }}
-                  <span v-if="labelIndex !== item.labels.length - 1">,</span>
-                </span>
+                {{ item.labelStr }}
               </p>
             </div>
             <div class="toast_box">
@@ -112,13 +106,28 @@ export default {
         })
         .then((res) => {
           if (res.code && res.data && res.code === 200) {
-            if (res.data.length > 5) {
-              const arr = res.data.sort(() => {
+            const arr = res.data
+              .filter((item) => {
+                return item.labels.length
+              })
+              .sort(() => {
                 return Math.random() - 0.5
               })
+            arr.forEach((element) => {
+              let str = ''
+              element.labels.forEach((item, index) => {
+                if (index === 0) {
+                  str = item.field
+                } else {
+                  str = str + ',' + item.field
+                }
+              })
+              element.labelStr = str
+            })
+            if (arr.length > 5) {
               this.lawerList = arr.splice(0, 5)
             } else {
-              this.lawerList = res.data
+              this.lawerList = arr
             }
           }
         })
@@ -212,8 +221,8 @@ export default {
     background-size: 100% 100%;
     .l_infos {
       padding-left: 260px;
-      padding-top: 20px;
-      height: 140px;
+      padding-top: 10px;
+      height: 150px;
       font-size: 24px;
       color: #555555;
       overflow: hidden;
@@ -222,7 +231,7 @@ export default {
         font-size: 36px;
         color: #222222;
         line-height: 32px;
-        margin-bottom: 30px;
+        margin-bottom: 24px;
         width: 336px;
         .name {
           padding-top: 2px;
@@ -260,9 +269,10 @@ export default {
         }
       }
       .l_tags {
-        span {
-          margin-bottom: 20px;
-        }
+        height: 80px;
+        overflow: hidden;
+        line-height: 36px;
+        .textOverflow(2);
       }
     }
     .toast_box {
