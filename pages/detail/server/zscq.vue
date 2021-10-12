@@ -3,7 +3,7 @@
     <ShareModal />
     <div class="template">
       <!-- header-->
-      <Header :rec-planner="tcPlannerBooth" />
+      <Header :rec-planner="tcPlannerBooth" :planners="planners" />
 
       <!--start 会员价 -->
       <!-- <MemberPrice></MemberPrice> -->
