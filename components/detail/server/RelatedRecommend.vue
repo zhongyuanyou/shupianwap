@@ -113,7 +113,7 @@ export default {
       } else {
         newPrice = price
       }
-      return newPrice
+      return newPrice/100
     },
     getItemList(list) {
       const listArr = []
