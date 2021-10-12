@@ -81,7 +81,7 @@ export default {
     // 获取商品图片
     this.getSellingImg()
     // 获取推荐产品
-    this.getrecommendProduct()
+    // this.getrecommendProduct()
     // 推荐规划师
     this.getRecommendPlanner()
     // 获取钻展
@@ -162,14 +162,26 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
+            console.log(
+              'this.$route.query.productId',
+              this.$route.query.productId
+            )
+            // const productList = res.data.filter((item) => {
+            //   return item.id !== this.$route.query.productId
+            // })
+            const productList = res.data
+            productList.forEach((element) => {
+              element.salesPrice = element.salesPrice / 100
+            })
             // 关闭骨架屏
             this.$refs.remNeed.needLoading = false
             this.productPage += 1
             if (res.data.length === 0) {
               this.finished = true
             }
-            this.recommendProduct = [...this.recommendProduct].concat(res.data) // 推荐产品列表
-            console.log('this.recommendProduct', this.recommendProduct)
+            this.recommendProduct = [...this.recommendProduct].concat(
+              productList
+            ) // 推荐产品列表
             // 推荐产品最多加载30条
             if (this.recommendProduct.length >= 30) {
               this.finished = true

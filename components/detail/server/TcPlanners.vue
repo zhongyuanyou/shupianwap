@@ -9,7 +9,11 @@
       :style="{ marginTop: index === 0 ? '0.42rem' : '0.66rem' }"
     >
       <div class="planners_item_lf">
-        <a href="javascript:void(0);" @click="plannerInfoUrlJump(item)">
+        <div
+          href="javascript:void(0);"
+          class="planner_header"
+          @click="plannerInfoUrlJump(item)"
+        >
           <sp-image
             width="0.8rem"
             height="0.8rem"
@@ -18,7 +22,7 @@
             lazy-load
             :src="$resizeImg(80, 80, item.portrait || PlannerHeadList)"
           />
-        </a>
+        </div>
         <div class="info">
           <div class="info_tp">
             <a href="javascript:void(0);" @click="plannerInfoUrlJump(item)">
@@ -35,6 +39,7 @@
           <div class="info_bot_last">
             <span
               v-for="(tagItem, tagIndex) in item.tagNameList"
+              v-show="tagIndex < 3"
               :key="tagIndex"
             >
               {{ tagItem }}
@@ -314,7 +319,7 @@ export default {
 
 <style lang="less" scoped>
 .planners {
-  border-top: 24px solid #f8f8f8;
+  // border-top: 24px solid #f8f8f8;
   padding: 41px 40px 56px 40px;
   background-color: #fff;
   border-bottom: 24px solid #f8f8f8;
@@ -372,13 +377,21 @@ export default {
     align-items: center;
     flex-direction: row;
     height: 120px;
-    &_lf {
+    .planners_item_lf {
       display: flex;
       justify-content: flex-start;
-      align-items: center;
+      // align-items: center;
       flex-direction: row;
       flex: 1;
       overflow: hidden;
+      padding-right: 40px;
+      .planner_header {
+        width: 80px;
+        padding: 0;
+        .sp-image {
+          float: left;
+        }
+      }
       .info {
         height: 120px;
         margin-left: 24px;
@@ -433,22 +446,21 @@ export default {
             background: #f0f2f5;
             border-radius: 4px;
             padding: 4px 8px;
-            transform: scale(0.9);
-            transform-origin: 50% 50%;
-            margin-right: 6px;
+            margin-right: 8px;
             float: left;
             margin-bottom: 20px;
           }
         }
       }
     }
-    &_rt {
-      width: 210px;
+    .planners_item_rt {
+      width: 180px;
       height: 80px;
       display: flex;
+      float: right;
       justify-content: flex-end;
-      align-items: center;
       flex-direction: row;
+      justify-content: space-between;
       ::v-deep .sp-button {
         border: none;
       }

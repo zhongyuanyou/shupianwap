@@ -147,12 +147,12 @@ export default {
       box-shadow: 0px 1px 0px 0px #f4f4f4;
     }
   }
-  &_title {
+  .need_title {
     font-size: 40px;
     font-weight: bold;
     color: #1a1a1a;
     line-height: 52px;
-    margin-bottom: 24px;
+    margin-bottom: 36px;
   }
   .recomend_goods_list {
     column-count: 2;
@@ -173,7 +173,7 @@ export default {
           width: 120px;
           height: 120px;
           overflow: hidden;
-          border-radius: 6px;
+          border-radius: 60px;
           img {
             width: 100%;
             height: 100%;
@@ -185,16 +185,15 @@ export default {
           flex: 1;
           .label_item {
             width: 100%;
-            height: 30px;
-            overflow: hidden;
             margin-bottom: 10px;
+            font-size: 20px;
+            overflow: hidden;
           }
           span {
             width: auto;
-            height: 28px;
             background: #f1ece2;
             border-radius: 4px;
-            line-height: 28px;
+            padding: 4px 8px;
             color: #947e4c;
             float: left;
             padding: 2px 6px;
@@ -217,22 +216,20 @@ export default {
         white-space: nowrap;
         margin-top: 20px;
         height: 40px;
-        span {
+        .label_item {
           white-space: nowrap;
           overflow: hidden;
           float: left;
           width: auto;
           display: block;
-          font-size: 24px;
+          font-size: 20px;
           color: #5c7499;
           letter-spacing: 0;
           height: auto;
           background: #f0f2f5;
           border-radius: 4px;
           padding: 4px 8px;
-          transform: scale(0.84);
-          transform-origin: 80px 10px;
-          margin-left: -12px;
+          margin-left: 6px;
           &::first-child {
             margin-left: 0 !important;
           }

@@ -174,7 +174,7 @@ export default {
     left: 40px;
     top: 0;
     width: 220px;
-    height: 200px;
+    height: 220px;
     border-radius: 12px;
     z-index: 2;
     overflow: hidden;
@@ -228,7 +228,7 @@ export default {
           width: auto;
           float: left;
           font-weight: 600;
-          max-width: 144px;
+          max-width: 284px;
           height: 36px;
           text-overflow: ellipsis;
           white-space: nowrap;

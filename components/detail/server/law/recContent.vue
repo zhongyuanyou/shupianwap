@@ -287,6 +287,7 @@ export default {
         color: #222222;
         letter-spacing: 0;
         line-height: 44px;
+        font-weight: 600;
         margin-bottom: 20px;
         .textOverflow(2);
       }
@@ -322,6 +323,7 @@ export default {
       font-size: 32px;
       color: #4974f5;
       text-align: center;
+      font-weight: 600;
     }
   }
 }
