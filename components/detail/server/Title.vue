@@ -189,7 +189,8 @@ export default {
   width: 100%;
   padding: 40px 40px 32px 40px;
   background-color: #ffffff;
-  border-bottom: 24px solid #f8f8f8;
+  border-radius: 24px;
+  margin-bottom: 24px;
   &_btitle {
     font-size: 44px;
     font-family: PingFang SC;

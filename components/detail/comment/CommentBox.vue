@@ -168,7 +168,8 @@ export default {
 <style lang="less" scoped>
 .comment {
   background: #fff;
-  border-bottom: 24px solid #f8f8f8;
+  border-radius: 24px;
+  margin-bottom: 24px;
   .tile-wrap {
     height: 106px;
     padding: 48px 40px 18px 40px;

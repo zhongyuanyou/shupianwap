@@ -627,7 +627,8 @@ export default {
   font-family: PingFang SC;
   font-weight: 400;
   background-color: #ffffff;
-  border-bottom: 24px solid #f8f8f8;
+  border-radius: 24px;
+  margin-bottom: 24px;
   .cell {
     padding: 0 40px 0 39px;
     height: 88px;

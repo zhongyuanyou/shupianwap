@@ -83,7 +83,8 @@ export default {
 .container {
   background-color: #fff;
   padding: 40px;
-  border-bottom: 24px solid #f8f8f8;
+  margin-bottom: 24px;
+  border-radius: 24px;
   &_title {
     font-size: 40px;
     font-family: PingFang SC;

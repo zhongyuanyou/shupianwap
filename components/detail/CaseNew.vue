@@ -152,8 +152,9 @@ export default {
 <style lang="less" scoped>
 .case {
   background: #fff;
-  border-bottom: 24px solid #f8f8f8;
   padding-bottom: 40px;
+  border-radius: 24px;
+  margin-bottom: 24px;
   .case-title {
     padding: 48px 40px 0;
     font-size: 40px;
