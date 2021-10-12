@@ -7,7 +7,7 @@
           v-for="(item, index) in lawerList"
           :key="index"
           class="l_s_item"
-          @click="toLawyerDetail(item.id,item.merchantUserId)"
+          @click="toLawyerDetail(item.id, item.merchantUserId)"
         >
           <div class="l_header">
             <sp-image :src="$resizeImg(220, 220, item.image)" />
@@ -31,7 +31,7 @@
                   >立即咨询</sp-button
                 > -->
               </p>
-              <p>
+              <p class="l_tags">
                 <span
                   v-for="(labelItem, labelIndex) in item.labels"
                   :key="labelIndex"
@@ -212,6 +212,7 @@ export default {
     background-size: 100% 100%;
     .l_infos {
       padding-left: 260px;
+      padding-top: 20px;
       height: 140px;
       font-size: 24px;
       color: #555555;
@@ -221,7 +222,7 @@ export default {
         font-size: 36px;
         color: #222222;
         line-height: 32px;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
         width: 336px;
         .name {
           padding-top: 2px;
@@ -256,6 +257,11 @@ export default {
           color: #3e2909;
           padding: 0 12px;
           color: #3e2909;
+        }
+      }
+      .l_tags {
+        span {
+          margin-bottom: 20px;
         }
       }
     }
