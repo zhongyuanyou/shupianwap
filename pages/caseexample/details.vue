@@ -9,6 +9,7 @@
       z-index="5"
       :class="{
         scroTopStyle: Boolean(opacity),
+        isInApp: isInApp,
       }"
       @scroll="scrollHandle"
     >
@@ -91,10 +92,7 @@
     ></ExpertComments>
 
     <!--E 评论-->
-    <CommentBox
-      :list="commentdata"
-      @preview="previewImg"
-    />
+    <CommentBox :list="commentdata" @preview="previewImg" />
     <!-- tcPlannerBooth -->
     <!-- <bottomBar :im-jump-query="imJumpQuery" :planner-info="tcPlannerBooth" /> -->
 
@@ -161,6 +159,7 @@ export default {
 
   data() {
     return {
+      isInApp: this.$store.state.app.isInApp,
       id: '',
       caseDetail: {}, // 信息，包含详情
       caseDetailInfo: {}, // 详情
@@ -476,6 +475,17 @@ export default {
           color: #ec5330 !important;
         }
       }
+    }
+  }
+  ::v-deep .isInApp {
+    .sp-top-nav-bar__left {
+      top: 68px;
+    }
+  }
+  ::v-deep .scroTopStyle.isInApp {
+    .sp-sticky--fixed {
+      height: 156px;
+      background: white;
     }
   }
   ::v-deep .sp-hairline--bottom::after {

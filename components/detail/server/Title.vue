@@ -69,7 +69,7 @@
         }}%
         <span>服务费</span>
       </p>
-      <div v-else class="title_bottom_moneyV2">
+      <p v-else class="title_bottom_moneyV2">
         <template
           v-if="
             sellingGoodsData.salesPrice !== '0.00' &&
@@ -81,7 +81,7 @@
           <span class="unit">元</span>
         </template>
         <template v-else>面议</template>
-      </div>
+      </p>
       <!-- <span class="title_bottom_num"
         >销量 {{ sellingGoodsData.salesVolume }}</span
       > -->
@@ -264,12 +264,16 @@ export default {
       .money-mixin();
     }
     &_moneyV2 {
+      position: relative;
       letter-spacing: 0;
       font-weight: bold;
       font-size: 44px;
       line-height: 62px;
       color: #ec5330;
       .unit {
+        position: absolute;
+        bottom: 8px;
+        right: -24px;
         font-weight: bold;
         font-size: 24px;
         line-height: 34px;
