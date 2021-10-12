@@ -170,9 +170,6 @@ export default {
             //   return item.id !== this.$route.query.productId
             // })
             const productList = res.data
-            productList.forEach((element) => {
-              element.salesPrice = element.salesPrice / 100
-            })
             // 关闭骨架屏
             this.$refs.remNeed.needLoading = false
             this.productPage += 1
