@@ -16,7 +16,7 @@
       <sp-top-nav-bar
         ellipsis
         :background="`rgba(255,255,255,0)`"
-        @on-click-left="onClickLeft"
+        @on-click-left="$back()"
       >
         <template #left>
           <div v-if="!isShare">
