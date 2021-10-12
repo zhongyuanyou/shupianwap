@@ -115,16 +115,6 @@ const category = {
     })
   },
 
-  // 查询订单详情
-  detailOrder({ axios }, params) {
-    return request({
-      axios,
-      params,
-      method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/add_order.do',
-    })
-  },
-
 
   /**
    *CHIPS_PC_URL

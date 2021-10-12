@@ -81,11 +81,11 @@
               class="goods-tag"
             > -->
             <p class="goods-tag">
-              <span
+              <!-- <span
                 v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1"
                 class="tag-item tag-tc"
                 >套餐</span
-              >
+              > -->
               <span
                 v-for="(tagItem, index2) in item.tag"
                 v-show="index2 < 3"

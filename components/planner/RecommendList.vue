@@ -60,14 +60,6 @@
                 <span v-else>{{ item.salesGoodsOperatings.slogan }}</span>
               </div>
               <div class="tags">
-                <div
-                  v-if="
-                    item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
-                  "
-                  class="tag_item desc-label-tc"
-                >
-                  套餐
-                </div>
                 <span
                   v-for="(tagItem, index2) in item.salesGoodsTags"
                   v-show="tagItem.categoryCode === 'DSJTC20210514000042'"
@@ -93,7 +85,6 @@ import { List, Image } from '@chipspc/vant-dgg'
 import { recommendApi } from '@/api'
 import { request } from '@/utils/request'
 import fingerprint from '@/utils/fingerprint'
-
 const DEFAULT_PAGE = {
   limit: 10,
   page: 1,
@@ -174,7 +165,7 @@ export default {
 
     handleDetail(item) {
       const { id } = item || {}
-      this.uPGoDetail(id)
+      this.uPGoDetail(id, item)
     },
 
     // 根据不同的平台差异，获取不同的参数
@@ -206,7 +197,7 @@ export default {
     },
 
     // 统一跳转详情
-    uPGoDetail(productId) {
+    uPGoDetail(productId, item) {
       if (!productId) {
         this.$xToast({
           message: '缺少productId',
@@ -283,10 +274,11 @@ export default {
         return
       }
       // 在浏览器中
-      this.$router.push({
-        path: '/detail',
-        query: { productId },
-      })
+      // this.$router.push({
+      //   path: '/detail',
+      //   query: { productId },
+      // })
+      this.toGoodsDeatil(item)
     },
 
     // 在app中获取Code

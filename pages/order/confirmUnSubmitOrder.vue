@@ -289,7 +289,7 @@ import PayMethodPopup from '@/components/PlaceOrder/PayMethodPopup.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { productDetailsApi, auth, shopCart } from '@/api'
 import cardApi from '@/api/card'
-import orderApi from '@/api/order'
+import orderApi from '@/api/order2'
 import OrderMixins from '@/mixins/order'
 
 import { coupon, order, actCard } from '@/api/index'

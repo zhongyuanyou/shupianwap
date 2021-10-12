@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import DetailTemplate from '~/components/detail/DetailTemplate'
+import DetailTemplate from '@/components/detail/DetailTemplate'
 import { productDetailsApi } from '~/api'
 import getUserSign from '~/utils/fingerprint'
 import { GOODSLIST } from '~/config/constant'
