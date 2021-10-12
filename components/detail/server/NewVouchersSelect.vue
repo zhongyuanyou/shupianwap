@@ -737,7 +737,7 @@ export default {
   }
   .youhui {
     display: block;
-    padding: 22px 80px;
+    padding: 22px 66px;
     height: 132px;
     font-size: 28px;
     color: #1a1a1a;
