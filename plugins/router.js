@@ -51,6 +51,7 @@ const infoList = [
   'order',
   'order-confirmUnSubmitOrder',
   'order-detail',
+  'detail-server-financing-creditEvaluation',
 ]
 // const getInfo = function () {
 //   return new Promise(function (resolve, reject) {

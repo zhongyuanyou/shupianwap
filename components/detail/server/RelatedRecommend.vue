@@ -162,9 +162,9 @@ export default {
     column-gap: 20px;
     .need_item {
       padding: 10px 0;
+      break-inside: avoid;
       .inner {
         background: white;
-        break-inside: avoid;
         box-sizing: border-box;
         padding: 20px;
         font-size: 24px;
