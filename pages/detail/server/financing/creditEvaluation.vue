@@ -214,9 +214,10 @@
 import { mapState, mapActions } from 'vuex'
 import { Picker, Popup, Sticky } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
-import { productDetailsApi, auth } from '@/api'
+import { productDetailsApi, auth, userinfoApi } from '@/api'
 import imHandle from '@/mixins/imHandle'
 import getUserSign from '@/utils/fingerprint'
+
 export default {
   components: {
     Head,
@@ -325,14 +326,34 @@ export default {
     },
   },
   async mounted() {
-    // 强制读取city name
-    if (!this.city.code) {
-      await this.POSITION_CITY({ type: 'init' })
-    }
-    this.cityName = this.city.name
-    this.userPhone = this.$cookies.get('userPhone', { path: '/' })
-    if (this.userId && this.token && this.userPhone) {
-      this.isLogin = true
+    if (this.isInApp) {
+      const userId = this.$route.query.userId
+      if (userId || this.userId) {
+        // 调用接口,拿取用户信息
+        const params = {
+          id: userId || this.userId,
+        }
+        const res = await this.$axios.get(userinfoApi.info, { params })
+        if (res.code === 200 && res.data) {
+          this.userPhone = res.data.decodePhone
+          this.isLogin = true
+        }
+        const _this = this
+        this.$appFn.dggCityCode((res) => {
+          const city = res.data.cityName
+          _this.cityName = city.name
+        })
+      }
+    } else {
+      // 强制读取city name
+      if (!this.city.code) {
+        await this.POSITION_CITY({ type: 'init' })
+      }
+      this.cityName = this.city.name
+      this.userPhone = this.$cookies.get('userPhone', { path: '/' })
+      if (this.userId && this.token && this.userPhone) {
+        this.isLogin = true
+      }
     }
     this.getPagePlanner('app-ghsdgye-02')
     this.getCity()
@@ -448,13 +469,34 @@ export default {
             }
           )
           .then((res) => {
-            this.creatImSessionMixin(planner)
+            this.imHandle()
           })
           .catch((e) => {
             this.$xToast.error('手机验证码校验失败!')
             console.log(e)
           })
       } else {
+        this.imHandle()
+      }
+    },
+    imHandle() {
+      if (this.isInApp) {
+        this.$appFn.dggOpenIM(
+          {
+            name: this.pagePlanner.userName,
+            userId: this.pagePlanner.id,
+            userType: this.pagePlanner.type,
+          },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200) this.$xToast.warn('联系失败！')
+          }
+        )
+      } else {
+        const planner = {
+          imUserId: this.pagePlanner.id,
+          imUserType: this.pagePlanner.type,
+        }
         this.creatImSessionMixin(planner)
       }
     },
