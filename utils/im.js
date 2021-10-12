@@ -34,7 +34,7 @@ export function imInit(data = {}) {
     sysCode: config.imsysCode,
     secret: config.imsecret,
     appKey: config.imappKey,
-    isConnectSocket: true,
+    isConnectSocket: false,
     onConnect:res=>{
       console.log('onConnect',res);
     },
