@@ -340,8 +340,8 @@ export default {
         }
         const _this = this
         this.$appFn.dggCityCode((res) => {
-          const city = res.data.cityName
-          _this.cityName = city.name
+          const cityName = res.data.cityName
+          _this.cityName = cityName
         })
       }
     } else {
