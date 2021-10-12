@@ -11,44 +11,48 @@
           class="need_item"
           @click="toGoodsDeatil(item)"
         >
-          <div v-if="item.mchUserDataVO" class="goods_item_top">
-            <div class="planer_header">
-              <img :src="item.mchUserDataVO.photoPath" alt="" srcset="" />
-            </div>
-            <div class="planer_label">
-              <div
-                v-for="(laberItem, laberIndex) in item.mchUserDataVO.tabs"
-                :key="laberIndex"
-                class="label_item"
-              >
-                {{ laberItem }}
+          <div class="inner">
+            <div v-if="item.mchUserDataVO" class="goods_item_top">
+              <div class="planer_header">
+                <img :src="item.mchUserDataVO.photoPath" alt="" srcset="" />
+              </div>
+              <div class="planer_label">
+                <div
+                  v-for="(laberItem, laberIndex) in item.mchUserDataVO.tabs"
+                  :key="laberIndex"
+                  class="label_item"
+                >
+                  {{ laberItem }}
+                </div>
               </div>
             </div>
-          </div>
-          <p class="goods_name">
-            {{ item.name }}
-          </p>
-          <div
-            v-if="item.salesGoodsTags && item.salesGoodsTags.length > 1"
-            class="goods_tags"
-          >
-            <span
-              v-for="(labelItem, index2) in item.salesGoodsTags"
-              v-show="labelItem.categoryCode === 'DSJTC20210514000042'"
-              :key="index2"
-              class="label_item"
-              >{{ labelItem.tagValueName || labelItem.tagName }}</span
+            <p class="goods_name">
+              {{ item.name }}
+            </p>
+            <div
+              v-if="item.salesGoodsTags && item.salesGoodsTags.length > 1"
+              class="goods_tags"
             >
-          </div>
-          <p v-if="item.priceType === 'PRO_FLOATING_PRICE'" class="goods_price">
-            <span class="money">
-              {{ getServerPrice(item.salesPrice || item.price) }}%</span
-            >服务费
-          </p>
-          <p v-else class="goods_price">
-            <span class="money">{{ item.salesPrice || item.price }}</span
-            >元
-            <!-- <span
+              <span
+                v-for="(labelItem, index2) in item.salesGoodsTags"
+                v-show="labelItem.categoryCode === 'DSJTC20210514000042'"
+                :key="index2"
+                class="label_item"
+                >{{ labelItem.tagValueName || labelItem.tagName }}</span
+              >
+            </div>
+            <p
+              v-if="item.priceType === 'PRO_FLOATING_PRICE'"
+              class="goods_price"
+            >
+              <span class="money">
+                {{ getServerPrice(item.salesPrice || item.price) }}%</span
+              >服务费
+            </p>
+            <p v-else class="goods_price">
+              <span class="money">{{ item.salesPrice || item.price }}</span
+              >元
+              <!-- <span
               v-if="
                 item.refConfig &&
                 item.refConfig.taskType != 'PRO_WANT_ORDER_DIGEST'
@@ -61,7 +65,8 @@
                 ? (item.salesPrice || item.price) + '元'
                 : '面议'
             }} -->
-          </p>
+            </p>
+          </div>
         </div>
       </div>
     </sp-skeleton>
@@ -156,14 +161,16 @@ export default {
     column-count: 2;
     column-gap: 20px;
     .need_item {
-      background: white;
-      break-inside: avoid;
-      box-sizing: border-box;
-      padding: 20px;
-      font-size: 24px;
-      height: auto;
-      border-radius: 24px;
-      margin-bottom: 20px;
+      padding: 10px 0;
+      .inner {
+        background: white;
+        break-inside: avoid;
+        box-sizing: border-box;
+        padding: 20px;
+        font-size: 24px;
+        height: auto;
+        border-radius: 24px;
+      }
       .goods_item_top {
         height: 120px;
         display: flex;
