@@ -78,14 +78,16 @@
       </div>
     </div>
     <div class="cell youhui">
-      <my-icon
-        name="gerenzhongxin_youhuiquanicon"
-        size="0.36rem"
-        color="#EC5330"
-        class="my_icon"
-      ></my-icon>
-      线下优惠可咨询规划师
-      <imBtn btn-text="询优惠" />
+      <div class="inner">
+        <my-icon
+          name="gerenzhongxin_youhuiquanicon"
+          size="0.36rem"
+          color="#EC5330"
+          class="my_icon"
+        ></my-icon>
+        线下优惠可咨询规划师
+        <imBtn btn-text="询优惠" />
+      </div>
     </div>
     <sp-popup
       v-model="show"
@@ -736,13 +738,21 @@ export default {
     }
   }
   .youhui {
+    width: 100%;
     display: block;
-    padding: 22px 66px;
-    height: 132px;
+    padding: 22px 40px;
+    height: 18vw;
     font-size: 28px;
     color: #1a1a1a;
     text-align: left;
     line-height: 88px;
+    .inner {
+      padding: 0 32px;
+      width: 100%;
+      height: 100%;
+      border: 1px solid #ec5330;
+      border-radius: 4px;
+    }
     .my_icon {
       float: left;
       margin-right: 12px;
@@ -978,7 +988,7 @@ export default {
               // position: relative;
               // padding-right: 20px;
               // margin-bottom: 10px;
-              font-size: 62px;
+              font-size: 42px;
               font-family: Bebas;
               font-weight: 400;
               color: #ffffff;
