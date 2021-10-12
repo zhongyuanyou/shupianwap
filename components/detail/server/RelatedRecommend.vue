@@ -21,9 +21,7 @@
                 :key="laberIndex"
                 class="label_item"
               >
-                <span>
-                  {{ laberItem }}
-                </span>
+                {{ laberItem }}
               </div>
             </div>
           </div>
@@ -217,6 +215,7 @@ export default {
         margin-top: 20px;
         height: 40px;
         .label_item {
+          margin-bottom: 20px;
           white-space: nowrap;
           overflow: hidden;
           float: left;
@@ -228,11 +227,11 @@ export default {
           height: auto;
           background: #f0f2f5;
           border-radius: 4px;
-          padding: 4px 8px;
+          padding: 4px 6px;
           margin-left: 6px;
-          &::first-child {
-            margin-left: 0 !important;
-          }
+        }
+        .label_item::first-child {
+          margin-left: 0 !important;
         }
       }
       .goods_price {

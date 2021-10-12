@@ -453,7 +453,7 @@ export default {
     }
     .planners_item_rt {
       width: 180px;
-      height: 80px;
+      height: 120px;
       display: flex;
       float: right;
       justify-content: flex-end;
