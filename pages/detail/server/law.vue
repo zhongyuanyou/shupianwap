@@ -3,7 +3,7 @@
     <ShareModal />
     <div class="template">
       <!-- header-->
-      <Header :rec-planner="tcPlannerBooth" />
+      <Header :rec-planner="tcPlannerBooth" :planners="planners" />
       <!--start 会员价 -->
       <!-- <MemberPrice></MemberPrice> -->
 
@@ -24,6 +24,10 @@
       <RecLawyer />
       <!-- <ContainContent /> -->
       <!--E 第三板块 包含服务-->
+      <!--S  精选案例-->
+      <!-- <OrderCase></OrderCase> -->
+      <CaseNew />
+      <!--E  精选案例-->
       <!--S 评论-->
       <CommentBox
         v-if="Array.isArray(comments.records) && comments.records.length"
@@ -37,10 +41,6 @@
       <!--S 第五板块 推荐规划师-->
       <TcPlanners :recommend-planner="planners" t-title="推荐经纪人" />
       <!--E 第五板块 推荐规划师-->
-      <!--S  精选案例-->
-      <!-- <OrderCase></OrderCase> -->
-      <CaseNew />
-      <!--E  精选案例-->
       <!-- 热门咨询 -->
       <HotConsult :list="queList" :change-flag="queChangeFlag" />
       <!--S 第十板块 服务详情-->

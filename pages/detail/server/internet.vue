@@ -28,6 +28,9 @@
         :good-id="sellingDetail.id"
       />
       <!--E 评论-->
+      <!--S  精选案例-->
+      <CaseNew :planner-detail="tcPlannerBooth" />
+      <!--E  精选案例-->
       <!--S 动态 -->
       <!-- <OrderDynamic></OrderDynamic> -->
       <!--S 第五板块 推荐规划师-->
@@ -35,9 +38,6 @@
       <!--E 第五板块 推荐规划师-->
       <!-- 热门咨询 -->
       <HotConsult :list="queList" :change-flag="queChangeFlag" />
-      <!--S  精选案例-->
-      <CaseNew :planner-detail="tcPlannerBooth" />
-      <!--E  精选案例-->
       <!--S 第十板块 猜你需要-->
       <sp-list
         v-model="loading"

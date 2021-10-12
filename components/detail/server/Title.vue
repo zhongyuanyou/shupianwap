@@ -1,10 +1,30 @@
 <template>
   <div class="title">
     <p class="title_btitle">{{ sellingGoodsData.name }}</p>
+    <div
+      v-if="
+        type !== 'financing' &&
+        sellingGoodsData.salesGoodsOperatings &&
+        sellingGoodsData.salesGoodsOperatings.slogan
+      "
+      class="title_ad"
+    >
+      {{ sellingGoodsData.salesGoodsOperatings.slogan }}
+    </div>
     <div v-if="tags.length" class="title_tags">
       <div v-for="(item, index) in tags" :key="index" class="title_tags_item">
         {{ item.tagValueName }}
       </div>
+    </div>
+    <div
+      v-if="
+        type === 'financing' &&
+        sellingGoodsData.salesGoodsOperatings &&
+        sellingGoodsData.salesGoodsOperatings.slogan
+      "
+      class="title-financing_ad"
+    >
+      {{ sellingGoodsData.salesGoodsOperatings.slogan }}
     </div>
     <!-- 融资贷款, 展示类型 -->
     <div v-if="type === 'financing'" class="title_bottom">
@@ -169,7 +189,8 @@ export default {
   width: 100%;
   padding: 40px 40px 32px 40px;
   background-color: #ffffff;
-  border-bottom: 24px solid #f8f8f8;
+  border-radius: 24px;
+  margin-bottom: 24px;
   &_btitle {
     font-size: 44px;
     font-family: PingFang SC;
@@ -177,6 +198,18 @@ export default {
     color: #222222;
     line-height: 52px;
     word-break: break-all;
+  }
+  &_ad {
+    color: #222;
+    font-size: 26px;
+    line-height: 40px;
+    margin: 16px 0;
+  }
+  &-financing_ad {
+    color: #222;
+    font-size: 26px;
+    line-height: 40px;
+    margin: 16px 0 32px 0;
   }
   &_tags {
     margin-top: 18px;

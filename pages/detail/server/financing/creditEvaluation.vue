@@ -266,7 +266,30 @@ export default {
     }),
     price() {
       let finalPrice = 0
-      if (this.amount >= 280) {
+      if (this.amount >= 280 && this.insuranceNum && this.reimbursementNum) {
+        const num =
+          50000 +
+          (this.amount - 280) * 575 +
+          this.insuranceNum * 10000 * 25 +
+          this.reimbursementNum * this.timeLimit
+        finalPrice = num
+      } else if (this.amount >= 280 && this.insuranceNum) {
+        const num =
+          50000 + (this.amount - 280) * 575 + this.insuranceNum * 10000 * 25
+        finalPrice = num
+      } else if (this.amount >= 280 && this.reimbursementNum) {
+        const num =
+          50000 +
+          (this.amount - 280) * 575 +
+          this.reimbursementNum * this.timeLimit
+        finalPrice = num
+      } else if (this.insuranceNum && this.reimbursementNum) {
+        const num =
+          50000 +
+          this.insuranceNum * 10000 * 25 +
+          this.reimbursementNum * this.timeLimit
+        finalPrice = num
+      } else if (this.amount >= 280) {
         // 有无缴满2年公积金
         const num = 50000 + (this.amount - 280) * 575
         finalPrice = num
@@ -277,29 +300,6 @@ export default {
       } else if (this.reimbursementNum) {
         // 房贷月供还款
         const num = this.reimbursementNum * this.timeLimit
-        finalPrice = num
-      } else if (this.amount && this.insuranceNum) {
-        const num =
-          50000 + (this.amount - 280) * 575 + this.insuranceNum * 10000 * 25
-        finalPrice = num
-      } else if (this.insuranceNum && this.reimbursementNum) {
-        const num =
-          50000 +
-          this.insuranceNum * 10000 * 25 +
-          this.reimbursementNum * this.timeLimit
-        finalPrice = num
-      } else if (this.amount && this.reimbursementNum) {
-        const num =
-          50000 +
-          (this.amount - 280) * 575 +
-          this.reimbursementNum * this.timeLimit
-        finalPrice = num
-      } else if (this.amount && this.insuranceNum && this.reimbursementNum) {
-        const num =
-          50000 +
-          (this.amount - 280) * 575 +
-          this.insuranceNum * 10000 * 25 +
-          this.reimbursementNum * this.timeLimit
         finalPrice = num
       } else {
         finalPrice = 0

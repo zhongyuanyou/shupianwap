@@ -10,19 +10,6 @@
       <!-- 产品信息 -->
       <Info />
       <!--E 第一板块-->
-      <PageMidAd />
-
-      <div class="youhui">
-        <my-icon
-          name="gerenzhongxin_youhuiquanicon"
-          size="0.36rem"
-          color="#EC5330"
-          class="my_icon"
-        ></my-icon>
-        线下优惠可咨询规划师
-        <imBtn btn-text="询优惠" />
-      </div>
-
       <!--S 第二板块 领券 SKU-->
       <!-- <VouchersSelect ref="sku" :planner-detail="tcPlannerBooth" /> -->
       <!--E 第二板块 领券 SKU-->
@@ -34,6 +21,18 @@
         :title="serviceDetail"
         :detail-data="sellingDetail.salesGoodsOperatings.clientDetails[0]"
       />
+      <!-- 广告位 -->
+      <PageMidAd />
+      <div class="youhui">
+        <my-icon
+          name="gerenzhongxin_youhuiquanicon"
+          size="0.36rem"
+          color="#EC5330"
+          class="my_icon"
+        ></my-icon>
+        线下优惠可咨询规划师
+        <imBtn btn-text="询优惠" />
+      </div>
       <!--S 评论-->
       <CommentBox
         v-if="Array.isArray(comments.records) && comments.records.length"
@@ -42,6 +41,9 @@
         :good-id="sellingDetail.id"
       />
       <!--E 评论-->
+      <!--S  精选案例-->
+      <CaseNew :planner-detail="tcPlannerBooth" />
+      <!--E  精选案例-->
       <!--S 动态 -->
       <!-- <OrderDynamic></OrderDynamic> -->
       <!--S 第五板块 推荐规划师-->
@@ -49,10 +51,8 @@
       <!--E 第五板块 推荐规划师-->
       <!-- 热门咨询 -->
       <HotConsult :list="queList" :change-flag="queChangeFlag" />
-      <!--S  精选案例-->
-      <CaseNew :planner-detail="tcPlannerBooth" />
-      <!--E  精选案例-->
-      <!--S 第十板块 猜你需要-->
+
+      <!--S 第十板块 猜你需要, 相关推荐-->
       <sp-list
         v-model="loading"
         :finished="finished"
@@ -62,6 +62,7 @@
         <RelatedRecommend ref="remNeed" :product-data="recommendProduct" />
       </sp-list>
       <!--E 第十板块 猜你需要-->
+      <!-- 底部规划师 -->
       <bottomBar :planner-info="tcPlannerBooth" />
       <!-- 提问 -->
       <SiderConsult :list="queList" />

@@ -142,8 +142,8 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { ImagePreview } from '@chipspc/vant-dgg'
-import { formatDate } from '@/static/js/date'
 
 export default {
   name: 'GoodCommentItem',
@@ -164,7 +164,7 @@ export default {
       }
     },
     filterDate(val) {
-      return formatDate(new Date(val), 'yyyy-MM-dd')
+      return moment(val).format('YYYY-MM-DD')
     },
   },
   components: {

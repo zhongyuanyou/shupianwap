@@ -322,7 +322,8 @@ export default {
   // border-top: 24px solid #f8f8f8;
   padding: 41px 40px 56px 40px;
   background-color: #fff;
-  border-bottom: 24px solid #f8f8f8;
+  border-radius: 24px;
+  margin-bottom: 24px;
   ::v-deep.sp-skeleton {
     margin-top: 48px;
   }

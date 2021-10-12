@@ -627,7 +627,8 @@ export default {
   font-family: PingFang SC;
   font-weight: 400;
   background-color: #ffffff;
-  border-bottom: 24px solid #f8f8f8;
+  border-radius: 24px;
+  margin-bottom: 24px;
   .cell {
     padding: 0 40px 0 39px;
     height: 88px;
@@ -1135,6 +1136,7 @@ export default {
   font-size: 24px;
   .pop_title {
     width: 100%;
+    font-weight: bold;
     font-size: 40px;
     color: #1a1a1a;
     letter-spacing: 0;
@@ -1151,6 +1153,7 @@ export default {
       border-radius: 8px;
       padding: 10px 20px;
       .goods_sub_name {
+        font-weight: bold;
         font-size: 28px;
         color: #222222;
         line-height: 38px;
@@ -1169,6 +1172,7 @@ export default {
         font-size: 26px;
         color: #555555;
         line-height: 36px;
+        font-weight: bold;
       }
       .goods_sub_server {
         margin-top: 10px;

@@ -86,8 +86,8 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { ImagePreview } from '@chipspc/vant-dgg'
-import { formatDate } from '@/static/js/date'
 
 export default {
   name: 'Comment',
@@ -108,7 +108,7 @@ export default {
       }
     },
     filterDate(val) {
-      return formatDate(new Date(val), 'yyyy-MM-dd')
+      return moment(val).format('YYYY-MM-DD')
     },
   },
   components: {
@@ -168,7 +168,8 @@ export default {
 <style lang="less" scoped>
 .comment {
   background: #fff;
-  border-bottom: 24px solid #f8f8f8;
+  border-radius: 24px;
+  margin-bottom: 24px;
   .tile-wrap {
     height: 106px;
     padding: 48px 40px 18px 40px;
