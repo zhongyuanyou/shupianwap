@@ -13,9 +13,6 @@
       <!--E 第一板块-->
       <!-- 页面中部广告位 -->
       <PageMidAd />
-      <div class="zxc">
-        <div class="inner" @click="toZC()"></div>
-      </div>
       <!-- <div class="banner file_box">
         <span class="text1">
           <sp-image
@@ -32,8 +29,11 @@
       <!-- <ContainProject /> -->
       <!--E 第三板块 包含项目-->
       <!--S 第三板块 包含服务-->
-      <ContainContent />
+      <!-- <ContainContent /> -->
       <!--E 第三板块 包含服务-->
+      <div class="zxc">
+        <div class="inner" @click="toZC()"></div>
+      </div>
       <!--S 评论-->
       <CommentBox
         v-if="Array.isArray(comments.records) && comments.records.length"
@@ -109,7 +109,7 @@ export default {
     Title,
     VouchersSelect,
     // ContainProject,
-    ContainContent,
+    // ContainContent,
     TcPlanners,
     // ServiceDetail,
     RelatedRecommend,
