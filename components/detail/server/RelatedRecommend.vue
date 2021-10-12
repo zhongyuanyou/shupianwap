@@ -22,7 +22,7 @@
                   :key="laberIndex"
                   class="label_item"
                 >
-                  {{ laberItem }}
+                  <span> {{ laberItem }}</span>
                 </div>
               </div>
             </div>
@@ -237,7 +237,7 @@ export default {
           padding: 4px 6px;
           margin-left: 6px;
         }
-        .label_item::first-child {
+        .label_item:first-child {
           margin-left: 0 !important;
         }
       }
