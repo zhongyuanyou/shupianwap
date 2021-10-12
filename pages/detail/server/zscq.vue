@@ -146,7 +146,7 @@ export default {
   height: 250px;
   background: #ffffff;
   border-radius: 24px;
-  padding: 32px 40px;
+  padding: 42px 40px;
   .inner {
     width: 100%;
     height: 100%;

@@ -737,8 +737,8 @@ export default {
   }
   .youhui {
     display: block;
-    padding: 0 60px;
-    height: 88px;
+    padding: 22px 80px;
+    height: 132px;
     font-size: 28px;
     color: #1a1a1a;
     text-align: left;
@@ -950,7 +950,7 @@ export default {
             text-align: center;
             .coupon_price {
               //   height: 67px;
-              font-size: 62px;
+              font-size: 42px;
               font-family: Bebas;
               font-weight: 400;
               color: #ffffff;
