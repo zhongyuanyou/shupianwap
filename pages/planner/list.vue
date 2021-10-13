@@ -194,7 +194,7 @@ import CoupleSelect from '@/components/common/coupleSelected/CoupleSelect'
 import Header from '@/components/common/head/header'
 import Search from '@/components/common/search/Search'
 import SearchPopup from '@/components/planner/SearchPopup'
-import PlannerSearchItem from '@/components/planner/PlannerSearchItem'
+import PlannerSearchItem from '@/components/planner/PlannerSearchItem.vue'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 import imHandle from '@/mixins/imHandle'
 
@@ -445,6 +445,7 @@ export default {
             const { limit, currentPage = 1, totalCount = 0, records = [] } = res
             this.pageOption = { limit, totalCount, page: currentPage }
             this.pageOption.page = currentPage + 1
+            this.plannerMd(records)
             // 第一页面请求提示
             if (currentPage === 1) {
               this.$xToast.show({
@@ -548,7 +549,10 @@ export default {
         case 'tel':
           if (this.isInApp) {
             this.$appFn.dggBindHiddenPhone(
-              { plannerId: data.mchUserId },
+              {
+                plannerId: data.mchUserId,
+                customerId: this.$store.state.user.customerID || '',
+              },
               (res) => {
                 const { code } = res || {}
                 if (code !== 200) {
@@ -695,6 +699,8 @@ export default {
               name: userName,
               userId: mchUserId,
               userType: type,
+              userCenterId: data.userCenterId,
+              mchDetailId: data.mchDetailId,
             },
             (res) => {
               const { code } = res || {}
@@ -775,6 +781,7 @@ export default {
           const { limit, currentPage = 1, totalCount = 0, records = [] } = data
           this.pageOption = { limit, totalCount, page: currentPage }
           this.list.push(...records)
+          this.plannerMd(records)
           // 第一页面请求提示
           if (currentPage === 1) {
             this.$xToast.show({
@@ -831,6 +838,20 @@ export default {
         console.error('getRegionList:', error)
         return Promise.reject(error)
       }
+    },
+    plannerMd(records) {
+      // 处理规划师列表访问埋点
+      records.forEach((item) => {
+        if (item) {
+          window.spptMd.spptTrackRow('p_plannerBoothVisit', {
+            track_code: this.isInApp ? 'SPP001111' : 'SPW000111',
+            planner_number: item.userCenterNo,
+            planner_name: item.userName,
+            crisps_fraction: item.point,
+            recommend_number: item.dggPlannerRecomLog || '',
+          })
+        }
+      })
     },
   },
   head() {

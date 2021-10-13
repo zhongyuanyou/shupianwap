@@ -2,9 +2,10 @@
   <div class="download-pop" @touchmove="noEvent($event)">
     <div class="download-pop-content">
       <div class="download-pop-content-box">
-        <img
-          :src="$ossImgSet(160, 160, 'g6trabnxtg80000.png')"
-          alt=""
+        <my-icon
+          name="logo_chaotuoyuan"
+          size="1.6rem"
+          color="#4974F5"
           class="app-logo"
         />
         <h4 class="app-title">薯片找人APP</h4>
@@ -77,10 +78,10 @@ export default {
       .app-logo {
         width: 140px;
         height: 140px;
-        background: #4974f5;
         border-radius: 24px;
         margin-top: 108px;
       }
+
       .app-title {
         font-size: 40px;
         font-weight: 700;

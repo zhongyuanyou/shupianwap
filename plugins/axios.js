@@ -43,7 +43,7 @@ export default function ({ $axios, redirect, app, store }) {
         token,
         contentType: config.headers['Content-Type'],
       })
-      config.headers = { ...signData }
+      Object.assign(config.headers, signData)
       // config.headers.sysCode = 'crisps-app-wap-bff-api'
       // 获取token
       if (token) {
@@ -92,9 +92,8 @@ export default function ({ $axios, redirect, app, store }) {
     (response) => {
       const result = response.data
       const code = result.code
-      console.log('process.env.DGG_SERVER_ENV:', process.env.DGG_SERVER_ENV)
       // 网关会对带有yk地址的请求做token有效性验证，若失效，网关直接抛出5223，wap里面跳转到 我的
-      if (code === 5223) {
+      if (code === 5223 || code === 9984) {
         // 清空登录信息
         store.dispatch('user/clearUser')
         if (!store.state.app.isInApp) {
@@ -111,9 +110,9 @@ export default function ({ $axios, redirect, app, store }) {
           return result
         }
       } else {
-        if (process.env.DGG_SERVER_ENV === 'production' && code !== 200) {
-          result.message = '您的网络开小差了，请稍后再试！'
-        }
+        // if (process.env.DGG_SERVER_ENV === 'production' && code !== 200) {
+        //   result.message = '您的网络开小差了，请稍后再试！'
+        // }
         return result
       }
     },

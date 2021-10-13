@@ -73,18 +73,19 @@
             <p class="goods-name">
               {{ item.name }}
             </p>
-            <p
+            <!-- <p
               v-if="
                 (item.tag && item.tag.length) ||
                 (item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1) > 0
               "
               class="goods-tag"
-            >
-              <span
+            > -->
+            <p class="goods-tag">
+              <!-- <span
                 v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1"
                 class="tag-item tag-tc"
                 >套餐</span
-              >
+              > -->
               <span
                 v-for="(tagItem, index2) in item.tag"
                 v-show="index2 < 3"
@@ -109,7 +110,14 @@
             </p>
             <div class="goods-price">
               <span
-                v-if="
+                v-if="item.priceType === 'PRO_FLOATING_PRICE'"
+                class="money"
+              >
+                {{ getServerPrice(item.salesPrice || item.price) }}%
+                <span class="small-value">服务费</span>
+              </span>
+              <span
+                v-else-if="
                   item.price == 0 ||
                   item.price === '0.00' ||
                   item.price === '0.0' ||
@@ -209,6 +217,21 @@ export default {
     this.init()
   },
   methods: {
+    getServerPrice(price) {
+      let newPrice = ''
+      if (typeof price !== 'string') price = String(price)
+      if (price.match('.')) {
+        const arr = price.split('.')
+        if (Number(arr[1]) > 0) {
+          newPrice = price
+        } else {
+          newPrice = arr[0]
+        }
+      } else {
+        newPrice = price
+      }
+      return newPrice
+    },
     init() {
       this.payMoney = localStorage.getItem('payMoney')
       this.findRecomList()

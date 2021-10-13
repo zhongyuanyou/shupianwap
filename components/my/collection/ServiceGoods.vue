@@ -32,20 +32,7 @@
             {{ info.showName || info.name }}
           </div>
 
-          <div
-            v-if="
-              type === 'Service' &&
-              ((info.salesGoodsTags && info.salesGoodsTags.length > 0) ||
-                (info.salesGoodsSubVos && info.salesGoodsSubVos.length > 1))
-            "
-            class="desc-label"
-          >
-            <span
-              v-if="info.salesGoodsSubVos && info.salesGoodsSubVos.length > 1"
-              class="desc-label-tc"
-            >
-              套餐
-            </span>
+          <div v-if="type === 'Service'" class="desc-label">
             <span
               v-for="item of getSalesGoodsTags(info.salesGoodsTags)"
               :key="item.tagValueCode"

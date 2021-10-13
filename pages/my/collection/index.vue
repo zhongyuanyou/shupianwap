@@ -172,7 +172,6 @@ import { shopApi } from '@/api'
 import Header from '@/components/common/head/header.vue'
 
 import ServiceGoods from '@/components/my/collection/ServiceGoods.vue'
-
 export default {
   layout: 'keepAlive',
   name: 'MyCollection',
@@ -269,12 +268,13 @@ export default {
         return
       }
       if (this.tabIndex === 4) {
-        this.$router.push({
-          path: '/detail',
-          query: {
-            productId: info.goodsId,
-          },
-        })
+        // this.$router.push({
+        //   path: '/detail',
+        //   query: {
+        //     productId: info.goodsId,
+        //   },
+        // })
+        this.toGoodsDeatil(info)
       } else {
         this.$router.push({
           path: '/detail/transactionDetails',

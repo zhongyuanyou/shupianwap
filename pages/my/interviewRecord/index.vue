@@ -1,6 +1,6 @@
 <template>
   <div class="interview">
-    <Header v-if="!isInApp" title="面谈记录">
+    <Header v-if="!isHideNav || isHideNav !== '1'" title="面谈记录">
       <template #left>
         <div @click="back">
           <my-icon
@@ -221,15 +221,20 @@ export default {
       isInApp: (state) => state.app.isInApp,
       userId: (state) => state.user.userInfo.userId,
     }),
+    isHideNav() {
+      return this.$route.query.isHideNav
+    },
   },
   mounted() {
+    console.log('link', window?.location.href)
+    console.log('isHideNav', this.$route.query.isHideNav)
     if (this.isInApp) {
-      this.$appFn.dggSetTitle(
-        {
-          title: '面谈记录',
-        },
-        (res) => {}
-      )
+      // this.$appFn.dggSetTitle(
+      //   {
+      //     title: '面谈记录',
+      //   },
+      //   (res) => {}
+      // )
       this.$appFn.dggGetUserInfo((res) => {
         if (res.code === 200 && res.data.userId && res.data.token) {
           this.$store.dispatch('user/setUser', res.data)

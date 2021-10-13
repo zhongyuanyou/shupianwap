@@ -9,13 +9,14 @@
       z-index="5"
       :class="{
         scroTopStyle: Boolean(opacity),
+        isInApp: isInApp,
       }"
       @scroll="scrollHandle"
     >
       <sp-top-nav-bar
         ellipsis
         :background="`rgba(255,255,255,0)`"
-        @on-click-left="onClickLeft"
+        @on-click-left="$back()"
       >
         <template #left>
           <div v-if="!isShare">
@@ -91,11 +92,7 @@
     ></ExpertComments>
 
     <!--E 评论-->
-    <CommentBox
-      v-if="commentdata.length > 0"
-      :list="commentdata"
-      @preview="previewImg"
-    />
+    <CommentBox :list="commentdata" @preview="previewImg" />
     <!-- tcPlannerBooth -->
     <!-- <bottomBar :im-jump-query="imJumpQuery" :planner-info="tcPlannerBooth" /> -->
 
@@ -162,6 +159,7 @@ export default {
 
   data() {
     return {
+      isInApp: this.$store.state.app.isInApp,
       id: '',
       caseDetail: {}, // 信息，包含详情
       caseDetailInfo: {}, // 详情
@@ -477,6 +475,17 @@ export default {
           color: #ec5330 !important;
         }
       }
+    }
+  }
+  ::v-deep .isInApp {
+    .sp-top-nav-bar__left {
+      top: 68px;
+    }
+  }
+  ::v-deep .scroTopStyle.isInApp {
+    .sp-sticky--fixed {
+      height: 156px;
+      background: white;
     }
   }
   ::v-deep .sp-hairline--bottom::after {

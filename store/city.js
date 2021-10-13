@@ -43,7 +43,6 @@ export const mutations = {
   },
   // 设置当前定位城市code
   SET_POSITION_CODE(state, code) {
-    console.log(state, code, 13213)
     state.positionCityCode = code
     this.$cookies.set('positionCityCode', state.positionCityCode, {
       path: '/',
@@ -82,7 +81,7 @@ export const actions = {
 
     const { code, data, message } = await getPositonCity()
     // 定位成功,且匹配到开通服务的站点
-    console.log('getPositonCity', code, data, message)
+    // console.log('getPositonCity', code, data, message)
     if (code === 200) {
       commit('SET_POSITION_CITY', data.name)
       commit('SET_POSITION_CODE', data.code)

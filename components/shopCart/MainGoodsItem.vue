@@ -91,7 +91,6 @@ import {
   Stepper,
   Icon,
 } from '@chipspc/vant-dgg'
-
 const SHOP_RESTRICTION = {
   unrestricted: 'PRO_SHOP_RESTRICTION_ALL', // 无限制
   restrictedNumber: 'PRO_SHOP_RESTRICTION_NUMBER', // 限制数量
@@ -297,12 +296,7 @@ export default {
           }
         )
       } else {
-        this.$router.push({
-          path: '/detail',
-          query: {
-            productId: id,
-          },
-        })
+        this.toGoodsDeatil(this.mainData)
       }
     },
   },

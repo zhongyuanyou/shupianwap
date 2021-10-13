@@ -23,24 +23,10 @@
     <div v-if="!skeletonloading" class="allbox">
       <div class="data-content">
         <div v-for="(item, index) in order.list" :key="index" class="list">
-          <!-- <div class="left">
-            <img
-              :src="
-                item.salesGoodsOperatings
-                  ? item.salesGoodsOperatings.clientDetails[0]
-                    ? item.salesGoodsOperatings.clientDetails[0]
-                        .imgFileIdPaths[0] ||
-                      'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
-                    : 'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
-                  : 'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
-              "
-              alt=""
-            />
-          </div> -->
           <div class="right">
             <h1 class="tit">
               {{
-                item.salesGoodsSubVos && item.salesGoodsSubVos.length
+                item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
                   ? item.salesGoodsSubVos[0].goodsSubName
                   : item.name
               }}
@@ -59,66 +45,30 @@
                   : ''
               }}
             </p>
-            <!-- <p class="tag">{{ item.classCodeName }}</p> -->
-            <p class="price">
+
+            <p v-if="item.salesGoodsSubVos" class="price">
               <span
-                ><b>{{ item.salesPrice }}</b
+                ><b>{{
+                  getGoodsSubById(item.salesGoodsSubVos[0].goodsSubId)
+                    .salesPrice
+                }}</b
                 >元</span
               >
               <i>{{
                 $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
               }}</i>
             </p>
-            <!--
-            <div v-if="$route.query.type === 'shopcar'" class="list">
-              <div
-                v-for="(listitem, listindex) in item.saleGoodsSubs"
-                :key="listindex"
+            <p v-if="item.saleGoodsSubs" class="price">
+              <span
+                ><b>{{
+                  getGoodsSubById(item.saleGoodsSubs[0].goodsSubId).salesPrice
+                }}</b
+                >元</span
               >
-                <p class="name">{{ listitem.goodsSubName || '-' }}</p>
-                <p class="data">{{ listitem.goodsSubDetailsName || '-' }}</p>
-                <p class="price">
-                  {{ `x1` }}
-                </p>
-              </div>
-            </div>
-            <div v-else class="list">
-              <div
-                v-for="(listitem, listindex) in item.salesGoodsSubVos"
-                :key="listindex"
-              >
-                <p class="name">
-                  <span v-if="listitem.goodsType === 'PRO_CLASS_TYPE_SALES'">
-                    销售产品
-                  </span>
-                  <span
-                    v-else-if="listitem.goodsType === 'PRO_CLASS_TYPE_SERVICE'"
-                  >
-                    服务产品
-                  </span>
-                  <span
-                    v-else-if="
-                      listitem.goodsType === 'PRO_CLASS_TYPE_SERVICE_RESOURCE'
-                    "
-                  >
-                    服务资源
-                  </span>
-                  <span
-                    v-else-if="
-                      listitem.goodsType === 'PRO_CLASS_TYPE_TRANSACTION'
-                    "
-                  >
-                    交易资源
-                  </span>
-                </p>
-                <p class="data">{{ listitem.goodsSubName }}</p>
-                <p class="price">
-                  {{ listitem.settlementPriceEdit }}
-                  {{ `x1` }}
-                </p>
-              </div>
-            </div>
-             -->
+              <i>{{
+                $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
+              }}</i>
+            </p>
           </div>
         </div>
         <div class="inpbox">
@@ -162,12 +112,12 @@
         <CellGroup>
           <Cell
             title="商品及服务总数"
-            :value="order.num || order.goodsTotal || 0 + '件'"
+            :value="(order.num || order.goodsTotal || 0) + '件'"
             value-class="black"
           />
           <Cell
             title="商品金额"
-            :value="order.salesPrice || order.skuTotalPrice || 0 + '元'"
+            :value="settlementInfo.skuTotalPrice + '元'"
             value-class="black"
           />
           <Cell
@@ -209,7 +159,7 @@
           合计：
           <span>
             <!-- <b>{{ order.salesPrice || order.skuTotalPrice }}</b> 元 -->
-            <b>{{ price }}</b> 元
+            <b>{{ settlementInfo.needPayTotalMoney }}</b> 元
           </span>
         </p>
       </div>
@@ -224,13 +174,20 @@
             is-link
             @click="gocontractedit()"
           />
+          <Cell
+            title="支付方式"
+            :value="payMethod.text"
+            is-link
+            value-class="black"
+            @click="openPayMethod"
+          />
         </CellGroup>
       </div>
       <div class="agreement">
         <Checkbox v-model="radio">
           <template>
             <p class="tit">
-              我已阅读过并知晓<span @click="goagr"
+              我已阅读过并知晓<span @click.stop="goagr"
                 >《薯片平台用户交易下单协议》</span
               >
             </p>
@@ -239,11 +196,19 @@
       </div>
     </div>
     <div ref="foot" class="foot">
-      <p class="left">
+      <!-- <p class="left">
         应付:<span>
           <b>{{ price }}</b> 元</span
         >
+        settlementInfo
       </p>
+       -->
+      <p class="left">
+        应付：<span>
+          <b>{{ settlementInfo.needPayTotalMoney }}</b> 元</span
+        >
+      </p>
+
       <div class="right" :class="radio ? 'act' : ''" @click="placeOrder">
         提交订单
       </div>
@@ -258,13 +223,24 @@
       :height="75"
       title="优惠"
       help="使用说明"
+      :origin-price="
+        $route.query.type === 'shopcar'
+          ? order.skuTotalPrice
+          : settlementInfo.skuTotalPrice
+      "
       :tablist="couponInfo.tablist"
       :datalist="couponInfo.datalist"
       :nolist="couponInfo.nolist"
       @change="conponChange"
       @close="close"
     ></Popup>
-
+    <PayMethodPopup
+      :show="payMethod.show"
+      :list="payMethod.list"
+      :value="payMethod.value"
+      @change="payMethodPopupChange"
+      @close="closePayMethod"
+    ></PayMethodPopup>
     <CardPopup
       ref="cardPopup"
       :show="card.show"
@@ -296,6 +272,8 @@ import Popup from '@/components/PlaceOrder/Popup.vue'
 import CardPopup from '@/components/PlaceOrder/CardPopup.vue'
 import Contract from '@/components/PlaceOrder/contract.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
+import PayMethodPopup from '@/components/PlaceOrder/PayMethodPopup.vue'
+
 import { productDetailsApi, auth, shopCart } from '@/api'
 import cardApi from '@/api/card'
 import { coupon, order, actCard } from '@/api/index'
@@ -312,6 +290,7 @@ export default {
     [Skeleton.name]: Skeleton,
     LoadingCenter,
     Contract,
+    PayMethodPopup,
   },
   data() {
     return {
@@ -321,6 +300,11 @@ export default {
 
       message: '',
       order: '',
+      settlementInfo: {
+        skuTotalPrice: 0,
+        needPayTotalMoney: 0,
+        saleGoodsList: [],
+      },
       // num: 0,
 
       couponInfo: {
@@ -346,6 +330,16 @@ export default {
         ],
         datalist: [], // 支持的列表
         nolist: [], // 不支持的列表
+      },
+      payMethod: {
+        show: false,
+        list: [
+          { value: 'ORDER_PAY_MODE_ONLINE', text: '在线支付' },
+          { value: 'ORDER_PAY_MODE_OFFLINE', text: '线下支付' },
+          // { value: 'ORDER_PAY_MODE_SECURED', text: '担保交易' },
+        ],
+        value: 'ORDER_PAY_MODE_ONLINE', // 'ORDER_PAY_MODE_ONLINE',
+        text: '在线支付', // '在线支付',
       },
 
       contaract: '',
@@ -383,7 +377,6 @@ export default {
     } else {
       this.asyncData()
     }
-    // this.getInitData()
     this.getProtocol('protocol100008')
   },
   methods: {
@@ -411,15 +404,15 @@ export default {
           this.order.list = this.order.productVo
           this.price = this.order.skuTotalPrice
           this.skeletonloading = false
-          this.getInitData(5)
-          this.getInitData(6)
+
+          this.settlement()
         })
         .catch((e) => {
           if (e.code !== 200) {
             this.$xToast.show(e.message)
             console.error(e)
             setTimeout(function () {
-              that.$router.back(-1)
+              // that.$router.back(-1)
             }, 2000)
           }
         })
@@ -456,8 +449,6 @@ export default {
           this.order.list.push(obj)
           this.order.num = this.order.list.length
           this.price = this.order.salesPrice
-          this.getInitData(5)
-          this.getInitData(6)
 
           this.productList = new Array(1).fill({
             categoryCode: data.classCodeLevel.split(',')[0],
@@ -465,6 +456,7 @@ export default {
             productPrice: data.salesPrice,
           })
 
+          this.settlement()
           // this.getCardList()
 
           console.log('productList', this.productList)
@@ -484,6 +476,81 @@ export default {
         this.skeletonloading = false
       }
     },
+    // 获取待结算价格
+    settlement() {
+      let saleGoodsList = []
+
+      if (this.$route.query.type === 'shopcar') {
+        this.order.list.map((item, index) => {
+          saleGoodsList.push({
+            id: item.id,
+            saleNum: item.salesVolume,
+            salesGoodsSubs: item.saleGoodsSubs,
+            salesPrice: item.salesPrice,
+            version: item.version,
+            refConfig: item.refConfig,
+          })
+        })
+      } else {
+        saleGoodsList = [
+          {
+            id: this.order.id,
+            saleNum: 1,
+            salesGoodsSubs: this.order.salesGoodsSubVos,
+            salesPrice: this.order.salesPrice,
+            version: this.order.version,
+            refConfig: this.order.refConfig,
+          },
+        ]
+      }
+
+      order
+        .settlement(
+          { axios: this.$axios },
+          {
+            sceneType: 'ORDER_DISCOUNT_ACCOUNT',
+            saleGoodsList,
+
+            couponId: this.couponInfo.selectedItem.couponId,
+            couponUseCode: this.couponInfo.selectedItem.couponUseCode,
+          }
+        )
+        .then((result) => {
+          console.log('settlement', result)
+          // result.skuTotalPrice = result.skuTotalPrice / 100
+          // result.needPayTotalMoney = result.needPayTotalMoney / 100
+          this.settlementInfo = result
+
+          if (this.couponInfo.datalist.length === 0) {
+            this.getInitData(5)
+            this.getInitData(6)
+          }
+        })
+        .catch((e) => {
+          this.loading = false
+          const msg = e?.data?.error
+          Toast({
+            message: msg,
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+            overlay: true,
+          })
+          console.error(e)
+        })
+    },
+    getGoodsSubById(goodsSubId) {
+      let goodsSub = {}
+      this.settlementInfo.saleGoodsList.forEach((goods) => {
+        goods.goodsList.forEach((item) => {
+          console.log(goodsSubId, item.goodsSubId)
+          if (item.goodsSubId === goodsSubId) {
+            goodsSub = item
+          }
+        })
+      })
+      console.log('goodsSub', goodsSub)
+      return goodsSub
+    },
     async getProtocol(categoryCode) {
       if (!categoryCode) {
         this.$xToast.warning('请传入需要获取的协议!')
@@ -496,7 +563,9 @@ export default {
       try {
         const data = await auth.protocol(params)
         const { rows = [] } = data || {}
-        this.Orderform.orderAgreementIds = rows[0].id || {}
+        if (rows.length > 0) {
+          this.Orderform.orderAgreementIds = rows[0].id
+        }
       } catch (error) {
         this.$xToast.error(error.message || '请求失败')
         return Promise.reject(error)
@@ -554,10 +623,19 @@ export default {
         ) {
           const arr = {
             code: 'ORDER_DISCOUNT_DISCOUNT',
-            value: this.$refs.conpon.checkarr.marketingCouponVO.id,
-            couponUseCode: this.$refs.conpon.checkarr.couponUseCode,
-            no: this.$refs.conpon.checkarr.marketingCouponVO.id,
-            couponName: this.$refs.conpon.checkarr.marketingCouponVO.couponName,
+            value: this.couponInfo.selectedItem.marketingCouponVO.id,
+            couponUseCode: this.couponInfo.selectedItem.couponUseCode,
+            no: this.couponInfo.selectedItem.marketingCouponVO.id,
+            couponName:
+              this.couponInfo.selectedItem.marketingCouponVO.couponName,
+            discountType:
+              this.couponInfo.selectedItem.marketingCouponVO.merId === -1
+                ? 'COUPON_DISCOUNT'
+                : 'BUSINESS_COUPON',
+            discountSubsidy:
+              this.couponInfo.selectedItem.marketingCouponVO.merId === -1
+                ? 1
+                : 0,
           }
           this.Orderform.discount = new Array(1).fill(arr)
         } else if (
@@ -574,6 +652,8 @@ export default {
           }
           this.Orderform.discount = new Array(1).fill(arr)
         }
+
+        this.Orderform.payType = this.payMethod.value // 'ORDER_PAY_MODE_ONLINE'
         this.Orderform.cusOrderPayType = cusOrderPayType
         this.Orderform.isFromCart = isFromCart
         this.Orderform.orderProvinceNo = this.$store.state.city.defaultCity.pid
@@ -587,23 +667,44 @@ export default {
           this.Orderform.contractFormParam = this.contaract
           this.Orderform.contractFormParam.contractApplyWay = 'CUSTOMER'
         }
+        if (this.$route.query.plannerId) {
+          this.Orderform.plannerId = this.$route.query.plannerId
+          this.Orderform.cusOrderModeNo = 'ORDER_CUS_MODE_SHARE'
+        }
+        if (!this.Orderform.orderAgreementIds) {
+          return this.$xToast.warning('协议获取失败!')
+        }
         order
           .placeOrder({ axios: this.$axios }, this.Orderform)
           .then((result) => {
             this.loading = false
-            Toast({
-              message: '下单成功',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_success',
-              overlay: true,
-            })
-            setTimeout(() => {
-              this.$router.push({
-                path: '/pay/payType',
-                query: {
-                  cusOrderId: result.cusOrderId,
-                },
+
+            if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
+              this.$xToast.error('请前往线下银行网点进行支付！')
+            } else {
+              Toast({
+                message: '下单成功',
+                iconPrefix: 'sp-iconfont',
+                icon: 'popup_ic_success',
+                overlay: true,
               })
+            }
+            setTimeout(() => {
+              if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
+                // 线下付款
+                this.$router.replace({
+                  path: '/order',
+                  query: {},
+                })
+              } else {
+                this.$router.replace({
+                  path: '/pay/payType',
+                  query: {
+                    fromPage: 'orderList',
+                    cusOrderId: result.cusOrderId,
+                  },
+                })
+              }
             }, 2000)
           })
           .catch((e) => {
@@ -632,16 +733,35 @@ export default {
       })
       return arr
     },
+
     //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
+      this.settlementInfo.saleGoodsList.map((item) => {
+        return {
+          goodsId: item.id,
+          price: item.salesPrice,
+          goodsNum: item.salesVolume || 1,
+          goodsClassCode: item.classCode,
+        }
+      })
+
       const arr = this.order.list.map((x) => {
         return x.id
       })
       const list = []
       for (let i = 0; i < this.order.list.length; i++) {
+        let itemPrice = this.order.list[i].salesPrice
+        if (
+          this.order.list[i].salesGoodsSubVos &&
+          this.order.list[i].salesGoodsSubVos.length > 0
+        ) {
+          const id = this.order.list[i].salesGoodsSubVos[0].goodsSubId
+          itemPrice = this.getGoodsSubById(id).salesPrice
+        }
+
         const item = {
           goodsId: this.order.list[i].id,
-          price: this.order.list[i].salesPrice,
+          price: itemPrice, // this.order.list[i].salesPrice,
           goodsNum: this.order.list[i].salesVolume || 1,
           goodsClassCode: this.order.list[i].classCode,
         }
@@ -660,7 +780,8 @@ export default {
             findType: index,
             userId: this.$store.state.user.userId,
             actionId: arr,
-            orderPrice: price,
+            orderPrice: this.settlementInfo.needPayTotalMoney,
+            // getGoodsSubById(item.salesGoodsSubVos[0].goodsSubId).salesPrice
             orderByWhere: 'createTime=desc',
             limit: 50,
             page: 1,
@@ -681,16 +802,6 @@ export default {
               )
             })
             this.couponInfo.datalist = sortList
-            // if (sortList.length > 0) {
-            //   this.datalist = sortList
-            //   this.conpon = this.datalist[0]
-            //   this.$refs.conpon.radio = 0
-            //   this.$refs.conpon.checkarr = this.datalist[0]
-            //   this.$refs.conpon.num =
-            //     this.$refs.conpon.checkarr.marketingCouponVO.reducePrice
-            //   this.$refs.conpon.sum()
-            // } else {
-            // }
           } else {
             this.couponInfo.nolist = result.marketingCouponLogList
           }
@@ -737,6 +848,7 @@ export default {
       this.couponInfo.selectedItem = item || {}
       this.card.cardPrice = ''
       this.card.selectedItem = {}
+      this.settlement()
     },
     cardChange(price, num, item) {
       this.price = price
@@ -745,13 +857,25 @@ export default {
       this.card.cardPrice = num
       this.card.selectedItem = item || {}
     },
+    payMethodPopupChange(item) {
+      this.payMethod.value = item.value
+      this.payMethod.text = item.text
+    },
+
     openPopupfn() {
       this.couponInfo.popupshow = true
     },
     openCardFn() {
       this.card.show = true
     },
-    close(data) {
+    openPayMethod() {
+      this.payMethod.show = true
+    },
+    closePayMethod() {
+      this.payMethod.show = false
+    },
+
+    close() {
       this.couponInfo.popupshow = false
     },
     closeCard() {
@@ -888,6 +1012,7 @@ export default {
       }
       .black {
         color: #1a1a1a;
+        font-weight: bold;
       }
       .red {
         color: #ec5330;
@@ -903,7 +1028,7 @@ export default {
           font-size: 22px;
           color: #ec5330;
           b {
-            font-size: 30px;
+            font-size: 36px;
           }
         }
       }
@@ -912,6 +1037,9 @@ export default {
       margin-top: 24px;
       background: #fff;
       .ys {
+        color: #1a1a1a;
+      }
+      .black {
         color: #1a1a1a;
       }
     }

@@ -52,7 +52,9 @@
             >《薯片用户服务协议》</a
           >和<a class="protocol_name" @click="handleProtocol('protocol100121')"
             >《薯片隐私协议》</a
-          >和《权限使用规则》各条款，包括但不限于: 各条款，包括但不限于: <br />
+          >和<a class="protocol_name" @click="handleProtocol('protocol100014')"
+            >《权限使用规则》</a
+          >各条款，包括但不限于: <br />
           为了向您提供即时通讯、内容分享等服务，我们需要收集您的设备信息、操作日志等个人信息。你可以在“设置中查看、变更、删除个人信息并管理您的授权。”
           如果您不同意本协议的修改，请立即停止访问或使用本网站或取消已经获得的服务；如果您选择继续访问或使用本网站，则视为您已接受本协议。
         </div>
@@ -200,7 +202,6 @@ export default {
               ? res.data.sortMaterialList[0].materialList
               : []
           } else {
-            this.$xToast.error('服务异常，请刷新重试！')
           }
         })
     },

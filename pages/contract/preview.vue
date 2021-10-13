@@ -36,7 +36,7 @@
         <Button plain type="primary" size="large" @click="onLeftClick"
           >我再想想</Button
         >
-        <Button type="primary" size="large" @click="decryptionPhone()"
+        <Button type="primary" size="large" @click="handleSignContract()"
           >确认签署</Button
         >
         <sp-dialog v-model="timeshow" :show-confirm-button="false">
@@ -60,12 +60,15 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Pdf from '@fe/vue-pdf'
 import { Button, Dialog, Toast, Skeleton } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
 import contractApi from '@/api/contract'
 import orderApi from '@/api/order'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import { userinfoApi } from '@/api'
+
 export default {
   name: 'Preview',
   components: {
@@ -87,24 +90,27 @@ export default {
       loading: false,
       skeletonLoading: false,
       numPages: 1,
+      contractName: '', // 签署人姓名
+      contractTel: '', // 签署人电话
     }
+  },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userId,
+    }),
   },
   created() {
     this.contract = this.$route.query
-    const _this = this
-    // 直接加载会导致有时pdf还没有生成出来,这样无法显示导致报错,所以这里延时1s
-    setTimeout(() => {
-      if (
-        _this.contract.fromPage === 'orderList' ||
-        _this.contract.fromPage === 'orderDetail'
-      ) {
-        _this.skeletonLoading = true
-        _this.getorder()
-      } else {
-        _this.src = _this.contract.contractUrl
-        _this.pdfTask(_this.src)
-      }
-    }, 1000)
+    this.skeletonLoading = true
+
+    if (
+      this.contract.fromPage === 'orderList' ||
+      this.contract.fromPage === 'orderDetail'
+    ) {
+      this.getorder()
+    } else {
+      this.getContractApi()
+    }
   },
   mounted() {},
   methods: {
@@ -155,25 +161,40 @@ export default {
         this.$router.back(-1)
       }
     },
-    decryptionPhone() {
-      if (this.contract.contactWay.length > 11) {
+    async handleSignContract() {
+      try {
         this.loading = true
-        contractApi
-          .decryptionPhone(
-            { axios: this.axios },
-            {
-              phoneList: [this.contract.contactWay],
-            }
-          )
-          .then((res) => {
-            this.sign(res)
-          })
-      } else {
-        this.sign(this.contract.contactWay)
+        const params = {
+          id: this.userId,
+        }
+        const { code, data } = await this.$axios.get(userinfoApi.info, {
+          params,
+        })
+        if (code !== 200) {
+          throw new Error('获取用户信息失败')
+        }
+        this.contractName = data.fullName
+        this.contractTel = data.mainAccountFull
+        this.decryptionPhone()
+      } catch (e) {
+        this.$xToast.error('获取用户信息失败')
+      } finally {
+        this.loading = false
       }
     },
+    decryptionPhone() {
+      contractApi
+        .decryptionPhone(
+          { axios: this.axios },
+          {
+            phoneList: [this.contractTel],
+          }
+        )
+        .then((res) => {
+          this.sign(res)
+        })
+    },
     sign(phone) {
-      this.loading = true
       if (
         this.$cookies.get('realStatus', { path: '/' }) ===
           'AUTHENTICATION_SUCCESS' ||
@@ -186,13 +207,12 @@ export default {
               contractId: this.contract.contractId,
               phone,
               type: 'CUSTOMER_PERSON',
-              name: this.contract.signerName,
+              name: this.contractName,
               businessId: this.$store.state.user.userId,
             }
           )
           .then((res) => {
             if (res) {
-              this.loading = false
               this.$router.replace({
                 path: '/contract/iframe',
                 query: {
@@ -203,7 +223,6 @@ export default {
             }
           })
           .catch((err) => {
-            this.loading = false
             Toast({
               message: err.message,
               overlay: true,
@@ -212,7 +231,6 @@ export default {
             })
           })
       } else {
-        this.loading = false
         Dialog.confirm({
           title: '温馨提示',
           message: '检测到您未实名认证，请在签合同前 先进行实名认证',
@@ -225,8 +243,8 @@ export default {
               query: {
                 contractId: this.contract.contractId,
                 contractNo: this.contract.contractNo,
-                signerName: this.contract.userName,
-                contactWay: this.contract.phone,
+                signerName: this.contractName,
+                contactWay: phone,
               },
             })
           })
@@ -249,7 +267,31 @@ export default {
         }
       }, 1000)
     },
-    dialogShow() {},
+    getContractApi() {
+      contractApi
+        .getContractDetail(
+          { axios: this.axios },
+          {
+            contractId: this.contract.contractId,
+            contractNo: this.contract.contractNo,
+          }
+        )
+        .then((res) => {
+          if (!res.filePath) {
+            throw new Error('查阅合同为空')
+          }
+          this.src = res.filePath
+          this.pdfTask()
+        })
+        .catch((e) => {
+          this.$xToast.error(e.message, 2000, false, () => {
+            this.$back()
+          })
+        })
+        .finally(() => {
+          this.skeletonLoading = false
+        })
+    },
   },
 }
 </script>
@@ -264,8 +306,6 @@ export default {
     padding: 40px 40px 0 40px;
     > .box {
       width: 100%;
-      height: calc(100% - 160px);
-      overflow-y: auto;
       p {
         height: 100%;
         background: #e5e5e5;

@@ -25,7 +25,7 @@
         :data-commodity_number="item.goodsNo || ''"
         :data-commodity_name="item.name || ''"
         data-commodity_type="服务商品"
-        @click="godeatil(item)"
+        @click="toGoodsDeatil(item)"
       >
         <div class="left">
           <img :src="item.img" alt="" />
@@ -34,8 +34,7 @@
           <h1>
             {{ item.name }}
           </h1>
-          <div v-if="item.tag && item.tag.length > 0" class="tag">
-            <div v-if="item.salesGoodsSubVos.length > 1">套餐</div>
+          <div class="tag">
             <p
               v-for="(tagitem, tagindex) in item.tag"
               v-show="tagitem.categoryCode === 'DSJTC20210514000042'"
@@ -47,7 +46,20 @@
           <p v-if="item.attr" class="describe">
             {{ item.attr }}
           </p>
-          <p class="price">
+          <p v-if="item.priceType === 'PRO_FLOATING_PRICE'" class="price">
+            {{ getServerPrice(item.salesPrice || item.price) }}%
+            <span>服务费</span>
+          </p>
+          <p
+            v-else-if="
+              item.refConfig &&
+              item.refConfig.taskType === 'PRO_WANT_ORDER_DIGEST'
+            "
+            class="price"
+          >
+            面议
+          </p>
+          <p v-else class="price">
             {{ item.price === '0.00' ? '面议' : item.price
             }}<span v-if="item.price !== '0.00'">元</span>
           </p>
@@ -65,7 +77,6 @@
 <script>
 import { PullRefresh, List } from '@chipspc/vant-dgg'
 import { goods } from '@/api/index'
-
 export default {
   name: 'Newlist',
   components: {
@@ -95,6 +106,21 @@ export default {
   //   this.getlist()
   // },
   methods: {
+    getServerPrice(price) {
+      let newPrice = ''
+      if (typeof price !== 'string') price = String(price)
+      if (price.match('.')) {
+        const arr = price.split('.')
+        if (Number(arr[1]) > 0) {
+          newPrice = price
+        } else {
+          newPrice = arr[0]
+        }
+      } else {
+        newPrice = price
+      }
+      return newPrice
+    },
     godeatil(item) {
       this.$router.push({
         path: '/detail',
@@ -187,11 +213,11 @@ export default {
           font-weight: 400;
           background: #f0f2f5;
           border-radius: 4px;
-          margin-left: 20px;
+          margin-right: 20px;
           color: #5c7499;
         }
-        > p:nth-child(1) {
-          margin-left: 0px;
+        > p:last-child {
+          margin-right: 0px;
         }
         > .act {
           background: #f1524e;

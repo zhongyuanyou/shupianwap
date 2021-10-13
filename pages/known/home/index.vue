@@ -1,6 +1,7 @@
 <template>
   <section>
     <ShareModal v-if="isShare" />
+    <LoadingCenter v-show="loadingData" />
     <div class="home_container">
       <div
         class="header"
@@ -103,6 +104,7 @@
             :finished="finished"
             finished-text="没有更多了"
             class="list_container"
+            :immediate-check="false"
             @load="getList"
           >
             <div v-for="(item, index) in list" :key="index">
@@ -119,7 +121,9 @@
                       :src="item.image.split(',')[0]"
                       alt=""
                     />
-                    <div class="time">{{ totime(item.duration) }}</div>
+                    <div v-if="!isNaN(item.duration)" class="time">
+                      {{ totime(item.duration) }}
+                    </div>
                   </div>
                   <div class="rt_content">
                     <div class="title">{{ item.videoName }}</div>
@@ -142,6 +146,7 @@
             finished-text="没有更多了"
             :error.sync="error"
             error-text="请求失败，点击重新加载"
+            :immediate-check="false"
             @load="getList"
           >
             <div v-if="list.length > 0" class="video-list">
@@ -202,6 +207,7 @@ import { domainUrl } from '~/config/index'
 import DownLoadArea from '@/components/common/downLoadArea'
 import ShareModal from '@/components/common/ShareModal'
 import { numChangeW } from '@/utils/common'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
 export default {
   layout: 'keepAlive',
@@ -218,6 +224,7 @@ export default {
     Item,
     DownLoadArea,
     ShareModal,
+    LoadingCenter,
   },
   async asyncData({ $axios, query, store, redirect }) {
     if (!query.homeUserId && !store.state.user.userId) {
@@ -279,7 +286,7 @@ export default {
           index: 2,
         },
         {
-          name: '视频',
+          name: '短视频',
           index: 5,
         },
         {
@@ -298,6 +305,7 @@ export default {
       showPop: false,
       sourceType: 1,
       error: false,
+      loadingData: false, // 加载项
     }
   },
   computed: {
@@ -318,6 +326,7 @@ export default {
   mounted() {
     this.isShare = this.$route.query.isShare
     this.getAdList()
+    this.getList()
     window.addEventListener('scroll', this.getScroll)
     // const userType = this.type || utils.getUserType(this.type)
     // 到时候这里改成5
@@ -500,6 +509,10 @@ export default {
       }
     },
     tabChange() {
+      // 未加载完成数据直接不响应
+      if (this.loadingData) {
+        return
+      }
       this.page = 1
       this.list = []
       this.finished = false
@@ -554,33 +567,44 @@ export default {
       console.log('点击了发布')
     },
     async getList() {
-      // if (this.active === 0) {
-      const { code, message, data } = await this.$axios.post(
-        knownApi.home.list,
-        {
+      this.loadingData = true
+      try {
+        // 类型：1问题  2文章 3回答
+        const params = {
           types: [this.active],
           userIds: this.homeUserId || this.userInfo.userId,
           currentUserId: this.userInfo.userId,
           page: this.page,
           limit: this.limit,
         }
-      )
-      if (code === 200) {
-        this.list = this.list.concat(data.rows)
-        if (this.active === 6) {
-          this.list.forEach((item) => {
-            item.custTotalCount = numChangeW(item.totalViewCount)
-          })
+        if (this.active === 0) {
+          params.types = [1, 2, 3]
         }
-        this.loading = false
-        this.page++
-        if (this.page > data.totalPage) {
+        const { code, message, data } = await this.$axios.post(
+          knownApi.home.list,
+          params
+        )
+        if (code === 200) {
+          this.list = this.list.concat(data.rows)
+          if (this.active === 6) {
+            this.list.forEach((item) => {
+              item.custTotalCount = numChangeW(item.totalViewCount)
+            })
+          }
+          this.loading = false
+          this.page++
+          if (this.page > data.totalPage) {
+            this.finished = true
+          }
+        } else {
+          console.log(message)
+          this.loading = false
           this.finished = true
         }
-      } else {
-        console.log(message)
-        this.loading = false
-        this.finished = true
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loadingData = false
       }
     },
     async getAdList() {
@@ -867,17 +891,14 @@ export default {
           }
           .rt_content {
             width: 402px;
+            height: 135px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             .title {
               color: #222222;
               font: bold 30px/42px PingFangSC-Medium, PingFang SC;
-              margin-bottom: 15px;
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 2;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              word-break: break-all;
-              height: 84px;
+              .textOverflow(2);
             }
             .name_time {
               display: flex;
@@ -886,6 +907,8 @@ export default {
               .name {
                 color: #555555;
                 font: bold 26px/36px PingFangSC-Medium, PingFang SC;
+                max-width: 150px;
+                .mixin-text-oneoverflow();
               }
               .time {
                 color: #999999;

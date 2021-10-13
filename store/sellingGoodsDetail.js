@@ -31,16 +31,24 @@ export const state = () => ({
 })
 export const mutations = {
   SET_SELLING_GOODS_DETAIL(state, object) {
+    console.log('设置详情2',object.id)
     state.sellingGoodsData = object
   },
   // 更新优惠券状态
-  SET_SELLING_COUPONLIST(state, cid) {
+  SET_SELLING_COUPONLIST(state, info) {
+    console.log(info.cid, info.couponStatus)
     const newCouponList = state.sellingGoodsData.couponList.map((item) => {
-      if (item.id === cid) {
-        item.couponStatus = 2
+      if (item.id === info.cid) {
+        item.couponStatus = info.couponStatus || 2
       }
       return item
     })
     state.sellingGoodsData.couponList = newCouponList
+  },
+}
+export const actions = {
+  setServiceGoodsDetail({ commit }, data) {
+    console.log('设置详情')
+    commit('SET_SELLING_GOODS_DETAIL', data)
   },
 }

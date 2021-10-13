@@ -316,7 +316,7 @@ export default {
               this.finished = true
             }
           } else {
-            throw new Error('服务异常，请刷新重试！')
+            throw new Error(res.message)
           }
         })
         .catch((error) => {
@@ -471,18 +471,19 @@ export default {
           },
         })
         .then((res) => {
+          // 这个接口被uc浏览器拦截了，uc会返回空数据
           if (res.code === 200) {
             if (res.data.sortMaterialList.length) {
               this.productAdvertData =
                 res.data.sortMaterialList[0].materialList.slice(0, 3)
             }
           } else {
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
+            // Toast.fail({
+            //   duration: 2000,
+            //   message: '服务异常，请刷新重试！',
+            //   forbidClick: true,
+            //   className: 'my-toast-style',
+            // })
           }
         })
         .catch((err) => {

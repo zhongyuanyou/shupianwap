@@ -1,5 +1,15 @@
 <template>
-  <div class="planner-search-item" @click.stop="handleClick('detail')">
+  <div
+    v-md:p_plannerBoothClick
+    data-even_name="p_plannerBoothClick"
+    :data-track_code="isInApp ? 'SPP001112' : 'SPW000112'"
+    :data-recommend_number="itemData.dggPlannerRecomLog || ''"
+    :data-planner_number="itemData.userCenterNo"
+    :data-planner_name="itemData.userName"
+    :data-crisps_fraction="itemData.point"
+    class="planner-search-item"
+    @click.stop="handleClick('detail')"
+  >
     <div class="left">
       <div class="planner-search-item__avatar">
         <sp-image
@@ -8,10 +18,7 @@
           fit="cover"
           class="planner-search-item__avatar-image"
           lazy-load
-          :src="
-            itemData.img ||
-            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
-          "
+          :src="$resizeImg(320, 320, itemData.img || PlannerHeadList)"
         />
       </div>
       <div class="planner-search-item__detail">
@@ -68,6 +75,7 @@
 <script>
 import { Button, Image, Tag } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
+import { PlannerHeadList } from '~/config/constant'
 import { planner } from '@/api'
 import imHandle from '@/mixins/imHandle'
 import { parseTel } from '~/utils/common'
@@ -88,7 +96,9 @@ export default {
     },
   },
   data() {
-    return {}
+    return {
+      PlannerHeadList,
+    }
   },
   computed: {
     ...mapState({
@@ -108,14 +118,26 @@ export default {
   //     await this.POSITION_CITY({ type: 'init' })
   //   }
   // },
-
   methods: {
     async handleClick(type) {
       let data = {}
+      // 添加埋点
+      if (type === 'IM' || type === 'tel') {
+        window.spptMd.spptTrackRow('p_IMClick', {
+          track_code: this.isInApp ? 'SPP001113' : 'SPW000113',
+          im_type: '售前',
+          planner_number: this.itemData.userCenterNo,
+          planner_name: this.itemData.userName,
+          crisps_fraction: this.itemData.point,
+          recommend_number: this.itemData.dggPlannerRecomLog || '',
+        })
+      }
       switch (type) {
         case 'IM':
           data = {
             mchUserId: this.itemData.mchUserId,
+            userCenterId: this.itemData.userCenterId,
+            mchDetailId: this.itemData.mchDetailId,
             userName: this.itemData.userName,
             type: this.itemData.type,
           }
@@ -132,6 +154,13 @@ export default {
       }
     },
     async getTel() {
+      this.$xToast.show({
+        message: '为了持续为您提供服务，规划师可能会主动联系您',
+        duration: 2000,
+        forbidClick: true,
+      })
+      await planner.awaitTip()
+
       if (this.isInApp) {
         this.$appFn.dggBindHiddenPhone(
           { plannerId: this.itemData.mchUserId },
@@ -148,25 +177,31 @@ export default {
           }
         )
       } else {
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          const params = {
-            areaCode: this.city.code,
-            areaName: this.city.name,
-            customerUserId: this.$store.state.user.userId,
-            plannerId: this.itemData.mchUserId,
-            customerPhone: this.itemData.phone,
-            requireCode: '',
-            requireName: '',
-          }
-          try {
-            const data = await planner.newtel(params)
-            return data
-          } catch (error) {
-            console.error('getTel:', error)
-            return Promise.reject(error)
-          }
+        // const isLogin = await this.judgeLoginMixin()
+        // if (isLogin) {
+        console.log(this.$store.state.user)
+        const params = {
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          customerId: this.$store.state.user.customerID || '',
+          plannerId: this.itemData.mchUserId,
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }) ||
+            '',
+          requireCode: '',
+          requireName: '',
         }
+        try {
+          const data = await planner.newtel(params)
+          console.log(data)
+          return data
+        } catch (error) {
+          console.error('getTel:', error)
+          return Promise.reject(error)
+        }
+        // }
       }
     },
   },

@@ -87,7 +87,7 @@
     />
     <!--E 第五板块 推荐规划师-->
     <ServiceDetail
-      comp-type="tc"
+      :title="serviceDetail"
       :detail-data="proDetail.goodsOperating.clientDetails[0]"
     />
     <!--S 第六板块 商品动态-->
@@ -97,7 +97,7 @@
     <Question />
     <!--E 第七板块 常见问题-->
     <!-- <CaseNew /> -->
-    <CaseNew />
+    <CaseNew :planner-detail="tcPlannerBooth" />
     <!--S 第八板块 成功案例-->
     <!-- <Case /> -->
     <!--E 第八板块 成功案例-->
@@ -154,7 +154,7 @@ import Basic from '~/components/detail/Basic'
 import Report from '~/components/detail/Report'
 import Commitment from '~/components/detail/Commitment'
 import TcPlanners from '~/components/detail/TcPlanners'
-import ServiceDetail from '~/components/detail/ServiceDetail'
+import ServiceDetail from '~/components/detail/common/ServiceDetail'
 import Dynamic from '~/components/detail/Dynamic'
 import Question from '~/components/detail/Question'
 // import Case from '~/components/detail/Case'
@@ -216,6 +216,7 @@ export default {
   },
   data() {
     return {
+      serviceDetail: '产品详情',
       opacity: 0,
       text1: '在线咨询',
       text2: '电话咨询',
@@ -507,6 +508,18 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             this.planners = res.data.records
+            // 进行埋点操作
+            this.planners.forEach((info) => {
+              if (info) {
+                window.spptMd.spptTrackRow('p_plannerBoothVisit', {
+                  track_code: 'SPW000160',
+                  planner_number: info.userCenterNo,
+                  planner_name: info.userName,
+                  crisps_fraction: info.point,
+                  recommend_number: info.dggPlannerRecomLog || '',
+                })
+              }
+            })
           }
         })
         .catch((err) => {
@@ -540,6 +553,14 @@ export default {
       })
       if (plannerRes.code === 200) {
         this.tcPlannerBooth = plannerRes.data.records[0]
+        // 处理埋点
+        window.spptMd.spptTrackRow('p_plannerBoothVisit', {
+          track_code: 'SPW000161',
+          planner_number: this.tcPlannerBooth.userCenterNo,
+          planner_name: this.tcPlannerBooth.userName,
+          crisps_fraction: this.tcPlannerBooth.point,
+          recommend_number: this.tcPlannerBooth.dggPlannerRecomLog || '',
+        })
       }
     },
     fieldListFun() {

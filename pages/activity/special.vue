@@ -1,91 +1,41 @@
-<template>
-  <div class="container">
-    <!-- <div
-      v-if="isInApp"
-      class="app_header_fill"
-      style="height: 0.6rem; background-color: #1e1e1e"
-    ></div> -->
 
+<template>
+  <!-- 99特卖 -->
+  <div class="container">
     <HeadWrapper
       :fill="false"
-      :line="ClassState == 0 ? true : false"
-      :background-color="`rgba(255,255,255,${headBkOpacity})`"
+      :line="false"
+      :background-color="`rgba(19,29,61,${headBkOpacity})`"
       @onHeightChange="onHeightChange"
     >
-      <Head
+      <Head2
         :class-state="ClassState"
         code="protocol100046"
         title="99特卖"
         :back="uPGoBack"
         :search="clickInputHandle"
-      ></Head>
-
-      <!-- <div class="search_container">
-        <div class="search" :style="{ backgroundImage: `url(${imageHead})` }">
-
-          <div class="left-back" @click="uPGoBack">
-            <my-icon
-              name="nav_ic_back"
-              class="back_icon"
-              size="0.4rem"
-              color="#FFFFFF"
-            ></my-icon>
-          </div>
-          <div class="search-box"></div>
-          <div class="right">
-            <my-icon
-              class="search-icon"
-              name="sear_ic_sear"
-              size="0.4rem"
-              color="#FFFFFF"
-              @click.native="clickInputHandle"
-            ></my-icon>
-            <span
-              class="rule"
-              @click="
-                $router.push('/login/protocol?categoryCode=protocol100046')
-              "
-              >规则</span
-            >
-          </div>
-        </div>
-      </div> -->
+        :click-input-handle="clickInputHandle"
+        :has-city="hasCity && isService"
+        :activity-type-options="activityTypeOptions"
+        :city-name="cityName"
+      ></Head2>
     </HeadWrapper>
 
     <div ref="fill_container" class="img_container">
       <img width="100%" :src="imageHead" alt="" />
-      <div
-        class="rule"
-        :class="{ rule_in_app: isInApp }"
-        @click="$router.push('/login/protocol?categoryCode=' + ruleCode)"
-      >
-        规则
-      </div>
-      <div v-if="isTimerShow" class="count-down">
-        <div class="down-time">
-          <div>距本场结束还剩</div>
-          <div class="time">{{ time.day }}</div>
-          <div>天</div>
-          <div class="time">{{ time.hour }}</div>
-          <div>:</div>
-          <div class="time">{{ time.min }}</div>
-          <div>:</div>
-          <div class="time">{{ time.sec }}</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="content_container">
       <Recommend
-        title="爆款单品"
+        class="recommend"
         :parse-price="parsePrice"
-        :list="recommendProductList"
+        :list="RecommendList"
         @jump="
           (item) => {
             jumpProductDetail(item)
           }
         "
       ></Recommend>
+    </div>
+
+    <div class="content_container">
       <client-only>
         <Classification
           :has-city="hasCity && isService"
@@ -112,16 +62,34 @@
               "
               @load="onLoad"
             >
-              <div v-if="activityProductList && activityProductList.length > 0">
-                <Card
-                  v-for="(item, index) in activityProductList"
-                  :key="index"
-                  :end-time="endTime"
-                  :item="item"
-                  :parse-price="parsePrice"
-                  :last="activityProductList.length - 1 == index"
-                  @click.native="jumpProductDetail(item)"
-                ></Card>
+              <div
+                v-if="activityProductList && activityProductList.length > 0"
+                class="card-container"
+              >
+                <div class="card-colunm-1">
+                  <Card
+                    v-for="(item, index) in activityProductList_1"
+                    :key="index"
+                    class="card"
+                    :item="item"
+                    :parse-price="parsePrice"
+                    :first="index == 0"
+                    :last="activityProductList_1.length - 1 == index"
+                    @click.native="jumpProductDetail(item)"
+                  ></Card>
+                </div>
+                <div class="card-colunm-2">
+                  <Card
+                    v-for="(item, index) in activityProductList_2"
+                    :key="index"
+                    class="card"
+                    :item="item"
+                    :parse-price="parsePrice"
+                    :first="index == 0"
+                    :last="activityProductList_2.length - 1 == index"
+                    @click.native="jumpProductDetail(item)"
+                  ></Card>
+                </div>
               </div>
               <NoData :is-no-data="isNoData"></NoData>
             </sp-list>
@@ -137,11 +105,13 @@ import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
 
 import activityMixin from '@/mixins/activityMixin.js'
 import HeadWrapper from '@/components/common/head/HeadWrapper.vue'
-import Recommend from '~/components/activity/Recommend.vue'
-import Card from '~/components/activity/Card.vue'
-import Head from '~/components/activity/Head.vue'
+import Recommend from '~/components/activity/special/Recommend.vue'
+import Card from '~/components/activity/special/Card.vue'
+import Head2 from '~/components/activity/special/Head2.vue'
+import Classification from '@/components/activity/special/Classification.vue'
+
 import NoData from '@/components/activity/NoData.vue'
-import Classification from '@/components/activity/Classification.vue'
+
 export default {
   name: 'Special',
   layout: 'default',
@@ -155,7 +125,7 @@ export default {
     [PullRefresh.name]: PullRefresh,
 
     Recommend,
-    Head,
+    Head2,
     Card,
     NoData,
     Classification,
@@ -166,13 +136,14 @@ export default {
       specType: 'HDZT_ZTTYPE_TM',
 
       hasCity: true,
-      imageHead: '',
-      imageHeadDefault: this.$ossImgSetV2('5yxoyjyfaxk0000.jpg'),
+      imageHead: '', // this.$ossImgSetV2('720ewx0kml00000.png'),
+
+      imageHeadDefault: this.$ossImgSetV2('720ewx0kml00000.png'),
       headerHeight: 0,
 
       headBkOpacity: 0,
       ClassState: 1,
-      advertCode: 'ad100074',
+      advertCode: 'ad100115',
       ruleCode: 'protocol100046',
     }
   },
@@ -183,6 +154,22 @@ export default {
     }),
     userInfo() {
       return this.$store.state.user
+    },
+    RecommendList() {
+      // if (this.activityProductList.length >= 3) {
+      return this.activityProductList.slice(0, 3)
+      // }
+      // return []
+    },
+    activityProductList_1() {
+      return this.activityProductList.filter((item, index) => {
+        return index % 2 === 0
+      })
+    },
+    activityProductList_2() {
+      return this.activityProductList.filter((item, index) => {
+        return index % 2 === 1
+      })
     },
   },
 
@@ -198,6 +185,18 @@ export default {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
+    setTopColor() {
+      if (this.isInApp) {
+        this.$appFn.dggChangeTopColor(
+          {
+            flags: 'light',
+          },
+          (res) => {
+            console.log('DGGSetColorRes', res)
+          }
+        )
+      }
+    },
     onHeightChange(height) {
       this.headerHeight = height
     },
@@ -237,53 +236,13 @@ export default {
     position: relative;
     min-height: 300px;
     background: #f8f8f8;
-    .count-down {
+    .recommend {
       position: absolute;
-      top: 74.8%;
-      transform: translate(0, -50%);
-      width: 100%;
-
-      font-size: 24px;
-      color: #ffedcb;
-      letter-spacing: 0;
-      line-height: 24px;
-
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-
-      .down-time {
-        font-size: 24px;
-        font-family: PingFangSC-Medium, PingFang SC;
-
-        color: #ffedcb;
-        line-height: 24px;
-
-        letter-spacing: 2px;
-        display: flex;
-        align-items: center;
-
-        .time {
-          // min-width: 36px;
-
-          padding: 0 5px;
-          min-width: 36px;
-          height: 36px;
-          line-height: 36px;
-          background-image: linear-gradient(139deg, #7e9fff 0%, #4974f5 100%);
-          border-radius: 4px;
-
-          font-family: Bebas;
-          font-size: 24px;
-          color: #fff;
-          text-align: center;
-          margin: 0 8px;
-          letter-spacing: 0;
-        }
-      }
+      bottom: 0;
+      left: 20px;
+      right: 20px;
+      // margin: 2.6% 2.6% 0;
     }
-
     .rule {
       // header的z-index是999
       z-index: 1000;
@@ -312,7 +271,7 @@ export default {
 
   .content_container {
     position: relative;
-    margin-top: -24px;
+    // margin-top: -24px;
     background: #f8f8f8;
     border-radius: 24px;
     overflow: hidden;
@@ -328,7 +287,25 @@ export default {
       .body-content {
         min-height: 80vh;
       }
+
+      .card-container {
+        overflow: hidden;
+        display: flex;
+        .card-colunm-1 {
+          flex: 1;
+          padding-right: 10px;
+        }
+        .card-colunm-2 {
+          flex: 1;
+          padding-left: 10px;
+        }
+      }
     }
+  }
+  ::v-deep .sp-list__finished-text {
+    padding: 24px 0px;
+    line-height: 0.25rem;
+    text-align: center;
   }
 }
 </style>

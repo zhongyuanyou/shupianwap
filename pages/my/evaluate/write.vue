@@ -1,6 +1,6 @@
 <template>
   <div class="m-evaluate write">
-    <Header title="评价">
+    <Header v-if="!isHideNav || isHideNav !== '1'" title="评价">
       <template #left>
         <div @click="back">
           <my-icon
@@ -66,6 +66,11 @@ export default {
       },
       orderDesc: '', // 评价属性
     }
+  },
+  computed: {
+    isHideNav() {
+      return this.$route.query.isHideNav
+    },
   },
   mounted() {
     const routeInfo = this.$route.query

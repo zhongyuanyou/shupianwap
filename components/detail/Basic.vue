@@ -2,7 +2,7 @@
   <div class="basic">
     <p class="basic_title">基本信息</p>
     <slot name="basic"></slot>
-    <div class="basic_offer">
+    <div v-if="false" class="basic_offer">
       <div class="user">
         <my-icon
           name="trading_ic_price"

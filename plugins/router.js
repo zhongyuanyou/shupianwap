@@ -48,6 +48,10 @@ const infoList = [
   'NeedCard',
   'my-coupon',
   'myDemandCard',
+  'order',
+  'order-confirmUnSubmitOrder',
+  'order-detail',
+  'detail-server-financing-creditEvaluation',
 ]
 // const getInfo = function () {
 //   return new Promise(function (resolve, reject) {
@@ -66,7 +70,46 @@ export default ({ app, store }) => {
     })
   })
   app.router.beforeEach((to, from, next) => {
-    console.log('to.name', to.name)
+    const query = to.query
+    // APP里导航栏参数处理
+    if (
+      from.query &&
+      from.query.isHideH5Nav &&
+      !query.isHideNav &&
+      from.query.isHideH5Nav !== '0'
+    ) {
+      delete from.query.isHideH5Nav
+      query.isHideNav = '1'
+      next({
+        path: to.path,
+        query,
+      })
+    }
+    if (to.name === 'detail') {
+      // 跳转至服务商品详情页路由重定向处理
+      if (to.query && to.query.classCodeOne) {
+        const code1 = to.query.classCodeOne
+        const urlObj = {
+          FL20210425164438: '/detail/server/zscq', // 商标
+          FL20210425164496: '/detail/server/zscq', // 专利
+          FL20210425164558: '/detail/server/financing', // 融资
+          FL20210604312000: '/detail/server/law', // 法律
+          FL20210428166370: '/detail/server/law', // 法律
+          FL20210526292003: '/detail/server/internet', // IT 互联网
+          FL20210425164016: '/detail/server/internet', // IT 互联网
+        }
+        const detailUrl = urlObj[code1] || '/detail'
+        delete to.query.classCodeOne
+        const queryData = Object.assign(to.query, {
+          productId: to.query.productId,
+        })
+        next({
+          path: detailUrl,
+          query: queryData,
+        })
+      }
+    }
+
     if (process.client) {
       const loginRoutePath = '/login' // 登录路由
       const defaultRoutePath = '/' // 首页路由

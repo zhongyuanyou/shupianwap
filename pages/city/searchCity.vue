@@ -110,7 +110,7 @@ export default {
       this.$cookies.set('cityHistory', historyList, {
         path: '/',
         maxAge: 60 * 60 * 24 * 99999, // 过期时间
-        domain: 'shupian.cn',
+        // domain: 'shupian.cn',
       })
       this.SET_CITY({
         code: data.code,

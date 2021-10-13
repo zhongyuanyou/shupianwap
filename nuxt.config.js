@@ -1,6 +1,7 @@
 'use strict'
 
 const path = require('path')
+const { resolve } = require('path')
 
 const BASE = require('./config/index.js')
 const NODE_ENV = process.env.NODE_ENV
@@ -58,8 +59,12 @@ module.exports = {
         name: '360-fullscreen',
         content: 'true',
       },
+      {
+        name: 'DGG_ENV',
+        content: process.env.DGG_SERVER_ENV,
+      },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon_new.ico' }],
     script: [
       {
         src: 'https://webapi.amap.com/maps?v=1.4.4&key=5111f49d979a509f1e96420a1b456ff4',
@@ -107,8 +112,12 @@ module.exports = {
     ],
   },
   loading: { color: '#4974F5' },
+  alias: {
+    '@css': resolve(__dirname, './assets/css'),
+  },
   css: [
-    'assets/css/reset.css',
+    'assets/css/setup/reset.css',
+    'assets/css/setup/global.less',
     'assets/icons/iconfont.css',
     'assets/iconsNew/iconfont.css',
     'assets/icons630/iconfont.css',
@@ -121,7 +130,7 @@ module.exports = {
     'video.js/dist/video-js.min.css',
   ],
   styleResources: {
-    less: 'assets/styles/variables.less',
+    less: ['./assets/css/abstracts/*.less', './assets/css/vars/*.less'],
   },
   plugins: [
     { src: '@/plugins/axios', ssr: true },
@@ -136,18 +145,19 @@ module.exports = {
     { src: '@/plugins/vue-quill-editor', ssr: false },
     { src: '@/plugins/vue-prototype', ssr: false },
     { src: '@/plugins/clear-emoij', ssr: false },
+    { src: '@/plugins/echarts', ssr: false },
     { src: '@/plugins/sp-api', ssr: false },
     { src: '@/plugins/echarts', ssr: false },
+    { src: '@/plugins/to-goods-detail', ssr: false },
   ],
   router: {
     middleware: 'appDock',
   },
-  buildModules: ['@nuxtjs/eslint-module'],
+  buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/style-resources'], // 修改 style-resources 在运行时处理
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
     // '@nuxtjs/sentry',
-    '@nuxtjs/style-resources',
     ['cookie-universal-nuxt', { parseJSON: true }],
   ],
   // sentry: {

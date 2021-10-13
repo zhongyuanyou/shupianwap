@@ -10,11 +10,19 @@
           }}</span>
           <span v-if="item.couponType === 2" class="coupon_price_unit">折</span>
 
-          <span v-else-if="item.couponType === 1">{{ item.reducePrice }}</span>
+          <span v-else-if="item.couponType === 1">{{
+            formatPrice(item.reducePrice)
+          }}</span>
+
+          <span
+            v-if="item.couponType === 1 && item.reducePrice >= 10000"
+            class="coupon_price_unit"
+            >万</span
+          >
         </div>
         <div v-if="item.fullPrice == 0" class="can_use">无门槛</div>
         <div v-else-if="item.fullPrice" class="can_use">
-          满{{ item.fullPrice }}元可用
+          满{{ formatPrice(item.fullPrice, true) }}可用
         </div>
       </div>
       <div class="item-rt">
@@ -29,8 +37,9 @@
             {{ item.couponName }}
           </span>
         </div>
-        <div ref="textpro" class="content">
-          {{ getuseTypeName(item.useType) }}
+        <div class="content">
+          {{ getuseTypeName(item.useType, item) }}
+
           <!-- item.useType === 1
               ? '全品类通用'
               : item.useType === 2
@@ -76,6 +85,20 @@ export default {
   },
 
   methods: {
+    // 将价格转为万元
+    formatPrice(price, haveUnit) {
+      let p = parseFloat(price)
+      let unit = '元'
+      if (p >= 10000) {
+        unit = '万'
+        p = parseFloat((p / 10000).toFixed(2))
+      }
+
+      if (haveUnit) {
+        return p + unit
+      }
+      return p
+    },
     // 获取状态对应的类名
     getStatusClassName() {
       if (this.couponType === 2) {
@@ -88,7 +111,7 @@ export default {
         }
       }
     },
-    getuseTypeName(useType) {
+    getuseTypeName(useType, item) {
       let useTypeName = ''
       switch (useType) {
         case 1:
@@ -98,7 +121,11 @@ export default {
           useTypeName = '仅限指定品类使用'
           break
         case 3:
-          useTypeName = '仅限指定商品使用'
+          // useTypeName = '仅限指定商品使用'
+
+          useTypeName = item.productName
+            ? item.productName + '-可用'
+            : '仅限指定商品使用'
       }
       return useTypeName
     },
@@ -136,7 +163,7 @@ export default {
   background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/5cx1r4tc3js0000.png');
   // background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/15vv9a0bvb1c000.png');
   .coupon_price {
-    margin-left: 16px !important;
+    // margin-left: 16px !important;
   }
 }
 // 未使用的背景
@@ -145,6 +172,13 @@ export default {
 }
 .not_coupon_data {
   background: #f5f5f5 !important;
+}
+.coupon_item.haveUse {
+  height: 222px;
+  .item-lf {
+    margin-left: 10px;
+    height: 222px;
+  }
 }
 
 .coupon_item {
@@ -158,8 +192,9 @@ export default {
   position: relative;
 
   .item-lf {
-    width: 201px;
+    width: 195px;
     height: 212px;
+    margin-left: 0px;
     display: flex;
     // align-items: center;
     justify-content: center;
@@ -168,14 +203,14 @@ export default {
     .coupon_price {
       //   height: 67px;
       white-space: nowrap;
-      font-size: 72px;
+      font-size: 42px;
       font-family: Bebas;
       font-weight: 400;
       color: #ffffff;
       text-align: center;
       // padding-top: 27px;
       .coupon_price_unit {
-        font-size: 36px;
+        font-size: 26px;
         margin-left: -6px;
       }
     }
@@ -193,26 +228,41 @@ export default {
     height: auto;
     flex: 1;
 
+    .sign {
+      position: absolute;
+      width: 90px;
+      height: 84px;
+      // background-image: url('https://cdn.shupian.cn/sp-pt/wap/dcdo6nc5o6g0000.png');
+      background-size: 100% 100%;
+      right: 10px;
+      top: 8px;
+    }
     .title {
+      position: relative;
+      z-index: 1;
       font-size: 32px;
+      line-height: 44px;
       font-family: PingFang SC;
       font-weight: bold;
       color: #222222;
       // line-height: 32px;
-      margin: 34px 24px 12px 0;
+      margin: 30px 24px 6px 0;
       word-break: break-all;
       display: -webkit-box;
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
       word-break: break-all;
       overflow: hidden;
+
       .coupon_name {
         margin-left: -12px;
+        vertical-align: middle;
       }
       .coupon_type_name {
         background-image: linear-gradient(90deg, #fa6d5a 0%, #fa5741 100%);
         border-radius: 4px;
-        padding: 1px 6px;
+        padding: 2px 8px;
+        line-height: normal;
         // margin-right: 5px;
 
         font-family: PingFangSC-Medium;
@@ -242,19 +292,12 @@ export default {
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       word-break: break-all;
+
+      min-height: 64px;
+      margin-bottom: 8px;
     }
 
-    .sign {
-      position: absolute;
-      width: 90px;
-      height: 84px;
-      // background-image: url('https://cdn.shupian.cn/sp-pt/wap/dcdo6nc5o6g0000.png');
-      background-size: 100% 100%;
-      right: 0px;
-      top: 0px;
-    }
     .date-container {
-      margin-top: 36px;
       display: flex;
       font-size: 0;
       .date {

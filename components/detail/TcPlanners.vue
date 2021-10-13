@@ -9,25 +9,19 @@
       :style="{ marginTop: index === 0 ? '0.42rem' : '0.66rem' }"
     >
       <div class="planners_item_lf">
-        <a
-          href="javascript:void(0);"
-          @click="plannerInfoUrlJump(item.mchUserId)"
-        >
+        <a href="javascript:void(0);" @click="plannerInfoUrlJump(item)">
           <sp-image
             width="0.8rem"
             height="0.8rem"
             round
             fit="cover"
             lazy-load
-            :src="`${item.portrait}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`"
+            :src="$resizeImg(80, 80, item.portrait || PlannerHeadList)"
           />
         </a>
         <div class="info">
           <div class="info_tp">
-            <a
-              href="javascript:void(0);"
-              @click="plannerInfoUrlJump(item.mchUserId)"
-            >
+            <a href="javascript:void(0);" @click="plannerInfoUrlJump(item)">
               <p class="name">{{ item.userName }}</p>
             </a>
             <i v-if="item.postName ? true : false" class="gold_icon">
@@ -42,8 +36,16 @@
       </div>
       <div class="planners_item_rt">
         <sp-button
+          v-md:p_IMClick
+          data-even_name="p_IMClick"
           round
           class="contact-btn"
+          data-im_type="售前"
+          :data-recommend_number="item.dggPlannerRecomLog || ''"
+          :data-planner_number="item.userCenterNo"
+          :data-planner_name="item.userName"
+          :data-crisps_fraction="item.point"
+          data-track_code="SPW000157"
           @click="sendTemplateMsgWithImg(item.mchUserId, item.type)"
           ><my-icon
             class=""
@@ -51,7 +53,18 @@
             size="0.424rem"
             color="#4974F5"
         /></sp-button>
-        <sp-button round class="contact-btn" @click="handleTel(item.mchUserId)"
+        <sp-button
+          v-md:p_IMClick
+          round
+          class="contact-btn"
+          data-even_name="p_IMClick"
+          data-im_type="售前"
+          :data-recommend_number="item.dggPlannerRecomLog || ''"
+          :data-planner_number="item.userCenterNo"
+          :data-planner_name="item.userName"
+          :data-crisps_fraction="item.point"
+          data-track_code="SPW000157"
+          @click="handleTel(item.mchUserId)"
           ><my-icon
             class=""
             name="notify_ic_tel"
@@ -69,6 +82,7 @@ import { Image, Button, Toast, Skeleton } from '@chipspc/vant-dgg'
 import { parseTel } from '~/utils/common'
 import { planner } from '~/api'
 import imHandle from '~/mixins/imHandle'
+import { PlannerHeadList } from '~/config/constant'
 import { codeTranslate } from '~/utils/codeTranslate'
 
 export default {
@@ -97,6 +111,11 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      PlannerHeadList,
+    }
+  },
   computed: {
     city() {
       return this.$store.state.city.currentCity
@@ -108,51 +127,72 @@ export default {
   },
   methods: {
     // 规划师详情跳转
-    plannerInfoUrlJump(mchUserId) {
+    plannerInfoUrlJump(item) {
+      // 处理埋点
+      window.spptMd.spptTrackRow('p_plannerBoothClick', {
+        track_code: 'SPW000158',
+        planner_number: item.userCenterNo,
+        planner_name: item.userName,
+        crisps_fraction: item.point,
+        recommend_number: item.dggPlannerRecomLog || '',
+      })
       this.$router.push({
         path: '/planner/detail',
-        query: { mchUserId, requireCode: this.proDetail.classCodeLevelList[0] },
+        query: {
+          mchUserId: item.mchUserId,
+          requireCode: this.proDetail.classCodeLevelList[0],
+        },
       })
     },
     async handleTel(mchUserId) {
       try {
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          const telData = await planner.newtel({
-            areaCode: this.city.code,
-            areaName: this.city.name,
-            customerUserId: this.$store.state.user.userId,
-            plannerId: mchUserId,
-            customerPhone: this.$cookies.get('mainAccountFull', { path: '/' }),
-            requireCode: this.proDetail.classCodeLevel.split(',')[0],
-            requireName: '',
-            // id: mchUserId,
-            // sensitiveInfoType: 'MCH_USER',
-          })
-          // 解密电话
-          if (telData.status === 1) {
-            const tel = telData.phone
-            window.location.href = `tel://${tel}`
-          } else if (telData.status === 0) {
-            Toast({
-              message: '当前人员已禁用，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-          } else if (telData.status === 3) {
-            Toast({
-              message: '当前人员已离职，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-          }
-        } else {
+        // const isLogin = await this.judgeLoginMixin()
+        // if (isLogin) {
+        this.$xToast.show({
+          message: '为了持续为您提供服务，规划师可能会主动联系您',
+          duration: 2000,
+          forbidClick: true,
+        })
+        await planner.awaitTip()
+        const telData = await planner.newtel({
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          customerId: this.$store.state.user.customerID || '',
+          plannerId: mchUserId,
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }) ||
+            '',
+          requireCode: this.proDetail.classCodeLevel.split(',')[0],
+          requireName: '',
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+        })
+        // 解密电话
+        if (telData.status === 1) {
+          const tel = telData.phone
+          window.location.href = `tel://${tel}`
+        } else if (telData.status === 0) {
           Toast({
-            message: '请先登录账号',
+            message: '当前人员已禁用，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+        } else if (telData.status === 3) {
+          Toast({
+            message: '当前人员已离职，无法拨打电话',
             iconPrefix: 'sp-iconfont',
             icon: 'popup_ic_fail',
           })
         }
+        // } else {
+        //   Toast({
+        //     message: '请先登录账号',
+        //     iconPrefix: 'sp-iconfont',
+        //     icon: 'popup_ic_fail',
+        //   })
+        // }
       } catch (err) {
         console.log(err)
         Toast({

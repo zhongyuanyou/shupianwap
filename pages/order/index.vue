@@ -1,28 +1,30 @@
 <template>
   <div ref="orderPage" class="order-page">
-    <Header
-      v-if="!isInApp && !isApplets"
-      title="我的订单"
-      :hide-back="true"
-      :hide-shadow="true"
-    >
+    <Header title="我的订单" :hide-back="!isInApp" :hide-shadow="true">
       <template #right>
         <div class="btn-car" @click="toCar">购物车</div>
       </template>
     </Header>
     <div
+      v-show="orderPageType !== 'submit'"
       class="top-nav"
       :style="{ top: !isInApp && !isApplets ? '44px' : '0' }"
     >
       <sp-tabs v-model="selectedOrderStatus" @click="changeTab">
         <sp-tab name="" title="全部"></sp-tab>
+        <sp-tab name="ORDER_CUS_STATUS_UNSUBMITE" title="待提交"></sp-tab>
         <sp-tab name="ORDER_CUS_STATUS_UNPAID" title="待付款"></sp-tab>
         <sp-tab name="ORDER_CUS_STATUS_PROGRESSING" title="办理中"></sp-tab>
         <sp-tab name="ORDER_CUS_STATUS_COMPLETED" title="已完成"></sp-tab>
         <sp-tab name="ORDER_CUS_STATUS_CANCELLED" title="已取消"></sp-tab>
       </sp-tabs>
     </div>
-    <div ref="scrollView" class="page-list" @scroll="scollChange">
+    <div
+      ref="scrollView"
+      class="page-list"
+      :class="isInApp ? 'page-list2' : ''"
+      @scroll="scollChange"
+    >
       <div class="scroll-inner">
         <sp-skeleton
           v-for="val in 10"
@@ -57,11 +59,12 @@
       />
       <p v-if="noMore" class="no-more">没有更多了</p>
     </div>
+
+    <!-- 取消订单弹窗 -->
     <CancelOrder
       ref="cancleOrderModel"
       :order-id="orderData.orderId"
       :cus-order-id="orderData.cusOrderId"
-      :order-list="orderData.orderList"
       @cancleOrder="cancleOrder"
       @getBatchList="getBatchList"
     />
@@ -73,6 +76,8 @@
       />
       <p class="text">暂无订单</p>
     </div>
+
+    <!-- 支付弹窗 -->
     <PayModal
       ref="payModal"
       :order-data="orderData"
@@ -104,19 +109,21 @@
         >
       </p>
     </sp-dialog>
+    <JiufenModal ref="jiufenModal" />
   </div>
 </template>
 
 <script>
 import { mapMutations, mapState } from 'vuex'
 import { Tab, Tabs, Loading, Skeleton, Dialog } from '@chipspc/vant-dgg'
-import Header from '@/components/common/head/header'
-import OrderItem from '@/components/order/OrderItem'
-import CancelOrder from '@/components/order/CancelOrder' // 取消订单弹窗
-import PayModal from '@/components/order/PayModal' // 支付弹窗
-import Bottombar from '@/components/common/nav/Bottombar'
+import Header from '@/components/common/head/header.vue'
+import OrderItem from '@/components/order/OrderItem.vue'
+import CancelOrder from '@/components/order/CancelOrder.vue' // 取消订单弹窗
+import PayModal from '@/components/order/PayModal.vue' // 支付弹窗
+import JiufenModal from '@/components/order/JiufenDialog.vue'
+import Bottombar from '@/components/common/nav/Bottombar.vue'
 import orderApi from '@/api/order'
-import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import OrderMixins from '@/mixins/order'
 export default {
   components: {
@@ -131,6 +138,7 @@ export default {
     Bottombar,
     PayModal,
     LoadingCenter,
+    JiufenModal,
   },
   mixins: [OrderMixins],
   data() {
@@ -146,6 +154,7 @@ export default {
       fromPage: 'orderList',
       noMore: false,
       loadingMore: false,
+      orderPageType: '',
     }
   },
   computed: {
@@ -171,7 +180,13 @@ export default {
         this.selectedOrderStatus = 'ORDER_CUS_STATUS_COMPLETED'
       } else if (pageType === '4') {
         this.selectedOrderStatus = 'ORDER_CUS_STATUS_CANCELLED'
+      } else if (pageType === '5') {
+        this.selectedOrderStatus = 'ORDER_CUS_STATUS_UNSUBMITE'
       }
+    }
+    this.orderPageType = this.$route.query.orderType
+    if (this.orderPageType) {
+      this.selectedOrderStatus = 'ORDER_CUS_STATUS_UNSUBMITE'
     }
     this.getOrderList()
     // 获取下单协议
@@ -224,13 +239,14 @@ export default {
       if (this.$route.query.type) {
         this.$router.push({ query: {} })
       }
-      
+
       this.list = []
       this.getOrderList()
     },
     toCar() {
       this.$router.push('../shopCart/')
     },
+
     getOrderList() {
       this.noMore = false
       orderApi
@@ -263,6 +279,16 @@ export default {
               arr[i].statusName = '已完成'
             } else {
               arr[i].statusName = this.getStatusName(arr[i].orderStatusNo)
+            }
+            if (
+              arr[i].statusName === '待确认' ||
+              arr[i].statusName === '办理中'
+            ) {
+              if (this.isShowConfirmBtn(arr[i]) === 1) {
+                arr[i].statusName = '待确认'
+              } else {
+                arr[i].statusName = '办理中'
+              }
             }
           }
           if (this.page === 1) {
@@ -327,7 +353,24 @@ export default {
           this.opType = 'invoice'
           this.toInvoice()
           break
+        case 9:
+          // 未提交转提交订单
+          this.toSubmitOrder(order)
+          break
+        case 10:
+          // 未提交转提交订单
+          this.handleShowJiufen(order)
+          break
       }
+    },
+    toSubmitOrder(order) {
+      this.$router.push({
+        path: '/order/confirmUnSubmitOrder',
+        query: {
+          orderIds: order.id,
+          cusOrderId: order.cusOrderId,
+        },
+      })
     },
   },
 }
@@ -336,6 +379,9 @@ export default {
 <style lang="less" scoped>
 .btn-car {
   margin-right: 40px;
+  font-size: 32px;
+  color: #222222;
+  font-weight: bold;
 }
 .order-page {
   min-height: 100%;
@@ -348,11 +394,13 @@ export default {
     z-index: 2;
     overflow: hidden;
     border-bottom: 1px solid #f0f0f0;
-    .sp-tab--active {
-      color: rgba(73, 116, 245, 1);
+    .sp-tab {
+      font-size: 30px;
+      color: #999999;
     }
+
     .sp-tab--active .sp-tab__text {
-      color: #4974f5;
+      color: #222222;
       font-weight: bold;
     }
     .sp-tabs__line {
@@ -360,11 +408,15 @@ export default {
       width: 32px;
     }
   }
+
   .page-list {
     padding-bottom: 140px;
     margin-top: 88px;
     height: calc(100vh - 200px);
     overflow-y: scroll;
+  }
+  .page-list2 {
+    margin-top: 0 !important;
   }
 }
 .no-data-area {

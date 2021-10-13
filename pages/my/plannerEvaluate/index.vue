@@ -1,7 +1,7 @@
 <template>
   <div class="evaluate_container">
     <!--S 头部-->
-    <Header v-if="!isInApp" title="评价">
+    <Header v-if="!isHideNav || isHideNav !== '1'" title="评价">
       <template #left>
         <div @click="back">
           <my-icon
@@ -82,6 +82,9 @@ export default {
       isInApp: (state) => state.app.isInApp,
       userId: (state) => state.user.userInfo.userId,
     }),
+    isHideNav() {
+      return this.$route.query.isHideNav
+    },
   },
   mounted() {
     if (this.isInApp) {
@@ -89,7 +92,9 @@ export default {
         {
           title: '写评价',
         },
-        (res) => {}
+        (res) => {
+          console.log('设置标题res', res)
+        }
       )
       this.$appFn.dggGetUserInfo((res) => {
         if (res.code === 200 && res.data.userId && res.data.token) {

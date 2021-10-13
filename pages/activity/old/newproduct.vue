@@ -444,12 +444,6 @@ export default {
             const adImg03 = res.data.sortMaterialList[2].materialList || []
             this.productAdvertData = [...adImg01, ...adImg02, ...adImg03]
           } else {
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
           }
         })
     },
@@ -468,8 +462,7 @@ export default {
     clickInputHandle() {
       if (this.isInApp) {
         const iOSRouter = {
-          path:
-            'CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation',
+          path: 'CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation',
           parameter: {
             routerPath: 'cpsc/search/page',
           },

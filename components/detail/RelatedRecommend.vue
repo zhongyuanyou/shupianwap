@@ -1,20 +1,16 @@
 <template>
   <div class="need">
-    <p class="need_title">猜您需要</p>
+    <sp-sticky ref="tabCurveRef" :offset-top="searchDomHeight" class="top">
+      <p class="need_title">猜您需要</p>
+    </sp-sticky>
     <sp-skeleton :row="20" :loading="needLoading">
       <div
         v-for="(item, index) in productData"
         :key="index + '' + item.id"
         class="need_item"
+        @click="toGoodsDeatil(item)"
       >
-        <nuxt-link
-          :to="{
-            path: '/detail',
-            query: {
-              productId: item.id,
-            },
-          }"
-        >
+        <a>
           <div class="need_item_img">
             <sp-image
               width="1.6rem"
@@ -31,11 +27,6 @@
             </p>
             <div class="label">
               <span
-                v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1"
-                class="label_item desc-label-tc"
-                >套餐</span
-              >
-              <span
                 v-for="(labelItem, index2) in item.salesGoodsTags"
                 v-show="labelItem.categoryCode === 'DSJTC20210514000042'"
                 :key="index2"
@@ -45,23 +36,41 @@
             </div>
 
             <div class="desc">
-              <p>{{ item.salesGoodsOperatings.slogan }}</p>
+              <p>
+                {{
+                  item.salesGoodsOperatings
+                    ? item.salesGoodsOperatings.slogan
+                    : ''
+                }}
+              </p>
             </div>
-            <p class="money">{{ item.salesPrice || item.price }}元</p>
+            <p v-if="item.priceType === 'PRO_FLOATING_PRICE'" class="money">
+              {{ getServerPrice(item.salesPrice || item.price) }}%
+              <span>服务费</span>
+            </p>
+            <p v-else class="money">
+              {{
+                item.refConfig &&
+                item.refConfig.taskType != 'PRO_WANT_ORDER_DIGEST'
+                  ? (item.salesPrice || item.price) + '元'
+                  : '面议'
+              }}
+            </p>
           </div>
-        </nuxt-link>
+        </a>
       </div>
     </sp-skeleton>
   </div>
 </template>
 
 <script>
-import { Image, Skeleton } from '@chipspc/vant-dgg'
+import { Image, Skeleton, Sticky } from '@chipspc/vant-dgg'
 export default {
   name: 'RelatedRecommend',
   components: {
     [Image.name]: Image,
     [Skeleton.name]: Skeleton,
+    [Sticky.name]: Sticky,
   },
   props: {
     productData: {
@@ -72,6 +81,7 @@ export default {
   data() {
     return {
       needLoading: true,
+      searchDomHeight: 0,
     }
   },
   computed: {
@@ -80,6 +90,21 @@ export default {
     },
   },
   methods: {
+    getServerPrice(price) {
+      let newPrice = ''
+      if (typeof price !== 'string') price = String(price)
+      if (price.match('.')) {
+        const arr = price.split('.')
+        if (Number(arr[1]) > 0) {
+          newPrice = price
+        } else {
+          newPrice = arr[0]
+        }
+      } else {
+        newPrice = price
+      }
+      return newPrice
+    },
     getItemList(list) {
       const listArr = []
       list.forEach((item) => {
@@ -101,6 +126,20 @@ export default {
   padding: 48px 40px 0 40px;
   ::v-deep.sp-skeleton {
     margin-top: 64px;
+  }
+  ::v-deep.top {
+    width: 100%;
+    z-index: 2;
+    .sp-sticky--fixed {
+      width: 100%;
+      position: fixed;
+      top: 80px;
+      left: 0;
+      padding-left: 40px;
+      height: 70px;
+      background: white;
+      box-shadow: 0px 1px 0px 0px #f4f4f4;
+    }
   }
   &_title {
     font-size: 40px;
@@ -185,6 +224,9 @@ export default {
         font-weight: bold;
         color: #ec5330;
         margin-top: 10px;
+        span {
+          font-size: 24px;
+        }
       }
     }
   }

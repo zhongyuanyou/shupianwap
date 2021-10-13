@@ -46,8 +46,8 @@
 // 服务商品支付方式分为全款，定金尾款，按节点付费，完结付费
 // 定金尾款，按节点付费，完结付费有办理进度
 import { Button } from '@chipspc/vant-dgg'
-import ServeItem from './ServeItem'
-import SkuModal from './SkuModal' // 商品属性弹窗
+import ServeItem from './ServeItem.vue'
+import SkuModal from './SkuModal.vue' // 商品属性弹窗
 export default {
   components: {
     [Button.name]: Button,

@@ -1,17 +1,31 @@
 <template>
   <div
     class="commodityConsult"
-    :style="{ opacity: plannerInfo.mchUserId ? 1 : 0 }"
+    :style="{
+      opacity: plannerDetail.mchUserId || plannerDetail.id ? 1 : 0,
+    }"
   >
     <div class="commodityConsult-containner">
       <div class="commodityConsult-containner-userInfo">
-        <a @click="plannerInfoUrlJump(plannerDetail.mchUserId)">
+        <a
+          v-md:p_plannerBoothClick
+          data-even_name="p_plannerBoothClick"
+          data-track_code="SPW000032"
+          :data-recommend_number="plannerDetail.dggPlannerRecomLog || ''"
+          :data-planner_number="plannerDetail.userCenterNo"
+          :data-planner_name="plannerDetail.userName"
+          :data-crisps_fraction="plannerDetail.point"
+          @click="plannerInfoUrlJump(plannerDetail.mchUserId)"
+        >
           <sp-image
             width="0.8rem"
             height="0.8rem"
             round
             fit="cover"
-            :src="plannerDetail.portrait"
+            :src="
+              plannerDetail.portrait ||
+              'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png'
+            "
           />
         </a>
         <div class="commodityConsult-containner-userInfo-name">
@@ -38,7 +52,11 @@
           v-if="[2, 3].includes(salesGoodsSubVos)"
           class="consulting"
           @click="
-            sendTemplateMsgWithImg(plannerDetail.mchUserId, plannerDetail.type)
+            sendTemplateMsgWithImg(
+              plannerDetail.mchUserId,
+              plannerDetail.type,
+              goodsInfo
+            )
           "
         >
           在线咨询
@@ -78,12 +96,6 @@ export default {
   },
   mixins: [imHandle],
   props: {
-    plannerInfo: {
-      type: Object,
-      default: () => {
-        return {}
-      },
-    },
     imJumpQuery: {
       type: Object,
       default: () => {
@@ -96,13 +108,22 @@ export default {
       type: 1,
       article: {}, // 下单协议信息
       carSub: null,
-      sharePlaner: null,
+      sharePlaner: {},
+      isPlannerShare: false,
     }
   },
   computed: {
-    // 产品详情
-    proDetail() {
-      return this.$store.state.tcProductDetail.detailData
+    plannerDetail() {
+      return this.$store.state.planner.isShare
+        ? this.$store.state.planner.sharePlannerInfo
+        : this.$store.state.planner.recodBottomPlanner
+    },
+    goodsInfo() {
+      if (this.$route.path.match('detail/transactionDetails')) {
+        // 交易商品详情
+        return this.$store.state.tcProductDetail.detailData
+      }
+      return this.$store.state.sellingGoodsDetail.sellingGoodsData
     },
     ...mapState({
       sellingGoodsData: (state) => state.sellingGoodsDetail.sellingGoodsData,
@@ -134,17 +155,13 @@ export default {
         }
       },
     }),
-    plannerDetail() {
-      if (this.sharePlaner) {
-        return this.sharePlaner
-      } else {
-        return this.plannerInfo
-      }
-    },
   },
   mounted() {
-    if (this.$route.query.isShare && this.$route.plannerId) {
-      this.getPlanerInfo(this.$route.plannerId)
+    if (this.$route.query.plannerId || this.$route.query.mchUserId) {
+      this.getPlanerInfo(
+        this.$route.query.plannerId || this.$route.query.mchUserId
+      )
+      this.isPlannerShare = true
     }
     // this.getPlanerInfo('607997736314102930')
   },
@@ -162,6 +179,7 @@ export default {
           ...obj,
           ...res,
         }
+        this.$store.dispatch('planner/setSharePlanner', this.sharePlaner)
         this.$forceUpdate()
       })
     },
@@ -202,6 +220,8 @@ export default {
             path: '/order/confirmorder',
             query: {
               productId: this.sellingGoodsData.id,
+              plannerId:
+                this.$route.query.plannerId || this.$route.query.mchUserId,
             },
           })
         } else {
@@ -220,45 +240,72 @@ export default {
     async handleTel(mchUserId) {
       // 规划师拨号需要先登录
       try {
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          const telData = await planner.newtel({
-            areaCode: this.city.code,
-            areaName: this.city.name,
-            customerUserId: this.$store.state.user.userId,
-            plannerId: mchUserId,
-            customerPhone: this.$cookies.get('mainAccountFull', { path: '/' }),
-            requireCode: this.sellingGoodsData.classCodeLevel.split(',')[0],
-            requireName: '',
-            // id: mchUserId,
-            // sensitiveInfoType: 'MCH_USER',
-          })
-          // 解密电话
-          if (telData.status === 1) {
-            const tel = telData.phone
-            window.location.href = `tel://${tel}`
-          } else if (telData.status === 0) {
-            Toast({
-              message: '当前人员已禁用，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-          } else if (telData.status === 3) {
-            Toast({
-              message: '当前人员已离职，无法拨打电话',
-              iconPrefix: 'sp-iconfont',
-              icon: 'popup_ic_fail',
-            })
-          } else {
-            console.log(telData)
-          }
-        } else {
+        // const isLogin = await this.judgeLoginMixin()
+        // if (isLogin) {
+        this.$xToast.show({
+          message: '为了持续为您提供服务，规划师可能会主动联系您',
+          duration: 2000,
+          forbidClick: true,
+        })
+        console.log('sellingGoodsData', {
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          customerId: this.$store.state.user.customerID || '',
+          plannerId: mchUserId,
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }) ||
+            '',
+          requireCode: this.sellingGoodsData.classCodeLevel.split(',')[0],
+          requireName: this.sellingGoodsData.classCodeLevelName.split('/')[0],
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+        })
+        await planner.awaitTip()
+
+        const telData = await planner.newtel({
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          customerId: this.$store.state.user.customerID || '',
+          plannerId: mchUserId,
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }) ||
+            '',
+          requireCode: this.sellingGoodsData.classCodeLevel.split(',')[0],
+          requireName: this.sellingGoodsData.classCodeLevelName.split('/')[0],
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+        })
+
+        // 解密电话
+        if (telData.status === 1) {
+          const tel = telData.phone
+          window.location.href = `tel://${tel}`
+        } else if (telData.status === 0) {
           Toast({
-            message: '请先登录账号',
+            message: '当前人员已禁用，无法拨打电话',
             iconPrefix: 'sp-iconfont',
             icon: 'popup_ic_fail',
           })
+        } else if (telData.status === 3) {
+          Toast({
+            message: '当前人员已离职，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+        } else {
+          console.log(telData)
         }
+        // } else {
+        //   Toast({
+        //     message: '请先登录账号',
+        //     iconPrefix: 'sp-iconfont',
+        //     icon: 'popup_ic_fail',
+        //   })
+        // }
       } catch (err) {
         console.log(err)
         Toast({
@@ -267,51 +314,6 @@ export default {
           icon: 'popup_ic_fail',
         })
       }
-    },
-    // 调起IM
-    // 发送模板消息(带图片)
-    sendTemplateMsgWithImg(mchUserId, type) {
-      // const isLogin = await this.judgeLoginMixin()
-      // if (isLogin) {
-      // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
-      // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
-      const intentionType = {}
-      intentionType[this.sellingGoodsData.classCode] =
-        this.sellingGoodsData.classCodeName
-      // 意向城市
-      const intentionCity = {}
-      intentionCity[this.city.code] = this.city.name
-      const sessionParams = {
-        imUserId: mchUserId, // 商户用户ID
-        imUserType: type, // 用户类型
-        requireCode: this.sellingGoodsData.classCodeLevel.split(',')[0],
-        ext: {
-          intentionType, // 意向业务 非必传
-          intentionCity, // 意向城市 非必传
-          recommendId: '',
-          recommendAttrJson: {},
-          startUserType: 'cps-app', //
-        },
-      }
-      const msgParams = {
-        sendType: 0, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
-        msgType: 'im_tmplate', // 消息类型
-        extContent: this.$route.query, // 路由参数
-        productName: this.sellingGoodsData.name, // 产品名称
-        productContent:
-          this.sellingGoodsData.salesGoodsOperatings.productDescribe, // 产品信息
-        price: `${this.sellingGoodsData.salesPrice}元`, // 价格
-        forwardAbstract: '[商品详情]',
-        routerId: 'IMRouter_APP_ProductDetail_Service', // 路由ID
-        imageUrl:
-          this.sellingGoodsData.salesGoodsOperatings.clientDetails[0]
-            .imgFileIdPaths[0], // 产品图片
-        unit: this.sellingGoodsData.salesPrice.split('.')[1], // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
-      }
-      this.sendTemplateMsgMixin({ sessionParams, msgParams })
-      // } else {
-      //   this.$router.push('/login')
-      // }
     },
   },
 }

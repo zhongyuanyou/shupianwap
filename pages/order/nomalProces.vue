@@ -23,8 +23,8 @@
 // 非周期产品办理进度
 import { mapMutations, mapState } from 'vuex'
 import { Image } from '@chipspc/vant-dgg'
-import Header from '@/components/common/head/header'
-import ProcessList from '@/components/order/process/ProcessList'
+import Header from '@/components/common/head/header.vue'
+import ProcessList from '@/components/order/process/ProcessList.vue'
 import orderApi from '@/api/order'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {

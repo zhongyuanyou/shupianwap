@@ -13,7 +13,6 @@
  * */
 
 import { auth } from '@/api'
-import orderUtils from '@/utils/order'
 import orderApi from '@/api/order'
 // 客户单状态code
 const ORDERSTATUSCODE = {
@@ -21,6 +20,7 @@ const ORDERSTATUSCODE = {
   2: 'ORDER_CUS_STATUS_PROGRESSING', // 进行中
   3: 'ORDER_CUS_STATUS_COMPLETED', // 已完成
   4: 'ORDER_CUS_STATUS_CANCELLED', // 已取消
+  5: 'ORDER_CUS_STATUS_UNSUBMITE', // 待提交
 }
 
 // 支付类型CODE
@@ -30,9 +30,47 @@ const PAYTYPECODE = {
   3: 'PRO_PRE_SERVICE_POST_PAY_BY_NODE', // 按服务节点付费
   4: 'PRO_PRE_SERVICE_FINISHED_PAY', // 服务完结收费
 }
-
+// 客户单支付状态code
+const PAYSTATUSCODE = {
+  1: 'ORDER_CUS_PAY_STATUS_UN_PAID', // 未支付
+  2: 'ORDER_CUS_PAY_STATUS_PART_PAID', // 部分支付
+  3: 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID', // 支付完成
+}
 // 根据订单状态判断订单状态名称
 const orderStatusObj = {
+  // 销售商品待提交
+  SALE_STATUS_UNSUBMITE: {
+    type: 'PRO_CLASS_TYPE_SALES',
+    code: 'ORDER_ORDER_SALE_STATUS_UNSUBMITE',
+    name: '待提交',
+    cripsName: '待提交',
+    status: 'ORDER_CUS_STATUS_UNSUBMITE',
+  },
+  // 交易商品 待提交
+  TRADE_STATUS_UNSUBMITE: {
+    type: 'PRO_CLASS_TYPE_TRANSACTION',
+    code: 'ORDER_ORDER_TRADE_STATUS_UNSUBMITE',
+    name: '待提交',
+    cripsName: '待提交',
+    status: 'ORDER_CUS_STATUS_UNSUBMITE',
+  },
+  //  资源商品 待提交：
+  RESOURCE_STATUS_UNSUBMITE: {
+    type: 'PRO_CLASS_TYPE_SERVICE_RESOURCE',
+    code: 'ORDER_ORDER_RESOURCE_STATUS_UNSUBMITE',
+    name: '待提交',
+    cripsName: '待提交',
+    status: 'ORDER_CUS_STATUS_UNSUBMITE',
+  },
+  // 服务商品  待提交：
+  SERVER_STATUS_UNSUBMITE: {
+    type: 'PRO_CLASS_TYPE_SERVICE',
+    code: 'ORDER_ORDER_SERVER_STATUS_UNSUBMITE',
+    name: '待提交',
+    cripsName: '待提交',
+    status: 'ORDER_CUS_STATUS_UNSUBMITE',
+  },
+
   TRADE_STATUS_UN_PAID: {
     type: 'PRO_CLASS_TYPE_TRANSACTION',
     code: 'ORDER_ORDER_TRADE_STATUS_UN_PAID',
@@ -203,6 +241,8 @@ const billStatusCodesObj = {
 export default {
   data() {
     return {
+      payOrderList: [], // 待付款的子订单
+      showJiufenModal: false,
       remainTotalPayIds: '', // 分批支付剩余支付批次id
       addOrderXy: {},
       tranXy: {},
@@ -216,12 +256,13 @@ export default {
         ORDER_CUS_STATUS_PROGRESSING: '办理中', // 进行中
         ORDER_CUS_STATUS_COMPLETED: '已完成', // 已完成
         ORDER_CUS_STATUS_CANCELLED: '已取消', // 已取消
+        ORDER_CUS_STATUS_UNSUBMITE: '待提交',
       },
       // 客户单付款状态CODE对应文字
       PAYSTATUSCODENAME: {
         ORDER_CUS_PAY_STATUS_UN_PAID: '待付款',
         ORDER_CUS_PAY_STATUS_PART_PAID: '部分支付',
-        ORDER_CUS_PAY_STATUS_COMPLETED_PAID: '已完成',
+        ORDER_CUS_PAY_STATUS_COMPLETED_PAID: '支付完成',
       },
       // 客户单类型
       orderProTypeNoS: {
@@ -292,6 +333,16 @@ export default {
     checkHasOtherOrder() {
       return this.orderData.orderList.length > 1
     },
+    // 判断是否有应付款的子订单
+    checkHasPayChildOrder() {
+      const newArr = JSON.parse(JSON.stringify(this.orderData.orderList))
+      this.payOrderList = newArr.filter((item) => {
+        return item.isNeedPay === 1
+      })
+      if (this.payOrderList.length > 1) {
+        return 1
+      }
+    },
     // 开始支付时判断
     startPay() {
       if (
@@ -317,26 +368,27 @@ export default {
       }
       if (this.fromPage === 'orderList' || this.fromPage === 'orderDetail') {
         // 同时判断有无关联订单
-        if (this.checkHasOtherOrder()) {
+        if (this.checkHasPayChildOrder()) {
           // 有关联订单时则打开提示弹窗
           this.loading = false
           if (this.$refs.cancleOrderModel) {
             this.$refs.cancleOrderModel.showPop = true
             this.$refs.cancleOrderModel.modalType = 2
           }
-          this.childOrderList = this.orderData.orderList
+          this.$refs.cancleOrderModel.orderList = this.payOrderList
           // 后续操作为关联弹窗点击立即付款后继续查询分批支付列表 走分批支付逻辑判断
         } else {
           // 无关联订单则直接走分批支付逻辑判断
           this.getBatchList()
         }
-      } else if (this.checkHasOtherOrder()) {
+      } else if (this.checkHasPayChildOrder()) {
         // 有关联订单时打开提示弹窗
         this.loading = false
         if (this.$refs.cancleOrderModel) {
           this.$refs.cancleOrderModel.showPop = true
           this.$refs.cancleOrderModel.modalType = 2
         }
+        this.$refs.cancleOrderModel.orderList = this.payOrderList
       } else if (this.payList.length === 1) {
         this.loading = false
         this.$router.push({
@@ -410,6 +462,10 @@ export default {
           this.$xToast.error(err.message || '获取支付信息失败')
           console.error(err)
         })
+    },
+    // 纠纷弹窗
+    handleShowJiufen() {
+      this.$refs.jiufenModal.showJiufenModal = true
     },
     // 判断是分批支付还是全款支付等
     checkCusBatchPayType() {
@@ -533,11 +589,20 @@ export default {
     },
     // 判断客户单状态类型 1待付款 2进行中 3已完成 4已取消
     checkCusOrderStatus() {
-      return orderUtils.checkCusOrderStatus(this.orderData.cusOrderStatusNo)
+      const cusOrderStatusNo = this.orderData.cusOrderStatusNo
+      if (!cusOrderStatusNo) return 0
+      for (const key in ORDERSTATUSCODE) {
+        if (ORDERSTATUSCODE[key] === cusOrderStatusNo) return Number(key)
+      }
     },
-    // 判断是否显示取消订单按钮
+    /*
+     * @ LastEditors: tang dai bing
+     * @ Description:根据不同的订单状态和支付状态判断显示不同的订单操作按钮和支付按钮
+     */
     isShowCanCelBtn() {
-      return orderUtils.isShowCanCelBtn(this.orderData)
+      // 当且仅当客户订单状态为待付款并且支付状态为未支付时展示取消订单按钮
+      return this.orderData.cusOrderStatusNo === ORDERSTATUSCODE[1]
+      // && orderData.orderPayStatusNo === PAYSTATUSCODE[1]  暂时修改逻辑放出取消订单按钮
     },
     // 判断是否显示确认订单按钮
     isShowConfirmBtn(data) {
@@ -546,7 +611,8 @@ export default {
       if (
         data.cusOrderStatusNo === 'ORDER_CUS_STATUS_PROGRESSING' &&
         (data.orderProTypeNo === 'PRO_CLASS_TYPE_TRANSACTION' ||
-          data.orderProTypeNo === 'PRO_CLASS_TYPE_SALES ')
+          data.orderProTypeNo === 'PRO_CLASS_TYPE_SALES ' ||
+          data.orderProTypeNo === 'PRO_CLASS_TYPE_SERVICE')
       ) {
         const orderArr = data.orderSkuEsList || data.orderSkuList
         for (let i = 0, l = orderArr.length; i < l; i++) {
@@ -567,10 +633,42 @@ export default {
       }
       return isShowConfirm
     },
-    // 判断是否显示付款按钮
+    /*
+     * @LastEditors: tang dai bing
+     * @params:orderData 订单数据
+     * @Description:判断是否显示支付按钮，返回数据: false 不显示，1显示立即付款， 2显示支付余款
+     */
     isShowPayBtn() {
-      return orderUtils.isShowPayBtn(this.orderData)
+      const orderData = this.orderData
+      if (
+        orderData.isNeedPay &&
+        orderData.cusOrderPayStatusNo === PAYSTATUSCODE[1] &&
+        orderData.cusOrderStatusNo !== ORDERSTATUSCODE[3] &&
+        orderData.cusOrderStatusNo !== ORDERSTATUSCODE[4]
+      ) {
+        // 显示立即付款按钮的条件
+        // 1订单可付款
+        // 2客户单支付状态为待付款
+        // 3订单状态不等于已取消
+        // 3订单状态不等于已完成
+        return 1
+      } else if (
+        orderData.isNeedPay &&
+        orderData.cusOrderPayStatusNo === PAYSTATUSCODE[2] &&
+        orderData.cusOrderStatusNo !== ORDERSTATUSCODE[3] &&
+        orderData.cusOrderStatusNo !== ORDERSTATUSCODE[4]
+      ) {
+        // 显示支付余款的条件
+        // 1订单可付款
+        // 2客户单支付状态为部分付款
+        // 2订单状态不等于已取消
+        // 3订单状态不等于已完成
+        return 2
+      } else {
+        return false
+      }
     },
+
     // 判断订单状态 返回数字
     checkOrderStatus(code) {
       const ALLSTATUS = {
@@ -587,19 +685,18 @@ export default {
     },
     // 判断客户单付费类型
     checkPayType() {
-      if (!this.orderData.cusOrderPayType) return 0
+      if (!this.orderData.orderPayType) return 0
       for (const key in PAYTYPECODE) {
-        if (PAYTYPECODE[key] === this.orderData.cusOrderPayType)
-          return Number(key)
+        if (PAYTYPECODE[key] === this.orderData.orderPayType) return Number(key)
       }
     },
     // 判断订单售后状态 是否展示售后按钮 展示何种售后按钮 0不售后 1退款售后 可售后 2 售后中 3售后完成 4 部分锁定 5已锁定
     checkAfterSaleStatus(orderData) {
       orderData = orderData || this.orderData || this.orderDetail
-      // 售后延期
-      if (orderData) {
-        return 0
-      }
+      // // 售后延期
+      // if (orderData) {
+      //   return 0
+      // }
       // 1.意向单、担保交易订单不展示售后按钮，
       if (
         orderData.orderType === 0 ||
@@ -696,8 +793,12 @@ export default {
       if (this.fromPage === 'orderList') {
         const orderAgreementIds = order.orderAgreementIds
         if (this.opType === 'payMoney' && !orderAgreementIds) {
-          // 无协议则需先同意协议
-          this.showMydialog = true
+          if (!this.addOrderXy || !this.addOrderXy.id) {
+            this.$xToast.error('未获取到下单协议，请稍后重试！')
+          } else {
+            // 无协议则需先同意协议
+            this.showMydialog = true
+          }
           return
         }
         // if (this.checkContractIsOver(order) === 1) {
@@ -778,7 +879,7 @@ export default {
     // 同意协议
     confirmAggret(order) {
       this.loading = true
-      if (!this.addOrderXy.id || !this.tranXy.id) {
+      if (!this.addOrderXy || !this.addOrderXy.id || !this.tranXy.id) {
         this.$xToast.error('获取协议失败，请刷新重试')
         return
       }
@@ -824,11 +925,11 @@ export default {
     // 根据操作类型进行不同的任务
     switchOptionType() {
       if (this.$refs.cancleOrderModel) {
-        this.$refs.cancleOrderModel.orderList = this.orderData.orderList
         if (this.opType === 'cancelOrder') {
           // 弹出取消订单弹窗
           this.$refs.cancleOrderModel.showPop = true
           if (this.orderData.orderList.length > 1) {
+            this.$refs.cancleOrderModel.orderList = this.orderData.orderList
             this.$refs.cancleOrderModel.step = 1
           } else {
             this.$refs.cancleOrderModel.step = 2
@@ -848,10 +949,15 @@ export default {
         })
       } else if (this.fromPage === 'orderDetail' && !orderSkuIds) {
         const ids = []
-        this.orderData.orderSkuList.forEach((item) => {
+        const arr1 =
+          this.orderData.orderSkuList ||
+          this.orderData.orderSkuEsList ||
+          this.orderData.orderList
+        arr1.forEach((item) => {
           if (
             item.skuStatusNo === 'ORDER_ORDER_SALE_STATUS_HANDLED' ||
-            item.skuStatusNo === 'ORDER_ORDER_TRADE_STATUS_HANDLED'
+            item.skuStatusNo === 'ORDER_ORDER_TRADE_STATUS_HANDLED' ||
+            item.skuStatusNo === 'ORDER_ORDER_SERVER_STATUS_HANDLED'
           )
             ids.push(item.id)
         })
@@ -860,6 +966,9 @@ export default {
       } else {
         orderSkuIds = new Array(1).fill(orderSkuIds)
       }
+      if (!orderSkuIds.length) {
+        return this.$xToast.warning('该订单未到确认完成节点！')
+      }
       const params = {
         orderSkuIds,
         operateSourcePlat: 'COMDIC_PLATFORM_CRISPS',
@@ -867,7 +976,7 @@ export default {
       }
       orderApi
         .confirmOrder({ axios: this.$axios }, params)
-        .then((res) => {
+        .then(() => {
           this.$xToast.success('操作成功')
           if (this.fromPage === 'orderList') this.getOrderList()
           else this.getDetail()
@@ -941,7 +1050,9 @@ export default {
       if (orderItem.orderTotalMoney && orderItem.depositAmount)
         // 尾款
         orderItem.lastAount = this.regFenToYuan(
-          Number(orderItem.orderTotalMoney) - Number(orderItem.depositAmount)
+          Number(orderItem.orderTotalMoney) -
+            Number(orderItem.depositAmount) -
+            Number(orderItem.orderDiscountMoney)
         )
       else orderItem.lastAount = '0.00'
       if (orderItem.depositAmount)
@@ -957,6 +1068,13 @@ export default {
         orderItem.orderPayableMoney = this.regFenToYuan(
           orderItem.orderPayableMoney
         )
+      // 订单总金额 已减去优惠券的金额
+      if (orderItem.orderTotalMoney && orderItem.orderDiscountMoney) {
+        orderItem.shouldPayTotalMoney = this.regFenToYuan(
+          Number(orderItem.orderTotalMoney) -
+            Number(orderItem.orderDiscountMoney)
+        )
+      }
       if (orderItem.orderDiscountMoney)
         // 优惠金额
         orderItem.orderDiscountMoney = this.regFenToYuan(
@@ -1362,6 +1480,30 @@ export default {
             orderId: orderData.id,
           },
         })
+      }
+    },
+    // 纠纷判断
+    checkJjiufen(orderData) {
+      // 担保交易订单办理中展示纠纷按钮
+      orderData = orderData || this.orderData
+      const proceingOrderStatus = [
+        'ORDER_ORDER_SALE_STATUS_HANDLING',
+        'ORDER_ORDER_SALE_STATUS_HANDLED',
+        'ORDER_ORDER_TRADE_STATUS_HANDLING',
+        'ORDER_ORDER_TRADE_STATUS_HANDLED',
+        'ORDER_ORDER_RESOURCE_STATUS_HANDLING',
+        'ORDER_ORDER_RESOURCE_STATUS_HANDLED',
+        'ORDER_ORDER_SERVER_STATUS_HANDLING',
+        'ORDER_ORDER_SERVER_STATUS_HANDLED',
+      ]
+      // orderData.disputeStatus =
+      //   orderData.disputeStatus || orderData.orderSkuEsList[0].disputeStatus
+      if (
+        proceingOrderStatus.indexOf(orderData.orderStatusNo) > -1 &&
+        orderData.payType &&
+        orderData.payType === 'ORDER_PAY_MODE_SECURED'
+      ) {
+        return 1
       }
     },
   },

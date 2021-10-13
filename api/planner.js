@@ -7,8 +7,8 @@
  * @FilePath: /chips-wap/client/api/planner.js
  */
 'use strict'
-
-import { CHIPS_WAP_BASE_URL, CRM_MIDDLE_APP } from '../config/constant'
+import { Toast } from '@chipspc/vant-dgg'
+import { CHIPS_WAP_BASE_URL, CRM_MIDDLE_APP, CHIPS_PC_URL } from '../config/constant'
 
 import { request } from '@/utils/request'
 
@@ -100,12 +100,33 @@ const planner = {
       url: CHIPS_WAP_BASE_URL + '/nk/planner/v1/tel.do',
     })
   },
-  newtel(params) {
-    return request({
-      params,
-      method: 'post',
-      url: CRM_MIDDLE_APP + '/yk/outbound/shupiancall/bind_hidden.do',
+
+  awaitTip(time = 1500) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve()
+      }, time)
     })
+  },
+  newtel(params) {
+    console.log('params', params);
+    const info = {}
+    for (const key in params) {
+      if (params[key] && params[key] !== 'undefined' && params[key] !== 'null') {
+        info[key] = params[key]
+      }
+    }
+
+    return request({
+      params: info,
+      method: 'post',
+      url: CRM_MIDDLE_APP + '/nk/outbound/shupiancall/bind_hidden.do',
+    })
+    // return request({
+    //   params,
+    //   method: 'get',
+    //   url: CHIPS_PC_URL + '/nk/planner/v1/getPlannerTel.do',
+    // })
   },
   bindCustomer:
     '/crisps-marketing-web/yk/branchsell/copartner/v1/add_copartner_customer_bind.do',

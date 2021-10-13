@@ -6,14 +6,10 @@ export function debounce(fun, delayed) {
   let timeout = null
   return function () {
     // 如果用户在定时器（上一次操作）执行前再次点击，那么上一次操作将被取消
-    clearTimeout(timeout)
-    const context = this
-    const args = arguments
-    timeout = setTimeout(function () {
-      // 使用事件绑定的当前对象，替换处理程序的当前对象
-      // 并将事件绑定的当前对象参数，传递给操作之后的处理程序
-      fun.apply(context, args)
-    }, delayed)
+    if (timeout !== null) {
+      clearTimeout(timeout)
+    }
+    timeout = setTimeout(fun, delayed)
   }
 }
 // 处理防抖的程序

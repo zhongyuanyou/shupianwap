@@ -128,6 +128,7 @@ export default {
         bizAreaName: this.city.name || '成都市',
         customerPhone:
           this.$refs.priceFrom.phone || this.userInfoData.mainAccount,
+
         customerName: this.token ? this.userInfoData.fullName : '游客',
         sourceUrl: location.href,
         customerSex: this.userInfoData.sex || 2,
@@ -290,7 +291,7 @@ export default {
           .then((res) => {
             if (res.code === 200) {
               this.userInfoData = res.data
-              this.$store.dispatch('user/setInfo', res.data)
+              // this.$store.dispatch('user/setInfo', res.data)
             } else {
               this.$xToast.show({
                 message: '网络错误,请刷稍后再试',

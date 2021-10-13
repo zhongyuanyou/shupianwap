@@ -6,7 +6,7 @@
           v-md:p_plannerBoothClick
           data-even_name="p_plannerBoothClick"
           data-track_code="SPW000032"
-          :data-recommend_number="plannerDetail.dggPlannerRecomLog"
+          :data-recommend_number="plannerDetail.dggPlannerRecomLog || ''"
           :data-planner_number="plannerDetail.userCenterNo"
           :data-planner_name="plannerDetail.userName"
           :data-crisps_fraction="plannerDetail.point"
@@ -141,9 +141,14 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      isPlannerShare: false,
+    }
+  },
   computed: {
     plannerDetail() {
-      if (this.sharePlaner) {
+      if (this.isPlannerShare) {
         return this.sharePlaner
       } else {
         return this.plannerInfo
@@ -157,11 +162,14 @@ export default {
     }),
   },
   async mounted() {
+    if (this.$route.query.plannerId || this.$route.query.mchUserId) {
+      this.getPlanerInfo(
+        this.$route.query.plannerId || this.$route.query.mchUserId
+      )
+      this.isPlannerShare = true
+    }
     if (!this.city.code) {
       await this.POSITION_CITY({ type: 'init' })
-    }
-    if (this.$route.query.isShare && this.$route.plannerId) {
-      this.getPlanerInfo(this.$route.plannerId)
     }
   },
   methods: {
@@ -196,10 +204,21 @@ export default {
     // 拨打电话
     async handleTel(mchUserId) {
       try {
+        this.$xToast.show({
+          message: '为了持续为您提供服务，规划师可能会主动联系您',
+          duration: 2000,
+          forbidClick: true,
+        })
+        await planner.awaitTip()
         const telData = await planner.newtel({
           areaCode: this.city.code,
           areaName: this.city.name,
           customerUserId: this.$store.state.user.userId,
+          customerId: this.$store.state.user.customerID || '',
+          customerPhone:
+            this.$store.state.user.mainAccountFull ||
+            this.$cookies.get('mainAccountFull', { path: '/' }) ||
+            '',
           plannerId: mchUserId,
           requireCode: '',
           requireName: '',
