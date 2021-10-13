@@ -365,7 +365,7 @@ export default {
          this.imExample.createSession(params, (res) => {
            if (res.code === 200) {
              const tepMsgParams = {
-               templateId: '6045e190ba0fd10006c2343f', // 模板 id
+               templateId: '6166bc39cbbd9900060d9fd3', // 模板 id
                receiver: res.data.groupId, // 会话 id
                msgType: 'text',
                senderName: userInfo.nickName || '访客', // 发送者昵称
