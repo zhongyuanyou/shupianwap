@@ -393,8 +393,7 @@ export default {
                    if (this.isApplets) {
                      window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}&isApplets=true`
                    } else {
-                    //  window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}`
-                     window.location.href = `http://172.16.135.37:8080/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}`
+                     window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}`
                    }
                  }, 2000)
                } else if (res.code === 5223) {
