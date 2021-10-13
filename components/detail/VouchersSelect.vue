@@ -58,7 +58,8 @@
       <p class="popup_title">优惠</p>
       <p class="p1">优惠预估</p>
       <p class="p2">
-        使用以下优惠券后预估价<span>{{ couponPreferentialLine }}元</span>
+        使用以下优惠券后预估价<span>{{ couponPreferentialLine }}</span
+        >元
       </p>
       <div class="popup_box">
         <p class="vouchers_box_title">可领取优惠券</p>
@@ -241,7 +242,6 @@ export default {
       skuShow: false,
       safeguardShow: false,
       num: 1,
-      couponPreferentialLine: 0.0, // 优惠后的金额
       imgFileIdPaths: [
         'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg',
       ], // 商品图片
@@ -279,33 +279,56 @@ export default {
       const list = []
       const couponList =
         this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList
-      try {
-        for (let i = 0; i < couponList.length; i++) {
-          const matchServiceLife = couponList[i].serviceLife.match('-')
-          if (matchServiceLife) {
-            const time0Obj = couponList[i].serviceLife.split('-')[0]
-            const time1Obj = couponList[i].serviceLife.split('-')[1]
-            const time0 = new Date(time0Obj).getTime()
-            const time1 = new Date(time1Obj).getTime() + 24 * 3600 * 1000
-            const time2 = new Date().getTime()
-            if (time0 <= time2 && time1 >= time2) {
-              list.push(couponList[i])
-            }
-          } else {
-            list.push(couponList[i])
-          }
-        }
-      } catch (error) {
-        console.log(error)
-      }
-      const list2 = JSON.parse(JSON.stringify(list))
+      // try {
+      //   for (let i = 0; i < couponList.length; i++) {
+      //     const matchServiceLife = couponList[i].serviceLife.match('-')
+      //     if (matchServiceLife) {
+      //       const time0Obj = couponList[i].serviceLife.split('-')[0]
+      //       const time1Obj = couponList[i].serviceLife.split('-')[1]
+      //       const time0 = new Date(time0Obj).getTime()
+      //       const time1 = new Date(time1Obj).getTime() + 24 * 3600 * 1000
+      //       const time2 = new Date().getTime()
+      //       if (time0 <= time2 && time1 >= time2) {
+      //         list.push(couponList[i])
+      //       }
+      //     } else {
+      //       list.push(couponList[i])
+      //     }
+      //   }
+      // } catch (error) {
+      //   console.log(error)
+      // }
+      // const list2 = JSON.parse(JSON.stringify(list))
+      // // 根据优惠金额对优惠券排序
+      // const sortcouponList = this.rangeDiscountPrice(
+      //   list2,
+      //   this.$store.state.sellingGoodsDetail.sellingGoodsData.salesPrice ||
+      //     this.$store.state.sellingGoodsDetail.sellingGoodsData.price
+      // )
       // 根据优惠金额对优惠券排序
       const sortcouponList = this.rangeDiscountPrice(
-        list2,
+        couponList,
         this.$store.state.sellingGoodsDetail.sellingGoodsData.salesPrice ||
           this.$store.state.sellingGoodsDetail.sellingGoodsData.price
       )
       return sortcouponList
+    },
+    // 预估价
+    couponPreferentialLine() {
+      // 过滤达到满减条件的优惠券
+      const canUseCoupon = JSON.parse(JSON.stringify(this.coupon)).filter(
+        (item) => {
+          return item.fullPrice < this.sellingGoodsData.salesPrice
+        }
+      )
+      if (canUseCoupon.length) {
+        const price1 = this.sellingGoodsData.salesPrice * 100
+        const price2 = canUseCoupon[0].reducePrice * 100
+        let preFrice = price1 - price2
+        if (preFrice < 0) preFrice = 0
+        return preFrice / 100
+      }
+      return 0.0
     },
     //  服务商品的SKU集合
     goodsSubDetailsName() {
@@ -397,8 +420,6 @@ export default {
         //  取最大优惠金额
         const salesPrice =
           sellingGoodsData.salesPrice - sortcouponList[0].reducePrice
-        const salesPriceRes = salesPrice >= 0 ? salesPrice : 0
-        this.couponPreferentialLine = salesPriceRes.toFixed('2')
         //  组装优惠券提示信息
         const info1 = sortcouponList[0]
         const info2 = sortcouponList[1]

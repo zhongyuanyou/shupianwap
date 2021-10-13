@@ -1,6 +1,7 @@
 'use strict'
 
 const path = require('path')
+const { resolve } = require('path')
 
 const BASE = require('./config/index.js')
 const NODE_ENV = process.env.NODE_ENV
@@ -111,8 +112,12 @@ module.exports = {
     ],
   },
   loading: { color: '#4974F5' },
+  alias: {
+    '@css': resolve(__dirname, './assets/css'),
+  },
   css: [
-    'assets/css/reset.css',
+    'assets/css/setup/reset.css',
+    'assets/css/setup/global.less',
     'assets/icons/iconfont.css',
     'assets/iconsNew/iconfont.css',
     'assets/icons630/iconfont.css',
@@ -125,7 +130,7 @@ module.exports = {
     'video.js/dist/video-js.min.css',
   ],
   styleResources: {
-    less: 'assets/styles/variables.less',
+    less: ['./assets/css/abstracts/*.less', './assets/css/vars/*.less'],
   },
   plugins: [
     { src: '@/plugins/axios', ssr: true },
@@ -140,18 +145,19 @@ module.exports = {
     { src: '@/plugins/vue-quill-editor', ssr: false },
     { src: '@/plugins/vue-prototype', ssr: false },
     { src: '@/plugins/clear-emoij', ssr: false },
+    { src: '@/plugins/echarts', ssr: false },
     { src: '@/plugins/sp-api', ssr: false },
     { src: '@/plugins/echarts', ssr: false },
+    { src: '@/plugins/to-goods-detail', ssr: false },
   ],
   router: {
     middleware: 'appDock',
   },
-  buildModules: ['@nuxtjs/eslint-module'],
+  buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/style-resources'], // 修改 style-resources 在运行时处理
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
     // '@nuxtjs/sentry',
-    '@nuxtjs/style-resources',
     ['cookie-universal-nuxt', { parseJSON: true }],
   ],
   // sentry: {

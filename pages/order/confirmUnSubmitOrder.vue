@@ -92,7 +92,7 @@
                 : '该订单先付款后服务'
             }}
           </div>
-          <div class="deposit_content">按业务办理节点付费</div>
+          <div v-if="isNodes" class="deposit_content">按业务办理节点付费</div>
         </div>
       </div>
       <div class="news-content">
@@ -289,7 +289,7 @@ import PayMethodPopup from '@/components/PlaceOrder/PayMethodPopup.vue'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import { productDetailsApi, auth, shopCart } from '@/api'
 import cardApi from '@/api/card'
-import orderApi from '@/api/order'
+import orderApi from '@/api/order2'
 import OrderMixins from '@/mixins/order'
 
 import { coupon, order, actCard } from '@/api/index'
@@ -485,6 +485,12 @@ export default {
           }
         )
         .then((result) => {
+          this.payMethod.value = result.payType || 'ORDER_PAY_MODE_ONLINE'
+          if (result.payType === 'ORDER_PAY_MODE_ONLINE') {
+            this.payMethod.text = '在线支付'
+          } else {
+            this.payMethod.text = '线下支付'
+          }
           this.goodsSkuDetail = JSON.parse(result.orderSkuList[0].skuDetailInfo)
           if (this.goodsSkuDetail.sku.targetRate) {
             this.goodsSkuDetail.sku.targetRate = parseFloat(
@@ -643,32 +649,46 @@ export default {
               })
             }
             setTimeout(() => {
-              if (this.isTRANSACTION) {
-                // 交易商品
-                this.jumpToOrder()
-              } else if (this.payMethod.value === 'ORDER_PAY_MODE_SECURED') {
-                // 担保交易
-                this.jumpToOrder()
-              } else if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
-                // 线下付款
-                this.jumpToOrder()
-              } else if (
+              let type
+              if (
                 result.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
                 result.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
               ) {
-                // 先付款后服务 PRO_PRE_PAY_POST_SERVICE;
-                // 先定金后尾款 PRO_PRE_DEPOSIT_POST_OTHERS;
-                this.$router.replace({
-                  path: '/pay/payType',
-                  query: {
-                    fromPage: 'orderList',
-                    cusOrderId: result.cusOrderId,
-                  },
-                })
-              } else {
-                // 意向单和担保交易等 回到订单列表
-                this.jumpToOrder()
+                type = 1
+              } else if (
+                result.cusOrderPayType === 'PRO_PRE_SERVICE_FINISHED_PAY' ||
+                result.cusOrderPayType === 'PRO_PRE_SERVICE_POST_PAY_BY_NODE'
+              ) {
+                type = 2
               }
+              this.jumpToOrder(type)
+              // if (this.isTRANSACTION) {
+              //   // 交易商品
+              //   this.jumpToOrder()
+              // } else if (this.payMethod.value === 'ORDER_PAY_MODE_SECURED') {
+              //   // 担保交易
+              //   this.jumpToOrder()
+              // } else if (this.payMethod.value === 'ORDER_PAY_MODE_OFFLINE') {
+              //   // 线下付款
+              //   this.jumpToOrder()
+              // } else if (
+              //   result.cusOrderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
+              //   result.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'
+              // ) {
+              //   this.jumpToOrder(1)
+              // 先付款后服务 PRO_PRE_PAY_POST_SERVICE;
+              // 先定金后尾款 PRO_PRE_DEPOSIT_POST_OTHERS;
+              // this.$router.replace({
+              //   path: '/pay/payType',
+              //   query: {
+              //     fromPage: 'orderList',
+              //     cusOrderId: result.cusOrderId,
+              //   },
+              // })
+              //   } else {
+              //     // 意向单和担保交易等 回到订单列表
+              //     this.jumpToOrder()
+              //   }
             }, 2000)
           })
           .catch((e) => {
@@ -684,10 +704,10 @@ export default {
           })
       }
     },
-    jumpToOrder() {
+    jumpToOrder(type) {
       this.$router.replace({
         path: '/order',
-        query: {},
+        query: { type },
       })
       // if (!this.isInApp) {
       //   this.$router.replace({

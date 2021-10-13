@@ -22,3 +22,8 @@ $ yarn run start:production
 
 # generate static project
 $ yarn run generate
+
+
+# 产品作业类型 taskType
+订单—消化模式 PRO_ORDER_DIGEST
+意向单—消化—订单模式 PRO_WANT_ORDER_DIGEST

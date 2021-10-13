@@ -202,7 +202,6 @@ export default {
               ? res.data.sortMaterialList[0].materialList
               : []
           } else {
-            this.$xToast.error('服务异常，请刷新重试！')
           }
         })
     },
