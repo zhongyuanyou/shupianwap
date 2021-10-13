@@ -203,38 +203,38 @@ import { callPhone, parseTel } from '@/utils/common'
 
 const SORT_CONFIG = [
   {
-    type: 'pointSort', // 排序类型
-    sortValue: 2, // 降序
+    type: 'orderByPoint', // 排序类型
+    sortValue: 1, // 降序
     text: '薯片分从高到低',
     value: 0,
   },
   {
-    type: 'pointSort',
-    sortValue: 1, // 升序
+    type: 'orderByPoint',
+    sortValue: 0, // 升序
     text: '薯片分从低到高',
     value: 1,
   },
   {
-    type: 'reputationSort',
-    sortValue: 2, // 降序
+    type: 'orderByReputation',
+    sortValue: 1, // 降序
     text: '客户评价分从高到低',
     value: 2,
   },
   {
-    type: 'reputationSort',
-    sortValue: 1, // 升序
+    type: 'orderByReputation',
+    sortValue: 0, // 升序
     text: '客户评价分从低到高',
     value: 3,
   },
   {
-    type: 'payNumSort',
-    sortValue: 2, // 降序
+    type: 'orderByPayNum',
+    sortValue: 1, // 降序
     text: '成交量从高到低',
     value: 4,
   },
   {
-    type: 'payNumSort',
-    sortValue: 1, // 升序
+    type: 'orderByPayNum',
+    sortValue: 0, // 升序
     text: '成交量从低到高',
     value: 5,
   },
@@ -282,6 +282,9 @@ export default {
         categoryCodeName: '全部分类',
         categoryState: 1,
       },
+      sortValueObj: {
+        orderByPoint: 1,
+      },
       sortOption: SORT_CONFIG,
       regionsOption: [],
       refreshing: false,
@@ -306,13 +309,7 @@ export default {
       code: (state) => state.city.code || '510100',
     }),
     formatSearch() {
-      const { sortId, keywords, region } = this.search
-      const matched =
-        this.sortOption.find((item) => item.value === sortId) || SORT_CONFIG[0]
-      const sort = {
-        sortType: matched.type,
-        value: matched.sortValue,
-      }
+      const { keywords, region } = this.search
       const code =
         region.name === '区域'
           ? this.isApplets
@@ -330,7 +327,7 @@ export default {
           regions: [code || '510100'],
         }
       }
-      return { sort, plannerName: keywords, regionDto }
+      return { plannerName: keywords, regionDto }
     },
   },
   created() {
@@ -490,6 +487,11 @@ export default {
       // 触发 formatSearchParams 计算
       this.search.sortText = text
       this.search.sortId = value
+      const key = item.type
+      this.sortValue = {}
+      console.log('item', item)
+      this.sortValue[key] = item.sortValue
+      console.log('this.sortValue', this.sortValue)
       this.$refs.sortDropdown.toggle()
       this.catogyActiveIndex = 0
       this.search.categoryCodeName = '全部分类'
@@ -768,9 +770,17 @@ export default {
     },
 
     async getList(currentPage) {
+      console.log('this.search', this.search)
       const { limit } = this.pageOption
-      const { sort, plannerName, regionDto } = this.formatSearch
-      const params = { sort, plannerName, regionDto, limit, page: currentPage }
+      const { plannerName, regionDto } = this.formatSearch
+      const params = {
+        plannerName,
+        regionDto,
+        limit,
+        page: currentPage,
+        isPoint: 1,
+        ...this.sortValueObj,
+      }
       try {
         const data = await planner.list(params)
         if (this.refreshing) {
