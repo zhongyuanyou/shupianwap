@@ -214,7 +214,7 @@ export default {
       // this.judgeLoginMixin(true).then((userInfo) => {
       if (userInfo) {
         let params = {
-          operUserType: userInfo.type || 'VISITOR',
+          operUserType: userInfo.userType || 'VISITOR',
           imUserId: '',
           imUserType: '',
           ext: {
@@ -305,7 +305,7 @@ export default {
       // this.judgeLoginMixin(true).then((userInfo) => {
       if (userInfo) {
         const userInfo = this.$store.state.user.userInfo
-        const userType = userInfo && userInfo.type ? userInfo.type : 'VISITOR'
+        const userType = userInfo && userInfo.userType ? userInfo.type : 'VISITOR'
         const params = {
           operUserType: userType,
           imUserId: mchUserId,
@@ -348,7 +348,7 @@ export default {
       const userInfo = this.$store.state.user.userInfo
        if (userInfo) {
          const userInfo = this.$store.state.user.userInfo
-         const userType = userInfo && userInfo.type ? userInfo.type : 'VISITOR'
+         const userType = userInfo && userInfo.userType ? userInfo.userType : 'VISITOR'
          const params = {
            operUserType: userType,
            imUserId: mchUserId,
@@ -367,13 +367,11 @@ export default {
              const tepMsgParams = {
                templateId: '6045e190ba0fd10006c2343f', // 模板 id
                receiver: res.data.groupId, // 会话 id
-               msgType: 'im_tmplate',
+               msgType: 'text',
                senderName: userInfo.nickName || '访客', // 发送者昵称
                extContent: JSON.stringify(this.$route.query), // 路由参数
                paramJsonStr: {
-                 forwardAbstract: '摘要信息',
-                 content: text,
-                 disableForward: 0,
+                "content":text
                },
              }
              tepMsgParams.paramJsonStr = JSON.stringify(
@@ -395,7 +393,8 @@ export default {
                    if (this.isApplets) {
                      window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}&isApplets=true`
                    } else {
-                     window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}`
+                    //  window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}`
+                     window.location.href = `http://172.16.135.37:8080/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}`
                    }
                  }, 2000)
                } else if (res.code === 5223) {
