@@ -25,7 +25,7 @@
         :data-commodity_number="item.goodsNo || ''"
         :data-commodity_name="item.name || ''"
         data-commodity_type="服务商品"
-        @click="godeatil(item)"
+        @click="toGoodsDeatil(item)"
       >
         <div class="left">
           <img :src="item.img" alt="" />
@@ -35,11 +35,6 @@
             {{ item.name }}
           </h1>
           <div class="tag">
-            <div
-              v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1"
-            >
-              套餐
-            </div>
             <p
               v-for="(tagitem, tagindex) in item.tag"
               v-show="tagitem.categoryCode === 'DSJTC20210514000042'"
@@ -82,7 +77,6 @@
 <script>
 import { PullRefresh, List } from '@chipspc/vant-dgg'
 import { goods } from '@/api/index'
-
 export default {
   name: 'Newlist',
   components: {
@@ -219,11 +213,11 @@ export default {
           font-weight: 400;
           background: #f0f2f5;
           border-radius: 4px;
-          margin-left: 20px;
+          margin-right: 20px;
           color: #5c7499;
         }
-        > p:nth-child(1) {
-          margin-left: 0px;
+        > p:last-child {
+          margin-right: 0px;
         }
         > .act {
           background: #f1524e;

@@ -603,7 +603,7 @@ export default {
   },
   data() {
     return {
-      PlannerHeadList ,
+      PlannerHeadList,
       loading: true,
       urlData: this.$route.query,
       detailData: {},

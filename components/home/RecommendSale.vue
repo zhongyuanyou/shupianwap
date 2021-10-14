@@ -70,7 +70,7 @@
               v-for="(item, goodsIndex) in swipItem.goodsList"
               :key="goodsIndex"
               class="goods-item"
-              @click="jumpPage(item)"
+              @click="toGoodsDeatil(item)"
             >
               <div class="goods-lable-img">
                 <span v-if="false" class="lable">2千元成交礼</span>
@@ -81,13 +81,6 @@
                   {{ item.name }}
                 </p>
                 <p class="goods-tag">
-                  <span
-                    v-if="
-                      item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
-                    "
-                    class="tag-item tag-tc"
-                    >套餐</span
-                  >
                   <span
                     v-for="(tagItem, index2) in item.salesGoodsTags"
                     v-show="tagItem.categoryCode === 'DSJTC20210514000042'"
@@ -346,14 +339,6 @@ export default {
         return price.split('.')[index]
       }
       return index === 0 ? price : ''
-    },
-    jumpPage(item) {
-      this.$router.push({
-        path: '/detail',
-        query: {
-          productId: item.id,
-        },
-      })
     },
     // 切换轮播
     onChange(index) {

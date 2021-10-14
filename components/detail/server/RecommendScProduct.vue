@@ -7,7 +7,7 @@
         <nuxt-link
           class="need_item"
           :to="{
-            path: '/detail/serviceDetails',
+            path: '/detail',
             query: { productId: item.id },
           }"
         >

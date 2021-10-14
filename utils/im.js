@@ -35,6 +35,12 @@ export function imInit(data = {}) {
     secret: config.imsecret,
     appKey: config.imappKey,
     isConnectSocket: false,
+    onConnect:res=>{
+      console.log('onConnect',res);
+    },
+    onClose:res=>{
+      console.log('onClose',res);
+    },
     myInfo: (res) => {
       if (data.userType === 'VISITOR') {
         localStorage.setItem('myInfo', JSON.stringify(res.data))
@@ -43,7 +49,7 @@ export function imInit(data = {}) {
       }
     },
     onError: (res) => {
-      console.log(res)
+      console.log('onError',res)
     },
   })
   return initSdk

@@ -152,6 +152,7 @@ export default {
           } else {
             this.visible = false
           }
+          this.$store.dispatch('planner/setSharePlanner', this.planerInfo)
           // this.$emit('setPlannerInfo', this.planerInfo)
           // this.$forceUpdate()
         })

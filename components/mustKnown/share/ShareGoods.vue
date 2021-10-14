@@ -1,5 +1,5 @@
 <template>
-  <div class="service-goods-component" @click="toDetail">
+  <div class="service-goods-component" @click="toGoodsDeatil(info)">
     <div class="service-goods-component-item">
       <slot name="left"></slot>
       <sp-image
@@ -13,12 +13,6 @@
             {{ info.name || '' }}
           </div>
           <div v-if="type === 'Service'" class="desc-label">
-            <span
-              v-if="info.salesGoodsSubVos && info.salesGoodsSubVos.length > 1"
-              class="desc-label-tc"
-            >
-              套餐
-            </span>
             <span
               v-for="item of info.salesGoodsTags"
               v-show="item.categoryCode === 'DSJTC20210514000042'"
@@ -68,7 +62,6 @@
 
 <script>
 import { Image } from '@chipspc/vant-dgg'
-
 export default {
   name: 'EvaluateList',
   components: {
@@ -88,33 +81,6 @@ export default {
   },
   data() {
     return {}
-  },
-  methods: {
-    toDetail() {
-      if (this.type === 'Service') {
-        this.$router.push({
-          path: '/detail',
-          query: {
-            productId: this.info.id,
-          },
-        })
-      } else {
-        this.$router.push({
-          path: '/detail/transactionDetails',
-          query: {
-            productId: this.info.id,
-          },
-        })
-      }
-    },
-    // linkServiceGoodsDetail(info) {
-    //   this.$router.push({
-    //     path: '/detail',
-    //     query: {
-    //       productId: info.id,
-    //     },
-    //   })
-    // },
   },
 }
 </script>
