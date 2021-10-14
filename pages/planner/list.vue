@@ -327,7 +327,7 @@ export default {
           regions: [code || '510100'],
         }
       }
-      return { plannerName: keywords, regionDto }
+      return { mchName: keywords, regionDto }
     },
   },
   created() {
@@ -772,9 +772,9 @@ export default {
     async getList(currentPage) {
       console.log('this.search', this.search)
       const { limit } = this.pageOption
-      const { plannerName, regionDto } = this.formatSearch
+      const { mchName, regionDto } = this.formatSearch
       const params = {
-        plannerName,
+        keyWords:mchName,
         regionDto,
         limit,
         page: currentPage,
