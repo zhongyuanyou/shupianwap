@@ -42,7 +42,7 @@
                 ref="regionsDropdownItem"
                 :disabled="!regionsOption || !regionsOption.length"
                 :title-class="
-                  search.region.name != '区域'
+                  search.region.name != '区域' && !isChooseCategory
                     ? 'sp-dropdown-menu__title--selected '
                     : ''
                 "
@@ -62,7 +62,9 @@
                 ref="sortDropdown"
                 class="search__dropdown-sort"
                 :title-class="
-                  search.sortId > 0 ? 'sp-dropdown-menu__title--selected' : ''
+                  search.sortId > 0 && !isChooseCategory
+                    ? 'sp-dropdown-menu__title--selected'
+                    : ''
                 "
                 :title="search.sortText"
               >
@@ -91,9 +93,7 @@
                 ref="categoryCodeSelect"
                 :title="search.categoryCodeName"
                 :title-class="
-                  search.categoryCodes
-                    ? 'sp-dropdown-menu__title--selected '
-                    : ''
+                  isChooseCategory ? 'sp-dropdown-menu__title--selected ' : ''
                 "
                 class="search__dropdown-category"
               >
@@ -204,45 +204,39 @@ import { callPhone, parseTel } from '@/utils/common'
 const SORT_CONFIG = [
   {
     type: 'pointSort', // 排序类型
-    sortValue: 1, // 降序
+    sortValue: 2, // 降序
     text: '薯片分从高到低',
     value: 0,
-    key: 'orderByPoint',
   },
   {
     type: 'pointSort',
-    sortValue: 0, // 升序
+    sortValue: 1, // 升序
     text: '薯片分从低到高',
     value: 1,
-    key: 'orderByPoint',
   },
   {
     type: 'reputationSort',
-    sortValue: 1, // 降序
+    sortValue: 2, // 降序
     text: '客户评价分从高到低',
     value: 2,
-    key: 'orderByReputation',
   },
   {
     type: 'reputationSort',
-    sortValue: 0, // 升序
+    sortValue: 1, // 升序
     text: '客户评价分从低到高',
     value: 3,
-    key: 'orderByReputation',
   },
   {
     type: 'payNumSort',
-    sortValue: 1, // 降序
+    sortValue: 2, // 降序
     text: '成交量从高到低',
     value: 4,
-    key: 'orderByPayNum',
   },
   {
     type: 'payNumSort',
-    sortValue: 0, // 升序
+    sortValue: 1, // 升序
     text: '成交量从低到高',
     value: 5,
-    key: 'orderByPayNum',
   },
 ]
 
@@ -277,7 +271,6 @@ export default {
     return {
       headHeight: '0.88rem',
       search: {
-        isPhoto: 1,
         keywords: '',
         sortId: 0,
         sortText: '薯片分从高到低',
@@ -302,10 +295,6 @@ export default {
       defaultCityCode: '',
       isChooseCategory: false,
       backData: [],
-      searchParams: {
-        page: 1,
-        limit: 20,
-      },
     }
   },
   computed: {
@@ -318,30 +307,30 @@ export default {
     }),
     formatSearch() {
       const { sortId, keywords, region } = this.search
-      const sortObj = this.sortOption[sortId]
+      const matched =
+        this.sortOption.find((item) => item.value === sortId) || SORT_CONFIG[0]
+      const sort = {
+        sortType: matched.type,
+        value: matched.sortValue,
+      }
       const code =
         region.name === '区域'
           ? this.isApplets
             ? this.code
             : this.currentCity.code
           : region.code
-      //   console.log('region.name', region.name)
-      //   let regionDto = {
-      //     codeState: region.name !== '区域' ? 3 : 2,
-      //     regions: [code || '510100'],
-      //   }
-      //   if (this.catogyActiveIndex !== 0) {
-      //     regionDto = {
-      //       codeState: 2,
-      //       regions: [code || '510100'],
-      //     }
-      //   }
-      const cityCodes = [this.currentCity.code] // 市集合
-      let areaCodes = [code] // 区集合
-      if (this.currentCity.code === code) {
-        areaCodes = []
+      console.log('region.name', region.name)
+      let regionDto = {
+        codeState: region.name !== '区域' ? 3 : 2,
+        regions: [code || '510100'],
       }
-      return { sortObj, mchName: keywords, cityCodes, areaCodes }
+      if (this.catogyActiveIndex !== 0) {
+        regionDto = {
+          codeState: 2,
+          regions: [code || '510100'],
+        }
+      }
+      return { sort, plannerName: keywords, regionDto }
     },
   },
   created() {
@@ -423,6 +412,7 @@ export default {
         this.categoryList = [{ name: '全部分类', code: 0 }].concat(res[0])
         if (this.$route.query && this.$route.query.categoryCode) {
           this.search.categoryCodes = this.$route.query.categoryCode
+          this.isChooseCategory = true
           this.categoryList.forEach((item, index) => {
             if (item.code === this.search.categoryCodes) {
               this.catogyActiveIndex = index
@@ -483,6 +473,9 @@ export default {
       this.uPGpBack()
     },
     handleRegionsSelect(data) {
+      this.catogyActiveIndex = 0
+      this.search.categoryCodeName = '全部分类'
+      this.isChooseCategory = false
       if (this.currentCity.code !== data[0].code) return
       const { code, name } = data[1] || {}
       this.search.region = {
@@ -493,7 +486,6 @@ export default {
       this.handleSearch()
     },
     handleSortChange(item) {
-      console.log('排序选择', item)
       const { value, text } = item || {}
       // 触发 formatSearchParams 计算
       this.search.sortText = text
@@ -501,7 +493,7 @@ export default {
       this.$refs.sortDropdown.toggle()
       this.catogyActiveIndex = 0
       this.search.categoryCodeName = '全部分类'
-
+      this.isChooseCategory = false
       this.handleSearch()
     },
     onLoad(isInit) {
@@ -515,17 +507,22 @@ export default {
         this.pageOption = DEFAULT_PAGE
         currentPage = 1
       }
-      this.getList(currentPage)
-        .then((data) => {
-          this.loading = false
-          if (this.list.length >= this.pageOption.totalCount) {
-            this.finished = true
-          }
-        })
-        .catch(() => {
-          this.error = true
-          this.loading = false
-        })
+      if (this.catogyActiveIndex === 0) {
+        this.getList(currentPage)
+          .then((data) => {
+            this.loading = false
+            if (this.list.length >= this.pageOption.totalCount) {
+              this.finished = true
+            }
+          })
+          .catch(() => {
+            this.error = true
+            this.loading = false
+          })
+      } else {
+        console.log('currentPage', currentPage)
+        this.getListByCode(this.search.categoryCodes, currentPage)
+      }
     },
     onRefresh() {
       this.finished = false
@@ -702,6 +699,8 @@ export default {
               name: userName,
               userId: mchUserId,
               userType: type,
+              userCenterId: data.userCenterId,
+              mchDetailId: data.mchDetailId,
             },
             (res) => {
               const { code } = res || {}
@@ -770,29 +769,10 @@ export default {
 
     async getList(currentPage) {
       const { limit } = this.pageOption
-      const { sortObj, mchName, cityCodes, areaCodes } = this.formatSearch
-      const params = {
-        cityCodes,
-        limit,
-        page: currentPage,
-        isPhoto: 1, // 是否获取电话
-        isBusinessCategory: 1, // 是否获取授权类目
-        isPoint: 1,
-      }
-      if (this.search.categoryCodes) {
-        params.secondTypeCodes = [this.search.categoryCodes] // 一级类目集合
-      }
-      if (areaCodes.length) {
-        params.areaCodes = areaCodes
-      }
-      if (mchName) {
-        params.mchName = mchName
-      }
-      params.mchClasses = ['MERCHANT_B'] // 商户类型
-      params[sortObj.key] = sortObj.sortValue // 排序参数
-      params.roleCodes = ['salesman']
+      const { sort, plannerName, regionDto } = this.formatSearch
+      const params = { sort, plannerName, regionDto, limit, page: currentPage }
       try {
-        const data = await planner.listV2(params)
+        const data = await planner.list(params)
         if (this.refreshing) {
           this.list = []
           this.refreshing = false

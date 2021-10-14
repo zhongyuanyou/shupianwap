@@ -734,7 +734,7 @@ export default {
         params.firstTypeCodes = [this.search.categoryCodes]
       }
       try {
-        const data = await planner.list(params)
+        const data = await planner.list2(params)
         if (this.refreshing) {
           this.list = []
           this.refreshing = false
