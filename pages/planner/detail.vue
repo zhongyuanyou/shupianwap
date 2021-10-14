@@ -71,7 +71,13 @@
                       width="1.2rem"
                       height="1.2rem"
                       fit="cover"
-                      :src="$resizeImg(120,120,newDetailData.image || PlannerHeadList)"
+                      :src="
+                        $resizeImg(
+                          120,
+                          120,
+                          newDetailData.image || PlannerHeadList
+                        )
+                      "
                     />
                     <span
                       v-if="!!newDetailData.title"
@@ -550,6 +556,7 @@ export default {
           mchUserId,
           dataFlg: '1',
           cardType: 'plannerCode',
+          standard: 0, // 查询非三标产品
         },
       })
       if (newData.code === 200) {
