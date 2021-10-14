@@ -94,7 +94,7 @@
                   <div class="right">
                     <sp-radio-group v-model="item.checked">
                       <sp-radio
-                        :name="1"
+                        :name="true"
                         disabled
                         :class="item.checked ? 'act' : ''"
                       >

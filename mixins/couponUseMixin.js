@@ -25,14 +25,15 @@ export default {
   methods: {
     switchCheckedCoupon(item) {
 
-      this.checkedCoupon.forEach(v => { v.checked = 0 })
+      this.checkedCoupon.forEach(v => { v.checked = false })
       // 如果点击已选中的，去掉选择
       if  (this.checkedCoupon.some(v => v.couponId === item.couponId)) {
         this.checkedCoupon = this.checkedCoupon.filter(v => {
-          v.checked = 0
+          v.checked = false
           return v.couponId !== item.couponId
         })
-        this.checkedCoupon.forEach(v => { v.checked = 1 })
+        this.checkedCoupon.forEach(v => { v.checked = true })
+        this.$forceUpdate()
         return
       }
       // 如果是点击未选中的
@@ -58,7 +59,8 @@ export default {
           this.checkedCoupon.push(item)
         }
       }
-      this.checkedCoupon.forEach(v => { v.checked = 1 })
+      this.checkedCoupon.forEach(v => { v.checked = true })
+      this.$forceUpdate()
     }
   }
 }
