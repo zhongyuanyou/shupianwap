@@ -716,13 +716,14 @@ export default {
     },
 
     async getList(currentPage) {
+      console.log('currentPage', currentPage)
       const { limit } = this.pageOption
       const { mchName, regionDto } = this.formatSearch
       const params = {
         keyWords: mchName,
         regionDto,
         limit,
-        page: currentPage,
+        start: currentPage,
         isPoint: 1,
         ...this.sortValueObj,
       }
@@ -736,12 +737,12 @@ export default {
           this.refreshing = false
         }
         if (data) {
-          const { limit, currentPage = 1, totalCount = 0, records = [] } = data
-          this.pageOption = { limit, totalCount, page: currentPage }
+          const { limit, current = 1, totalCount = 0, records = [] } = data
+          this.pageOption = { limit, totalCount, page: current }
           this.list.push(...records)
           this.plannerMd(records)
           // 第一页面请求提示
-          if (currentPage === 1) {
+          if (current === 1) {
             this.$xToast.show({
               message: `共找到${totalCount}个规划师`,
               duration: 1000,
