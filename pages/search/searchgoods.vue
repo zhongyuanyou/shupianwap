@@ -265,6 +265,9 @@ export default {
       if (this.tabVues[type]) {
         this.isInput = true
       }
+      if (this.$refs.goods) {
+        this.$refs.isLoading = false
+      }
       // 处理存储路由的query
       if (
         this.$router.history.current.query.keywords !== this.formData.searchText
