@@ -382,7 +382,6 @@ export default {
       this.search.categoryCodes = this.categoryList[index].code
       // this.pageOption.page = 1
       // this.pageOption.limit = 10
-
       this.pageOption = DEFAULT_PAGE
 
       this.search.keywords = ''
@@ -401,6 +400,8 @@ export default {
           },
         ]
       }
+      this.refreshing = true
+      this.pageOption.page = 1
       this.onLoad()
       this.$refs.categoryCodeSelect.toggle()
     },
@@ -416,54 +417,8 @@ export default {
               this.search.categoryCodeName = item.name
             }
           })
-          this.getListByCode(this.search.categoryCodes, 1)
         }
       })
-    },
-    // 根据经营类目查询规划师
-    getListByCode(code, currentPage) {
-      planner
-        .findListByCode({
-          categoryCodes: [code],
-          categoryState: 1, // 分类层级
-          limit: 10,
-          start: this.pageOption.page,
-        })
-        .then((res) => {
-          if (this.refreshing) {
-            this.list = []
-            this.refreshing = false
-          }
-          if (res) {
-            // this.pageOption.page++
-            this.loading = false
-            this.finished = false
-            this.error = false
-            const { limit, currentPage = 1, totalCount = 0, records = [] } = res
-            this.pageOption = { limit, totalCount, page: currentPage }
-            this.pageOption.page = currentPage + 1
-            this.plannerMd(records)
-            // 第一页面请求提示
-            if (currentPage === 1) {
-              this.$xToast.show({
-                message: `共找到${totalCount}个规划师`,
-                duration: 1000,
-                forbidClick: true,
-                icon: 'toast_ic_comp',
-              })
-              this.list = records
-            } else {
-              this.list.push(...records)
-              // this.list = this.list.concat(currentPage)
-            }
-          }
-        })
-        .catch((error) => {
-          console.log('error', error)
-          this.loading = false
-          this.finished = true
-          this.error = true
-        })
     },
     onLeftClick() {
       console.log('nav onClickLeft')
@@ -509,22 +464,17 @@ export default {
         this.pageOption = DEFAULT_PAGE
         currentPage = 1
       }
-      if (this.catogyActiveIndex === 0) {
-        this.getList(currentPage)
-          .then((data) => {
-            this.loading = false
-            if (this.list.length >= this.pageOption.totalCount) {
-              this.finished = true
-            }
-          })
-          .catch(() => {
-            this.error = true
-            this.loading = false
-          })
-      } else {
-        console.log('currentPage', currentPage)
-        this.getListByCode(this.search.categoryCodes, currentPage)
-      }
+      this.getList(currentPage)
+        .then((data) => {
+          this.loading = false
+          if (this.list.length >= this.pageOption.totalCount) {
+            this.finished = true
+          }
+        })
+        .catch(() => {
+          this.error = true
+          this.loading = false
+        })
     },
     onRefresh() {
       this.finished = false
@@ -770,16 +720,18 @@ export default {
     },
 
     async getList(currentPage) {
-      console.log('this.search', this.search)
       const { limit } = this.pageOption
       const { mchName, regionDto } = this.formatSearch
       const params = {
-        keyWords:mchName,
+        keyWords: mchName,
         regionDto,
         limit,
         page: currentPage,
         isPoint: 1,
         ...this.sortValueObj,
+      }
+      if (this.search.categoryCodes) {
+        params.firstTypeCodes = [this.search.categoryCodes]
       }
       try {
         const data = await planner.list(params)
