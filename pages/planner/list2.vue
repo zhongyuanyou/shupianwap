@@ -203,38 +203,38 @@ import { callPhone, parseTel } from '@/utils/common'
 
 const SORT_CONFIG = [
   {
-    type: 'orderByPoint', // 排序类型
-    sortValue: 1, // 降序
+    type: 'pointSort', // 排序类型
+    sortValue: 2, // 降序
     text: '薯片分从高到低',
     value: 0,
   },
   {
-    type: 'orderByPoint',
-    sortValue: 0, // 升序
+    type: 'pointSort',
+    sortValue: 1, // 升序
     text: '薯片分从低到高',
     value: 1,
   },
   {
-    type: 'orderByReputation',
-    sortValue: 1, // 降序
+    type: 'reputationSort',
+    sortValue: 2, // 降序
     text: '客户评价分从高到低',
     value: 2,
   },
   {
-    type: 'orderByReputation',
-    sortValue: 0, // 升序
+    type: 'reputationSort',
+    sortValue: 1, // 升序
     text: '客户评价分从低到高',
     value: 3,
   },
   {
-    type: 'orderByPayNum',
-    sortValue: 1, // 降序
+    type: 'payNumSort',
+    sortValue: 2, // 降序
     text: '成交量从高到低',
     value: 4,
   },
   {
-    type: 'orderByPayNum',
-    sortValue: 0, // 升序
+    type: 'payNumSort',
+    sortValue: 1, // 升序
     text: '成交量从低到高',
     value: 5,
   },
@@ -282,9 +282,6 @@ export default {
         categoryCodeName: '全部分类',
         categoryState: 1,
       },
-      sortValueObj: {
-        orderByPoint: 1,
-      },
       sortOption: SORT_CONFIG,
       regionsOption: [],
       refreshing: false,
@@ -309,7 +306,13 @@ export default {
       code: (state) => state.city.code || '510100',
     }),
     formatSearch() {
-      const { keywords, region } = this.search
+      const { sortId, keywords, region } = this.search
+      const matched =
+        this.sortOption.find((item) => item.value === sortId) || SORT_CONFIG[0]
+      const sort = {
+        sortType: matched.type,
+        value: matched.sortValue,
+      }
       const code =
         region.name === '区域'
           ? this.isApplets
@@ -327,7 +330,7 @@ export default {
           regions: [code || '510100'],
         }
       }
-      return { mchName: keywords, regionDto }
+      return { sort, plannerName: keywords, regionDto }
     },
   },
   created() {
@@ -382,6 +385,7 @@ export default {
       this.search.categoryCodes = this.categoryList[index].code
       // this.pageOption.page = 1
       // this.pageOption.limit = 10
+
       this.pageOption = DEFAULT_PAGE
 
       this.search.keywords = ''
@@ -400,8 +404,6 @@ export default {
           },
         ]
       }
-      this.refreshing = true
-      this.pageOption.page = 1
       this.onLoad()
       this.$refs.categoryCodeSelect.toggle()
     },
@@ -417,8 +419,54 @@ export default {
               this.search.categoryCodeName = item.name
             }
           })
+          this.getListByCode(this.search.categoryCodes, 1)
         }
       })
+    },
+    // 根据经营类目查询规划师
+    getListByCode(code, currentPage) {
+      planner
+        .findListByCode({
+          categoryCodes: [code],
+          categoryState: 1, // 分类层级
+          limit: 10,
+          start: this.pageOption.page,
+        })
+        .then((res) => {
+          if (this.refreshing) {
+            this.list = []
+            this.refreshing = false
+          }
+          if (res) {
+            // this.pageOption.page++
+            this.loading = false
+            this.finished = false
+            this.error = false
+            const { limit, currentPage = 1, totalCount = 0, records = [] } = res
+            this.pageOption = { limit, totalCount, page: currentPage }
+            this.pageOption.page = currentPage + 1
+            this.plannerMd(records)
+            // 第一页面请求提示
+            if (currentPage === 1) {
+              this.$xToast.show({
+                message: `共找到${totalCount}个规划师`,
+                duration: 1000,
+                forbidClick: true,
+                icon: 'toast_ic_comp',
+              })
+              this.list = records
+            } else {
+              this.list.push(...records)
+              // this.list = this.list.concat(currentPage)
+            }
+          }
+        })
+        .catch((error) => {
+          console.log('error', error)
+          this.loading = false
+          this.finished = true
+          this.error = true
+        })
     },
     onLeftClick() {
       console.log('nav onClickLeft')
@@ -442,11 +490,6 @@ export default {
       // 触发 formatSearchParams 计算
       this.search.sortText = text
       this.search.sortId = value
-      const key = item.type
-      this.sortValue = {}
-      console.log('item', item)
-      this.sortValueObj[key] = item.sortValue
-      console.log('this.sortValueObj', this.sortValueObj)
       this.$refs.sortDropdown.toggle()
       this.catogyActiveIndex = 0
       this.search.categoryCodeName = '全部分类'
@@ -464,17 +507,22 @@ export default {
         this.pageOption = DEFAULT_PAGE
         currentPage = 1
       }
-      this.getList(currentPage)
-        .then((data) => {
-          this.loading = false
-          if (this.list.length >= this.pageOption.totalCount) {
-            this.finished = true
-          }
-        })
-        .catch(() => {
-          this.error = true
-          this.loading = false
-        })
+      if (this.catogyActiveIndex === 0) {
+        this.getList(currentPage)
+          .then((data) => {
+            this.loading = false
+            if (this.list.length >= this.pageOption.totalCount) {
+              this.finished = true
+            }
+          })
+          .catch(() => {
+            this.error = true
+            this.loading = false
+          })
+      } else {
+        console.log('currentPage', currentPage)
+        this.getListByCode(this.search.categoryCodes, currentPage)
+      }
     },
     onRefresh() {
       this.finished = false
@@ -721,20 +769,10 @@ export default {
 
     async getList(currentPage) {
       const { limit } = this.pageOption
-      const { mchName, regionDto } = this.formatSearch
-      const params = {
-        keyWords: mchName,
-        regionDto,
-        limit,
-        page: currentPage,
-        isPoint: 1,
-        ...this.sortValueObj,
-      }
-      if (this.search.categoryCodes) {
-        params.firstTypeCodes = [this.search.categoryCodes]
-      }
+      const { sort, plannerName, regionDto } = this.formatSearch
+      const params = { sort, plannerName, regionDto, limit, page: currentPage }
       try {
-        const data = await planner.list2(params)
+        const data = await planner.list(params)
         if (this.refreshing) {
           this.list = []
           this.refreshing = false
