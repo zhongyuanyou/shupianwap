@@ -584,18 +584,20 @@ export default {
           console.log('this.order.list', this.order.list)
           const arr = []
           for (let i = 0; i < this.order.list.length; i++) {
-            const subGoodsIdList = this.order.list[i].saleGoodsSubs.map(
-              (item) => {
-                return item.productId
+            const subGoods = this.order.list[i].saleGoodsSubs.map((item) => {
+              return {
+                goodsId: item.goodsId,
+                productId: item.productId,
+                goodsSubId: item.goodsSubId,
               }
-            )
+            })
             const sku = {
               saleSkuId: this.order.list[i].id,
               saleSkuName: this.order.list[i].name,
               saleSkuVersionNo: this.order.list[i].version + '',
               saleSkuPrice: this.order.list[i].salesPrice,
               saleSkuCount: this.order.list[i].salesVolume,
-              subGoodsIdList,
+              subGoods,
             }
             arr.push(sku)
             this.loading = false
@@ -603,18 +605,20 @@ export default {
           this.Orderform.needSplitProPackageDataParam = arr
         } else {
           console.log('this.order', this.order)
-          const subGoodsIdList = this.order.list[0].salesGoodsSubVos.map(
-            (item) => {
-              return item.productId
+          const subGoods = this.order.list[0].salesGoodsSubVos.map((item) => {
+            return {
+              goodsId: item.goodsId,
+              productId: item.productId,
+              goodsSubId: item.goodsSubId,
             }
-          )
+          })
           const sku = {
             saleSkuId: this.order.id,
             saleSkuName: this.order.name,
             saleSkuVersionNo: this.order.version + '',
             saleSkuPrice: this.order.salesPrice,
             saleSkuCount: 1,
-            subGoodsIdList, // 基础服务产品id
+            subGoods, // 基础服务产品id
           }
           this.Orderform.needSplitProPackageDataParam = new Array(1).fill(sku)
         }
