@@ -425,8 +425,6 @@ export default {
       this.uPGpBack()
     },
     handleRegionsSelect(data) {
-      this.catogyActiveIndex = 0
-      this.search.categoryCodeName = '全部分类'
       this.isChooseCategory = false
       if (this.currentCity.code !== data[0].code) return
       const { code, name } = data[1] || {}
@@ -448,8 +446,6 @@ export default {
       this.sortValueObj[key] = item.sortValue
       console.log('this.sortValueObj', this.sortValueObj)
       this.$refs.sortDropdown.toggle()
-      this.catogyActiveIndex = 0
-      this.search.categoryCodeName = '全部分类'
       this.isChooseCategory = false
       this.handleSearch()
     },
