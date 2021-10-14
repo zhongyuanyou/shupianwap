@@ -490,8 +490,8 @@ export default {
       const key = item.type
       this.sortValue = {}
       console.log('item', item)
-      this.sortValue[key] = item.sortValue
-      console.log('this.sortValue', this.sortValue)
+      this.sortValueObj[key] = item.sortValue
+      console.log('this.sortValueObj', this.sortValueObj)
       this.$refs.sortDropdown.toggle()
       this.catogyActiveIndex = 0
       this.search.categoryCodeName = '全部分类'
