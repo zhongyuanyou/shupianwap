@@ -570,8 +570,8 @@ export default {
         active = newDetailData.titleNavs[0]
         newDetailData.label =
           newDetailData.label && newDetailData.label.split('|')
-        if (newDetailData.label && newDetailData.label.length > 3) {
-          newDetailData.label = newDetailData.label.splice(0, 2)
+        if (newDetailData.label && newDetailData.label.length > 5) {
+          newDetailData.label = newDetailData.label.splice(0, 5)
         }
         newDetailData.content.hotNews.forEach((item) => {
           if (item.createTime) {
@@ -1341,8 +1341,6 @@ export default {
       &__label {
         font-size: 24px;
         p {
-          height: 50px;
-          overflow: hidden;
           margin: 23px 0 32px 0;
           span {
             display: inline-block;
