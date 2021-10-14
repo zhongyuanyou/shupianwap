@@ -22,7 +22,7 @@
             @click="tabactivefn(item, index)"
           >
             <span>{{ item.name }}</span
-            ><span v-if="index == 0">{{ `(${datalist.length || 0})` }}</span>
+            ><span v-if="index == 0">{{ `(${cloneList.length || 0})` }}</span>
             <span v-else>{{ `(${nolist.length || 0})` }}</span>
             <i class="icon"></i>
           </p>
@@ -33,9 +33,9 @@
         </div>
         <div v-if="tablist[tabAct].is">
           <div class="databox">
-            <div v-if="datalist.length > 0" class="listbox">
+            <div v-if="cloneList.length > 0" class="listbox">
               <div
-                v-for="(item, index) in datalist"
+                v-for="(item, index) in cloneList"
                 :key="index"
                 class="list"
                 @click="checkitem(item, index)"
@@ -92,11 +92,11 @@
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
                   <div class="right">
-                    <sp-radio-group v-model="radio">
+                    <sp-radio-group v-model="item.checked">
                       <sp-radio
-                        :name="index"
+                        :name="1"
                         disabled
-                        :class="radio === index ? 'act' : ''"
+                        :class="item.checked ? 'act' : ''"
                       >
                         <template #icon="props">
                           <my-icon
@@ -106,7 +106,7 @@
                                 : 'pay_ic_radio_n'
                             "
                             size="0.32rem"
-                            :color="radio === index ? '#4E78F5' : '#dddddd'"
+                            :color="item.checked ? '#4E78F5' : '#dddddd'"
                           ></my-icon>
                         </template>
                       </sp-radio>
@@ -122,7 +122,7 @@
               />
               <p>暂无优惠券</p>
             </div>
-            <div v-if="datalist.length > 0" class="btn">
+            <div v-if="cloneList.length > 0" class="btn">
               <p @click="submit">确定</p>
             </div>
           </div>
@@ -231,6 +231,8 @@ import {
 } from '@chipspc/vant-dgg'
 import { order } from '@/api/index'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
+import couponUseMixin from '@/mixins/couponUseMixin.js'
+import clone from '@/utils/clone'
 export default {
   name: 'PlaceOrderPopup',
   components: {
@@ -242,6 +244,7 @@ export default {
     [Dialog.Component.name]: Dialog.Component,
     LoadingCenter,
   },
+  mixins: [couponUseMixin],
   props: {
     show: {
       type: Boolean,
@@ -314,6 +317,7 @@ export default {
       TipsShow: false,
 
       loading: false,
+      cloneList: [],
     }
   },
   computed: {
@@ -347,6 +351,19 @@ export default {
     //     100
     //   )
     // },
+  },
+  watch: {
+    show: {
+      immediate: true,
+      handler(newVal) {
+        if (newVal) {
+          this.cloneList = clone(this.datalist, true)
+          this.cloneList.forEach(v => {
+            v.checked = false
+          });
+        }
+      }
+    }
   },
 
   mounted() {},
@@ -417,14 +434,16 @@ export default {
       return Number(count) / 100
     },
     checkitem(item, index) {
-      if (this.radio === index) {
-        this.checkarr = ''
-        this.radio = -1
-      } else {
-        this.checkarr = item
-        this.radio = index
-      }
-      this.settlement()
+      this.switchCheckedCoupon(item);
+      console.log(this.cloneList);
+      // if (this.radio === index) {
+      //   this.checkarr = ''
+      //   this.radio = -1
+      // } else {
+      //   this.checkarr = item
+      //   this.radio = index
+      // }
+      // this.settlement()
     },
     close() {
       this.$emit('close')
@@ -438,7 +457,7 @@ export default {
       this.tabAct = index
       this.$emit('tabactive', item, index)
     },
-  },
+  }
 }
 </script>
 
