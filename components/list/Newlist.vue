@@ -137,7 +137,7 @@ export default {
     },
     getlist() {},
     onLoad() {
-      if (this.$parent && this.$parent.onshow) {
+      if (this.$parent && !this.$parent.isLoading) {
         this.loading = true
         this.pages++
         this.$emit('load', this.pages)
