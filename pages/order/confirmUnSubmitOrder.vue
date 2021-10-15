@@ -322,6 +322,7 @@ export default {
         popupshow: false,
 
         selectedItem: {}, // 选择的对象
+        selectedCoupons: [], // 确认选择了的，双11多优惠券需求添加
         couponPrice: '', // 选择的优惠券对象
 
         tablist: [
@@ -480,8 +481,12 @@ export default {
           { axios: this.$axios },
           {
             orderId: this.$route.query.cusOrderId,
-            couponUseCode: this.couponInfo.selectedItem.couponUseCode,
-            couponId: this.couponInfo.selectedItem.couponId,
+            coupons: this.couponInfo.selectedCoupons.map(v => ({
+              couponUseCode: v?.couponUseCode || '',
+              couponId: v?.couponId || '',
+            })),
+            // couponUseCode: this.couponInfo.selectedItem.couponUseCode,
+            // couponId: this.couponInfo.selectedItem.couponId,
           }
         )
         .then((result) => {
@@ -583,26 +588,35 @@ export default {
 
         if (
           this.couponInfo.couponPrice &&
-          this.couponInfo.selectedItem &&
-          this.couponInfo.selectedItem.marketingCouponVO.id
+          this.couponInfo.selectedCoupons.length
         ) {
-          const arr = {
+          // const arr = {
+          //   code: 'ORDER_DISCOUNT_DISCOUNT',
+          //   value: this.couponInfo.selectedItem.marketingCouponVO.id,
+          //   couponUseCode: this.couponInfo.selectedItem.couponUseCode,
+          //   no: this.couponInfo.selectedItem.marketingCouponVO.id,
+          //   couponName:
+          //     this.couponInfo.selectedItem.marketingCouponVO.couponName,
+          //   discountType:
+          //     this.couponInfo.selectedItem.marketingCouponVO.merId === -1
+          //       ? 'COUPON_DISCOUNT'
+          //       : 'BUSINESS_COUPON',
+          //   discountSubsidy:
+          //     this.couponInfo.selectedItem.marketingCouponVO.merId === -1
+          //       ? 1
+          //       : 0,
+          // }
+          this.Orderform.discount = this.couponInfo.selectedCoupons.map(v => ({
             code: 'ORDER_DISCOUNT_DISCOUNT',
-            value: this.couponInfo.selectedItem.marketingCouponVO.id,
-            couponUseCode: this.couponInfo.selectedItem.couponUseCode,
-            no: this.couponInfo.selectedItem.marketingCouponVO.id,
-            couponName:
-              this.couponInfo.selectedItem.marketingCouponVO.couponName,
-            discountType:
-              this.couponInfo.selectedItem.marketingCouponVO.merId === -1
+            value: v.marketingCouponVO.id,
+            couponUseCode: v.couponUseCode,
+            no: v.marketingCouponVO.id,
+            couponName: v.marketingCouponVO.couponName,
+            discountType: v.marketingCouponVO.merId === -1
                 ? 'COUPON_DISCOUNT'
                 : 'BUSINESS_COUPON',
-            discountSubsidy:
-              this.couponInfo.selectedItem.marketingCouponVO.merId === -1
-                ? 1
-                : 0,
-          }
-          this.Orderform.discount = new Array(1).fill(arr)
+            discountSubsidy: v.marketingCouponVO.merId === -1 ? 1 : 0,
+          }))
         } else if (
           this.card.cardPrice &&
           this.card.selectedItem &&
@@ -835,11 +849,12 @@ export default {
         })
     },
 
-    conponChange(price, num, item) {
+    conponChange(price, num, coupons) {
       console.log('price', price)
       console.log('num', num)
       this.couponInfo.couponPrice = num
-      this.couponInfo.selectedItem = item || {}
+      // this.couponInfo.selectedItem = item || {}
+      this.couponInfo.selectedCoupons = coupons || []
       this.card.cardPrice = ''
       this.card.selectedItem = {}
       this.settlement()

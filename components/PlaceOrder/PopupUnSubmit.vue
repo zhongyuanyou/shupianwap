@@ -37,7 +37,7 @@
               <div
                 v-for="(item, index) in cloneList"
                 :key="index"
-                class="list"
+                :class="['list', item.composable ? 'composable' : ' ']"
                 @click="checkitem(item, index)"
               >
                 <div class="left">
@@ -216,6 +216,14 @@
     </sp-dialog>
 
     <LoadingCenter v-show="loading" />
+    <sp-center-popup
+      v-model="ifConfirmSwitchPopupShow"
+      :field="switchPopupField"
+      :close-on-click-overlay="false"
+      width="5.40rem"
+      button-type="confirm"
+      @cancel="handleSwitchCouponConfirm"
+    />
   </div>
 </template>
 
@@ -228,11 +236,12 @@ import {
   Toast,
   Button,
   Dialog,
+  CenterPopup,
 } from '@chipspc/vant-dgg'
 import { order } from '@/api/index'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
 import couponUseMixin from '@/mixins/couponUseMixin.js'
-import clone from '@/utils/clone'
+
 export default {
   name: 'PlaceOrderPopup',
   components: {
@@ -241,6 +250,7 @@ export default {
     [RadioGroup.name]: RadioGroup,
     [Radio.name]: Radio,
     [Button.name]: Button,
+    [CenterPopup.name]: CenterPopup,
     [Dialog.Component.name]: Dialog.Component,
     LoadingCenter,
   },
@@ -317,7 +327,6 @@ export default {
       TipsShow: false,
 
       loading: false,
-      cloneList: [],
     }
   },
   computed: {
@@ -352,19 +361,6 @@ export default {
     //   )
     // },
   },
-  watch: {
-    show: {
-      immediate: true,
-      handler(newVal) {
-        if (newVal) {
-          this.cloneList = clone(this.datalist, true)
-          this.cloneList.forEach(v => {
-            v.checked = false
-          });
-        }
-      }
-    }
-  },
 
   mounted() {},
   methods: {
@@ -397,31 +393,55 @@ export default {
     },
 
     // 获取待结算价格
-    settlement() {
-      this.loading = true
-      if (!this.checkarr?.couponUseCode) {
-        this.disPrice = 0
+    async settlement() {
+      if (!this.checkedCoupon.length) {
+        this.disPrice = 0;
+        return;
       }
-      order
-        .settle_order_by_unsubmit(
-          { axios: this.$axios },
+      this.loading = true;
+      try {
+        const result = await order.settle_order_by_unsubmit(
+          {axios: this.$axios},
           {
             orderId: this.cusOrderId,
-            couponUseCode: this.checkarr?.couponUseCode || '',
-            couponId: this.checkarr?.couponId || '',
+            coupons: this.checkedCoupon.map(v => ({
+              couponUseCode: v?.couponUseCode || '',
+              couponId: v?.couponId || '',
+            }))
           }
-        )
-        .then((result) => {
-          this.loading = false
-          this.disPrice = parseFloat(result.orderDiscountMoney) || 0
-          this.price = parseFloat(result.orderPayableMoney) || 0
-          console.log('result', result)
-        })
-        .catch((error) => {
-          this.loading = false
-          console.log('选择优惠券错误', error)
-          this.$xToast.warning('服务器异常,请然后再试')
-        })
+        );
+        this.disPrice = parseFloat(result.orderDiscountMoney) || 0;
+        this.price = parseFloat(result.orderPayableMoney) || 0;
+      } catch (err) {
+        console.error(err);
+        this.$xToast.warning('服务器异常,请然后再试');
+      }
+      this.loading = false;
+
+
+      // if (!this.checkarr?.couponUseCode) {
+      //   this.disPrice = 0
+      // }
+      // order
+      //   .settle_order_by_unsubmit(
+      //     { axios: this.$axios },
+      //     {
+      //       orderId: this.cusOrderId,
+      //       couponUseCode: this.checkarr?.couponUseCode || '',
+      //       couponId: this.checkarr?.couponId || '',
+      //     }
+      //   )
+      //   .then((result) => {
+      //     this.loading = false
+      //     this.disPrice = parseFloat(result.orderDiscountMoney) || 0
+      //     this.price = parseFloat(result.orderPayableMoney) || 0
+      //     console.log('result', result)
+      //   })
+      //   .catch((error) => {
+      //     this.loading = false
+      //     console.log('选择优惠券错误', error)
+      //     this.$xToast.warning('服务器异常,请然后再试')
+      //   })
     },
     handleProtocol(categoryCode) {
       this.$router.push({
@@ -434,23 +454,16 @@ export default {
       return Number(count) / 100
     },
     checkitem(item, index) {
-      this.switchCheckedCoupon(item);
-      console.log(this.cloneList);
-      // if (this.radio === index) {
-      //   this.checkarr = ''
-      //   this.radio = -1
-      // } else {
-      //   this.checkarr = item
-      //   this.radio = index
-      // }
-      // this.settlement()
+      this.ifConfirmSwitchPopupShow = true
+      this.currentTapCoupon = item
     },
     close() {
       this.$emit('close')
     },
     submit() {
       // price计算后售价，disPrice折扣价，checkarr选择项
-      this.$emit('change', this.price, -this.disPrice, this.checkarr)
+      // this.$emit('change', this.price, -this.disPrice, this.checkarr)
+      this.$emit('change', this.price, -this.disPrice, this.checkedCoupon)
       this.close()
     },
     tabactivefn(item, index) {
@@ -549,6 +562,10 @@ export default {
 
           background: url('https://cdn.shupian.cn/sp-pt/wap/g4kbai7wgrk0000.png')
             no-repeat;
+          &.composable {
+            // 可叠加右标
+            background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/33w6tcfd0xu0000.png');
+          }
           background-size: 100% 100%;
           ::v-deep.sp-radio__icon--checked .sp-icon {
             color: #fff;
