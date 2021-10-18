@@ -30,4 +30,9 @@ module.exports = {
     'https://spmicrouag.shupian.cn/tac-external-platform-server/oss/mutlefind',
   formApi: 'https://spmicrouag.shupian.cn/crisps-resource-house', // 资源表单地址 新 -企大顺
   domain: 'shupian.cn',
+  cookieConfig: {
+    path: '/',
+    maxAge: 60 * 60 * 24 * 7, // 过期时间
+    domain: 'shupian.cn',
+  },
 }
