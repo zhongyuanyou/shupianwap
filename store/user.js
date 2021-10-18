@@ -9,7 +9,7 @@
 
 import { auth } from '@/api'
 import { AVATAR } from '~/config/constant'
-import { domain } from '~/config/'
+import { cookieConfig, domain } from '~/config/'
 export const state = () => ({
   userInfo: {},
   token: '',
@@ -25,27 +25,15 @@ export const state = () => ({
 })
 export const mutations = {
   SET_USER(state, data = {}) {
-    this.$cookies.set('token', String(data.token), {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain,
-    })
-    this.$cookies.set('userId', String(data.userId), {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain,
-    })
-    this.$cookies.set('userType', String(data.userType || data.type), {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain,
-    })
+    this.$cookies.set('token', String(data.token), cookieConfig)
+    this.$cookies.set('userId', String(data.userId), cookieConfig)
+    this.$cookies.set(
+      'userType',
+      String(data.userType || data.type),
+      cookieConfig
+    )
     if (data.customerID) {
-      this.$cookies.set('customerID', String(data.customerID), {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 7, // 过期时间
-        domain,
-      })
+      this.$cookies.set('customerID', String(data.customerID), cookieConfig)
     }
     state.userInfo = data
     state.token = String(data.token)
@@ -93,51 +81,26 @@ export const mutations = {
   },
   SET_INFO(state, data = {}) {
     console.log('SET_INFO', data)
-    this.$cookies.set('userNo', String(data.no), {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain,
-    })
-    this.$cookies.set('userName', data.nickName, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain,
-    })
-    this.$cookies.set('userPhone', data.decodePhone, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain,
-    })
-    this.$cookies.set('realStatus', data.realStatus, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain,
-    })
-    this.$cookies.set('mainAccountFull', data.mainAccountFull, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain,
-    })
-    this.$cookies.set('avatar', data.url || AVATAR, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain,
-    })
-    this.$cookies.set('userType', String(data.type || data.userType), {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain,
-    })
+    this.$cookies.set('userNo', String(data.no), cookieConfig)
+    this.$cookies.set('userName', data.nickName, cookieConfig)
+    this.$cookies.set('userPhone', data.decodePhone, cookieConfig)
+    this.$cookies.set('realStatus', data.realStatus, cookieConfig)
+    this.$cookies.set('mainAccountFull', data.mainAccountFull, cookieConfig)
+    this.$cookies.set('avatar', data.url || AVATAR, cookieConfig)
+    this.$cookies.set(
+      'userType',
+      String(data.type || data.userType),
+      cookieConfig
+    )
     if (data?.customerInfo?.id) {
-      this.$cookies.set('customerID', String(data?.customerInfo?.id || ''), {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 7, // 过期时间
-        domain,
-      })
+      this.$cookies.set(
+        'customerID',
+        String(data?.customerInfo?.id || ''),
+        cookieConfig
+      )
       state.customerID = data?.customerInfo?.id
       state.userInfo.customerID = data?.customerInfo?.id
     }
-
     state.userNo = data.no
     state.userName = data.nickName
     state.userType = data.type || data.userType
@@ -145,7 +108,6 @@ export const mutations = {
     state.realStatus = data.realStatus
     state.mainAccountFull = data.mainAccountFull
     state.avatar = data.url || AVATAR
-
     state.userInfo.userNo = data.no
     state.userInfo.userName = data.nickName
     state.userInfo.userPhone = data.fullName
