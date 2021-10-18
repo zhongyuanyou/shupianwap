@@ -243,6 +243,7 @@
       :tablist="couponInfo.tablist"
       :datalist="couponInfo.datalist"
       :nolist="couponInfo.nolist"
+      :echo-selected-coupons="couponInfo.selectedCoupons"
       @change="conponChange"
       @close="close"
     ></PopupUnSubmit>

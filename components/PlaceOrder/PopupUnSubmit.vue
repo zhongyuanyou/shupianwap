@@ -182,6 +182,7 @@
                   </div>
                 </div>
               </div>
+              <p>{{ item.marketingCouponVO.wherefore }}</p>
             </div>
           </div>
           <div v-else class="none">
@@ -299,6 +300,12 @@ export default {
       },
     },
     nolist: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
+    echoSelectedCoupons: {
       type: Array,
       default() {
         return []
@@ -454,11 +461,20 @@ export default {
       return Number(count) / 100
     },
     checkitem(item, index) {
-      this.ifConfirmSwitchPopupShow = true
       this.currentTapCoupon = item
+      // 若已有选中的优惠券
+      if (this.checkedCoupon.length) {
+        this.ifConfirmSwitchPopupShow = true
+      } else {
+        this.handleSwitchCouponConfirm()
+      }
     },
     close() {
+      console.log(111111111111111)
       this.$emit('close')
+      this.checkedCoupon = this.echoSelectedCoupons
+      this.checkSKUCouponComposability();
+      this.$forceUpdate()
     },
     submit() {
       // price计算后售价，disPrice折扣价，checkarr选择项
@@ -751,11 +767,12 @@ export default {
       .listbox {
         height: 100%;
         > .nolist {
-          height: 220px;
+          //height: 220px;
+          height: 280px;
           margin: 10px auto 0;
           width: 670px;
-          background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/5cx1r4tc3js0000.png');
-          // background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png) no-repeat;
+          //background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/5cx1r4tc3js0000.png');
+           background: url('https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png') no-repeat;
           background-size: 100% 100%;
           // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
           box-sizing: border-box;
@@ -764,7 +781,7 @@ export default {
             > .left {
               margin-left: 10px;
               width: 201px;
-              height: 212px;
+              height: 208px;
               color: #fff;
               padding-top: 20px;
               box-sizing: border-box;
@@ -821,7 +838,7 @@ export default {
             }
             > .right {
               width: calc(100% - 201px);
-              height: 212px;
+              height: 208px;
               box-sizing: border-box;
               padding: 25px 0;
               display: flex;
@@ -890,11 +907,14 @@ export default {
             }
           }
           > p {
-            width: 100%;
+            //width: 100%;
+            width: calc(100% - 32px);
             font-size: 20px;
-            font-family: PingFang SC;
             font-weight: 400;
             padding: 13px 20px;
+            border-top: 1px dashed #F4F4F4;
+            margin-left: 16px;
+            color: #1A1A1A;
           }
         }
       }

@@ -95,27 +95,22 @@ export default {
       this.cloneList.forEach(v => {
         v.composable = false;
       })
-      const checkedSKUCouponIds = this.checkedCoupon
-        .filter(v => v.marketingCouponVO.useType === 3)
-        .map(v => v.marketingCouponVO.productId)
-      this.cloneList
-        .filter(v => v.marketingCouponVO.useType === 3)
-        .forEach(v => {
-          if (!checkedSKUCouponIds.includes(v.marketingCouponVO.productId)) {
-            v.composable = true;
-          }
-        })
+      if (this.checkedCoupon.every(v => v.marketingCouponVO.useType === 3)) {
+        const checkedSKUCouponIds = this.checkedCoupon
+          .filter(v => v.marketingCouponVO.useType === 3)
+          .map(v => v.marketingCouponVO.productId)
+        this.cloneList
+          .filter(v => v.marketingCouponVO.useType === 3)
+          .forEach(v => {
+            if (!checkedSKUCouponIds.includes(v.marketingCouponVO.productId)) {
+              v.composable = true;
+            }
+          })
+      }
     },
     handleSwitchCouponConfirm() {
       // 点击优惠券时切换优惠券状态
       this.switchCheckedCoupon(this.currentTapCoupon);
-      // if (this.radio === index) {
-      //   this.checkarr = ''
-      //   this.radio = -1
-      // } else {
-      //   this.checkarr = item
-      //   this.radio = index
-      // }
       this.settlement();
     }
   },
