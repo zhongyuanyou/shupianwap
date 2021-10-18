@@ -28,8 +28,8 @@
           </p>
         </div>
         <div v-if="tabAct === 0" class="calculation">
-          {{ disPrice ? '已选中优惠券，可抵扣' : '请选择优惠券' }}
-          <span v-if="disPrice" class="red">{{ disPrice }}元</span>
+          {{ checkedCoupon.length ? `已选中${checkedCoupon.length}张优惠券，可抵扣` : '请选择优惠券' }}
+          <span v-if="checkedCoupon.length" class="red">{{ disPrice }}元</span>
         </div>
         <div v-if="tablist[tabAct].is">
           <div class="databox">
