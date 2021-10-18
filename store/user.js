@@ -9,6 +9,7 @@
 
 import { auth } from '@/api'
 import { AVATAR } from '~/config/constant'
+import { domain } from '~/config/'
 export const state = () => ({
   userInfo: {},
   token: '',
@@ -27,23 +28,23 @@ export const mutations = {
     this.$cookies.set('token', String(data.token), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn',
+      domain,
     })
     this.$cookies.set('userId', String(data.userId), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn',
+      domain,
     })
     this.$cookies.set('userType', String(data.userType || data.type), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn',
+      domain,
     })
     if (data.customerID) {
       this.$cookies.set('customerID', String(data.customerID), {
         path: '/',
         maxAge: 60 * 60 * 24 * 7, // 过期时间
-        domain: 'shupian.cn',
+        domain,
       })
     }
     state.userInfo = data
@@ -73,7 +74,7 @@ export const mutations = {
     clearKeys.forEach((key) => {
       this.$cookies.remove(key, {
         path: '/',
-        domain: 'shupian.cn',
+        domain,
       })
       this.$cookies.remove(key, {
         path: '/',
@@ -95,43 +96,43 @@ export const mutations = {
     this.$cookies.set('userNo', String(data.no), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn',
+      domain,
     })
     this.$cookies.set('userName', data.nickName, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn',
+      domain,
     })
     this.$cookies.set('userPhone', data.decodePhone, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn',
+      domain,
     })
     this.$cookies.set('realStatus', data.realStatus, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn',
+      domain,
     })
     this.$cookies.set('mainAccountFull', data.mainAccountFull, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn',
+      domain,
     })
     this.$cookies.set('avatar', data.url || AVATAR, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn',
+      domain,
     })
     this.$cookies.set('userType', String(data.type || data.userType), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn',
+      domain,
     })
     if (data?.customerInfo?.id) {
       this.$cookies.set('customerID', String(data?.customerInfo?.id || ''), {
         path: '/',
         maxAge: 60 * 60 * 24 * 7, // 过期时间
-        domain: 'shupian.cn',
+        domain,
       })
       state.customerID = data?.customerInfo?.id
       state.userInfo.customerID = data?.customerInfo?.id
