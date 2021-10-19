@@ -1,6 +1,6 @@
 <template>
   <div class="m-evaluate success">
-    <Header v-if="!isHideNav || isHideNav !== '1'" :hide-back="true">
+    <Header v-if="!isHideH5Nav || isHideH5Nav !== '1'" :hide-back="true">
       <template #right><div @click="back">完成</div></template>
     </Header>
     <div class="content-wrap">
@@ -34,8 +34,8 @@ export default {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
     }),
-    isHideNav() {
-      return this.$route.query.isHideNav
+    isHideH5Nav() {
+      return this.$route.query.isHideH5Nav
     },
   },
   methods: {

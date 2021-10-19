@@ -10,7 +10,7 @@
 <template>
   <div class="detail">
     <div
-      v-if="(!isHideNav || isHideNav !== '1') && !isApplets && titleStatus"
+      v-if="(!isHideH5Nav || isHideH5Nav !== '1')  && titleStatus"
       class="head"
     >
       <Header title="规划师">
@@ -629,7 +629,7 @@ export default {
       showShare: false,
       isShare: Number(this.$route.query.isShare) === 1, // 默认不是分享页面，从规划师列表进来就不是分享
       hideIM: this.$route.query.imUserId === this.$route.query.mchUserId, // 目前是 获取到imUserId与mchUserId相等，说明是自己与自己聊天，不显示IM
-      isHideNav: this.$route.query.isHideNav,
+      isHideH5Nav: this.$route.query.isHideH5Nav,
       redirectType: this.$route.query.redirectType || 'wap', // 跳转的到 wap里面还是app里面去
       requireCode: this.$route.query.requireCode || '', // 隐号拨打需要
       requireName: this.$route.query.requireName || '', // 隐号拨打需要

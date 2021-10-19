@@ -1,7 +1,7 @@
 <template>
   <div class="m-evaluate detail">
     <Header
-      v-if="!isHideNav || isHideNav !== '1'"
+      v-if="!isHideH5Nav || isHideH5Nav !== '1'"
       title="评价详情"
       :fixed="true"
     />
@@ -52,8 +52,8 @@ export default {
     }
   },
   computed: {
-    isHideNav() {
-      return this.$route.query.isHideNav
+    isHideH5Nav() {
+      return this.$route.query.isHideH5Nav
     },
   },
   mounted() {

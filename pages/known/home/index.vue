@@ -454,13 +454,13 @@ export default {
         const iosRouter =
           '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
           `${iosUrl}` +
-          '","isHideNav":' +
+          '","isHideH5Nav":' +
           hide +
           ',"emptyTitle":"标题"},"isLogin":"0","version":"1.0.0"}'
         const adRouter =
           '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +
           `${adUrl}` +
-          '","isHideNav":' +
+          '","isHideH5Nav":' +
           hide +
           ',"emptyTitle":"标题"},"isLogin":"0","version":"1.0.0"}'
         if (this.isInApp) {

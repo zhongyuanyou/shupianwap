@@ -75,11 +75,9 @@ export default ({ app, store }) => {
     if (
       from.query &&
       from.query.isHideH5Nav &&
-      !query.isHideNav &&
       from.query.isHideH5Nav !== '0'
     ) {
-      delete from.query.isHideH5Nav
-      query.isHideNav = '1'
+      query.isHideH5Nav = '1'
       next({
         path: to.path,
         query,

@@ -1,6 +1,6 @@
 <template>
   <div class="m-evaluate write">
-    <Header v-if="!isHideNav || isHideNav !== '1'" title="评价">
+    <Header v-if="!isHideH5Nav || isHideH5Nav !== '1'" title="评价">
       <template #left>
         <div @click="back">
           <my-icon
@@ -68,8 +68,8 @@ export default {
     }
   },
   computed: {
-    isHideNav() {
-      return this.$route.query.isHideNav
+    isHideH5Nav() {
+      return this.$route.query.isHideH5Nav
     },
   },
   mounted() {
