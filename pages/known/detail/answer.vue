@@ -576,7 +576,8 @@ export default {
               } else {
                 Toast.fail({
                   duration: 2000,
-                  message: '服务异常，请刷新重试！',
+                  message:
+                    res.data.error || res.message || '服务异常，请刷新重试！',
                   forbidClick: true,
                   className: 'my-toast-style',
                 })
@@ -584,6 +585,12 @@ export default {
             })
         })
         .catch((err) => {
+          Toast.fail({
+            duration: 2000,
+            message: '服务异常，请刷新重试！',
+            forbidClick: true,
+            className: 'my-toast-style',
+          })
           console.log(err)
           // on cancel
         })
