@@ -10,7 +10,7 @@
 <template>
   <div class="detail">
     <div
-      v-if="(!isHideH5Nav || isHideH5Nav !== '1' || !isApplets) && titleStatus"
+      v-if="(!isHideH5Nav || isHideH5Nav !== '1') && titleStatus && !isApplets"
       class="head"
     >
       <Header title="规划师">
