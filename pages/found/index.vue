@@ -165,11 +165,11 @@ export default {
         const ios =
           '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
           `${domainUrl}found/foundSearch` +
-          '","isHideH5Nav":1,"isHideBack":1},"isLogin":"0","version":"1.0.0"}'
+          '","isHideNav":1,"isHideBack":1},"isLogin":"0","version":"1.0.0"}'
         const android =
           '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +
           `${domainUrl}found/foundSearch` +
-          '","isHideH5Nav":1,"emptyTitle":"标题"},"isLogin":"0","version":"1.0.0"}'
+          '","isHideNav":1,"emptyTitle":"标题"},"isLogin":"0","version":"1.0.0"}'
         this.$appFn.dggJumpRoute({ iOSRouter: ios, androidRouter: android })
         return
       }
