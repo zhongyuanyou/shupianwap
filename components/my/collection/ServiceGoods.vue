@@ -4,8 +4,10 @@
       class="service-goods-component-item"
       :class="{
         invalid:
-          info.status !== 'PRO_STATUS_PUT_AWAY' &&
-          info.status !== 'PRO_STATUS_LOCKED',
+          (info.status &&
+            info.status !== 'PRO_STATUS_PUT_AWAY' &&
+            info.status !== 'PRO_STATUS_LOCKED') ||
+          !info.name,
       }"
     >
       <slot name="left"></slot>
