@@ -239,6 +239,7 @@ export default {
   methods: {
     // 规划师详情跳转
     plannerInfoUrlJump(item) {
+      console.log(`1111111111111111111111: ${JSON.stringify(this.goodsInfo)}`)
       // 处理埋点
       window.spptMd.spptTrackRow('p_plannerBoothClick', {
         track_code: 'SPW000158',
@@ -247,11 +248,17 @@ export default {
         crisps_fraction: item.point,
         recommend_number: item.dggPlannerRecomLog || '',
       })
+      // 修改时间: 2021-10-20
+      // 修改问题: 服务详情页面推荐规划师点击头像报错
+      const strLevel = this.goodsInfo.classCodeLevel
+        ? this.goodsInfo.classCodeLevel
+        : ''
+      const classCodeLevelList = this.goodsInfo.classCodeLevel.split(',')
       this.$router.push({
         path: '/planner/detail',
         query: {
           mchUserId: item.mchUserId,
-          requireCode: this.goodsInfo.classCodeLevelList[0],
+          requireCode: classCodeLevelList[0],
         },
       })
     },
