@@ -239,7 +239,6 @@ export default {
   methods: {
     // 规划师详情跳转
     plannerInfoUrlJump(item) {
-      console.log(`1111111111111111111111: ${JSON.stringify(this.goodsInfo)}`)
       // 处理埋点
       window.spptMd.spptTrackRow('p_plannerBoothClick', {
         track_code: 'SPW000158',
