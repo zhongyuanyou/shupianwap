@@ -252,7 +252,7 @@ export default {
       const strLevel = this.goodsInfo.classCodeLevel
         ? this.goodsInfo.classCodeLevel
         : ''
-      const classCodeLevelList = this.goodsInfo.classCodeLevel.split(',')
+      const classCodeLevelList = strLevel.split(',')
       this.$router.push({
         path: '/planner/detail',
         query: {
