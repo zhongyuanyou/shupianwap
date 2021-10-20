@@ -45,6 +45,20 @@ export default {
           v.composable = false; // 初始可叠加状态置否
         });
       }
+    },
+    show: {
+      immediate: true,
+      deep: true,
+      handler(newVal) {
+        if (newVal) {
+          this.checkedCoupon = this.echoSelectedCoupons
+          this.checkSKUCouponComposability();
+          this.settlement();
+          this.$forceUpdate();
+
+        }
+
+      }
     }
   },
   methods: {
@@ -95,7 +109,9 @@ export default {
       this.cloneList.forEach(v => {
         v.composable = false;
       })
-      if (this.checkedCoupon.every(v => v.marketingCouponVO.useType === 3)) {
+      if (
+        this.checkedCoupon.length &&
+        this.checkedCoupon.every(v => v.marketingCouponVO.useType === 3)) {
         const checkedSKUCouponIds = this.checkedCoupon
           .filter(v => v.marketingCouponVO.useType === 3)
           .map(v => v.marketingCouponVO.productId)

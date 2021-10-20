@@ -37,7 +37,7 @@
               <div
                 v-for="(item, index) in cloneList"
                 :key="index"
-                :class="['list', item.composable ? 'composable' : ' ']"
+                :class="['list', item.composable && !item.checked ? 'composable' : ' ']"
                 @click="checkitem(item, index)"
               >
                 <div class="left">
@@ -463,18 +463,17 @@ export default {
     checkitem(item, index) {
       this.currentTapCoupon = item
       // 若已有选中的优惠券
-      if (this.checkedCoupon.length) {
+      if (
+        this.checkedCoupon.length &&
+        this.checkedCoupon[0].marketingCouponVO.useType !== item.marketingCouponVO.useType
+      ) {
         this.ifConfirmSwitchPopupShow = true
       } else {
         this.handleSwitchCouponConfirm()
       }
     },
     close() {
-      console.log(111111111111111)
       this.$emit('close')
-      this.checkedCoupon = this.echoSelectedCoupons
-      this.checkSKUCouponComposability();
-      this.$forceUpdate()
     },
     submit() {
       // price计算后售价，disPrice折扣价，checkarr选择项

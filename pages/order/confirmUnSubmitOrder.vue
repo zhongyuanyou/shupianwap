@@ -646,7 +646,6 @@ export default {
             }
           )
           .then((result) => {
-            console.log('result', result)
             this.loading = false
 
             if (this.payMethod.value === 'ORDER_PAY_MODE_SECURED') {
@@ -819,7 +818,10 @@ export default {
                 a.marketingCouponVO.reducePrice
               )
             })
+            // TODO 删除过滤代码
             this.couponInfo.datalist = sortList
+            //   .filter(v => v.marketingCouponVO.couponType === 1)
+            // console.log('可用优惠券', this.couponInfo.datalist.map(v => v.marketingCouponVO))
           } else {
             this.couponInfo.nolist = result.marketingCouponLogList
           }
@@ -851,8 +853,6 @@ export default {
     },
 
     conponChange(price, num, coupons) {
-      console.log('price', price)
-      console.log('num', num)
       this.couponInfo.couponPrice = num
       // this.couponInfo.selectedItem = item || {}
       this.couponInfo.selectedCoupons = coupons || []
