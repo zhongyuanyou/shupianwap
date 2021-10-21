@@ -247,11 +247,17 @@ export default {
         crisps_fraction: item.point,
         recommend_number: item.dggPlannerRecomLog || '',
       })
+      // 修改时间: 2021-10-20
+      // 修改问题: 服务详情页面推荐规划师点击头像报错
+      const strLevel = this.goodsInfo.classCodeLevel
+        ? this.goodsInfo.classCodeLevel
+        : ''
+      const classCodeLevelList = strLevel.split(',')
       this.$router.push({
         path: '/planner/detail',
         query: {
           mchUserId: item.mchUserId,
-          requireCode: this.goodsInfo.classCodeLevelList[0],
+          requireCode: classCodeLevelList[0],
         },
       })
     },
