@@ -770,9 +770,9 @@ export default {
 
     //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
-      const arr = this.settlementInfo.productVo.map((x) => {
-        return x.id
-      })
+      const productIds = this.settlementInfo.productVo.map(x => x.id)
+      const classCodes = this.settlementInfo.productVo.map(x => x.classCode)
+      const arr = [...productIds, ...classCodes]
       const list = []
       this.settlementInfo.productVo.map((product) => {
         const orderSaleId = product.id
