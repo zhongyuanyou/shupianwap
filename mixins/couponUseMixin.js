@@ -69,9 +69,9 @@ export default {
       })
       if (
         // 如果点击已选中的，去掉选择
-        this.checkedCoupon.some(v => v.couponId === item.couponId)
+        this.checkedCoupon.some(v => v.couponUseCode === item.couponUseCode)
       ) {
-        this.checkedCoupon = this.checkedCoupon.filter(v => v.couponId !== item.couponId);
+        this.checkedCoupon = this.checkedCoupon.filter(v => v.couponUseCode !== item.couponUseCode);
       } else if (
         // 如果是点击未选中的
         [1, 2].includes(item.marketingCouponVO.useType) ||

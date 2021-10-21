@@ -36,7 +36,7 @@
             <div v-if="cloneList.length > 0" class="listbox">
               <div
                 v-for="(item, index) in cloneList"
-                :key="index"
+                :key="item.id"
                 :class="['list', item.composable && !item.checked ? 'composable' : ' ']"
                 @click="checkitem(item, index)"
               >
