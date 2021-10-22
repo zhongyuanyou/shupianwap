@@ -561,7 +561,7 @@ export default {
       }
     }
     .databox {
-      height: calc(67vh - 324px);
+      height: calc(85vh - 324px - 100px);
       .listbox {
         height: calc(100% - 180px);
         overflow-y: auto;
@@ -575,11 +575,11 @@ export default {
           box-sizing: border-box;
           display: flex;
 
-          background: url('https://cdn.shupian.cn/sp-pt/wap/g4kbai7wgrk0000.png')
+          background: url('https://cdn.shupian.cn/sp-pt/wap/images/2x92aidcm4i0000.png')
             no-repeat;
           &.composable {
             // 可叠加右标
-            background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/33w6tcfd0xu0000.png');
+            background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/2ay4724dr3i8000.png');
           }
           background-size: 100% 100%;
           ::v-deep.sp-radio__icon--checked .sp-icon {
@@ -761,7 +761,7 @@ export default {
       }
     }
     .nodatabox {
-      height: calc(67vh - 324px);
+      height: calc(85vh - 324px);
       padding-top: 20px;
       .listbox {
         height: 100%;
@@ -852,7 +852,7 @@ export default {
                   overflow: hidden;
                   text-overflow: ellipsis;
                   white-space: nowrap;
-                  font-weight: normal;
+                  font-weight: bold;
                   position: relative;
                   z-index: 2;
                   padding-left: 80px;
@@ -974,6 +974,10 @@ export default {
     height: auto;
     line-height: normal;
     font-size: 0;
+  }
+
+  ::v-deep .sp-center-popup__containerConfirm .sp-center-popup__cancel .sp-button__text{
+    font-weight: 400;
   }
 }
 </style>
