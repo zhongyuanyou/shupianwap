@@ -118,14 +118,10 @@ export default {
           useTypeName = '全场通用'
           break
         case 2:
-          useTypeName = '仅限指定品类使用'
+          useTypeName = item.productName ? `"${item.productName}"-可用` : '仅限指定品类使用'
           break
         case 3:
-          // useTypeName = '仅限指定商品使用'
-
-          useTypeName = item.productName
-            ? item.productName + '-可用'
-            : '仅限指定商品使用'
+          useTypeName = item.productName ? `"${item.productName}"-可用` : '仅限指定商品使用'
       }
       return useTypeName
     },

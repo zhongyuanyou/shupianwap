@@ -203,12 +203,9 @@ export default {
       if (item.useType === 1) {
         return '全场通用'
       } else if (item.useType === 2) {
-        return '仅限指定品类使用'
+        return item.productName ? `"${item.productName}"-可用` : '仅限指定品类使用'
       } else if (item.useType === 3) {
-        if (item.productName) {
-          return item.productName + '-可用'
-        }
-        return '仅限指定商品使用'
+        return item.productName ? `"${item.productName}"-可用` : '仅限指定商品使用'
       }
       return ''
     },
