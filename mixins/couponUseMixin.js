@@ -40,18 +40,23 @@ export default {
       deep: true,
       handler(newVal) {
         this.cloneList = clone(newVal, true);
-        this.cloneList.forEach(v => {
-          v.checked = false; // 初始选中状态置否
-          v.composable = false; // 初始可叠加状态置否
-        });
+        this.initLists()
       }
     },
     show: {
       immediate: true,
       deep: true,
       handler(newVal) {
+        this.currentTapCoupon = null
         if (newVal) {
-          this.checkedCoupon = this.echoSelectedCoupons
+          this.initLists()
+          // 回显父组件的选中优惠券
+          this.cloneList.forEach(v => {
+            if (this.echoSelectedCoupons.some(x => x.couponUseCode === v.couponUseCode)) {
+              v.checked = true
+              this.checkedCoupon.push(v)
+            }
+          })
           this.checkSKUCouponComposability();
           this.settlement();
           this.$forceUpdate();
@@ -64,6 +69,7 @@ export default {
   methods: {
     // 点击优惠券时切换优惠券状态
     switchCheckedCoupon(item) {
+      if (!item) return
       this.checkedCoupon.forEach(v => {
         v.checked = false;
       })
@@ -128,6 +134,14 @@ export default {
       // 点击优惠券时切换优惠券状态
       this.switchCheckedCoupon(this.currentTapCoupon);
       this.settlement();
+    },
+    initLists() {
+      this.cloneList.forEach(v => {
+        v.composable = false;
+        v.checked = false;
+      })
+      this.checkedCoupon = []
+      this.currentTapCoupon = null
     }
   },
 }

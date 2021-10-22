@@ -474,11 +474,13 @@ export default {
       }
     },
     close() {
+      this.initLists()
       this.$emit('close')
     },
     submit() {
       // price计算后售价，disPrice折扣价，checkarr选择项
       // this.$emit('change', this.price, -this.disPrice, this.checkarr)
+
       this.$emit('change', this.price, -this.disPrice, this.checkedCoupon)
       this.close()
     },
