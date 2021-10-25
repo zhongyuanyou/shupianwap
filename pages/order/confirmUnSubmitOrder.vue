@@ -771,8 +771,9 @@ export default {
     //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
       const productIds = this.settlementInfo.productVo.map(x => x.id)
-      const classCodes = this.settlementInfo.productVo.map(x => x.classCode)
-      const arr = [...productIds, ...classCodes]
+      const productClassCodes = this.settlementInfo.productVo.map(x => x.classCode)
+      const SKUClassCodes = this.settlementInfo.orderSkuList.map(x => x.classifyThreeNo)
+      const arr = [...productIds, ...productClassCodes, ...SKUClassCodes]
       const list = []
       this.settlementInfo.productVo.map((product) => {
         const orderSaleId = product.id
@@ -871,7 +872,7 @@ export default {
       this.payMethod.text = item.text
     },
     openPopupfn() {
-      this.couponInfo.popupshow = true
+      if (this.couponInfo.datalist.length) this.couponInfo.popupshow = true
     },
     openCardFn() {
       this.card.show = true
