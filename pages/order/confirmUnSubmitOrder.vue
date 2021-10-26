@@ -774,6 +774,19 @@ export default {
       const productClassCodes = this.settlementInfo.productVo.map(x => x.classCode)
       const SKUClassCodes = this.settlementInfo.orderSkuList.map(x => x.classifyThreeNo)
       const arr = [...productIds, ...productClassCodes, ...SKUClassCodes]
+      let customerTypes = []
+      if (this.settlementInfo?.saleSkuList?.length) {
+        /*
+        * 客户类型
+        * CUSTOMER_TYPE_0：普通客户
+        * CUSTOMER_TYPE_1：PLUS会员
+        * CUSTOMER_TYPE_2：大客户会员
+        * CUSTOMER_TYPE_3：秒杀
+        * CUSTOMER_TYPE_4：限时抢购
+        * CUSTOMER_TYPE_5：限量抢购
+        * */
+        customerTypes = this.settlementInfo.saleSkuList.map(x => x.customerType)
+      }
       const list = []
       this.settlementInfo.productVo.map((product) => {
         const orderSaleId = product.id
@@ -799,6 +812,7 @@ export default {
             findType: index,
             userId: this.$store.state.user.userId,
             actionId: arr,
+            customerTypes,
             orderPrice: this.settlementInfo.orderPayableMoney,
             orderByWhere: 'createTime=desc',
             limit: 50,
