@@ -245,8 +245,13 @@ export default {
       if (!val) {
         return '***'
       }
+      // 需求变更: 2021-10-26 这里需求改变,需要处理如果昵称也为一串加密数字，那么数字需要全部展示，不能加密
       const startString = val.slice(0, 1)
-      return `${startString}**`
+      if (!isNaN(Number(startString))) {
+        return val.split(' ')[0]
+      } else {
+        return `${startString}**`
+      }
     },
     // 预览大图
     preview(img) {
