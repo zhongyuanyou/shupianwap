@@ -127,7 +127,6 @@ import UserItem from '@/components/mustKnown/search/UserItem'
 import SmallVideoItem from '@/components/mustKnown/search/SmallVideoItem'
 import knownApi from '@/api/known'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
-import { numChangeW } from '@/utils/common'
 
 export default {
   layout: 'keepAlive',
@@ -362,7 +361,14 @@ export default {
             this.userList.push(...res.data.records)
           } else if (this.actTab.code === 'svideo') {
             res.data.records.forEach((item) => {
-              item.custTotalCount = numChangeW(item.totalViewCount)
+              // 对数字进行处理,方式报错
+              const tempViewBase = isNaN(Number(item.viewBase))
+                ? 0
+                : Number(item.viewBase)
+              const tempViewCount = isNaN(Number(item.viewCount))
+                ? 0
+                : Number(item.viewCount)
+              item.custTotalCount = tempViewBase + tempViewCount
             })
             this.searchList.push(...res.data.records)
           } else {

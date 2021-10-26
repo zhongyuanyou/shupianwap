@@ -34,9 +34,7 @@
               {{ plannerDetail.userName }}
             </p>
           </a>
-          <span v-if="plannerDetail.postName">
-            {{ plannerDetail.postName }}
-          </span>
+          <span v-if="plannerZwName">{{ plannerZwName }}</span>
         </div>
       </div>
       <div class="commodityConsult-containner-handle">
@@ -113,6 +111,12 @@ export default {
     }
   },
   computed: {
+    plannerZwName() {
+      return this.$route.path.match('detail/server/law')
+        ? '律师经纪人'
+        : // : this.plannerDetail.postName
+          '金牌规划师'
+    },
     plannerDetail() {
       return this.$store.state.planner.isShare
         ? this.$store.state.planner.sharePlannerInfo
