@@ -59,9 +59,7 @@ export default {
             page: this.page,
             needContent: 0,
             contentTextLength: 50,
-          },
-          headers: {
-            'x-cache-control': 'cache',
+            isList:1
           },
         }
       )

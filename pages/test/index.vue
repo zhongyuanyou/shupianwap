@@ -50,6 +50,9 @@ export default {
     onOversize() {
       this.$xToast.error('文件大小不能超过5M')
     },
+    OSS() {
+      this.$axios.post('https://pspapi.shupian.cn/api/oss/v1/upload')
+    },
     afterRead(file) {
       const imgs = this.images
       const formData = new FormData()

@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
     <div style="width: 100%">
-      <Header v-if="!isHideNav || isHideNav !== '1'" title="面谈确认">
+      <Header v-if="!isHideH5Nav || isHideH5Nav !== '1'" title="面谈确认">
         <template #left>
           <div @click="back">
             <my-icon
@@ -137,8 +137,8 @@ export default {
       isInApp: (state) => state.app.isInApp,
       userId: (state) => state.user.userInfo.userId,
     }),
-    isHideNav() {
-      return this.$route.query.isHideNav
+    isHideH5Nav() {
+      return this.$route.query.isHideH5Nav
     },
   },
   mounted() {

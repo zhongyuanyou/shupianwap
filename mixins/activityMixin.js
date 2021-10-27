@@ -209,7 +209,7 @@ export default {
       //   params.cityCodes = this.cityCode || this.defaultCityCode || this.defaultCityCodeCode
       // }
       // 前端放开，后台校验城市，如果是交易产品后台就不带城市查询
-      params.cityCodes = this.cityCode  || this.defaultCityCode
+      params.cityCodes = this.cityCode || this.defaultCityCode
 
       await this.$axios
         .get(activityApi.activityTypeOptions, {
@@ -399,6 +399,8 @@ export default {
           },
         })
         .then((res) => {
+          // 这个接口被uc浏览器拦截了，uc会返回空数据
+
           if (res.code === 200) {
             if (
               res.data.sortMaterialList.length &&
@@ -411,12 +413,6 @@ export default {
             }
           } else {
             this.imageHead = this.imageHead || this.imageHeadDefault
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
           }
         })
         .catch((err) => {

@@ -17,8 +17,8 @@
       <template #content>
         <div class="service-select__content">
           <div
-            v-for="item of childrenList"
-            :key="item.text"
+            v-for="(item, index) of childrenList"
+            :key="index"
             class="service-select__item"
             :class="{
               'service-select__item--active': selectData[1].services.some(

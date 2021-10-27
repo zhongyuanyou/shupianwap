@@ -262,8 +262,7 @@ export default {
 .choose-topic {
   position: fixed;
   left: 0;
-  bottom: 130px;
-  height: 80px;
+  bottom: 150px;
   padding: 20px 0 0 40px;
   width: 100%;
   overflow-x: scroll;
@@ -273,7 +272,7 @@ export default {
   color: #4974f5;
   background: white;
   border-top: 1px solid #f4f4f4;
-  z-index: 99;
+  z-index: 199;
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
   .item {

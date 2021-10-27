@@ -8,6 +8,21 @@ import { Toast } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import config from '@/config'
 import { userinfoApi, afterSaleApi } from '@/api'
+const getServerPrice = function (price) {
+  let newPrice = ''
+  if (typeof price !== 'string') price = String(price)
+  if (price.match('.')) {
+    const arr = price.split('.')
+    if (Number(arr[1]) > 0) {
+      newPrice = price
+    } else {
+      newPrice = arr[0]
+    }
+  } else {
+    newPrice = price
+  }
+  return newPrice
+}
 export default {
   computed: {
     ...mapState({
@@ -17,6 +32,7 @@ export default {
       userType: (state) => state.user.userType,
       imExample: (state) => state.im.imExample, // IM 实例
       isApplets: (state) => state.app.isApplets, // 是否在小程序中
+      city: (state) => state.city.currentCity,
     }),
   },
   methods: {
@@ -198,7 +214,7 @@ export default {
       // this.judgeLoginMixin(true).then((userInfo) => {
       if (userInfo) {
         let params = {
-          operUserType: userInfo.type || 'VISITOR',
+          operUserType: userInfo.userType || 'VISITOR',
           imUserId: '',
           imUserType: '',
           ext: {
@@ -289,7 +305,7 @@ export default {
       // this.judgeLoginMixin(true).then((userInfo) => {
       if (userInfo) {
         const userInfo = this.$store.state.user.userInfo
-        const userType = userInfo && userInfo.type ? userInfo.type : 'VISITOR'
+        const userType = userInfo && userInfo.userType ? userInfo.type : 'VISITOR'
         const params = {
           operUserType: userType,
           imUserId: mchUserId,
@@ -325,6 +341,131 @@ export default {
           }
         })
       }
+    },
+    // 普通会话v2 | 可以通过普通模板发送消息
+    // mchUserId: 规划师id; text: 消息
+    sendTextMessageV2(mchUserId, text) {
+      const userInfo = this.$store.state.user.userInfo
+       if (userInfo) {
+         const userInfo = this.$store.state.user.userInfo
+         const userType = userInfo && userInfo.userType ? userInfo.userType : 'VISITOR'
+         const params = {
+           operUserType: userType,
+           imUserId: mchUserId,
+           imUserType: 'MERCHANT_USER',
+           ext: {
+             intentionType: '',
+             intentionCity: '',
+             recommendId: '',
+             recommendAttrJson: {},
+             startUserType: 'cps-app',
+           },
+         }
+         // 发送消息前先创建会话
+         this.imExample.createSession(params, (res) => {
+           if (res.code === 200) {
+             const tepMsgParams = {
+               templateId: '6166bc39cbbd9900060d9fd3', // 模板 id
+               receiver: res.data.groupId, // 会话 id
+               msgType: 'text',
+               senderName: userInfo.nickName || '访客', // 发送者昵称
+               extContent: JSON.stringify(this.$route.query), // 路由参数
+               paramJsonStr: {
+                "content":text
+               },
+             }
+             tepMsgParams.paramJsonStr = JSON.stringify(
+               tepMsgParams.paramJsonStr
+             )
+             this.imExample.sendTemplateMsg(tepMsgParams, (resData) => {
+               if (resData.code === 200) {
+                 // 延时1s进入IM,避免模板消息未发生完成就已进入IM
+                 this.$xToast.showLoading({ message: '正在联系规划师...' })
+                 const timer = setTimeout(() => {
+                   clearTimeout(timer)
+                   this.$xToast.hideLoading()
+                   const myInfo = localStorage.getItem('myInfo')
+                     ? JSON.parse(localStorage.getItem('myInfo'))
+                     : {}
+                   const token = this.userType ? this.token : myInfo.token
+                   const userId = this.userType ? this.userId : myInfo.imUserId
+                   const userType = this.userType || 'VISITOR'
+                   if (this.isApplets) {
+                     window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}&isApplets=true`
+                   } else {
+                     window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&operUserType=${userType}&id=${res.data.groupId}`
+                   }
+                 }, 2000)
+               } else if (res.code === 5223) {
+                 this.clearUserInfoAndJumpLoging()
+               } else {
+                 this.$xToast.warning(resData.msg)
+               }
+             })
+           } else if (res.code === 5223) {
+             console.log('发送消息', res)
+             this.clearUserInfoAndJumpLoging()
+           } else {
+             console.log('发送消息', res)
+             this.$xToast.warning(res.msg)
+           }
+         })
+       }
+     },
+    /**
+     * @author tangdaibing
+     * @description: IM 创建与发送商品模板消息
+     * @param mchUserId 规划师商户用户id
+     * @param type 规划师用户类型
+     * @param goodsInfo 商品信息
+     * @since 2021/09/13
+     */
+    // 调起IM
+    // 发送模板消息(带图片)
+    sendTemplateMsgWithImg(mchUserId, type, goodsInfo) {
+      console.log('goodsInfo', goodsInfo)
+      // const isLogin = await this.judgeLoginMixin()
+      // if (isLogin) {
+      // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
+      // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
+      const intentionType = {}
+      intentionType[goodsInfo.classCode] = goodsInfo.classCodeName
+      // 意向城市
+      const intentionCity = {}
+      intentionCity[this.city.code] = this.city.name
+      const sessionParams = {
+        imUserId: mchUserId, // 商户用户ID
+        imUserType: type, // 用户类型
+        requireCode: goodsInfo.classCodeLevel.split(',')[0],
+        ext: {
+          intentionType, // 意向业务 非必传
+          intentionCity, // 意向城市 非必传
+          recommendId: '',
+          recommendAttrJson: {},
+          startUserType: 'cps-app', //
+        },
+      }
+      const msgParams = {
+        sendType: 0, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
+        msgType: 'im_tmplate', // 消息类型
+        extContent: this.$route.query, // 路由参数
+        productName: goodsInfo.name, // 产品名称
+        productContent: goodsInfo.salesGoodsOperatings.productDescribe, // 产品信息
+        price: `${goodsInfo.salesPrice}元`, // 价格
+        forwardAbstract: '[商品详情]',
+        routerId: 'IMRouter_APP_ProductDetail_Service', // 路由ID
+        imageUrl:
+          goodsInfo.salesGoodsOperatings.clientDetails[0].imgFileIdPaths[0], // 产品图片
+        unit: goodsInfo.salesPrice.split('.')[1], // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+      }
+      if (goodsInfo.priceType === 'PRO_FLOATING_PRICE') {
+        msgParams.price =
+          getServerPrice(goodsInfo.salesPrice || goodsInfo.price) + '%服务费'
+      }
+      this.sendTemplateMsgMixin({ sessionParams, msgParams })
+      // } else {
+      //   this.$router.push('/login')
+      // }
     },
   },
 }

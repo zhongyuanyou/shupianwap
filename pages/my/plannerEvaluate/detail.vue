@@ -1,6 +1,10 @@
 <template>
   <div class="m-evaluate detail">
-    <Header v-if="!isHideNav" title="评价详情" :fixed="true" />
+    <Header
+      v-if="!isHideH5Nav || isHideH5Nav !== '1'"
+      title="评价详情"
+      :fixed="true"
+    />
     <div class="header-line"></div>
     <div class="info">
       <sp-image
@@ -117,8 +121,8 @@ export default {
       isInApp: (state) => state.app.isInApp,
       userId: (state) => state.user.userInfo.userId,
     }),
-    isHideNav() {
-      return this.$route.query.isHideNav
+    isHideH5Nav() {
+      return this.$route.query.isHideH5Nav
     },
   },
   mounted() {

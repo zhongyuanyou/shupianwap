@@ -535,7 +535,8 @@ export default {
               } else {
                 Toast.fail({
                   duration: 2000,
-                  message: '服务异常，请刷新重试！',
+                  message:
+                    res.data.error || res.message || '服务异常，请刷新重试！',
                   forbidClick: true,
                   className: 'my-toast-style',
                 })
@@ -543,6 +544,12 @@ export default {
             })
         })
         .catch((err) => {
+          Toast.fail({
+            duration: 2000,
+            message: '服务异常，请刷新重试！',
+            forbidClick: true,
+            className: 'my-toast-style',
+          })
           console.log(err)
         })
     },
@@ -552,7 +559,9 @@ export default {
           const url = window && window.location.href
           const sharedUrl = setUrlParams(url, { isShare: 1 })
           const tile = this.articleDetails.title
-          const content = this.articleDetails.contentText.substring(0, 50).trim()
+          const content = this.articleDetails.contentText
+            .substring(0, 50)
+            .trim()
           console.log(`output tile: ${tile}`)
           console.log(`output content: ${content}`)
           const shareContent = {

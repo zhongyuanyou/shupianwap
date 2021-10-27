@@ -166,9 +166,6 @@ export default {
       this.loading = true
       this.$axios
         .get(homeApi.findSiteList, {
-          headers: {
-            'x-cache-control': 'cache',
-          },
         })
         .then((res) => {
           this.loading = false
@@ -296,7 +293,7 @@ export default {
       this.$cookies.set('cityHistory', historyList, {
         path: '/',
         maxAge: 60 * 60 * 24 * 99999, // 过期时间
-        domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
+        // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
       })
       if (this.dataType === 1) {
         this.SET_CITY1({

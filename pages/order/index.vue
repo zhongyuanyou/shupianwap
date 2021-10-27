@@ -65,7 +65,6 @@
       ref="cancleOrderModel"
       :order-id="orderData.orderId"
       :cus-order-id="orderData.cusOrderId"
-      :order-list="orderData.orderList"
       @cancleOrder="cancleOrder"
       @getBatchList="getBatchList"
     />

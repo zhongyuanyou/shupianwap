@@ -157,6 +157,9 @@ export default {
 
   font-size: 0;
 
+  ::v-deep .swiper-wrapper {
+    align-items: flex-end;
+  }
   ::v-deep .swiper-slide {
     text-align: center;
     font-size: 18px;
@@ -173,12 +176,12 @@ export default {
     -ms-flex-align: center;
     -webkit-align-items: center;
     align-items: center;
+
     transition: 300ms;
     transform-origin: center 76.8%;
     transform: scale(0.832);
   }
-  ::v-deep .swiper-slide-active,
-  ::v-deep .swiper-slide-duplicate-active {
+  ::v-deep .swiper-slide-active {
     transform: scale(1);
   }
   ::v-deep .swiper-slide-prev {

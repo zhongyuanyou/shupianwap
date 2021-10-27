@@ -7,9 +7,13 @@ export default ({ app, store, route }) => {
    * @Desc: 扩展从app回退,以及页面回退
    */
   Vue.prototype.$back = () => {
+    console.log('回退按钮')
     if (store.state.app.isInApp) {
-      appHandler.dggWebGoBack((res) => { })
+      appHandler.dggWebGoBack((res) => { 
+        console.log('回退按钮App返回',res)
+      })
     } else {
+      console.log('回退按钮wap返回')
       app.router.back()
     }
   }

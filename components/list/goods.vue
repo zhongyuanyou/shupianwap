@@ -38,8 +38,8 @@
 
 <script>
 import { Skeleton } from '@chipspc/vant-dgg'
-import Newlist from '@/components/list/Newlist'
-import Filters from '@/components/list/filters'
+import Newlist from '@/components/list/Newlist.vue'
+import Filters from '@/components/list/filters.vue'
 import searchList from '@/mixins/searchList'
 import { goods } from '@/api/index'
 
@@ -116,7 +116,7 @@ export default {
       },
       classcode: this.$route.query,
       isOne: true,
-      onshow: true,
+      isLoading: true,
     }
   },
   computed: {},
@@ -256,6 +256,7 @@ export default {
       goods
         .transactionList({ axios: this.$axios }, this.formData)
         .then((data) => {
+          this.isLoading = false
           if (this.formData.needTypes === 1) {
             this.items = data
             this.classification = Array.isArray(data.typeData)
@@ -379,6 +380,7 @@ export default {
       console.log(data, filrerName)
     },
     pagefn(val) {
+      this.isLoading = true
       this.formData.start = val
       this.formData.needTypes = 0
       this.getlist()

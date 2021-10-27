@@ -4,8 +4,10 @@
       class="service-goods-component-item"
       :class="{
         invalid:
-          info.status !== 'PRO_STATUS_PUT_AWAY' &&
-          info.status !== 'PRO_STATUS_LOCKED',
+          (info.status &&
+            info.status !== 'PRO_STATUS_PUT_AWAY' &&
+            info.status !== 'PRO_STATUS_LOCKED') ||
+          !info.name,
       }"
     >
       <slot name="left"></slot>
@@ -33,12 +35,6 @@
           </div>
 
           <div v-if="type === 'Service'" class="desc-label">
-            <span
-              v-if="info.salesGoodsSubVos && info.salesGoodsSubVos.length"
-              class="desc-label-tc"
-            >
-              套餐
-            </span>
             <span
               v-for="item of getSalesGoodsTags(info.salesGoodsTags)"
               :key="item.tagValueCode"

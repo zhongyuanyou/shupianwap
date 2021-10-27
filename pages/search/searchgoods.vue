@@ -105,8 +105,8 @@ import { mapMutations } from 'vuex'
 import { WorkTabs, WorkTab } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 // import serveGoods from '@/components/list/ServeGoods'
-import serveGoods from '@/components/list/goods'
-import JyGoods from '@/components/list/JyGoods'
+import serveGoods from '@/components/list/goods.vue'
+import JyGoods from '@/components/list/JyGoods.vue'
 import addSearchHistory from '@/mixins/addSearchHistory'
 import listJumpIm from '@/mixins/listJumpIm'
 import { goods, dict } from '@/api/index'
@@ -264,6 +264,9 @@ export default {
       this.tabVues[type] && this.tabVues[type].resetAllSelect()
       if (this.tabVues[type]) {
         this.isInput = true
+      }
+      if (this.$refs.goods) {
+        this.$refs.isLoading = false
       }
       // 处理存储路由的query
       if (

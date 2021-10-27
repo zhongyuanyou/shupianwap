@@ -42,11 +42,11 @@
       </div>
       <div class="complaint-content">
         <textarea
+          ref="content"
           v-model="formData.content"
           class="complaint-content-textarea"
           placeholder="请描述您的问题，有助于快速处理您的反馈额~(最少10个字符)"
           maxlength="200"
-          @input="changeText"
         />
         <span class="complaint-content-label"
           >{{ formData.content.length }}/200</span
@@ -87,6 +87,7 @@
 </template>
 <script>
 import {
+  Field,
   Button,
   Toast,
   TopNavBar,
@@ -100,6 +101,8 @@ import { complain, commonApi, ossApi } from '~/api'
 import SpToast from '@/components/common/spToast/SpToast'
 import Header from '@/components/common/head/header'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import { debounce } from '~/utils/debounceThrottling'
+
 export default {
   layout: 'keepAlive',
   name: 'AddComplaint',
@@ -110,6 +113,7 @@ export default {
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
     [Sticky.name]: Sticky,
+    [Field.name]: Field,
     SpToast,
     Header,
     LoadingCenter,
@@ -150,6 +154,11 @@ export default {
     }
   },
   mounted() {
+    const content = this.$refs.content
+    // 定义wap 事件防抖
+    const debounceWarpFun = debounce(function () {}, 500)
+    content.addEventListener('touchmove', debounceWarpFun, true)
+    content.addEventListener('click', debounceWarpFun, true)
     console.log('isInApp', this.isInApp)
     if (this.isInApp) {
       // 设置app导航名称
@@ -223,6 +232,7 @@ export default {
     // 提交
     async submit() {
       this.formData.userId = this.userId
+      this.formData.content = this.formData.content.trim()
       if (this.formData.content.length < 10) {
         this.$refs.spToast.show({
           message: '描述问题为必填，长度为10-200个字',
@@ -436,8 +446,10 @@ export default {
   &-content {
     margin-top: 32px;
     position: relative;
+    ::v-deep.sp-field__control {
+      min-height: 280px !important;
+    }
     &-textarea {
-      height: 380px;
       width: 100%;
       background: #ffffff;
       border: 1px solid #cdcdcd;

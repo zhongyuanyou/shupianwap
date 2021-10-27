@@ -1,6 +1,6 @@
 <template>
   <div class="evaluateStar_container">
-    <div v-if="scoreFlag" class="score">
+    <div v-if="scoreFlag && !additional" class="score">
       <div class="score-total">
         <div class="tile">服务评分</div>
         <template v-for="(item, index) in totalStars">
@@ -36,7 +36,7 @@
         </div>
       </template>
     </div>
-    <div v-if="tipsFlag && subScoreFlag" class="tips">
+    <div v-if="tipsFlag && subScoreFlag && !additional" class="tips">
       <div
         v-for="(item, index) in tips"
         :key="index"
@@ -58,7 +58,11 @@
         :maxlength="maxLength"
         placeholder="请对服务进行评价~"
         show-word-limit
-      />
+      >
+        <template v-if="supportAnonymous && !additional" #button>
+          <sp-checkbox v-model="anonymousFlag">匿名</sp-checkbox>
+        </template>
+      </sp-field>
     </div>
 
     <div class="line-upload"></div>
@@ -72,7 +76,7 @@
           :list-url="CONFIG.listUrl"
           :delete-url="CONFIG.deleteUrl"
           :call-back-url="CONFIG.callBackUrl"
-          :max-count="3"
+          :max-count="5"
           :max-size="5 * 1024 * 1024"
           @onSuccess="success"
           @onDeleted="deleted"
@@ -83,7 +87,7 @@
     <div class="placeholder"></div>
     <sp-bottombar safe-area-inset-bottom>
       <sp-bottombar-button
-        :class="[submitFlag ? '' : 'z-inactive']"
+        :class="[submitFlag || additional ? '' : 'z-inactive']"
         type="primary"
         color="#4974F5"
         text="发布评价"
@@ -106,9 +110,11 @@ import {
   Button,
   Bottombar,
   BottombarButton,
+  Checkbox,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import utils from '@/utils/changeBusinessData'
-import { evaluateApi } from '@/api'
+import { evaluateApi, userinfoApi } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import config from '@/config'
 
@@ -125,6 +131,7 @@ export default {
     [Button.name]: Button,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
+    [Checkbox.name]: Checkbox,
     LoadingCenter,
   },
   filters: {
@@ -204,9 +211,20 @@ export default {
       evaluateFileId: '',
       CONFIG: config,
       imgLength: 0, // 图片数量
+      anonymousFlag: false, // 匿名标识
+      supportAnonymous: 0, // 是否支持匿名评价
+      /* start:  追评添加字段 */
+      additional: 0, // 追评标识
+      submitEvaluateId: '', // 追评id
+      createrId: '', // 追评需要字段,创建id
+      createrName: '', // 追评需要字段,创建名称
+      /* end:  追评添加字段 */
     }
   },
   computed: {
+    ...mapState({
+      userId: (state) => state.user.userId,
+    }),
     submitFlag() {
       // check 服务评分
       if (this.totalStarLevel === 0) {
@@ -249,13 +267,21 @@ export default {
     },
   },
   mounted() {
-    this.infoId = this.$route.query.infoId
-    this.init()
+    if (this.$route.query.additional === '1') {
+      // 追评逻辑
+      this.additional = 1
+      this.submitEvaluateId = this.$route.query.addEvaluateId
+      this.createrId = this.$route.query.createrId
+      this.createrName = this.$route.query.createrName
+      this.subScoreFlag = true
+      this.getFileIdApi()
+    } else {
+      // 首评逻辑
+      this.infoId = this.$route.query.infoId
+      this.getEvaluateDetailApi()
+    }
   },
   methods: {
-    init() {
-      this.getEvaluateDetailApi()
-    },
     setTotalStars() {
       const _this = this
       this.totalStars.forEach((item, index) => {
@@ -373,10 +399,33 @@ export default {
       return true
     },
     submit() {
-      // start: check data
-      const checkResult = this.checkSubmit()
-      if (checkResult) {
-        this.addEvaluateApi()
+      if (this.additional === 1) {
+        // 追评提交逻辑
+        const params = {
+          id: this.userId,
+        }
+        this.$axios.get(userinfoApi.info, { params }).then((res) => {
+          if (res.code === 200) {
+            this.additionalEvaluateApi(res.data)
+          }
+        })
+      } else {
+        // 首评提交逻辑
+        const checkResult = this.checkSubmit()
+        if (checkResult) {
+          this.addEvaluateApi()
+        }
+      }
+    },
+    async getFileIdApi() {
+      try {
+        const { data, code } = await this.$axios.post(evaluateApi.reviewFileId)
+        if (code !== 200) {
+          throw new Error('查询追评fileid出错')
+        }
+        this.evaluateFileId = data.reviewReplyFileId
+      } catch (e) {
+        this.$xToast.error('查询追评fileid出错')
       }
     },
     async getEvaluateDetailApi() {
@@ -395,6 +444,10 @@ export default {
         this.evaluateDimensionList = data.evaluateDimensionList
         this.tips = data.evaluateTagList
         this.evaluateFileId = data.evaluateFileId || ''
+        // 赋值是否匿名
+        this.supportAnonymous = data.choiceSupportAnonymous
+          ? data.choiceSupportAnonymous
+          : 0
         this.initItemsStar()
         this.initTips()
       } catch (e) {
@@ -415,12 +468,47 @@ export default {
           evaluateDimensionList: this.buildEvaluateDimensionList(),
           evaluateTagList: this.buildTips(),
           sourceSyscode: this.CONFIG.SYS_CODE,
+          choiceAnonymous: this.anonymousFlag ? 1 : 0, // 添加是否匿名
         }
         // 如果有图片,则添加图片参数
         if (this.uploadImgFlag) {
           params.evaluateFileId = this.evaluateFileId
         }
         const { code, data } = await this.$axios.post(evaluateApi.add, params)
+        this.loading = false
+        if (code !== 200) {
+          this.$xToast.error(data.error || '评价失败')
+          return
+        }
+        this.$router.replace({ path: '/my/evaluate/success' })
+      } catch (e) {
+        this.loading = false
+        this.$xToast.error('评价失败')
+      }
+    },
+    // 追评接口
+    async additionalEvaluateApi(info) {
+      try {
+        this.loading = true
+        const params = {
+          submitEvaluateId: this.submitEvaluateId,
+          reviewReplyContent: this.evaluateContent,
+          sourceSyscode: this.CONFIG.SYS_CODE,
+          reviewReplyType: 1, // 追评回复类型:1是追评;2:是回复
+          userId: info.id, // 追评/回复人ID
+          userCode: info.no, // 追评/回复人工号
+          userName: info.fullName, // 追评/回复人名称
+          createrId: this.createrId, // 创建人
+          createrName: this.createrName, // 姓名/工号
+        }
+        // 如果有图片,则添加图片参数
+        if (this.uploadImgFlag) {
+          params.reviewReplyFileId = this.evaluateFileId
+        }
+        const { code, data } = await this.$axios.post(
+          evaluateApi.addReview,
+          params
+        )
         this.loading = false
         if (code !== 200) {
           this.$xToast.error(data.error || '评价失败')
@@ -570,10 +658,22 @@ export default {
       padding: 0;
       font: 400 28px/40px @fontf-pfsc-reg;
       color: #222222;
+      position: relative;
       .sp-field__body {
         textarea {
           min-height: 200px;
         }
+      }
+      .sp-field__button {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      }
+      .sp-checkbox__label {
+        margin-left: 8px;
+        color: #222;
+        font-size: 28px;
+        line-height: 1;
       }
     }
   }
@@ -588,13 +688,16 @@ export default {
 
     ::v-deep.van-uploader__wrapper {
       .van-uploader__preview {
-        margin: 0 32px 0 0;
+        margin: 0 32px 32px 0;
         .van-uploader__preview-image {
           width: 143px;
           height: 143px;
           background: #d8d8d8;
           border-radius: 8px;
         }
+      }
+      div:nth-child(4n + 0) {
+        margin-right: 0;
       }
       .van-uploader__upload {
         width: 143px;

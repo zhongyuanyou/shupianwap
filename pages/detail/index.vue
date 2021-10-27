@@ -31,16 +31,11 @@ export default {
           withGoodsSubFlg: 1,
           withOperatingsFlg: 1,
           clientType: 'COMDIC_TERMINAL_APP',
-        },
-        {
-          headers: {
-            'x-cache-control': 'cache',
-          },
         }
       )
       if (code === 200) {
         sellingGoodsDetailData = data
-        store.commit('sellingGoodsDetail/SET_SELLING_GOODS_DETAIL', data)
+        store.dispatch('sellingGoodsDetail/setServiceGoodsDetail', data)
       } else {
         throw message
       }

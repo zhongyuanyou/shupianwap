@@ -22,6 +22,7 @@ import { ossApi } from './oss'
 import coupon from './coupon' // 优惠券接口
 import pay from './pay' // 支付接口
 import order from './order'
+import order2 from './order2' // 性能优化版本订单接口
 import contract from './contract'
 import knownApi from './known'
 import knownQuestionArticleApi from './knownQuestionArticle' // 必懂文章集合api
@@ -75,4 +76,5 @@ export { formApi }
 export { walletApi }
 export { invoiceApi }
 export { storeApi }
+export { order2 }
 
