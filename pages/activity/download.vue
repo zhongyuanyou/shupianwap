@@ -121,7 +121,7 @@ export default {
       if (this.isIOS) {
         downLoadUrl = 'https://apps.apple.com/cn/app/薯片找人/id1535886630'
       } else {
-        downLoadUrl = 'https://cdn.shupian.cn/app-official-release.apk'
+        downLoadUrl = 'https://cdn.shupian.cn/mobile/shupian/android/app-official-release.apk'
       }
       window.location.href = downLoadUrl
     },
