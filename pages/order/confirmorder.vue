@@ -54,12 +54,15 @@
             </p>
 
             <p v-if="item.salesGoodsSubVos" class="price">
-              <span
+              <!-- <span
                 ><b>{{
                   getGoodsSubById(item.salesGoodsSubVos[0].goodsSubId)
                     .salesPrice
                 }}</b
                 >元</span
+              > -->
+              <span
+                ><b>{{ item.salesPrice }}元</b></span
               >
               <i>{{
                 $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
