@@ -31,6 +31,6 @@ module.exports = {
   cookieConfig: {
     path: '/',
     maxAge: 60 * 60 * 24 * 14,
-    domain: 'shupian.cn',
+    // domain: 'shupian.cn',
   },
 }

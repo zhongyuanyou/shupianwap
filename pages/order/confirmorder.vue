@@ -24,11 +24,18 @@
       <div class="data-content">
         <div v-for="(item, index) in order.list" :key="index" class="list">
           <div class="right">
-            <h1 class="tit">
+            <h1 v-if="item.salesGoodsSubVos" class="tit">
               {{
                 item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
-                  ? item.salesGoodsSubVos[0].goodsSubName
-                  : item.name
+                  ? item.name
+                  : item.salesGoodsSubVos[0].goodsSubName
+              }}
+            </h1>
+            <h1 v-if="item.saleGoodsSubs" class="tit">
+              {{
+                item.saleGoodsSubs.length > 1
+                  ? item.name
+                  : item.saleGoodsSubs[0].goodsSubName
               }}
             </h1>
             <p v-if="item.salesGoodsSubVos" class="goods-sku">
@@ -60,9 +67,7 @@
             </p>
             <p v-if="item.saleGoodsSubs" class="price">
               <span
-                ><b>{{
-                  getGoodsSubById(item.saleGoodsSubs[0].goodsSubId).salesPrice
-                }}</b
+                ><b>{{ item.salesPrice }}</b
                 >元</span
               >
               <i>{{
@@ -548,6 +553,7 @@ export default {
           }
         })
       })
+      console.log('goodsSub', goodsSub)
       return goodsSub
     },
     async getProtocol(categoryCode) {
@@ -581,44 +587,26 @@ export default {
       } else {
         this.loading = true
         if (this.$route.query.type === 'shopcar') {
-          console.log('this.order.list', this.order.list)
           const arr = []
           for (let i = 0; i < this.order.list.length; i++) {
-            const subGoods = this.order.list[i].saleGoodsSubs.map((item) => {
-              return {
-                goodsId: item.goodsId,
-                productId: item.productId,
-                goodsSubId: item.goodsSubId,
-              }
-            })
             const sku = {
               saleSkuId: this.order.list[i].id,
               saleSkuName: this.order.list[i].name,
               saleSkuVersionNo: this.order.list[i].version + '',
               saleSkuPrice: this.order.list[i].salesPrice,
               saleSkuCount: this.order.list[i].salesVolume,
-              subGoods,
             }
             arr.push(sku)
             this.loading = false
           }
           this.Orderform.needSplitProPackageDataParam = arr
         } else {
-          console.log('this.order', this.order)
-          const subGoods = this.order.list[0].salesGoodsSubVos.map((item) => {
-            return {
-              goodsId: item.goodsId,
-              productId: item.productId,
-              goodsSubId: item.goodsSubId,
-            }
-          })
           const sku = {
             saleSkuId: this.order.id,
             saleSkuName: this.order.name,
             saleSkuVersionNo: this.order.version + '',
             saleSkuPrice: this.order.salesPrice,
             saleSkuCount: 1,
-            subGoods, // 基础服务产品id
           }
           this.Orderform.needSplitProPackageDataParam = new Array(1).fill(sku)
         }
@@ -632,7 +620,7 @@ export default {
           cusOrderPayType = this.order.refConfig.payType
           isFromCart = false
         }
-        console.log('this.Orderform', this.Orderform)
+
         if (
           this.couponInfo.couponPrice &&
           this.couponInfo.selectedItem &&
@@ -669,6 +657,7 @@ export default {
           }
           this.Orderform.discount = new Array(1).fill(arr)
         }
+
         this.Orderform.payType = this.payMethod.value // 'ORDER_PAY_MODE_ONLINE'
         this.Orderform.cusOrderPayType = cusOrderPayType
         this.Orderform.isFromCart = isFromCart
