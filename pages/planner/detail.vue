@@ -96,11 +96,40 @@
                   </div>
                 </div>
                 <div class="detail-content__label">
-                  <p>
-                    <span v-for="tag of newDetailData.label" :key="tag">
-                      {{ tag }}
-                    </span>
-                  </p>
+                  <div class="tags_area">
+                    <p
+                      class="planner_tags"
+                      :class="!showAllTags ? 's_tag_area' : ''"
+                    >
+                      <span
+                        v-for="(tagItem, index) of detailData.tagNameList"
+                        :key="index"
+                      >
+                        {{ tagItem }}
+                      </span>
+                    </p>
+                    <p
+                      v-if="
+                        detailData.tagNameList &&
+                        detailData.tagNameList.length > 12
+                      "
+                      class="tag_btn_area"
+                    >
+                      <span
+                        v-show="!showAllTags"
+                        class="tag_btn"
+                        @click="handleToggleTags(true)"
+                        >查看全部</span
+                      >
+                      <span
+                        v-show="showAllTags"
+                        class="tag_btn"
+                        @click="handleToggleTags(false)"
+                      >
+                        收起</span
+                      >
+                    </p>
+                  </div>
                   <ul>
                     <li>
                       <div>
@@ -168,15 +197,6 @@
                     </li>
                   </ul>
                 </div>
-                <!-- <div class="detail-content__tag-list">
-                  <sp-tag
-                    v-for="tag of formatTagList"
-                    :key="tag"
-                    class="detail-content__tag-list-item"
-                    >{{ tag }}</sp-tag
-                  >
-
-                </div> -->
               </div>
               <div class="detail-content__wrap-body">
                 <div class="detail-content__section-title">个人信息</div>
@@ -611,6 +631,7 @@ export default {
   data() {
     return {
       PlannerHeadList,
+      showAllTags: false,
       loading: true,
       urlData: this.$route.query,
       detailData: {},
@@ -644,12 +665,6 @@ export default {
       userInfo: (state) => state.user.userInfo,
       isApplets: (state) => state.app.isApplets,
     }),
-    formatTagList() {
-      const tagList = this.detailData.tagList
-      if (!Array.isArray(tagList)) return []
-      const formatData = tagList.slice(0, 5)
-      return formatData
-    },
     formatServeAgeText() {
       const serveAge = this.detailData.serveAge
       if (serveAge == null) {
@@ -717,6 +732,10 @@ export default {
       const oldTime = s.split(' ')[0]
       const time = oldTime.split('-')
       return `${time[1]}月${time[2]}日`
+    },
+    handleToggleTags(val) {
+      this.showAllTags = val
+      console.log('this.showAllTags', this.showAllTags)
     },
     setPhone(phone) {
       if (phone.length === 11) {
@@ -1340,8 +1359,11 @@ export default {
       }
       &__label {
         font-size: 24px;
-        p {
-          margin: 23px 0 32px 0;
+        .tags_area {
+          position: relative;
+        }
+        .planner_tags {
+          margin: 23px 0 70px 0;
           span {
             display: inline-block;
             margin: 0 12px 0 0;
@@ -1356,6 +1378,21 @@ export default {
             text-overflow: ellipsis;
             white-space: nowrap;
           }
+        }
+        .s_tag_area {
+          max-height: 214px;
+          overflow: hidden;
+        }
+        .tag_btn_area {
+          position: absolute;
+          width: 100%;
+          height: 44px;
+          bottom: -54px;
+          left: 0;
+          text-align: center;
+          line-height: 44px;
+          font-size: 24px;
+          color: #666;
         }
         ul {
           position: relative;
