@@ -144,7 +144,7 @@
                 ? 'black'
                 : ''
             "
-            @click="openPopupfn()"
+            @click="openPopupfn"
           />
           <!-- <Cell
             title="活动卡"
@@ -886,7 +886,13 @@ export default {
       this.payMethod.text = item.text
     },
     openPopupfn() {
-      if (this.couponInfo.datalist.length) this.couponInfo.popupshow = true
+      if (this.isIntendedOrder) {
+        // 若是意向单不可使用优惠券
+        Toast({message: '意向单商品不可使用优惠券'})
+      } else if (this.couponInfo.datalist.length) {
+        // 有优惠券才能点开优惠券列表
+        this.couponInfo.popupshow = true
+      }
     },
     openCardFn() {
       this.card.show = true
