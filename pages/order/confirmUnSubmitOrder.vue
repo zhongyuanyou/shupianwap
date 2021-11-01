@@ -888,7 +888,7 @@ export default {
     openPopupfn() {
       if (this.isIntendedOrder) {
         // 若是意向单不可使用优惠券
-        Toast({message: '意向单商品不可使用优惠券'})
+        Toast({message: '当前订单不符合优惠券使用条件'})
       } else if (this.couponInfo.datalist.length) {
         // 有优惠券才能点开优惠券列表
         this.couponInfo.popupshow = true
