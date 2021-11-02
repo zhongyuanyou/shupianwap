@@ -85,7 +85,7 @@
           color="#EC5330"
           class="my_icon"
         ></my-icon>
-        线下优惠可咨询规划师
+        线下优惠可咨询{{ plannerText }}
         <imBtn btn-text="询优惠" />
       </div>
     </div>
@@ -330,6 +330,11 @@ export default {
     }
   },
   computed: {
+    plannerText() {
+      return this.$route.path.match('detail/server/law')
+        ? '律师经纪人'
+        : '规划师'
+    },
     plannerDetail() {
       return this.$store.state.planner.isShare
         ? this.$store.state.planner.sharePlannerInfo
