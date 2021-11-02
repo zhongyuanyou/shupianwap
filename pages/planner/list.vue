@@ -367,6 +367,7 @@ export default {
     this.$nextTick(() => {
       this.headHeight = this.$refs.head.clientHeight
     })
+    this.search.categoryCodes = this.$route.query.categoryCode
     this.getCategoryCodes()
   },
   methods: {
@@ -409,7 +410,6 @@ export default {
       goods.getCategoryCodes({ axios: this.$axios }).then((res) => {
         this.categoryList = [{ name: '全部分类', code: 0 }].concat(res[0])
         if (this.$route.query && this.$route.query.categoryCode) {
-          this.search.categoryCodes = this.$route.query.categoryCode
           this.isChooseCategory = true
           this.categoryList.forEach((item, index) => {
             if (item.code === this.search.categoryCodes) {
@@ -449,10 +449,7 @@ export default {
       this.isChooseCategory = false
       this.handleSearch()
     },
-    onLoad(isInit) {
-      if (isInit && this.$route.query.categoryCode) {
-        return
-      }
+    onLoad() {
       let currentPage = this.pageOption.page
       if (!this.refreshing && this.list.length && currentPage >= 1) {
         currentPage += 1
