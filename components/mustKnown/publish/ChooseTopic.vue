@@ -273,6 +273,7 @@ export default {
   background: white;
   border-top: 1px solid #f4f4f4;
   z-index: 199;
+  height: 80px;
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
   .item {
