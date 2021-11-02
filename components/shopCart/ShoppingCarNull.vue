@@ -29,17 +29,12 @@ export default {
     uPGoScan() {
       if (this.isInApp) {
         const iOSRouter = {
-          path:
-            'CPSCustomer:CPSCustomer/CPSCAllCategoryViewController///push/animation',
-          parameter: {
-            routerPath: '',
-          },
+          path: 'CPSCustomer:CPSCustomer/CPSCAllCategoryViewController///push/animation',
+          parameter: {},
         }
         const androidRouter = {
           path: '/reform/flutter/classify',
-          parameter: {
-            routerPath: '',
-          },
+          parameter: {},
         }
         const iOSRouterStr = JSON.stringify(iOSRouter)
         const androidRouterStr = JSON.stringify(androidRouter)
