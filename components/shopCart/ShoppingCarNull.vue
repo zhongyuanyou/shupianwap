@@ -30,15 +30,15 @@ export default {
       if (this.isInApp) {
         const iOSRouter = {
           path:
-            'CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation',
+            'CPSCustomer:CPSCustomer/CPSCAllCategoryViewController///push/animation',
           parameter: {
-            routerPath: 'cpsc/classify/page',
+            routerPath: '',
           },
         }
         const androidRouter = {
-          path: '/flutter/main',
+          path: '/reform/flutter/classify',
           parameter: {
-            routerPath: 'cpsc/classify/page',
+            routerPath: '',
           },
         }
         const iOSRouterStr = JSON.stringify(iOSRouter)
