@@ -24,11 +24,18 @@
       <div class="data-content">
         <div v-for="(item, index) in order.list" :key="index" class="list">
           <div class="right">
-            <h1 class="tit">
+            <h1 v-if="item.salesGoodsSubVos" class="tit">
               {{
                 item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
-                  ? item.salesGoodsSubVos[0].goodsSubName
-                  : item.name
+                  ? item.name
+                  : item.salesGoodsSubVos[0].goodsSubName
+              }}
+            </h1>
+            <h1 v-if="item.saleGoodsSubs" class="tit">
+              {{
+                item.saleGoodsSubs.length > 1
+                  ? item.name
+                  : item.saleGoodsSubs[0].goodsSubName
               }}
             </h1>
             <p v-if="item.salesGoodsSubVos" class="goods-sku">
@@ -47,12 +54,15 @@
             </p>
 
             <p v-if="item.salesGoodsSubVos" class="price">
-              <span
+              <!-- <span
                 ><b>{{
                   getGoodsSubById(item.salesGoodsSubVos[0].goodsSubId)
                     .salesPrice
                 }}</b
                 >元</span
+              > -->
+              <span
+                ><b>{{ item.salesPrice }}元</b></span
               >
               <i>{{
                 $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
@@ -60,9 +70,7 @@
             </p>
             <p v-if="item.saleGoodsSubs" class="price">
               <span
-                ><b>{{
-                  getGoodsSubById(item.saleGoodsSubs[0].goodsSubId).salesPrice
-                }}</b
+                ><b>{{ item.salesPrice }}</b
                 >元</span
               >
               <i>{{

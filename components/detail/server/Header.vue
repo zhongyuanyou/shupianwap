@@ -70,17 +70,10 @@
             </div>
           </div>
           <div
-            v-if="
-              Array.isArray(custRecPlanner.tagNameList) &&
-              custRecPlanner.tagNameList.length
-            "
+            v-if="Array.isArray(tagNameList) && tagNameList.length"
             class="tips"
           >
-            <div
-              v-for="(item, i) in custRecPlanner.tagNameList"
-              :key="i"
-              class="tips__item"
-            >
+            <div v-for="(item, i) in tagNameList" :key="i" class="tips__item">
               {{ item }}
             </div>
           </div>
@@ -183,11 +176,48 @@ export default {
         return []
       }
     },
+    tagNameList() {
+      // 规划师的标签优选显示这个一级分类下的二级授权范围标签，然后再依次显示其它一级产品分类的下的二级授权范围标签，最多显示2排
+      if (this.custRecPlanner.mchUserBusinessCategories) {
+        const classCodeOne = this.goodDetail.classCodeLevel.split(',')[0]
+        const arr1 = JSON.parse(
+          JSON.stringify(this.custRecPlanner.mchUserBusinessCategories)
+        )
+        const len = arr1.length
+        // 将当前商品对应的一级分类排最前面
+        const arr2 = arr1.sort((a, b) => {
+          if (a.firstTypeCode === classCodeOne) {
+            return -1
+          }
+          return 1
+        })
+        // 取二级分类
+        const arr3 = arr2.map((item) => {
+          return item.secondTypeName
+        })
+        // 去重
+        const result = this.unique(arr3)
+        console.log('result', result)
+        return result
+      }
+      return []
+    },
   },
   mounted() {
     this.isShare = this.$route.query.isShare
   },
   methods: {
+    unique(arr) {
+      const res = []
+      const obj = {}
+      for (let i = 0; i < arr.length; i++) {
+        if (!obj[arr[i]]) {
+          obj[arr[i]] = 1
+          res.push(arr[i])
+        }
+      }
+      return res
+    },
     linkPlannerDetail() {
       this.$router.push({
         path: '/planner/detail',
