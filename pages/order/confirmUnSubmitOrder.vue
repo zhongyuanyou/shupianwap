@@ -144,7 +144,7 @@
                 ? 'black'
                 : ''
             "
-            @click="openPopupfn()"
+            @click="openPopupfn"
           />
           <!-- <Cell
             title="活动卡"
@@ -243,6 +243,7 @@
       :tablist="couponInfo.tablist"
       :datalist="couponInfo.datalist"
       :nolist="couponInfo.nolist"
+      :echo-selected-coupons="couponInfo.selectedCoupons"
       @change="conponChange"
       @close="close"
     ></PopupUnSubmit>
@@ -322,6 +323,7 @@ export default {
         popupshow: false,
 
         selectedItem: {}, // 选择的对象
+        selectedCoupons: [], // 确认选择了的，双11多优惠券需求添加
         couponPrice: '', // 选择的优惠券对象
 
         tablist: [
@@ -480,8 +482,12 @@ export default {
           { axios: this.$axios },
           {
             orderId: this.$route.query.cusOrderId,
-            couponUseCode: this.couponInfo.selectedItem.couponUseCode,
-            couponId: this.couponInfo.selectedItem.couponId,
+            coupons: this.couponInfo.selectedCoupons.map(v => ({
+              couponUseCode: v?.couponUseCode || '',
+              couponId: v?.couponId || '',
+            })),
+            // couponUseCode: this.couponInfo.selectedItem.couponUseCode,
+            // couponId: this.couponInfo.selectedItem.couponId,
           }
         )
         .then((result) => {
@@ -583,26 +589,35 @@ export default {
 
         if (
           this.couponInfo.couponPrice &&
-          this.couponInfo.selectedItem &&
-          this.couponInfo.selectedItem.marketingCouponVO.id
+          this.couponInfo.selectedCoupons.length
         ) {
-          const arr = {
+          // const arr = {
+          //   code: 'ORDER_DISCOUNT_DISCOUNT',
+          //   value: this.couponInfo.selectedItem.marketingCouponVO.id,
+          //   couponUseCode: this.couponInfo.selectedItem.couponUseCode,
+          //   no: this.couponInfo.selectedItem.marketingCouponVO.id,
+          //   couponName:
+          //     this.couponInfo.selectedItem.marketingCouponVO.couponName,
+          //   discountType:
+          //     this.couponInfo.selectedItem.marketingCouponVO.merId === -1
+          //       ? 'COUPON_DISCOUNT'
+          //       : 'BUSINESS_COUPON',
+          //   discountSubsidy:
+          //     this.couponInfo.selectedItem.marketingCouponVO.merId === -1
+          //       ? 1
+          //       : 0,
+          // }
+          this.Orderform.discount = this.couponInfo.selectedCoupons.map(v => ({
             code: 'ORDER_DISCOUNT_DISCOUNT',
-            value: this.couponInfo.selectedItem.marketingCouponVO.id,
-            couponUseCode: this.couponInfo.selectedItem.couponUseCode,
-            no: this.couponInfo.selectedItem.marketingCouponVO.id,
-            couponName:
-              this.couponInfo.selectedItem.marketingCouponVO.couponName,
-            discountType:
-              this.couponInfo.selectedItem.marketingCouponVO.merId === -1
+            value: v.marketingCouponVO.id,
+            couponUseCode: v.couponUseCode,
+            no: v.marketingCouponVO.id,
+            couponName: v.marketingCouponVO.couponName,
+            discountType: v.marketingCouponVO.merId === -1
                 ? 'COUPON_DISCOUNT'
                 : 'BUSINESS_COUPON',
-            discountSubsidy:
-              this.couponInfo.selectedItem.marketingCouponVO.merId === -1
-                ? 1
-                : 0,
-          }
-          this.Orderform.discount = new Array(1).fill(arr)
+            discountSubsidy: v.marketingCouponVO.merId === -1 ? 1 : 0,
+          }))
         } else if (
           this.card.cardPrice &&
           this.card.selectedItem &&
@@ -631,7 +646,6 @@ export default {
             }
           )
           .then((result) => {
-            console.log('result', result)
             this.loading = false
 
             if (this.payMethod.value === 'ORDER_PAY_MODE_SECURED') {
@@ -756,9 +770,23 @@ export default {
 
     //  5:订单可用优惠券 6：订单不可用优惠券
     getInitData(index) {
-      const arr = this.settlementInfo.productVo.map((x) => {
-        return x.id
-      })
+      const productIds = this.settlementInfo.productVo.map(x => x.id)
+      const productClassCodes = this.settlementInfo.productVo.map(x => x.classCode)
+      const SKUClassCodes = this.settlementInfo.orderSkuList.map(x => x.classifyThreeNo)
+      const arr = [...productIds, ...productClassCodes, ...SKUClassCodes]
+      let customerTypes = []
+      if (this.settlementInfo?.saleSkuList?.length) {
+        /*
+        * 客户类型
+        * CUSTOMER_TYPE_0：普通客户
+        * CUSTOMER_TYPE_1：PLUS会员
+        * CUSTOMER_TYPE_2：大客户会员
+        * CUSTOMER_TYPE_3：秒杀
+        * CUSTOMER_TYPE_4：限时抢购
+        * CUSTOMER_TYPE_5：限量抢购
+        * */
+        customerTypes = this.settlementInfo.saleSkuList.map(x => x.customerType)
+      }
       const list = []
       this.settlementInfo.productVo.map((product) => {
         const orderSaleId = product.id
@@ -784,6 +812,7 @@ export default {
             findType: index,
             userId: this.$store.state.user.userId,
             actionId: arr,
+            customerTypes,
             orderPrice: this.settlementInfo.orderPayableMoney,
             orderByWhere: 'createTime=desc',
             limit: 50,
@@ -804,7 +833,10 @@ export default {
                 a.marketingCouponVO.reducePrice
               )
             })
+            // TODO 删除过滤代码
             this.couponInfo.datalist = sortList
+            //   .filter(v => v.marketingCouponVO.couponType === 1)
+            // console.log('可用优惠券', this.couponInfo.datalist.map(v => v.marketingCouponVO))
           } else {
             this.couponInfo.nolist = result.marketingCouponLogList
           }
@@ -835,11 +867,10 @@ export default {
         })
     },
 
-    conponChange(price, num, item) {
-      console.log('price', price)
-      console.log('num', num)
+    conponChange(price, num, coupons) {
       this.couponInfo.couponPrice = num
-      this.couponInfo.selectedItem = item || {}
+      // this.couponInfo.selectedItem = item || {}
+      this.couponInfo.selectedCoupons = coupons || []
       this.card.cardPrice = ''
       this.card.selectedItem = {}
       this.settlement()
@@ -855,7 +886,13 @@ export default {
       this.payMethod.text = item.text
     },
     openPopupfn() {
-      this.couponInfo.popupshow = true
+      if (this.isIntendedOrder) {
+        // 若是意向单不可使用优惠券
+        Toast({message: '当前订单不符合优惠券使用条件'})
+      } else if (this.couponInfo.datalist.length) {
+        // 有优惠券才能点开优惠券列表
+        this.couponInfo.popupshow = true
+      }
     },
     openCardFn() {
       this.card.show = true

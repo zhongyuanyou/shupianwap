@@ -370,12 +370,13 @@ export default {
       if (item.marketingCouponVO.useType === 1) {
         return '全场通用'
       } else if (item.marketingCouponVO.useType === 2) {
-        return '仅限指定品类使用'
+        return item.marketingCouponVO.productName ?
+          `"${item.marketingCouponVO.productName}"-可用` :
+          '仅限指定品类使用'
       } else if (item.marketingCouponVO.useType === 3) {
-        if (item.marketingCouponVO.productName) {
-          return item.marketingCouponVO.productName + '-可用'
-        }
-        return '仅限指定商品使用'
+        return item.marketingCouponVO.productName ?
+          `"${item.marketingCouponVO.productName}"-可用` :
+          '仅限指定商品使用'
       }
       return ''
     },

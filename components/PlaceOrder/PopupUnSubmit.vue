@@ -22,22 +22,22 @@
             @click="tabactivefn(item, index)"
           >
             <span>{{ item.name }}</span
-            ><span v-if="index == 0">{{ `(${datalist.length || 0})` }}</span>
+            ><span v-if="index == 0">{{ `(${cloneList.length || 0})` }}</span>
             <span v-else>{{ `(${nolist.length || 0})` }}</span>
             <i class="icon"></i>
           </p>
         </div>
         <div v-if="tabAct === 0" class="calculation">
-          {{ disPrice ? '已选中优惠券，可抵扣' : '请选择优惠券' }}
-          <span v-if="disPrice" class="red">{{ disPrice }}元</span>
+          {{ checkedCoupon.length ? `已选中${checkedCoupon.length}张优惠券，可抵扣` : '请选择优惠券' }}
+          <span v-if="checkedCoupon.length" class="red">{{ disPrice }}元</span>
         </div>
         <div v-if="tablist[tabAct].is">
           <div class="databox">
-            <div v-if="datalist.length > 0" class="listbox">
+            <div v-if="cloneList.length > 0" class="listbox">
               <div
-                v-for="(item, index) in datalist"
-                :key="index"
-                class="list"
+                v-for="(item, index) in cloneList"
+                :key="item.id"
+                :class="['list', item.composable && !item.checked ? 'composable' : ' ']"
                 @click="checkitem(item, index)"
               >
                 <div class="left">
@@ -92,11 +92,11 @@
                     <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
                   <div class="right">
-                    <sp-radio-group v-model="radio">
+                    <sp-radio-group v-model="item.checked">
                       <sp-radio
-                        :name="index"
+                        :name="true"
                         disabled
-                        :class="radio === index ? 'act' : ''"
+                        :class="item.checked ? 'act' : ''"
                       >
                         <template #icon="props">
                           <my-icon
@@ -106,7 +106,7 @@
                                 : 'pay_ic_radio_n'
                             "
                             size="0.32rem"
-                            :color="radio === index ? '#4E78F5' : '#dddddd'"
+                            :color="item.checked ? '#4E78F5' : '#dddddd'"
                           ></my-icon>
                         </template>
                       </sp-radio>
@@ -122,7 +122,7 @@
               />
               <p>暂无优惠券</p>
             </div>
-            <div v-if="datalist.length > 0" class="btn">
+            <div v-if="cloneList.length > 0" class="btn">
               <p @click="submit">确定</p>
             </div>
           </div>
@@ -182,6 +182,7 @@
                   </div>
                 </div>
               </div>
+              <p>{{ item.marketingCouponVO.wherefore }}</p>
             </div>
           </div>
           <div v-else class="none">
@@ -216,6 +217,14 @@
     </sp-dialog>
 
     <LoadingCenter v-show="loading" />
+    <sp-center-popup
+      v-model="ifConfirmSwitchPopupShow"
+      :field="switchPopupField"
+      :close-on-click-overlay="false"
+      width="5.40rem"
+      button-type="confirm"
+      @cancel="handleSwitchCouponConfirm"
+    />
   </div>
 </template>
 
@@ -228,9 +237,12 @@ import {
   Toast,
   Button,
   Dialog,
+  CenterPopup,
 } from '@chipspc/vant-dgg'
 import { order } from '@/api/index'
 import LoadingCenter from '@/components/common/loading/LoadingCenter.vue'
+import couponUseMixin from '@/mixins/couponUseMixin.js'
+
 export default {
   name: 'PlaceOrderPopup',
   components: {
@@ -239,9 +251,11 @@ export default {
     [RadioGroup.name]: RadioGroup,
     [Radio.name]: Radio,
     [Button.name]: Button,
+    [CenterPopup.name]: CenterPopup,
     [Dialog.Component.name]: Dialog.Component,
     LoadingCenter,
   },
+  mixins: [couponUseMixin],
   props: {
     show: {
       type: Boolean,
@@ -286,6 +300,12 @@ export default {
       },
     },
     nolist: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
+    echoSelectedCoupons: {
       type: Array,
       default() {
         return []
@@ -369,42 +389,67 @@ export default {
       if (item.marketingCouponVO.useType === 1) {
         return '全场通用'
       } else if (item.marketingCouponVO.useType === 2) {
-        return '仅限指定品类使用'
+        return item.marketingCouponVO.productName ?
+          `"${item.marketingCouponVO.productName}"-可用` :
+          '仅限指定品类使用'
       } else if (item.marketingCouponVO.useType === 3) {
-        if (item.marketingCouponVO.productName) {
-          return item.marketingCouponVO.productName + '-可用'
-        }
-        return '仅限指定商品使用'
+        return item.marketingCouponVO.productName ?
+          `"${item.marketingCouponVO.productName}"-可用` :
+          '仅限指定商品使用'
       }
       return ''
     },
 
     // 获取待结算价格
-    settlement() {
-      this.loading = true
-      if (!this.checkarr?.couponUseCode) {
-        this.disPrice = 0
+    async settlement() {
+      if (!this.checkedCoupon.length) {
+        this.disPrice = 0;
+        return;
       }
-      order
-        .settle_order_by_unsubmit(
-          { axios: this.$axios },
+      this.loading = true;
+      try {
+        const result = await order.settle_order_by_unsubmit(
+          {axios: this.$axios},
           {
             orderId: this.cusOrderId,
-            couponUseCode: this.checkarr?.couponUseCode || '',
-            couponId: this.checkarr?.couponId || '',
+            coupons: this.checkedCoupon.map(v => ({
+              couponUseCode: v?.couponUseCode || '',
+              couponId: v?.couponId || '',
+            }))
           }
-        )
-        .then((result) => {
-          this.loading = false
-          this.disPrice = parseFloat(result.orderDiscountMoney) || 0
-          this.price = parseFloat(result.orderPayableMoney) || 0
-          console.log('result', result)
-        })
-        .catch((error) => {
-          this.loading = false
-          console.log('选择优惠券错误', error)
-          this.$xToast.warning('服务器异常,请然后再试')
-        })
+        );
+        this.disPrice = parseFloat(result.orderDiscountMoney) || 0;
+        this.price = parseFloat(result.orderPayableMoney) || 0;
+      } catch (err) {
+        console.error(err);
+        this.$xToast.warning('服务器异常,请然后再试');
+      }
+      this.loading = false;
+
+
+      // if (!this.checkarr?.couponUseCode) {
+      //   this.disPrice = 0
+      // }
+      // order
+      //   .settle_order_by_unsubmit(
+      //     { axios: this.$axios },
+      //     {
+      //       orderId: this.cusOrderId,
+      //       couponUseCode: this.checkarr?.couponUseCode || '',
+      //       couponId: this.checkarr?.couponId || '',
+      //     }
+      //   )
+      //   .then((result) => {
+      //     this.loading = false
+      //     this.disPrice = parseFloat(result.orderDiscountMoney) || 0
+      //     this.price = parseFloat(result.orderPayableMoney) || 0
+      //     console.log('result', result)
+      //   })
+      //   .catch((error) => {
+      //     this.loading = false
+      //     console.log('选择优惠券错误', error)
+      //     this.$xToast.warning('服务器异常,请然后再试')
+      //   })
     },
     handleProtocol(categoryCode) {
       this.$router.push({
@@ -417,28 +462,33 @@ export default {
       return Number(count) / 100
     },
     checkitem(item, index) {
-      if (this.radio === index) {
-        this.checkarr = ''
-        this.radio = -1
+      this.currentTapCoupon = item
+      // 若已有选中的优惠券
+      if (
+        this.checkedCoupon.length &&
+        this.checkedCoupon[0].marketingCouponVO.useType !== item.marketingCouponVO.useType
+      ) {
+        this.ifConfirmSwitchPopupShow = true
       } else {
-        this.checkarr = item
-        this.radio = index
+        this.handleSwitchCouponConfirm()
       }
-      this.settlement()
     },
     close() {
+      this.initLists()
       this.$emit('close')
     },
     submit() {
       // price计算后售价，disPrice折扣价，checkarr选择项
-      this.$emit('change', this.price, -this.disPrice, this.checkarr)
+      // this.$emit('change', this.price, -this.disPrice, this.checkarr)
+
+      this.$emit('change', this.price, -this.disPrice, this.checkedCoupon)
       this.close()
     },
     tabactivefn(item, index) {
       this.tabAct = index
       this.$emit('tabactive', item, index)
     },
-  },
+  }
 }
 </script>
 
@@ -514,7 +564,7 @@ export default {
       }
     }
     .databox {
-      height: calc(67vh - 324px);
+      height: calc(85vh - 324px - 100px);
       .listbox {
         height: calc(100% - 180px);
         overflow-y: auto;
@@ -528,8 +578,12 @@ export default {
           box-sizing: border-box;
           display: flex;
 
-          background: url('https://cdn.shupian.cn/sp-pt/wap/g4kbai7wgrk0000.png')
+          background: url('https://cdn.shupian.cn/sp-pt/wap/images/2x92aidcm4i0000.png')
             no-repeat;
+          &.composable {
+            // 可叠加右标
+            background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/2ay4724dr3i8000.png');
+          }
           background-size: 100% 100%;
           ::v-deep.sp-radio__icon--checked .sp-icon {
             color: #fff;
@@ -710,16 +764,17 @@ export default {
       }
     }
     .nodatabox {
-      height: calc(67vh - 324px);
+      height: calc(85vh - 324px);
       padding-top: 20px;
       .listbox {
         height: 100%;
         > .nolist {
-          height: 220px;
+          //height: 220px;
+          height: 280px;
           margin: 10px auto 0;
           width: 670px;
-          background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/5cx1r4tc3js0000.png');
-          // background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png) no-repeat;
+          //background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/5cx1r4tc3js0000.png');
+           background: url('https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png') no-repeat;
           background-size: 100% 100%;
           // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
           box-sizing: border-box;
@@ -728,7 +783,7 @@ export default {
             > .left {
               margin-left: 10px;
               width: 201px;
-              height: 212px;
+              height: 208px;
               color: #fff;
               padding-top: 20px;
               box-sizing: border-box;
@@ -785,7 +840,7 @@ export default {
             }
             > .right {
               width: calc(100% - 201px);
-              height: 212px;
+              height: 208px;
               box-sizing: border-box;
               padding: 25px 0;
               display: flex;
@@ -800,7 +855,7 @@ export default {
                   overflow: hidden;
                   text-overflow: ellipsis;
                   white-space: nowrap;
-                  font-weight: normal;
+                  font-weight: bold;
                   position: relative;
                   z-index: 2;
                   padding-left: 80px;
@@ -854,11 +909,14 @@ export default {
             }
           }
           > p {
-            width: 100%;
+            //width: 100%;
+            width: calc(100% - 32px);
             font-size: 20px;
-            font-family: PingFang SC;
             font-weight: 400;
             padding: 13px 20px;
+            border-top: 1px dashed #F4F4F4;
+            margin-left: 16px;
+            color: #1A1A1A;
           }
         }
       }
@@ -919,6 +977,10 @@ export default {
     height: auto;
     line-height: normal;
     font-size: 0;
+  }
+
+  ::v-deep .sp-center-popup__containerConfirm .sp-center-popup__cancel .sp-button__text{
+    font-weight: 400;
   }
 }
 </style>
